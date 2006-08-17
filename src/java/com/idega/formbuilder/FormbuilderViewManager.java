@@ -34,6 +34,7 @@ public class FormbuilderViewManager {
 	
 	
 	public ViewNode getFormbuilderViewNode(){
+		
 		IWBundle iwb = this.iwma.getBundle("com.idega.formbuilder");
 		if(this.formbuilderNode == null){
 			this.formbuilderNode = initalizeFormbuilderNode(iwb);
@@ -48,10 +49,10 @@ public class FormbuilderViewManager {
 		Collection<String> roles = new ArrayList<String>();
 		roles.add(StandardRoles.ROLE_KEY_BUILDER);
 		
-		DefaultViewNode devNode = new WorkspaceApplicationNode("formbuilder",workspace,roles);
-		devNode.setKeyboardShortcut(new KeyboardShortcut("4"));
+		DefaultViewNode formbuilderNode = new WorkspaceApplicationNode("formbuilder",workspace,roles);
+		formbuilderNode.setKeyboardShortcut(new KeyboardShortcut("4"));
 		
-		return devNode;
+		return formbuilderNode;
 	}
 	
 }
