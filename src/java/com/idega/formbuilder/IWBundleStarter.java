@@ -11,10 +11,10 @@ import com.idega.idegaweb.IWBundleStartable;
  * <p>
  * TODO tryggvil Describe Type IWBundleStarter
  * </p>
- *  Last modified: $Date: 2006/08/17 15:01:03 $ by $Author: civilis $
+ *  Last modified: $Date: 2006/08/21 15:01:44 $ by $Author: civilis $
  * 
  * @author <a href="mailto:tryggvil@idega.com">tryggvil</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class IWBundleStarter implements IWBundleStartable{
 
@@ -22,8 +22,8 @@ public class IWBundleStarter implements IWBundleStartable{
 	 * @see com.idega.idegaweb.IWBundleStartable#start(com.idega.idegaweb.IWBundle)
 	 */
 	public void start(IWBundle starterBundle) {
-		FormbuilderViewManager viewMan = FormbuilderViewManager.getInstance(starterBundle.getApplication());
-		viewMan.getFormbuilderViewNode();
+		FormbuilderViewManager cViewManager = FormbuilderViewManager.getInstance(starterBundle.getApplication());
+		cViewManager.initializeStandardNodes(starterBundle);
 	}
 
 	/* (non-Javadoc)
