@@ -84,9 +84,6 @@ public class FBToolbarRenderer extends ToolbarRenderer {
 				}
 			}
 			
-			
-			
-			
 			Iterator iter = itemList.iterator();
 			boolean isFirstItem = true;
 			boolean hasNext = iter.hasNext();
@@ -110,7 +107,7 @@ public class FBToolbarRenderer extends ToolbarRenderer {
 					if (buttonId.equals(menu.getSelectedMenuItemId())) {
 						buttonStyleClass = menu.getSelectedMenuItemStyleClass();
 					} 
-//					out.startElement("li", null);
+					out.startElement("span", null);
 					if (buttonStyleClass != null) {
 						if(isFirstItem){
 							buttonStyleClass+=" first";
@@ -126,7 +123,7 @@ public class FBToolbarRenderer extends ToolbarRenderer {
 						out.writeAttribute("class", buttonStyleClass, null);
 					}
 					renderChild(context,menuItem);
-//					out.endElement("li");
+					out.endElement("span");
 				}
 			}
 			out.endElement("span");
