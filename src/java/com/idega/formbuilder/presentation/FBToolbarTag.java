@@ -12,7 +12,6 @@ public class FBToolbarTag extends UIComponentTagBase {
 	 * @see javax.faces.webapp.UIComponentTag#getComponentType()
 	 */
 	public String getComponentType() {
-		System.out.println("wazaaaaaaaaaaaaaa");
 		return "FBToolbar";
 	}
 
