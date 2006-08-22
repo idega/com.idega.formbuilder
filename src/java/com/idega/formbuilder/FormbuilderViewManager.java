@@ -15,23 +15,27 @@ import com.idega.repository.data.Singleton;
 
 public class FormbuilderViewManager implements Singleton  {
 
-	private static final String IW_CONTENT_VIEW_MANAGER_KEY = "iw_formbuilderviewmanager";
-	private static final String CONTENT_ID="formbuilder";
-	private static final String CONTENT_BUNDLE_IDENTIFIER="com.idega.formbuilder";
-	private ViewNode contentRootNode;
+	private static final String IW_FORMBUILDER_VIEW_MANAGER_KEY = "iw_formbuilderviewmanager";
+	private static final String FORMBUILDER_ID = "formbuilder";
+	private static final String FORMBUILDER_BUNDLE_IDENTIFIER = "com.idega.formbuilder";
+	private ViewNode rootNode;
 	private IWMainApplication iwma;
 	
 	private FormbuilderViewManager(IWMainApplication iwma){
-		this.iwma=iwma;
+		this.iwma = iwma;
 	}
 
+	/**
+	 * 
+	 * TODO: implement getInstance method in the right way (using pattern from better lighter..)
+	 */
 	  public static synchronized FormbuilderViewManager getInstance(IWMainApplication iwma){
-		  FormbuilderViewManager contentViewManager = (FormbuilderViewManager) iwma.getAttribute(IW_CONTENT_VIEW_MANAGER_KEY);
-	    if(contentViewManager==null){
-	      contentViewManager = new FormbuilderViewManager(iwma);
-	      iwma.setAttribute(IW_CONTENT_VIEW_MANAGER_KEY,contentViewManager);
+		  FormbuilderViewManager formbuilder_view_manager = (FormbuilderViewManager) iwma.getAttribute(IW_FORMBUILDER_VIEW_MANAGER_KEY);
+	    if(formbuilder_view_manager==null){
+	      formbuilder_view_manager = new FormbuilderViewManager(iwma);
+	      iwma.setAttribute(IW_FORMBUILDER_VIEW_MANAGER_KEY,formbuilder_view_manager);
 	    }
-	    return contentViewManager;
+	    return formbuilder_view_manager;
 	  }	
 	
 	public static FormbuilderViewManager getInstance(FacesContext context){
@@ -45,84 +49,30 @@ public class FormbuilderViewManager implements Singleton  {
 	
 	
 	public ViewNode getContentNode(){
-		IWBundle iwb = this.iwma.getBundle(CONTENT_BUNDLE_IDENTIFIER);
+		IWBundle iwb = this.iwma.getBundle(FORMBUILDER_BUNDLE_IDENTIFIER);
 		//ViewNode content = root.getChild(CONTENT_ID);
-		if(this.contentRootNode==null){
-			this.contentRootNode = initalizeContentNode(iwb);
+		if(this.rootNode==null){
+			this.rootNode = initalizeContentNode(iwb);
 		}
-		return this.contentRootNode;
+		return this.rootNode;
 	}
 	
 	public ViewNode initalizeContentNode(IWBundle contentBundle){
 		ViewNode root = getViewManager().getWorkspaceRoot();
-		DefaultViewNode contentNode = new ApplicationViewNode(CONTENT_ID,root);
-		Collection roles = new ArrayList();
-		roles.add(StandardRoles.ROLE_KEY_EDITOR);
-		roles.add(StandardRoles.ROLE_KEY_AUTHOR);
-		contentNode.setAuthorizedRoles(roles);
+		DefaultViewNode node = new ApplicationViewNode(FORMBUILDER_ID,root);
+		Collection<String> roles = new ArrayList<String>();
+		roles.add(StandardRoles.ROLE_KEY_BUILDER);
+		node.setAuthorizedRoles(roles);
 		
+		node.setJspUri(contentBundle.getJSPURI("formbuilder.jsp"));
+		node.setKeyboardShortcut(new KeyboardShortcut("4"));
 		
-		contentNode.setJspUri(contentBundle.getJSPURI("formbuilder.jsp"));
-		contentNode.setKeyboardShortcut(new KeyboardShortcut("4"));
-		
-		this.contentRootNode = contentNode;
-		return this.contentRootNode;
+		this.rootNode = node;
+		return this.rootNode;
 	}
 	
 	
 	public void initializeStandardNodes(IWBundle bundle){
-		ViewNode contentNode = initalizeContentNode(bundle);
-		
-//		/* Page nodes begin */
-//		DefaultViewNode pagesNode = new DefaultViewNode("pages",contentNode);
-//		pagesNode.setJspUri(bundle.getJSPURI("pages.jsp"));
-//		pagesNode.setKeyboardShortcut(new KeyboardShortcut("p"));
-//		pagesNode.setName("#{localizedStrings['com.idega.content']['pages']}");
-//		
-//		//DefaultViewNode pageListNode = new DefaultViewNode("list",pagesNode);
-//		//pageListNode.setJspUri(bundle.getJSPURI("pages.jsp"));
-//		//pageListNode.setName("#{localizedStrings['com.idega.content']['list_pages']}");
-//		
-//		DefaultViewNode createPageNode = new DefaultViewNode("create",pagesNode);
-//		createPageNode.setJspUri(bundle.getJSPURI("createpage.jsp"));
-//		createPageNode.setName("#{localizedStrings['com.idega.content']['create_page']}");
-//		createPageNode.setVisibleInMenus(false);
-//		
-//		DefaultViewNode previewPageNode = new DefaultViewNode("preview",pagesNode);
-//		previewPageNode.setJspUri(bundle.getJSPURI("pagepreview.jsp"));
-//		previewPageNode.setVisibleInMenus(false);
-//		
-//		DefaultViewNode detailsPageNode = new DefaultViewNode("details",pagesNode);
-//		detailsPageNode.setJspUri(bundle.getJSPURI("pagedetails.jsp"));
-//		detailsPageNode.setVisibleInMenus(false);
-//		detailsPageNode.setName("#{localizedStrings['com.idega.content']['page_details']}");
-//		
-//		DefaultViewNode simpleTemplateNode = new DefaultViewNode("templatesettings",pagesNode);
-//		simpleTemplateNode.setJspUri(bundle.getJSPURI("simpletemplate.jsp"));
-//		simpleTemplateNode.setName("#{localizedStrings['com.idega.content']['template_settings']}");
-//		simpleTemplateNode.setVisibleInMenus(false);
-//		
-//		/* Page nodes end */
-//		
-//		
-//		DefaultViewNode documentsNode = new DefaultViewNode("documents",contentNode);
-//		//documentsNode.setJspUri(bundle.getJSPURI("documents.jsp"));
-//		documentsNode.setJspUri(bundle.getJSPURI("listDocuments.jsp"));
-//		documentsNode.setKeyboardShortcut(new KeyboardShortcut("d"));
-//		documentsNode.setName("#{localizedStrings['com.idega.content']['documents']}");
-//		
-//		DefaultViewNode previewNode = new DefaultViewNode("preview",documentsNode);
-//		previewNode.setJspUri(bundle.getJSPURI("listDocuments.jsp"));
-//		previewNode.setVisibleInMenus(false);
-//		
-//		DefaultViewNode permissionNode = new DefaultViewNode("permission",documentsNode);
-//		permissionNode.setJspUri(bundle.getJSPURI("listDocuments.jsp"));
-//		permissionNode.setVisibleInMenus(false);
-//		
-//		DefaultViewNode searchNode = new DefaultViewNode("search",contentNode);
-//		searchNode.setJspUri(bundle.getJSPURI("search.jsp"));	
-//		searchNode.setKeyboardShortcut(new KeyboardShortcut("s"));
-//		searchNode.setName("#{localizedStrings['com.idega.content']['search']}");
-		
+		initalizeContentNode(bundle);
 	}
 }
