@@ -1,29 +1,22 @@
-/**
- * 
- */
 package com.idega.formbuilder;
 
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWBundleStartable;
+import com.idega.idegaweb.include.GlobalIncludeManager;
 
 
 /**
- * <p>
- * TODO tryggvil Describe Type IWBundleStarter
- * </p>
- *  Last modified: $Date: 2006/08/21 15:01:44 $ by $Author: civilis $
- * 
- * @author <a href="mailto:tryggvil@idega.com">tryggvil</a>
- * @version $Revision: 1.2 $
+ * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @version 1.0
  */
-public class IWBundleStarter implements IWBundleStartable{
-
-	/* (non-Javadoc)
-	 * @see com.idega.idegaweb.IWBundleStartable#start(com.idega.idegaweb.IWBundle)
-	 */
+public class IWBundleStarter implements IWBundleStartable {
+	
+	public static final String IW_BUNDLE_IDENTIFIER = "com.idega.formbuilder";
+	
 	public void start(IWBundle starterBundle) {
 		FormbuilderViewManager cViewManager = FormbuilderViewManager.getInstance(starterBundle.getApplication());
 		cViewManager.initializeStandardNodes(starterBundle);
+		GlobalIncludeManager.getInstance().addBundleStyleSheet(IW_BUNDLE_IDENTIFIER,"/style/formbuilder.css");
 	}
 
 	/* (non-Javadoc)
