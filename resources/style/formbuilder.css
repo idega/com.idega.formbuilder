@@ -1,37 +1,57 @@
-#level0 {
-    background:#FC0;}
-  #level1 {
-    margin-left:143px;
+div#level0 {
+    /*background:#FC0;*/
+}
+
+div#level1 {
+    margin-left:205px;
     padding-left:9px;
-    background:#FFF;}
-  #level2 {
-    background:#FFF3AC;}
-  #level3 {
-    margin-right:143px;
+    /*background:#FFF;*/
+}
+
+div#level2 {
+/*    background:#FFF3AC;*/
+        padding-right:9px;
+}
+
+div#level3 {
+    margin-right: 250px;
     padding-right:9px;
-    background:#FFF;}
-  #main {
-    background:#CCC;}
+/*    background:#FFF;*/
+}
+
+div#main {
+/*    background:#CCC;*/
+}
     
-    #toolBar{
-    background:white;}
-    #lftBar {
+div#toolBar {
+/*    background:white;*/
+}
+
+div#lftBar {
 	float:left;
-    width:143px;
     top:0px;
-    left:9px;}
-    #rgtBar {
+    left:9px;
+}
+
+div#rgtBar {
     float:right;
-    width:143px;
     top:0;
-    right:0;}
+    right:9px;
+}
 
 div.fb_panel {
 	border: 1px #000 groove;
-	width: 202px;
 	height: 300px;
 	margin-left: 4px;
 	margin-bottom: 0;
+}
+
+div.left_panel, div#lftBar {
+	width: 200px;
+}
+
+div.right_panel, div#rgtBar {
+	width: 250px;
 }
 
 .fb_panel div#fb_panel_header {
@@ -51,7 +71,7 @@ div.fb_panel {
 	color: #404040;
 	font-weight: bold;
 	text-align: left; 
-	padding: 1px 20px 0;
+	padding: 1px 20px 0px;
 	margin: 0 0 0 5px;
 }
 .fb_panel div#fb_panel_header div#fb_panel_header_icon {
