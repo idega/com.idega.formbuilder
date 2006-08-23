@@ -27,19 +27,31 @@
 	</tag>
 	<tag>
 		<name>fbpanel</name>
-		<tag-class>com.idega.formbuiler.presentation.FBPanelTag</tag-class>
+		<tag-class>com.idega.formbuilder.presentation.FBPanelTag</tag-class>
 		<attribute>
 			<name>id</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<name>binding</name>
-			<description>A value binding that points to a bean property</description>
+			<name>title</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<name>rendered</name>
-			<description>The client id of this component</description>
+			<name>top</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>left</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
 	<tag>
