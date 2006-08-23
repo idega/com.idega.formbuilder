@@ -5,7 +5,13 @@
   "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
 
 <faces-config>
-
+	<render-kit>
+	     <renderer>
+	          <component-family>webface</component-family>
+	          <renderer-type>fb_toolbar</renderer-type>
+	          <renderer-class>com.idega.formbuilder.presentation.renderkit.FBToolbarRenderer</renderer-class>
+	     </renderer>
+	</render-kit>
 	<render-kit>
 	     <renderer>
 	          <component-family>formbuilder</component-family>
@@ -13,10 +19,12 @@
 	          <renderer-class>com.idega.formbuilder.presentation.renderkit.PanelRenderer</renderer-class>
 	     </renderer>
 	</render-kit>
-
+	<component>
+		<component-type>FBToolbar</component-type>
+		<component-class>com.idega.formbuilder.presentation.FBToolbar</component-class>
+	</component>
 	<component>
 		<component-type>FBPanel</component-type>
 		<component-class>com.idega.formbuilder.presentation.FBPanel</component-class>
 	</component>
-
 </faces-config>
