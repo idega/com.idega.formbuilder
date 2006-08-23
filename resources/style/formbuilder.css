@@ -25,3 +25,36 @@
     width:143px;
     top:0;
     right:0;}
+
+div.fb_panel {
+	border: 1px #000 groove;
+	width: 202px;
+	height: 300px;
+	margin-left: 4px;
+	margin-bottom: 0;
+}
+
+.fb_panel div#fb_panel_header {
+	width: 100%;
+	border-top: 1px #fff solid;
+	border-bottom: 1px #000 groove;
+	height: 25px;
+	background: url(wf_background.gif) repeat-x;
+	padding: 6px 0 0 0px;
+	color: #515151;
+	font-weight: bold;
+	font-size: 1.2em;
+	font-variant: small-caps;
+}
+
+.fb_panel div#fb_panel_header div#fb_panel_header_text {
+	color: #404040;
+	font-weight: bold;
+	text-align: left; 
+	padding: 1px 20px 0;
+	margin: 0 0 0 5px;
+}
+.fb_panel div#fb_panel_header div#fb_panel_header_icon {
+	padding: 4px 5px 0;
+	margin: 0;
+}
