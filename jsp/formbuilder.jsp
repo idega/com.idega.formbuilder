@@ -11,20 +11,16 @@
 	<f:view>
 		<ws:page id="formbuilder">
 			<h:form id="workspaceform1">
-				<fb:container id="level0" style="height: 100%">
+				<fb:container id="level0">
 					<fb:container id="lftBar">
-						<f:verbatim>
-    This is the left navigation ...
-    </f:verbatim>
+						<fb:fbpanel title="antanas" styleClass="fb_panel left_panel" />
 					</fb:container>
 					<fb:container id="level1">
 
 						<fb:container id="level2">
 
 							<fb:container id="rgtBar">
-								<f:verbatim>
-          This is the right navigation...
-          </f:verbatim>
+						<fb:fbpanel title="X X X" styleClass="fb_panel right_panel" />
 							</fb:container>
 							<fb:container id="level3">
 								<fb:container id="toolBar">
