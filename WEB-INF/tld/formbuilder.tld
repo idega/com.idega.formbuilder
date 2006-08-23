@@ -5,15 +5,28 @@
   
 <taglib>
 
-    <tlib-version>0.1.0</tlib-version>
+    <tlib-version>0.9.0</tlib-version>
     <jsp-version>1.2</jsp-version>
-    <short-name>Idega Formbuilder Tag Library</short-name>
-    <description>JSF Idega Formbuilder Tag Library</description>
-    <uri>http://xmlns.idega.com/com.idega.formbuiler</uri>
-
+    <short-name>Idega Frombuilder Tag Library</short-name>
+    <description>JSF Idega Frombuilder Tag Library</description>
+    <uri>http://xmlns.idega.com/com.idega.formbuilder</uri>
 
 	<tag>
-		<name>FBPanel</name>
+		<name>toolbar</name>
+		<tag-class>com.idega.formbuilder.presentation.FBToolbarTag</tag-class>
+		<attribute>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>fbpanel</name>
 		<tag-class>com.idega.formbuiler.presentation.FBPanelTag</tag-class>
 		<attribute>
 			<name>id</name>
@@ -29,5 +42,4 @@
 			<description>The client id of this component</description>
 		</attribute>
 	</tag>
-	
 </taglib>
