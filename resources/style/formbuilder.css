@@ -1,1 +1,27 @@
-.fb_bgg {background-color: green; }
+#level0 {
+    background:#FC0;}
+  #level1 {
+    margin-left:143px;
+    padding-left:9px;
+    background:#FFF;}
+  #level2 {
+    background:#FFF3AC;}
+  #level3 {
+    margin-right:143px;
+    padding-right:9px;
+    background:#FFF;}
+  #main {
+    background:#CCC;}
+    
+    #toolBar{
+    background:white;}
+    #lftBar {
+	float:left;
+    width:143px;
+    top:0px;
+    left:9px;}
+    #rgtBar {
+    float:right;
+    width:143px;
+    top:0;
+    right:0;}
