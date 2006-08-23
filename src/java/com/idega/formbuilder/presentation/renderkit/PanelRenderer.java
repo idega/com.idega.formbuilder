@@ -19,7 +19,7 @@ public class PanelRenderer extends Renderer {
 		ResponseWriter writer = context.getResponseWriter();
 		FBPanel panel = (FBPanel) component;
 		writer.startElement("DIV", panel);
-		writer.writeAttribute("style", "position: absolute; top: " + panel.getTop() + "px; left: " + panel.getLeft() + "px;","position");
+		//writer.writeAttribute("style", "position: absolute; top: " + panel.getTop() + "px; left: " + panel.getLeft() + "px;","position");
 		writer.writeAttribute("class", panel.getStyleClass(), "styleClass");
 			writer.startElement("DIV", panel);
 			writer.writeAttribute("id", "fb_panel_header", "headerStyle");
