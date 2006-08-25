@@ -59,7 +59,7 @@ div.right_panel, div#rgtBar {
 	border-top: 1px #fff solid;
 	border-bottom: 1px #000 groove;
 	height: 25px;
-	background: url(wf_background.gif) repeat-x;
+	background: url(../images/wf_background.gif) repeat-x;
 	padding: 6px 0 0 0px;
 	color: #515151;
 	font-weight: bold;
@@ -77,4 +77,16 @@ div.right_panel, div#rgtBar {
 .fb_panel div#fb_panel_header div#fb_panel_header_icon {
 	padding: 4px 5px 0;
 	margin: 0;
+}
+
+.main_toolbar {
+	
+	
+/*	background-color: red;	*/
+}
+
+.main_toolbar_buttons {
+
+	padding-right:5px;
+/*	background-color: green;*/
 }
