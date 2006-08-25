@@ -38,4 +38,8 @@
 		<component-type>FBContainer</component-type>
 		<component-class>com.idega.formbuilder.presentation.FBContainer</component-class>
 	</component>
+	<component>
+		<component-type>FBToolbarButton</component-type>
+		<component-class>com.idega.formbuilder.presentation.FBToolbarButton</component-class>
+	</component>
 </faces-config>
