@@ -16,18 +16,17 @@
 						<fb:fbpanel title="antanas" styleClass="fb_panel left_panel" />
 					</fb:container>
 					<fb:container id="level1">
-
 						<fb:container id="level2">
-
 							<fb:container id="rgtBar">
-						<fb:fbpanel title="X X X" styleClass="fb_panel right_panel" />
+								<fb:fbpanel title="X X X" styleClass="fb_panel right_panel" />
 							</fb:container>
 							<fb:container id="level3">
 								<fb:container id="toolBar">
-									<fb:toolbar id="FBtoolbar">
-					<wf:toolbarbutton id="button1" displayText="aaaaaa" />
-					<wf:toolbarbutton id="button2" displayText="uhuhu" />
-				</fb:toolbar>
+									<fb:toolbar id="FBtoolbar" buttonsStyleClass="main_toolbar_buttons" styleClass="main_toolbar">
+										<fb:toolbarbutton image="toolbar_new.gif" tooltip="New Form" onmouseover="toolbar_save.gif" onmousedown="toolbar_delete.gif" />
+										<fb:toolbarbutton image="toolbar_save.gif" tooltip="Save Form" />
+										<fb:toolbarbutton image="toolbar_delete.gif" tooltip="Delete Form" />
+									</fb:toolbar>
 								</fb:container>
 								<fb:container id="main">
 									<f:verbatim>CONTENT -</f:verbatim>
@@ -36,18 +35,6 @@
 						</fb:container>
 					</fb:container>
 				</fb:container>
-				<!--<fb:toolbar id="FBtoolbar" styleClass="fb_bgg">
-					<wf:toolbarbutton id="button1" displayText="aaaaaa" styleClass="fb_bgg" />
-					<wf:toolbarbutton id="button2" displayText="uhuhu" />
-				</fb:toolbar>
-				<fb:container
-					style="width: 100px; height: 100px; background-color: red;">
-				</fb:container>
-				<fb:container
-					style="width: 100px; height: 100px; background-color: yellow;">
-
-				</fb:container>
-			-->
 			</h:form>
 		</ws:page>
 	</f:view>
