@@ -14,11 +14,21 @@ import com.idega.webface.WFToolbar;
 public class FBToolbar extends WFToolbar {
 	
 	private static String RENDERER_TYPE = "fb_toolbar";
+	private String buttonsStyleClass;
 	
 	public static String getToolbarRendererType() {
 		return RENDERER_TYPE;
 	}
 	
+	public String getButtonsStyleClass() {
+		return buttonsStyleClass;
+	}
+
+	public void setButtonsStyleClass(String buttonsStyleClass) {
+		if(buttonsStyleClass != null)
+			this.buttonsStyleClass = buttonsStyleClass;
+	}
+
 	public FBToolbar(){
 		setRendererType(getToolbarRendererType());
 		setToolbarStyle();

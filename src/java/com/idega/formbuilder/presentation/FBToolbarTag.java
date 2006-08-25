@@ -1,5 +1,7 @@
 package com.idega.formbuilder.presentation;
 
+import javax.faces.component.UIComponent;
+
 import org.apache.myfaces.shared_tomahawk.taglib.UIComponentTagBase;
 
 /**
@@ -10,6 +12,7 @@ import org.apache.myfaces.shared_tomahawk.taglib.UIComponentTagBase;
 public class FBToolbarTag extends UIComponentTagBase {
 
 	private String styleClass;
+	private String buttonsStyleClass;
 	
 	public String getStyleClass() {
 		return styleClass;
@@ -36,6 +39,27 @@ public class FBToolbarTag extends UIComponentTagBase {
 	public String getRendererType() {
 		return FBToolbar.getToolbarRendererType();
 	}
+
+	public String getButtonsStyleClass() {
+		return buttonsStyleClass;
+	}
+
+	public void setButtonsStyleClass(String buttonsStyleClass) {
+		this.buttonsStyleClass = buttonsStyleClass;
+	}
 	
-	
+	@Override
+	protected void setProperties(UIComponent component) {
+		
+		super.setProperties(component);
+		FBToolbar toolbar = (FBToolbar)component;
+		
+	    if(toolbar != null) {
+	        if(buttonsStyleClass != null)
+	            toolbar.setButtonsStyleClass(buttonsStyleClass);
+	        
+	        if(styleClass != null)
+	            toolbar.setStyleClass(styleClass);
+	    }
+	}
 }
