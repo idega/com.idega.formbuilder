@@ -1,92 +1,188 @@
-div#level0 {
-    /*background:#FC0;*/
+/*---Basic tag styles---*/
+a {
+	color: red;
+	text-decoration: none;
+}
+body {
+	font-size: 0.8em;
+	text-align: center;
+	background-color: #E2EBED;
+	font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
+	margin: 0px;
+	padding: 0px;
+}
+img {
+	border: 0px;
 }
 
-div#level1 {
-    margin-left:205px;
-    padding-left:9px;
-    /*background:#FFF;*/
-}
-
-div#level2 {
-/*    background:#FFF3AC;*/
-        padding-right:9px;
-}
-
-div#level3 {
-    margin-right: 250px;
-    padding-right:9px;
-/*    background:#FFF;*/
-}
-
-div#main {
-/*    background:#CCC;*/
-}
-    
-div#toolBar {
-/*    background:white;*/
-}
-
-div#lftBar {
-	float:left;
-    top:0px;
-    left:9px;
-}
-
-div#rgtBar {
-    float:right;
-    top:0;
-    right:9px;
-}
-
-div.fb_panel {
+/*---Page layout styles---*/
+.application_container {
 	border: 1px #000 groove;
-	height: 300px;
-	margin-left: 4px;
-	margin-bottom: 0;
+	margin-top: 10px;
+	margin-left: 10px;
+	margin-right: 10px;
+	height: 570px;
+	padding-bottom: 10px;
+}
+.toolbar_container {
+	border: 1px #000 groove;
+	margin-top: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
+	background: #F2F2F2;
+	height: 30px;
+}
+.main_container {
+	border: 1px #000 groove;
+	margin-top: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-bottom: 5px;
+	padding-bottom: 5px;
+	background: #F2F2F2;
+	height: 90%;
+}
+.options_container {
+	border: 1px #000 groove;
+	margin-top: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
+	padding-right: 5px;
+	padding-left: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	width: 35%;
+	height: 95%;
+}
+.form_container {
+	border: 1px #000 groove;
+	margin-top: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
+	padding: 5px;
+	width: 60%;
+	height: 69%;
+	position: absolute;
+	top: 143px;
+	right: 17px;
 }
 
-div.left_panel, div#lftBar {
-	width: 200px;
+/*---Top menu styles---*/
+#dhtmlgoodies_menu {		
+	font-family: arial;
+	width: auto;
+	margin-left: 5px;
+	padding-left: 5px;
+}
+#dhtmlgoodies_menu	li {
+	margin: 0px;
+	list-style: none;
+	float: left;
+	padding: 0px;
+}
+#dhtmlgoodies_menu ul {	
+	margin: 0px;
+	padding: 0px;
+	float: left;
+}
+#dhtmlgoodies_menu	li a {
+	text-decoration: none;
+	color: #000;
+	height: 20px;
+	width: 75px;
+	line-height: 20px;
+	vertical-align: middle;
+	border: 1px solid #000;
+	background-color: #FAFAFA;
+	margin: 1px;
+	padding: 1px;
+	display: block;
+	float: left;
+	font-size: 1.0em;
+}
+#dhtmlgoodies_menu	li a:hover {
+	color: #FFF;
+	background-color: #317082;
 }
 
-div.right_panel, div#rgtBar {
-	width: 250px;
+/*---Options tabbed pane styles---*/
+.dhtmlgoodies_tabPane{
+	height: 21px;	/* Height of tabs */
+	border-bottom: 1px solid #919b9c;
+}
+.dhtmlgoodies_aTab{
+	border-left: 1px solid #919b9c;
+	border-right: 1px solid #919b9c;
+	border-bottom: 1px solid #919b9c;
+	font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
+	padding: 5px;		
+}
+.dhtmlgoodies_tabPane DIV{
+	float: left;
+	height: 100%;
+	padding-left: 3px;
+	vertical-align: middle;
+	background-repeat: no-repeat;
+	background-position: bottom left;
+	cursor: pointer;
+	position: relative;
+	bottom: -1px;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+.dhtmlgoodies_tabPane .tabActive{
+	background-image:url('../images/tab_left_active.gif');
+	margin-left:0px;
+	margin-right:0px;	
+	z-index:10;	
+}
+.dhtmlgoodies_tabPane .tabInactive{
+	background-image:url('../images/tab_left_inactive.gif');
+	margin-left:0px;
+	margin-right:0px;
+	z-index:1;
+}
+.dhtmlgoodies_tabPane .inactiveTabOver{
+	background-image:url('../images/tab_left_over.gif');
+	margin-left:0px;
+	margin-right:0px;
+}
+.dhtmlgoodies_tabPane span{
+	font-family:arial;
+	vertical-align:top;
+	font-size:11px;
+	padding-left:3px;
+	padding-right:3px;		
+	line-height:21px;
+	float:left;
+}
+.dhtmlgoodies_tabPane .tabActive span{
+	padding-bottom:1px;
+	line-height:20px;
+}
+.dhtmlgoodies_tabPane img{
+	float:left;
 }
 
-.fb_panel div#fb_panel_header {
-	width: 100%;
-	border-top: 1px #fff solid;
-	border-bottom: 1px #000 groove;
-	height: 25px;
-	background: url(../images/wf_background.gif) repeat-x;
-	padding: 6px 0 0 0px;
-	color: #515151;
-	font-weight: bold;
-	font-size: 1.2em;
-	font-variant: small-caps;
-}
 
-.fb_panel div#fb_panel_header div#fb_panel_header_text {
-	color: #404040;
-	font-weight: bold;
-	text-align: left; 
-	padding: 1px 20px 0px;
-	margin: 0 0 0 5px;
+.modalDialog_transparentDivs {	
+	filter: alpha(opacity=40);	/* Transparency */
+	opacity: 0.4;	/* Transparency */
+	background-color: #AAA;
+	z-index: 1;
+	position: absolute; /* Always needed	*/
 }
-.fb_panel div#fb_panel_header div#fb_panel_header_icon {
-	padding: 4px 5px 0;
-	margin: 0;
+.modalDialog_contentDiv {
+	border: 3px solid #000;	
+	padding: 2px;
+	z-index: 100;/* Always needed	*/
+	position: absolute;	/* Always needed	*/
+	background-color: #FFF;	/* White background color for the message */
 }
-
-.main_toolbar {
-	
-	
-/*	background-color: red;	*/
-}
-
-.main_toolbar_buttons {
-
-	padding-right:5px;
-/*	background-color: green;*/
+.modalDialog_contentDiv_shadow{
+	z-index: 90;/* Always needed	- to make it appear below the message */
+	position: absolute;	/* Always needed	*/
+	background-color: #555;
+	filter: alpha(opacity=30);	/* Transparency */
+	opacity: 0.3;	/* Transparency */	
 }
