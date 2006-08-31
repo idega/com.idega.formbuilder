@@ -23,6 +23,13 @@
       <roles/>
     </developer>
     <developer>
+      <name>Gediminas Paulauskas</name>
+      <id>gediminas</id>
+      <email>gediminas@idega.com</email>
+      <organization>idega software</organization>
+      <roles/>
+    </developer>
+    <developer>
       <name>Aleksandras Skrynikovas</name>
       <id>alexis</id>
       <email>alexis@idega.com</email>
@@ -43,5 +50,19 @@
       <version>3.5.0</version>
       <type>jar</type>
     </dependency>
+    <!-- 
+    <dependency>
+      <groupId>org.apache.myfaces.trinidad</groupId>
+      <artifactId>trinidad-api</artifactId>
+      <version>incubator-m1-SNAPSHOT</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.myfaces.trinidad</groupId>
+      <artifactId>trinidad-impl</artifactId>
+      <version>incubator-m1-SNAPSHOT</version>
+      <type>jar</type>
+    </dependency>
+     -->
   </dependencies>
 </project>
