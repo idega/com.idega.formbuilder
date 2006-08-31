@@ -5,6 +5,12 @@
   "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
 
 <faces-config>
+<!-- 
+	<application>
+    	<default-render-kit-id>org.apache.myfaces.trinidad.core</default-render-kit-id>
+  	</application>
+  	-->
+
 	<render-kit>
 	     <renderer>
 	          <component-family>webface</component-family>
