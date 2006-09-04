@@ -12,7 +12,7 @@
     <description>JSF Idega Frombuilder Tag Library</description>
 
 	<tag>
-		<name>field</name>
+		<name>formField</name>
 		<tag-class>com.idega.formbuilder.presentation.FBFormFieldTag</tag-class>
 		<attribute>
 			<name>id</name>

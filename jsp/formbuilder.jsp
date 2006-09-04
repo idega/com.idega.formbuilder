@@ -85,7 +85,7 @@
 						       	var="field"
 						        value="#{palette.fields}"
 						        layout="unorderedList">
-						        <fb:field value="#{field.name}" />
+						        <fb:formField value="#{formField.name}" />
 						    </t:dataList>
 							<f:verbatim>
 								<script type="text/javascript">
