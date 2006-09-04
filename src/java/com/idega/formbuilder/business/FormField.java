@@ -2,12 +2,13 @@ package com.idega.formbuilder.business;
 
 import java.io.Serializable;
 
-public class Field implements Serializable {
+public class FormField implements Serializable {
 	
+	private static final long serialVersionUID = -1462694114806788168L;
 	private String name;
 	private String type;
 	
-	public Field(String name, String type) {
+	public FormField(String name, String type) {
 		this.name = name;
 		this.type = type;
 	}
