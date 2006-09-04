@@ -5,12 +5,21 @@
   "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
 
 <faces-config>
-<!-- 
+	<!-- 
 	<application>
     	<default-render-kit-id>org.apache.myfaces.trinidad.core</default-render-kit-id>
   	</application>
-  	-->
-
+  	 -->
+  	<managed-bean>
+		<managed-bean-name>palette</managed-bean-name>
+		<managed-bean-class>com.idega.formbuilder.business.ComponentPalette</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>field</managed-bean-name>
+		<managed-bean-class>com.idega.formbuilder.business.Field</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
 	<render-kit>
 	     <renderer>
 	          <component-family>webface</component-family>
@@ -32,6 +41,17 @@
 	          <renderer-class>com.idega.formbuilder.presentation.renderkit.ContainerRenderer</renderer-class>
 	     </renderer>
 	</render-kit>
+	<render-kit>
+	     <renderer>
+	          <component-family>formbuilder</component-family>
+	          <renderer-type>fb_field</renderer-type>
+	          <renderer-class>com.idega.formbuilder.presentation.renderkit.FieldRenderer</renderer-class>
+	     </renderer>
+	</render-kit>
+	<component>
+		<component-type>FBFormField</component-type>
+		<component-class>com.idega.formbuilder.presentation.FBFormField</component-class>
+	</component>
 	<component>
 		<component-type>FBToolbar</component-type>
 		<component-class>com.idega.formbuilder.presentation.FBToolbar</component-class>
