@@ -4,13 +4,16 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:wf="http://xmlns.idega.com/com.idega.webface"
 	xmlns:ws="http://xmlns.idega.com/com.idega.workspace" version="1.2"
-	xmlns:t="http://myfaces.apache.org/tomahawk">
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:tr="http://myfaces.apache.org/trinidad">
 	<jsp:directive.page contentType="text/html" />
 	<f:view>
 		<ws:page id="formbuilder" javascripturls="/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax.js,
 												/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/tab-view.js,
 												/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/modal-message.js,
-												/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax-dynamic-content.js">
+												/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax-dynamic-content.js,
+												/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/prototype.js,
+												/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/scriptaculous.js">
 			<h:form id="workspaceform1">
 				<wf:container styleClass="application_container">
 					<wf:container styleClass="toolbar_container">
@@ -54,8 +57,11 @@
 								  </div>
 								  <div class="dhtmlgoodies_aTab">
 								    Elements
-								  	<ul>
-										<li><a href="#">New form</a></li>
+								  	<ul id="firstlist">
+										<li></f:verbatim>
+											<h:outputText value="Some text" />
+										<f:verbatim>
+										</li>
 										<li><a href="#">Save form</a></li>
 										<li><a href="#">Delete form</a></li>
 										<li><a href="#">Import</a></li>
@@ -72,13 +78,24 @@
 									initTabs('dhtmlgoodies_tabView1',Array('Form properties','Add field','Form properties'),1,400,400);
 								</script>
 							</f:verbatim>
+				
 						</wf:container>
 						<wf:container styleClass="form_container">
 							<f:verbatim>
-								
+								<ul id="secondlist">
+									<li><a href="#">New form</a></li>
+									<li><a href="#">Save form</a></li>
+								</ul>
+								<script type="text/javascript">
+									// <![CDATA[
+									   Sortable.create("firstlist",{dropOnEmpty:true,containment:["firstlist","secondlist"],constraint:false});
+									   Sortable.create("secondlist",{dropOnEmpty:true,containment:["firstlist","secondlist"],constraint:false});
+									 // ]]>
+								</script>
 							</f:verbatim>
 						</wf:container>
 					</wf:container>
+					
 				</wf:container>
 			</h:form>
 		</ws:page>
