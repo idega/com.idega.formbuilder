@@ -16,8 +16,8 @@
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
-		<managed-bean-name>field</managed-bean-name>
-		<managed-bean-class>com.idega.formbuilder.business.Field</managed-bean-class>
+		<managed-bean-name>formField</managed-bean-name>
+		<managed-bean-class>com.idega.formbuilder.business.FormField</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
 	<render-kit>
