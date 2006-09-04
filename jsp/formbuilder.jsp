@@ -3,9 +3,9 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:wf="http://xmlns.idega.com/com.idega.webface"
+	xmlns:fb="http://xmlns.idega.com/com.idega.formbuilder"
 	xmlns:ws="http://xmlns.idega.com/com.idega.workspace" version="1.2"
-	xmlns:t="http://myfaces.apache.org/tomahawk"
-	xmlns:tr="http://myfaces.apache.org/trinidad">
+	xmlns:t="http://myfaces.apache.org/tomahawk">
 	<jsp:directive.page contentType="text/html" />
 	<f:view>
 		<ws:page id="formbuilder" javascripturls="/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax.js,
@@ -58,9 +58,9 @@
 								  <div class="dhtmlgoodies_aTab">
 								    Elements
 								  	<ul id="firstlist">
-										<li></f:verbatim>
-											<h:outputText value="Some text" />
-										<f:verbatim>
+										<li>
+											<a href="#">New form</a>
+										
 										</li>
 										<li><a href="#">Save form</a></li>
 										<li><a href="#">Delete form</a></li>
@@ -78,24 +78,25 @@
 									initTabs('dhtmlgoodies_tabView1',Array('Form properties','Add field','Form properties'),1,400,400);
 								</script>
 							</f:verbatim>
-				
 						</wf:container>
 						<wf:container styleClass="form_container">
+							<t:dataList id="secondlist"
+						        styleClass="standardList" 
+						       	var="field"
+						        value="#{palette.fields}"
+						        layout="unorderedList">
+						        <fb:field value="#{field.name}" />
+						    </t:dataList>
 							<f:verbatim>
-								<ul id="secondlist">
-									<li><a href="#">New form</a></li>
-									<li><a href="#">Save form</a></li>
-								</ul>
 								<script type="text/javascript">
 									// <![CDATA[
-									   Sortable.create("firstlist",{dropOnEmpty:true,containment:["firstlist","secondlist"],constraint:false});
-									   Sortable.create("secondlist",{dropOnEmpty:true,containment:["firstlist","secondlist"],constraint:false});
+									   Sortable.create("firstlist",{dropOnEmpty:true,containment:["firstlist","workspaceform1:secondlist"],constraint:false});
+									   Sortable.create("workspaceform1:secondlist",{dropOnEmpty:true,containment:["firstlist","workspaceform1:secondlist"],constraint:false});
 									 // ]]>
 								</script>
 							</f:verbatim>
 						</wf:container>
 					</wf:container>
-					
 				</wf:container>
 			</h:form>
 		</ws:page>
