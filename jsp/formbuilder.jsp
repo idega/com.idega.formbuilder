@@ -12,8 +12,7 @@
 												/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/tab-view.js,
 												/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/modal-message.js,
 												/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax-dynamic-content.js,
-												/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/prototype.js,
-												/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/scriptaculous.js">
+												/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/drag-drop-custom.js">
 			<h:form id="workspaceform1">
 				<wf:container styleClass="application_container">
 					<wf:container styleClass="toolbar_container">
@@ -28,74 +27,41 @@
 									<li><a href="#">Switch form</a></li>
 								</ul>
 							</div>
-							<script type="text/javascript">
-								messageObj = new DHTML_modalMessage();
-								messageObj.setShadowOffset(5);
-
-								function displayMessage(url) {
-									messageObj.setSource(url);
-									messageObj.setCssClassMessageBox(false);
-									messageObj.setSize(250,100);
-									messageObj.setShadowDivVisible(true);
-									messageObj.display();
-								}
-
-								function closeMessage() {
-									messageObj.close();	
-								}
-							</script>
 						</f:verbatim>
 						<h:selectOneMenu />
 					</wf:container>
 					<wf:container styleClass="main_container">
-						<wf:container styleClass="options_container">
-							<f:verbatim>
-								<div id="dhtmlgoodies_tabView1">
-								  <div class="dhtmlgoodies_aTab">
-								    Content of tab 1
-								  
-								  </div>
-								  <div class="dhtmlgoodies_aTab">
-								    Elements
-								  	<ul id="firstlist">
-										<li>
-											<a href="#">New form</a>
-										
-										</li>
-										<li><a href="#">Save form</a></li>
-										<li><a href="#">Delete form</a></li>
-										<li><a href="#">Import</a></li>
-										<li><a href="#">Export</a></li>
-										<li><a href="#">Switch form</a></li>
-									</ul>
-								  </div>
-								  <div class="dhtmlgoodies_aTab">
-								    Content of tab 3
-								  
-								  </div>
-								</div>
-								<script type="text/javascript">
-									initTabs('dhtmlgoodies_tabView1',Array('Form properties','Add field','Form properties'),1,400,400);
-								</script>
-							</f:verbatim>
-						</wf:container>
-						<wf:container styleClass="form_container">
-							<t:dataList id="secondlist"
-						        styleClass="standardList" 
-						       	var="field"
-						        value="#{palette.fields}"
-						        layout="unorderedList">
-						        <fb:formField value="#{formField.name}" />
-						    </t:dataList>
-							<f:verbatim>
-								<script type="text/javascript">
-									// <![CDATA[
-									   Sortable.create("firstlist",{dropOnEmpty:true,containment:["firstlist","workspaceform1:secondlist"],constraint:false});
-									   Sortable.create("workspaceform1:secondlist",{dropOnEmpty:true,containment:["firstlist","workspaceform1:secondlist"],constraint:false});
-									 // ]]>
-								</script>
-							</f:verbatim>
-						</wf:container>
+						  	<wf:container styleClass="options_container" id="options">
+								<t:div id="dhtmlgoodies_tabView1" forceId="true">
+									<t:div styleClass="dhtmlgoodies_aTab">
+									  	<h:outputText value="Content of tab 1" />
+									</t:div>
+									<t:div styleClass="dhtmlgoodies_aTab" id="component_palette" forceId="true">
+									  	<t:dataList forceId="true"
+									  		id="firstlist"
+											styleClass="components_list"
+											itemStyleClass=""
+											var="field"
+											value="#{palette.fields}"
+											layout="unorderedList">
+											<t:div styleClass="palette_component" id="field" forceId="true" forceIdIndex="true">
+												<h:outputLabel value="#{field.name}" />
+											</t:div>
+										</t:dataList>
+									</t:div>
+									<t:div styleClass="dhtmlgoodies_aTab">
+									    <h:outputText value="Content of tab 3" />
+									</t:div>
+								</t:div>
+							</wf:container>
+							<wf:container styleClass="form_container">
+								<t:div id="dropBox" forceId="true" styleClass="dropBox">
+									<h:outputText value="This is your form" />
+								</t:div>
+							    <f:verbatim>
+							    	<script type="text/javascript" src="/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js" />
+							    </f:verbatim>
+							</wf:container>
 					</wf:container>
 				</wf:container>
 			</h:form>
