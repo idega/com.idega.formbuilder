@@ -12,6 +12,8 @@ Thank you!
 www.dhtmlgoodies.com
 Alf Magne Kalleland
 
+trash
+
 ************************************************************************************************************/
 
 var enableCache = true;
