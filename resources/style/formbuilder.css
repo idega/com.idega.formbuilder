@@ -26,7 +26,7 @@ img {
 	margin-left: 5px;
 	margin-right: 5px;
 	background: #E2EBED;
-	height: 20px;
+	height: 24px;
 }
 .main_container {
 	margin: 5px;
@@ -107,14 +107,33 @@ img {
 	margin: 0px;
 	padding: 1px;
 	display: block;
-	float: left;
+	font-size: 1.0em;
+}
+.toolbar_field {
+	text-decoration: none;
+	color: #000;
+	height: 20px;
+	width: 200px;
+	line-height: 20px;
+	vertical-align: middle;
+	border: 1px solid #000;
+	background-color: #FAFAFA;
+	margin: 0px;
+	padding: 1px;
+	display: block;
 	font-size: 1.0em;
 }
 .toolbar_button:hover {
 	color: #FFF;
 	background-color: #317082;
 	text-decoration: none;
-}	
+}
+.float_left {
+	float: left;
+}
+.float_right {
+	float: right;
+}
 
 /*---Options tabbed pane styles---*/
 table {
@@ -123,7 +142,7 @@ table {
     border-spacing: 0px                      ! important;
     padding: 0px                             ! important;
     border-width: 0px                        ! important;
-    empty-cells: show                        ! important;
+    /*empty-cells: show                        ! important;*/
 }
 td { 
 	border-spacing: 0px                      ! important;
@@ -156,19 +175,21 @@ td.activeTab {
 	border-left: 2px solid #fff              ! important;
 	border-right: 2px solid #aaacae          ! important;
 	border-bottom: 0px none                  ! important;
-	padding: 2px                             ! important;
-	height: 4ex                              ! important;
-	font-size: 14px                          ! important;
+	padding: 0px                             ! important;
+	height: 20px                             ! important;
+	font-size: 12px                          ! important;
 	horizontal-align: center                 ! important;
 	text-align: center                       ! important;
 	width: 155px							 ! important;
 }
 td.activeTab input { 
 	background-color: #e0e0ec                ! important;
-	font-size: 14px                          ! important;
+	font-size: 12px                          ! important;
 	horizontal-align: center                 ! important;
 	text-align: center                       ! important;
-	border: none							 ! important; 
+	border: none							 ! important;
+	height: 20px							 ! important;
+	margin: 0px								 ! important;
 }
 td.inactiveTab { 
 	background-color: #c8c8d8                ! important;
@@ -176,19 +197,21 @@ td.inactiveTab {
 	border-left: 2px solid #ebecef           ! important;
 	border-right: 2px solid #8a8c8e          ! important;
 	border-bottom: 0px none                  ! important;
-	padding: 2px                             ! important;
-	height: 4ex                              ! important;
-	font-size: 14px                          ! important;
+	padding: 0px                             ! important;
+	height: 20px                             ! important;
+	font-size: 12px                          ! important;
 	horizontal-align: center                 ! important;
 	text-align: center                       ! important;
-	height: 4ex                              ! important;
 	width: 155px							 ! important;
 }
 td.inactiveTab input { 
 	background-color: #c8c8d8                ! important;
-	font-size: 100%                          ! important;
+	font-size: 12px                          ! important;
 	horizontal-align: center                 ! important;
 	text-align: center                       ! important;
+	border: none							 ! important;
+	height: 20px							 ! important;
+	margin: 0px								 ! important;
 }
 td.activeSub { 
 	background-color: #e0e0ec                ! important;

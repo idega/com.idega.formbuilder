@@ -13,7 +13,10 @@ public class ComponentPalette implements Serializable {
 	public ComponentPalette() {
 		fields.add(new FormField("Vardas", ""));
 		fields.add(new FormField("Profesija", ""));
-		fields.add(new FormField("Nieko", ""));
+		fields.add(new FormField("Email", ""));
+		fields.add(new FormField("Gymimo data", ""));
+		fields.add(new FormField("Checkbox", ""));
+		fields.add(new FormField("Input field", ""));
 	}
 
 	public List<FormField> getFields() {
@@ -22,6 +25,10 @@ public class ComponentPalette implements Serializable {
 
 	public void setFields(List<FormField> fields) {
 		this.fields = fields;
+	}
+	
+	public String sum() {
+		return "WOWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW";
 	}
 	
 }

@@ -8,6 +8,11 @@ public class FormField implements Serializable {
 	private String name;
 	private String type;
 	
+	public FormField() {
+		this.name = "";
+		this.type = "";
+	}
+	
 	public FormField(String name, String type) {
 		this.name = name;
 		this.type = type;
