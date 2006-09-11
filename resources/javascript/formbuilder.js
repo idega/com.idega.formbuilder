@@ -1,3 +1,6 @@
+function resulting() {
+	
+}
 function dropItems(idOfDraggedItem,targetId,x,y) {
 	/*if(targetId=='dropBox'){	// Item dropped on <div id="dropBox">
 		document.getElementById('dropBox').appendChild(document.getElementById(idOfDraggedItem));	// Appending dragged element as child of target box
@@ -12,7 +15,9 @@ function dropItems(idOfDraggedItem,targetId,x,y) {
 		html = html + htmlStart + innerHtml + htmlEnd;
 	}
 	document.getElementById('dropBox').innerHTML = html;
+	ComponentPalette.sum(resulting);
 }
+
 function setup(listObjId) {
 	var listObj = document.getElementById(listObjId);
 	var subDivs = listObj.getElementsByTagName('li');
@@ -37,5 +42,6 @@ setup('firstlist');
 dragDropObj.init();
 messageObj = new DHTML_modalMessage();
 messageObj.setShadowOffset(5);
+
 
 								
