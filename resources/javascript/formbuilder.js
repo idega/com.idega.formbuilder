@@ -4,7 +4,13 @@ function dropItems(idOfDraggedItem,targetId,x,y) {
 	}*/
 	var html = document.getElementById('dropBox').innerHTML;
 	var caption = document.getElementById(idOfDraggedItem).firstChild.firstChild.nodeValue;
-	if(html.length>0)html = html + '<div class="' + 'form_component' + '"><label>' + caption + '</label></div>';
+	var tabPaneDiv = "'dhtmlgoodies_tabView1'";
+	var htmlStart = '<div class="form_component" onClick="showTab(' + tabPaneDiv + ',1)">';
+	var htmlEnd = '</div>';
+	var innerHtml = '<label>some text</label><input type="text" value="" />';
+	if(html.length>0) {
+		html = html + htmlStart + innerHtml + htmlEnd;
+	}
 	document.getElementById('dropBox').innerHTML = html;
 }
 function setup(listObjId) {
@@ -25,7 +31,7 @@ function displayMessage(url) {
 function closeMessage() {
 	messageObj.close();	
 }
-initTabs('dhtmlgoodies_tabView1',Array('Form properties','Add new field','Field properties'),1,477,450);
+/*initTabs('dhtmlgoodies_tabView1',Array('Form properties','Add new field','Field properties'),1,477,450);*/
 var dragDropObj = new DHTMLSuite_dragDrop();
 setup('firstlist');
 dragDropObj.init();
