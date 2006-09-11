@@ -1,5 +1,5 @@
 /*---Basic tag styles---*/
-a {
+/*a {
 	color: red;
 	text-decoration: none;
 }
@@ -13,7 +13,7 @@ body {
 }
 img {
 	border: 0px;
-}
+}*/
 
 /*---Page layout styles---*/
 .application_container {
@@ -136,13 +136,13 @@ img {
 }
 
 /*---Options tabbed pane styles---*/
-table {
+/*table {
 	width: 477px							 ! important;
 	border-collapse: collapse                ! important;
     border-spacing: 0px                      ! important;
     padding: 0px                             ! important;
     border-width: 0px                        ! important;
-    /*empty-cells: show                        ! important;*/
+    empty-cells: show                        ! important;
 }
 td { 
 	border-spacing: 0px                      ! important;
@@ -161,7 +161,7 @@ th {
 	padding-bottom: 0px                      ! important;
 	background: #d8d9d4                      ! important;
 	white-space: nowrap                      ! important; 
-}
+}*/
 table.tabbedPane { 
 	width: 475px                             ! important;
     height: 470px                            ! important;
