@@ -94,27 +94,8 @@ img {
 	padding-left: 5%;
 	padding-right: 5%;
 	overflow: auto;
-}	
-
-/*---Top menu styles---*/
-#dhtmlgoodies_menu {		
-	font-family: arial;
-	width: auto;
-	margin-left: 5px;
-	padding-left: 5px;
 }
-#dhtmlgoodies_menu	li {
-	margin: 0px;
-	list-style: none;
-	float: left;
-	padding: 0px;
-}
-#dhtmlgoodies_menu ul {	
-	margin: 0px;
-	padding: 0px;
-	float: left;
-}
-#dhtmlgoodies_menu	li a {
+.toolbar_button {
 	text-decoration: none;
 	color: #000;
 	height: 20px;
@@ -129,9 +110,18 @@ img {
 	float: left;
 	font-size: 1.0em;
 }
-#dhtmlgoodies_menu	li a:hover {
+.toolbar_button:hover {
 	color: #FFF;
 	background-color: #317082;
+	text-decoration: none;
+}	
+
+/*---Top menu styles---*/
+#dhtmlgoodies_menu {		
+	font-family: arial;
+	width: auto;
+	margin-left: 5px;
+	padding-left: 0px;
 }
 
 /*---Options tabbed pane styles---*/
@@ -169,8 +159,8 @@ table.tabbedPane {
     border-spacing: 0px                      ! important; 
 }
 td.activeTab { 
-	/*background-color: #e0e0ec                ! important;*/
-	background-image:url('../images/tab_left_active.gif') !important;
+	background-color: #e0e0ec                ! important;
+	/*background-image:url('../images/tab_left_active.gif') !important;*/
 	border-top: 2px solid #fff               ! important;
 	border-left: 2px solid #fff              ! important;
 	border-right: 2px solid #aaacae          ! important;
@@ -233,65 +223,6 @@ td.tabContent {
 	height: 100%                             ! important;
 	text-align: justify                      ! important; 
 } 
-/*
-.dhtmlgoodies_tabPane{
-	height: 21px;
-	border-bottom: 1px solid #919b9c;
-}
-.dhtmlgoodies_aTab{
-	border-left: 1px solid #919b9c;
-	border-right: 1px solid #919b9c;
-	border-bottom: 1px solid #919b9c;
-	font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
-	padding: 5px;		
-}
-.dhtmlgoodies_tabPane DIV{
-	float: left;
-	height: 100%;
-	width: 150px;
-	padding-left: 3px;
-	vertical-align: middle;
-	background-repeat: no-repeat;
-	background-position: bottom left;
-	cursor: pointer;
-	position: relative;
-	bottom: -1px;
-	margin-left: 0px;
-	margin-right: 0px;
-}
-.dhtmlgoodies_tabPane .tabActive{
-	background-image:url('../images/tab_left_active.gif');
-	margin-left:0px;
-	margin-right:0px;	
-	z-index:10;	
-}
-.dhtmlgoodies_tabPane .tabInactive{
-	background-image:url('../images/tab_left_inactive.gif');
-	margin-left:0px;
-	margin-right:0px;
-	z-index:1;
-}
-.dhtmlgoodies_tabPane .inactiveTabOver{
-	background-image:url('../images/tab_left_over.gif');
-	margin-left:0px;
-	margin-right:0px;
-}
-.dhtmlgoodies_tabPane span{
-	font-family:arial;
-	vertical-align:top;
-	font-size:12px;
-	padding-left:3px;
-	padding-right:3px;		
-	line-height:21px;
-	float:left;
-}
-.dhtmlgoodies_tabPane .tabActive span{
-	padding-bottom:1px;
-	line-height:20px;
-}
-.dhtmlgoodies_tabPane img{
-	float:left;
-}*/
 
 /*---Popup model dialog styles---*/
 .modalDialog_transparentDivs {	
