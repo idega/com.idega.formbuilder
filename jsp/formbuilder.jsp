@@ -24,7 +24,7 @@
 					</wf:container>
 					<wf:container styleClass="main_container">
 						  	<wf:container styleClass="options_container" id="options">
-						  		<t:panelTabbedPane 
+						  		<t:panelTabbedPane id="options_tabbed_pane"
 						  			styleClass="tabbedPane"
 		                           	activeTabStyleClass="activeTab"
 		                           	inactiveTabStyleClass="inactiveTab"
