@@ -26,7 +26,7 @@ img {
 	margin-left: 5px;
 	margin-right: 5px;
 	background: #E2EBED;
-	height: 30px;
+	height: 20px;
 }
 .main_container {
 	margin: 5px;
@@ -104,7 +104,7 @@ img {
 	vertical-align: middle;
 	border: 1px solid #000;
 	background-color: #FAFAFA;
-	margin: 1px;
+	margin: 0px;
 	padding: 1px;
 	display: block;
 	float: left;
@@ -115,14 +115,6 @@ img {
 	background-color: #317082;
 	text-decoration: none;
 }	
-
-/*---Top menu styles---*/
-#dhtmlgoodies_menu {		
-	font-family: arial;
-	width: auto;
-	margin-left: 5px;
-	padding-left: 0px;
-}
 
 /*---Options tabbed pane styles---*/
 table {
@@ -160,28 +152,24 @@ table.tabbedPane {
 }
 td.activeTab { 
 	background-color: #e0e0ec                ! important;
-	/*background-image:url('../images/tab_left_active.gif') !important;*/
 	border-top: 2px solid #fff               ! important;
 	border-left: 2px solid #fff              ! important;
 	border-right: 2px solid #aaacae          ! important;
 	border-bottom: 0px none                  ! important;
 	padding: 2px                             ! important;
 	height: 4ex                              ! important;
-	font-size: 100%                          ! important;
+	font-size: 14px                          ! important;
 	horizontal-align: center                 ! important;
 	text-align: center                       ! important;
 	width: 155px							 ! important;
 }
 td.activeTab input { 
 	background-color: #e0e0ec                ! important;
-	font-size: 100%                          ! important;
+	font-size: 14px                          ! important;
 	horizontal-align: center                 ! important;
 	text-align: center                       ! important;
 	border: none							 ! important; 
 }
-/*td.activeTab input:active {
-	border: none							 ! important;
-}*/
 td.inactiveTab { 
 	background-color: #c8c8d8                ! important;
 	border-top: 2px solid #e3e5e7            ! important;
@@ -190,7 +178,7 @@ td.inactiveTab {
 	border-bottom: 0px none                  ! important;
 	padding: 2px                             ! important;
 	height: 4ex                              ! important;
-	font-size: 100%                          ! important;
+	font-size: 14px                          ! important;
 	horizontal-align: center                 ! important;
 	text-align: center                       ! important;
 	height: 4ex                              ! important;
@@ -198,15 +186,15 @@ td.inactiveTab {
 }
 td.inactiveTab input { 
 	background-color: #c8c8d8                ! important;
-	font-size: 100%                           ! important;
+	font-size: 100%                          ! important;
 	horizontal-align: center                 ! important;
 	text-align: center                       ! important;
 }
 td.activeSub { 
 	background-color: #e0e0ec                ! important;
 	padding: 0px                             ! important;
-	border-left: 2px solid #fff             ! important;
-	border-right: 2px solid #aaacae         ! important; 
+	border-left: 2px solid #fff              ! important;
+	border-right: 2px solid #aaacae          ! important; 
 }
 td.inactiveSub { 
 	background-color: #fff                   ! important;
@@ -214,10 +202,10 @@ td.inactiveSub {
 }
 td.tabContent { 
 	background-color: #e0e0ec                ! important;
-	border-top: 0px none                    ! important;
-	border-left: 2px solid #fff             ! important;
-	border-right: 2px solid #aaacae         ! important;
-	border-bottom: 2px solid #aaacae        ! important;
+	border-top: 0px none                     ! important;
+	border-left: 2px solid #fff              ! important;
+	border-right: 2px solid #aaacae          ! important;
+	border-bottom: 2px solid #aaacae         ! important;
 	vertical-align: top                      ! important;
 	padding: 20px                            ! important;
 	height: 100%                             ! important;
@@ -226,11 +214,11 @@ td.tabContent {
 
 /*---Popup model dialog styles---*/
 .modalDialog_transparentDivs {	
-	filter: alpha(opacity=40);	/* Transparency */
-	opacity: 0.4;	/* Transparency */
+	filter: alpha(opacity=40);
+	opacity: 0.4;
 	background-color: #AAA;
 	z-index: 1;
-	position: absolute; /* Always needed	*/
+	position: absolute;
 }
 .modalDialog_contentDiv {
 	border: 3px solid #000;	
