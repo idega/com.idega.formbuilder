@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+	<filter>
+        <filter-name>ajax4jsf</filter-name>
+        <filter-class>org.ajax4jsf.Filter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>ajax4jsf</filter-name>
+        <servlet-name>Faces Servlet</servlet-name>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>extensionsFilter</filter-name>
+        <url-pattern>*.faces</url-pattern>
+    </filter-mapping>
+</web-app>

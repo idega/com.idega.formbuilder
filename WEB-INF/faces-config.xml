@@ -5,11 +5,6 @@
   "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
 
 <faces-config>
-	<!-- 
-	<application>
-    	<default-render-kit-id>org.apache.myfaces.trinidad.core</default-render-kit-id>
-  	</application>
-  	 -->
   	<managed-bean>
 		<managed-bean-name>palette</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.business.ComponentPalette</managed-bean-class>
