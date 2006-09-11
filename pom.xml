@@ -74,5 +74,17 @@
       <version>2.3.2</version>
       <type>jar</type>
     </dependency>
+    <dependency>
+      <groupId>chiba</groupId>
+      <artifactId>chiba</artifactId>
+      <version>1.2.0</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>chiba</groupId>
+      <artifactId>chiba-web</artifactId>
+      <version>2.0.0rc1</version>
+      <type>jar</type>
+    </dependency>
   </dependencies>
 </project>
