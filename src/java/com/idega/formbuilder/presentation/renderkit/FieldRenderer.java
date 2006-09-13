@@ -9,6 +9,7 @@ import javax.faces.render.Renderer;
 
 import com.idega.formbuilder.presentation.FBFormField;
 
+
 public class FieldRenderer extends Renderer {
 
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
@@ -16,13 +17,16 @@ public class FieldRenderer extends Renderer {
 	}
 	
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
-		ResponseWriter writer = context.getResponseWriter();
+		
 		FBFormField field = (FBFormField) component;
+		
+		ResponseWriter writer = context.getResponseWriter();
+		
 		writer.startElement("DIV", field);
 		writer.writeAttribute("class", field.getStyleClass(), "styleClass");
-		System.out.println("Render end " + field.getValue());
 		writer.writeText(field.getValue(), null);
 		writer.endElement("DIV");
+		
 	}
 	
 	public void decode(FacesContext context, UIComponent component) {

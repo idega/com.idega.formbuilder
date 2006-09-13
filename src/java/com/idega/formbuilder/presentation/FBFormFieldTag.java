@@ -42,7 +42,6 @@ public class FBFormFieldTag extends UIComponentTagBase {
 	                ValueBinding vb = getFacesContext().getApplication().createValueBinding(this.value);
 	                panel.setValueBinding("value", vb);
 	            } else {
-	            	System.out.println("Setting field value");
 	            	panel.setValue(this.value);
 	            }
 			}

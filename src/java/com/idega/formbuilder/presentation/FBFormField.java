@@ -39,7 +39,6 @@ public class FBFormField extends UIPanel {
 		this.setRendererType(RENDERER_TYPE);
 		this.setFieldType(type);
 		this.setValue(value);
-		System.out.println("Field double constructor");
 	}
 	
 	public String getFamily() {
