@@ -17,11 +17,12 @@ public class FormbuilderViewManager implements Singleton  {
 
 	private static final String IW_FORMBUILDER_VIEW_MANAGER_KEY = "iw_formbuilderviewmanager";
 	private static final String FORMBUILDER_ID = "formbuilder";
-	private static final String FORMBUILDER_BUNDLE_IDENTIFIER = "com.idega.formbuilder";
+	public static final String FORMBUILDER_BUNDLE_IDENTIFIER = "com.idega.formbuilder";
 	private ViewNode rootNode;
 	private IWMainApplication iwma;
 	
 	private FormbuilderViewManager(IWMainApplication iwma){
+		
 		this.iwma = iwma;
 	}
 
@@ -30,6 +31,7 @@ public class FormbuilderViewManager implements Singleton  {
 	 * TODO: implement getInstance method in the right way (using pattern from better lighter..)
 	 */
 	  public static synchronized FormbuilderViewManager getInstance(IWMainApplication iwma){
+		  
 		  FormbuilderViewManager formbuilder_view_manager = (FormbuilderViewManager) iwma.getAttribute(IW_FORMBUILDER_VIEW_MANAGER_KEY);
 	    if(formbuilder_view_manager==null){
 	      formbuilder_view_manager = new FormbuilderViewManager(iwma);
@@ -58,6 +60,7 @@ public class FormbuilderViewManager implements Singleton  {
 	}
 	
 	public ViewNode initalizeContentNode(IWBundle contentBundle){
+		
 		ViewNode root = getViewManager().getWorkspaceRoot();
 		DefaultViewNode node = new ApplicationViewNode(FORMBUILDER_ID,root);
 		Collection<String> roles = new ArrayList<String>();
