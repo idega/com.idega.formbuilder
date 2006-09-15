@@ -1,7 +1,13 @@
 package com.idega.formbuilder.util;
 
 import javax.faces.context.FacesContext;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.idegaweb.IWBundle;
+import com.idega.idegaweb.IWMainApplication;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 
@@ -35,5 +41,25 @@ public class FBUtil {
 	
 	public static IWResourceBundle getResourceBundle(){
 		return getResourceBundle(FacesContext.getCurrentInstance());
-	}   
+	}
+	
+	public static String getResourceAbsolutePath(IWMainApplication iwma, String url) {
+		IWBundle iwb = iwma.getBundle(FormbuilderViewManager.FORMBUILDER_BUNDLE_IDENTIFIER);
+        return iwb.getRealPathWithFileNameString(url);
+	}
+	
+	private static DocumentBuilderFactory factory = null;
+	
+	public static DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
+		
+		if(factory == null) {
+			factory = DocumentBuilderFactory.newInstance();
+		    factory.setNamespaceAware(true);
+		    factory.setValidating(false);
+		}
+
+	    return factory.newDocumentBuilder();
+	}
+	
+	
 }
