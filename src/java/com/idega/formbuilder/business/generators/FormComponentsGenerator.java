@@ -1,4 +1,4 @@
-package com.idega.formbuilder.generators;
+package com.idega.formbuilder.business.generators;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -7,6 +7,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.commons.transaction.locking.LockException;
 import org.chiba.tools.xslt.StylesheetLoader;
 import org.chiba.tools.xslt.UIGenerator;
@@ -14,7 +16,7 @@ import org.chiba.xml.xforms.exception.XFormsException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import com.idega.formbuilder.generators.FBXSLTGenerator;
+import com.idega.formbuilder.business.generators.FBXSLTGenerator;
 import com.idega.repository.data.Singleton;
 import com.idega.xml.XMLException;
 
@@ -22,13 +24,15 @@ import com.idega.xml.XMLException;
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
  * @version 1.0
  * 
- * Initial components description is kept in xforms document.
+ * Initial components description is kept in xforms document.<br />
  * This class parses all those components to html format components into xml document.
  * 
  */
-public class FormComponentsGenerator implements Singleton  {
+public class FormComponentsGenerator implements Singleton, IComponentsGenerator  {
 	
-	private static FormComponentsGenerator me = null;
+	private static Log logger = LogFactory.getLog(FormComponentsGenerator.class);
+	
+	protected static IComponentsGenerator me = null;
 	private String absolute_components_xforms_path = null;
 	private String absolute_components_xforms_stylesheet_path = null;
 	private String absolute_components_stylesheet_path = null;
@@ -36,11 +40,11 @@ public class FormComponentsGenerator implements Singleton  {
 	protected final int params_cnt = 3;
 	private Document xforms_doc = null;
 	private int locked_cnt = 0;
-
+	
 	/**
 	 * TODO: checkout how to write this method effective
 	 */
-	public static synchronized FormComponentsGenerator getInstance() {
+	public static synchronized IComponentsGenerator getInstance() {
 		
 		if (me == null) {
 			me = new FormComponentsGenerator();
@@ -51,9 +55,8 @@ public class FormComponentsGenerator implements Singleton  {
 	
 	private FormComponentsGenerator() { }
 
-	/**
-	 * not very thread safe?
-	 * not important actually
+	/* (non-Javadoc)
+	 * @see com.idega.formbuilder.generators.IComponentsGenerator#isInitiated()
 	 */
 	public boolean isInitiated() {
 		
@@ -64,28 +67,26 @@ public class FormComponentsGenerator implements Singleton  {
 	
 	/**
 	 * 
-	 * @param params
-	 * for params description see initParams(..) javadoc
+	 *  @param params -	full pathes with file names:<br />
+	 *  [0] - absolute components xforms path - should be not null if xforms document is not set explicitly<br />
+	 *  [1] - absolute components xforms stylesheet path - stylesheet (xsl) with conversion from xforms to components html - xml<br />
+	 *  [2] - absolute components stylesheet path - stylesheet (xsl) with conversion from html - xml to plain components xml<br />
+	 * 
+	 * @throws LockException - if someone is using generateBaseComponentsDocument method
+	 * @throws IndexOutOfBoundsException - if not enough parameters are passed.
+	 * 
 	 */
 	public synchronized void init(String[] params) throws LockException, IndexOutOfBoundsException {
 		
 		if(locked_cnt > 0)
 			throw new LockException("generateBaseComponentsDocument is running, you cannot lock now", 0, null);
 		
+		//TODO: is this solution correct?
+		locked_cnt = -1;
 		initParams(params);
+		locked_cnt = 0;
 	}
 	
-	/**
-	 * 
-	 * @param params
-	 * 
-	 *  full pathes with file names:
-	 *  [0] - absolute components xforms path - should be not null if xforms document is not set explicitly
-	 *  [1] - absolute components xforms stylesheet path - stylesheet (xsl) with conversion from xforms to components html - xml
-	 *  [2] - absolute components stylesheet path - stylesheet (xsl) with conversion from html - xml to plain components xml
-	 * 
-	 * @throws IndexOutOfBoundsException - is throwed when not enough params is got
-	 */
 	protected void initParams(String[] params) throws IndexOutOfBoundsException {
 
 		if(params.length < params_cnt)
@@ -96,9 +97,12 @@ public class FormComponentsGenerator implements Singleton  {
 		absolute_components_stylesheet_path = params[2];
 	}
 	
-	public void setXFormsDocument(Document xforms_doc) {
+	public void setXFormsDocument(Document xforms_doc) throws NullPointerException {
 		
-		this.xforms_doc = xforms_doc;
+		if(xforms_doc != null)
+			this.xforms_doc = xforms_doc;
+		else
+			throw new NullPointerException("Use removeXFormsDocument method, if you want to remove it.");
 	}
 	
 	private static final String NO_XFORMS_DOC_DEFINITION_MSG = "Set absolute components xforms path first. Either xforms document or path should not be null";
@@ -110,25 +114,21 @@ public class FormComponentsGenerator implements Singleton  {
 		xforms_doc = null;
 	}
 	
-	/**
-	 * 
-	 * Generates xml components document from xforms components document, using parameters, 
-	 * passed through init phase. See initParams(..) javadoc.
-	 * 
-	 * @return HTML components xml document
-	 * @throws XMLException - if either ParserConfigurationException or SAXException occurs.
-	 * @throws IOException
-	 * @throws XFormsException
+	/* (non-Javadoc)
+	 * @see com.idega.formbuilder.generators.IComponentsGenerator#generateBaseComponentsDocument()
 	 */
-	public synchronized Document generateBaseComponentsDocument() throws XMLException, IOException, XFormsException  {
+	public synchronized Document generateBaseComponentsDocument() throws XMLException, IOException, XFormsException, LockException  {
+		
+		if(locked_cnt < 0) {
+			logger.error("generateBaseComponentsDocument(). Tried to call, while initializing.");
+			throw new LockException("Call after initialization.", 0, null);
+		}
 		
 		locked_cnt++;
 		if(!isInitiated()) {
 
 			locked_cnt--;
-			/**
-	    	 * TODO: Log this place.
-	    	 */
+			logger.error("generateBaseComponentsDocument() was called, when not initiated. Should not happen. ");
 			throw new NullPointerException(NO_XFORMS_DOC_DEFINITION_MSG);
 		}
 		

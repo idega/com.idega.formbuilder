@@ -13,7 +13,8 @@ import junit.framework.TestCase;
 import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 
-import com.idega.formbuilder.generators.FormComponentsGenerator;
+import com.idega.formbuilder.business.generators.FormComponentsGenerator;
+import com.idega.formbuilder.business.generators.IComponentsGenerator;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
@@ -50,7 +51,7 @@ public class FormComponentsGeneratorTest extends TestCase {
 			String absolute_components_xforms_stylesheet_path = this_class.getResource("htmlxml.xsl").getPath();
 			String absolute_components_stylesheet_path = this_class.getResource("components.xsl").getPath();
 			
-			FormComponentsGenerator fcg = FormComponentsGenerator.getInstance();
+			IComponentsGenerator fcg = FormComponentsGenerator.getInstance();
 			
 			fcg.init(new String[] {
 					absolute_components_xforms_path,
@@ -105,7 +106,7 @@ public class FormComponentsGeneratorTest extends TestCase {
 			String absolute_components_xforms_stylesheet_path = getClass().getResource("htmlxml.xsl").getPath();
 			String absolute_components_stylesheet_path = getClass().getResource("components.xsl").getPath();
 			
-			FormComponentsGenerator fcg = FormComponentsGenerator.getInstance();
+			IComponentsGenerator fcg = FormComponentsGenerator.getInstance();
 			
 			fcg.init(new String[] {
 					absolute_components_xforms_path,

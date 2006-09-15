@@ -1,4 +1,4 @@
-package com.idega.formbuilder.generators;
+package com.idega.formbuilder.business.generators;
 
 import java.io.Writer;
 import java.util.HashMap;
@@ -53,6 +53,7 @@ public class FBXSLTGenerator extends XSLTGenerator implements UIGenerator {
             DOMSource inputDoc = new DOMSource(inputNode);
             transform.transform(inputDoc, new DOMResult(output));
         } catch (TransformerException e) {
+        	
             throw new XFormsException(e.getMessageAndLocation());
         }
     }
