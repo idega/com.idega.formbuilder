@@ -1,4 +1,3 @@
-
 package com.idega.formbuilder.business.form;
 
 import java.io.ByteArrayInputStream;
@@ -66,10 +65,13 @@ public class FormBuilder {
 	 * creates primary user form document and stores it to webdav
 	 * 
 	 * @param form_props - primary form description. Only id is mandatory.
+	 * @throws WebdavSaveException - see exception description at checkForPendingErrors() javadoc
 	 * @throws NullPointerException - form_props is null or id not provided
 	 * @throws Exception - some kind of other error occured
 	 */
-	public void createFormDocument(FormPropertiesBean form_properties) throws NullPointerException, Exception {
+	public void createFormDocument(FormPropertiesBean form_properties) throws WebdavSaveException, NullPointerException, Exception {
+		
+		checkForPendingErrors();
 		
 		if(form_properties == null)
 			throw new NullPointerException("Form properties not provided");
@@ -101,7 +103,7 @@ public class FormBuilder {
 				model.setTextContent(form_props.getName());
 			}
 			
-			saveDocumentToWebdav(form_xforms, getServiceBean(), form_id_str);
+//			saveDocumentToWebdav(form_xforms, getServiceBean(), form_id_str);
 			
 		} catch (NullPointerException e) {
 			throw e;
@@ -187,7 +189,7 @@ public class FormBuilder {
 		}.start();
 	}
 	
-	private void checkForComponentType(String component_type) throws NullPointerException {
+	private static void checkForComponentType(String component_type) throws NullPointerException {
 		
 		if(component_type == null || !components_types.contains(component_type)) {
 			
@@ -253,8 +255,31 @@ public class FormBuilder {
 		cached_html_components.put(component_type, html_component);
 		return html_component;
 	}
-	
-	public Element createFormElement(String component_type, String component_after_new_id) throws NullPointerException, Exception {
+
+	/**
+	 * <p>
+	 * Creates new form component by component type provided,
+	 * inserts it after specific component OR after all components in form component list.
+	 * New xforms document is saved to webdav repository and component html representation returned.
+	 * </p>
+	 * <p>
+	 * Of course form document should be created or imported before.
+	 * </p>
+	 * 
+	 * @param component_type - type of component from components_types list,
+	 * which should be inserted to form document.
+	 * @param component_after_new_id - where new component should be places. This id must come from
+	 * currently editing form document component. Provide <i>null</i> if component needs to be appended
+	 * to other components list.
+	 * @return newly created form component html representation
+	 * @throws WebdavSaveException - see exception description at checkForPendingErrors() javadoc
+	 * @throws NullPointerException - form document was not created first, 
+	 * component_after_new_id was provided, but such component was not found, other..
+	 * @throws Exception - something else is wrong
+	 */
+	public Element createFormElement(String component_type, String component_after_new_id) throws WebdavSaveException, NullPointerException, Exception {
+		
+		checkForPendingErrors();
 		
 		if(form_xforms == null)
 			throw new NullPointerException("Form document not created");
@@ -282,10 +307,10 @@ public class FormBuilder {
 				
 				component_after_new.insertBefore(new_xforms_component, component_after_new);
 			} else
-				throw new NullPointerException("Component, after which new component should be places, was not found");
+				throw new NullPointerException("Component, after which new component should be placed, was not found");
 		}
 		
-		saveDocumentToWebdav(form_xforms, getServiceBean(), form_props.getId().toString());
+//		saveDocumentToWebdav(form_xforms, getServiceBean(), form_props.getId().toString());
 
 		Element new_html_component = (Element)getHtmlComponentReferenceByType(component_type).cloneNode(true);
 		putAttributesOnHtmlComponent(new_html_component, String.valueOf(new_comp_id), component_type);
@@ -301,7 +326,7 @@ public class FormBuilder {
 	 * @param new_comp_id - new form component id to be set on attributes
 	 * @param old_comp_id - all form component id
 	 */
-	private void putAttributesOnHtmlComponent(Element component, String new_comp_id, String old_comp_id) {
+	private static void putAttributesOnHtmlComponent(Element component, String new_comp_id, String old_comp_id) {
 		
 		component.setAttribute("id", new_comp_id);
 		NodeList descendants = component.getElementsByTagName("*");
@@ -320,7 +345,6 @@ public class FormBuilder {
 					
 					attribute.setNodeValue(node_val.replace(old_comp_id, new_comp_id));
 			}
-			
 		}
 	}
 	
@@ -498,6 +522,17 @@ public class FormBuilder {
 		}
 		
 		return components_types;
+	}
+	
+	/**
+	 * Check for exceptions thrown during previous requests
+	 * @throws WebdavSaveException - if saving xml file to webdav failed. Formbuilder user knows,
+	 * that error happened and can (most likely) happen again, so some adequate actions can be taken. 
+	 */
+	private void checkForPendingErrors() throws WebdavSaveException {
+		
+		if(document_to_webdav_save_exception != null)
+			throw new WebdavSaveException(document_to_webdav_save_exception);
 	}
 		
 	public static void main(String[] args) {
