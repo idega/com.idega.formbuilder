@@ -23,6 +23,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.idega.formbuilder.business.form.beans.FormPropertiesBean;
+import com.idega.formbuilder.business.form.beans.XFormsComponentBean;
 import com.idega.formbuilder.business.generators.FormComponentsGenerator;
 import com.idega.formbuilder.business.generators.IComponentsGenerator;
 import com.idega.formbuilder.util.FBUtil;
@@ -31,8 +32,7 @@ import com.idega.slide.business.IWSlideServiceBean;
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
  * @version 1.0
  * 
- * Main FormBuilder model class. Knows about available form components, manages user's xforms document,
- * returns requested component type html.
+ * Main FormBuilder model class. Knows about available form components, manages user's xforms document
  */
 public class FormBuilder {
 	
@@ -44,7 +44,7 @@ public class FormBuilder {
 	private static InputStream components_xforms_stream = null;
 	private static boolean inited = false;
 	private static List<String> components_types = null;
-	private static Map<String, Element> cached_xforms_components = new HashMap<String, Element>();
+	private static Map<String, XFormsComponentBean> cached_xforms_components = new HashMap<String, XFormsComponentBean>();
 	private static Map<String, Element> cached_html_components = new HashMap<String, Element>();
 	
 	private static String COMPONENTS_XFORMS_CONTEXT_PATH = null;
@@ -81,15 +81,13 @@ public class FormBuilder {
 		try {
 			
 			form_xforms = (Document)form_xforms_template.cloneNode(true);
-			String form_id_str;
 			
 			if(form_props.getId() != null) {
 				
 				NodeList nl = form_xforms.getElementsByTagName("xf:model");
 				
 				Element model = (Element)nl.item(0);
-				form_id_str = form_props.getId().toString();
-				model.setAttribute("id", form_id_str);
+				model.setAttribute("id", form_props.getId().toString());
 				
 			} else {
 				throw new NullPointerException("Id not presented in form properties.");
@@ -110,6 +108,18 @@ public class FormBuilder {
 		} catch (Exception e) {
 			throw e;
 		}
+	}
+	
+	public void removeFormComponent(String component_id) throws WebdavSaveException, NullPointerException {
+		
+		checkForPendingErrors();
+		
+		if(form_xforms == null)
+			throw new NullPointerException("Form document not created");
+		
+		
+		
+		
 	}
 	
 	private IWSlideServiceBean getServiceBean() {
@@ -216,20 +226,42 @@ public class FormBuilder {
 	 * @return reference to cached element node. See WARNING for info.
 	 * @throws NullPointerException - component implementation could not be found by component type
 	 */
-	private Element getXFormsComponentReferenceByType(String component_type) throws NullPointerException {
+	private XFormsComponentBean getXFormsComponentReferencesByType(String component_type) throws NullPointerException {
 		
-		Element xforms_component = cached_xforms_components.get(component_type); 
+		XFormsComponentBean xforms_component = cached_xforms_components.get(component_type); 
 
 		if(xforms_component != null)
 			return xforms_component;
 		
-		xforms_component = FBUtil.getElementByIdFromDocument(components_xforms, null, component_type);
+		Element xforms_element = FBUtil.getElementByIdFromDocument(components_xforms, "body", component_type);
 		
-		if(xforms_component == null) {
+		if(xforms_element == null) {
 			String msg = "Component cannot be found in components xforms document.";
 			logger.error(msg+
 				" Should not happen. Take a look, why component is registered in components_types, but is not present in components xforms document.");
 			throw new NullPointerException(msg);
+		}
+		
+		xforms_component = new XFormsComponentBean();
+		xforms_component.setElement(xforms_element);
+		
+		String bind_to = xforms_element.getAttribute("bind");
+		
+		if(bind_to != null) {
+			
+//			get binding
+			Element binding = 
+				FBUtil.getElementByIdFromDocument(components_xforms, "xf:model", bind_to);
+			
+			if(binding == null)
+				throw new NullPointerException("Binding not found");
+
+//			get nodeset
+			String nodeset_to = binding.getAttribute("nodeset");
+			Element nodeset = (Element)((Element)components_xforms.getElementsByTagName("xf:instance").item(0)).getElementsByTagName(nodeset_to).item(0);
+			
+			xforms_component.setBind(binding);
+			xforms_component.setNodeset(nodeset);
 		}
 		
 		cached_xforms_components.put(component_type, xforms_component);
@@ -277,7 +309,7 @@ public class FormBuilder {
 	 * component_after_new_id was provided, but such component was not found, other..
 	 * @throws Exception - something else is wrong
 	 */
-	public Element createFormElement(String component_type, String component_after_new_id) throws WebdavSaveException, NullPointerException, Exception {
+	public Element createFormComponent(String component_type, String component_after_new_id) throws WebdavSaveException, NullPointerException, Exception {
 		
 		checkForPendingErrors();
 		
@@ -286,34 +318,91 @@ public class FormBuilder {
 		
 		checkForComponentType(component_type);
 		
-		Element new_xforms_component = (Element)getXFormsComponentReferenceByType(component_type);
-		new_xforms_component = (Element)form_xforms.importNode(new_xforms_component, true);
+		XFormsComponentBean xforms_component = getXFormsComponentReferencesByType(component_type);
+		
+		Element new_xforms_element = xforms_component.getElement();
+		new_xforms_element = (Element)form_xforms.importNode(new_xforms_element, true);
 		
 		Integer new_comp_id = FBUtil.generateComponentId(form_props.getLast_component_id());
 		form_props.setLast_component_id(new_comp_id);
 		
-		new_xforms_component.setAttribute("id", String.valueOf(new_comp_id));
+		String new_comp_id_str = CTID+String.valueOf(new_comp_id);
+		
+		new_xforms_element.setAttribute("id", new_comp_id_str);
+		
+		String bind_id = null;
+		
+		if(xforms_component.getBind() != null) {
+			
+			bind_id = new_comp_id_str+xforms_component.getBind().getAttribute("id");
+			new_xforms_element.setAttribute("bind", bind_id);
+		}
 		
 		if(component_after_new_id == null) {
 //			append element to component list
 			Element components_container = (Element)form_xforms.getElementsByTagName("xf:group").item(0);
-			components_container.appendChild(new_xforms_component);
+			components_container.appendChild(new_xforms_element);
 			
 		} else {
 //			insert element after component
-			Element component_after_new = form_xforms.getElementById(component_after_new_id);
+			Element component_after_new = FBUtil.getElementByIdFromDocument(form_xforms, null, component_after_new_id);
 			
 			if(component_after_new != null) {
 				
-				component_after_new.insertBefore(new_xforms_component, component_after_new);
+				component_after_new.insertBefore(new_xforms_element, component_after_new);
 			} else
 				throw new NullPointerException("Component, after which new component should be placed, was not found");
+		}
+		
+		if(xforms_component.getBind() != null) {
+//			insert bind element
+			new_xforms_element = (Element)form_xforms.importNode(xforms_component.getBind(), true);
+			new_xforms_element.setAttribute("id", bind_id);
+			
+			if(xforms_component.getNodeset() != null) {
+				
+				new_xforms_element.setAttribute("nodeset", bind_id);
+			}
+			
+			Element container = (Element)form_xforms.getElementsByTagName("xf:model").item(0);
+			container.appendChild(new_xforms_element);
+			
+			if(xforms_component.getNodeset() != null) {
+//				insert nodeset element
+				
+				new_xforms_element = form_xforms.createElement(bind_id);
+				
+				if(xforms_component.getNodeset().hasChildNodes()) {
+					
+					NodeList children = xforms_component.getNodeset().getChildNodes();
+					
+					for (int i = 0; i < children.getLength(); i++) {
+						
+						Node child = children.item(i);
+						
+						if(child.getNodeType() == Node.ELEMENT_NODE) {
+
+							child = form_xforms.importNode(child, true);
+							new_xforms_element.appendChild(child);
+						}
+					}
+				}
+				
+				container = 
+					(Element)((Element)form_xforms
+							.getElementsByTagName("xf:instance").item(0))
+							.getElementsByTagName("data").item(0);
+				container.appendChild(new_xforms_element);
+			}
 		}
 		
 //		saveDocumentToWebdav(form_xforms, getServiceBean(), form_props.getId().toString());
 
 		Element new_html_component = (Element)getHtmlComponentReferenceByType(component_type).cloneNode(true);
-		putAttributesOnHtmlComponent(new_html_component, String.valueOf(new_comp_id), component_type);
+		putAttributesOnHtmlComponent(new_html_component, new_comp_id_str, component_type);
+		
+		
+		DOMUtil.prettyPrintDOM(form_xforms);
 		
 		return new_html_component;
 	}
@@ -549,7 +638,7 @@ public class FormBuilder {
 
 			fb.createFormDocument(form_props);
 			
-			fb.createFormElement("fbcomp_multiple_select_minimal", null);
+			fb.createFormComponent("fbcomp_text", null);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

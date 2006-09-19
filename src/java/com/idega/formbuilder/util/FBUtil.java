@@ -83,6 +83,21 @@ public class FBUtil {
 	 */
 	public static Element getElementByIdFromDocument(Document doc, String start_tag, String id_value) {
 		
+		return getElementByAttributeFromDocument(doc, start_tag, "id", id_value);
+	}
+	
+	/**
+	 * 
+	 * method name should explain, what it does
+	 * 
+	 * @param doc - document, to search for an element
+	 * @param start_tag - where to start. faster search.
+	 * @param attribute_name - what name attribute shoulde be searched for
+	 * @param attribute_value - ..
+	 * @return - Reference to element in document
+	 */
+	public static Element getElementByAttributeFromDocument(Document doc, String start_tag, String attribute_name, String attribute_value) {
+		
 		Element start_element;
 		
 		if(start_tag != null)
@@ -90,6 +105,6 @@ public class FBUtil {
 		else
 			start_element = doc.getDocumentElement();
 		
-		return DOMUtil.getElementByAttributeValue(start_element, "*", "id", id_value);
+		return DOMUtil.getElementByAttributeValue(start_element, "*", attribute_name, attribute_value);
 	}
 }
