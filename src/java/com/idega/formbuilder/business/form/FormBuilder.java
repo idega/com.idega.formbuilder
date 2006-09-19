@@ -1,39 +1,33 @@
 
 package com.idega.formbuilder.business.form;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import javax.faces.context.FacesContext;
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.transform.TransformerException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.webdav.lib.WebdavFile;
 import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.idega.business.IBOLookup;
-import com.idega.business.IBOSession;
 import com.idega.formbuilder.business.form.beans.FormPropertiesBean;
 import com.idega.formbuilder.business.generators.FormComponentsGenerator;
 import com.idega.formbuilder.business.generators.IComponentsGenerator;
-import com.idega.formbuilder.sandbox.SandboxChibaServlet;
 import com.idega.formbuilder.util.FBUtil;
-import com.idega.idegaweb.IWMainApplication;
-import com.idega.presentation.IWContext;
 import com.idega.slide.business.IWSlideServiceBean;
-import com.idega.slide.business.IWSlideSession;
-import com.idega.slide.business.IWSlideSessionBean;
-
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
  * @version 1.0
@@ -51,36 +45,282 @@ public class FormBuilder {
 	private static InputStream components_xforms_stream = null;
 	private static boolean inited = false;
 	private static List<String> components_types = null;
+	private static Map<String, Element> cached_xforms_components = new HashMap<String, Element>();
+	private static Map<String, Element> cached_html_components = new HashMap<String, Element>();
 	
 	private static String COMPONENTS_XFORMS_CONTEXT_PATH = null;
 	private static String COMPONENTS_XFORMSHTML_STYLESHEET_CONTEXT_PATH = null;
 	private static String COMPONENTS_XFORMSXML_STYLESHEET_CONTEXT_PATH = null;
 	private static String FORM_XFORMS_TEMPLATE_CONTEXT_PATH = null;
 	
+	private static final String FORMS_REPO_CONTEXT = "/files/formbuilder/forms/";
+	
+	private IWSlideServiceBean service_bean = null;
 	private Document form_xforms = null;
+	private FormPropertiesBean form_props = null;
 	
-	public void addComponent() {
+//	gal lengviau UI bus orientuotis pagal sitoki lista
+//	private List<String> form_components_id_list = new LinkedList<String>();
+	
+	/**
+	 * creates primary user form document and stores it to webdav
+	 * 
+	 * @param form_props - primary form description. Only id is mandatory.
+	 * @throws NullPointerException - form_props is null or id not provided
+	 * @throws Exception - some kind of other error occured
+	 */
+	public void createFormDocument(FormPropertiesBean form_properties) throws NullPointerException, Exception {
 		
-	}
-	
-	public void editComponent() {
+		if(form_properties == null)
+			throw new NullPointerException("Form properties not provided");
 		
-	}
-	
-	public void removeComponent() {
-		
-	}
-	
-	public void createFormDocument(FormPropertiesBean form_props) {
+		form_props = form_properties;
 		
 		try {
 			
 			form_xforms = (Document)form_xforms_template.cloneNode(true);
+			String form_id_str;
 			
-			DOMUtil.prettyPrintDOM(form_xforms);
+			if(form_props.getId() != null) {
+				
+				NodeList nl = form_xforms.getElementsByTagName("xf:model");
+				
+				Element model = (Element)nl.item(0);
+				form_id_str = form_props.getId().toString();
+				model.setAttribute("id", form_id_str);
+				
+			} else {
+				throw new NullPointerException("Id not presented in form properties.");
+			}
 			
+			if(form_props.getName() != null) {
+				
+				NodeList nl = form_xforms.getElementsByTagName("title");
+				
+				Element model = (Element)nl.item(0);
+				model.setTextContent(form_props.getName());
+			}
+			
+			saveDocumentToWebdav(form_xforms, getServiceBean(), form_id_str);
+			
+		} catch (NullPointerException e) {
+			throw e;
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	private IWSlideServiceBean getServiceBean() {
+		
+		if(service_bean == null)
+			service_bean = new IWSlideServiceBean();
+		
+		return service_bean;
+	}
+	
+	private Exception document_to_webdav_save_exception = null;
+	
+	/**
+	 * saves xml(!) file to webdav directory
+	 * 
+	 * <p>
+	 * <b>imporant:</b> method uses thread to upload file. So, if something bad happens during this process
+	 * exception thrown is saved to document_to_webdav_save_exception variable. This variable should be time to time checked
+	 * for null condition to know, if everything is alright.<br />
+	 * Variable is set to null everytime, when no exception is thrown.<br />
+	 * Logging is taking place for every exception thrown, so see logs for all problems.
+	 * </p>
+	 * 
+	 * @param document - xml document to write to webdav repository
+	 * @param service_bean - service bean, used to upload files
+	 * @param path_to_file - where file should be placed, relative to webdav context
+	 * @param file_name - how should we name the file
+	 * @throws TransformerException - file is not an xml file maybe
+	 * @throws NullPointerException - some parameters were not provided, or provided empty string(s)
+	 */
+	protected void saveDocumentToWebdav(final Document document, final IWSlideServiceBean service_bean, final String form_id) throws TransformerException, NullPointerException {
+		
+		if(document == null || service_bean == null || form_id == null || form_id.equals("")) {
+			
+			StringBuffer msg_buf = new StringBuffer("Either parameter is provided as null or empty, shouldn't be:");
+			msg_buf.append("\ndocument: ");
+			msg_buf.append(String.valueOf(document));
+			msg_buf.append("\nservice_bean: ");
+			msg_buf.append(String.valueOf(service_bean));
+			msg_buf.append("\nform_id: ");
+			msg_buf.append(form_id);
+			
+			throw new NullPointerException(msg_buf.toString());
+		}
+		
+		final StringBuffer path_to_file_string_buffer = new StringBuffer(FORMS_REPO_CONTEXT);
+		path_to_file_string_buffer.append(form_id);
+		path_to_file_string_buffer.append("/");
+		
+		final StringBuffer file_name_string_buffer = new StringBuffer(form_id);
+		file_name_string_buffer.append(".xforms");
+		
+		new Thread() {
+			
+			public void run() {
+				
+				try {
+					
+//					TODO: find better method for doing this.
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
+					DOMUtil.prettyPrintDOM(document, out);
+					InputStream is = new ByteArrayInputStream(out.toByteArray());
+//					--
+					
+					service_bean.uploadFileAndCreateFoldersFromStringAsRoot(
+							path_to_file_string_buffer.toString(), file_name_string_buffer.toString(),
+							is, "text/xml", false
+					);
+					
+					document_to_webdav_save_exception = null;
+					
+				} catch (Exception e) {
+					logger.error("Exception occured while saving document to webdav dir: ", e);
+					document_to_webdav_save_exception = e;
+				}
+			}
+		}.start();
+	}
+	
+	private void checkForComponentType(String component_type) throws NullPointerException {
+		
+		if(component_type == null || !components_types.contains(component_type)) {
+			
+			String msg;
+			
+			if(component_type == null)
+				msg = "Component type is not provided (provided null)";
+			else
+				msg = "Component type given is not known. Given: "+component_type;
+			
+			throw new NullPointerException(msg);
+		}
+	}
+	
+	/**
+	 * Gets full component reference by component type. What "reference" means,
+	 * is that this is not the clone of node, but only reference to node.<br />
+	 * So if you need to change node, you <b>must</b> clone it first.
+	 * <p>
+	 * <b><i>WARNING:</i></b> returned node should be cloned, if you want to change it in any way.
+	 * </p>
+	 * 
+	 * @param component_type - used to find correct xforms component implementation
+	 * @return reference to cached element node. See WARNING for info.
+	 * @throws NullPointerException - component implementation could not be found by component type
+	 */
+	private Element getXFormsComponentReferenceByType(String component_type) throws NullPointerException {
+		
+		Element xforms_component = cached_xforms_components.get(component_type); 
+
+		if(xforms_component != null)
+			return xforms_component;
+		
+		xforms_component = FBUtil.getElementByIdFromDocument(components_xforms, null, component_type);
+		
+		if(xforms_component == null) {
+			String msg = "Component cannot be found in components xforms document.";
+			logger.error(msg+
+				" Should not happen. Take a look, why component is registered in components_types, but is not present in components xforms document.");
+			throw new NullPointerException(msg);
+		}
+		
+		cached_xforms_components.put(component_type, xforms_component);
+		return xforms_component;
+	}
+	
+	private Element getHtmlComponentReferenceByType(String component_type) throws NullPointerException {
+		
+		Element html_component = cached_html_components.get(component_type); 
+
+		if(html_component != null)
+			return html_component;
+			
+		html_component = FBUtil.getElementByIdFromDocument(components_xml, null, component_type);
+		
+		if(html_component == null) {
+			String msg = "Component cannot be found in temporal components xml document.";
+			logger.error(msg+
+				" Should not happen. Take a look, why component is registered in components_types, but is not present in components xml document.");
+			throw new NullPointerException(msg);
+		}
+		
+		cached_html_components.put(component_type, html_component);
+		return html_component;
+	}
+	
+	public Element createFormElement(String component_type, String component_after_new_id) throws NullPointerException, Exception {
+		
+		if(form_xforms == null)
+			throw new NullPointerException("Form document not created");
+		
+		checkForComponentType(component_type);
+		
+		Element new_xforms_component = (Element)getXFormsComponentReferenceByType(component_type);
+		new_xforms_component = (Element)form_xforms.importNode(new_xforms_component, true);
+		
+		Integer new_comp_id = FBUtil.generateComponentId(form_props.getLast_component_id());
+		form_props.setLast_component_id(new_comp_id);
+		
+		new_xforms_component.setAttribute("id", String.valueOf(new_comp_id));
+		
+		if(component_after_new_id == null) {
+//			append element to component list
+			Element components_container = (Element)form_xforms.getElementsByTagName("xf:group").item(0);
+			components_container.appendChild(new_xforms_component);
+			
+		} else {
+//			insert element after component
+			Element component_after_new = form_xforms.getElementById(component_after_new_id);
+			
+			if(component_after_new != null) {
+				
+				component_after_new.insertBefore(new_xforms_component, component_after_new);
+			} else
+				throw new NullPointerException("Component, after which new component should be places, was not found");
+		}
+		
+		saveDocumentToWebdav(form_xforms, getServiceBean(), form_props.getId().toString());
+
+		Element new_html_component = (Element)getHtmlComponentReferenceByType(component_type).cloneNode(true);
+		putAttributesOnHtmlComponent(new_html_component, String.valueOf(new_comp_id), component_type);
+		
+		return new_html_component;
+	}
+	
+	/**
+	 * Replaces old_comp_id values with new_comp_id values on all attributes, which contained old_comp_id values.
+	 * Puts id attribute on component element with new_comp_id value. 
+	 * 
+	 * @param component - form component container
+	 * @param new_comp_id - new form component id to be set on attributes
+	 * @param old_comp_id - all form component id
+	 */
+	private void putAttributesOnHtmlComponent(Element component, String new_comp_id, String old_comp_id) {
+		
+		component.setAttribute("id", new_comp_id);
+		NodeList descendants = component.getElementsByTagName("*");
+		
+		for (int i = 0; i < descendants.getLength(); i++) {
+			
+			Node desc = descendants.item(i);
+			NamedNodeMap attributes = desc.getAttributes();
+			
+			for (int j = 0; j < attributes.getLength(); j++) {
+				Node attribute = attributes.item(j);
+				
+				String node_val = attribute.getNodeValue();
+				
+				if(node_val.contains(old_comp_id))
+					
+					attribute.setNodeValue(node_val.replace(old_comp_id, new_comp_id));
+			}
+			
 		}
 	}
 	
@@ -266,7 +506,15 @@ public class FormBuilder {
 			
 			FormBuilder.init(null);
 			FormBuilder fb = FormBuilder.getInstance();
-			fb.createFormDocument(null);
+			
+
+			FormPropertiesBean form_props = new FormPropertiesBean();
+			form_props.setId(new Long(22));
+			form_props.setName("my form name");
+
+			fb.createFormDocument(form_props);
+			
+			fb.createFormElement("fbcomp_multiple_select_minimal", null);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
