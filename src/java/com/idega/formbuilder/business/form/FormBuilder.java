@@ -348,15 +348,15 @@ public class FormBuilder {
 		if(component_after_new_id == null) {
 //			append element to component list
 			Element components_container = (Element)form_xforms.getElementsByTagName("xf:group").item(0);
+			
 			components_container.appendChild(new_xforms_element);
 			
 		} else {
 //			insert element after component
-			Element component_after_new = FBUtil.getElementByIdFromDocument(form_xforms, null, component_after_new_id);
+			Element component_after_new = FBUtil.getElementByIdFromDocument(form_xforms, "body", component_after_new_id);
 			
 			if(component_after_new != null) {
-				
-				component_after_new.insertBefore(new_xforms_element, component_after_new);
+				component_after_new.getParentNode().insertBefore(new_xforms_element, component_after_new);
 			} else
 				throw new NullPointerException("Component, after which new component should be placed, was not found");
 		}
@@ -651,6 +651,9 @@ public class FormBuilder {
 			fb.createFormDocument(form_props);
 			
 			fb.createFormComponent("fbcomp_text", null);
+			
+			fb.createFormComponent("fbcomp_text", null);
+			fb.createFormComponent("fbcomp_textarea", "fbcomp_2");
 			
 		} catch (Exception e) {
 			e.printStackTrace();
