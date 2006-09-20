@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -59,8 +60,7 @@ public class FormBuilder {
 	private Document form_xforms = null;
 	private FormPropertiesBean form_props = null;
 	
-//	gal lengviau UI bus orientuotis pagal sitoki lista
-//	private List<String> form_components_id_list = new LinkedList<String>();
+	private List<String> form_components_id_list = new LinkedList<String>();
 	
 	/**
 	 * creates primary user form document and stores it to webdav
@@ -114,6 +114,12 @@ public class FormBuilder {
 		}
 	}
 	
+	/**
+	 * __NOT IMPLEMENTED YET__
+	 * @param component_id - form component id to remove
+	 * @throws FBPostponedException - see exception description at checkForPendingErrors() javadoc 
+	 * @throws NullPointerException - form document is not created
+	 */
 	public void removeFormComponent(String component_id) throws FBPostponedException, NullPointerException {
 		
 		checkForPendingErrors();
@@ -121,9 +127,7 @@ public class FormBuilder {
 		if(form_xforms == null)
 			throw new NullPointerException("Form document not created");
 		
-		
-		
-		
+		throw new NullPointerException("Not implemented yet");
 	}
 	
 	private IWSlideServiceBean getServiceBean() {
@@ -404,12 +408,26 @@ public class FormBuilder {
 		}
 		
 		saveDocumentToWebdav(form_xforms, getServiceBean(), form_props.getId().toString());
-
+		
+		if(component_after_new_id != null) {
+			
+			//find index and insert
+			for (int i = 0; i < form_components_id_list.size(); i++) {
+				
+				if(form_components_id_list.get(i).equals(component_after_new_id)) {
+					form_components_id_list.add(i, new_comp_id_str);
+					System.out.println("found: ");
+					break;
+				}
+			}
+		} else
+			form_components_id_list.add(new_comp_id_str);
+		
 		Element new_html_component = (Element)getHtmlComponentReferenceByType(component_type).cloneNode(true);
 		putAttributesOnHtmlComponent(new_html_component, new_comp_id_str, component_type);
 		
 		
-		DOMUtil.prettyPrintDOM(form_xforms);
+//		DOMUtil.prettyPrintDOM(form_xforms);
 		
 		return new_html_component;
 	}
@@ -450,7 +468,7 @@ public class FormBuilder {
 	 * 
 	 * @return List of available form components types
 	 */
-	public List<String> getFormComponentsList() {
+	public List<String> getAvailableFormComponentsList() {
 		
 		if(components_xforms == null) {
 			
@@ -459,6 +477,11 @@ public class FormBuilder {
 		}
 		
 		return components_types;
+	}
+	
+	
+	public List<String> getFormComponentsList() {
+		return form_components_id_list;
 	}
 	
 	private static final String NOT_INITED_MSG = "Init FormBuilder first";
@@ -635,6 +658,10 @@ public class FormBuilder {
 		if(document_to_webdav_save_exception != null)
 			throw new FBPostponedException(document_to_webdav_save_exception);
 	}
+	
+	public static boolean isInited() {
+		return inited;
+	}
 		
 	public static void main(String[] args) {
 		
@@ -653,7 +680,8 @@ public class FormBuilder {
 			fb.createFormComponent("fbcomp_text", null);
 			
 			fb.createFormComponent("fbcomp_text", null);
-			fb.createFormComponent("fbcomp_textarea", "fbcomp_2");
+			Element textarea = fb.createFormComponent("fbcomp_textarea", "fbcomp_2");
+			DOMUtil.prettyPrintDOM(textarea);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

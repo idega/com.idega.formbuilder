@@ -1,9 +1,12 @@
 package com.idega.formbuilder.presentation.renderkit;
 
 import java.io.IOException;
+
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+
+import com.idega.formbuilder.business.form.FormBuilder;
 import com.idega.webface.WFContainer;
 
 /**
@@ -19,6 +22,32 @@ import com.idega.webface.WFContainer;
 public class ContainerRenderer extends com.idega.webface.renderkit.ContainerRenderer {
 
 	public void encodeBegin(FacesContext ctx, UIComponent comp) throws IOException {
+		
+		if(!FormBuilder.isInited()) {
+			
+			try {
+				FormBuilder.init(null);
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			}
+		}
+//		try {
+//			
+//			FormBuilder fb = FormBuilder.getInstance();
+//
+//			FormPropertiesBean form_props = new FormPropertiesBean();
+//			form_props.setId(new Long(21));
+//			form_props.setName("my form name");
+//
+//			fb.createFormDocument(form_props);
+//			
+//			System.out.println("trying to create an element ---------- ");
+//			fb.createFormComponent("fbcomp_text", null);
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+		
 		WFContainer container = (WFContainer) comp;
 		if (!container.isRendered()) {
 			return;
