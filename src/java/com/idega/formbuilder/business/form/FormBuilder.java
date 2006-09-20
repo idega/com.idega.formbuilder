@@ -26,6 +26,7 @@ import com.idega.formbuilder.business.form.beans.FormPropertiesBean;
 import com.idega.formbuilder.business.form.beans.XFormsComponentBean;
 import com.idega.formbuilder.business.generators.FormComponentsGenerator;
 import com.idega.formbuilder.business.generators.IComponentsGenerator;
+import com.idega.formbuilder.sandbox.SandboxUtil;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.slide.business.IWSlideServiceBean;
 /**
@@ -154,6 +155,9 @@ public class FormBuilder {
 	 * @throws NullPointerException - some parameters were not provided, or provided empty string(s)
 	 */
 	protected void saveDocumentToWebdav(final Document document, final IWSlideServiceBean service_bean, final String form_id) throws TransformerException, NullPointerException {
+		
+		if(true)
+			return;
 		
 		if(document == null || service_bean == null || form_id == null || form_id.equals("")) {
 			
@@ -474,11 +478,16 @@ public class FormBuilder {
 	
 	public static void init(FacesContext ctx) throws InstantiationException {
 		
-		COMPONENTS_XFORMS_CONTEXT_PATH = "/Users/civilis/workspace/ePlatform35/chiba-web/web/myBasicTest.xhtml";
-//		COMPONENTS_XFORMS_CONTEXT_PATH = "/files/formbuilder/components/components.xforms";
-		COMPONENTS_XFORMSHTML_STYLESHEET_CONTEXT_PATH = "/Users/civilis/workspace/ePlatform35/com.idega.formbuilder/resources/xslt/htmlxml.xsl";
-		COMPONENTS_XFORMSXML_STYLESHEET_CONTEXT_PATH = "/Users/civilis/workspace/ePlatform35/com.idega.formbuilder/resources/xslt/components.xsl";
-		FORM_XFORMS_TEMPLATE_CONTEXT_PATH = "/Users/civilis/workspace/ePlatform35/com.idega.formbuilder/resources/templates/form.xhtml";
+//		COMPONENTS_XFORMS_CONTEXT_PATH = "/Users/civilis/workspace/ePlatform35/chiba-web/web/myBasicTest.xhtml";
+////		COMPONENTS_XFORMS_CONTEXT_PATH = "/files/formbuilder/components/components.xforms";
+//		COMPONENTS_XFORMSHTML_STYLESHEET_CONTEXT_PATH = "/Users/civilis/workspace/ePlatform35/com.idega.formbuilder/resources/xslt/htmlxml.xsl";
+//		COMPONENTS_XFORMSXML_STYLESHEET_CONTEXT_PATH = "/Users/civilis/workspace/ePlatform35/com.idega.formbuilder/resources/xslt/components.xsl";
+//		FORM_XFORMS_TEMPLATE_CONTEXT_PATH = "/Users/civilis/workspace/ePlatform35/com.idega.formbuilder/resources/templates/form.xhtml";
+		
+		COMPONENTS_XFORMS_CONTEXT_PATH = SandboxUtil.COMPONENTS_XFORMS_CONTEXT_PATH;
+		COMPONENTS_XFORMSHTML_STYLESHEET_CONTEXT_PATH = SandboxUtil.COMPONENTS_XFORMSHTML_STYLESHEET_CONTEXT_PATH;
+		COMPONENTS_XFORMSXML_STYLESHEET_CONTEXT_PATH = SandboxUtil.COMPONENTS_XFORMSXML_STYLESHEET_CONTEXT_PATH;
+		FORM_XFORMS_TEMPLATE_CONTEXT_PATH = SandboxUtil.FORM_XFORMS_TEMPLATE_CONTEXT_PATH;
 		
 		try {
 			
