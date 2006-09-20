@@ -65,11 +65,11 @@ public class FormBuilder {
 	 * creates primary user form document and stores it to webdav
 	 * 
 	 * @param form_props - primary form description. Only id is mandatory.
-	 * @throws WebdavSaveException - see exception description at checkForPendingErrors() javadoc
+	 * @throws FBPostponedException - see exception description at checkForPendingErrors() javadoc
 	 * @throws NullPointerException - form_props is null or id not provided
 	 * @throws Exception - some kind of other error occured
 	 */
-	public void createFormDocument(FormPropertiesBean form_properties) throws WebdavSaveException, NullPointerException, Exception {
+	public void createFormDocument(FormPropertiesBean form_properties) throws FBPostponedException, NullPointerException, Exception {
 		
 		checkForPendingErrors();
 		
@@ -81,13 +81,16 @@ public class FormBuilder {
 		try {
 			
 			form_xforms = (Document)form_xforms_template.cloneNode(true);
+			String form_id_str;
 			
 			if(form_props.getId() != null) {
+				
+				form_id_str = form_props.getId().toString();
 				
 				NodeList nl = form_xforms.getElementsByTagName("xf:model");
 				
 				Element model = (Element)nl.item(0);
-				model.setAttribute("id", form_props.getId().toString());
+				model.setAttribute("id", form_id_str);
 				
 			} else {
 				throw new NullPointerException("Id not presented in form properties.");
@@ -101,7 +104,7 @@ public class FormBuilder {
 				model.setTextContent(form_props.getName());
 			}
 			
-//			saveDocumentToWebdav(form_xforms, getServiceBean(), form_id_str);
+			saveDocumentToWebdav(form_xforms, getServiceBean(), form_id_str);
 			
 		} catch (NullPointerException e) {
 			throw e;
@@ -110,7 +113,7 @@ public class FormBuilder {
 		}
 	}
 	
-	public void removeFormComponent(String component_id) throws WebdavSaveException, NullPointerException {
+	public void removeFormComponent(String component_id) throws FBPostponedException, NullPointerException {
 		
 		checkForPendingErrors();
 		
@@ -304,12 +307,12 @@ public class FormBuilder {
 	 * currently editing form document component. Provide <i>null</i> if component needs to be appended
 	 * to other components list.
 	 * @return newly created form component html representation
-	 * @throws WebdavSaveException - see exception description at checkForPendingErrors() javadoc
+	 * @throws FBPostponedException - see exception description at checkForPendingErrors() javadoc
 	 * @throws NullPointerException - form document was not created first, 
 	 * component_after_new_id was provided, but such component was not found, other..
 	 * @throws Exception - something else is wrong
 	 */
-	public Element createFormComponent(String component_type, String component_after_new_id) throws WebdavSaveException, NullPointerException, Exception {
+	public Element createFormComponent(String component_type, String component_after_new_id) throws FBPostponedException, NullPointerException, Exception {
 		
 		checkForPendingErrors();
 		
@@ -396,7 +399,7 @@ public class FormBuilder {
 			}
 		}
 		
-//		saveDocumentToWebdav(form_xforms, getServiceBean(), form_props.getId().toString());
+		saveDocumentToWebdav(form_xforms, getServiceBean(), form_props.getId().toString());
 
 		Element new_html_component = (Element)getHtmlComponentReferenceByType(component_type).cloneNode(true);
 		putAttributesOnHtmlComponent(new_html_component, new_comp_id_str, component_type);
@@ -615,13 +618,13 @@ public class FormBuilder {
 	
 	/**
 	 * Check for exceptions thrown during previous requests
-	 * @throws WebdavSaveException - if saving xml file to webdav failed. Formbuilder user knows,
+	 * @throws FBPostponedException - if some kind of exception happened during previous request. Formbuilder user knows,
 	 * that error happened and can (most likely) happen again, so some adequate actions can be taken. 
 	 */
-	private void checkForPendingErrors() throws WebdavSaveException {
+	private void checkForPendingErrors() throws FBPostponedException {
 		
 		if(document_to_webdav_save_exception != null)
-			throw new WebdavSaveException(document_to_webdav_save_exception);
+			throw new FBPostponedException(document_to_webdav_save_exception);
 	}
 		
 	public static void main(String[] args) {
