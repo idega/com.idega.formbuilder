@@ -11,12 +11,13 @@ public class ComponentPalette implements Serializable {
 	private List<FormField> fields = new LinkedList<FormField>();
 	
 	public ComponentPalette() {
-		fields.add(new FormField("Vardas", ""));
-		fields.add(new FormField("Profesija", ""));
-		fields.add(new FormField("Email", ""));
-		fields.add(new FormField("Gymimo data", ""));
-		fields.add(new FormField("Checkbox", ""));
-		fields.add(new FormField("Input field", ""));
+		//TODO Substitute with proper logic for retrieving a list of FormFields
+		fields.add(new FormField("field_text"));
+		fields.add(new FormField("field_radio"));
+		fields.add(new FormField("field_textarea"));
+		fields.add(new FormField("field_checkbox"));
+		fields.add(new FormField("field_dropdown"));
+		fields.add(new FormField("field_list"));
 	}
 
 	public List<FormField> getFields() {
@@ -26,9 +27,4 @@ public class ComponentPalette implements Serializable {
 	public void setFields(List<FormField> fields) {
 		this.fields = fields;
 	}
-	
-	public String sum() {
-		return "WOWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW";
-	}
-	
 }
