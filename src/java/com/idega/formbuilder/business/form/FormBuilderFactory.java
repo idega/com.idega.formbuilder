@@ -14,6 +14,8 @@ public class FormBuilderFactory {
 	
 	private static final Lock initiation_lock = new ReentrantLock();
 	
+	private FormBuilderFactory() { }
+	
 	/**
 	 * @return FormBuilder instance
 	 * @throws InstantiationException - FormBuilder could not be instantiated

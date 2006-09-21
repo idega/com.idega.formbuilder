@@ -42,22 +42,28 @@ public class FormBuilder implements IFormBuilder {
 	
 	private static Document components_xml = null;
 	private static Document components_xforms = null;
+	private static Document components_xsd = null;
 	private static Document form_xforms_template = null;
+	private static Document form_xsd_template = null;
 	private static InputStream components_xforms_stream = null;
+	private static InputStream components_xsd_stream = null;
 	private static boolean inited = false;
 	private static List<String> components_types = null;
 	private static Map<String, XFormsComponentBean> cached_xforms_components = new HashMap<String, XFormsComponentBean>();
 	private static Map<String, Element> cached_html_components = new HashMap<String, Element>();
 	
 	private static String COMPONENTS_XFORMS_CONTEXT_PATH = null;
+	private static String COMPONENTS_XSD_CONTEXT_PATH = null;
 	private static String COMPONENTS_XFORMSHTML_STYLESHEET_CONTEXT_PATH = null;
 	private static String COMPONENTS_XFORMSXML_STYLESHEET_CONTEXT_PATH = null;
 	private static String FORM_XFORMS_TEMPLATE_CONTEXT_PATH = null;
+	private static String FORM_XSD_TEMPLATE_CONTEXT_PATH = null;
 	
 	private static final String FORMS_REPO_CONTEXT = "/files/formbuilder/forms/";
 	
 	private IWSlideServiceBean service_bean = null;
 	private Document form_xforms = null;
+	private Document form_xsd = null;
 	private FormPropertiesBean form_props = null;
 	
 	private List<String> form_components_id_list = new LinkedList<String>();
@@ -83,10 +89,10 @@ public class FormBuilder implements IFormBuilder {
 				
 				form_id_str = form_props.getId().toString();
 				
-				NodeList nl = form_xforms.getElementsByTagName("xf:model");
+				NodeList nl = form_xforms.getElementsByTagName(FormBuilderUtil.model_name);
 				
 				Element model = (Element)nl.item(0);
-				model.setAttribute("id", form_id_str);
+				model.setAttribute(FormBuilderUtil.id_name, form_id_str);
 				
 			} else {
 				throw new NullPointerException("Id not presented in form properties.");
@@ -100,13 +106,59 @@ public class FormBuilder implements IFormBuilder {
 				model.setTextContent(form_props.getName());
 			}
 			
-			saveDocumentToWebdav(form_xforms, getServiceBean(), form_id_str);
+			
+			form_xsd = (Document)form_xsd_template.cloneNode(true);
+			
+			String[] pathes = getFormPath(form_id_str);
+			saveDocumentToWebdav(form_xforms, getServiceBean(), pathes[0], pathes[1]);
+			
+			pathes = getFormSchemaPath(form_id_str);
+			saveDocumentToWebdav(form_xsd, getServiceBean(), pathes[0], pathes[1]);
 			
 		} catch (NullPointerException e) {
 			throw e;
 		} catch (Exception e) {
 			throw e;
 		}
+	}
+	
+	private String[] form_pathes = null;
+	
+	private String[] getFormPath(String form_id) {
+	
+		if(form_pathes == null) {
+			
+			StringBuffer path_to_file_string_buffer = new StringBuffer(FORMS_REPO_CONTEXT);
+			path_to_file_string_buffer.append(form_id);
+			path_to_file_string_buffer.append(FormBuilderUtil.slash);
+			
+			StringBuffer file_name_string_buffer = new StringBuffer(form_id);
+			file_name_string_buffer.append(".xforms");
+			
+			form_pathes = new String[] {path_to_file_string_buffer.toString(), file_name_string_buffer.toString()};			
+		}
+		
+		return form_pathes;
+	}
+	
+	private String[] schema_pathes = null;
+	
+	private String[] getFormSchemaPath(String form_id) {
+		
+		if(schema_pathes == null) {
+			
+			StringBuffer path_to_file_string_buffer = new StringBuffer(FORMS_REPO_CONTEXT);
+			path_to_file_string_buffer.append("xsd/");
+			path_to_file_string_buffer.append(form_id);
+			path_to_file_string_buffer.append(FormBuilderUtil.slash);
+			
+			StringBuffer file_name_string_buffer = new StringBuffer(form_id);
+			file_name_string_buffer.append(".xsd");
+			
+			schema_pathes = new String[] {path_to_file_string_buffer.toString(), file_name_string_buffer.toString()};
+		}
+
+		return schema_pathes;
 	}
 	
 	/* (non-Javadoc)
@@ -150,30 +202,25 @@ public class FormBuilder implements IFormBuilder {
 	 * @throws TransformerException - file is not an xml file maybe
 	 * @throws NullPointerException - some parameters were not provided, or provided empty string(s)
 	 */
-	protected void saveDocumentToWebdav(final Document document, final IWSlideServiceBean service_bean, final String form_id) throws TransformerException, NullPointerException {
+	protected void saveDocumentToWebdav(final Document document, final IWSlideServiceBean service_bean, final String path_to_file, final String file_name) throws TransformerException, NullPointerException {
 		
 		if(true)
 			return;
 		
-		if(document == null || service_bean == null || form_id == null || form_id.equals("")) {
+		if(document == null || service_bean == null || path_to_file == null || path_to_file.equals("") || file_name == null || file_name.equals("")) {
 			
 			StringBuffer msg_buf = new StringBuffer("Either parameter is provided as null or empty, shouldn't be:");
 			msg_buf.append("\ndocument: ");
 			msg_buf.append(String.valueOf(document));
 			msg_buf.append("\nservice_bean: ");
 			msg_buf.append(String.valueOf(service_bean));
-			msg_buf.append("\nform_id: ");
-			msg_buf.append(form_id);
+			msg_buf.append("\npath_to_file: ");
+			msg_buf.append(path_to_file);
+			msg_buf.append("\nfile_name: ");
+			msg_buf.append(file_name);
 			
 			throw new NullPointerException(msg_buf.toString());
 		}
-		
-		final StringBuffer path_to_file_string_buffer = new StringBuffer(FORMS_REPO_CONTEXT);
-		path_to_file_string_buffer.append(form_id);
-		path_to_file_string_buffer.append("/");
-		
-		final StringBuffer file_name_string_buffer = new StringBuffer(form_id);
-		file_name_string_buffer.append(".xforms");
 		
 		new Thread() {
 			
@@ -188,7 +235,7 @@ public class FormBuilder implements IFormBuilder {
 //					--
 					
 					service_bean.uploadFileAndCreateFoldersFromStringAsRoot(
-							path_to_file_string_buffer.toString(), file_name_string_buffer.toString(),
+							path_to_file, file_name,
 							is, "text/xml", false
 					);
 					
@@ -254,7 +301,7 @@ public class FormBuilder implements IFormBuilder {
 			
 //			get binding
 			Element binding = 
-				FBUtil.getElementByIdFromDocument(components_xforms, "xf:model", bind_to);
+				FBUtil.getElementByIdFromDocument(components_xforms, FormBuilderUtil.model_name, bind_to);
 			
 			if(binding == null)
 				throw new NullPointerException("Binding not found");
@@ -313,13 +360,13 @@ public class FormBuilder implements IFormBuilder {
 		
 		String new_comp_id_str = CTID+String.valueOf(new_comp_id);
 		
-		new_xforms_element.setAttribute("id", new_comp_id_str);
+		new_xforms_element.setAttribute(FormBuilderUtil.id_name, new_comp_id_str);
 		
 		String bind_id = null;
 		
 		if(xforms_component.getBind() != null) {
 			
-			bind_id = new_comp_id_str+xforms_component.getBind().getAttribute("id");
+			bind_id = new_comp_id_str+xforms_component.getBind().getAttribute(FormBuilderUtil.id_name);
 			new_xforms_element.setAttribute("bind", bind_id);
 		}
 		
@@ -342,14 +389,14 @@ public class FormBuilder implements IFormBuilder {
 		if(xforms_component.getBind() != null) {
 //			insert bind element
 			new_xforms_element = (Element)form_xforms.importNode(xforms_component.getBind(), true);
-			new_xforms_element.setAttribute("id", bind_id);
+			new_xforms_element.setAttribute(FormBuilderUtil.id_name, bind_id);
 			
 			if(xforms_component.getNodeset() != null) {
 				
 				new_xforms_element.setAttribute("nodeset", bind_id);
 			}
 			
-			Element container = (Element)form_xforms.getElementsByTagName("xf:model").item(0);
+			Element container = (Element)form_xforms.getElementsByTagName(FormBuilderUtil.model_name).item(0);
 			container.appendChild(new_xforms_element);
 			
 			if(xforms_component.getNodeset() != null) {
@@ -380,8 +427,13 @@ public class FormBuilder implements IFormBuilder {
 				container.appendChild(new_xforms_element);
 			}
 		}
+		String form_id_str = form_props.getId().toString();
+		String[] pathes = getFormPath(form_id_str);
+		saveDocumentToWebdav(form_xforms, getServiceBean(), pathes[0], pathes[1]);
 		
-		saveDocumentToWebdav(form_xforms, getServiceBean(), form_props.getId().toString());
+//		TODO: check, if schema could not be saved everytime component is created
+		pathes = getFormSchemaPath(form_id_str);
+		saveDocumentToWebdav(form_xsd, getServiceBean(), pathes[0], pathes[1]);
 		
 		if(component_after_new_id != null) {
 			
@@ -390,7 +442,6 @@ public class FormBuilder implements IFormBuilder {
 				
 				if(form_components_id_list.get(i).equals(component_after_new_id)) {
 					form_components_id_list.add(i, new_comp_id_str);
-					System.out.println("found: ");
 					break;
 				}
 			}
@@ -399,9 +450,6 @@ public class FormBuilder implements IFormBuilder {
 		
 		Element new_html_component = (Element)getHtmlComponentReferenceByType(component_type).cloneNode(true);
 		putAttributesOnHtmlComponent(new_html_component, new_comp_id_str, component_type);
-		
-		
-//		DOMUtil.prettyPrintDOM(form_xforms);
 		
 		return new_html_component;
 	}
@@ -416,7 +464,7 @@ public class FormBuilder implements IFormBuilder {
 	 */
 	private static void putAttributesOnHtmlComponent(Element component, String new_comp_id, String old_comp_id) {
 		
-		component.setAttribute("id", new_comp_id);
+		component.setAttribute(FormBuilderUtil.id_name, new_comp_id);
 		NodeList descendants = component.getElementsByTagName("*");
 		
 		for (int i = 0; i < descendants.getLength(); i++) {
@@ -477,22 +525,19 @@ public class FormBuilder implements IFormBuilder {
 	
 	public static void init(FacesContext ctx) throws InstantiationException {
 		
-//		COMPONENTS_XFORMS_CONTEXT_PATH = "/Users/civilis/workspace/ePlatform35/chiba-web/web/myBasicTest.xhtml";
-////		COMPONENTS_XFORMS_CONTEXT_PATH = "/files/formbuilder/components/components.xforms";
-//		COMPONENTS_XFORMSHTML_STYLESHEET_CONTEXT_PATH = "/Users/civilis/workspace/ePlatform35/com.idega.formbuilder/resources/xslt/htmlxml.xsl";
-//		COMPONENTS_XFORMSXML_STYLESHEET_CONTEXT_PATH = "/Users/civilis/workspace/ePlatform35/com.idega.formbuilder/resources/xslt/components.xsl";
-//		FORM_XFORMS_TEMPLATE_CONTEXT_PATH = "/Users/civilis/workspace/ePlatform35/com.idega.formbuilder/resources/templates/form.xhtml";
-		
 		COMPONENTS_XFORMS_CONTEXT_PATH = SandboxUtil.COMPONENTS_XFORMS_CONTEXT_PATH;
 		COMPONENTS_XFORMSHTML_STYLESHEET_CONTEXT_PATH = SandboxUtil.COMPONENTS_XFORMSHTML_STYLESHEET_CONTEXT_PATH;
 		COMPONENTS_XFORMSXML_STYLESHEET_CONTEXT_PATH = SandboxUtil.COMPONENTS_XFORMSXML_STYLESHEET_CONTEXT_PATH;
 		FORM_XFORMS_TEMPLATE_CONTEXT_PATH = SandboxUtil.FORM_XFORMS_TEMPLATE_CONTEXT_PATH;
+		FORM_XSD_TEMPLATE_CONTEXT_PATH = SandboxUtil.FORM_XSD_TEMPLATE_CONTEXT_PATH;
+		COMPONENTS_XSD_CONTEXT_PATH = SandboxUtil.COMPONENTS_XSD_CONTEXT_PATH;
 		
 		try {
 			
 //			IWContext iwc = IWContext.getInstance();
 //			IBOSession ses_bean = IBOLookup.getSessionInstance(iwc, IWSlideSession.class);			
 //			components_xforms_stream = ((IWSlideSessionBean)ses_bean).getInputStream(COMPONENTS_XFORMS_CONTEXT_PATH);
+//			components_xsd_stream = ((IWSlideSessionBean)ses_bean).getInputStream(COMPONENTS_XSD_CONTEXT_PATH);
 			
 		} catch (Exception e) {
 			InstantiationException inst_e = new InstantiationException(FB_INIT_FAILED);
@@ -533,11 +578,19 @@ public class FormBuilder implements IFormBuilder {
 			
 			DocumentBuilder doc_builder = FBUtil.getDocumentBuilder();
 			
-			if(components_xforms_stream != null)
+			if(components_xforms_stream != null) {
 				
 				components_xforms = doc_builder.parse(components_xforms_stream);
-			else
+				components_xforms_stream = null;
+			} else
 				components_xforms = doc_builder.parse(new FileInputStream(COMPONENTS_XFORMS_CONTEXT_PATH));
+			
+			if(components_xsd_stream != null) {
+				
+				components_xsd = doc_builder.parse(components_xsd_stream);
+				components_xsd_stream = null;
+			} else
+				components_xsd = doc_builder.parse(new FileInputStream(COMPONENTS_XSD_CONTEXT_PATH));
 			
 			components_generator.setDocument(components_xforms);
 			components_xml = components_generator.generateBaseComponentsDocument();
@@ -545,6 +598,7 @@ public class FormBuilder implements IFormBuilder {
 			components_types = gatherAvailableComponentsTypes(components_xml);
 			
 			form_xforms_template = doc_builder.parse(new FileInputStream(FORM_XFORMS_TEMPLATE_CONTEXT_PATH));
+			form_xsd_template = doc_builder.parse(new FileInputStream(FORM_XSD_TEMPLATE_CONTEXT_PATH));
 			
 			inited = true;
 			
@@ -611,7 +665,7 @@ public class FormBuilder implements IFormBuilder {
 			
 			if(child.getNodeType() == Node.ELEMENT_NODE && child.getNodeName().equals("div")) {
 				
-				String element_id = ((Element)child).getAttribute("id");
+				String element_id = ((Element)child).getAttribute(FormBuilderUtil.id_name);
 				
 				if(element_id != null && 
 						element_id.startsWith(CTID) &&
@@ -638,16 +692,16 @@ public class FormBuilder implements IFormBuilder {
 	public static boolean isInited() {
 		return inited;
 	}
-		
+	
 	public static void main(String[] args) {
 		
 		try {
 			
 			IFormBuilder fb = FormBuilderFactory.createFormBuilder();
-			System.out.println("<sugeneruoti komponentai > ");
-			DOMUtil.prettyPrintDOM(components_xml);
-			System.out.println("<sugeneruoti komponentai />");
-
+//			System.out.println("<sugeneruoti komponentai > ");
+//			DOMUtil.prettyPrintDOM(components_xml);
+//			System.out.println("<sugeneruoti komponentai />");
+			
 			FormPropertiesBean form_props = new FormPropertiesBean();
 			form_props.setId(new Long(22));
 			form_props.setName("my form name");
