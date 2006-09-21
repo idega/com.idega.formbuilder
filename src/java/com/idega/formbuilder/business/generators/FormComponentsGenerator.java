@@ -97,7 +97,7 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 		absolute_components_stylesheet_path = params[2];
 	}
 	
-	public void setXFormsDocument(Document xforms_doc) throws NullPointerException {
+	public void setDocument(Document xforms_doc) throws NullPointerException {
 		
 		if(xforms_doc != null)
 			this.xforms_doc = xforms_doc;

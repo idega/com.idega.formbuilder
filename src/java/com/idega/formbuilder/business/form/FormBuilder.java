@@ -25,7 +25,7 @@ import org.w3c.dom.NodeList;
 
 import com.idega.formbuilder.business.form.beans.FormPropertiesBean;
 import com.idega.formbuilder.business.form.beans.XFormsComponentBean;
-import com.idega.formbuilder.business.generators.FormComponentsGenerator;
+import com.idega.formbuilder.business.generators.ComponentsGeneratorFactory;
 import com.idega.formbuilder.business.generators.IComponentsGenerator;
 import com.idega.formbuilder.sandbox.SandboxUtil;
 import com.idega.formbuilder.util.FBUtil;
@@ -36,7 +36,7 @@ import com.idega.slide.business.IWSlideServiceBean;
  * 
  * Main FormBuilder model class. Knows about available form components, manages user's xforms document
  */
-public class FormBuilder {
+public class FormBuilder implements IFormBuilder {
 	
 	private static Log logger = LogFactory.getLog(FormBuilder.class);
 	
@@ -62,13 +62,8 @@ public class FormBuilder {
 	
 	private List<String> form_components_id_list = new LinkedList<String>();
 	
-	/**
-	 * creates primary user form document and stores it to webdav
-	 * 
-	 * @param form_props - primary form description. Only id is mandatory.
-	 * @throws FBPostponedException - see exception description at checkForPendingErrors() javadoc
-	 * @throws NullPointerException - form_props is null or id not provided
-	 * @throws Exception - some kind of other error occured
+	/* (non-Javadoc)
+	 * @see com.idega.formbuilder.business.form.IFormBuilder#createFormDocument(com.idega.formbuilder.business.form.beans.FormPropertiesBean)
 	 */
 	public void createFormDocument(FormPropertiesBean form_properties) throws FBPostponedException, NullPointerException, Exception {
 		
@@ -114,11 +109,8 @@ public class FormBuilder {
 		}
 	}
 	
-	/**
-	 * __NOT IMPLEMENTED YET__
-	 * @param component_id - form component id to remove
-	 * @throws FBPostponedException - see exception description at checkForPendingErrors() javadoc 
-	 * @throws NullPointerException - form document is not created
+	/* (non-Javadoc)
+	 * @see com.idega.formbuilder.business.form.IFormBuilder#removeFormComponent(java.lang.String)
 	 */
 	public void removeFormComponent(String component_id) throws FBPostponedException, NullPointerException {
 		
@@ -299,26 +291,8 @@ public class FormBuilder {
 		return html_component;
 	}
 
-	/**
-	 * <p>
-	 * Creates new form component by component type provided,
-	 * inserts it after specific component OR after all components in form component list.
-	 * New xforms document is saved to webdav repository and component html representation returned.
-	 * </p>
-	 * <p>
-	 * Of course form document should be created or imported before.
-	 * </p>
-	 * 
-	 * @param component_type - type of component from components_types list,
-	 * which should be inserted to form document.
-	 * @param component_after_new_id - where new component should be places. This id must come from
-	 * currently editing form document component. Provide <i>null</i> if component needs to be appended
-	 * to other components list.
-	 * @return newly created form component html representation
-	 * @throws FBPostponedException - see exception description at checkForPendingErrors() javadoc
-	 * @throws NullPointerException - form document was not created first, 
-	 * component_after_new_id was provided, but such component was not found, other..
-	 * @throws Exception - something else is wrong
+	/* (non-Javadoc)
+	 * @see com.idega.formbuilder.business.form.IFormBuilder#createFormComponent(java.lang.String, java.lang.String)
 	 */
 	public Element createFormComponent(String component_type, String component_after_new_id) throws FBPostponedException, NullPointerException, Exception {
 		
@@ -464,9 +438,8 @@ public class FormBuilder {
 	
 	private FormBuilder() {	}
 	
-	/**
-	 * 
-	 * @return List of available form components types
+	/* (non-Javadoc)
+	 * @see com.idega.formbuilder.business.form.IFormBuilder#getAvailableFormComponentsList()
 	 */
 	public List<String> getAvailableFormComponentsList() {
 		
@@ -480,6 +453,9 @@ public class FormBuilder {
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see com.idega.formbuilder.business.form.IFormBuilder#getFormComponentsList()
+	 */
 	public List<String> getFormComponentsList() {
 		return form_components_id_list;
 	}
@@ -491,7 +467,7 @@ public class FormBuilder {
 	 * @return instance of this class. FormBuilder should be initiated first by calling init()
 	 * @throws InstantiationException - if formbuilder was not initiated.
 	 */
-	public static FormBuilder getInstance() throws InstantiationException {
+	public static IFormBuilder getInstance() throws InstantiationException {
 		
 		if(!inited)
 			throw new InstantiationException(NOT_INITED_MSG);
@@ -548,7 +524,7 @@ public class FormBuilder {
 		
 		try {
 			
-			IComponentsGenerator components_generator = FormComponentsGenerator.getInstance();
+			IComponentsGenerator components_generator = ComponentsGeneratorFactory.createComponentsGenerator();
 			components_generator.init(
 					new String[] {null, COMPONENTS_XFORMSHTML_STYLESHEET_CONTEXT_PATH, 
 							COMPONENTS_XFORMSXML_STYLESHEET_CONTEXT_PATH
@@ -563,7 +539,7 @@ public class FormBuilder {
 			else
 				components_xforms = doc_builder.parse(new FileInputStream(COMPONENTS_XFORMS_CONTEXT_PATH));
 			
-			((FormComponentsGenerator)components_generator).setXFormsDocument(components_xforms);
+			components_generator.setDocument(components_xforms);
 			components_xml = components_generator.generateBaseComponentsDocument();
 			
 			components_types = gatherAvailableComponentsTypes(components_xml);
@@ -667,9 +643,10 @@ public class FormBuilder {
 		
 		try {
 			
-			FormBuilder.init(null);
-			FormBuilder fb = FormBuilder.getInstance();
-			
+			IFormBuilder fb = FormBuilderFactory.createFormBuilder();
+			System.out.println("<sugeneruoti komponentai > ");
+			DOMUtil.prettyPrintDOM(components_xml);
+			System.out.println("<sugeneruoti komponentai />");
 
 			FormPropertiesBean form_props = new FormPropertiesBean();
 			form_props.setId(new Long(22));
@@ -677,11 +654,11 @@ public class FormBuilder {
 
 			fb.createFormDocument(form_props);
 			
-			fb.createFormComponent("fbcomp_text", null);
-			
-			fb.createFormComponent("fbcomp_text", null);
-			Element textarea = fb.createFormComponent("fbcomp_textarea", "fbcomp_2");
-			DOMUtil.prettyPrintDOM(textarea);
+//			fb.createFormComponent("fbcomp_text", null);
+//			
+//			fb.createFormComponent("fbcomp_text", null);
+//			Element textarea = fb.createFormComponent("fbcomp_textarea", "fbcomp_2");
+//			DOMUtil.prettyPrintDOM(textarea);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

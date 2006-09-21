@@ -1,3 +1,4 @@
+
 package com.idega.formbuilder.presentation.renderkit;
 
 import java.io.IOException;
@@ -6,7 +7,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-import com.idega.formbuilder.business.form.FormBuilder;
 import com.idega.webface.WFContainer;
 
 /**
@@ -23,17 +23,9 @@ public class ContainerRenderer extends com.idega.webface.renderkit.ContainerRend
 
 	public void encodeBegin(FacesContext ctx, UIComponent comp) throws IOException {
 		
-		if(!FormBuilder.isInited()) {
-			
-			try {
-				FormBuilder.init(null);
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			}
-		}
 //		try {
 //			
-//			FormBuilder fb = FormBuilder.getInstance();
+//			IFormBuilder fb = FormBuilderFactory.createFormBuilder();
 //
 //			FormPropertiesBean form_props = new FormPropertiesBean();
 //			form_props.setId(new Long(21));
