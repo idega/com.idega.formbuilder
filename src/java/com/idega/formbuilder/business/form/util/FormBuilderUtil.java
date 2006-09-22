@@ -55,15 +55,17 @@ public class FormBuilderUtil {
 		
 		if(src == null || dest == null || type_name == null) {
 			
-			StringBuffer err_msg = new StringBuffer("\nEither parameter is not provided:");
-			err_msg.append("\nsrc: ");
-			err_msg.append(String.valueOf(src));
-			err_msg.append("\ndest: ");
-			err_msg.append(String.valueOf(dest));
-			err_msg.append("\ntype_name: ");
-			err_msg.append(type_name);
+			String err_msg = 
+			new StringBuffer("\nEither parameter is not provided:")
+			.append("\nsrc: ")
+			.append(String.valueOf(src))
+			.append("\ndest: ")
+			.append(String.valueOf(dest))
+			.append("\ntype_name: ")
+			.append(type_name)
+			.toString();
 			
-			throw new NullPointerException(err_msg.toString());
+			throw new NullPointerException(err_msg);
 		}
 		
 		Element root = src.getDocumentElement();

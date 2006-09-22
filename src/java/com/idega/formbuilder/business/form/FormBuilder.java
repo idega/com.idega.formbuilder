@@ -122,14 +122,13 @@ public class FormBuilder implements IFormBuilder {
 	
 		if(form_pathes == null) {
 			
-			StringBuffer path_to_file_string_buffer = new StringBuffer(FORMS_REPO_CONTEXT);
-			path_to_file_string_buffer.append(form_id);
-			path_to_file_string_buffer.append(FormBuilderUtil.slash);
+			String path_to_file = 
+			new StringBuffer(FORMS_REPO_CONTEXT)
+			.append(form_id)
+			.append(FormBuilderUtil.slash)
+			.toString();
 			
-			StringBuffer file_name_string_buffer = new StringBuffer(form_id);
-			file_name_string_buffer.append(".xforms");
-			
-			form_pathes = new String[] {path_to_file_string_buffer.toString(), file_name_string_buffer.toString()};			
+			form_pathes = new String[] {path_to_file, form_id+".xforms"};			
 		}
 		
 		return form_pathes;
@@ -141,15 +140,14 @@ public class FormBuilder implements IFormBuilder {
 		
 		if(schema_pathes == null) {
 			
-			StringBuffer path_to_file_string_buffer = new StringBuffer(FORMS_REPO_CONTEXT);
-			path_to_file_string_buffer.append("xsd/");
-			path_to_file_string_buffer.append(form_id);
-			path_to_file_string_buffer.append(FormBuilderUtil.slash);
+			String path_to_file = 
+			new StringBuffer(FORMS_REPO_CONTEXT)
+			.append("xsd/")
+			.append(form_id)
+			.append(FormBuilderUtil.slash)
+			.toString();
 			
-			StringBuffer file_name_string_buffer = new StringBuffer(form_id);
-			file_name_string_buffer.append(".xsd");
-			
-			schema_pathes = new String[] {path_to_file_string_buffer.toString(), file_name_string_buffer.toString()};
+			schema_pathes = new String[] {path_to_file.toString(), form_id+".xsd"};
 		}
 
 		return schema_pathes;
@@ -203,17 +201,19 @@ public class FormBuilder implements IFormBuilder {
 		
 		if(document == null || service_bean == null || path_to_file == null || path_to_file.equals("") || file_name == null || file_name.equals("")) {
 			
-			StringBuffer msg_buf = new StringBuffer("\nEither parameter is provided as null or empty, shouldn't be:");
-			msg_buf.append("\ndocument: ");
-			msg_buf.append(String.valueOf(document));
-			msg_buf.append("\nservice_bean: ");
-			msg_buf.append(String.valueOf(service_bean));
-			msg_buf.append("\npath_to_file: ");
-			msg_buf.append(path_to_file);
-			msg_buf.append("\nfile_name: ");
-			msg_buf.append(file_name);
+			String msg = 
+			new StringBuffer("\nEither parameter is provided as null or empty, shouldn't be:")
+			.append("\ndocument: ")
+			.append(String.valueOf(document))
+			.append("\nservice_bean: ")
+			.append(String.valueOf(service_bean))
+			.append("\npath_to_file: ")
+			.append(path_to_file)
+			.append("\nfile_name: ")
+			.append(file_name)
+			.toString();
 			
-			throw new NullPointerException(msg_buf.toString());
+			throw new NullPointerException(msg);
 		}
 		
 		new Thread() {
