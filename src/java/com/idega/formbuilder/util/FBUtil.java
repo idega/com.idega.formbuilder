@@ -1,13 +1,6 @@
 package com.idega.formbuilder.util;
 
 import javax.faces.context.FacesContext;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.chiba.xml.dom.DOMUtil;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.idegaweb.IWBundle;
@@ -52,59 +45,5 @@ public class FBUtil {
 	public static String getResourceAbsolutePath(IWMainApplication iwma, String url) {
 		IWBundle iwb = iwma.getBundle(FormbuilderViewManager.FORMBUILDER_BUNDLE_IDENTIFIER);
         return iwb.getRealPathWithFileNameString(url);
-	}
-	
-	private static DocumentBuilderFactory factory = null;
-	
-	public static DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
-		
-		if(factory == null) {
-			factory = DocumentBuilderFactory.newInstance();
-		    factory.setNamespaceAware(true);
-		    factory.setValidating(false);
-		}
-
-	    return factory.newDocumentBuilder();
-	}
-	
-	public static Integer generateComponentId(Integer last_component_id) {
-		
-		return new Integer(last_component_id.intValue()+1);
-	}
-	
-	/**
-	 * 
-	 * method name should explain, what it does
-	 * 
-	 * @param doc - document, to search for an element
-	 * @param start_tag - where to start. faster search.
-	 * @param id_value - ..
-	 * @return - Reference to element in document
-	 */
-	public static Element getElementByIdFromDocument(Document doc, String start_tag, String id_value) {
-		
-		return getElementByAttributeFromDocument(doc, start_tag, "id", id_value);
-	}
-	
-	/**
-	 * 
-	 * method name should explain, what it does
-	 * 
-	 * @param doc - document, to search for an element
-	 * @param start_tag - where to start. faster search.
-	 * @param attribute_name - what name attribute shoulde be searched for
-	 * @param attribute_value - ..
-	 * @return - Reference to element in document
-	 */
-	public static Element getElementByAttributeFromDocument(Document doc, String start_tag, String attribute_name, String attribute_value) {
-		
-		Element start_element;
-		
-		if(start_tag != null)
-			start_element = (Element)doc.getElementsByTagName(start_tag).item(0);
-		else
-			start_element = doc.getDocumentElement();
-		
-		return DOMUtil.getElementByAttributeValue(start_element, "*", attribute_name, attribute_value);
 	}
 }

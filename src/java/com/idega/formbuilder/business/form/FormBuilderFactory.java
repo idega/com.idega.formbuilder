@@ -1,8 +1,5 @@
 package com.idega.formbuilder.business.form;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 /**
  * This class is just to convenience getting new instance of FormBuilder
  * 
@@ -12,32 +9,22 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class FormBuilderFactory {
 	
-	private static final Lock initiation_lock = new ReentrantLock();
-	
 	private FormBuilderFactory() { }
 	
 	/**
 	 * @return FormBuilder instance
 	 * @throws InstantiationException - FormBuilder could not be instantiated
 	 */
-	public static IFormBuilder createFormBuilder() throws InstantiationException {
+	public static IFormBuilder newFormBuilder() throws InstantiationException {
 		
-		/**
-		 * TODO: look for factory design patterns
-		 */
 		if(!FormBuilder.isInited()) {
 			
-			try {
-				
-				initiation_lock.lock();
-				
+			synchronized(FormBuilder.class) {
+					
 				if(!FormBuilder.isInited()) {
-				
+						
 					FormBuilder.init(null);
 				}
-				
-			} finally {
-				initiation_lock.unlock();
 			}
 		}
 		

@@ -16,6 +16,7 @@ import org.chiba.xml.xforms.exception.XFormsException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import com.idega.formbuilder.business.form.FormBuilder;
 import com.idega.formbuilder.business.generators.FBXSLTGenerator;
 import com.idega.repository.data.Singleton;
 import com.idega.xml.XMLException;
@@ -30,7 +31,7 @@ import com.idega.xml.XMLException;
  */
 public class FormComponentsGenerator implements Singleton, IComponentsGenerator  {
 	
-	private static Log logger = LogFactory.getLog(FormComponentsGenerator.class);
+	private volatile static Log logger = LogFactory.getLog(FormComponentsGenerator.class);
 	
 	protected static IComponentsGenerator me = null;
 	private String absolute_components_xforms_path = null;
@@ -41,13 +42,15 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 	private Document xforms_doc = null;
 	private int locked_cnt = 0;
 	
-	/**
-	 * TODO: checkout how to write this method effective
-	 */
-	public static synchronized IComponentsGenerator getInstance() {
+	public static IComponentsGenerator getInstance() {
 		
 		if (me == null) {
-			me = new FormComponentsGenerator();
+			
+			synchronized (FormBuilder.class) {
+				if (me == null) {
+					me = new FormComponentsGenerator();
+				}
+			}
 		}
 
 		return me;
