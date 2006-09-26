@@ -23,13 +23,17 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.idega.business.IBOLookup;
+import com.idega.business.IBOLookupException;
 import com.idega.formbuilder.business.form.beans.FormPropertiesBean;
 import com.idega.formbuilder.business.form.beans.XFormsComponentBean;
 import com.idega.formbuilder.business.form.util.FormBuilderUtil;
 import com.idega.formbuilder.business.generators.ComponentsGeneratorFactory;
 import com.idega.formbuilder.business.generators.IComponentsGenerator;
 import com.idega.formbuilder.sandbox.SandboxUtil;
-import com.idega.slide.business.IWSlideServiceBean;
+import com.idega.idegaweb.IWMainApplication;
+import com.idega.slide.business.IWSlideService;
+
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
  * @version 1.0
@@ -61,7 +65,6 @@ public class FormBuilder implements IFormBuilder {
 	
 	private static final String FORMS_REPO_CONTEXT = "/files/formbuilder/forms/";
 	
-	private IWSlideServiceBean service_bean = null;
 	private Document form_xforms = null;
 	private Document form_xsd = null;
 	private FormPropertiesBean form_props = null;
@@ -111,9 +114,9 @@ public class FormBuilder implements IFormBuilder {
 		
 		form_xsd = (Document)form_xsd_template.cloneNode(true);
 		
-		saveDocumentToWebdav(form_xsd, getServiceBean(), pathes[0], pathes[1]);
+		saveDocumentToWebdav(form_xsd, pathes[0], pathes[1]);
 		pathes = getFormPath(form_id_str);
-		saveDocumentToWebdav(form_xforms, getServiceBean(), pathes[0], pathes[1]);
+		saveDocumentToWebdav(form_xforms, pathes[0], pathes[1]);
 	}
 	
 	private String[] form_pathes = null;
@@ -166,12 +169,13 @@ public class FormBuilder implements IFormBuilder {
 		throw new NullPointerException("Not implemented yet");
 	}
 	
-	private IWSlideServiceBean getServiceBean() {
-		
-		if(service_bean == null)
-			service_bean = new IWSlideServiceBean();
-		
-		return service_bean;
+	protected IWSlideService getIWSlideService() {
+		try {
+			return (IWSlideService) IBOLookup.getServiceInstance(IWMainApplication.getDefaultIWApplicationContext(), IWSlideService.class);
+		}
+		catch (IBOLookupException e) {
+			throw new RuntimeException("Error getting IWSlideService");
+		}
 	}
 	
 	private Exception document_to_webdav_save_exception = null;
@@ -188,25 +192,22 @@ public class FormBuilder implements IFormBuilder {
 	 * </p>
 	 * 
 	 * @param document - xml document to write to webdav repository
-	 * @param service_bean - service bean, used to upload files
 	 * @param path_to_file - where file should be placed, relative to webdav context
 	 * @param file_name - how should we name the file
 	 * @throws TransformerException - file is not an xml file maybe
 	 * @throws NullPointerException - some parameters were not provided, or provided empty string(s)
 	 */
-	protected void saveDocumentToWebdav(final Document document, final IWSlideServiceBean service_bean, final String path_to_file, final String file_name) throws TransformerException, NullPointerException {
+	protected void saveDocumentToWebdav(final Document document, final String path_to_file, final String file_name) throws TransformerException, NullPointerException {
 		
 		if(true)
 			return;
 		
-		if(document == null || service_bean == null || path_to_file == null || path_to_file.equals("") || file_name == null || file_name.equals("")) {
+		if(document == null || path_to_file == null || path_to_file.equals("") || file_name == null || file_name.equals("")) {
 			
 			String msg = 
 			new StringBuffer("\nEither parameter is provided as null or empty, shouldn't be:")
 			.append("\ndocument: ")
 			.append(String.valueOf(document))
-			.append("\nservice_bean: ")
-			.append(String.valueOf(service_bean))
 			.append("\npath_to_file: ")
 			.append(path_to_file)
 			.append("\nfile_name: ")
@@ -228,7 +229,7 @@ public class FormBuilder implements IFormBuilder {
 					InputStream is = new ByteArrayInputStream(out.toByteArray());
 //					--
 					
-					service_bean.uploadFileAndCreateFoldersFromStringAsRoot(
+					getIWSlideService().uploadFileAndCreateFoldersFromStringAsRoot(
 							path_to_file, file_name,
 							is, "text/xml", false
 					);
@@ -406,7 +407,7 @@ public class FormBuilder implements IFormBuilder {
 		
 		String form_id_str = form_props.getId().toString();
 		String[] pathes = getFormPath(form_id_str);
-		saveDocumentToWebdav(form_xforms, getServiceBean(), pathes[0], pathes[1]);
+		saveDocumentToWebdav(form_xforms, pathes[0], pathes[1]);
 		
 		if(component_after_new_id != null) {
 			
@@ -426,7 +427,7 @@ public class FormBuilder implements IFormBuilder {
 			FormBuilderUtil.copySchemaType(components_xsd, form_xsd, new_form_schema_type);
 			form_xsd_contained_types_declarations.add(new_form_schema_type);
 			pathes = getFormSchemaPath(form_id_str);
-			saveDocumentToWebdav(form_xsd, getServiceBean(), pathes[0], pathes[1]);
+			saveDocumentToWebdav(form_xsd,  pathes[0], pathes[1]);
 		}
 		
 		Element new_html_component = (Element)getHtmlComponentReferenceByType(component_type).cloneNode(true);
