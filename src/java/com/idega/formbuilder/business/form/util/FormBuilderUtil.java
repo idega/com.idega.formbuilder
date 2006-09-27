@@ -1,5 +1,6 @@
 package com.idega.formbuilder.business.form.util;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -12,11 +13,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
+
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
  * @version 1.0
  *
- * FormBuilder (yep, that means some methods can be tightly coupled) helper class for working with xml files
+ * FormBuilder helper class (yep, that means some methods can be tightly coupled)
  *
  * Tightly coupled with FormBuilder class
  * 
@@ -31,6 +34,13 @@ public class FormBuilderUtil {
 	public static final String type_name = "type";
 	public static final String slash = "/";
 	public static final String fb_ = "fb_";
+	public static final String loc_ref_part1 = "instance('localized_strings')/";
+	public static final String loc_ref_part2 = "[@lang=instance('localized_strings')/current_language]";
+	public static final String loc_mod = "localized_strings_model";
+	public static final String loc_tag = "localized_strings";
+	public static final String output = "xf:output";
+	public static final String ref_s = "ref";
+	public static final String lang = "lang";
 
 	private static final String simple_type = "xs:simpleType";
 	private static final String complex_type = "xs:complexType";
@@ -84,8 +94,7 @@ public class FormBuilderUtil {
 			throw new NullPointerException("Schema type was not found by provided name: "+type_name);
 		
 		type_to_copy = (Element)dest.importNode(type_to_copy, true);
-		
-		dest.getDocumentElement().appendChild(type_to_copy);
+		((Element)dest.getElementsByTagName("xs:schema").item(0)).appendChild(type_to_copy);
 	}
 	
 	private static Element getSchemaTypeToCopy(NodeList types, String type_name_required) {
@@ -181,19 +190,153 @@ public class FormBuilderUtil {
 		container.appendChild(new_xforms_element);
 	}
 	
-	public static void insertBindElement(Document form_xforms, Element new_xforms_element, String new_form_schema_type, String bind_id, List<String> form_xsd_contained_types_declarations) {
+	public static String insertBindElement(Document form_xforms, Element new_xforms_element, String bind_id, List<String> form_xsd_contained_types_declarations) {
 		
 		new_xforms_element.setAttribute(id_name, bind_id);
 	
 		String type_att = new_xforms_element.getAttribute(type_name);
 		
-		if(type_att != null && type_att.startsWith(fb_) &&
-				!form_xsd_contained_types_declarations.contains(type_att)) {
+		NodeList models = form_xforms.getElementsByTagName(model_name);
+		
+		for (int i = 0; i < models.getLength(); i++) {
+			
+			Element model = (Element)models.item(i);
+			
+			if(!model.getAttribute(id_name).equals(loc_mod)) {
+				
+				model.appendChild(new_xforms_element);
+				
+				if(type_att != null && type_att.startsWith(fb_) &&
+						!form_xsd_contained_types_declarations.contains(type_att))
 
-			new_form_schema_type = type_att;
+					return type_att;
+				
+				return null;
+			}
 		}
 		
-		Element container = (Element)form_xforms.getElementsByTagName(model_name).item(0);
-		container.appendChild(new_xforms_element);
+		return null;
+	}
+	
+	/**
+	 * Puts localized text on element. Localization is saved on the xforms document.
+	 * 
+	 * @param new_key - new localization message key
+	 * @param old_key - old key, if provided, is used for replacing with new_key
+	 * @param element - element, to change or put localization message
+	 * @param xforms - xforms document
+	 * @param loc_string - Localized message. See class javadoc
+	 * @throws NullPointerException - something necessary not provided
+	 */
+	public static void putLocalizedText(String new_key, String old_key, Element element, Document xforms, LocalizedStringBean loc_string) throws NullPointerException {
+
+		if(xforms == null)
+			throw new NullPointerException("XForms document not provided");
+		
+		String ref = element.getAttribute(ref_s);
+		
+		if(ref == null || new_key != null) {
+			
+			if(new_key == null)
+				throw new NullPointerException("Localization to element not initialized and key for new localization string not presented");
+			
+//			add key to ref
+			ref = new StringBuffer(loc_ref_part1)
+			.append(new_key)
+			.append(loc_ref_part2)
+			.toString();
+			
+			element.setAttribute(ref_s, ref);
+			
+		} else if(ref != null && isRefFormCorrect(ref)) {
+//			get key from ref
+			
+			new_key = getKeyFromRef(ref);
+			
+		} else
+			throw new NullPointerException("Ref and key not specified or ref has incorrect format");
+		
+		Element loc_model = getElementByIdFromDocument(xforms, "head", loc_mod);
+		
+		Element loc_strings = (Element)loc_model.getElementsByTagName(loc_tag).item(0);
+		
+		if(old_key != null) {
+			
+			NodeList loc_tags = loc_strings.getElementsByTagName(old_key);
+			
+//			find and rename those elements
+			
+			for (int i = 0; i < loc_tags.getLength(); i++) {
+				
+				Element loc_tag = (Element)loc_tags.item(i);
+				xforms.renameNode(loc_tag, loc_tag.getNamespaceURI(), new_key);
+			}
+		}
+		
+		NodeList loc_tags = loc_strings.getElementsByTagName(new_key);
+		
+		for (Iterator<String> iter = loc_string.getLanguagesKeySet().iterator(); iter.hasNext();) {
+			String loc_key = iter.next();
+			
+			boolean val_set = false;
+			
+			if(loc_tags != null) {
+				
+				for (int i = 0; i < loc_tags.getLength(); i++) {
+					
+					Element loc_tag = (Element)loc_tags.item(i);
+					
+					if(loc_tag.getAttribute(lang).equals(loc_key)) {
+						
+						loc_tag.setTextContent(loc_string.getString(loc_key));
+						
+						val_set = true;
+						break;
+					}
+				}
+			}
+			
+			if(loc_tags == null || !val_set) {
+				
+//				create new localization element
+				Element new_loc_el = xforms.createElement(new_key);
+				new_loc_el.setAttribute(lang, loc_key);
+				new_loc_el.setTextContent(loc_string.getString(loc_key));
+				loc_strings.appendChild(new_loc_el);
+			}
+		}
+	}
+	
+	public static String getKeyFromRef(String ref) {
+		return ref.substring(ref.indexOf(slash)+1, ref.indexOf("["));
+	}
+	
+	public static boolean isRefFormCorrect(String ref) {
+
+		return ref != null && ref.startsWith(loc_ref_part1) && ref.endsWith(loc_ref_part2) && !ref.contains(" "); 
+	}
+	
+	public static LocalizedStringBean getLocalizedStrings(String key, Document xforms_doc) {
+
+		Element loc_model = getElementByIdFromDocument(xforms_doc, "head", loc_mod);
+		Element loc_strings = (Element)loc_model.getElementsByTagName(loc_tag).item(0);
+		
+		NodeList key_elements = loc_strings.getElementsByTagName(key);
+		LocalizedStringBean loc_str_bean = new LocalizedStringBean();
+		
+		for (int i = 0; i < key_elements.getLength(); i++) {
+			
+			Element key_element = (Element)key_elements.item(i);
+			
+			String lang_code = key_element.getAttribute("lang");
+			
+			if(lang_code != null) {
+				
+				String content = key_element.getTextContent();
+				loc_str_bean.setString(lang_code, content == null ? "" : content);
+			}
+		}
+		
+		return loc_str_bean;
 	}
 }

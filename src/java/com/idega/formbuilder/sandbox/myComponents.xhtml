@@ -28,41 +28,67 @@
             
             <xf:bind id="email" nodeset="email" type="fb_email" />
         </xf:model>
+        <xf:model id="localized_strings_model">
+             <xf:instance id="localized_strings" xmlns="">
+	            <localized_strings>
+	            	<current_language>en</current_language>
+	            	
+	            	<email.title lang="en">Email english</email.title>
+	            	<email.title lang="is">Email islenski</email.title>
+	              <email.error lang="en">Email err english</email.error>
+	              <email.error lang="is">Email err islenski</email.error>
+	              <select1_full.title lang="en">Radioboxes from a set in english</select1_full.title>
+	              <select1_full.title lang="is">Radioboxes from a set islenski</select1_full.title>
+	              <select_full.title lang="en">Checkboxes from a set in english</select_full.title>
+	              <select_full.title lang="is">Checkboxes from a set islenski</select_full.title>
+	              <select1_minimal.title lang="en">Single Select from a set in english</select1_minimal.title>
+	              <select1_minimal.title lang="is">Single Select from a set islenski</select1_minimal.title>
+	              <select_minimal.title lang="en">Multiple Select from a set in english</select_minimal.title>
+	              <select_minimal.title lang="is">Multiple Select from a set islenski</select_minimal.title>
+	              <secret.title lang="en">Password Line Field in english</secret.title>
+	              <secret.title lang="is">Password Line Field islenski</secret.title>
+	              <textarea.title lang="en">Paragraph Text in english</textarea.title>
+	              <textarea.title lang="is">Paragraph Text islenski</textarea.title>
+	              <input.title lang="en">Single Line Field in english</input.title>
+	              <input.title lang="is">Single Line Field islenski</input.title>
+	            </localized_strings>
+            </xf:instance>
+        </xf:model>
     </head>
     <body>
         <xf:group appearance="full">
             <xf:input bind="text" id="fbcomp_text">
-                <xf:label>Single Line Field</xf:label>
+                <xf:label ref="instance('localized_strings')/input.title[@lang=instance('localized_strings')/current_language]" model="localized_strings_model" />
             </xf:input>
             <xf:textarea bind="textarea" id="fbcomp_textarea">
-                <xf:label>Paragraph Text</xf:label>
+                <xf:label ref="instance('localized_strings')/textarea.title[@lang=instance('localized_strings')/current_language]" model="localized_strings_model" />
             </xf:textarea>
             <xf:secret bind="secret" id="fbcomp_secret">
-                <xf:label>Password Line Field</xf:label>
+                <xf:label ref="instance('localized_strings')/secret.title[@lang=instance('localized_strings')/current_language]" model="localized_strings_model" />
             </xf:secret>
             <xf:select bind="multiple_select_minimal" id="fbcomp_multiple_select_minimal" appearance="minimal">
-                <xf:label>Multiple Select from a set</xf:label>
+                <xf:label ref="instance('localized_strings')/select_minimal.title[@lang=instance('localized_strings')/current_language]" model="localized_strings_model" />
                 <xf:item>
 	                <xf:label>empty</xf:label>
 	                <xf:value />
                 </xf:item>
             </xf:select>
             <xf:select1 bind="single_select_minimal" id="fbcomp_single_select_minimal" appearance="minimal">
-                <xf:label>Single Select from a set</xf:label>
+                <xf:label ref="instance('localized_strings')/select1_minimal.title[@lang=instance('localized_strings')/current_language]" model="localized_strings_model" />
                 <xf:item>
 	                <xf:label>empty</xf:label>
 	                <xf:value />
                 </xf:item>
             </xf:select1>
 						<xf:select bind="multiple_select" id="fbcomp_multiple_select" appearance="full">
-                <xf:label>Checkboxes from a set</xf:label>
+                <xf:label ref="instance('localized_strings')/select_full.title[@lang=instance('localized_strings')/current_language]" model="localized_strings_model" />
                 <xf:item>
 	                <xf:label>empty</xf:label>
 	                <xf:value />
                 </xf:item>
             </xf:select>
 						<xf:select1 bind="single_select" id="fbcomp_single_select" appearance="full">
-                <xf:label>Radioboxes from a set</xf:label>
+                <xf:label ref="instance('localized_strings')/select1_full.title[@lang=instance('localized_strings')/current_language]" model="localized_strings_model" />
                 <xf:item>
 	                <xf:label>empty</xf:label>
 	                <xf:value />
@@ -70,8 +96,8 @@
             </xf:select1>
             
 						<xf:input bind="email" id="fbcomp_email">
-                <xf:label>Email Field</xf:label>
-                <xf:alert>Email pattern incorrect</xf:alert>
+                <xf:label ref="instance('localized_strings')/email.title[@lang=instance('localized_strings')/current_language]" model="localized_strings_model" />
+                <xf:alert><xf:output ref="instance('localized_strings')/email.error[@lang=instance('localized_strings')/current_language]" model="localized_strings_model" /></xf:alert>
             </xf:input>
         </xf:group>
     </body>

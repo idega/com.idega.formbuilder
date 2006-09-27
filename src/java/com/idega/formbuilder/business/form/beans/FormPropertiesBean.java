@@ -7,7 +7,7 @@ package com.idega.formbuilder.business.form.beans;
  */
 public class FormPropertiesBean extends FBGenericBean {
 	
-	private String name;
+	private LocalizedStringBean name;
 	private String[] classes;
 	private Integer last_component_id = 0;
 	
@@ -23,10 +23,10 @@ public class FormPropertiesBean extends FBGenericBean {
 	public void setClasses(String[] classes) {
 		this.classes = classes;
 	}
-	public String getName() {
+	public LocalizedStringBean getName() {
 		return name;
 	}
-	public void setName(String name) {
+	public void setName(LocalizedStringBean name) {
 		this.name = name;
 	}
 }
