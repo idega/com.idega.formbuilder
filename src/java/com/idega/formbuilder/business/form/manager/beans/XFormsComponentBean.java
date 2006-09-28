@@ -1,4 +1,4 @@
-package com.idega.formbuilder.business.form.beans;
+package com.idega.formbuilder.business.form.manager.beans;
 
 import org.w3c.dom.Element;
 

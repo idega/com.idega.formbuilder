@@ -13,8 +13,8 @@ import junit.framework.TestCase;
 import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 
-import com.idega.formbuilder.business.generators.FormComponentsGenerator;
-import com.idega.formbuilder.business.generators.IComponentsGenerator;
+import com.idega.formbuilder.business.form.manager.generators.FormComponentsGenerator;
+import com.idega.formbuilder.business.form.manager.generators.IComponentsGenerator;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>

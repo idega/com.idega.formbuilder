@@ -11,19 +11,19 @@ import javax.faces.model.SelectItem;
  */
 public class GenericFormComponentPropertiesBean {
 	
-	private String title;
+	private LocalizedStringBean title;
 	private Collection<SelectItem> validations;
 	
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
 	public Collection<SelectItem> getValidations() {
 		return validations;
 	}
 	public void setValidations(Collection<SelectItem> validations) {
 		this.validations = validations;
+	}
+	public LocalizedStringBean getTitle() {
+		return title;
+	}
+	public void setTitle(LocalizedStringBean title) {
+		this.title = title;
 	}
 }

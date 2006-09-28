@@ -1,7 +1,13 @@
-package com.idega.formbuilder.business.generators;
+package com.idega.formbuilder.business.form.manager.generators;
 
 import org.w3c.dom.Document;
 
+/**
+ * 
+ * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @version 1.0
+ *
+ */
 public interface IComponentsGenerator {
 
 	public boolean isInitiated();

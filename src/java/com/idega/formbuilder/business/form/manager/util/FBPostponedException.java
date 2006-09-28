@@ -1,4 +1,4 @@
-package com.idega.formbuilder.business.form;
+package com.idega.formbuilder.business.form.manager.util;
 
 public class FBPostponedException extends Exception {
 

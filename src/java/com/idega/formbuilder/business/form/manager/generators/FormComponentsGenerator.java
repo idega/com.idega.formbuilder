@@ -1,4 +1,4 @@
-package com.idega.formbuilder.business.generators;
+package com.idega.formbuilder.business.form.manager.generators;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,8 +16,8 @@ import org.chiba.xml.xforms.exception.XFormsException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import com.idega.formbuilder.business.form.FormBuilder;
-import com.idega.formbuilder.business.generators.FBXSLTGenerator;
+import com.idega.formbuilder.business.form.manager.FormManager;
+import com.idega.formbuilder.business.form.manager.generators.FBXSLTGenerator;
 import com.idega.repository.data.Singleton;
 import com.idega.xml.XMLException;
 
@@ -46,7 +46,7 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 		
 		if (me == null) {
 			
-			synchronized (FormBuilder.class) {
+			synchronized (FormManager.class) {
 				if (me == null) {
 					me = new FormComponentsGenerator();
 				}

@@ -5,12 +5,19 @@ package com.idega.formbuilder.business.form.beans;
  * @version 1.0
  * 
  */
-public class FormPropertiesBean extends FBGenericBean {
+public class FormPropertiesBean {
 	
 	private LocalizedStringBean name;
 	private String[] classes;
 	private Integer last_component_id = 0;
+	private Long id;
 	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	public Integer getLast_component_id() {
 		return last_component_id;
 	}

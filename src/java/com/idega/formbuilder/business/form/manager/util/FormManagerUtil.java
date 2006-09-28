@@ -1,4 +1,4 @@
-package com.idega.formbuilder.business.form.util;
+package com.idega.formbuilder.business.form.manager.util;
 
 import java.util.Iterator;
 import java.util.List;
@@ -19,15 +19,15 @@ import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
  * @version 1.0
  *
- * FormBuilder helper class (yep, that means some methods can be tightly coupled)
+ * FormManager helper class (yep, that means some methods can be tightly coupled)
  *
- * Tightly coupled with FormBuilder class
+ * Tightly coupled with FormManager class
  * 
  */
-public class FormBuilderUtil {
+public class FormManagerUtil {
 	
 	/**
-	 * Properties holded for FormBuilder class for optimization(?) purposes
+	 * Properties holded for FormManager class for optimization(?) purposes
 	 */
 	public static final String model_name = "xf:model";
 	public static final String id_name = "id";
@@ -41,11 +41,12 @@ public class FormBuilderUtil {
 	public static final String output = "xf:output";
 	public static final String ref_s = "ref";
 	public static final String lang = "lang";
+	public static final String CTID = "fbcomp_";
 
 	private static final String simple_type = "xs:simpleType";
 	private static final String complex_type = "xs:complexType";
 	
-	private FormBuilderUtil() { }
+	private FormManagerUtil() { }
 	
 	/**
 	 * <p>

@@ -1,18 +1,26 @@
-package com.idega.formbuilder.business.form;
+package com.idega.formbuilder.business.form.manager;
 
 import java.util.List;
 
 import org.w3c.dom.Element;
 
 import com.idega.formbuilder.business.form.beans.FormPropertiesBean;
+import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
 
-public interface IFormBuilder {
+
+/**
+ * 
+ * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @version 1.0
+ *
+ */
+public interface IFormManager {
 
 	/**
 	 * creates primary user form document and stores it depending on implementation
 	 * 
 	 * @param form_props - primary form description. Only id is mandatory.
-	 * @throws FBPostponedException - if some kind of exception happened during previous request. Formbuilder user knows,
+	 * @throws FBPostponedException - if some kind of exception happened during previous request. FormManager user knows,
 	 * that error happened and can (most likely) happen again, so some adequate actions can be taken.
 	 * @throws NullPointerException - form_props is null or id not provided
 	 * @throws Exception - some kind of other error occured

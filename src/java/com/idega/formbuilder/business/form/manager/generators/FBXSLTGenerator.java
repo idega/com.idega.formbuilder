@@ -1,4 +1,4 @@
-package com.idega.formbuilder.business.generators;
+package com.idega.formbuilder.business.form.manager.generators;
 
 import java.io.Writer;
 import java.util.HashMap;
