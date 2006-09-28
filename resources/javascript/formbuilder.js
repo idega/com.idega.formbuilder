@@ -1,21 +1,17 @@
-function resulting() {
-	
+function resulting(fieldId) {
+	alert(fieldId);
 }
-function dropItems(idOfDraggedItem,targetId,x,y) {
-	/*if(targetId=='dropBox'){	// Item dropped on <div id="dropBox">
-		document.getElementById('dropBox').appendChild(document.getElementById(idOfDraggedItem));	// Appending dragged element as child of target box
-	}*/
-	var html = document.getElementById('dropBox').innerHTML;
-	var caption = document.getElementById(idOfDraggedItem).firstChild.firstChild.nodeValue;
-	var tabPaneDiv = "'dhtmlgoodies_tabView1'";
-	var htmlStart = '<div class="form_component" onClick="showTab(' + tabPaneDiv + ',1)">';
-	var htmlEnd = '</div>';
-	var innerHtml = '<label>some text</label><input type="text" value="" />';
-	if(html.length>0) {
-		html = html + htmlStart + innerHtml + htmlEnd;
-	}
-	document.getElementById('dropBox').innerHTML = html;
-	ComponentPalette.sum(resulting);
+function dropHandler(idOfDraggedItem,targetId,x,y) {
+	var fieldType = document.getElementById(idOfDraggedItem).lastChild.firstChild.nodeValue;
+	document.forms['workspaceform1'].elements['selected_field_type'].value=fieldType;
+	
+	document.getElementById('add_field_button').onclick();
+}
+
+function selectFormField(selectedField) {
+	document.forms['workspaceform1'].elements['selected_field_id'].value=selectedField.parentNode.id;
+	/*ajaxAnywhere.submitAJAX();*/
+	document.getElementById('select_field_button').onclick();
 }
 
 function setup(listObjId) {
@@ -24,7 +20,7 @@ function setup(listObjId) {
 	for(i=0;i<subDivs.length;i++) {
 		dragDropObj.addSource('field[' + i + ']',true);
 	}
-	dragDropObj.addTarget('dropBox','dropItems');
+	dragDropObj.addTarget('dropBox','dropHandler');
 }
 function displayMessage(url) {
 	messageObj.setSource(url);
@@ -36,9 +32,8 @@ function displayMessage(url) {
 function closeMessage() {
 	messageObj.close();	
 }
-/*initTabs('dhtmlgoodies_tabView1',Array('Form properties','Add new field','Field properties'),1,477,450);*/
 var dragDropObj = new DHTMLSuite_dragDrop();
-setup('firstlist');
+setup('workspaceform1:firstlist');
 dragDropObj.init();
 messageObj = new DHTML_modalMessage();
 messageObj.setShadowOffset(5);

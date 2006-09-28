@@ -1,2 +1,9 @@
 toolbar_new=New form
 toolbar_save=Save form
+fbcomp_text=Text Field
+fbcomp_textarea=Textarea
+fbcomp_secret=Secret Field
+fbcomp_multiple_select_minimal=CUSTOM
+fbcomp_single_select_minimal=CUSTOM
+fbcomp_multiple_select=CUSTOM
+fbcomp_single_select=Dropdown menu

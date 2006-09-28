@@ -1,54 +1,87 @@
-/*---Basic tag styles---*/
-/*a {
-	color: red;
-	text-decoration: none;
-}
-body {
-	font-size: 0.8em;
-	text-align: center;
-	background-color: #E2EBED;
-	font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
-	margin: 0px;
-	padding: 0px;
-}
-img {
-	border: 0px;
-}*/
-
 /*---Page layout styles---*/
-.application_container {
+#application_container {
 	border: 1px #000 groove;
 	margin: 10px;
 	height: 100%;
+	text-align: center;
+	font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
+	
 }
-.toolbar_container {
+#toolbar_container {
 	margin-top: 5px;
 	margin-left: 5px;
 	margin-right: 5px;
 	background: #E2EBED;
 	height: 24px;
 }
-.main_container {
+#main_container {
 	margin: 5px;
-	padding-bottom: 10px;
+	padding-bottom: 0px;
 	background: #F2F2F2;
-	height: 550px;
+	height: 500px;
 }
-.options_container {
+#options_container {
 	float:left;
 	width: 477px;
-	height: auto;
+	height: 500px;
 	background:#fff;
 	margin-right: 0px;
 	margin-bottom: 0px;
 	padding-bottom: 0px;
 }
-.form_container {
+#form_container {
 	margin-left: 35%;
-	margin-bottom: 50px;
-	height: auto;
+	margin-bottom: 0px;
+	height: 500px;
+}
+#hidden_container {
+	display: none;
+}
+#bottom_tab_container {
+	border: 1px #000 groove;
+	margin: 0px;
+	padding-top: 0px;
+	padding: 0px;
+	height: 20px;
+	width: 100%;
 }
 /*---UI Component styles---*/
+.form_element {
+	width: 88%;
+	height: auto;	
+	margin-bottom: 10px;
+	padding-left: 30px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border: none;
+}
+
+
+
+
+/*#form_heading {
+	width: 88%;
+	height: auto;
+	background-color: #FFF;		
+	margin-bottom: 5px;
+	padding: 0px;
+	font-weight: bold;
+	text-align: center;
+	border: 1px solid #000;
+}
+
+.fieldInnerStructure {
+	border: 0px;
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	height: 100%;
+	border: 1px #000 groove;
+}
+.fieldInnerStructure:hover {
+	border: 1px dotted #000;
+	background-color: Grey;
+}*/
 .components_list {
 	list-style: none;
 }
@@ -62,34 +95,25 @@ img {
 	font-weight: bold;
 	text-align: center;
 }
-.form_component {
+/*.form_component {
 	width: 88%;
-	height: 20px;
+	height: auto;
 	background-color: #FFF;		
 	margin-bottom: 5px;
-	padding-left: 5%;
-	padding-right: 5%;
-	padding-bottom: 10px;
-	padding-top: 10px;
+	padding: 0px;
 	font-weight: bold;
 	text-align: center;
+	border: 1px solid #000;
 }
 .form_component:hover{
-	width: 88%;
-	height: 20px;
-	border: 1px dotted #000;
-	background-color: #FFF;		
-	margin-bottom: 5px;
-	padding-left: 5%;
-	padding-right: 5%;
-	padding-bottom: 10px;
-	padding-top: 10px;
-	font-weight: bold;
-	text-align: center;
+	
 }
+.form_component:active{
+	background-color: Red;
+}*/
 .dropBox {
 	background-color: White;
-	height: 470px;
+	height: 500px;
 	margin-bottom: 10px;
 	padding-left: 5%;
 	padding-right: 5%;
@@ -134,37 +158,24 @@ img {
 .float_right {
 	float: right;
 }
+.float_center {
+	float: center;
+}
+.bottom_tab_button {
+	text-decoration: none;
+	height: 20px;
+	width: 100px;
+	vertical-align: middle;
+	text-align: center;
+	margin: 0px;
+	padding: 10px;
+	
+}
 
 /*---Options tabbed pane styles---*/
-/*table {
-	width: 477px							 ! important;
-	border-collapse: collapse                ! important;
-    border-spacing: 0px                      ! important;
-    padding: 0px                             ! important;
-    border-width: 0px                        ! important;
-    empty-cells: show                        ! important;
-}
-td { 
-	border-spacing: 0px                      ! important;
-    padding: 0px                             ! important;
-    border-width: 0px                        ! important; 
-}
-th { 
-	font-weight: normal                      ! important;
-	font-size: 100%                          ! important;
-	text-align: center                       ! important;
-	border: 2px solid                        ! important;
-	border-color: black #ccc #ccc black      ! important;
-	padding-top: 0px                         ! important;
-	padding-left: 5px                        ! important;
-	padding-right: 5px                       ! important;
-	padding-bottom: 0px                      ! important;
-	background: #d8d9d4                      ! important;
-	white-space: nowrap                      ! important; 
-}*/
 table.tabbedPane { 
 	width: 475px                             ! important;
-    height: 470px                            ! important;
+    height: 500px                            ! important;
     vertical-align: top                      ! important;
     border-collapse: separate                ! important;
     border-spacing: 0px                      ! important; 
@@ -256,4 +267,20 @@ td.tabContent {
 	background-color: #555;
 	filter: alpha(opacity=30);
 	opacity: 0.3;
+}
+
+#progressBar { 
+	padding-top: 5px; 
+}
+#progressBarBox { 
+	width: 350px; 
+	height: 20px; 
+	border: 1px inset; 
+	background: #eee;
+}
+#progressBarBoxContent { 
+	width: 0; 
+	height: 20px; 
+	border-right: 1px solid #444; 
+	background: #9ACB34; 
 }
