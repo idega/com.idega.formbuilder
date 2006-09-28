@@ -6,15 +6,18 @@ import javax.faces.el.ValueBinding;
 public class FBPanel extends UIPanel {
 	
 	private static final String RENDERER_TYPE = "fb_panel";
-	private static final String EXPAND_IMG = "";
-	private static final String COLLAPSE_IMG = "";
+	private static final String EXPAND_IMG = "../resources/style/green_down.gif";
+	private static final String COLLAPSE_IMG = "../resources/style/green_up.gif";
 	
 	private String title;
 	private String styleClass;
 	private String top;
 	private String left;
-	//private boolean expanded;
+	private boolean expanded = true;
 	
+	public String getCurrentIcon() {
+		return (expanded) ? EXPAND_IMG : COLLAPSE_IMG;
+	}
 	
 	public String getStyleClass() {
 		return styleClass;
@@ -59,6 +62,14 @@ public class FBPanel extends UIPanel {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public boolean isExpanded() {
+		return expanded;
+	}
+
+	public void setExpanded(boolean expanded) {
+		this.expanded = expanded;
 	}
 
 }

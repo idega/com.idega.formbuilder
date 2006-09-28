@@ -23,4 +23,8 @@ public class FBContainer extends WFContainer {
 		setRendererType(getContainerRendererType());
 		setStyleClass(DEFAULT_STYLE_CLASS);
 	}
+	
+	public String getFamily() {
+		return ("formbuilder");
+	}
 }

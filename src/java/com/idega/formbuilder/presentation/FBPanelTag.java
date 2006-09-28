@@ -11,7 +11,16 @@ public class FBPanelTag extends UIComponentTagBase {
 	private String styleClass;
 	private String top;
 	private String left;
+	private String expanded;
 	
+	public String getExpanded() {
+		return expanded;
+	}
+
+	public void setExpanded(String expanded) {
+		this.expanded = expanded;
+	}
+
 	public String getLeft() {
 		return left;
 	}
@@ -73,6 +82,13 @@ public class FBPanelTag extends UIComponentTagBase {
 			}
 			if(this.left != null) {
 				panel.setLeft(this.left);
+			}
+			if(this.expanded != null) {
+				if(this.expanded.toLowerCase().equals("true")) {
+					panel.setExpanded(true);
+				} else if(this.expanded.toLowerCase().equals("false")) {
+					panel.setExpanded(false);
+				}
 			}
 	    }
 	}
