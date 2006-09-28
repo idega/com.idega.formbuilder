@@ -4,11 +4,16 @@
 
 <dwr>
   <allow>
+  	<!--
     <create creator="new" javascript="FormField">
       <param name="class" value="com.idega.formbuilder.business.FormField"/>
     </create>
-    <create creator="new" javascript="ComponentPalette" scope="application">
+    <create creator="new" javascript="ComponentPalette">
       <param name="class" value="com.idega.formbuilder.business.ComponentPalette"/>
     </create>
+    <create creator="new" javascript="uimanager">
+      <param name="class" value="com.idega.formbuilder.presentation.UIManager"/>
+    </create>
+    -->
   </allow>
 </dwr>

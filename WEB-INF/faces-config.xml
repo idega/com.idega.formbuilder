@@ -5,6 +5,11 @@
   "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
 
 <faces-config>
+	<managed-bean>
+		<managed-bean-name>viewmanager</managed-bean-name>
+		<managed-bean-class>com.idega.formbuilder.presentation.UIManager</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
   	<managed-bean>
 		<managed-bean-name>palette</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.business.ComponentPalette</managed-bean-class>
@@ -43,6 +48,17 @@
 	          <renderer-class>com.idega.formbuilder.presentation.renderkit.FieldRenderer</renderer-class>
 	     </renderer>
 	</render-kit>
+	<render-kit>
+	     <renderer>
+	          <component-family>formbuilder</component-family>
+	          <renderer-type>fb_genericfield</renderer-type>
+	          <renderer-class>com.idega.formbuilder.presentation.renderkit.GenericFormComponentRenderer</renderer-class>
+	     </renderer>
+	</render-kit>
+	<component>
+		<component-type>FBGenericField</component-type>
+		<component-class>com.idega.formbuilder.presentation.FBGenericFormComponent</component-class>
+	</component>
 	<component>
 		<component-type>FBFormField</component-type>
 		<component-class>com.idega.formbuilder.presentation.FBFormField</component-class>
