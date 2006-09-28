@@ -9,7 +9,7 @@ import javax.faces.render.Renderer;
 
 import org.w3c.dom.Element;
 
-import com.idega.formbuilder.business.form.IFormBuilder;
+import com.idega.formbuilder.business.form.manager.IFormManager;
 import com.idega.formbuilder.presentation.FBGenericFormComponent;
 
 public class GenericFormComponentRenderer extends Renderer {
@@ -23,7 +23,7 @@ public class GenericFormComponentRenderer extends Renderer {
 		FBGenericFormComponent field = (FBGenericFormComponent) component;
 		Element element = null;
 		try {
-			IFormBuilder fbInstance = (IFormBuilder) context.getExternalContext().getSessionMap().get("formbuilderInstance");
+			IFormManager fbInstance = (IFormManager) context.getExternalContext().getSessionMap().get("formbuilderInstance");
 			/*
 			if(field == null) {
 				System.out.println("COMPONENT IS NULL");

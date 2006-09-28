@@ -19,16 +19,16 @@ import org.apache.myfaces.custom.tabbedpane.TabChangeListener;
 
 import com.idega.formbuilder.business.ComponentPalette;
 import com.idega.formbuilder.business.FormField;
-import com.idega.formbuilder.business.form.FormBuilderFactory;
-import com.idega.formbuilder.business.form.IFormBuilder;
 import com.idega.formbuilder.business.form.beans.FormPropertiesBean;
+import com.idega.formbuilder.business.form.manager.FormManagerFactory;
+import com.idega.formbuilder.business.form.manager.IFormManager;
 
 public class UIManager implements TabChangeListener {
 	
 	private ComponentPalette palette;
 	private static List fields = new ArrayList();
 	private int elementCount;
-	private static IFormBuilder fb = null;
+	private static IFormManager fb = null;
 	
 	private HtmlPanelTabbedPane optionsPane = null;
 	private HtmlInputHidden selectedFieldType = null;
@@ -65,7 +65,7 @@ public class UIManager implements TabChangeListener {
 	public UIManager() {
 		if(fb == null) {
 			try {
-				fb = FormBuilderFactory.createFormBuilder();
+				fb = FormManagerFactory.newFormManager();
 				FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("formbuilderInstance", fb);
 			} catch(InstantiationException e) {
 				e.printStackTrace();
