@@ -196,11 +196,22 @@ public class CacheManager {
 	
 	public static void initAppContext(FacesContext ctx) {
 		
+		if(true)
+			return;
 		if(ctx == null)
 			return;
+		
+		System.out.println("init appp context");
+		System.out.println("cl1: "+cached_html_components.getClass());
+		System.out.println("cl2: "+cached_xforms_components.getClass());
 		
 		IWMainApplication iwma = IWMainApplication.getIWMainApplication(ctx);
 		cached_html_components = IWCacheManager2.getInstance(iwma).getCache("cached_html_components");
 		cached_xforms_components = IWCacheManager2.getInstance(iwma).getCache("cached_xforms_components");
+		
+		System.out.println("after");
+		
+		System.out.println("cl1: "+cached_html_components.getClass());
+		System.out.println("cl2: "+cached_xforms_components.getClass());
 	}
 }
