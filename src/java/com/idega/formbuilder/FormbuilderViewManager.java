@@ -26,11 +26,7 @@ public class FormbuilderViewManager implements Singleton  {
 		this.iwma = iwma;
 	}
 
-	/**
-	 * 
-	 * TODO: implement getInstance method in the right way (using pattern from better lighter..)
-	 */
-	  public static synchronized FormbuilderViewManager getInstance(IWMainApplication iwma){
+	public static synchronized FormbuilderViewManager getInstance(IWMainApplication iwma){
 		  
 		  FormbuilderViewManager formbuilder_view_manager = (FormbuilderViewManager) iwma.getAttribute(IW_FORMBUILDER_VIEW_MANAGER_KEY);
 	    if(formbuilder_view_manager==null){
@@ -38,10 +34,11 @@ public class FormbuilderViewManager implements Singleton  {
 	      iwma.setAttribute(IW_FORMBUILDER_VIEW_MANAGER_KEY,formbuilder_view_manager);
 	    }
 	    return formbuilder_view_manager;
-	  }	
+	}	
 	
 	public static FormbuilderViewManager getInstance(FacesContext context){
 		IWMainApplication iwma = IWMainApplication.getIWMainApplication(context);
+		
 		return getInstance(iwma);
 	}
 	

@@ -1,5 +1,7 @@
 package com.idega.formbuilder.business.form.manager;
 
+import javax.faces.context.FacesContext;
+
 
 /**
  * This class is just to convenience getting new instance of FormManager
@@ -16,7 +18,7 @@ public class FormManagerFactory {
 	 * @return FormManager instance
 	 * @throws InstantiationException - FormManager could not be instantiated
 	 */
-	public static IFormManager newFormManager() throws InstantiationException {
+	public static IFormManager newFormManager(FacesContext ctx) throws InstantiationException {
 		
 		if(!FormManager.isInited()) {
 			
@@ -24,7 +26,7 @@ public class FormManagerFactory {
 					
 				if(!FormManager.isInited()) {
 						
-					FormManager.init(null);
+					FormManager.init(ctx);
 				}
 			}
 		}

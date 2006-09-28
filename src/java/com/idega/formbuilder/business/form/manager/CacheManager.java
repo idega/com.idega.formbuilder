@@ -162,6 +162,7 @@ public class CacheManager {
 	
 	public static Element getHtmlComponentReferenceByType(String component_type) throws NullPointerException {
 		
+		
 		Element html_component = cached_html_components.get(component_type); 
 
 		if(html_component != null)
@@ -196,8 +197,6 @@ public class CacheManager {
 	
 	public static void initAppContext(FacesContext ctx) {
 		
-		if(true)
-			return;
 		if(ctx == null)
 			return;
 		

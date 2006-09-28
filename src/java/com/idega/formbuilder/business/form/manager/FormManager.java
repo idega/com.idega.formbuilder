@@ -227,7 +227,7 @@ public class FormManager implements IFormManager {
 
 		try {
 			long start = System.currentTimeMillis();
-			IFormManager fb = FormManagerFactory.newFormManager();
+			IFormManager fb = FormManagerFactory.newFormManager(null);
 			long end = System.currentTimeMillis();
 			System.out.println("inited in: "+(end-start));
 //			System.out.println("<sugeneruoti komponentai > ");
