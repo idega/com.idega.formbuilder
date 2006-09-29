@@ -38,8 +38,7 @@
 		                        disabledTabStyleClass="disabledTab"
 		                        activeSubStyleClass="activeSub"
 		                        inactiveSubStyleClass="inactiveSub"
-		                        tabContentStyleClass="tabContent"
-		                        binding="#{viewmanager.optionsPane}">
+		                        tabContentStyleClass="tabContent">
 		                        <t:tabChangeListener type="com.idega.formbuilder.presentation.UIManager" />
 							    <t:panelTab id="tab01" label="Form properties">
 							    	<t:outputText value="something" />
