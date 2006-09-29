@@ -22,6 +22,7 @@ import com.idega.formbuilder.business.FormField;
 import com.idega.formbuilder.business.form.beans.FormPropertiesBean;
 import com.idega.formbuilder.business.form.manager.FormManagerFactory;
 import com.idega.formbuilder.business.form.manager.IFormManager;
+import com.idega.presentation.IWContext;
 
 public class UIManager implements TabChangeListener {
 	
@@ -64,8 +65,13 @@ public class UIManager implements TabChangeListener {
 
 	public UIManager() {
 		if(fb == null) {
+			System.out.println("XIXIXIXIXIXIXIXIXIXIXIXI");
 			try {
-				fb = FormManagerFactory.newFormManager();
+				System.out.println("XIXIXIXIXIXIXIXIXIXIXIXI");
+				fb = FormManagerFactory.newFormManager(IWContext.getInstance());
+				if(fb == null) {
+					System.out.println("XIXIXIXIXIXIXIXIXIXIXIXI");
+				}
 				FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("formbuilderInstance", fb);
 			} catch(InstantiationException e) {
 				e.printStackTrace();
