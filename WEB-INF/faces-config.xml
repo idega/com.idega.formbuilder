@@ -36,7 +36,7 @@
 	</render-kit>
 	<render-kit>
 	     <renderer>
-	          <component-family>webface</component-family>
+	          <component-family>formbuilder</component-family>
 	          <renderer-type>fb_container</renderer-type>
 	          <renderer-class>com.idega.formbuilder.presentation.renderkit.ContainerRenderer</renderer-class>
 	     </renderer>

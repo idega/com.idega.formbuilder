@@ -3,6 +3,8 @@ package com.idega.formbuilder.business.form.manager;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.xml.transform.TransformerException;
 
@@ -40,6 +42,8 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 	}
 	
 	private WebdavPersistenceManager() { }
+	
+	Lock lock = new ReentrantLock();
 
 	public void persistDocument(final Document document) throws TransformerException, InstantiationException, NullPointerException {
 		
@@ -49,13 +53,15 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 		if(document == null)
 			throw new NullPointerException("Document is not provided");
 		
-		if(true)
-			return;
+//		if(true)
+//			return;
 		
 		final String path_to_file = form_pathes[0];
 		final String file_name = form_pathes[1];
 		final IWSlideServiceBean service_bean = getServiceBean();
 		
+		//TODO: think about the same document management, when next save starts when the previous is not finished yet
+		//using lock now is not a good idea. just temporary
 		new Thread() {
 			
 			public void run() {
@@ -67,16 +73,23 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 					DOMUtil.prettyPrintDOM(document, out);
 					InputStream is = new ByteArrayInputStream(out.toByteArray());
 //					--
-					
-					service_bean.uploadFileAndCreateFoldersFromStringAsRoot(
-							path_to_file, file_name,
-							is, "text/xml", false
-					);
+					try {
+						lock.lock();
+						
+						service_bean.uploadFileAndCreateFoldersFromStringAsRoot(
+								path_to_file, file_name,
+								is, "text/xml", false
+						);
+						
+					} finally {
+						lock.unlock();
+					}
 					
 					document_to_webdav_save_exception = null;
 					
 				} catch (Exception e) {
 					logger.error("Exception occured while saving document to webdav dir: ", e);
+					
 					document_to_webdav_save_exception = e;
 				}
 			}
