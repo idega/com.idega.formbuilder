@@ -1,16 +1,11 @@
-function resulting(fieldId) {
-	alert(fieldId);
-}
 function dropHandler(idOfDraggedItem,targetId,x,y) {
 	var fieldType = document.getElementById(idOfDraggedItem).lastChild.firstChild.nodeValue;
 	document.forms['workspaceform1'].elements['selected_field_type'].value=fieldType;
-	
 	document.getElementById('add_field_button').onclick();
 }
 
 function selectFormField(selectedField) {
 	document.forms['workspaceform1'].elements['selected_field_id'].value=selectedField.parentNode.id;
-	/*ajaxAnywhere.submitAJAX();*/
 	document.getElementById('select_field_button').onclick();
 }
 
@@ -34,6 +29,7 @@ function closeMessage() {
 }
 var dragDropObj = new DHTMLSuite_dragDrop();
 setup('workspaceform1:firstlist');
+/*setup('firstlist');*/
 dragDropObj.init();
 messageObj = new DHTML_modalMessage();
 messageObj.setShadowOffset(5);
