@@ -2,7 +2,6 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:wf="http://xmlns.idega.com/com.idega.webface"
 	xmlns:fb="http://xmlns.idega.com/com.idega.formbuilder"
 	xmlns:ws="http://xmlns.idega.com/com.idega.workspace" version="1.2"
 	xmlns:t="http://myfaces.apache.org/tomahawk">
@@ -38,13 +37,14 @@
 		                        disabledTabStyleClass="disabledTab"
 		                        activeSubStyleClass="activeSub"
 		                        inactiveSubStyleClass="inactiveSub"
-		                        tabContentStyleClass="tabContent">
-		                        <t:tabChangeListener type="com.idega.formbuilder.presentation.UIManager" />
+		                        tabContentStyleClass="tabContent"
+		                        binding="#{viewmanager.optionsPane}">
 							    <t:panelTab id="tab01" label="Form properties">
 							    	<t:outputText value="something" />
 							    </t:panelTab>
 							    <t:panelTab id="tab02" label="Add new field">
 							        <t:dataList id="firstlist"
+							        	forceId="true"
 										styleClass="components_list"
 										itemStyleClass=""
 										var="field"
@@ -69,15 +69,24 @@
 								</t:div>
 							</t:div>
 							<f:verbatim>
+								<h1>LALALALALALALA</h1>
 								<script type="text/javascript" src="/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js" />
+								<script type="text/javascript">
+								<!--
+								var dragDropObj = new DHTMLSuite_dragDrop();
+								-->
+								</script>
+								
 							</f:verbatim>
 						</t:div>
 					</t:div>
+					<!--
 					<t:div id="bottom_tab_container" forceId="true">
 						<h:commandLink id="design_view_button" styleClass="bottom_tab_button float_center" action="" value="Design"/>
 						<h:commandLink id="preview_view_button" styleClass="bottom_tab_button float_center" action="" value="Preview"/>
 						<h:commandLink id="source_view_button" styleClass="bottom_tab_button float_center" action="" value="Source"/>
 					</t:div>
+					-->
 					<t:div id="hidden_container" forceId="true">
 						<t:commandLink id="add_field_button" forceId="true" action="#{viewmanager.addFormField}" value="" />
 						<t:commandLink id="select_field_button" forceId="true" action="#{viewmanager.selectFormField}" value="" />

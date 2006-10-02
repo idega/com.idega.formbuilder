@@ -6,16 +6,12 @@ import java.util.List;
 
 import javax.faces.application.Application;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AbortProcessingException;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.myfaces.component.html.ext.HtmlCommandLink;
 import org.apache.myfaces.component.html.ext.HtmlInputHidden;
 import org.apache.myfaces.component.html.ext.HtmlPanelGrid;
 import org.apache.myfaces.custom.div.Div;
 import org.apache.myfaces.custom.tabbedpane.HtmlPanelTabbedPane;
-import org.apache.myfaces.custom.tabbedpane.TabChangeEvent;
-import org.apache.myfaces.custom.tabbedpane.TabChangeListener;
 
 import com.idega.formbuilder.business.ComponentPalette;
 import com.idega.formbuilder.business.FormField;
@@ -24,7 +20,7 @@ import com.idega.formbuilder.business.form.manager.FormManagerFactory;
 import com.idega.formbuilder.business.form.manager.IFormManager;
 import com.idega.presentation.IWContext;
 
-public class UIManager implements TabChangeListener {
+public class UIManager {
 	
 	private ComponentPalette palette;
 	private static List fields = new ArrayList();
@@ -64,14 +60,10 @@ public class UIManager implements TabChangeListener {
 	}
 
 	public UIManager() {
+		
 		if(fb == null) {
-			System.out.println("XIXIXIXIXIXIXIXIXIXIXIXI");
 			try {
-				System.out.println("XIXIXIXIXIXIXIXIXIXIXIXI");
 				fb = FormManagerFactory.newFormManager(IWContext.getInstance());
-				if(fb == null) {
-					System.out.println("XIXIXIXIXIXIXIXIXIXIXIXI");
-				}
 				FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("formbuilderInstance", fb);
 			} catch(InstantiationException e) {
 				e.printStackTrace();
@@ -86,6 +78,7 @@ public class UIManager implements TabChangeListener {
 				fields.add(temp);
 			}
 		}
+		
 	}
 
 	public ComponentPalette getPalette() {
@@ -168,16 +161,6 @@ public class UIManager implements TabChangeListener {
             AAUtils.addZonesToRefresh(getRequest(), "panel");
         }
 		this.getOptionsPane().setSelectedIndex(2);*/
-	}
-	
-	private HttpServletRequest getRequest() {
-        return (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-    }
-	
-	public void processTabChange(TabChangeEvent e) throws AbortProcessingException {
-		FacesContext context = FacesContext.getCurrentInstance();
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		System.out.println("--------" + e.getComponent().getAttributes().get("id"));
 	}
 
 	public Div getFormView() {
