@@ -3,8 +3,6 @@ package com.idega.formbuilder.business.form.manager;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import javax.xml.transform.TransformerException;
 
@@ -13,8 +11,11 @@ import org.apache.commons.logging.LogFactory;
 import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 
+import com.idega.business.IBOLookup;
+import com.idega.business.IBOLookupException;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
-import com.idega.slide.business.IWSlideServiceBean;
+import com.idega.presentation.IWContext;
+import com.idega.slide.business.IWSlideService;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
@@ -43,8 +44,6 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 	
 	private WebdavPersistenceManager() { }
 	
-	Lock lock = new ReentrantLock();
-
 	public void persistDocument(final Document document) throws TransformerException, InstantiationException, NullPointerException {
 		
 		if(!inited)
@@ -58,10 +57,8 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 		
 		final String path_to_file = form_pathes[0];
 		final String file_name = form_pathes[1];
-		final IWSlideServiceBean service_bean = getServiceBean();
+		final IWSlideService service_bean = getServiceBean();
 		
-		//TODO: think about the same document management, when next save starts when the previous is not finished yet
-		//using lock now is not a good idea. just temporary
 		new Thread() {
 			
 			public void run() {
@@ -73,17 +70,10 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 					DOMUtil.prettyPrintDOM(document, out);
 					InputStream is = new ByteArrayInputStream(out.toByteArray());
 //					--
-					try {
-						lock.lock();
-						
-						service_bean.uploadFileAndCreateFoldersFromStringAsRoot(
-								path_to_file, file_name,
-								is, "text/xml", false
-						);
-						
-					} finally {
-						lock.unlock();
-					}
+					service_bean.uploadFileAndCreateFoldersFromStringAsRoot(
+							path_to_file, file_name,
+							is, "text/xml", false
+					);
 					
 					document_to_webdav_save_exception = null;
 					
@@ -105,7 +95,7 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 		return inited;
 	}
 	
-	private IWSlideServiceBean service_bean = null;
+	//private IWSlideService service_bean = null;
 	private Exception document_to_webdav_save_exception = null;
 	private String[] form_pathes = null;
 	private static final String FORMS_REPO_CONTEXT = "/files/formbuilder/forms/";
@@ -126,10 +116,16 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 		return form_pathes;
 	}
 	
-	private IWSlideServiceBean getServiceBean() {
+	private IWSlideService getServiceBean() {
 		
-		if(service_bean == null)
-			service_bean = new IWSlideServiceBean();
+		IWSlideService service_bean = null;
+		try {
+			
+			service_bean = (IWSlideService)IBOLookup.getServiceInstance(IWContext.getInstance(), IWSlideService.class);
+			
+		} catch (IBOLookupException e) {
+			e.printStackTrace();
+		}
 		
 		return service_bean;
 	}
