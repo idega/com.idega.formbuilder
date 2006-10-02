@@ -24,15 +24,8 @@ public class GenericFormComponentRenderer extends Renderer {
 		Element element = null;
 		try {
 			IFormManager fbInstance = (IFormManager) context.getExternalContext().getSessionMap().get("formbuilderInstance");
-			System.out.println("XXXXXXXX");
-			System.out.println(field.getType());
-			System.out.println("XXXXXXXX");
-			element = fbInstance.createFormComponent(field.getType(), null);
-			if(element == null) {
-				System.out.println("XXXXXXXX");
-				System.out.println("ELEMENT IS NULL");
-				System.out.println("XXXXXXXX");
-			}
+			//element = fbInstance.createFormComponent(field.getType(), null);
+			element = fbInstance.createFormComponent("fbcomp_text", null);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

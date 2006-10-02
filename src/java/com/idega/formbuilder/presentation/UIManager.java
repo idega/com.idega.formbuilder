@@ -60,10 +60,9 @@ public class UIManager {
 	}
 
 	public UIManager() {
-		
 		if(fb == null) {
 			try {
-				fb = FormManagerFactory.newFormManager(IWContext.getInstance());
+				fb = FormManagerFactory.newFormManager(FacesContext.getCurrentInstance());
 				FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("formbuilderInstance", fb);
 			} catch(InstantiationException e) {
 				e.printStackTrace();
@@ -78,7 +77,6 @@ public class UIManager {
 				fields.add(temp);
 			}
 		}
-		
 	}
 
 	public ComponentPalette getPalette() {
