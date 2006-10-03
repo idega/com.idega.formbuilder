@@ -334,7 +334,8 @@ public class ComponentsManager {
 						
 						if(lang != null && lang.equals(loc_str)) {
 							
-							localized_string = FormManagerUtil.getElementsTextNodeValue(loc_el);
+							localized_string = loc_el.getTextContent();
+//							FormManagerUtil.getElementsTextNodeValue(loc_el);
 							break;
 						}
 					}
