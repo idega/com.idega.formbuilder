@@ -205,11 +205,11 @@ public class ComponentsManager {
 			
 			Element desc = (Element)descendants.item(i);
 			
-			String desc_text_content = desc.getTextContent();
+			String desc_text_content = FormManagerUtil.getElementsTextNodeValue(desc);
 			
 			if(FormManagerUtil.isLocalizationKeyCorrect(desc_text_content)) {
 				
-				desc.setTextContent(FormManagerUtil.getComponentLocalizationKey(new_comp_id, desc_text_content));
+				FormManagerUtil.setElementsTextNodeValue(desc, FormManagerUtil.getComponentLocalizationKey(new_comp_id, desc_text_content));
 			}
 			
 			NamedNodeMap attributes = desc.getAttributes();
@@ -314,9 +314,9 @@ public class ComponentsManager {
 		
 		for (int i = 0; i < descendants.getLength(); i++) {
 			
-			Element desc = (Element)descendants.item(i);
+			Node desc = descendants.item(i);
 			
-			String txt_content = desc.getTextContent();
+			String txt_content = FormManagerUtil.getElementsTextNodeValue(desc);
 			
 			if(FormManagerUtil.isLocalizationKeyCorrect(txt_content)) {
 				
@@ -334,7 +334,7 @@ public class ComponentsManager {
 						
 						if(lang != null && lang.equals(loc_str)) {
 							
-							localized_string = loc_el.getTextContent();
+							localized_string = FormManagerUtil.getElementsTextNodeValue(loc_el);
 							break;
 						}
 					}
@@ -344,7 +344,7 @@ public class ComponentsManager {
 					throw new NullPointerException(
 							"Could not find localization value by provided key= "+txt_content+", language= "+loc_str);
 				
-				desc.setTextContent(localized_string);
+				FormManagerUtil.setElementsTextNodeValue(desc, localized_string);
 			}
 		}
 		

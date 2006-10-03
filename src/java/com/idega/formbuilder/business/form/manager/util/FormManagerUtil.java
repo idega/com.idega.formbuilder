@@ -300,8 +300,6 @@ public class FormManagerUtil {
 			
 			if(loc_tags == null || !val_set) {
 				
-				System.out.println("laewa");
-				
 //				create new localization element
 				Element new_loc_el = xforms.createElement(new_key);
 				new_loc_el.setAttribute(lang, loc_key);
@@ -349,7 +347,7 @@ public class FormManagerUtil {
 			
 			if(lang_code != null) {
 				
-				String content = key_element.getTextContent();
+				String content = getElementsTextNodeValue(key_element);
 				loc_str_bean.setString(lang_code, content == null ? "" : content);
 			}
 		}
@@ -359,5 +357,25 @@ public class FormManagerUtil {
 	
 	public static boolean isLocalizationKeyCorrect(String loc_key) {
 		return loc_key != null && !loc_key.contains(" ") && loc_key.startsWith(loc_key_identifier);
+	}
+	
+	public static String getElementsTextNodeValue(Node element) {
+		
+		Node txt_node = element.getFirstChild();
+		
+		if(txt_node == null || txt_node.getNodeType() != Node.TEXT_NODE)
+			return null;
+		
+		return txt_node.getNodeValue().trim();
+	}
+	
+	public static void setElementsTextNodeValue(Node element, String value) {
+		
+		Node txt_node = element.getFirstChild();
+		
+		if(txt_node == null || txt_node.getNodeType() != Node.TEXT_NODE)
+			return;
+			
+		txt_node.setNodeValue(value);
 	}
 }
