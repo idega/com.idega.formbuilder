@@ -290,7 +290,7 @@ public class FormManagerUtil {
 					
 					if(loc_tag.getAttribute(lang).equals(loc_key)) {
 						
-						loc_tag.setTextContent(loc_string.getString(loc_key));
+						setElementsTextNodeValue(loc_tag, loc_string.getString(loc_key));
 						
 						val_set = true;
 						break;
@@ -303,7 +303,7 @@ public class FormManagerUtil {
 //				create new localization element
 				Element new_loc_el = xforms.createElement(new_key);
 				new_loc_el.setAttribute(lang, loc_key);
-				new_loc_el.setTextContent(loc_string.getString(loc_key));
+				setElementsTextNodeValue(new_loc_el, loc_string.getString(loc_key));
 				loc_strings.appendChild(new_loc_el);
 			}
 		}
