@@ -64,7 +64,7 @@ public class FormManager implements IFormManager {
 		comp_manager.removeFormComponent(component_id);
 	}
 	
-	public Element getLocalizedFormHtmlComponent(String component_id, String loc_str) {
+	public Element getLocalizedFormHtmlComponent(String component_id, String loc_str) throws NullPointerException {
 		
 		return comp_manager.getLocalizedFormHtmlComponent(component_id, loc_str);
 	}
@@ -254,18 +254,20 @@ public class FormManager implements IFormManager {
 			System.out.println("document created in: "+(end-start));
 			
 			start = System.currentTimeMillis();
-			fb.createFormComponent("fbcomp_text", null);
+			String created = fb.createFormComponent("fbcomp_text", null);
+			
+			System.out.println("cr: "+created);
 			end = System.currentTimeMillis();
 			System.out.println("text component created in: "+(end-start));
 			
 			Element loc = fb.getLocalizedFormHtmlComponent("fbcomp_1", "en");
 			DOMUtil.prettyPrintDOM(loc);
-			loc = fb.getLocalizedFormHtmlComponent("fbcomp_1", "is");
-			DOMUtil.prettyPrintDOM(loc);
-			
-			fb.createFormComponent("fbcomp_email", null);
-			loc = fb.getLocalizedFormHtmlComponent("fbcomp_2", "en");
-			DOMUtil.prettyPrintDOM(loc);
+//			loc = fb.getLocalizedFormHtmlComponent("fbcomp_1", "is");
+//			DOMUtil.prettyPrintDOM(loc);
+//			
+//			fb.createFormComponent("fbcomp_email", null);
+//			loc = fb.getLocalizedFormHtmlComponent("fbcomp_2", "en");
+//			DOMUtil.prettyPrintDOM(loc);
 			
 ////			
 //			start = System.currentTimeMillis();

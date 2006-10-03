@@ -74,5 +74,5 @@ public interface IFormManager {
 	 */
 	public abstract List<String> getFormComponentsList();
 	
-	public abstract Element getLocalizedFormHtmlComponent(String component_id, String loc_str);
+	public abstract Element getLocalizedFormHtmlComponent(String component_id, String loc_str) throws NullPointerException;
 }
