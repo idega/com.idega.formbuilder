@@ -303,6 +303,7 @@ public class FormManagerUtil {
 //				create new localization element
 				Element new_loc_el = xforms.createElement(new_key);
 				new_loc_el.setAttribute(lang, loc_key);
+				new_loc_el.appendChild(xforms.createTextNode(""));
 				setElementsTextNodeValue(new_loc_el, loc_string.getString(loc_key));
 				loc_strings.appendChild(new_loc_el);
 			}
@@ -363,8 +364,9 @@ public class FormManagerUtil {
 		
 		Node txt_node = element.getFirstChild();
 		
-		if(txt_node == null || txt_node.getNodeType() != Node.TEXT_NODE)
+		if(txt_node == null || txt_node.getNodeType() != Node.TEXT_NODE) {
 			return null;
+		}
 		
 		return txt_node.getNodeValue().trim();
 	}
