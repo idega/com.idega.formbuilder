@@ -4,7 +4,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:fb="http://xmlns.idega.com/com.idega.formbuilder"
 	xmlns:ws="http://xmlns.idega.com/com.idega.workspace" version="1.2"
-	xmlns:t="http://myfaces.apache.org/tomahawk">
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax">
 	<jsp:directive.page contentType="text/html" />
 	<f:view>
 		<ws:page id="formbuilder" javascripturls="/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax.js,
@@ -40,7 +41,21 @@
 		                        tabContentStyleClass="tabContent"
 		                        binding="#{viewmanager.optionsPane}">
 							    <t:panelTab id="tab01" label="Form properties">
-							    	<t:outputText value="something" />
+							    	
+								    <t:outputLabel for="formTitle" value="Form title" />
+								    <t:inputText id="formTitleInput2" forceId="true" value="#{viewmanager.formTitle}">
+								    	<a4j:support event="onkeyup" ajaxSingle="true" reRender="formTitleInput,form_heading_title" />
+								    </t:inputText>
+								    
+								    <t:outputLabel for="formDescription" value="Description" />
+								    <t:inputTextarea id="formDescription" forceId="true" value="#{viewmanager.formDescription}" />
+							    	
+							    	<h:outputText value="Type the Text:" />
+									<h:inputText size="50" value="#{viewmanager.formTitle}">
+										<a4j:support event="onkeyup" ajaxSingle="true" reRender="form_heading_title" />
+									</h:inputText>
+									<h:outputText value="Text in the AJAX Response:" />
+									<h:outputText id="repeater" value="#{viewmanager.formTitle}" />
 							    </t:panelTab>
 							    <t:panelTab id="tab02" label="Add new field">
 							        <t:dataList id="firstlist"
@@ -64,12 +79,13 @@
 						<t:div styleClass="form_container" id="form_container" forceId="true">
 							<t:div id="dropBox" forceId="true" styleClass="dropBox" binding="#{viewmanager.formView}">
 								<t:div styleClass="form_element form_heading">
-									<t:outputText id="form_heading_title" forceId="true" value="Untitled form" />
-									<t:outputText id="form_heading_description" forceId="true" value="Some description" />
+									<t:inputText id="formTitleInput" forceId="true" value="#{viewmanager.formTitle}" />
+									<t:outputText id="form_heading_title" forceId="true" value="#{viewmanager.formTitle}" />
+									<t:htmlTag value="br" />
+									<t:outputText id="form_heading_description" forceId="true" value="#{viewmanager.formDescription}" />
 								</t:div>
 							</t:div>
 							<f:verbatim>
-								<h1>LALALALALALALA</h1>
 								<script type="text/javascript" src="/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js" />
 								<script type="text/javascript">
 								<!--
@@ -80,16 +96,15 @@
 							</f:verbatim>
 						</t:div>
 					</t:div>
-					<!--
 					<t:div id="bottom_tab_container" forceId="true">
 						<h:commandLink id="design_view_button" styleClass="bottom_tab_button float_center" action="" value="Design"/>
 						<h:commandLink id="preview_view_button" styleClass="bottom_tab_button float_center" action="" value="Preview"/>
 						<h:commandLink id="source_view_button" styleClass="bottom_tab_button float_center" action="" value="Source"/>
 					</t:div>
-					-->
 					<t:div id="hidden_container" forceId="true">
 						<t:commandLink id="add_field_button" forceId="true" action="#{viewmanager.addFormField}" value="" />
 						<t:commandLink id="select_field_button" forceId="true" action="#{viewmanager.selectFormField}" value="" />
+						<t:commandLink id="select_form_header_button" forceId="true" action="#{viewmanager.selectFormHeader}" value="" />
 						<t:inputHidden id="selected_field_type" forceId="true" value="#{viewmanager.selectedFieldTypeValue}" />
 						<t:inputHidden id="selected_field_id" forceId="true" binding="#{viewmanager.selectedFieldId}" />
 					</t:div>

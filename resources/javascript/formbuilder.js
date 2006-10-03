@@ -9,6 +9,10 @@ function selectFormField(selectedField) {
 	document.getElementById('select_field_button').onclick();
 }
 
+function selectFormHeader() {
+	document.getElementById('select_form_header_button').onclick();
+}
+
 function setup(listObjId) {
 	var listObj = document.getElementById(listObjId);
 	var subDivs = listObj.getElementsByTagName('li');

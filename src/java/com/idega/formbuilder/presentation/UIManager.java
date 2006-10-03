@@ -9,6 +9,8 @@ import javax.faces.context.FacesContext;
 
 import org.apache.myfaces.component.html.ext.HtmlCommandLink;
 import org.apache.myfaces.component.html.ext.HtmlInputHidden;
+import org.apache.myfaces.component.html.ext.HtmlInputText;
+import org.apache.myfaces.component.html.ext.HtmlOutputText;
 import org.apache.myfaces.component.html.ext.HtmlPanelGrid;
 import org.apache.myfaces.custom.div.Div;
 import org.apache.myfaces.custom.tabbedpane.HtmlPanelTabbedPane;
@@ -18,22 +20,29 @@ import com.idega.formbuilder.business.FormField;
 import com.idega.formbuilder.business.form.beans.FormPropertiesBean;
 import com.idega.formbuilder.business.form.manager.FormManagerFactory;
 import com.idega.formbuilder.business.form.manager.IFormManager;
-import com.idega.presentation.IWContext;
 
 public class UIManager {
 	
 	private ComponentPalette palette;
 	private static List fields = new ArrayList();
 	private int elementCount;
-	private static IFormManager fb = null;
+	private static IFormManager formManagerInstance = null;
 	
 	private HtmlPanelTabbedPane optionsPane = null;
 	private HtmlInputHidden selectedFieldType = null;
 	private HtmlInputHidden selectedFieldId = null;
+	private HtmlOutputText formTitleField = null;
+	private HtmlInputText input = null;
 	private Div formView = null;
 	
 	private String selectedFieldTypeValue;
 	private String text;
+	
+	
+	private String formTitle;
+	private String formDescription;
+	
+	private boolean viewInitialized = false;
 	
 	public String getText() {
 		return text;
@@ -60,22 +69,33 @@ public class UIManager {
 	}
 
 	public UIManager() {
-		if(fb == null) {
-			try {
-				fb = FormManagerFactory.newFormManager(FacesContext.getCurrentInstance());
-				FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("formbuilderInstance", fb);
-			} catch(InstantiationException e) {
-				e.printStackTrace();
+		try {
+			if(!isViewInitialized()) {
+				initialize();
+				setViewInitialized(true);
 			}
+		} catch(Exception e) {
+			setViewInitialized(false);
+			e.printStackTrace();
 		}
-		if(fields == null || fields.size() == 0) {
-			List components = fb.getAvailableFormComponentsList();
+	}
+	
+	private void initialize() throws Exception {
+		try {
+			formManagerInstance = FormManagerFactory.newFormManager(FacesContext.getCurrentInstance());
+			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("formbuilderInstance", formManagerInstance);
+			fields.clear();
+			List components = formManagerInstance.getAvailableFormComponentsList();
 			Iterator it = components.iterator();
 			FormField temp = null;
 			while(it.hasNext()) {
 				temp = new FormField((String) it.next());
 				fields.add(temp);
 			}
+		} catch(InstantiationException e) {
+			throw new Exception("FormManager instantiation failed: " + e);
+		} catch(Exception e) {
+			throw new Exception("UIManager instantiation failed: " + e);
 		}
 	}
 
@@ -92,7 +112,7 @@ public class UIManager {
 		clearFormView();
 		FormPropertiesBean formProperties = new FormPropertiesBean();
 		formProperties.setId(123L);
-		fb.createFormDocument(formProperties);
+		formManagerInstance.createFormDocument(formProperties);
 		
 	}
 	
@@ -138,8 +158,8 @@ public class UIManager {
 	        HtmlCommandLink cloneButton = (HtmlCommandLink) application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
 	        cloneButton.setValue("CLONE");
 	        cloneButton.setStyleClass("hot_button");
-	        //fieldButtons.getChildren().add(deleteButton);
-	        //fieldButtons.getChildren().add(cloneButton);
+	        fieldButtons.getChildren().add(deleteButton);
+	        fieldButtons.getChildren().add(cloneButton);
 	        FBGenericFormComponent genericField = (FBGenericFormComponent) application.createComponent(FBGenericFormComponent.COMPONENT_TYPE);
 	        genericField.setType(this.getSelectedFieldTypeValue());
 	        fieldInnerHtml.getChildren().add(genericField);
@@ -159,6 +179,10 @@ public class UIManager {
             AAUtils.addZonesToRefresh(getRequest(), "panel");
         }
 		this.getOptionsPane().setSelectedIndex(2);*/
+	}
+	
+	public void selectFormHeader() {
+		this.getOptionsPane().setSelectedIndex(0);
 	}
 
 	public Div getFormView() {
@@ -195,5 +219,37 @@ public class UIManager {
 
 	public void setFields(List fields) {
 		this.fields = fields;
+	}
+
+	public String getFormDescription() {
+		return formDescription;
+	}
+
+	public void setFormDescription(String formDescription) {
+		this.formDescription = formDescription;
+	}
+
+	public String getFormTitle() {
+		return formTitle;
+	}
+
+	public void setFormTitle(String formTitle) {
+		this.formTitle = formTitle;
+	}
+
+	public boolean isViewInitialized() {
+		return viewInitialized;
+	}
+
+	public void setViewInitialized(boolean viewInitialized) {
+		this.viewInitialized = viewInitialized;
+	}
+
+	public HtmlOutputText getFormTitleField() {
+		return formTitleField;
+	}
+
+	public void setFormTitleField(HtmlOutputText formTitleField) {
+		this.formTitleField = formTitleField;
 	}
 }

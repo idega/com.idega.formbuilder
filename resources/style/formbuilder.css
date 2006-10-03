@@ -48,8 +48,11 @@
 /*---UI Component styles---*/
 .form_element {
 	width: 88%;
+	border: 1px #000 groove						! important;
 	height: auto;	
 	margin-bottom: 10px;
+	margin-left: 5%;
+	margin-right: 5%;
 	padding-left: 30px;
 	padding-top: 10px;
 	padding-bottom: 10px;
@@ -120,18 +123,22 @@
 	overflow: auto;
 }
 .toolbar_button {
-	text-decoration: none;
+	text-decoration: none 					! important;
 	color: #000;
 	height: 20px;
 	width: 75px;
 	line-height: 20px;
 	vertical-align: middle;
-	border: 1px solid #000;
+	border: none;
 	background-color: #FAFAFA;
-	margin: 0px;
+	margin: 2px;
 	padding: 1px;
 	display: block;
 	font-size: 1.0em;
+}
+.toolbar_button:hover {
+	border: 1px solid #000;
+	margin: 1px;
 }
 .toolbar_field {
 	text-decoration: none;

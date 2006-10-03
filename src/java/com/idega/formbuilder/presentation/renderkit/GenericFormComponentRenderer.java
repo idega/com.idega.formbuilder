@@ -21,14 +21,15 @@ public class GenericFormComponentRenderer extends Renderer {
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		FBGenericFormComponent field = (FBGenericFormComponent) component;
-		Element element = null;
+		String elementId = null;
+		IFormManager fbInstance = null;
 		try {
-			IFormManager fbInstance = (IFormManager) context.getExternalContext().getSessionMap().get("formbuilderInstance");
-			//element = fbInstance.createFormComponent(field.getType(), null);
-			element = fbInstance.createFormComponent("fbcomp_text", null);
+			fbInstance = (IFormManager) context.getExternalContext().getSessionMap().get("formbuilderInstance");
+			elementId = fbInstance.createFormComponent(field.getType(), null);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+		Element element = fbInstance.getLocalizedFormHtmlComponent(elementId, "en");
 		GenericFieldParser.renderNode(element, field, writer);
 	}
 	
