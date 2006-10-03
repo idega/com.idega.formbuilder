@@ -14,10 +14,14 @@ import org.chiba.tools.xslt.StylesheetLoader;
 import org.chiba.tools.xslt.UIGenerator;
 import org.chiba.xml.xforms.exception.XFormsException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.idega.formbuilder.business.form.manager.FormManager;
 import com.idega.formbuilder.business.form.manager.generators.FBXSLTGenerator;
+import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 import com.idega.repository.data.Singleton;
 import com.idega.xml.XMLException;
 
@@ -56,7 +60,7 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 		return me;
 	}
 	
-	private FormComponentsGenerator() { }
+	protected FormComponentsGenerator() { }
 
 	/* (non-Javadoc)
 	 * @see com.idega.formbuilder.generators.IComponentsGenerator#isInitiated()
@@ -116,10 +120,8 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 			
 		xforms_doc = null;
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.idega.formbuilder.generators.IComponentsGenerator#generateBaseComponentsDocument()
-	 */
+
+//	TODO: check those synchronized. Smth is changed and smth is left. a bit mess
 	public synchronized Document generateBaseComponentsDocument() throws XMLException, IOException, XFormsException, LockException  {
 		
 		if(locked_cnt < 0) {
@@ -150,7 +152,8 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 		        	xforms_doc = document_builder.parse(
 		        			new FileInputStream(absolute_components_xforms_path)
 		        	);
-		        }
+		        } else
+		        	xforms_doc = (Document)xforms_doc.cloneNode(true);
 	        }
 
 	        /*
@@ -161,6 +164,9 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 	        ((FBXSLTGenerator)gen).setAbsoluteStylesheetPath(absolute_components_xforms_stylesheet_path);
 	        gen.setInputNode(xforms_doc);
 	        
+//        	TODO: there could be only one stylesheet used for all this, do it if u master it enough for components.xsl
+        	copyLocalizationKeysToElements(xforms_doc);
+        	
 	        Document temp_xml_doc = document_builder.newDocument();
 	        gen.setOutput(temp_xml_doc);
         	
@@ -188,6 +194,29 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 			throw new XMLException(e.getMessage(), e);
 		} finally {
 			locked_cnt--;
+		}
+	}
+	
+	private static void copyLocalizationKeysToElements(Document managed_doc) {
+		
+		Element components_container = (Element)managed_doc.getElementsByTagName("xf:group").item(0);
+		
+		NodeList child_elements = components_container.getElementsByTagName("*");
+		
+		for (int i = 0; i < child_elements.getLength(); i++) {
+			Element child = (Element)child_elements.item(i);
+			
+			if(child.hasAttribute("ref")) {
+				
+				String ref = child.getAttribute("ref");
+				
+				if(!FormManagerUtil.isRefFormCorrect(ref))
+					continue;
+				
+				String key = FormManagerUtil.getKeyFromRef(ref);
+				Node key_node = managed_doc.createTextNode(key);
+				child.appendChild(key_node);
+			}
 		}
 	}
 }

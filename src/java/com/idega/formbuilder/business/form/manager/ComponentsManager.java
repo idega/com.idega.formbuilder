@@ -27,7 +27,7 @@ public class ComponentsManager {
 	private FormBean form_bean;
 	private IPersistenceManager persistance_manager;
 	
-	private ComponentsManager() { }
+	protected ComponentsManager() { }
 	
 	public static ComponentsManager getInstance(FormBean form_bean, IPersistenceManager persistance_manager) throws NullPointerException {
 		
@@ -59,16 +59,17 @@ public class ComponentsManager {
 	/*
 	 * TODO: add some kind of transaction. if smth critical failes, all changes to form or schema should be rollbacked.
 	 */
-	public Element createFormComponent(String component_type, String component_after_new_id) throws FBPostponedException, NullPointerException, Exception {
+	public String createFormComponent(String component_type, String component_after_new_id) throws FBPostponedException, NullPointerException, Exception {
 		
 		Document form_xforms = form_bean.getFormXforms();
 		
 		if(form_xforms == null)
 			throw new NullPointerException(form_not_created);
 		
-		CacheManager.checkForComponentType(component_type);
+		CacheManager cache_manager = CacheManager.getInstance();
+		cache_manager.checkForComponentType(component_type);
 		
-		XFormsComponentBean xforms_component = CacheManager.getXFormsComponentReferencesByType(component_type);
+		XFormsComponentBean xforms_component = cache_manager.getXFormsComponentReferencesByType(component_type);
 		
 		Element new_xforms_element = xforms_component.getElement();
 		new_xforms_element = (Element)form_xforms.importNode(new_xforms_element, true);
@@ -82,7 +83,7 @@ public class ComponentsManager {
 		
 		new_xforms_element.setAttribute(FormManagerUtil.id_name, new_comp_id_str);
 		
-		localizeNewComponent(new_xforms_element, new_comp_id_str, form_xforms, CacheManager.getComponentsXforms());
+		localizeNewComponent(new_xforms_element, new_comp_id_str, form_xforms, cache_manager.getComponentsXforms());
 		
 		String bind_id = null;
 		
@@ -147,7 +148,7 @@ public class ComponentsManager {
 		
 		if(new_form_schema_type != null) {
 
-			FormManagerUtil.copySchemaType(CacheManager.getComponentsXsd(), form_xforms, new_form_schema_type);
+			FormManagerUtil.copySchemaType(cache_manager.getComponentsXsd(), form_xforms, new_form_schema_type);
 			form_bean.getFormXsdContainedTypesDeclarations().add(new_form_schema_type);
 		}
 		
@@ -159,10 +160,11 @@ public class ComponentsManager {
 		
 		persistance_manager.persistDocument(form_xforms);
 		
-		Element new_html_component = (Element)CacheManager.getHtmlComponentReferenceByType(component_type).cloneNode(true);
-		putAttributesOnHtmlComponent(new_html_component, new_comp_id_str, component_type);
+		Element new_html_component = (Element)cache_manager.getHtmlComponentReferenceByType(component_type).cloneNode(true);
+		putMetaInfoOnHtmlComponent(new_html_component, new_comp_id_str, component_type);
+		cache_manager.putUnlocalizedFormHtmlComponent(String.valueOf(form_props.getId()), new_comp_id_str, new_html_component);
 		
-		return new_html_component;
+		return new_comp_id_str;
 	}
 	
 	private static void localizeNewComponent(Element component_container, String comp_id, Document xforms_doc_to, Document xforms_doc_from) {
@@ -179,7 +181,7 @@ public class ComponentsManager {
 				
 				String key = FormManagerUtil.getKeyFromRef(ref);
 				FormManagerUtil.putLocalizedText(
-					comp_id+key, null, child, xforms_doc_to,
+					FormManagerUtil.getComponentLocalizationKey(comp_id, key), null, child, xforms_doc_to,
 					FormManagerUtil.getLocalizedStrings(key, xforms_doc_from)
 				);
 			}
@@ -194,14 +196,22 @@ public class ComponentsManager {
 	 * @param new_comp_id - new form component id to be set on attributes
 	 * @param old_comp_id - all form component id
 	 */
-	private static void putAttributesOnHtmlComponent(Element component, String new_comp_id, String old_comp_id) {
+	private static void putMetaInfoOnHtmlComponent(Element component, String new_comp_id, String old_comp_id) {
 		
 		component.setAttribute(FormManagerUtil.id_name, new_comp_id);
 		NodeList descendants = component.getElementsByTagName("*");
 		
 		for (int i = 0; i < descendants.getLength(); i++) {
 			
-			Node desc = descendants.item(i);
+			Element desc = (Element)descendants.item(i);
+			
+			String desc_text_content = desc.getTextContent();
+			
+			if(FormManagerUtil.isLocalizationKeyCorrect(desc_text_content)) {
+				
+				desc.setTextContent(FormManagerUtil.getComponentLocalizationKey(new_comp_id, desc_text_content));
+			}
+			
 			NamedNodeMap attributes = desc.getAttributes();
 			
 			for (int j = 0; j < attributes.getLength(); j++) {
@@ -273,5 +283,71 @@ public class ComponentsManager {
 		}
 		
 		return components_types;
+	}
+	
+	public Element getLocalizedFormHtmlComponent(String component_id, String loc_str) throws NullPointerException {
+		
+		CacheManager cache_manager = CacheManager.getInstance();
+		String form_id_str = String.valueOf(form_bean.getFormProperties().getId());
+		
+		Element form_component = cache_manager.getLocalizedFormHtmlComponent(
+				form_id_str, component_id, loc_str);
+		
+		if(form_component != null)
+			return form_component;
+		
+		form_component = cache_manager.getUnlocalizedFormHtmlComponent(form_id_str, component_id);
+		
+		if(form_component == null)
+			throw new NullPointerException("Unlocalized form html component not found in cache. Should not happen.");
+		
+		return getFormHtmlComponentLocalization(form_bean.getFormXforms(), form_component, loc_str);
+	}
+	
+	private Element getFormHtmlComponentLocalization(Document xforms_doc, Element unlocalized_component, String loc_str) {
+		
+		Element loc_model = FormManagerUtil.getElementByIdFromDocument(xforms_doc, "head", FormManagerUtil.loc_mod);
+		Element loc_strings = (Element)loc_model.getElementsByTagName(FormManagerUtil.loc_tag).item(0);
+		Element localized_component = (Element)unlocalized_component.cloneNode(true);
+		
+		NodeList descendants = localized_component.getElementsByTagName("*");
+		
+		for (int i = 0; i < descendants.getLength(); i++) {
+			
+			Element desc = (Element)descendants.item(i);
+			
+			String txt_content = desc.getTextContent();
+			
+			if(FormManagerUtil.isLocalizationKeyCorrect(txt_content)) {
+				
+				NodeList localization_strings_elements = loc_strings.getElementsByTagName(txt_content);
+				
+				String localized_string = null;
+				
+				if(localization_strings_elements != null) {
+					
+					for (int j = 0; j < localization_strings_elements.getLength(); j++) {
+						
+						Element loc_el = (Element)localization_strings_elements.item(j);
+						
+						String lang = loc_el.getAttribute("lang");
+						
+						if(lang != null && lang.equals(loc_str)) {
+							
+							localized_string = loc_el.getTextContent();
+							break;
+						}
+					}
+				}
+				
+				if(localized_string == null)
+					throw new NullPointerException(
+							"Could not find localization value by provided key= "+txt_content+", language= "+loc_str);
+				
+				desc.setTextContent(localized_string);
+			}
+		}
+		
+		return localized_component;
 	}
 }

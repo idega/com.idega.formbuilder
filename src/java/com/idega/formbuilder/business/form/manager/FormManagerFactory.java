@@ -12,7 +12,7 @@ import javax.faces.context.FacesContext;
  */
 public class FormManagerFactory {
 	
-	private FormManagerFactory() { }
+	protected FormManagerFactory() { }
 	
 	/**
 	 * @return FormManager instance

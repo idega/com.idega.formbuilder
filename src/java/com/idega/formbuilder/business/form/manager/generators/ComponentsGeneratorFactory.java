@@ -8,7 +8,7 @@ package com.idega.formbuilder.business.form.manager.generators;
  */
 public class ComponentsGeneratorFactory {
 	
-	private ComponentsGeneratorFactory() { }
+	protected ComponentsGeneratorFactory() { }
 
 	/**
 	 * @return IComponentsGenerator implementation depending on __not defined yet__

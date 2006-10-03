@@ -42,6 +42,7 @@ public class FormManagerUtil {
 	public static final String ref_s = "ref";
 	public static final String lang = "lang";
 	public static final String CTID = "fbcomp_";
+	public static final String loc_key_identifier = "lockey_";
 
 	private static final String simple_type = "xs:simpleType";
 	private static final String complex_type = "xs:complexType";
@@ -132,7 +133,7 @@ public class FormManagerUtil {
 	
 	/**
 	 * 
-	 * method name should explain, what it does
+	 * method name should be clear enough to explain, what it does
 	 * 
 	 * @param doc - document, to search for an element
 	 * @param start_tag - where to start. faster search.
@@ -299,6 +300,8 @@ public class FormManagerUtil {
 			
 			if(loc_tags == null || !val_set) {
 				
+				System.out.println("laewa");
+				
 //				create new localization element
 				Element new_loc_el = xforms.createElement(new_key);
 				new_loc_el.setAttribute(lang, loc_key);
@@ -306,6 +309,19 @@ public class FormManagerUtil {
 				loc_strings.appendChild(new_loc_el);
 			}
 		}
+	}
+	
+	public static String getComponentLocalizationKey(String component_id, String loc_key) {
+		
+		if(!isLocalizationKeyCorrect(loc_key))
+			return null;
+		
+		String new_loc_key = new StringBuffer(loc_key_identifier)
+		.append(component_id)
+		.append(loc_key.substring(loc_key_identifier.length()))
+		.toString();
+		
+		return new_loc_key;
 	}
 	
 	public static String getKeyFromRef(String ref) {
@@ -339,5 +355,9 @@ public class FormManagerUtil {
 		}
 		
 		return loc_str_bean;
+	}
+	
+	public static boolean isLocalizationKeyCorrect(String loc_key) {
+		return loc_key != null && !loc_key.contains(" ") && loc_key.startsWith(loc_key_identifier);
 	}
 }

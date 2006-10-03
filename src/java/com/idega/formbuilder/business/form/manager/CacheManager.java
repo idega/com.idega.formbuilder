@@ -1,5 +1,6 @@
 package com.idega.formbuilder.business.form.manager;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import com.idega.core.cache.IWCacheManager2;
 import com.idega.formbuilder.business.form.manager.beans.XFormsComponentBean;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 import com.idega.idegaweb.IWMainApplication;
+import com.idega.repository.data.Singleton;
 import com.idega.util.caching.CacheMap;
 
 /**
@@ -21,19 +23,39 @@ import com.idega.util.caching.CacheMap;
  * @version 1.0
  * 
  */
-public class CacheManager {
+public class CacheManager implements Singleton {
 	
-	private static Log logger = LogFactory.getLog(FormManager.class);
+	private static Log logger = LogFactory.getLog(CacheManager.class);
 	
-	private static Document form_xforms_template = null;
-	private static Document components_xforms = null;
-	private static Document components_xsd = null;
-	private static Document components_xml = null;
-	private static List<String> components_types = null;
-	private static Map<String, XFormsComponentBean> cached_xforms_components = new CacheMap();
-	private static Map<String, Element> cached_html_components = new CacheMap();
+	private Document form_xforms_template = null;
+	private Document components_xforms = null;
+	private Document components_xsd = null;
+	private Document components_xml = null;
+	private List<String> components_types = null;
+	private Map<String, XFormsComponentBean> cached_xforms_components = new CacheMap();
+	private Map<String, Element> cached_html_components = new CacheMap();
+	//TODO: think how to null reference to form cache manager when session ends
+	private Map<String, FormCacheManager> form_cache_managers = new HashMap<String, FormCacheManager>();
+	
+	private static CacheManager me;
+	
+	public static CacheManager getInstance() {
+		
+		if (me == null) {
+			
+			synchronized (CacheManager.class) {
+				if (me == null) {
+					me = new CacheManager();
+				}
+			}
+		}
 
-	public static Document getFormXformsTemplateCopy() {
+		return me;
+	}
+	
+	protected CacheManager() { }
+
+	public Document getFormXformsTemplateCopy() {
 		
 		if(form_xforms_template == null)
 			throw new NullPointerException("Form xforms template not initialized");
@@ -41,45 +63,45 @@ public class CacheManager {
 		return (Document)form_xforms_template.cloneNode(true);
 	}
 
-	public static void setFormXformsTemplate(Document form_xforms_template) {
+	public void setFormXformsTemplate(Document form_xforms_template) {
 		
 		if(form_xforms_template != null)
-			CacheManager.form_xforms_template = form_xforms_template;
+			this.form_xforms_template = form_xforms_template;
 	}
 
-	public static List<String> getComponentsTypes() {
+	public List<String> getComponentsTypes() {
 		return components_types;
 	}
 
-	public static void setComponentsTypes(List<String> components_types) {
-		CacheManager.components_types = components_types;
+	public void setComponentsTypes(List<String> components_types) {
+		this.components_types = components_types;
 	}
 
-	public static Document getComponentsXforms() {
+	public Document getComponentsXforms() {
 		return components_xforms;
 	}
 
-	public static void setComponentsXforms(Document components_xforms) {
-		CacheManager.components_xforms = components_xforms;
+	public void setComponentsXforms(Document components_xforms) {
+		this.components_xforms = components_xforms;
 	}
 
-	public static Document getComponentsXml() {
+	public Document getComponentsXml() {
 		return components_xml;
 	}
 
-	public static void setComponentsXml(Document components_xml) {
-		CacheManager.components_xml = components_xml;
+	public void setComponentsXml(Document components_xml) {
+		this.components_xml = components_xml;
 	}
 
-	public static Document getComponentsXsd() {
+	public Document getComponentsXsd() {
 		return components_xsd;
 	}
 
-	public static void setComponentsXsd(Document components_xsd) {
-		CacheManager.components_xsd = components_xsd;
+	public void setComponentsXsd(Document components_xsd) {
+		this.components_xsd = components_xsd;
 	}
 	
-	public static void checkForComponentType(String component_type) throws NullPointerException {
+	public void checkForComponentType(String component_type) throws NullPointerException {
 		
 		if(components_types == null || component_type == null || !components_types.contains(component_type)) {
 			
@@ -110,7 +132,7 @@ public class CacheManager {
 	 * @return reference to cached element node. See WARNING for info.
 	 * @throws NullPointerException - component implementation could not be found by component type
 	 */
-	public static XFormsComponentBean getXFormsComponentReferencesByType(String component_type) throws NullPointerException {
+	public XFormsComponentBean getXFormsComponentReferencesByType(String component_type) throws NullPointerException {
 		
 		XFormsComponentBean xforms_component = cached_xforms_components.get(component_type); 
 
@@ -126,7 +148,7 @@ public class CacheManager {
 			throw new NullPointerException(msg);
 		}
 		
-		synchronized (FormManager.class) {
+		synchronized (this) {
 			
 			xforms_component = cached_xforms_components.get(component_type);
 			
@@ -160,7 +182,7 @@ public class CacheManager {
 		return xforms_component;
 	}
 	
-	public static Element getHtmlComponentReferenceByType(String component_type) throws NullPointerException {
+	public Element getHtmlComponentReferenceByType(String component_type) throws NullPointerException {
 		
 		
 		Element html_component = cached_html_components.get(component_type); 
@@ -182,8 +204,7 @@ public class CacheManager {
 		return html_component;
 	}
 	
-	public static List<String> getAvailableFormComponentsList() {
-		
+	public List<String> getAvailableFormComponentsList() {
 		
 		if(components_xforms == null) {
 			
@@ -194,8 +215,45 @@ public class CacheManager {
 		return components_types;
 	}
 	
+	public FormCacheManager getFormCacheManager(String form_id) {
+		
+		FormCacheManager form_cache_manager = form_cache_managers.get(form_id);
+		
+		if(form_cache_manager == null) {
+			
+			form_cache_manager = new FormCacheManager();
+			form_cache_managers.put(form_id, form_cache_manager);
+		}
+		
+		return form_cache_manager;
+	}
 	
-	public static void initAppContext(FacesContext ctx) {
+	public void putUnlocalizedFormHtmlComponent(String form_id, String comp_id, Element component) {
+		
+		FormCacheManager fcm = getFormCacheManager(form_id);
+		fcm.putUnlocalizedFormHtmlComponent(comp_id, component);
+	}
+	
+	public void putLocalizedFormHtmlComponent(String form_id, String comp_id, String loc_str, Element component) {
+		
+		FormCacheManager fcm = getFormCacheManager(form_id);
+		fcm.putLocalizedFormHtmlComponent(comp_id, loc_str, component);
+	}
+	
+	public Element getLocalizedFormHtmlComponent(String form_id, String comp_id, String loc_str) {
+		
+		FormCacheManager fcm = getFormCacheManager(form_id);
+		return fcm.getLocalizedFormHtmlComponent(comp_id, loc_str);
+	}
+	
+	public Element getUnlocalizedFormHtmlComponent(String form_id, String comp_id) {
+		
+		FormCacheManager fcm = getFormCacheManager(form_id);
+		return fcm.getUnlocalizedFormHtmlComponent(comp_id);
+	}
+
+	
+	public void initAppContext(FacesContext ctx) {
 		
 		if(ctx == null)
 			return;

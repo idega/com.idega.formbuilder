@@ -25,8 +25,7 @@ public class DocumentManager {
 	private FormBean form_bean;
 	private IPersistenceManager persistance_manager;
 	
-	private DocumentManager() { }
-	
+	protected DocumentManager() { }
 	
 	public static DocumentManager getInstance(FormBean form_bean, IPersistenceManager persistance_manager) throws NullPointerException {
 		
@@ -48,7 +47,7 @@ public class DocumentManager {
 		if(form_properties == null)
 			throw new NullPointerException("Form properties not provided");
 		
-		Document form_xforms = CacheManager.getFormXformsTemplateCopy();
+		Document form_xforms = CacheManager.getInstance().getFormXformsTemplateCopy();
 		
 		String form_id_str;
 		

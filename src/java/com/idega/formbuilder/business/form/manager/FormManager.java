@@ -9,6 +9,7 @@ import javax.xml.parsers.DocumentBuilder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -63,21 +64,23 @@ public class FormManager implements IFormManager {
 		comp_manager.removeFormComponent(component_id);
 	}
 	
-	/*
-	 * TODO: add some kind of transaction. if smth critical failes, all changes to form or schema should be rollbacked.
-	 */
-	public Element createFormComponent(String component_type, String component_after_new_id) throws FBPostponedException, NullPointerException, Exception {
+	public Element getLocalizedFormHtmlComponent(String component_id, String loc_str) {
+		
+		return comp_manager.getLocalizedFormHtmlComponent(component_id, loc_str);
+	}
+	
+	public String createFormComponent(String component_type, String component_after_new_id) throws FBPostponedException, NullPointerException, Exception {
 		
 		checkForPendingErrors();
 		
 		return comp_manager.createFormComponent(component_type, component_after_new_id);
 	}
 	
-	private FormManager() {	}
+	protected FormManager() {	}
 	
 	public List<String> getAvailableFormComponentsList() {
 		
-		return CacheManager.getAvailableFormComponentsList();
+		return CacheManager.getInstance().getAvailableFormComponentsList();
 	}
 	
 	public List<String> getFormComponentsList() {
@@ -118,7 +121,7 @@ public class FormManager implements IFormManager {
 //			components_xforms_stream = ((IWSlideSessionBean)ses_bean).getInputStream(COMPONENTS_XFORMS_CONTEXT_PATH);
 //			components_xsd_stream = ((IWSlideSessionBean)ses_bean).getInputStream(COMPONENTS_XSD_CONTEXT_PATH);
 			
-			CacheManager.initAppContext(ctx);
+			CacheManager.getInstance().initAppContext(ctx);
 			
 		} catch (Exception e) {
 			InstantiationException inst_e = new InstantiationException(FB_INIT_FAILED);
@@ -184,11 +187,13 @@ public class FormManager implements IFormManager {
 			
 			form_xforms_template = doc_builder.parse(new FileInputStream(FORM_XFORMS_TEMPLATE_CONTEXT_PATH));
 			
-			CacheManager.setFormXformsTemplate(form_xforms_template);
-			CacheManager.setComponentsTypes(components_types);
-			CacheManager.setComponentsXforms(components_xforms);
-			CacheManager.setComponentsXml(components_xml);
-			CacheManager.setComponentsXsd(components_xsd);
+//			DOMUtil.prettyPrintDOM(components_xml);
+			CacheManager cache_manager = CacheManager.getInstance();
+			cache_manager.setFormXformsTemplate(form_xforms_template);
+			cache_manager.setComponentsTypes(components_types);
+			cache_manager.setComponentsXforms(components_xforms);
+			cache_manager.setComponentsXml(components_xml);
+			cache_manager.setComponentsXsd(components_xsd);
 			
 			inited = true;
 			
@@ -235,7 +240,7 @@ public class FormManager implements IFormManager {
 //			System.out.println("<sugeneruoti komponentai />");
 			
 			FormPropertiesBean form_props = new FormPropertiesBean();
-			form_props.setId(new Long(22));
+			form_props.setId(123L);
 			
 			LocalizedStringBean title = new LocalizedStringBean();
 			title.setString("en", "eng title");
@@ -252,11 +257,21 @@ public class FormManager implements IFormManager {
 			fb.createFormComponent("fbcomp_text", null);
 			end = System.currentTimeMillis();
 			System.out.println("text component created in: "+(end-start));
-////			
-			start = System.currentTimeMillis();
+			
+			Element loc = fb.getLocalizedFormHtmlComponent("fbcomp_1", "en");
+			DOMUtil.prettyPrintDOM(loc);
+			loc = fb.getLocalizedFormHtmlComponent("fbcomp_1", "is");
+			DOMUtil.prettyPrintDOM(loc);
+			
 			fb.createFormComponent("fbcomp_email", null);
-			end = System.currentTimeMillis();
-			System.out.println("email component created in: "+(end-start));
+			loc = fb.getLocalizedFormHtmlComponent("fbcomp_2", "en");
+			DOMUtil.prettyPrintDOM(loc);
+			
+////			
+//			start = System.currentTimeMillis();
+//			fb.createFormComponent("fbcomp_email", null);
+//			end = System.currentTimeMillis();
+//			System.out.println("email component created in: "+(end-start));
 			
 //			
 //			Element textarea = fb.createFormComponent("fbcomp_textarea", "fbcomp_2");

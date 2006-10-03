@@ -42,7 +42,7 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 		inited = true;
 	}
 	
-	private WebdavPersistenceManager() { }
+	protected WebdavPersistenceManager() { }
 	
 	public void persistDocument(final Document document) throws TransformerException, InstantiationException, NullPointerException {
 		
@@ -52,8 +52,8 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 		if(document == null)
 			throw new NullPointerException("Document is not provided");
 		
-//		if(true)
-//			return;
+		if(true)
+			return;
 		
 		final String path_to_file = form_pathes[0];
 		final String file_name = form_pathes[1];

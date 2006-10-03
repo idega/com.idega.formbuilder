@@ -41,7 +41,7 @@ public interface IFormManager {
 	 * <p>
 	 * Creates new form component by component type provided,
 	 * inserts it after specific component OR after all components in form component list.
-	 * New xforms document is saved depending on implementation and component representation for UI returned.
+	 * New xforms document is saved depending on implementation and component id is returned.
 	 * </p>
 	 * <p>
 	 * <i><b>ATTENTION: </b></i>Of course form document should be created or imported before.
@@ -52,13 +52,13 @@ public interface IFormManager {
 	 * @param component_after_new_id - where new component should be places. This id must come from
 	 * currently editing form document component. Provide <i>null</i> if component needs to be appended
 	 * to other components list.
-	 * @return newly created form component representation
+	 * @return newly created form component id
 	 * @throws FBPostponedException - see exception description at createFormDocument(..) javadoc
 	 * @throws NullPointerException - form document was not created first, 
 	 * component_after_new_id was provided, but such component was not found, other..
 	 * @throws Exception - something else is wrong
 	 */
-	public abstract Element createFormComponent(String component_type,
+	public abstract String createFormComponent(String component_type,
 			String component_after_new_id) throws FBPostponedException,
 			NullPointerException, Exception;
 
@@ -73,5 +73,6 @@ public interface IFormManager {
 	 * @return List of all form components, placed on current form
 	 */
 	public abstract List<String> getFormComponentsList();
-
+	
+	public abstract Element getLocalizedFormHtmlComponent(String component_id, String loc_str);
 }
