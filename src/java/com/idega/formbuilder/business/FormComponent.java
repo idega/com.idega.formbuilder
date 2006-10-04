@@ -7,7 +7,7 @@ import java.util.Map;
 import com.idega.idegaweb.BundleLocalizationMap;
 import com.idega.webface.WFUtil;
 
-public class FormField implements Serializable {
+public class FormComponent implements Serializable {
 	
 	private static final long serialVersionUID = -1462694114806788168L;
 	
@@ -16,12 +16,12 @@ public class FormField implements Serializable {
 	private String type;
 	private String name;
 	
-	public FormField() {
+	public FormComponent() {
 		this.type = "";
 		this.name = "";
 	}
 	
-	public FormField(String type) {
+	public FormComponent(String type) {
 		this.type = type;
 		this.name = (String) localizedStrings.get(type);
 	}

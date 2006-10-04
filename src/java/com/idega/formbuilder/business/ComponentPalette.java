@@ -10,7 +10,7 @@ public class ComponentPalette implements Serializable {
 		
 	private static final long serialVersionUID = -7539955900908793992L;
 	
-	private List<FormField> fields = new ArrayList<FormField>();
+	private List<FormComponent> fields = new ArrayList<FormComponent>();
 	//private Map localizedFBStrings = new HashMap();
 	
 	public ComponentPalette() {
@@ -20,31 +20,31 @@ public class ComponentPalette implements Serializable {
 	
 	public ComponentPalette(List list) {
 		Iterator it = list.iterator();
-		FormField temp = null;
+		FormComponent temp = null;
 		System.out.println("---------------------");
 		while(it.hasNext()) {
 			System.out.println("XXXXXXXXXXXXXXXXXX");
-			temp = new FormField((String) it.next());
+			temp = new FormComponent((String) it.next());
 			System.out.println("XXXXXXXXXXXXXXXXXX");
 			fields.add(temp);
 			System.out.println("XXXXXXXXXXXXXXXXXX");
 		}
 	}
 
-	public List<FormField> getFields() {
+	public List<FormComponent> getFields() {
 		return fields;
 	}
 	
 	public void setTypeList(List<String> list) {
 		Iterator it = list.iterator();
-		FormField temp = null;
+		FormComponent temp = null;
 		while(it.hasNext()) {
-			temp = new FormField((String) it.next());
+			temp = new FormComponent((String) it.next());
 			fields.add(temp);
 		}
 	}
 
-	public void setFields(List<FormField> fields) {
+	public void setFields(List<FormComponent> fields) {
 		this.fields = fields;
 	}
 }
