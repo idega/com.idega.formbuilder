@@ -8,18 +8,18 @@
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax">
 	<jsp:directive.page contentType="text/html" />
 	<f:view>
-		<ws:page id="formbuilder" javascripturls="/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax.js,
-												/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/modal-message.js,
-												/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax-dynamic-content.js,
-												/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/drag-drop-custom.js,
-												/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/upload.js">
+		<ws:page id="formbuilder" javascripturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax.js,
+												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/modal-message.js,
+												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax-dynamic-content.js,
+												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/drag-drop-custom.js,
+												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/upload.js">
 			<h:form id="workspaceform1">
 				<t:div styleClass="application_container" id="application_container" forceId="true">
 					<t:div styleClass="toolbar_container" id="toolbar_container" forceId="true">
 						<h:commandLink id="new_form_button" styleClass="toolbar_button float_left" action="#{viewmanager.newForm}" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}"/>
 						<h:commandLink id="save_form_button" styleClass="toolbar_button float_left" action="#{viewmanager.doStuff}" value="Save form" />
-						<h:commandLink id="delete_form_button" styleClass="toolbar_button float_left" onclick="displayMessage('/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/confirm-delete.inc');return false" action="" value="Delete form"/>
-						<h:commandLink id="import_form_button" styleClass="toolbar_button float_left" onclick="displayMessage('/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/upload-dialog.inc');return false" action="" value="Import form"/>
+						<h:commandLink id="delete_form_button" styleClass="toolbar_button float_left" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/confirm-delete.inc');return false" action="" value="Delete form"/>
+						<h:commandLink id="import_form_button" styleClass="toolbar_button float_left" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/upload-dialog.inc');return false" action="" value="Import form"/>
 						<h:commandLink id="export_form_button" styleClass="toolbar_button float_left" action="" value="Export form" />
 						<t:div styleClass="toolbar_field float_left">
 							<h:outputText value="Switch to:" />
@@ -43,19 +43,16 @@
 							    <t:panelTab id="tab01" label="Form properties">
 							    	
 								    <t:outputLabel for="formTitle" value="Form title" />
-								    <t:inputText id="formTitleInput2" forceId="true" value="#{viewmanager.formTitle}">
-								    	<a4j:support event="onkeyup" ajaxSingle="true" reRender="formTitleInput,form_heading_title" />
+								    <t:htmlTag value="br" />
+								    <t:inputText id="formTitleInput" forceId="true" value="#{viewmanager.formTitle}">
+								    	<a4j:support event="onkeyup" ajaxSingle="true" requestDelay="500" reRender="form_heading_title" />
 								    </t:inputText>
-								    
+								    <t:htmlTag value="br" />
 								    <t:outputLabel for="formDescription" value="Description" />
-								    <t:inputTextarea id="formDescription" forceId="true" value="#{viewmanager.formDescription}" />
-							    	
-							    	<h:outputText value="Type the Text:" />
-									<h:inputText size="50" value="#{viewmanager.formTitle}">
-										<a4j:support event="onkeyup" ajaxSingle="true" reRender="form_heading_title" />
-									</h:inputText>
-									<h:outputText value="Text in the AJAX Response:" />
-									<h:outputText id="repeater" value="#{viewmanager.formTitle}" />
+								    <t:htmlTag value="br" />
+								    <t:inputTextarea id="formDescription" forceId="true" value="#{viewmanager.formDescription}">
+								    	<a4j:support event="onkeyup" ajaxSingle="true" requestDelay="500" reRender="form_heading_description" />
+								    </t:inputTextarea>
 							    </t:panelTab>
 							    <t:panelTab id="tab02" label="Add new field">
 							        <t:dataList id="firstlist"
@@ -63,7 +60,7 @@
 										styleClass="components_list"
 										itemStyleClass=""
 										var="field"
-										value="#{viewmanager.fields}"
+										value="#{palette.components}"
 										layout="unorderedList">
 										<t:div styleClass="palette_component" id="field" forceId="true" forceIdIndex="true">
 											<h:outputLabel value="#{field.name}" rendered="true" />
@@ -79,14 +76,13 @@
 						<t:div styleClass="form_container" id="form_container" forceId="true">
 							<t:div id="dropBox" forceId="true" styleClass="dropBox" binding="#{viewmanager.formView}">
 								<t:div styleClass="form_element form_heading">
-									<t:inputText id="formTitleInput" forceId="true" value="#{viewmanager.formTitle}" />
-									<t:outputText id="form_heading_title" forceId="true" value="#{viewmanager.formTitle}" />
+									<t:outputText id="form_heading_title" forceId="true" onclick="selectFormHeader()" value="#{viewmanager.formTitle}" />
 									<t:htmlTag value="br" />
 									<t:outputText id="form_heading_description" forceId="true" value="#{viewmanager.formDescription}" />
 								</t:div>
 							</t:div>
 							<f:verbatim>
-								<script type="text/javascript" src="/idega/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js" />
+								<script type="text/javascript" src="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js" />
 								<script type="text/javascript">
 								<!--
 								var dragDropObj = new DHTMLSuite_dragDrop();
@@ -103,7 +99,13 @@
 					</t:div>
 					<t:div id="hidden_container" forceId="true">
 						<t:commandLink id="add_field_button" forceId="true" action="#{viewmanager.addFormField}" value="" />
-						<t:commandLink id="select_field_button" forceId="true" action="#{viewmanager.selectFormField}" value="" />
+						
+						<t:commandLink id="select_field_button" forceId="true" action="#{viewmanager.selectFormField}" value="">
+							<a4j:support event="onclick" reRender="options_tabbed_pane" />
+						</t:commandLink>
+						<!--
+						<a4j:commandLink id="select_field_button" action="#{viewmanager.selectFormField}" value="" reRender="options_tabbed_pane" />
+						-->
 						<t:commandLink id="select_form_header_button" forceId="true" action="#{viewmanager.selectFormHeader}" value="" />
 						<t:inputHidden id="selected_field_type" forceId="true" value="#{viewmanager.selectedFieldTypeValue}" />
 						<t:inputHidden id="selected_field_id" forceId="true" binding="#{viewmanager.selectedFieldId}" />
