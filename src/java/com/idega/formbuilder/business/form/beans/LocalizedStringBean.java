@@ -13,46 +13,30 @@ import java.util.Set;
  */
 public class LocalizedStringBean {
 	
-	private Map<String, String> strings;
+	private Map<Locale, String> strings;
 	
 	public LocalizedStringBean() {
-		strings = new HashMap<String, String>();
+		strings = new HashMap<Locale, String>();
 	}
 	
-	public Set<String> getLanguagesKeySet() {
+	public Set<Locale> getLanguagesKeySet() {
 		return strings.keySet();
 	}
 	
-	public void setString(String lang_code, String text) {
+	public void setString(Locale locale, String text) {
 		
-		if(lang_code == null || text == null)
-			throw new NullPointerException("Lang code or text is not provided");
+		if(locale == null || text == null)
+			throw new NullPointerException("Locale or text is not provided");
 		
-		strings.put(lang_code, text);
+		strings.put(locale, text);
 	}
 	
-	public void setString(Locale lang, String text) {
-		
-		if(lang == null || text == null)
-			throw new NullPointerException("Lang code or text is not provided");
-		
-		strings.put(lang.getLanguage(), text);
+	public String getString(Locale locale) {
+		return strings.get(locale);
 	}
 	
-	public String getString(String lang_code) {
-		return strings.get(lang_code);
-	}
-	
-	public String getString(Locale lang) {
-		return strings.get(lang.getLanguage());
-	}
-	
-	public void removeString(String lang_code) {
-		strings.remove(lang_code);
-	}
-	
-	public void removeString(Locale lang) {
-		strings.remove(lang.getLanguage());
+	public void removeString(Locale locale) {
+		strings.remove(locale);
 	}
 	
 	public void clear() {

@@ -1,6 +1,5 @@
 package com.idega.formbuilder.business.form.manager;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,8 +33,6 @@ public class CacheManager implements Singleton {
 	private List<String> components_types = null;
 	private Map<String, XFormsComponentBean> cached_xforms_components = new CacheMap();
 	private Map<String, Element> cached_html_components = new CacheMap();
-	//TODO: think how to null reference to form cache manager when session ends
-	private Map<String, FormCacheManager> form_cache_managers = new HashMap<String, FormCacheManager>();
 	
 	private static CacheManager me;
 	
@@ -215,43 +212,7 @@ public class CacheManager implements Singleton {
 		return components_types;
 	}
 	
-	public FormCacheManager getFormCacheManager(String form_id) {
-		
-		FormCacheManager form_cache_manager = form_cache_managers.get(form_id);
-		
-		if(form_cache_manager == null) {
-			
-			form_cache_manager = new FormCacheManager();
-			form_cache_managers.put(form_id, form_cache_manager);
-		}
-		
-		return form_cache_manager;
-	}
 	
-	public void putUnlocalizedFormHtmlComponent(String form_id, String comp_id, Element component) {
-		
-		FormCacheManager fcm = getFormCacheManager(form_id);
-		fcm.putUnlocalizedFormHtmlComponent(comp_id, component);
-	}
-	
-	public void putLocalizedFormHtmlComponent(String form_id, String comp_id, String loc_str, Element component) {
-		
-		FormCacheManager fcm = getFormCacheManager(form_id);
-		fcm.putLocalizedFormHtmlComponent(comp_id, loc_str, component);
-	}
-	
-	public Element getLocalizedFormHtmlComponent(String form_id, String comp_id, String loc_str) {
-		
-		FormCacheManager fcm = getFormCacheManager(form_id);
-		return fcm.getLocalizedFormHtmlComponent(comp_id, loc_str);
-	}
-	
-	public Element getUnlocalizedFormHtmlComponent(String form_id, String comp_id) {
-		
-		FormCacheManager fcm = getFormCacheManager(form_id);
-		return fcm.getUnlocalizedFormHtmlComponent(comp_id);
-	}
-
 	
 	public void initAppContext(FacesContext ctx) {
 		

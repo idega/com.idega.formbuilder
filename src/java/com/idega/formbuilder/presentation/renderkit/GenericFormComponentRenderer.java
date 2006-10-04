@@ -1,6 +1,7 @@
 package com.idega.formbuilder.presentation.renderkit;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -26,11 +27,11 @@ public class GenericFormComponentRenderer extends Renderer {
 		try {
 			fbInstance = (IFormManager) context.getExternalContext().getSessionMap().get("formbuilderInstance");
 			elementId = fbInstance.createFormComponent(field.getType(), null);
+			Element element = fbInstance.getLocalizedFormHtmlComponent(elementId, new Locale("en"));
+			GenericFieldParser.renderNode(element, field, writer);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		Element element = fbInstance.getLocalizedFormHtmlComponent(elementId, "en");
-		GenericFieldParser.renderNode(element, field, writer);
 	}
 	
 	public void decode(FacesContext context, UIComponent component) {

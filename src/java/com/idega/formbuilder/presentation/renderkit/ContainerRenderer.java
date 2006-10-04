@@ -2,11 +2,16 @@
 package com.idega.formbuilder.presentation.renderkit;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
+import com.idega.formbuilder.business.form.beans.FormPropertiesBean;
+import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
+import com.idega.formbuilder.business.form.manager.FormManagerFactory;
+import com.idega.formbuilder.business.form.manager.IFormManager;
 import com.idega.webface.WFContainer;
 
 /**
@@ -23,22 +28,45 @@ public class ContainerRenderer extends com.idega.webface.renderkit.ContainerRend
 
 	public void encodeBegin(FacesContext ctx, UIComponent comp) throws IOException {
 		
-//		try {
-//			
-//			IFormBuilder fb = FormBuilderFactory.createFormBuilder();
-//
-//			FormPropertiesBean form_props = new FormPropertiesBean();
-//			form_props.setId(new Long(21));
-//			form_props.setName("my form name");
-//
-//			fb.createFormDocument(form_props);
-//			
-//			System.out.println("trying to create an element ---------- ");
+		try {
+			
+			System.out.println("__________________encode begin___________");
+			
+			long start = System.currentTimeMillis();
+			IFormManager fb = FormManagerFactory.newFormManager(ctx);
+			long end = System.currentTimeMillis();
+			System.out.println("inited in: "+(end-start));
+	//		System.out.println("<sugeneruoti komponentai > ");
+	//		DOMUtil.prettyPrintDOM(components_xml);
+	//		System.out.println("<sugeneruoti komponentai />");
+			
+			FormPropertiesBean form_props = new FormPropertiesBean();
+			form_props.setId(new Long(22));
+			
+			LocalizedStringBean title = new LocalizedStringBean();
+			title.setString(new Locale("en"), "eng title");
+			title.setString(new Locale("is"), "isl title");
+			
+			form_props.setName(title);
+	
+			start = System.currentTimeMillis();
+			fb.createFormDocument(form_props);
+			end = System.currentTimeMillis();
+			System.out.println("document created in: "+(end-start));
+			
+//			start = System.currentTimeMillis();
 //			fb.createFormComponent("fbcomp_text", null);
-//			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+//			end = System.currentTimeMillis();
+//			System.out.println("text component created in: "+(end-start));
+	////		
+			start = System.currentTimeMillis();
+			fb.createFormComponent("fbcomp_email", null);
+			end = System.currentTimeMillis();
+			System.out.println("email component created in: "+(end-start));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		WFContainer container = (WFContainer) comp;
 		if (!container.isRendered()) {

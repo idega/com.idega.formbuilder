@@ -1,6 +1,7 @@
 package com.idega.formbuilder.business.form.manager;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.w3c.dom.Element;
 
@@ -66,7 +67,7 @@ public interface IFormManager {
 	 * 
 	 * @return List of available form components types to place on form
 	 */
-	public abstract List<String> getAvailableFormComponentsList();
+	public abstract List<String> getAvailableFormComponentsList() throws FBPostponedException;
 
 	/**
 	 * 
@@ -74,5 +75,5 @@ public interface IFormManager {
 	 */
 	public abstract List<String> getFormComponentsList();
 	
-	public abstract Element getLocalizedFormHtmlComponent(String component_id, String loc_str) throws NullPointerException;
+	public abstract Element getLocalizedFormHtmlComponent(String component_id, Locale locale) throws FBPostponedException, NullPointerException;
 }

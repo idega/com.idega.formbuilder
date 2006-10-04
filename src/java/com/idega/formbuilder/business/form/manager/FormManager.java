@@ -3,6 +3,7 @@ package com.idega.formbuilder.business.form.manager;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.context.FacesContext;
 import javax.xml.parsers.DocumentBuilder;
@@ -64,9 +65,11 @@ public class FormManager implements IFormManager {
 		comp_manager.removeFormComponent(component_id);
 	}
 	
-	public Element getLocalizedFormHtmlComponent(String component_id, String loc_str) throws NullPointerException {
+	public Element getLocalizedFormHtmlComponent(String component_id, Locale locale) throws FBPostponedException, NullPointerException {
 		
-		return comp_manager.getLocalizedFormHtmlComponent(component_id, loc_str);
+		checkForPendingErrors();
+		
+		return comp_manager.getLocalizedFormHtmlComponent(component_id, locale);
 	}
 	
 	public String createFormComponent(String component_type, String component_after_new_id) throws FBPostponedException, NullPointerException, Exception {
@@ -78,7 +81,7 @@ public class FormManager implements IFormManager {
 	
 	protected FormManager() {	}
 	
-	public List<String> getAvailableFormComponentsList() {
+	public List<String> getAvailableFormComponentsList() throws FBPostponedException {
 		
 		return CacheManager.getInstance().getAvailableFormComponentsList();
 	}
@@ -235,16 +238,13 @@ public class FormManager implements IFormManager {
 			IFormManager fb = FormManagerFactory.newFormManager(null);
 			long end = System.currentTimeMillis();
 			System.out.println("inited in: "+(end-start));
-//			System.out.println("<sugeneruoti komponentai > ");
-//			DOMUtil.prettyPrintDOM(components_xml);
-//			System.out.println("<sugeneruoti komponentai />");
 			
 			FormPropertiesBean form_props = new FormPropertiesBean();
 			form_props.setId(123L);
 			
 			LocalizedStringBean title = new LocalizedStringBean();
-			title.setString("en", "eng title");
-			title.setString("is", "isl title");
+			title.setString(new Locale("en"), "eng title");
+			title.setString(new Locale("is"), "isl title");
 			
 			form_props.setName(title);
 
@@ -256,28 +256,28 @@ public class FormManager implements IFormManager {
 			start = System.currentTimeMillis();
 			String created = fb.createFormComponent("fbcomp_text", null);
 			
-			System.out.println("cr: "+created);
 			end = System.currentTimeMillis();
 			System.out.println("text component created in: "+(end-start));
 			
-			Element loc = fb.getLocalizedFormHtmlComponent("fbcomp_1", "en");
+			Element loc = fb.getLocalizedFormHtmlComponent(created, new Locale("en"));
+			Element loc2 = fb.getLocalizedFormHtmlComponent(created, new Locale("is"));
+			
+			try {
+				Element loc3 = fb.getLocalizedFormHtmlComponent(created, new Locale("ha"));
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 			DOMUtil.prettyPrintDOM(loc);
-//			loc = fb.getLocalizedFormHtmlComponent("fbcomp_1", "is");
-//			DOMUtil.prettyPrintDOM(loc);
-//			
-//			fb.createFormComponent("fbcomp_email", null);
-//			loc = fb.getLocalizedFormHtmlComponent("fbcomp_2", "en");
-//			DOMUtil.prettyPrintDOM(loc);
+			System.out.println("second---------");
+			DOMUtil.prettyPrintDOM(loc2);
 			
-////			
-//			start = System.currentTimeMillis();
-//			fb.createFormComponent("fbcomp_email", null);
-//			end = System.currentTimeMillis();
-//			System.out.println("email component created in: "+(end-start));
 			
-//			
-//			Element textarea = fb.createFormComponent("fbcomp_textarea", "fbcomp_2");
-//			DOMUtil.prettyPrintDOM(textarea);
+			created = fb.createFormComponent("fbcomp_email", created);
+			
+			loc2 = fb.getLocalizedFormHtmlComponent(created, new Locale("is"));
+			DOMUtil.prettyPrintDOM(loc2);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

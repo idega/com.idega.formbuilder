@@ -2,6 +2,7 @@ package com.idega.formbuilder.business.form.manager.util;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -44,79 +45,9 @@ public class FormManagerUtil {
 	public static final String CTID = "fbcomp_";
 	public static final String loc_key_identifier = "lockey_";
 
-	private static final String simple_type = "xs:simpleType";
-	private static final String complex_type = "xs:complexType";
+	
 	
 	private FormManagerUtil() { }
-	
-	/**
-	 * <p>
-	 * Copies schema type from one schema document to another by provided type name.
-	 * </p>
-	 * <p>
-	 * <b><i>WARNING: </i></b>currently doesn't support cascading types copying,
-	 * i.e., when one type depends on another
-	 * </p>
-	 * 
-	 * @param src - schema document to copy from
-	 * @param dest - schema document to copy to
-	 * @param type_name - name of type to copy
-	 * @throws NullPointerException - some params were null or such type was not found in src document
-	 */
-	public static void copySchemaType(Document src, Document dest, String type_name) throws NullPointerException {
-		
-		if(src == null || dest == null || type_name == null) {
-			
-			String err_msg = 
-			new StringBuffer("\nEither parameter is not provided:")
-			.append("\nsrc: ")
-			.append(String.valueOf(src))
-			.append("\ndest: ")
-			.append(String.valueOf(dest))
-			.append("\ntype_name: ")
-			.append(type_name)
-			.toString();
-			
-			throw new NullPointerException(err_msg);
-		}
-		
-		Element root = src.getDocumentElement();
-		
-//		check among simple types
-		
-		Element type_to_copy = getSchemaTypeToCopy(root.getElementsByTagName(simple_type), type_name);
-		
-		if(type_to_copy == null) {
-//			check among complex types
-			
-			type_to_copy = getSchemaTypeToCopy(root.getElementsByTagName(complex_type), type_name);
-		}
-		
-		if(type_to_copy == null)
-			throw new NullPointerException("Schema type was not found by provided name: "+type_name);
-		
-		type_to_copy = (Element)dest.importNode(type_to_copy, true);
-		((Element)dest.getElementsByTagName("xs:schema").item(0)).appendChild(type_to_copy);
-	}
-	
-	private static Element getSchemaTypeToCopy(NodeList types, String type_name_required) {
-		
-		for (int i = 0; i < types.getLength(); i++) {
-			
-			Element simple_type = (Element)types.item(i); 
-			String name_att = simple_type.getAttribute("name");
-			
-			if(name_att != null && name_att.equals(type_name_required))
-				return simple_type;
-		}
-		
-		return null;
-	}
-	
-	public static Integer generateComponentId(Integer last_component_id) {
-		
-		return new Integer(last_component_id.intValue()+1);
-	}
 	
 	private static DocumentBuilderFactory factory = null;
 	
@@ -277,8 +208,8 @@ public class FormManagerUtil {
 		
 		NodeList loc_tags = loc_strings.getElementsByTagName(new_key);
 		
-		for (Iterator<String> iter = loc_string.getLanguagesKeySet().iterator(); iter.hasNext();) {
-			String loc_key = iter.next();
+		for (Iterator<Locale> iter = loc_string.getLanguagesKeySet().iterator(); iter.hasNext();) {
+			Locale locale = iter.next();
 			
 			boolean val_set = false;
 			
@@ -288,9 +219,9 @@ public class FormManagerUtil {
 					
 					Element loc_tag = (Element)loc_tags.item(i);
 					
-					if(loc_tag.getAttribute(lang).equals(loc_key)) {
+					if(loc_tag.getAttribute(lang).equals(locale.getLanguage())) {
 						
-						setElementsTextNodeValue(loc_tag, loc_string.getString(loc_key));
+						setElementsTextNodeValue(loc_tag, loc_string.getString(locale));
 						
 						val_set = true;
 						break;
@@ -302,9 +233,9 @@ public class FormManagerUtil {
 				
 //				create new localization element
 				Element new_loc_el = xforms.createElement(new_key);
-				new_loc_el.setAttribute(lang, loc_key);
+				new_loc_el.setAttribute(lang, locale.getLanguage());
 				new_loc_el.appendChild(xforms.createTextNode(""));
-				setElementsTextNodeValue(new_loc_el, loc_string.getString(loc_key));
+				setElementsTextNodeValue(new_loc_el, loc_string.getString(locale));
 				loc_strings.appendChild(new_loc_el);
 			}
 		}
@@ -349,7 +280,7 @@ public class FormManagerUtil {
 			if(lang_code != null) {
 				
 				String content = getElementsTextNodeValue(key_element);
-				loc_str_bean.setString(lang_code, content == null ? "" : content);
+				loc_str_bean.setString(new Locale(lang_code), content == null ? "" : content);
 			}
 		}
 		
@@ -367,8 +298,9 @@ public class FormManagerUtil {
 		if(txt_node == null || txt_node.getNodeType() != Node.TEXT_NODE) {
 			return null;
 		}
+		String node_value = txt_node.getNodeValue();
 		
-		return txt_node.getNodeValue().trim();
+		return node_value == null ? "" : node_value.trim();
 	}
 	
 	public static void setElementsTextNodeValue(Node element, String value) {

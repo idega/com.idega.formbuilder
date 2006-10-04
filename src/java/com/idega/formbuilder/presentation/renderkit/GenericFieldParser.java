@@ -21,6 +21,7 @@ public class GenericFieldParser {
 				writer.writeAttribute(attr.getNodeName(), attr.getNodeValue(), null);
 			}
 		}
+		
 		if(node.hasChildNodes()) {
 			NodeList children = node.getChildNodes();
 			for(int i = 0; i < children.getLength(); i++) {

@@ -2,6 +2,7 @@ package com.idega.formbuilder.business.form.manager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.persistence.PersistenceException;
 
@@ -11,7 +12,9 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.idega.formbuilder.business.form.beans.FormComponentBean;
 import com.idega.formbuilder.business.form.beans.FormPropertiesBean;
+import com.idega.formbuilder.business.form.beans.IFormComponent;
 import com.idega.formbuilder.business.form.manager.beans.FormBean;
 import com.idega.formbuilder.business.form.manager.beans.XFormsComponentBean;
 import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
@@ -22,7 +25,7 @@ import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
  * @version 1.0
  * 
  */
-public class ComponentsManager {
+public class ComponentsManager /*TODO: implement interface*/{
 	
 	private FormBean form_bean;
 	private IPersistenceManager persistance_manager;
@@ -76,7 +79,7 @@ public class ComponentsManager {
 		
 		FormPropertiesBean form_props = form_bean.getFormProperties();
 		
-		Integer new_comp_id = FormManagerUtil.generateComponentId(form_props.getLast_component_id());
+		Integer new_comp_id = generateComponentId(form_props.getLast_component_id());
 		form_props.setLast_component_id(new_comp_id);
 		
 		String new_comp_id_str = FormManagerUtil.CTID+String.valueOf(new_comp_id);
@@ -148,7 +151,7 @@ public class ComponentsManager {
 		
 		if(new_form_schema_type != null) {
 
-			FormManagerUtil.copySchemaType(cache_manager.getComponentsXsd(), form_xforms, new_form_schema_type);
+			copySchemaType(cache_manager.getComponentsXsd(), form_xforms, new_form_schema_type);
 			form_bean.getFormXsdContainedTypesDeclarations().add(new_form_schema_type);
 		}
 		
@@ -162,7 +165,11 @@ public class ComponentsManager {
 		
 		Element new_html_component = (Element)cache_manager.getHtmlComponentReferenceByType(component_type).cloneNode(true);
 		putMetaInfoOnHtmlComponent(new_html_component, new_comp_id_str, component_type);
-		cache_manager.putUnlocalizedFormHtmlComponent(String.valueOf(form_props.getId()), new_comp_id_str, new_html_component);
+		
+		IFormComponent html_form_component = new FormComponentBean();
+		html_form_component.setComponentId(new_comp_id_str);
+		html_form_component.setComponent(null, new_html_component);
+		form_bean.putFormComponent(html_form_component);
 		
 		return new_comp_id_str;
 	}
@@ -285,23 +292,24 @@ public class ComponentsManager {
 		return components_types;
 	}
 	
-	public Element getLocalizedFormHtmlComponent(String component_id, String loc_str) throws NullPointerException {
-		
-		CacheManager cache_manager = CacheManager.getInstance();
-		String form_id_str = String.valueOf(form_bean.getFormProperties().getId());
-		
-		Element form_component = cache_manager.getLocalizedFormHtmlComponent(
-				form_id_str, component_id, loc_str);
-		
-		if(form_component != null)
-			return form_component;
-		
-		form_component = cache_manager.getUnlocalizedFormHtmlComponent(form_id_str, component_id);
+	public Element getLocalizedFormHtmlComponent(String component_id, Locale locale) throws NullPointerException {
+
+		IFormComponent form_component = form_bean.getFormComponent(component_id);
 		
 		if(form_component == null)
-			throw new NullPointerException("Unlocalized form html component not found in cache. Should not happen.");
+			throw new NullPointerException("Form html component not found in cache. Should not happen.");
 		
-		return getFormHtmlComponentLocalization(form_bean.getFormXforms(), form_component, loc_str);
+		Element localized_element = form_component.getComponent(locale);
+		if(localized_element != null)
+			return localized_element;
+		
+//		trust implementation so no component without unlocalized element should contain
+		Element unlocalized_element = form_component.getComponent(null);
+		
+		localized_element = getFormHtmlComponentLocalization(form_bean.getFormXforms(), unlocalized_element, locale.getLanguage());
+		form_component.setComponent(locale, localized_element);
+		
+		return localized_element;
 	}
 	
 	private Element getFormHtmlComponentLocalization(Document xforms_doc, Element unlocalized_component, String loc_str) {
@@ -349,5 +357,77 @@ public class ComponentsManager {
 		}
 		
 		return localized_component;
+	}
+	
+	private static final String simple_type = "xs:simpleType";
+	private static final String complex_type = "xs:complexType";
+	
+	/**
+	 * <p>
+	 * Copies schema type from one schema document to another by provided type name.
+	 * </p>
+	 * <p>
+	 * <b><i>WARNING: </i></b>currently doesn't support cascading types copying,
+	 * i.e., when one type depends on another
+	 * </p>
+	 * 
+	 * @param src - schema document to copy from
+	 * @param dest - schema document to copy to
+	 * @param type_name - name of type to copy
+	 * @throws NullPointerException - some params were null or such type was not found in src document
+	 */
+	protected void copySchemaType(Document src, Document dest, String type_name) throws NullPointerException {
+		
+		if(src == null || dest == null || type_name == null) {
+			
+			String err_msg = 
+			new StringBuffer("\nEither parameter is not provided:")
+			.append("\nsrc: ")
+			.append(String.valueOf(src))
+			.append("\ndest: ")
+			.append(String.valueOf(dest))
+			.append("\ntype_name: ")
+			.append(type_name)
+			.toString();
+			
+			throw new NullPointerException(err_msg);
+		}
+		
+		Element root = src.getDocumentElement();
+		
+//		check among simple types
+		
+		Element type_to_copy = getSchemaTypeToCopy(root.getElementsByTagName(simple_type), type_name);
+		
+		if(type_to_copy == null) {
+//			check among complex types
+			
+			type_to_copy = getSchemaTypeToCopy(root.getElementsByTagName(complex_type), type_name);
+		}
+		
+		if(type_to_copy == null)
+			throw new NullPointerException("Schema type was not found by provided name: "+type_name);
+		
+		type_to_copy = (Element)dest.importNode(type_to_copy, true);
+		((Element)dest.getElementsByTagName("xs:schema").item(0)).appendChild(type_to_copy);
+	}
+	
+	private Element getSchemaTypeToCopy(NodeList types, String type_name_required) {
+		
+		for (int i = 0; i < types.getLength(); i++) {
+			
+			Element simple_type = (Element)types.item(i); 
+			String name_att = simple_type.getAttribute("name");
+			
+			if(name_att != null && name_att.equals(type_name_required))
+				return simple_type;
+		}
+		
+		return null;
+	}
+	
+	protected Integer generateComponentId(Integer last_component_id) {
+		
+		return new Integer(last_component_id.intValue()+1);
 	}
 }
