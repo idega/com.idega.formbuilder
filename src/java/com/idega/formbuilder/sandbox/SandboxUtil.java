@@ -15,4 +15,6 @@ public class SandboxUtil {
 	
 //	public static final String COMPONENTS_XFORMSHTML_STYLESHEET_CONTEXT_PATH = "resources path taken from webapp context/xslt/htmlxml.xsl";
 //	public static final String COMPONENTS_XFORMSXML_STYLESHEET_CONTEXT_PATH = "resources path taken from webapp context/xslt/components.xsl";
+	
+	public static final String GENERATED_DOCUMENT_LOCATION = "/Users/civilis/workspace/ePlatform35/com.idega.formbuilder/src/java/com/idega/formbuilder/sandbox/generatedDoc.xhtml";
 }

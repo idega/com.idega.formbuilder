@@ -5,9 +5,8 @@ import java.util.Locale;
 
 import org.w3c.dom.Element;
 
-import com.idega.formbuilder.business.form.beans.FormPropertiesBean;
+import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
-
 
 /**
  * 
@@ -18,22 +17,23 @@ import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
 public interface IFormManager {
 
 	/**
-	 * creates primary user form document and stores it depending on implementation
+	 * creates primary user form document and stores it depending on persistance manager implementation
 	 * 
-	 * @param form_props - primary form description. Only id is mandatory.
-	 * @throws FBPostponedException - if some kind of exception happened during previous request. FormManager user knows,
-	 * that error happened and can (most likely) happen again, so some adequate actions can be taken.
-	 * @throws NullPointerException - form_props is null or id not provided
+	 * @param form_id - cannot be null
+	 * @param name - form name. Can be null, then default is used.
+	 *  
+	 * @throws FBPostponedException - if some kind of exception happened during previous request.
+	 * @throws NullPointerException - form_id was not provided
 	 * @throws Exception - some kind of other error occured
 	 */
-	public abstract void createFormDocument(FormPropertiesBean form_properties)
+	public abstract void createFormDocument(String form_id, LocalizedStringBean name)
 			throws FBPostponedException, NullPointerException, Exception;
 
 	/**
 	 * __NOT IMPLEMENTED YET__
 	 * @param component_id - form component id to remove
 	 * @throws FBPostponedException - see exception description at createFormDocument(..) javadoc 
-	 * @throws NullPointerException - form document is not created
+	 * @throws NullPointerException
 	 */
 	public abstract void removeFormComponent(String component_id)
 			throws FBPostponedException, NullPointerException;
@@ -41,39 +41,48 @@ public interface IFormManager {
 	/**
 	 * <p>
 	 * Creates new form component by component type provided,
-	 * inserts it after specific component OR after all components in form component list.
-	 * New xforms document is saved depending on implementation and component id is returned.
+	 * inserts it before specific component OR after all components in form component list.
+	 * New xforms document is saved depending on implementation and newly created component id is returned.
 	 * </p>
 	 * <p>
-	 * <i><b>ATTENTION: </b></i>Of course form document should be created or imported before.
+	 * <i><b>ATTENTION: </b></i>Of course, form document should be created or imported before.
 	 * </p>
 	 * 
-	 * @param component_type - type of component from components_types list,
-	 * which should be inserted to form document.
-	 * @param component_after_new_id - where new component should be places. This id must come from
-	 * currently editing form document component. Provide <i>null</i> if component needs to be appended
-	 * to other components list.
+	 * @param component_type - type of component, which should be created on form document - types can be got using getFormComponentsList()
+	 * @param component_after_this_id - where new component should be placed.
+	 * If provided, new component will be inserted <b>before</b> component with component_after_this_id id.
+	 * Provide <i>null</i> if component needs to be appended to the end of document.
 	 * @return newly created form component id
 	 * @throws FBPostponedException - see exception description at createFormDocument(..) javadoc
-	 * @throws NullPointerException - form document was not created first, 
-	 * component_after_new_id was provided, but such component was not found, other..
-	 * @throws Exception - something else is wrong
+	 * @throws NullPointerException - form document was not created/imported before, 
+	 * component_after_new_id was provided, but such component was not found in document, __NOT SPECIFIED__
+	 * @throws Exception - something else is wrong (earthquake or smth)
 	 */
 	public abstract String createFormComponent(String component_type,
-			String component_after_new_id) throws FBPostponedException,
+			String component_after_this_id) throws FBPostponedException,
 			NullPointerException, Exception;
 
 	/**
 	 * 
-	 * @return List of available form components types to place on form
+	 * @return List of available form components types
 	 */
-	public abstract List<String> getAvailableFormComponentsList() throws FBPostponedException;
+	public abstract List<String> getAvailableFormComponentsTypesList() throws FBPostponedException;
 
 	/**
 	 * 
-	 * @return List of all form components, placed on current form
+	 * @return List of all form components ids, placed on current form
 	 */
-	public abstract List<String> getFormComponentsList();
-	
+	public abstract List<String> getFormComponentsIdsList();
+
+	/**
+	 * 
+	 * Returns localized component html representation
+	 * 
+	 * @param component_id
+	 * @param locale
+	 * @return
+	 * @throws FBPostponedException - see exception description at createFormDocument(..) javadoc
+	 * @throws NullPointerException - component by such an id was not found, locale was not provided, ...
+	 */
 	public abstract Element getLocalizedFormHtmlComponent(String component_id, Locale locale) throws FBPostponedException, NullPointerException;
 }

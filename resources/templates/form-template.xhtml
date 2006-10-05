@@ -4,7 +4,7 @@
       xmlns:xf="http://www.w3.org/2002/xforms"
       xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <head>
-        <title><xf:output ref="instance('localized_strings')/form.title[@lang=instance('localized_strings')/current_language]" model="localized_strings_model" /></title>
+        <title><xf:output ref="instance('localized_strings')/form.title[@lang=instance('localized_strings')/current_language]" model="data_model" /></title>
 
         <xf:model id="form_id" schema="#fb-schema">
             <xf:instance id="instance1" xmlns="">
@@ -12,7 +12,7 @@
                 </data>
             </xf:instance>
         </xf:model>
-        <xf:model id="localized_strings_model">
+        <xf:model id="data_model">
 	        <xf:instance id="localized_strings" xmlns="">
 		        <localized_strings>
 	         		<current_language>en</current_language>

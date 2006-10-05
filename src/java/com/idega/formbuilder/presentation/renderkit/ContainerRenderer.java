@@ -8,7 +8,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-import com.idega.formbuilder.business.form.beans.FormPropertiesBean;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.manager.FormManagerFactory;
 import com.idega.formbuilder.business.form.manager.IFormManager;
@@ -40,17 +39,12 @@ public class ContainerRenderer extends com.idega.webface.renderkit.ContainerRend
 	//		DOMUtil.prettyPrintDOM(components_xml);
 	//		System.out.println("<sugeneruoti komponentai />");
 			
-			FormPropertiesBean form_props = new FormPropertiesBean();
-			form_props.setId(new Long(22));
-			
 			LocalizedStringBean title = new LocalizedStringBean();
 			title.setString(new Locale("en"), "eng title");
 			title.setString(new Locale("is"), "isl title");
 			
-			form_props.setName(title);
-	
 			start = System.currentTimeMillis();
-			fb.createFormDocument(form_props);
+			fb.createFormDocument("1", title);
 			end = System.currentTimeMillis();
 			System.out.println("document created in: "+(end-start));
 			

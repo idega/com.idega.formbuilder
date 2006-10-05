@@ -11,7 +11,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.idega.core.cache.IWCacheManager2;
-import com.idega.formbuilder.business.form.manager.beans.XFormsComponentBean;
+import com.idega.formbuilder.business.form.beans.XFormsComponentInfoBean;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.repository.data.Singleton;
@@ -31,8 +31,8 @@ public class CacheManager implements Singleton {
 	private Document components_xsd = null;
 	private Document components_xml = null;
 	private List<String> components_types = null;
-	private Map<String, XFormsComponentBean> cached_xforms_components = new CacheMap();
-	private Map<String, Element> cached_html_components = new CacheMap();
+	private Map<String, XFormsComponentInfoBean> cached_xforms_components;
+	private Map<String, Element> cached_html_components;
 	
 	private static CacheManager me;
 	
@@ -129,9 +129,12 @@ public class CacheManager implements Singleton {
 	 * @return reference to cached element node. See WARNING for info.
 	 * @throws NullPointerException - component implementation could not be found by component type
 	 */
-	public XFormsComponentBean getXFormsComponentReferencesByType(String component_type) throws NullPointerException {
+	public XFormsComponentInfoBean getXFormsComponentReferencesByType(String component_type) throws NullPointerException {
 		
-		XFormsComponentBean xforms_component = cached_xforms_components.get(component_type); 
+		if(cached_xforms_components == null)
+			cached_xforms_components = new CacheMap();
+			
+		XFormsComponentInfoBean xforms_component = cached_xforms_components.get(component_type); 
 
 		if(xforms_component != null)
 			return xforms_component;
@@ -152,7 +155,7 @@ public class CacheManager implements Singleton {
 			if(xforms_component != null)
 				return xforms_component;
 			
-			xforms_component = new XFormsComponentBean();
+			xforms_component = new XFormsComponentInfoBean();
 			xforms_component.setElement(xforms_element);
 			
 			String bind_to = xforms_element.getAttribute("bind");
@@ -181,6 +184,8 @@ public class CacheManager implements Singleton {
 	
 	public Element getHtmlComponentReferenceByType(String component_type) throws NullPointerException {
 		
+		if(cached_html_components == null)
+			cached_html_components = new CacheMap();
 		
 		Element html_component = cached_html_components.get(component_type); 
 
@@ -201,7 +206,7 @@ public class CacheManager implements Singleton {
 		return html_component;
 	}
 	
-	public List<String> getAvailableFormComponentsList() {
+	public List<String> getAvailableFormComponentsTypesList() {
 		
 		if(components_xforms == null) {
 			

@@ -15,9 +15,9 @@ import org.apache.myfaces.custom.div.Div;
 import org.apache.myfaces.custom.tabbedpane.HtmlPanelTabbedPane;
 
 import com.idega.formbuilder.FormbuilderViewManager;
-import com.idega.formbuilder.business.form.beans.FormPropertiesBean;
 import com.idega.formbuilder.business.form.manager.FormManagerFactory;
 import com.idega.formbuilder.business.form.manager.IFormManager;
+import com.idega.formbuilder.business.form.manager.util.InitializationException;
 import com.idega.formbuilder.presentation.FBGenericFormComponent;
 
 public class ActionManager implements Serializable {
@@ -73,7 +73,7 @@ public class ActionManager implements Serializable {
 		try {
 			formManagerInstance = FormManagerFactory.newFormManager(FacesContext.getCurrentInstance());
 			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORM_MANAGER_INSTANCE, formManagerInstance);
-		} catch(InstantiationException e) {
+		} catch(InitializationException e) {
 			throw new Exception("FormManager instantiation failed: " + e);
 		}
 		/*try {
@@ -99,7 +99,7 @@ public class ActionManager implements Serializable {
 				temp = new FormField((String) it.next());
 				fields.add(temp);
 			}*/
-		} catch(InstantiationException e) {
+		} catch(InitializationException e) {
 			throw new Exception("FormManager instantiation failed: " + e);
 		} catch(Exception e) {
 			throw new Exception("UIManager instantiation failed: " + e);
@@ -117,9 +117,7 @@ public class ActionManager implements Serializable {
 	public void newForm() throws Exception {
 		this.saveForm();
 		clearFormView();
-		FormPropertiesBean formProperties = new FormPropertiesBean();
-		formProperties.setId(123L);
-		formManagerInstance.createFormDocument(formProperties);
+		formManagerInstance.createFormDocument("11", null);
 		
 	}
 	

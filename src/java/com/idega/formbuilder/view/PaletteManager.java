@@ -22,7 +22,7 @@ public class PaletteManager implements Serializable {
 		//try {
 		formManagerInstance = (IFormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
 		components.clear();
-		List list = formManagerInstance.getAvailableFormComponentsList();
+		List list = formManagerInstance.getAvailableFormComponentsTypesList();
 		Iterator it = list.iterator();
 			//FormField temp = null;
 		while(it.hasNext()) {

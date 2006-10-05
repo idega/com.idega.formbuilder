@@ -4,8 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
-import javax.xml.transform.TransformerException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.chiba.xml.dom.DOMUtil;
@@ -14,6 +12,7 @@ import org.w3c.dom.Document;
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
+import com.idega.formbuilder.business.form.manager.util.InitializationException;
 import com.idega.presentation.IWContext;
 import com.idega.slide.business.IWSlideService;
 
@@ -33,10 +32,10 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 	
 	private boolean inited = false;
 	
-	public void init(String document_id) throws InstantiationException {
+	public void init(String document_id) throws NullPointerException {
 		
 		if(document_id == null || document_id.equals(""))
-			throw new InstantiationException("Document id not provided");
+			throw new NullPointerException("Document id not provided");
 		
 		getFormPath(document_id);
 		inited = true;
@@ -44,16 +43,26 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 	
 	protected WebdavPersistenceManager() { }
 	
-	public void persistDocument(final Document document) throws TransformerException, InstantiationException, NullPointerException {
+	/**
+	 * see IPersistenceManager javadoc for additional info
+	 * 
+	 * Implementation specific:
+	 * <p>
+	 * <b>imporant:</b> method uses thread to upload file.
+	 * So, if something bad happens during this process
+	 * exceptions thrown are saved.<br />
+	 * Those excepptions should be time to time checked.<br />
+	 * Exceptions are set to null everytime, when no exception is thrown.<br />
+	 * That means, successful request overrides unsuccessful traces.
+	 * </p>
+	 */
+	public void persistDocument(final Document document) throws InitializationException, NullPointerException {
 		
-		if(!inited)
-			throw new InstantiationException("Persistance manager is not initialized");
+		if(!isInitiated())
+			throw new InitializationException("Persistance manager is not initialized");
 		
 		if(document == null)
 			throw new NullPointerException("Document is not provided");
-		
-		if(true)
-			return;
 		
 		final String path_to_file = form_pathes[0];
 		final String file_name = form_pathes[1];
@@ -95,7 +104,6 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 		return inited;
 	}
 	
-	//private IWSlideService service_bean = null;
 	private Exception document_to_webdav_save_exception = null;
 	private String[] form_pathes = null;
 	private static final String FORMS_REPO_CONTEXT = "/files/formbuilder/forms/";
@@ -124,7 +132,8 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 			service_bean = (IWSlideService)IBOLookup.getServiceInstance(IWContext.getInstance(), IWSlideService.class);
 			
 		} catch (IBOLookupException e) {
-			e.printStackTrace();
+			
+			logger.error("Error during lookup for IWSlideService", e);
 		}
 		
 		return service_bean;

@@ -14,13 +14,16 @@ import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.idega.formbuilder.business.form.beans.FormPropertiesBean;
+import com.idega.formbuilder.business.form.beans.FormComponentFactory;
+import com.idega.formbuilder.business.form.beans.FormDocument;
+import com.idega.formbuilder.business.form.beans.IFormComponent;
+import com.idega.formbuilder.business.form.beans.IFormDocument;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
-import com.idega.formbuilder.business.form.manager.beans.FormBean;
 import com.idega.formbuilder.business.form.manager.generators.ComponentsGeneratorFactory;
 import com.idega.formbuilder.business.form.manager.generators.IComponentsGenerator;
 import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
+import com.idega.formbuilder.business.form.manager.util.InitializationException;
 import com.idega.formbuilder.sandbox.SandboxUtil;
 
 /**
@@ -45,71 +48,90 @@ public class FormManager implements IFormManager {
 	private static String FORM_XFORMS_TEMPLATE_CONTEXT_PATH = null;
 	
 	private static final String NOT_INITED_MSG = "Init FormManager first";
-	private static final String FB_INIT_FAILED = "Could not instantiate FormManager. See \"caused by\" for details.";
+	private static final String FB_INIT_FAILED = "Could not initialize FormManager. See \"caused by\" for details.";
 	
-	private DocumentManager doc_manager;
-	private ComponentsManager comp_manager;
-	private IPersistenceManager persistence_manager;
+	private IFormDocument form_document;
 	
-	public void createFormDocument(FormPropertiesBean form_properties) throws FBPostponedException, NullPointerException, Exception {
+	public void createFormDocument(String form_id, LocalizedStringBean form_name) throws FBPostponedException, NullPointerException, Exception {
 		
 		checkForPendingErrors();
 		
-		doc_manager.createDocument(form_properties);
+		form_document.createDocument(form_id, form_name);
+		form_document.persist();
 	}
 	
 	public void removeFormComponent(String component_id) throws FBPostponedException, NullPointerException {
 		
 		checkForPendingErrors();
-		
-		comp_manager.removeFormComponent(component_id);
+		throw new NullPointerException("__Not implemented__");
 	}
 	
 	public Element getLocalizedFormHtmlComponent(String component_id, Locale locale) throws FBPostponedException, NullPointerException {
 		
 		checkForPendingErrors();
 		
-		return comp_manager.getLocalizedFormHtmlComponent(component_id, locale);
+		IFormComponent component = form_document.getFormComponent(component_id);
+		
+		if(component == null)
+			throw new NullPointerException("Component was not found");
+		
+		return component.getHtmlRepresentationByLocale(locale);
 	}
 	
-	public String createFormComponent(String component_type, String component_after_new_id) throws FBPostponedException, NullPointerException, Exception {
+	public String createFormComponent(String component_type, String component_after_this_id) throws FBPostponedException, NullPointerException, Exception {
 		
 		checkForPendingErrors();
 		
-		return comp_manager.createFormComponent(component_type, component_after_new_id);
+		IFormComponent component = FormComponentFactory.getInstance().getFormComponentByType(component_type);
+
+		if(component_after_this_id != null) {
+			
+			IFormComponent comp_after_new = form_document.getFormComponent(component_after_this_id);
+			
+			if(comp_after_new == null)
+				throw new NullPointerException("Component after not found");
+			
+			component.setComponentAfterThis(comp_after_new);
+		}
+		
+		form_document.addComponent(component);
+		
+		form_document.persist();
+		
+		return component.getId();
 	}
 	
 	protected FormManager() {	}
 	
-	public List<String> getAvailableFormComponentsList() throws FBPostponedException {
+	public List<String> getAvailableFormComponentsTypesList() throws FBPostponedException {
 		
-		return CacheManager.getInstance().getAvailableFormComponentsList();
+		return CacheManager.getInstance().getAvailableFormComponentsTypesList();
 	}
 	
-	public List<String> getFormComponentsList() {
-		return doc_manager.getFormComponentsList();
+	public List<String> getFormComponentsIdsList() {
+		
+		return form_document.getFormComponentsIdList();
 	}
 	
 	/**
-	 * 
-	 * @return instance of this class. FormManager should be initiated first by calling init()
-	 * @throws InstantiationException - if FormManager was not initiated.
+	 * @return instance of this class. FormManager must be initiated first by calling init()
+	 * @throws InitializationException - if FormManager was not initiated before.
 	 */
-	public static IFormManager getInstance() throws InstantiationException {
+	public static IFormManager getInstance() throws InitializationException {
 		
 		if(!inited)
-			throw new InstantiationException(NOT_INITED_MSG);
+			throw new InitializationException(NOT_INITED_MSG);
 		
 		FormManager fm = new FormManager();
-		FormBean fb = new FormBean();
-		fm.persistence_manager = PersistenceManagerFactory.newPersistenceManager();
-		fm.doc_manager = DocumentManager.getInstance(fb, fm.persistence_manager);
-		fm.comp_manager = ComponentsManager.getInstance(fb, fm.persistence_manager);
+		
+		IFormDocument form_document = new FormDocument();
+		form_document.setPersistenceManager(PersistenceManagerFactory.newPersistenceManager());
+		fm.form_document = form_document;
 			
 		return fm;
 	}
 	
-	public static void init(FacesContext ctx) throws InstantiationException {
+	public static void init(FacesContext ctx) throws InitializationException {
 		
 		COMPONENTS_XFORMS_CONTEXT_PATH = SandboxUtil.COMPONENTS_XFORMS_CONTEXT_PATH;
 		COMPONENTS_XFORMSHTML_STYLESHEET_CONTEXT_PATH = SandboxUtil.COMPONENTS_XFORMSHTML_STYLESHEET_CONTEXT_PATH;
@@ -127,9 +149,8 @@ public class FormManager implements IFormManager {
 			CacheManager.getInstance().initAppContext(ctx);
 			
 		} catch (Exception e) {
-			InstantiationException inst_e = new InstantiationException(FB_INIT_FAILED);
-			inst_e.initCause(e);
-			throw inst_e;
+			
+			throw new InitializationException(FB_INIT_FAILED, e);
 		}
 		
 		init();
@@ -139,7 +160,7 @@ public class FormManager implements IFormManager {
 	 * Should be called, before getting an instance of this class
 	 * @throws InstantiationException - smth bad happened during init phase
 	 */
-	protected static void init() throws InstantiationException {
+	protected static void init() throws InitializationException {
 		
 		long start = 0;
 		
@@ -149,7 +170,7 @@ public class FormManager implements IFormManager {
 		if(inited) {
 			
 			logger.error("init(): tried to call, when already inited");
-			throw new InstantiationException("FormManager is already instantiated.");
+			throw new InitializationException("FormManager is already initialized.");
 		}
 		
 		try {
@@ -186,11 +207,10 @@ public class FormManager implements IFormManager {
 			components_generator.setDocument(components_xforms);
 			components_xml = components_generator.generateBaseComponentsDocument();
 			
-			components_types = ComponentsManager.gatherAvailableComponentsTypes(components_xml);
+			components_types = FormManagerUtil.gatherAvailableComponentsTypes(components_xml);
 			
 			form_xforms_template = doc_builder.parse(new FileInputStream(FORM_XFORMS_TEMPLATE_CONTEXT_PATH));
 			
-//			DOMUtil.prettyPrintDOM(components_xml);
 			CacheManager cache_manager = CacheManager.getInstance();
 			cache_manager.setFormXformsTemplate(form_xforms_template);
 			cache_manager.setComponentsTypes(components_types);
@@ -208,20 +228,17 @@ public class FormManager implements IFormManager {
 			
 		} catch (Exception e) {
 
-			InstantiationException inst_e = new InstantiationException(FB_INIT_FAILED);
-			inst_e.initCause(e);
-			throw inst_e;
+			throw new InitializationException(FB_INIT_FAILED, e);
 		}
 	}
 	
 	/**
 	 * Check for exceptions thrown during previous requests
-	 * @throws FBPostponedException - if some kind of exception happened during previous request. FormManager user knows,
-	 * that error happened and can (most likely) happen again, so some adequate actions can be taken. 
+	 * @throws FBPostponedException - if some kind of exception happened during previous request. 
 	 */
-	private void checkForPendingErrors() throws FBPostponedException {
+	protected void checkForPendingErrors() throws FBPostponedException {
 		
-		Exception[] saved_exceptions = persistence_manager.getSavedExceptions();
+		Exception[] saved_exceptions = form_document.getSavedExceptions();
 		
 		if(saved_exceptions != null && saved_exceptions.length != 0)
 			throw new FBPostponedException(saved_exceptions[0]);
@@ -239,17 +256,12 @@ public class FormManager implements IFormManager {
 			long end = System.currentTimeMillis();
 			System.out.println("inited in: "+(end-start));
 			
-			FormPropertiesBean form_props = new FormPropertiesBean();
-			form_props.setId(123L);
-			
 			LocalizedStringBean title = new LocalizedStringBean();
 			title.setString(new Locale("en"), "eng title");
 			title.setString(new Locale("is"), "isl title");
 			
-			form_props.setName(title);
-
 			start = System.currentTimeMillis();
-			fb.createFormDocument(form_props);
+			fb.createFormDocument("11", title);
 			end = System.currentTimeMillis();
 			System.out.println("document created in: "+(end-start));
 			
@@ -262,26 +274,15 @@ public class FormManager implements IFormManager {
 			Element loc = fb.getLocalizedFormHtmlComponent(created, new Locale("en"));
 			Element loc2 = fb.getLocalizedFormHtmlComponent(created, new Locale("is"));
 			
-			try {
-				Element loc3 = fb.getLocalizedFormHtmlComponent(created, new Locale("ha"));
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
+			System.out.println("english one");
 			DOMUtil.prettyPrintDOM(loc);
-			System.out.println("second---------");
+			System.out.println("icelandish");
 			DOMUtil.prettyPrintDOM(loc2);
 			
-			
-			created = fb.createFormComponent("fbcomp_email", created);
-			
-			loc2 = fb.getLocalizedFormHtmlComponent(created, new Locale("is"));
-			DOMUtil.prettyPrintDOM(loc2);
+			fb.createFormComponent("fbcomp_email", created);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 }

@@ -1,5 +1,6 @@
 package com.idega.formbuilder.business.form.manager.util;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -37,7 +38,7 @@ public class FormManagerUtil {
 	public static final String fb_ = "fb_";
 	public static final String loc_ref_part1 = "instance('localized_strings')/";
 	public static final String loc_ref_part2 = "[@lang=instance('localized_strings')/current_language]";
-	public static final String loc_mod = "localized_strings_model";
+	public static final String data_mod = "data_model";
 	public static final String loc_tag = "localized_strings";
 	public static final String output = "xf:output";
 	public static final String ref_s = "ref";
@@ -64,12 +65,10 @@ public class FormManagerUtil {
 	
 	/**
 	 * 
-	 * method name should be clear enough to explain, what it does
-	 * 
 	 * @param doc - document, to search for an element
-	 * @param start_tag - where to start. faster search.
-	 * @param id_value - ..
-	 * @return - Reference to element in document
+	 * @param start_tag - where to start. Could be just null, then document root element is taken.
+	 * @param id_value
+	 * @return - <b>reference</b> to element in document
 	 */
 	public static Element getElementByIdFromDocument(Document doc, String start_tag, String id_value) {
 		
@@ -78,12 +77,10 @@ public class FormManagerUtil {
 	
 	/**
 	 * 
-	 * method name should explain, what it does
-	 * 
 	 * @param doc - document, to search for an element
-	 * @param start_tag - where to start. faster search.
-	 * @param attribute_name - what name attribute shoulde be searched for
-	 * @param attribute_value - ..
+	 * @param start_tag - where to start. Could be just null, then document root element is taken.
+	 * @param attribute_name - what name attribute should be searched for
+	 * @param attribute_value
 	 * @return - Reference to element in document
 	 */
 	public static Element getElementByAttributeFromDocument(Document doc, String start_tag, String attribute_name, String attribute_value) {
@@ -135,7 +132,7 @@ public class FormManagerUtil {
 			
 			Element model = (Element)models.item(i);
 			
-			if(!model.getAttribute(id_name).equals(loc_mod)) {
+			if(!model.getAttribute(id_name).equals(data_mod)) {
 				
 				model.appendChild(new_xforms_element);
 				
@@ -158,7 +155,7 @@ public class FormManagerUtil {
 	 * @param old_key - old key, if provided, is used for replacing with new_key
 	 * @param element - element, to change or put localization message
 	 * @param xforms - xforms document
-	 * @param loc_string - Localized message. See class javadoc
+	 * @param loc_string - localized message
 	 * @throws NullPointerException - something necessary not provided
 	 */
 	public static void putLocalizedText(String new_key, String old_key, Element element, Document xforms, LocalizedStringBean loc_string) throws NullPointerException {
@@ -189,7 +186,7 @@ public class FormManagerUtil {
 		} else
 			throw new NullPointerException("Ref and key not specified or ref has incorrect format");
 		
-		Element loc_model = getElementByIdFromDocument(xforms, "head", loc_mod);
+		Element loc_model = getElementByIdFromDocument(xforms, "head", data_mod);
 		
 		Element loc_strings = (Element)loc_model.getElementsByTagName(loc_tag).item(0);
 		
@@ -265,7 +262,7 @@ public class FormManagerUtil {
 	
 	public static LocalizedStringBean getLocalizedStrings(String key, Document xforms_doc) {
 
-		Element loc_model = getElementByIdFromDocument(xforms_doc, "head", loc_mod);
+		Element loc_model = getElementByIdFromDocument(xforms_doc, "head", data_mod);
 		Element loc_strings = (Element)loc_model.getElementsByTagName(loc_tag).item(0);
 		
 		NodeList key_elements = loc_strings.getElementsByTagName(key);
@@ -311,5 +308,64 @@ public class FormManagerUtil {
 			return;
 			
 		txt_node.setNodeValue(value);
+	}
+	
+	/**
+	 * <p>
+	 * @param components_xml - components xml document, which passes the structure described:
+	 * <p>
+	 * optional document root name - form_components
+	 * </p>
+	 * <p>
+	 * Component is encapsulated into div tag, which contains tag id as component type.
+	 * Every component div container is child of root.
+	 * </p>
+	 * <p>
+	 * Component type starts with "fbcomp_"
+	 * </p>
+	 * <p>
+	 * example:
+	 * </p>
+	 * <p>
+	 * &lt;form_components&gt;<br />
+		&lt;div class="input" id="fbcomp_text"&gt;<br />
+			&lt;label class="label" for="fbcomp_text-value" id="fbcomp_text-label"&gt;			Single Line Field		&lt;/label&gt;<br />
+			&lt;input class="value" id="fbcomp_text-value" name="d_fbcomp_text"	type="text" value="" /&gt;<br />
+		&lt;/div&gt;<br />
+	&lt;/form_components&gt;
+	 * </p>
+	 * </p>
+	 * 
+	 * IMPORTANT: types should be unique
+	 * 
+	 * @return List of components types (Strings)
+	 */
+	public static List<String> gatherAvailableComponentsTypes(Document components_xml) {
+		
+		Element root = components_xml.getDocumentElement();
+		
+		if(!root.hasChildNodes())
+			return null;
+		
+		NodeList children = root.getChildNodes();
+		List<String> components_types = new ArrayList<String>();
+		
+		for (int i = 0; i < children.getLength(); i++) {
+			
+			Node child = children.item(i);
+			
+			if(child.getNodeType() == Node.ELEMENT_NODE && child.getNodeName().equals("div")) {
+				
+				String element_id = ((Element)child).getAttribute(FormManagerUtil.id_name);
+				
+				if(element_id != null && 
+						element_id.startsWith(FormManagerUtil.CTID) &&
+						!components_types.contains(element_id)
+				)
+					components_types.add(element_id);
+			}
+		}
+		
+		return components_types;
 	}
 }

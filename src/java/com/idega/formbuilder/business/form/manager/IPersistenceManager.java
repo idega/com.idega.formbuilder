@@ -1,35 +1,39 @@
 package com.idega.formbuilder.business.form.manager;
 
-import javax.xml.transform.TransformerException;
-
 import org.w3c.dom.Document;
+
+import com.idega.formbuilder.business.form.manager.util.InitializationException;
 
 public interface IPersistenceManager {
 
 	/**
-	 * saves xml(!) file to webdav directory
+	 * saves xml(!) document
 	 * 
-	 * <p>
-	 * <b>imporant:</b> method uses thread to upload file. So, if something bad happens during this process
-	 * exception thrown is saved to document_to_webdav_save_exception variable. This variable should be time to time checked
-	 * for null condition to know, if everything is alright.<br />
-	 * Variable is set to null everytime, when no exception is thrown.<br />
-	 * Logging is taking place for every exception thrown, so see logs for all problems.
-	 * </p>
+	 * @param document - xml document to save
 	 * 
-	 * @param document - xml document to write to webdav repository
-	 * @param service_bean - service bean, used to upload files
-	 * @param path_to_file - where file should be placed, relative to webdav context
-	 * @param file_name - how should we name the file
-	 * @throws TransformerException - file is not an xml file maybe
-	 * @throws NullPointerException - some parameters were not provided, or provided empty string(s)
+	 * @throws InitializationException - IPersistenceManager was not initiated before
+	 * @throws NullPointerException - document was not provided, __implementation specific__
 	 */
 	public abstract void persistDocument(final Document document)
-			throws TransformerException, InstantiationException, NullPointerException;
-	
-	public abstract void init(String document_id) throws InstantiationException;
+			throws InitializationException, NullPointerException;
+
+	/**
+	 * 
+	 * @param document_id - identifier, used for document recognition
+	 * 
+	 * @throws NullPointerException - document_id not provided
+	 * @throws InstantiationException - __implementation specific__
+	 * 
+	 */
+	public abstract void init(String document_id) throws NullPointerException;
 	
 	public abstract boolean isInitiated();
 	
+	/**
+	 * 
+	 * __implementation specific__
+	 * 
+	 * @return exceptions array, that happened during previous request
+	 */
 	public abstract Exception[] getSavedExceptions();
 }

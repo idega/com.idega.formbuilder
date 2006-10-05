@@ -6,12 +6,17 @@ import org.w3c.dom.Element;
 
 public interface IFormComponent {
 
-	public abstract String getComponentId();
+	public abstract void render();
 
-	public abstract void setComponentId(String component_id);
+	public abstract void setComponentAfterThis(IFormComponent component);
 
-	public abstract void setComponent(Locale locale, Element element);
+	public abstract String getId();
 
-	public abstract Element getComponent(Locale locale);
+	public abstract void setId(String id);
 
+	public abstract void setType(String type);
+
+	public abstract void setFormDocument(IFormComponentParent form_document);
+	
+	public abstract Element getHtmlRepresentationByLocale(Locale locale);
 }

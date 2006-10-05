@@ -1,4 +1,4 @@
-package com.idega.formbuilder.business.form.manager.beans;
+package com.idega.formbuilder.business.form.beans;
 
 import org.w3c.dom.Element;
 
@@ -7,7 +7,7 @@ import org.w3c.dom.Element;
  * @version 1.0
  * 
  */
-public class XFormsComponentBean {
+public class XFormsComponentInfoBean {
 	
 	private Element element;
 	private Element bind;
