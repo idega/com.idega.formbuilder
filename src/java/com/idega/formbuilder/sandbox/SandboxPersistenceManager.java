@@ -41,7 +41,7 @@ public class SandboxPersistenceManager extends WebdavPersistenceManager {
 					
 					synchronized (SandboxPersistenceManager.class) {
 						
-						DOMUtil.prettyPrintDOM(document);
+//						DOMUtil.prettyPrintDOM(document);
 					
 						DOMUtil.prettyPrintDOM(document, new FileOutputStream(
 							new File(SandboxUtil.GENERATED_DOCUMENT_LOCATION)));

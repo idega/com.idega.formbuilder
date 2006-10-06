@@ -101,6 +101,8 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 	}
 
 	public IFormComponent getFormComponent(String component_id) {
+		
+//		TODO: if not found, scan xforms document and load if found
 		return getFormComponents().get(component_id);
 	}
 	

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<choiceListData>
-		<localizedEntries lang="en">
-					<item>
+<choiceListData xmlns="http://www.idega.is/select-data-src/"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.idega.is/select-data-src/ select-data-src.xsd">
+
+		<localizedEntries lang="en"> 
+			<item>
         <item_label>choose coountry</item_label>
         <item_value></item_value>
       </item>

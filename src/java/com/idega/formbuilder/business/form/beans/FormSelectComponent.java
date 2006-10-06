@@ -19,7 +19,7 @@ import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
  * @version 1.0
  * 
  */
-public class FormComponent implements IFormComponent {
+public class FormSelectComponent extends FormComponent {
 	
 	private static final String simple_type = "xs:simpleType";
 	private static final String complex_type = "xs:complexType";
@@ -33,7 +33,7 @@ public class FormComponent implements IFormComponent {
 	private Element unlocalized_html_component;
 	private Map<Locale, Element> localized_html_components;
 	
-	private IComponentProperties properties;
+	private SelectComponentProperties properties;
 	
 	public void render() {
 		
@@ -348,12 +348,12 @@ public class FormComponent implements IFormComponent {
 		
 		return localized_component;
 	}
-	
+
 	public IComponentProperties getProperties() {
 		
 		if(properties == null)
-			properties = new ComponentProperties();
+			properties = new SelectComponentProperties();
 		
 		return properties;
-	}
+ 	}
 }
