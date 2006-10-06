@@ -16,6 +16,7 @@ import org.w3c.dom.Element;
 
 import com.idega.formbuilder.business.form.beans.FormComponentFactory;
 import com.idega.formbuilder.business.form.beans.FormDocument;
+import com.idega.formbuilder.business.form.beans.IComponentProperties;
 import com.idega.formbuilder.business.form.beans.IFormComponent;
 import com.idega.formbuilder.business.form.beans.IFormDocument;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
@@ -101,6 +102,13 @@ public class FormManager implements IFormManager {
 		return component.getId();
 	}
 	
+	public void updateFormComponent(IComponentProperties properties, String component_id) throws FBPostponedException {
+		
+		checkForPendingErrors();
+		
+		form_document.getFormComponent(component_id);
+	}
+	
 	protected FormManager() {	}
 	
 	public List<String> getAvailableFormComponentsTypesList() throws FBPostponedException {
@@ -111,6 +119,11 @@ public class FormManager implements IFormManager {
 	public List<String> getFormComponentsIdsList() {
 		
 		return form_document.getFormComponentsIdList();
+	}
+	
+	public IComponentProperties getComponentProperties(String component_id) {
+		
+		return form_document.getFormComponent(component_id).getProperties();
 	}
 	
 	/**
@@ -252,7 +265,7 @@ public class FormManager implements IFormManager {
 
 		try {
 			long start = System.currentTimeMillis();
-			IFormManager fb = FormManagerFactory.newFormManager(null);
+			IFormManager fm = FormManagerFactory.newFormManager(null);
 			long end = System.currentTimeMillis();
 			System.out.println("inited in: "+(end-start));
 			
@@ -261,28 +274,32 @@ public class FormManager implements IFormManager {
 			title.setString(new Locale("is"), "isl title");
 			
 			start = System.currentTimeMillis();
-			fb.createFormDocument("11", title);
+			fm.createFormDocument("11", title);
 			end = System.currentTimeMillis();
 			System.out.println("document created in: "+(end-start));
 			
 			start = System.currentTimeMillis();
-			String created = fb.createFormComponent("fbcomp_text", null);
+			String created = fm.createFormComponent("fbcomp_text", null);
 			
 			end = System.currentTimeMillis();
 			System.out.println("text component created in: "+(end-start));
 			
-			Element loc = fb.getLocalizedFormHtmlComponent(created, new Locale("en"));
-			Element loc2 = fb.getLocalizedFormHtmlComponent(created, new Locale("is"));
+			Element loc = fm.getLocalizedFormHtmlComponent(created, new Locale("en"));
+			Element loc2 = fm.getLocalizedFormHtmlComponent(created, new Locale("is"));
 			
 			System.out.println("english one");
 			DOMUtil.prettyPrintDOM(loc);
 			System.out.println("icelandish");
 			DOMUtil.prettyPrintDOM(loc2);
 			
-			fb.createFormComponent("fbcomp_email", created);
+			fm.createFormComponent("fbcomp_email", created);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void rearrangeDocument() {
+		
 	}
 }

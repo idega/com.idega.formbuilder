@@ -13,6 +13,4 @@ public interface IComponentProperties {
 	public abstract boolean isRequired();
 
 	public abstract void setRequired(boolean required);
-
-	public abstract short getComponentClass();
 }

@@ -5,6 +5,7 @@ import java.util.Locale;
 
 import org.w3c.dom.Element;
 
+import com.idega.formbuilder.business.form.beans.IComponentProperties;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
 
@@ -85,4 +86,21 @@ public interface IFormManager {
 	 * @throws NullPointerException - component by such an id was not found, locale was not provided, ...
 	 */
 	public abstract Element getLocalizedFormHtmlComponent(String component_id, Locale locale) throws FBPostponedException, NullPointerException;
+	
+	/**
+	 * use getFormComponentsIdsList(), use this list to change the order of components,
+	 * then call this method
+	 *
+	 */
+	public abstract void rearrangeDocument();
+	
+	public abstract void updateFormComponent(IComponentProperties properties, String component_id) throws FBPostponedException;
+	
+	/**
+	 * 
+	 * @param component_id
+	 * @return return specific class component's properties. U still need to know about concrete classes,
+	 * so u can use their specific methods, if needed.
+	 */
+	public abstract IComponentProperties getComponentProperties(String component_id);
 }

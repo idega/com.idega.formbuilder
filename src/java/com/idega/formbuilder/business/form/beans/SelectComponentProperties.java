@@ -35,9 +35,6 @@ public class SelectComponentProperties extends ComponentProperties {
 			
 		this.required = required;
 	}
-	public short getComponentClass() {
-		return SELECT_COMPONENT_CLASS;
-	}
 	public String getExternalDataSrc() {
 		return external_data_src;
 	}

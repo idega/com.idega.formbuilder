@@ -7,10 +7,6 @@ package com.idega.formbuilder.business.form.beans;
  */
 public class ComponentProperties implements IComponentProperties {
 	
-	public static final short BASIC_COMPONENT_CLASS = 1;
-	public static final short TEXT_COMPONENT_CLASS = 2;
-	public static final short SELECT_COMPONENT_CLASS = 3;
-	
 	private boolean required;
 	private LocalizedStringBean label;
 	private LocalizedStringBean error_msg;
@@ -32,8 +28,5 @@ public class ComponentProperties implements IComponentProperties {
 	}
 	public void setRequired(boolean required) {
 		this.required = required;
-	}
-	public short getComponentClass() {
-		return BASIC_COMPONENT_CLASS;
 	}
 }
