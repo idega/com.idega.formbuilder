@@ -9,6 +9,7 @@ import org.w3c.dom.Element;
 import com.idega.formbuilder.business.form.manager.CacheManager;
 import com.idega.formbuilder.business.form.manager.HtmlManager;
 import com.idega.formbuilder.business.form.manager.XFormsManager;
+import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
@@ -47,8 +48,15 @@ public class FormComponent implements IFormComponent {
 			xforms_manager.addComponentToDocument(component_id, 
 					component_after_me == null ? null : component_after_me.getId(),
 					xforms_component);
-
+			
 			xforms_manager.setXFormsComponentDataBean(xforms_component);
+			
+			ComponentProperties properties = (ComponentProperties)getProperties();
+			
+			properties.setPlainLabel(FormManagerUtil.getLabelLocalizedStrings(getId(), xforms_doc));
+			properties.setPlainRequired(false);
+			properties.setPlainErrorMsg(FormManagerUtil.getErrorLabelLocalizedStrings(getId(), xforms_doc));
+			
 			created = true;
 		}
 	}

@@ -291,21 +291,13 @@ public class XFormsManager {
 			throw new NullPointerException("Bind element is not set");
 		}
 		
-		if(props.isRequired()) {
-			
-			System.out.println("setting required");
+		if(props.isRequired())
 			
 			bind.setAttribute(required_att, true_xpath);
-			
-		} else {
+		
+		else
 			bind.removeAttribute(required_att);
-		}
 	}
-	
-	
-//    <xf:input bind="fbcomp_1text" id="fbcomp_1">
-//    <xf:label model="data_model" ref="instance('localized_strings')/lockey_fbcomp_1input.title[@lang=instance('localized_strings')/current_language]"/>
-//</xf:input>
 	
 	public void updateLabel() {
 		
@@ -317,15 +309,14 @@ public class XFormsManager {
 		if(labels == null || labels.getLength() == 0)
 			return;
 		
-		Element label = (Element)labels.item(0);  
+		Element label = (Element)labels.item(0);
+		
 		
 		FormManagerUtil.putLocalizedText(null, null, 
 				label,
 				form_document.getXformsDocument(),
 				loc_str
 		);
-		
-		System.out.println("label updated");
 	}
 	
 	public void updateErrorMsg() {

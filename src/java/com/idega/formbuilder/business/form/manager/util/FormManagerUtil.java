@@ -34,6 +34,7 @@ public class FormManagerUtil {
 	 */
 	public static final String model_name = "xf:model";
 	public static final String label_name = "xf:label";
+	public static final String alert_name = "xf:alert";
 	public static final String id_name = "id";
 	public static final String type_name = "type";
 	public static final String slash = "/";
@@ -305,6 +306,48 @@ public class FormManagerUtil {
 		}
 		
 		return loc_str_bean;
+	}
+	
+	public static LocalizedStringBean getLabelLocalizedStrings(String component_id, Document xforms_doc) {
+		
+		Element component = getElementByIdFromDocument(xforms_doc, "body", component_id);
+		
+		NodeList labels = component.getElementsByTagName(FormManagerUtil.label_name);
+		
+		if(labels == null || labels.getLength() == 0)
+			return new LocalizedStringBean();
+		
+		Element label = (Element)labels.item(0);
+		
+		String ref = label.getAttribute("ref");
+		
+		if(!isRefFormCorrect(ref))
+			return new LocalizedStringBean();
+		
+		String key = getKeyFromRef(ref);
+		
+		return getLocalizedStrings(key, xforms_doc);
+	}
+	
+	public static LocalizedStringBean getErrorLabelLocalizedStrings(String component_id, Document xforms_doc) {
+		
+		Element component = getElementByIdFromDocument(xforms_doc, "body", component_id);
+		
+		NodeList alerts = component.getElementsByTagName(FormManagerUtil.alert_name);
+		
+		if(alerts == null || alerts.getLength() == 0)
+			return new LocalizedStringBean();
+		
+		Element output = (Element)((Element)alerts.item(0)).getElementsByTagName(FormManagerUtil.output).item(0);
+		
+		String ref = output.getAttribute("ref");
+		
+		if(!isRefFormCorrect(ref))
+			return new LocalizedStringBean();
+		
+		String key = getKeyFromRef(ref);
+		
+		return getLocalizedStrings(key, xforms_doc);
 	}
 	
 	public static boolean isLocalizationKeyCorrect(String loc_key) {

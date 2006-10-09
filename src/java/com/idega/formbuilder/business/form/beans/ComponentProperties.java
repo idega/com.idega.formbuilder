@@ -38,4 +38,13 @@ public class ComponentProperties implements IComponentProperties {
 	public void setXFormsManager(XFormsManager xforms_manager) {
 		this.xforms_manager = xforms_manager;
 	}
+	public void setPlainLabel(LocalizedStringBean label) {
+		this.label = label;
+	}
+	public void setPlainRequired(boolean required) {
+		this.required = required;
+	}
+	public void setPlainErrorMsg(LocalizedStringBean error_msg) {
+		this.error_msg = error_msg;
+	}
 }

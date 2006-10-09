@@ -17,6 +17,7 @@ import org.w3c.dom.Element;
 import com.idega.formbuilder.business.form.beans.FormComponentFactory;
 import com.idega.formbuilder.business.form.beans.FormDocument;
 import com.idega.formbuilder.business.form.beans.IComponentProperties;
+import com.idega.formbuilder.business.form.beans.IComponentSelectProperties;
 import com.idega.formbuilder.business.form.beans.IFormComponent;
 import com.idega.formbuilder.business.form.beans.IFormDocument;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
@@ -291,15 +292,22 @@ public class FormManager implements IFormManager {
 			start = System.currentTimeMillis();
 			String created = fm.createFormComponent("fbcomp_text", null);
 			
-			IComponentProperties props = fm.getComponentProperties(created);
+//			Element html = fm.getLocalizedFormHtmlComponent(created, new Locale("en"));
+//			
+//			DOMUtil.prettyPrintDOM(html);
+//			
+//			html = fm.getLocalizedFormHtmlComponent(created, new Locale("en"));
 			
-			System.out.println("what str bean is now: "+props.getLabel());
 			
-			LocalizedStringBean loc_str = new LocalizedStringBean();
-			loc_str.setString(new Locale("en"), null);
-			props.setLabel(loc_str);
+//			IComponentProperties props = fm.getComponentProperties(created);
+//			
+//			System.out.println("what str bean is now: "+props.getLabel());
 			
-			fm.updateFormComponent(created);
+//			LocalizedStringBean loc_str = new LocalizedStringBean();
+//			loc_str.setString(new Locale("en"), null);
+//			props.setLabel(loc_str);
+//			
+//			fm.updateFormComponent(created);
 			
 			end = System.currentTimeMillis();
 			//System.out.println("text component created in: "+(end-start));
