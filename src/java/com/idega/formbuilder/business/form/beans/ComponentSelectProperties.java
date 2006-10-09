@@ -7,7 +7,8 @@ import java.util.Map;
  * @version 1.0
  * 
  */
-public class SelectComponentProperties extends ComponentProperties {
+public class ComponentSelectProperties extends ComponentProperties
+implements IComponentSelectProperties {
 	
 	private boolean required;
 	private LocalizedStringBean empty_element_label;
@@ -21,6 +22,7 @@ public class SelectComponentProperties extends ComponentProperties {
 		this.empty_element_label = empty_element_label;
 	}
 	public boolean isRequired() {
+		
 		return required;
 	}
 	/**
@@ -32,7 +34,7 @@ public class SelectComponentProperties extends ComponentProperties {
 		if(!required && empty_element_label == null)
 			
 			empty_element_label = new LocalizedStringBean();
-			
+		
 		this.required = required;
 	}
 	public String getExternalDataSrc() {

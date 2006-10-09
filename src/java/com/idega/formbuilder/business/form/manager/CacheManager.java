@@ -11,7 +11,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.idega.core.cache.IWCacheManager2;
-import com.idega.formbuilder.business.form.beans.XFormsComponentInfoBean;
+import com.idega.formbuilder.business.form.beans.XFormsComponentDataBean;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.repository.data.Singleton;
@@ -31,7 +31,7 @@ public class CacheManager implements Singleton {
 	private Document components_xsd = null;
 	private Document components_xml = null;
 	private List<String> components_types = null;
-	private Map<String, XFormsComponentInfoBean> cached_xforms_components;
+	private Map<String, XFormsComponentDataBean> cached_xforms_components;
 	private Map<String, Element> cached_html_components;
 	
 	private static CacheManager me;
@@ -117,71 +117,6 @@ public class CacheManager implements Singleton {
 		}
 	}
 	
-	/**
-	 * Gets full component reference by component type. What "reference" means,
-	 * is that this is not the clone of node, but only reference to node.<br />
-	 * So if you need to change node, you <b>must</b> clone it first.
-	 * <p>
-	 * <b><i>WARNING:</i></b> returned node should be cloned, if you want to change it in any way.
-	 * </p>
-	 * 
-	 * @param component_type - used to find correct xforms component implementation
-	 * @return reference to cached element node. See WARNING for info.
-	 * @throws NullPointerException - component implementation could not be found by component type
-	 */
-	public XFormsComponentInfoBean getXFormsComponentReferencesByType(String component_type) throws NullPointerException {
-		
-		if(cached_xforms_components == null)
-			cached_xforms_components = new CacheMap();
-			
-		XFormsComponentInfoBean xforms_component = cached_xforms_components.get(component_type); 
-
-		if(xforms_component != null)
-			return xforms_component;
-		
-		Element xforms_element = FormManagerUtil.getElementByIdFromDocument(components_xforms, "body", component_type);
-		
-		if(xforms_element == null) {
-			String msg = "Component cannot be found in components xforms document.";
-			logger.error(msg+
-				" Should not happen. Take a look, why component is registered in components_types, but is not present in components xforms document.");
-			throw new NullPointerException(msg);
-		}
-		
-		synchronized (this) {
-			
-			xforms_component = cached_xforms_components.get(component_type);
-			
-			if(xforms_component != null)
-				return xforms_component;
-			
-			xforms_component = new XFormsComponentInfoBean();
-			xforms_component.setElement(xforms_element);
-			
-			String bind_to = xforms_element.getAttribute("bind");
-			
-			if(bind_to != null) {
-				
-//				get binding
-				Element binding = 
-					FormManagerUtil.getElementByIdFromDocument(components_xforms, FormManagerUtil.model_name, bind_to);
-				
-				if(binding == null)
-					throw new NullPointerException("Binding not found");
-
-//				get nodeset
-				String nodeset_to = binding.getAttribute("nodeset");
-				Element nodeset = (Element)((Element)components_xforms.getElementsByTagName("xf:instance").item(0)).getElementsByTagName(nodeset_to).item(0);
-				
-				xforms_component.setBind(binding);
-				xforms_component.setNodeset(nodeset);
-			}
-			
-			cached_xforms_components.put(component_type, xforms_component);
-		}
-		return xforms_component;
-	}
-	
 	public Element getHtmlComponentReferenceByType(String component_type) throws NullPointerException {
 		
 		if(cached_html_components == null)
@@ -217,8 +152,6 @@ public class CacheManager implements Singleton {
 		return components_types;
 	}
 	
-	
-	
 	public void initAppContext(FacesContext ctx) {
 		
 		if(ctx == null)
@@ -227,5 +160,37 @@ public class CacheManager implements Singleton {
 		IWMainApplication iwma = IWMainApplication.getIWMainApplication(ctx);
 		cached_html_components = IWCacheManager2.getInstance(iwma).getCache("cached_html_components");
 		cached_xforms_components = IWCacheManager2.getInstance(iwma).getCache("cached_xforms_components");
+	}
+	
+	public void cacheXformsComponent(String key, XFormsComponentDataBean xbean) {
+		
+		if(cached_xforms_components == null)
+			cached_xforms_components = new CacheMap();
+			
+		cached_xforms_components.put(key, xbean);			
+	}
+	
+	public void cacheHtmlComponent(String key, Element ebean) {
+		
+		if(cached_html_components == null)
+			cached_html_components = new CacheMap();
+			
+		cached_html_components.put(key, ebean);			
+	}
+	
+	public XFormsComponentDataBean getCachedXformsComponent(String key) {
+		
+		if(cached_xforms_components == null)
+			return null;
+			
+		return cached_xforms_components.get(key);			
+	}
+	
+	public Element getCachedHtmlComponent(String key) {
+		
+		if(cached_html_components == null)
+			return null;
+			
+		return cached_html_components.get(key);			
 	}
 }

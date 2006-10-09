@@ -94,7 +94,7 @@ public interface IFormManager {
 	 */
 	public abstract void rearrangeDocument();
 	
-	public abstract void updateFormComponent(IComponentProperties properties, String component_id) throws FBPostponedException;
+	public abstract void updateFormComponent(String component_id) throws FBPostponedException, NullPointerException, Exception;
 	
 	/**
 	 * 

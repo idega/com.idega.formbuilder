@@ -102,11 +102,17 @@ public class FormManager implements IFormManager {
 		return component.getId();
 	}
 	
-	public void updateFormComponent(IComponentProperties properties, String component_id) throws FBPostponedException {
+	public void updateFormComponent(String component_id) throws FBPostponedException, NullPointerException, Exception {
 		
 		checkForPendingErrors();
 		
-		form_document.getFormComponent(component_id);
+		IFormComponent component = form_document.getFormComponent(component_id);
+		
+		if(component == null)
+			throw new NullPointerException("Component with such an id was not found on document");
+		
+		component.render();
+		form_document.persist();
 	}
 	
 	protected FormManager() {	}
@@ -261,13 +267,17 @@ public class FormManager implements IFormManager {
 		return inited;
 	}
 	
+	public void rearrangeDocument() {
+		
+	}
+	
 	public static void main(String[] args) {
 
 		try {
 			long start = System.currentTimeMillis();
 			IFormManager fm = FormManagerFactory.newFormManager(null);
 			long end = System.currentTimeMillis();
-			System.out.println("inited in: "+(end-start));
+			//System.out.println("inited in: "+(end-start));
 			
 			LocalizedStringBean title = new LocalizedStringBean();
 			title.setString(new Locale("en"), "eng title");
@@ -276,30 +286,46 @@ public class FormManager implements IFormManager {
 			start = System.currentTimeMillis();
 			fm.createFormDocument("11", title);
 			end = System.currentTimeMillis();
-			System.out.println("document created in: "+(end-start));
+			//System.out.println("document created in: "+(end-start));
 			
 			start = System.currentTimeMillis();
 			String created = fm.createFormComponent("fbcomp_text", null);
 			
+			IComponentProperties props = fm.getComponentProperties(created);
+			
+			System.out.println("what str bean is now: "+props.getLabel());
+			
+			LocalizedStringBean loc_str = new LocalizedStringBean();
+			loc_str.setString(new Locale("en"), null);
+			props.setLabel(loc_str);
+			
+			fm.updateFormComponent(created);
+			
 			end = System.currentTimeMillis();
-			System.out.println("text component created in: "+(end-start));
+			//System.out.println("text component created in: "+(end-start));
 			
-			Element loc = fm.getLocalizedFormHtmlComponent(created, new Locale("en"));
-			Element loc2 = fm.getLocalizedFormHtmlComponent(created, new Locale("is"));
+//			IComponentProperties properties = fm.getComponentProperties(created);
+//			
+//			properties.setRequired(false);
+//			properties.setErrorMsg(null);
+//			
+//			fm.updateFormComponent(created);
+//			
+//			created = fm.createFormComponent("fbcomp_email", created);
 			
-			System.out.println("english one");
-			DOMUtil.prettyPrintDOM(loc);
-			System.out.println("icelandish");
-			DOMUtil.prettyPrintDOM(loc2);
-			
-			fm.createFormComponent("fbcomp_email", created);
+//			Element loc = fm.getLocalizedFormHtmlComponent(created, new Locale("en"));
+//			Element loc2 = fm.getLocalizedFormHtmlComponent(created, new Locale("is"));
+//			
+//			System.out.println("english one");
+//			DOMUtil.prettyPrintDOM(loc);
+//			System.out.println("icelandish");
+//			DOMUtil.prettyPrintDOM(loc2);
+//			
+//			created = fm.createFormComponent("fbcomp_email", created);
+
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public void rearrangeDocument() {
-		
 	}
 }

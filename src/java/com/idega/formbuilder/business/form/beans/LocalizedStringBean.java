@@ -23,10 +23,16 @@ public class LocalizedStringBean {
 		return strings.keySet();
 	}
 	
+	/**
+	 * if You don't want to change the text, provide text value as null
+	 * 
+	 * @param locale
+	 * @param text
+	 */
 	public void setString(Locale locale, String text) {
 		
-		if(locale == null || text == null)
-			throw new NullPointerException("Locale or text is not provided");
+		if(locale == null)
+			throw new NullPointerException("Locale is not provided");
 		
 		strings.put(locale, text);
 	}

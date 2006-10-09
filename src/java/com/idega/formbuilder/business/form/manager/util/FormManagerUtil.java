@@ -1,6 +1,7 @@
 package com.idega.formbuilder.business.form.manager.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -32,6 +33,7 @@ public class FormManagerUtil {
 	 * Properties holded for FormManager class for optimization(?) purposes
 	 */
 	public static final String model_name = "xf:model";
+	public static final String label_name = "xf:label";
 	public static final String id_name = "id";
 	public static final String type_name = "type";
 	public static final String slash = "/";
@@ -205,7 +207,27 @@ public class FormManagerUtil {
 		
 		NodeList loc_tags = loc_strings.getElementsByTagName(new_key);
 		
-		for (Iterator<Locale> iter = loc_string.getLanguagesKeySet().iterator(); iter.hasNext();) {
+		Collection<Locale> lang_key_set = loc_string.getLanguagesKeySet();
+		
+		Collection<String> lang_strings = new ArrayList<String>();
+		
+		for (Iterator<Locale> iter = lang_key_set.iterator(); iter.hasNext();) {
+			
+			lang_strings.add(iter.next().getLanguage());
+		}
+		
+		for (int i = 0; i < loc_tags.getLength(); i++) {
+			
+			Element loc_tag = (Element)loc_tags.item(i);
+			
+			if(!lang_strings.contains(loc_tag.getAttribute(lang))) {
+				
+				loc_strings.removeChild(loc_tag);
+			}
+		}
+		lang_strings = null;
+		
+		for (Iterator<Locale> iter = lang_key_set.iterator(); iter.hasNext();) {
 			Locale locale = iter.next();
 			
 			boolean val_set = false;
@@ -218,7 +240,8 @@ public class FormManagerUtil {
 					
 					if(loc_tag.getAttribute(lang).equals(locale.getLanguage())) {
 						
-						setElementsTextNodeValue(loc_tag, loc_string.getString(locale));
+						if(loc_string.getString(locale) != null)
+							setElementsTextNodeValue(loc_tag, loc_string.getString(locale));
 						
 						val_set = true;
 						break;
@@ -232,7 +255,7 @@ public class FormManagerUtil {
 				Element new_loc_el = xforms.createElement(new_key);
 				new_loc_el.setAttribute(lang, locale.getLanguage());
 				new_loc_el.appendChild(xforms.createTextNode(""));
-				setElementsTextNodeValue(new_loc_el, loc_string.getString(locale));
+				setElementsTextNodeValue(new_loc_el, loc_string.getString(locale) == null ? "" : loc_string.getString(locale));
 				loc_strings.appendChild(new_loc_el);
 			}
 		}

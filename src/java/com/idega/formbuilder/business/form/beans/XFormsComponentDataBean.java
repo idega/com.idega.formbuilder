@@ -7,7 +7,7 @@ import org.w3c.dom.Element;
  * @version 1.0
  * 
  */
-public class XFormsComponentInfoBean {
+public class XFormsComponentDataBean {
 	
 	private Element element;
 	private Element bind;

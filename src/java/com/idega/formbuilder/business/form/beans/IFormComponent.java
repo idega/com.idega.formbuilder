@@ -15,6 +15,8 @@ public interface IFormComponent {
 	public abstract void setId(String id);
 
 	public abstract void setType(String type);
+	
+	public abstract String getType();
 
 	public abstract void setFormDocument(IFormComponentParent form_document);
 	
