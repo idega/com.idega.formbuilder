@@ -299,15 +299,26 @@ public class FormManager implements IFormManager {
 //			html = fm.getLocalizedFormHtmlComponent(created, new Locale("en"));
 			
 			
-//			IComponentProperties props = fm.getComponentProperties(created);
-//			
-//			System.out.println("what str bean is now: "+props.getLabel());
+			IComponentProperties props = fm.getComponentProperties(created);
 			
-//			LocalizedStringBean loc_str = new LocalizedStringBean();
-//			loc_str.setString(new Locale("en"), null);
-//			props.setLabel(loc_str);
-//			
-//			fm.updateFormComponent(created);
+			LocalizedStringBean loc_str = new LocalizedStringBean();
+			loc_str.setString(new Locale("en"), null);
+			props.setLabel(loc_str);
+			
+			loc_str = new LocalizedStringBean();
+			loc_str.setString(new Locale("en"), "errrrrrrrrrrrrrrrrrr");
+			
+			props.setErrorMsg(loc_str);
+			
+			fm.updateFormComponent(created);
+			
+			loc_str = new LocalizedStringBean();
+			loc_str.setString(new Locale("is"), "errrrrrrrr-----updated islandisk ---rrrrrrrrrr");
+			loc_str.setString(new Locale("en"), "errrrrrrrr-----updated eng ---rrrrrrrrrr");
+			
+			props.setErrorMsg(loc_str);
+			
+			fm.updateFormComponent(created);
 			
 			end = System.currentTimeMillis();
 			//System.out.println("text component created in: "+(end-start));

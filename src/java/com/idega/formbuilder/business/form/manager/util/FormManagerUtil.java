@@ -48,8 +48,7 @@ public class FormManagerUtil {
 	public static final String lang = "lang";
 	public static final String CTID = "fbcomp_";
 	public static final String loc_key_identifier = "lockey_";
-
-	
+	public static final String localized_entries = "localizedEntries";
 	
 	private FormManagerUtil() { }
 	
@@ -433,5 +432,23 @@ public class FormManagerUtil {
 		}
 		
 		return components_types;
+	}
+	
+	public static Element getItemElementById(Document item_doc, String item_id) {
+		
+		Element item = FormManagerUtil.getElementByIdFromDocument(item_doc, "head", item_id);
+		if(item == null)
+			return null;
+		
+		NodeList children = item.getChildNodes();
+		
+		for (int i = 0; i < children.getLength(); i++) {
+			
+			Node item_node = children.item(i);
+			
+			if(item_node.getNodeType() == Node.ELEMENT_NODE)
+				return (Element)item_node;
+		}
+		return null;
 	}
 }

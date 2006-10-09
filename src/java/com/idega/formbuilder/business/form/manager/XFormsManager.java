@@ -321,6 +321,36 @@ public class XFormsManager {
 	
 	public void updateErrorMsg() {
 		
+		IComponentProperties props = component.getProperties();
+		
+		Element element = xforms_component.getElement();
+		NodeList alerts = element.getElementsByTagName(FormManagerUtil.alert_name);
+		
+		if(alerts == null || alerts.getLength() == 0) {
+			
+			Element alert = FormManagerUtil.getItemElementById(cache_manager.getComponentsXforms(), "alert");
+			
+			Document xforms_doc = form_document.getXformsDocument();
+			
+			alert = (Element)xforms_doc.importNode(alert, true);
+			element.appendChild(alert);
+			Element output = (Element)alert.getElementsByTagName(FormManagerUtil.output).item(0);
+			
+			String new_err_id = new StringBuffer(FormManagerUtil.loc_key_identifier)
+			.append(component.getId())
+			.append("error")
+			.toString();
+			
+			FormManagerUtil.putLocalizedText(
+					new_err_id, FormManagerUtil.localized_entries, output, xforms_doc, props.getErrorMsg());
+		} else {
+			
+			Element alert = (Element)alerts.item(0);
+			Element output = (Element)alert.getElementsByTagName(FormManagerUtil.output).item(0);
+			
+			FormManagerUtil.putLocalizedText(
+					null, null, output, form_document.getXformsDocument(), props.getErrorMsg());
+		}
 	}
 	
 	public void setFormComponent(IFormComponent component) {

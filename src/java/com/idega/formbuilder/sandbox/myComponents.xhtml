@@ -89,6 +89,11 @@
 									    <xf:value ref="item_value" />
 									  </xf:itemset>
              			</item>
+             			<item id="alert">
+	             			<xf:alert>
+	             				<xf:output ref="instance('localized_strings')/localizedEntries[@lang=instance('localized_strings')/current_language]" model="data_model" />
+	             			</xf:alert>
+             			</item>
 								</examples>
              </xf:instance>
              
