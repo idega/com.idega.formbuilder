@@ -2,6 +2,8 @@ package com.idega.formbuilder.business.form.manager.generators;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -10,9 +12,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.transaction.locking.LockException;
-import org.chiba.tools.xslt.StylesheetLoader;
-import org.chiba.tools.xslt.UIGenerator;
+import org.chiba.adapter.ui.XSLTGenerator;
 import org.chiba.xml.xforms.exception.XFormsException;
+import org.chiba.xml.xslt.TransformerService;
+import org.chiba.xml.xslt.impl.CachingTransformerService;
+import org.chiba.xml.xslt.impl.FileResourceResolver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -20,7 +24,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.idega.formbuilder.business.form.manager.FormManager;
-import com.idega.formbuilder.business.form.manager.generators.FBXSLTGenerator;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 import com.idega.repository.data.Singleton;
 import com.idega.xml.XMLException;
@@ -120,7 +123,7 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 			
 		xforms_doc = null;
 	}
-
+	
 //	TODO: check those synchronized. Smth is changed and smth is left. a bit mess
 	public synchronized Document generateBaseComponentsDocument() throws XMLException, IOException, XFormsException, LockException  {
 		
@@ -159,10 +162,12 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 	        /*
 	         * generate temporal xml document from components xforms document
 	         */
-	        UIGenerator gen = new FBXSLTGenerator(new StylesheetLoader(null));
+	        TransformerService ts = new CachingTransformerService(new FileResourceResolver());
+	        XSLTGenerator gen = new XSLTGenerator();
+	        gen.setTransformerService(ts);
 	        
-	        ((FBXSLTGenerator)gen).setAbsoluteStylesheetPath(absolute_components_xforms_stylesheet_path);
-	        gen.setInputNode(xforms_doc);
+	        gen.setStylesheetURI(new URI("file", absolute_components_xforms_stylesheet_path, null));
+	        gen.setInput(xforms_doc);
 	        
 //        	TODO: there could be only one stylesheet used for all this, do it if u master it enough for components.xsl
         	copyLocalizationKeysToElements(xforms_doc);
@@ -175,8 +180,8 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
         	/*
         	 * generate final components xml
         	 */
-        	((FBXSLTGenerator)gen).setAbsoluteStylesheetPath(absolute_components_stylesheet_path);
-        	gen.setInputNode(temp_xml_doc);
+        	gen.setStylesheetURI(new URI("file", absolute_components_stylesheet_path, null));
+        	gen.setInput(temp_xml_doc);
         	
         	temp_xml_doc = document_builder.newDocument();
         	gen.setOutput(temp_xml_doc);
@@ -191,6 +196,9 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 		
 		} catch (SAXException e) {
 			
+			throw new XMLException(e.getMessage(), e);
+		}
+		catch (URISyntaxException e) {
 			throw new XMLException(e.getMessage(), e);
 		} finally {
 			locked_cnt--;
