@@ -37,7 +37,7 @@ public class HtmlManager {
 		
 		if(unlocalized_html_component == null) {
 			
-			unlocalized_html_component = (Element)cache_manager.getHtmlComponentReferenceByType(component.getType()).cloneNode(true);
+			unlocalized_html_component = cache_manager.getHtmlComponentReferenceByType(component.getType());
 			putMetaInfoOnHtmlComponent(unlocalized_html_component, component.getId(), component.getType());
 		}
 		

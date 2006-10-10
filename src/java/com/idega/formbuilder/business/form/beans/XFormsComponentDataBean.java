@@ -34,11 +34,24 @@ public class XFormsComponentDataBean implements Cloneable {
 	
 	public Object clone() {
 		
-		XFormsComponentDataBean clone = new XFormsComponentDataBean();
+		XFormsComponentDataBean clone;
 		
-		clone.setElement((Element)element.cloneNode(true));
-		clone.setBind((Element)bind.cloneNode(true));
-		clone.setNodeset((Element)nodeset.cloneNode(true));
+		try {
+			clone = (XFormsComponentDataBean)super.clone();
+			
+		} catch (Exception e) {
+			
+			clone = new XFormsComponentDataBean();
+		}
+		
+		if(element != null)
+			clone.setElement((Element)element.cloneNode(true));
+		
+		if(bind != null)
+			clone.setBind((Element)bind.cloneNode(true));
+		
+		if(nodeset != null)
+			clone.setNodeset((Element)nodeset.cloneNode(true));
 		
 		return clone;
 	}

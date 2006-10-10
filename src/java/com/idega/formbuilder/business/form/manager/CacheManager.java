@@ -125,7 +125,7 @@ public class CacheManager implements Singleton {
 		Element html_component = cached_html_components.get(component_type); 
 
 		if(html_component != null)
-			return html_component;
+			return (Element)html_component.cloneNode(true);
 
 		html_component = FormManagerUtil.getElementByIdFromDocument(components_xml, null, component_type);
 		
@@ -138,7 +138,7 @@ public class CacheManager implements Singleton {
 		
 		cached_html_components.put(component_type, html_component);
 		
-		return html_component;
+		return (Element)html_component.cloneNode(true);
 	}
 	
 	public List<String> getAvailableFormComponentsTypesList() {
