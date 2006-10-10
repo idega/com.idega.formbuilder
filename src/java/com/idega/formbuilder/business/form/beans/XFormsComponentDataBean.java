@@ -7,7 +7,7 @@ import org.w3c.dom.Element;
  * @version 1.0
  * 
  */
-public class XFormsComponentDataBean {
+public class XFormsComponentDataBean implements Cloneable {
 	
 	private Element element;
 	private Element bind;
@@ -30,5 +30,16 @@ public class XFormsComponentDataBean {
 	}
 	public void setNodeset(Element nodeset) {
 		this.nodeset = nodeset;
+	}
+	
+	public Object clone() {
+		
+		XFormsComponentDataBean clone = new XFormsComponentDataBean();
+		
+		clone.setElement((Element)element.cloneNode(true));
+		clone.setBind((Element)bind.cloneNode(true));
+		clone.setNodeset((Element)nodeset.cloneNode(true));
+		
+		return clone;
 	}
 }

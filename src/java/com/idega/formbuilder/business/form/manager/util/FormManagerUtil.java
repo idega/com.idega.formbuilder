@@ -49,6 +49,8 @@ public class FormManagerUtil {
 	public static final String CTID = "fbcomp_";
 	public static final String loc_key_identifier = "lockey_";
 	public static final String localized_entries = "localizedEntries";
+	public static final String body_name = "body";
+	public static final String bind_name = "bind";
 	
 	private FormManagerUtil() { }
 	

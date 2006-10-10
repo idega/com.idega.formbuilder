@@ -63,10 +63,10 @@ public class XFormsManager {
 		XFormsComponentDataBean xforms_component = cache_manager.getCachedXformsComponent(component_type); 
 
 		if(xforms_component != null)
-			return xforms_component;
+			return (XFormsComponentDataBean)xforms_component.clone();
 		
 		Document components_xforms = cache_manager.getComponentsXforms();
-		Element xforms_element = FormManagerUtil.getElementByIdFromDocument(components_xforms, "body", component_type);
+		Element xforms_element = FormManagerUtil.getElementByIdFromDocument(components_xforms, FormManagerUtil.body_name, component_type);
 		
 		if(xforms_element == null) {
 			String msg = "Component cannot be found in components xforms document.";
@@ -106,7 +106,7 @@ public class XFormsManager {
 			
 			cache_manager.cacheXformsComponent(component_type, xforms_component);
 		}
-		return xforms_component;
+		return (XFormsComponentDataBean)xforms_component.clone();
 	}
 	
 	public void addComponentToDocument(String component_id, String component_after_this_id, XFormsComponentDataBean xforms_component)
@@ -118,6 +118,7 @@ public class XFormsManager {
 		Document xforms_doc = form_document.getXformsDocument();
 		
 		Element new_xforms_element = xforms_component.getElement();
+		
 		new_xforms_element = (Element)xforms_doc.importNode(new_xforms_element, true);
 		xforms_component.setElement(new_xforms_element);
 		
@@ -129,8 +130,8 @@ public class XFormsManager {
 		
 		if(xforms_component.getBind() != null) {
 			
-			bind_id = component_id+xforms_component.getBind().getAttribute(FormManagerUtil.id_name);
-			new_xforms_element.setAttribute("bind", bind_id);
+			bind_id = component_id+FormManagerUtil.bind_name;
+			new_xforms_element.setAttribute(FormManagerUtil.bind_name, bind_id);
 		}
 		
 		if(component_after_this_id == null) {
@@ -141,7 +142,7 @@ public class XFormsManager {
 			
 		} else {
 //			insert element after component
-			Element component_after_me = FormManagerUtil.getElementByIdFromDocument(xforms_doc, "body", component_after_this_id);
+			Element component_after_me = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_name, component_after_this_id);
 			
 			if(component_after_me != null)
 				component_after_me.getParentNode().insertBefore(new_xforms_element, component_after_me);
@@ -359,5 +360,22 @@ public class XFormsManager {
 	
 	public void setXFormsComponentDataBean(XFormsComponentDataBean xforms_component) {
 		this.xforms_component = xforms_component;
+	}
+	
+	public void moveComponent(String current_id, String before_component_id) {
+		
+		Document xforms_doc = form_document.getXformsDocument();
+		
+		Element element_to_move = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_name, current_id);
+		Element element_to_insert_before = null;
+
+		if(before_component_id != null) {
+			
+			element_to_insert_before = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_name, before_component_id);
+		}
+		
+		xforms_component.setElement(
+				(Element)((Element)element_to_move.getParentNode()).insertBefore(element_to_move, element_to_insert_before)
+		);
 	}
 }

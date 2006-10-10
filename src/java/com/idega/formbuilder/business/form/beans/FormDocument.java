@@ -3,7 +3,6 @@ package com.idega.formbuilder.business.form.beans;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -66,7 +65,7 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 	
 	public void addComponent(IFormComponent component) {
 		
-		String component_id = FormManagerUtil.CTID+String.valueOf(generateNewComponentId());
+		String component_id = FormManagerUtil.CTID+generateNewComponentId();
 		
 		component.setId(component_id);
 		component.setFormDocument(this);
@@ -138,22 +137,24 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 	}
 	
 	public void rearrangeDocument() throws NullPointerException {
-
-		for (ListIterator<String> iter = form_components_id_sequence.listIterator(); iter.hasNext();) {
+		
+		int size = form_components_id_sequence.size();
+		
+		for (int i = size-1; i >= 0; i--) {
 			
-			String component_id = iter.next();
+			String component_id = form_components_id_sequence.get(i);
 			
 			if(form_components.containsKey(component_id)) {
 				
 				IFormComponent comp = form_components.get(component_id);
 				
-				if(iter.hasNext()) {
+				if(i != size-1) {
+					
 					comp.setComponentAfterThisRerender(
-							form_components.get(
-									iter.next()
-							)
+						form_components.get(
+								form_components_id_sequence.get(i+1)
+						)
 					);
-					iter.previous();
 				} else
 					comp.setComponentAfterThisRerender(null);
 				

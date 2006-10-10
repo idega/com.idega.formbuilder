@@ -10,6 +10,7 @@ import javax.xml.parsers.DocumentBuilder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -293,21 +294,37 @@ public class FormManager implements IFormManager {
 			
 			start = System.currentTimeMillis();
 			String created = fm.createFormComponent("fbcomp_text", null);
-			created = fm.createFormComponent("fbcomp_text", null);
-			created = fm.createFormComponent("fbcomp_text", null);
-
+			String created2 = fm.createFormComponent("fbcomp_text", null);
+			String created3 = fm.createFormComponent("fbcomp_text", null);
+			
+			System.out.println("__1_");
+			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(created, new Locale("en")));
+			
+			System.out.println("__1_a");
+			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(created, new Locale("en")));
+			
+			System.out.println("__2_");
+			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(created2, new Locale("en")));
+			
+			System.out.println("__2_a");
+			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(created2, new Locale("en")));
+			
+			System.out.println("__3_");
+			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(created3, new Locale("en")));
+			
+			System.out.println("__3_a");
+			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(created3, new Locale("en")));
+			
 			List<String> comp_ids = fm.getFormComponentsIdsList();
 			
-			System.out.println("compList: "+comp_ids);
+			String id2 = comp_ids.get(0);
 			
-			String id2 = comp_ids.get(1);
-			
-			comp_ids.set(1, comp_ids.get(2));
+			comp_ids.set(0, comp_ids.get(2));
 			comp_ids.set(2, id2);
 			
 			fm.rearrangeDocument();
-			
-			System.out.println("compList2: "+comp_ids);
+//			
+//			System.out.println("compList2: "+comp_ids);
 			
 			
 //			Element html = fm.getLocalizedFormHtmlComponent(created, new Locale("en"));
