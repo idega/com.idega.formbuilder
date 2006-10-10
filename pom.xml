@@ -56,6 +56,12 @@
       <type>jar</type>
     </dependency>
     <dependency>
+      <groupId>com.idega.block.platform</groupId>
+      <artifactId>com.idega.block.form</artifactId>
+      <version>3.5.0</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
       <groupId>ajax4jsf</groupId>
       <artifactId>ajax4jsf</artifactId>
       <version>1.0.1</version>
