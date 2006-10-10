@@ -2,7 +2,6 @@ package com.idega.formbuilder.business.form.beans;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -24,9 +23,6 @@ public class FormComponent implements IFormComponent {
 	protected String type;
 	
 	protected IFormComponentParent form_document;
-	
-	protected Element unlocalized_html_component;
-	protected Map<Locale, Element> localized_html_components;
 	
 	protected IComponentProperties properties;
 	protected boolean created = false;

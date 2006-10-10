@@ -37,7 +37,25 @@ public class HtmlManager {
 		
 		if(unlocalized_html_component == null) {
 			
-			unlocalized_html_component = cache_manager.getHtmlComponentReferenceByType(component.getType());
+			String comp_type = component.getType();
+			unlocalized_html_component = cache_manager.getCachedHtmlComponent(comp_type);
+			
+			if(unlocalized_html_component == null) {
+				
+				Element html_component = FormManagerUtil.getElementByIdFromDocument(cache_manager.getComponentsXml(), null, comp_type);
+				
+				if(html_component == null) {
+					String msg = "Component cannot be found in temporal components xml document.";
+
+					throw new NullPointerException(msg);
+				}
+				
+				cache_manager.cacheHtmlComponent(comp_type, html_component);
+				unlocalized_html_component = (Element)html_component.cloneNode(true);
+				
+			} else
+				unlocalized_html_component = (Element)unlocalized_html_component.cloneNode(true);
+				
 			putMetaInfoOnHtmlComponent(unlocalized_html_component, component.getId(), component.getType());
 		}
 		

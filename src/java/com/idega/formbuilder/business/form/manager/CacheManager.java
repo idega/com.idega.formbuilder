@@ -12,7 +12,6 @@ import org.w3c.dom.Element;
 
 import com.idega.core.cache.IWCacheManager2;
 import com.idega.formbuilder.business.form.beans.XFormsComponentDataBean;
-import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.repository.data.Singleton;
 import com.idega.util.caching.CacheMap;
@@ -117,30 +116,6 @@ public class CacheManager implements Singleton {
 		}
 	}
 	
-	public Element getHtmlComponentReferenceByType(String component_type) throws NullPointerException {
-		
-		if(cached_html_components == null)
-			cached_html_components = new CacheMap();
-		
-		Element html_component = cached_html_components.get(component_type); 
-
-		if(html_component != null)
-			return (Element)html_component.cloneNode(true);
-
-		html_component = FormManagerUtil.getElementByIdFromDocument(components_xml, null, component_type);
-		
-		if(html_component == null) {
-			String msg = "Component cannot be found in temporal components xml document.";
-			logger.error(msg+
-				" Should not happen. Take a look, why component is registered in components_types, but is not present in components xml document.");
-			throw new NullPointerException(msg);
-		}
-		
-		cached_html_components.put(component_type, html_component);
-		
-		return (Element)html_component.cloneNode(true);
-	}
-	
 	public List<String> getAvailableFormComponentsTypesList() {
 		
 		if(components_xforms == null) {
@@ -180,17 +155,11 @@ public class CacheManager implements Singleton {
 	
 	public XFormsComponentDataBean getCachedXformsComponent(String key) {
 		
-		if(cached_xforms_components == null)
-			return null;
-			
-		return cached_xforms_components.get(key);			
+		return cached_xforms_components == null ? null : cached_xforms_components.get(key);
 	}
 	
 	public Element getCachedHtmlComponent(String key) {
 		
-		if(cached_html_components == null)
-			return null;
-			
-		return cached_html_components.get(key);			
+		return cached_html_components == null ? null : cached_html_components.get(key);
 	}
 }

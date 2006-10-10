@@ -102,9 +102,8 @@ public class XFormsManager {
 				
 				xforms_component.setBind(binding);
 				xforms_component.setNodeset(nodeset);
+				cache_manager.cacheXformsComponent(component_type, xforms_component);
 			}
-			
-			cache_manager.cacheXformsComponent(component_type, xforms_component);
 		}
 		return (XFormsComponentDataBean)xforms_component.clone();
 	}
