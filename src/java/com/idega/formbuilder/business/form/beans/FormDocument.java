@@ -3,6 +3,7 @@ package com.idega.formbuilder.business.form.beans;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -65,7 +66,7 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 	
 	public void addComponent(IFormComponent component) {
 		
-		String component_id = FormManagerUtil.CTID+String.valueOf(generateNewComponentId(last_component_id));
+		String component_id = FormManagerUtil.CTID+String.valueOf(generateNewComponentId());
 		
 		component.setId(component_id);
 		component.setFormDocument(this);
@@ -75,9 +76,9 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		getFormComponents().put(component_id, component);
 	}
 	
-	protected int generateNewComponentId(int last_component_id) {
+	protected int generateNewComponentId() {
 		
-		return last_component_id+1;
+		return ++last_component_id;
 	}
 	
 	public Document getXformsDocument() {
@@ -134,5 +135,30 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 				persistence_manager.init(form_id);
 		
 		persistence_manager.persistDocument(form_xforms);
+	}
+	
+	public void rearrangeDocument() throws NullPointerException {
+
+		for (ListIterator<String> iter = form_components_id_sequence.listIterator(); iter.hasNext();) {
+			
+			String component_id = iter.next();
+			
+			if(form_components.containsKey(component_id)) {
+				
+				IFormComponent comp = form_components.get(component_id);
+				
+				if(iter.hasNext()) {
+					comp.setComponentAfterThisRerender(
+							form_components.get(
+									iter.next()
+							)
+					);
+					iter.previous();
+				} else
+					comp.setComponentAfterThisRerender(null);
+				
+			} else
+				throw new NullPointerException("Component, which id was provided in list was not found. Provided: "+component_id);
+		}
 	}
 }

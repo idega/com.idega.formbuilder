@@ -9,6 +9,8 @@ public interface IFormComponent {
 	public abstract void render();
 
 	public abstract void setComponentAfterThis(IFormComponent component);
+	
+	public abstract void setComponentAfterThisRerender(IFormComponent component);
 
 	public abstract String getId();
 

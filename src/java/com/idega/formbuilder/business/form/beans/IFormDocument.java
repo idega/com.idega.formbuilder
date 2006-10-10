@@ -23,5 +23,6 @@ public interface IFormDocument {
 
 	public abstract void persist() throws NullPointerException,
 			InitializationException;
-
+	
+	public abstract void rearrangeDocument();
 }

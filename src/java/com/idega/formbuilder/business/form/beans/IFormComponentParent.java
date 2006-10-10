@@ -11,4 +11,6 @@ public interface IFormComponentParent {
 	public abstract List<String> getFormComponentsIdList();
 	
 	public abstract List<String> getFormXsdContainedTypesDeclarations();
+	
+	public abstract IFormComponent getFormComponent(String component_id);
 }

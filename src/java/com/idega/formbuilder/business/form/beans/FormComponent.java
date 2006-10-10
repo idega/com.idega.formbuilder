@@ -1,5 +1,6 @@
 package com.idega.formbuilder.business.form.beans;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -49,6 +50,15 @@ public class FormComponent implements IFormComponent {
 					component_after_me == null ? null : component_after_me.getId(),
 					xforms_component);
 			
+			List<String> id_list = form_document.getFormComponentsIdList();
+
+			for (int i = 0; i < id_list.size(); i++) {
+				
+				if(id_list.get(i).equals(component_id) && i != 0)
+					
+					form_document.getFormComponent(id_list.get(i-1)).setComponentAfterThis(this);
+			}
+			
 			xforms_manager.setXFormsComponentDataBean(xforms_component);
 			
 			ComponentProperties properties = (ComponentProperties)getProperties();
@@ -63,9 +73,26 @@ public class FormComponent implements IFormComponent {
 	
 	public void setComponentAfterThis(IFormComponent component) {
 		
-		if(component == null)
-			throw new NullPointerException("Component not provided");
+		component_after_me = component;
+	}
+	
+	public void setComponentAfterThisRerender(IFormComponent component) {
 		
+		if(component != null && component_after_me != null && !component_after_me.getId().equals(component.getId())) {
+			//TODO: change position
+			System.out.println("was: "+component_after_me.getId()+" now is: "+component.getId());
+			
+		} else if(component_after_me == null && component != null) {
+			
+			//TODO: ..
+			System.out.println("was null, now: "+component.getId());
+		} else if(component == null && component_after_me != null) {
+			
+//			TODO: ..
+			System.out.println("was: "+component_after_me.getId()+" now null");
+		} else {
+			System.out.println("nothing happened");
+		}
 		component_after_me = component;
 	}
 	

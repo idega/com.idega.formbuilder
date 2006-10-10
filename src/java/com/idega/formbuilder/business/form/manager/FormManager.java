@@ -10,14 +10,12 @@ import javax.xml.parsers.DocumentBuilder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.idega.formbuilder.business.form.beans.FormComponentFactory;
 import com.idega.formbuilder.business.form.beans.FormDocument;
 import com.idega.formbuilder.business.form.beans.IComponentProperties;
-import com.idega.formbuilder.business.form.beans.IComponentSelectProperties;
 import com.idega.formbuilder.business.form.beans.IFormComponent;
 import com.idega.formbuilder.business.form.beans.IFormDocument;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
@@ -268,8 +266,12 @@ public class FormManager implements IFormManager {
 		return inited;
 	}
 	
-	public void rearrangeDocument() {
+	public void rearrangeDocument() throws FBPostponedException, Exception {
 		
+		checkForPendingErrors();
+		
+		form_document.rearrangeDocument();
+		form_document.persist();
 	}
 	
 	public static void main(String[] args) {
@@ -291,6 +293,22 @@ public class FormManager implements IFormManager {
 			
 			start = System.currentTimeMillis();
 			String created = fm.createFormComponent("fbcomp_text", null);
+			created = fm.createFormComponent("fbcomp_text", null);
+			created = fm.createFormComponent("fbcomp_text", null);
+
+			List<String> comp_ids = fm.getFormComponentsIdsList();
+			
+			System.out.println("compList: "+comp_ids);
+			
+			String id2 = comp_ids.get(1);
+			
+			comp_ids.set(1, comp_ids.get(2));
+			comp_ids.set(2, id2);
+			
+			fm.rearrangeDocument();
+			
+			System.out.println("compList2: "+comp_ids);
+			
 			
 //			Element html = fm.getLocalizedFormHtmlComponent(created, new Locale("en"));
 //			
