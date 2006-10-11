@@ -26,31 +26,57 @@ function displayMessage(url) {
 	messageObj.display();
 }
 function closeMessage() {
-	messageObj.close();	
+	messageObj.close();
 }
-function empty() {
-	alert('Success');
+function addNewField(element) {
+	dwrmanager.getElement(gotComponent,"fbcomp_text");
+}
+function showInnerHtml(element) {
+	alert(element.parentNode.innerHtml);
+	alert(element.parentNode.id);
+	alert(document.getElementById('toolbar_container').innerHTML);
+}
+function empty(element,dropBox) {
+	/*alert('Success');
+	alert(document.getElementById('field[0]').innerHTML);
+	alert(element.innerHTML);
+	alert(dropBox.id);*/
+}
+function tempCheck() {
+	alert("Great");
+}
+function startDrag(element) {
+	/*alert("onDragStart");
+	alert(element.id);*/
+	dwrmanager.getElement(gotComponent,"fbcomp_multiple_select_minimal");
+	/*alert("onDragEnd");*/
+}
+function gotComponent(result) {
+	alert("Result of method" + result);
+	document.getElementById('dropBox').appendChild(result.childNodes[0]);
 }
 function temp(element) {
-	alert(element.id);
-	/*for(i=0;i<element.getElementsByTagName('div').length;i++) {
-		alert(element.childNodes[i].id);
-	}*/
+	alert("onUpdate");
 	actionmanager.rebuildFormComponentsTree(empty);
 }
 
 /*Setup drag and drop from palette to main area with DHTMLGoodies*/
-var dragDropObj = new DHTMLSuite_dragDrop();
-setup('workspaceform1:firstlist');
+/*var dragDropObj = new DHTMLSuite_dragDrop();
+setup('workspaceform1:firstlist');*/
 /*setup('firstlist');*/
-dragDropObj.init();
-
+/*dragDropObj.init();*/
+/*var palette = document.getElementById('workspaceform1:firstlist');
+for(var i=0;i<palette.childNodes.length;i++) {
+	new Draggable('field[' + i + ']', {tag:"li",starteffect:startDrag,revert:true});
+}
+Droppables.add('dropBox',{onDrop:empty});*/
 /*Setup modal message windows functionality*/
 messageObj = new DHTML_modalMessage();
 messageObj.setShadowOffset(5);
 
 /*Setup form components drag and drop functionality with scriptaculous*/
 Position.includeScrollOffsets = true;
-Sortable.create("dropBox",{dropOnEmpty:true,tag:"div",only:"form_element","onUpdate":temp,containment:["dropBox"],scroll:"dropBox",constraint:false});
+/*Sortable.create("workspaceform1:firstlist",{dropOnEmpty:true,tag:"li",containment:["workspaceform1:firstlist","dropBox"],constraint:false});*/
+Sortable.create("dropBox",{dropOnEmpty:true,tag:"div","onUpdate":temp,containment:["dropBox","workspaceform1:firstlist"],scroll:"dropBox",constraint:false});
 
 								
