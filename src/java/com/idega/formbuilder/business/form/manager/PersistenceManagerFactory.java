@@ -6,9 +6,6 @@ public class PersistenceManagerFactory {
 	
 	public static IPersistenceManager newPersistenceManager() {
 		
-//		WebdavPersistenceManager webdav_manager = WebdavPersistenceManager.getInstance();
-//		webdav_manager.setFormsPath("");
-		
 		return SandboxPersistenceManager.getInstance();
 //		return WebdavPersistenceManager.getInstance();
 	}

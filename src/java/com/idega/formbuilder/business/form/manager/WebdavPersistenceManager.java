@@ -113,7 +113,7 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 		if(form_pathes == null) {
 			
 			String path_to_file = 
-			new StringBuffer(forms_path == null ? FORMS_REPO_CONTEXT : forms_path)
+			new StringBuffer(FORMS_REPO_CONTEXT)
 			.append(form_id)
 			.append(FormManagerUtil.slash)
 			.toString();
@@ -122,12 +122,6 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 		}
 		
 		return form_pathes;
-	}
-	
-	private String forms_path;
-	
-	public void setFormsPath(String path) {
-		forms_path = path;
 	}
 	
 	private IWSlideService getServiceBean() {

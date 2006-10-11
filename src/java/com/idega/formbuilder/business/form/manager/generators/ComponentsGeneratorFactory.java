@@ -9,8 +9,8 @@ import org.chiba.xml.xslt.impl.CachingTransformerService;
 import org.chiba.xml.xslt.impl.FileResourceResolver;
 import org.chiba.xml.xslt.impl.ResourceResolver;
 
+import com.idega.block.form.business.BundleResourceResolver;
 import com.idega.formbuilder.IWBundleStarter;
-import com.idega.formbuilder.business.form.manager.util.BundleResourceResolver;
 import com.idega.formbuilder.sandbox.SandboxUtil;
 import com.idega.idegaweb.IWMainApplication;
 
