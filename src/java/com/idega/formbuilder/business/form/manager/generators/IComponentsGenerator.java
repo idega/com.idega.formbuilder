@@ -14,15 +14,7 @@ public interface IComponentsGenerator {
 
 	/**
 	 * 
-	 * @param params - parameters, used for components document generation. Usually - context info.
-	 * @throws Exception. Concrete exceptions throwed depends on implementation.
-	 */
-	public void init(String[] params) throws Exception;
-
-	/**
-	 * 
-	 * Generates xml components document from xforms components document, using parameters, 
-	 * passed through init phase.
+	 * Generates xml components document from xforms components document
 	 * 
 	 * @return HTML components xml document
 	 * @throws Exception. Concrete exceptions throwed depends on implementation.

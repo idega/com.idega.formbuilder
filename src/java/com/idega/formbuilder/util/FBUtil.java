@@ -2,7 +2,7 @@ package com.idega.formbuilder.util;
 
 import javax.faces.context.FacesContext;
 
-import com.idega.formbuilder.FormbuilderViewManager;
+import com.idega.formbuilder.IWBundleStarter;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.idegaweb.IWResourceBundle;
@@ -43,7 +43,7 @@ public class FBUtil {
 	}
 	
 	public static String getResourceAbsolutePath(IWMainApplication iwma, String url) {
-		IWBundle iwb = iwma.getBundle(FormbuilderViewManager.FORMBUILDER_BUNDLE_IDENTIFIER);
+		IWBundle iwb = iwma.getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER);
         return iwb.getRealPathWithFileNameString(url);
 	}
 }

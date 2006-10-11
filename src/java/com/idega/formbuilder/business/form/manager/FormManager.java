@@ -44,8 +44,6 @@ public class FormManager implements IFormManager {
 	
 	private static String COMPONENTS_XFORMS_CONTEXT_PATH = null;
 	private static String COMPONENTS_XSD_CONTEXT_PATH = null;
-	private static String COMPONENTS_XFORMSHTML_STYLESHEET_CONTEXT_PATH = null;
-	private static String COMPONENTS_XFORMSXML_STYLESHEET_CONTEXT_PATH = null;
 	private static String FORM_XFORMS_TEMPLATE_CONTEXT_PATH = null;
 	
 	private static final String NOT_INITED_MSG = "Init FormManager first";
@@ -153,8 +151,6 @@ public class FormManager implements IFormManager {
 	public static void init(FacesContext ctx) throws InitializationException {
 		
 		COMPONENTS_XFORMS_CONTEXT_PATH = SandboxUtil.COMPONENTS_XFORMS_CONTEXT_PATH;
-		COMPONENTS_XFORMSHTML_STYLESHEET_CONTEXT_PATH = SandboxUtil.COMPONENTS_XFORMSHTML_STYLESHEET_CONTEXT_PATH;
-		COMPONENTS_XFORMSXML_STYLESHEET_CONTEXT_PATH = SandboxUtil.COMPONENTS_XFORMSXML_STYLESHEET_CONTEXT_PATH;
 		FORM_XFORMS_TEMPLATE_CONTEXT_PATH = SandboxUtil.FORM_XFORMS_TEMPLATE_CONTEXT_PATH;
 		COMPONENTS_XSD_CONTEXT_PATH = SandboxUtil.COMPONENTS_XSD_CONTEXT_PATH;
 		
@@ -165,6 +161,7 @@ public class FormManager implements IFormManager {
 //			components_xforms_stream = ((IWSlideSessionBean)ses_bean).getInputStream(COMPONENTS_XFORMS_CONTEXT_PATH);
 //			components_xsd_stream = ((IWSlideSessionBean)ses_bean).getInputStream(COMPONENTS_XSD_CONTEXT_PATH);
 			
+			ComponentsGeneratorFactory.init(ctx);
 			CacheManager.getInstance().initAppContext(ctx);
 			
 		} catch (Exception e) {
@@ -195,11 +192,6 @@ public class FormManager implements IFormManager {
 		try {
 			
 			IComponentsGenerator components_generator = ComponentsGeneratorFactory.createComponentsGenerator();
-			components_generator.init(
-					new String[] {null, COMPONENTS_XFORMSHTML_STYLESHEET_CONTEXT_PATH, 
-							COMPONENTS_XFORMSXML_STYLESHEET_CONTEXT_PATH
-							}
-					);
 			
 			Document components_xforms = null;
 			Document components_xsd = null;

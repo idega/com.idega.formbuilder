@@ -46,25 +46,25 @@ public class FormComponentsGeneratorTest extends TestCase {
 	        	return;
 			
 			
-			Class this_class = new FormComponentsGeneratorTest().getClass();
-			String absolute_components_xforms_path = this_class.getResource("myBasicTest.xhtml").getPath();
-			String absolute_components_xforms_stylesheet_path = this_class.getResource("htmlxml.xsl").getPath();
-			String absolute_components_stylesheet_path = this_class.getResource("components.xsl").getPath();
+//			Class this_class = new FormComponentsGeneratorTest().getClass();
+//			String absolute_components_xforms_path = this_class.getResource("myBasicTest.xhtml").getPath();
+//			String absolute_components_xforms_stylesheet_path = this_class.getResource("htmlxml.xsl").getPath();
+//			String absolute_components_stylesheet_path = this_class.getResource("components.xsl").getPath();
+//			
+//			IComponentsGenerator fcg = FormComponentsGenerator.getInstance();
+//			
+//			fcg.init(new String[] {
+//					absolute_components_xforms_path,
+//					absolute_components_xforms_stylesheet_path,
+//					absolute_components_stylesheet_path
+//			});
 			
-			IComponentsGenerator fcg = FormComponentsGenerator.getInstance();
-			
-			fcg.init(new String[] {
-					absolute_components_xforms_path,
-					absolute_components_xforms_stylesheet_path,
-					absolute_components_stylesheet_path
-			});
-			
-			Document excepted_res_doc = fcg.generateBaseComponentsDocument();
-			
-			OutputStream os = new FileOutputStream(this_class.getResource("myComponents.xml").getPath());
-			DOMUtil.prettyPrintDOM(excepted_res_doc, os);
-			
-			System.out.println("done");
+//			Document excepted_res_doc = fcg.generateBaseComponentsDocument();
+//			
+//			OutputStream os = new FileOutputStream(this_class.getResource("myComponents.xml").getPath());
+//			DOMUtil.prettyPrintDOM(excepted_res_doc, os);
+//			
+//			System.out.println("done");
 			
 		} catch (Exception e) {
 			
@@ -108,11 +108,11 @@ public class FormComponentsGeneratorTest extends TestCase {
 			
 			IComponentsGenerator fcg = FormComponentsGenerator.getInstance();
 			
-			fcg.init(new String[] {
-					absolute_components_xforms_path,
-					absolute_components_xforms_stylesheet_path,
-					absolute_components_stylesheet_path
-			});
+//			fcg.init(new String[] {
+//					absolute_components_xforms_path,
+//					absolute_components_xforms_stylesheet_path,
+//					absolute_components_stylesheet_path
+//			});
 			
 			Document excepted_res_doc = fcg.generateBaseComponentsDocument();
 			

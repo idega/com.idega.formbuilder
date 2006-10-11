@@ -17,7 +17,6 @@ public class FormbuilderViewManager implements Singleton  {
 
 	private static final String IW_FORMBUILDER_VIEW_MANAGER_KEY = "iw_formbuilderviewmanager";
 	private static final String FORMBUILDER_ID = "formbuilder";
-	public static final String FORMBUILDER_BUNDLE_IDENTIFIER = "com.idega.formbuilder";
 	public static final String FORM_MANAGER_INSTANCE = "FORM_MANAGER_INSTANCE";
 	private ViewNode rootNode;
 	private IWMainApplication iwma;
@@ -49,7 +48,7 @@ public class FormbuilderViewManager implements Singleton  {
 	
 	
 	public ViewNode getContentNode(){
-		IWBundle iwb = this.iwma.getBundle(FORMBUILDER_BUNDLE_IDENTIFIER);
+		IWBundle iwb = this.iwma.getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER);
 		//ViewNode content = root.getChild(CONTENT_ID);
 		if(this.rootNode==null){
 			this.rootNode = initalizeContentNode(iwb);

@@ -1,32 +1,22 @@
 package com.idega.formbuilder.business.form.manager.generators;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.transaction.locking.LockException;
+import org.chiba.adapter.ui.UIGenerator;
 import org.chiba.adapter.ui.XSLTGenerator;
 import org.chiba.xml.xforms.exception.XFormsException;
 import org.chiba.xml.xslt.TransformerService;
-import org.chiba.xml.xslt.impl.CachingTransformerService;
-import org.chiba.xml.xslt.impl.FileResourceResolver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import com.idega.formbuilder.business.form.manager.FormManager;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 import com.idega.repository.data.Singleton;
-import com.idega.xml.XMLException;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
@@ -38,22 +28,22 @@ import com.idega.xml.XMLException;
  */
 public class FormComponentsGenerator implements Singleton, IComponentsGenerator  {
 	
-	private volatile static Log logger = LogFactory.getLog(FormComponentsGenerator.class);
+	protected static FormComponentsGenerator me = null;
 	
-	protected static IComponentsGenerator me = null;
-	private String absolute_components_xforms_path = null;
-	private String absolute_components_xforms_stylesheet_path = null;
-	private String absolute_components_stylesheet_path = null;
+	private URI components_xforms_stylesheet_uri;
+	private URI components_stylesheet_uri;
 	
-	protected final int params_cnt = 3;
+	private TransformerService transf_service;
+	private UIGenerator components_generator;
+	private UIGenerator components_xforms_generator;
+	
 	private Document xforms_doc = null;
-	private int locked_cnt = 0;
 	
-	public static IComponentsGenerator getInstance() {
+	public static FormComponentsGenerator getInstance() {
 		
 		if (me == null) {
 			
-			synchronized (FormManager.class) {
+			synchronized (FormComponentsGenerator.class) {
 				if (me == null) {
 					me = new FormComponentsGenerator();
 				}
@@ -65,144 +55,70 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 	
 	protected FormComponentsGenerator() { }
 
-	/* (non-Javadoc)
-	 * @see com.idega.formbuilder.generators.IComponentsGenerator#isInitiated()
-	 */
 	public boolean isInitiated() {
 		
-		return absolute_components_xforms_stylesheet_path != null && 
-		absolute_components_stylesheet_path != null &&
-		(absolute_components_xforms_path != null || xforms_doc != null);
+		return components_xforms_stylesheet_uri != null && 
+		components_stylesheet_uri != null &&
+		xforms_doc != null && transf_service != null;
 	}
 	
-	/**
-	 * 
-	 *  @param params -	full pathes with file names:<br />
-	 *  [0] - absolute components xforms path - should be not null if xforms document is not set explicitly<br />
-	 *  [1] - absolute components xforms stylesheet path - stylesheet (xsl) with conversion from xforms to components html - xml<br />
-	 *  [2] - absolute components stylesheet path - stylesheet (xsl) with conversion from html - xml to plain components xml<br />
-	 * 
-	 * @throws LockException - if someone is using generateBaseComponentsDocument method
-	 * @throws IndexOutOfBoundsException - if not enough parameters are passed.
-	 * 
-	 */
-	public synchronized void init(String[] params) throws LockException, IndexOutOfBoundsException {
+	public void setDocument(Document xforms_doc) {
 		
-		if(locked_cnt > 0)
-			throw new LockException("generateBaseComponentsDocument is running, you cannot lock now", 0, null);
-		
-		//TODO: is this solution correct?
-		locked_cnt = -1;
-		initParams(params);
-		locked_cnt = 0;
+		this.xforms_doc = xforms_doc;
 	}
 	
-	protected void initParams(String[] params) throws IndexOutOfBoundsException {
-
-		if(params.length < params_cnt)
-			throw new IndexOutOfBoundsException("Not enough parameters passed. I want to get "+params_cnt);
+	public Document generateBaseComponentsDocument() throws NullPointerException, ParserConfigurationException, XFormsException {
 		
-		absolute_components_xforms_path = params[0];
-		absolute_components_xforms_stylesheet_path = params[1];
-		absolute_components_stylesheet_path = params[2];
-	}
-	
-	public void setDocument(Document xforms_doc) throws NullPointerException {
-		
-		if(xforms_doc != null)
-			this.xforms_doc = xforms_doc;
-		else
-			throw new NullPointerException("Use removeXFormsDocument method, if you want to remove it.");
-	}
-	
-	private static final String NO_XFORMS_DOC_DEFINITION_MSG = "Set absolute components xforms path first. Either xforms document or path should not be null";
-	public void removeXFormsDocument() throws NullPointerException {
-		
-		if(absolute_components_xforms_path == null)
-			throw new NullPointerException(NO_XFORMS_DOC_DEFINITION_MSG);
-			
-		xforms_doc = null;
-	}
-	
-//	TODO: check those synchronized. Smth is changed and smth is left. a bit mess
-	public synchronized Document generateBaseComponentsDocument() throws XMLException, IOException, XFormsException, LockException  {
-		
-		if(locked_cnt < 0) {
-			logger.error("generateBaseComponentsDocument(). Tried to call, while initializing.");
-			throw new LockException("Call after initialization.", 0, null);
-		}
-		
-		locked_cnt++;
 		if(!isInitiated()) {
-
-			locked_cnt--;
-			logger.error("generateBaseComponentsDocument() was called, when not initiated. Should not happen. ");
-			throw new NullPointerException(NO_XFORMS_DOC_DEFINITION_MSG);
+			
+			String err_msg = new StringBuffer("Either is not provided:")
+			.append("\ncomponents xforms stylesheet uri: ")
+			.append(components_xforms_stylesheet_uri)
+			.append("\ncomponents stylesheet uri: ")
+			.append(components_stylesheet_uri)
+			.append("\nxforms doc: ")
+			.append(xforms_doc)
+			.append("\ntransformer service: ")
+			.append(transf_service)
+			.toString();
+			
+			throw new NullPointerException(err_msg);
 		}
 		
-		try {
-			
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-	        
-	        factory.setNamespaceAware(true);
-	        factory.setValidating(false);
-	        DocumentBuilder document_builder = factory.newDocumentBuilder();
-	        
-	        synchronized(this) {
-	        	
-	        	if(xforms_doc == null && absolute_components_xforms_path != null) {
-		        	
-		        	xforms_doc = document_builder.parse(
-		        			new FileInputStream(absolute_components_xforms_path)
-		        	);
-		        } else
-		        	xforms_doc = (Document)xforms_doc.cloneNode(true);
-	        }
-
-	        /*
-	         * generate temporal xml document from components xforms document
-	         */
-	        TransformerService ts = new CachingTransformerService(new FileResourceResolver());
-	        XSLTGenerator gen = new XSLTGenerator();
-	        gen.setTransformerService(ts);
-	        
-	        gen.setStylesheetURI(new URI("file", absolute_components_xforms_stylesheet_path, null));
-	        gen.setInput(xforms_doc);
-	        
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        
+        factory.setNamespaceAware(true);
+        factory.setValidating(false);
+        
+        /*
+         * generate temporal xml document from components xforms document
+         */
+        UIGenerator gen = getComponentsXFormsGenerator();
+        
+        gen.setInput(xforms_doc);
+        
 //        	TODO: there could be only one stylesheet used for all this, do it if u master it enough for components.xsl
-        	copyLocalizationKeysToElements(xforms_doc);
-        	
-	        Document temp_xml_doc = document_builder.newDocument();
-	        gen.setOutput(temp_xml_doc);
-        	
-        	gen.generate();
-        	
-        	/*
-        	 * generate final components xml
-        	 */
-        	gen.setStylesheetURI(new URI("file", absolute_components_stylesheet_path, null));
-        	gen.setInput(temp_xml_doc);
-        	
-        	temp_xml_doc = document_builder.newDocument();
-        	gen.setOutput(temp_xml_doc);
-        	
-        	gen.generate();
-        	
-        	return temp_xml_doc;
-        	
-		} catch (ParserConfigurationException e) {
-			
-			throw new XMLException(e.getMessage(), e);
-		
-		} catch (SAXException e) {
-			
-			throw new XMLException(e.getMessage(), e);
-		}
-		catch (URISyntaxException e) {
-			throw new XMLException(e.getMessage(), e);
-		} finally {
-			locked_cnt--;
-		}
+    	copyLocalizationKeysToElements(xforms_doc);
+    	
+    	DocumentBuilder document_builder = factory.newDocumentBuilder();
+    	
+        Document temp_xml_doc = document_builder.newDocument();
+        gen.setOutput(temp_xml_doc);
+    	
+    	gen.generate();
+    	
+    	/*
+    	 * generate final components xml
+    	 */
+    	gen = getComponentsGenerator();
+    	gen.setInput(temp_xml_doc);
+    	
+    	temp_xml_doc = document_builder.newDocument();
+    	gen.setOutput(temp_xml_doc);
+    	
+    	gen.generate();
+    	
+    	return temp_xml_doc;
 	}
 	
 	private static void copyLocalizationKeysToElements(Document managed_doc) {
@@ -226,5 +142,53 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 				child.appendChild(key_node);
 			}
 		}
+	}
+	
+	public void setComponentsXformsStylesheetUri(URI uri) {
+		components_xforms_stylesheet_uri = uri;
+	}
+
+	public void setComponentsStylesheetUri(URI uri) {
+		components_stylesheet_uri = uri;
+	}
+	
+	public void setTransformerService(TransformerService transf_service) {
+		this.transf_service = transf_service;
+	}
+	
+	protected UIGenerator getComponentsGenerator() {
+		
+		if(components_generator == null) {
+			
+			synchronized (this) {
+				
+				if(components_generator == null) {
+					XSLTGenerator gen = new XSLTGenerator();
+					gen.setTransformerService(transf_service);
+					gen.setStylesheetURI(components_stylesheet_uri);
+					
+					components_generator = gen;
+				}
+			}
+		}
+		return components_generator;
+	}
+	
+	protected UIGenerator getComponentsXFormsGenerator() {
+		
+		if(components_xforms_generator == null) {
+			
+			synchronized (this) {
+				
+				if(components_xforms_generator == null) {
+					XSLTGenerator gen = new XSLTGenerator();
+					gen.setTransformerService(transf_service);
+					gen.setStylesheetURI(components_xforms_stylesheet_uri);
+					
+					components_xforms_generator = gen;
+				}
+			}
+		}
+		return components_xforms_generator;
 	}
 }
