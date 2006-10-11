@@ -1,0 +1,14 @@
+<!DOCTYPE dwr PUBLIC
+    "-//GetAhead Limited//DTD Direct Web Remoting 1.0//EN"
+    "http://www.getahead.ltd.uk/dwr/dwr10.dtd">
+
+<dwr>
+  <allow>
+    <create creator="new" javascript="actionmanager">
+      <param name="class" value="com.idega.formbuilder.view.ActionManager"/>
+    </create>
+    <create creator="new" javascript="dwrmanager">
+      <param name="class" value="com.idega.formbuilder.view.DWRManager"/>
+    </create>
+  </allow>
+</dwr>

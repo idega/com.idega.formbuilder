@@ -56,6 +56,10 @@
 	     </renderer>
 	</render-kit>
 	<component>
+		<component-type>FormViewer</component-type>
+		<component-class>com.idega.formbuilder.formviewer.FormViewer</component-class>
+	</component>
+	<component>
 		<component-type>FBGenericField</component-type>
 		<component-class>com.idega.formbuilder.presentation.FBGenericFormComponent</component-class>
 	</component>
