@@ -2,9 +2,13 @@ package com.idega.formbuilder.view;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.application.Application;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.ActionListener;
 
 import org.apache.myfaces.component.html.ext.HtmlCommandLink;
 import org.apache.myfaces.component.html.ext.HtmlInputHidden;
@@ -13,6 +17,7 @@ import org.apache.myfaces.component.html.ext.HtmlOutputText;
 import org.apache.myfaces.component.html.ext.HtmlPanelGrid;
 import org.apache.myfaces.custom.div.Div;
 import org.apache.myfaces.custom.tabbedpane.HtmlPanelTabbedPane;
+import org.w3c.dom.Element;
 
 import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.formbuilder.business.form.manager.FormManagerFactory;
@@ -20,7 +25,7 @@ import com.idega.formbuilder.business.form.manager.IFormManager;
 import com.idega.formbuilder.business.form.manager.util.InitializationException;
 import com.idega.formbuilder.presentation.FBGenericFormComponent;
 
-public class ActionManager implements Serializable {
+public class ActionManager implements Serializable, ActionListener {
 	
 	private static final long serialVersionUID = -753995343458793992L;
 	
@@ -44,6 +49,15 @@ public class ActionManager implements Serializable {
 	private String formDescription = "Please put the description of the form here";
 	
 	private boolean viewInitialized = false;
+	
+	public void processAction(ActionEvent ae) {
+		try {
+			
+		} catch(Exception e) {
+			//FacesContext.getCurrentInstance().addMessage(null, new FacesMessage())
+			e.printStackTrace();
+		}
+	}
 	
 	public String getText() {
 		return text;
@@ -70,26 +84,39 @@ public class ActionManager implements Serializable {
 	}
 
 	public ActionManager() throws Exception {
-		try {
+		System.out.println("ACTION MANAGER CONSTRUCTOR");
+		/*try {
 			formManagerInstance = FormManagerFactory.newFormManager(FacesContext.getCurrentInstance());
 			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORM_MANAGER_INSTANCE, formManagerInstance);
 		} catch(InitializationException e) {
 			throw new Exception("FormManager instantiation failed: " + e);
-		}
-		/*try {
+		}*/
+		try {
 			if(!isViewInitialized()) {
+				System.out.println("ATTEMPTING CREATION");
 				initialize();
 				setViewInitialized(true);
 			}
 		} catch(Exception e) {
 			setViewInitialized(false);
 			e.printStackTrace();
-		}*/
+		}
+	}
+	
+	public Element getComponent(String type) throws Exception {
+		System.out.println("INSIDE METHOD");
+		IFormManager fbInstance = (IFormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
+		//System.out.println(formManagerInstance);
+		String elementId = getFormManagerInstance().createFormComponent(type, null);
+		Element element = getFormManagerInstance().getLocalizedFormHtmlComponent(elementId, new Locale("en"));
+		System.out.println("END OF METHOD");
+		return element;
 	}
 	
 	private void initialize() throws Exception {
 		try {
 			formManagerInstance = FormManagerFactory.newFormManager(FacesContext.getCurrentInstance());
+			System.out.println(formManagerInstance);
 			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORM_MANAGER_INSTANCE, formManagerInstance);
 			/*fields.clear();
 			List components = formManagerInstance.getAvailableFormComponentsList();
@@ -114,15 +141,24 @@ public class ActionManager implements Serializable {
 		
 	}
 	
-	public void newForm() throws Exception {
-		this.saveForm();
-		clearFormView();
-		formManagerInstance.createFormDocument("11", null);
-		
+	private IFormManager getFormManagerInstance() {
+		return(IFormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
 	}
 	
-	public void deleteForm() {
+	public void newForm(ActionEvent ae) {
 		
+		this.saveForm();
+		clearFormView();
+		try {
+			System.out.println(formManagerInstance);
+			getFormManagerInstance().createFormDocument("No id", null);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteForm(ActionEvent ae) {
+		clearFormView();
 	}
 	
 	private void clearFormView() {
@@ -185,6 +221,23 @@ public class ActionManager implements Serializable {
             AAUtils.addZonesToRefresh(getRequest(), "panel");
         }
 		this.getOptionsPane().setSelectedIndex(2);*/
+	}
+	
+	public void rebuildFormComponentsTree() {
+		System.out.println("So far so good");
+		FacesContext context = FacesContext.getCurrentInstance();
+		assert context != null;
+		if(context == null) {
+			System.out.println("Context is null");
+		}
+		UIViewRoot vr = context.getViewRoot();
+		if(vr == null) {
+			System.out.println("ViewRoot is null");
+		}
+		assert formView != null;
+		if(formView == null) {
+			System.out.println("FormView is null");
+		}
 	}
 	
 	public void selectFormHeader() {
