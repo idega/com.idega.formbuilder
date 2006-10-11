@@ -30,12 +30,12 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 	
 	protected static FormComponentsGenerator me = null;
 	
-	private URI components_xforms_stylesheet_uri;
-	private URI components_stylesheet_uri;
+	private URI final_xml_stylesheet_uri;
+	private URI temporal_xml_stylesheet_uri;
 	
 	private TransformerService transf_service;
-	private UIGenerator components_generator;
-	private UIGenerator components_xforms_generator;
+	private UIGenerator temporal_xml_components_generator;
+	private UIGenerator final_xml_components_generator;
 	
 	private Document xforms_doc = null;
 	
@@ -57,9 +57,10 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 
 	public boolean isInitiated() {
 		
-		return components_xforms_stylesheet_uri != null && 
-		components_stylesheet_uri != null &&
+		return final_xml_stylesheet_uri != null && 
+		temporal_xml_stylesheet_uri != null &&
 		xforms_doc != null && transf_service != null;
+		 
 	}
 	
 	public void setDocument(Document xforms_doc) {
@@ -73,9 +74,9 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 			
 			String err_msg = new StringBuffer("Either is not provided:")
 			.append("\ncomponents xforms stylesheet uri: ")
-			.append(components_xforms_stylesheet_uri)
+			.append(final_xml_stylesheet_uri)
 			.append("\ncomponents stylesheet uri: ")
-			.append(components_stylesheet_uri)
+			.append(temporal_xml_stylesheet_uri)
 			.append("\nxforms doc: ")
 			.append(xforms_doc)
 			.append("\ntransformer service: ")
@@ -93,12 +94,12 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
         /*
          * generate temporal xml document from components xforms document
          */
-        UIGenerator gen = getComponentsXFormsGenerator();
-        
-        gen.setInput(xforms_doc);
+        UIGenerator gen = getTemporalXmlComponentsGenerator();
         
 //        	TODO: there could be only one stylesheet used for all this, do it if u master it enough for components.xsl
     	copyLocalizationKeysToElements(xforms_doc);
+    	
+    	gen.setInput(xforms_doc);
     	
     	DocumentBuilder document_builder = factory.newDocumentBuilder();
     	
@@ -110,7 +111,7 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
     	/*
     	 * generate final components xml
     	 */
-    	gen = getComponentsGenerator();
+    	gen = getFinalXmlComponentsGenerator();
     	gen.setInput(temp_xml_doc);
     	
     	temp_xml_doc = document_builder.newDocument();
@@ -144,51 +145,51 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 		}
 	}
 	
-	public void setComponentsXformsStylesheetUri(URI uri) {
-		components_xforms_stylesheet_uri = uri;
+	public void setTemporalXmlStylesheetUri(URI uri) {
+		temporal_xml_stylesheet_uri = uri;
 	}
-
-	public void setComponentsStylesheetUri(URI uri) {
-		components_stylesheet_uri = uri;
+	
+	public void setFinalXmlStylesheetUri(URI uri) {
+		final_xml_stylesheet_uri = uri;
 	}
 	
 	public void setTransformerService(TransformerService transf_service) {
 		this.transf_service = transf_service;
 	}
 	
-	protected UIGenerator getComponentsGenerator() {
+	protected UIGenerator getTemporalXmlComponentsGenerator() {
 		
-		if(components_generator == null) {
+		if(temporal_xml_components_generator == null) {
 			
 			synchronized (this) {
 				
-				if(components_generator == null) {
+				if(temporal_xml_components_generator == null) {
 					XSLTGenerator gen = new XSLTGenerator();
 					gen.setTransformerService(transf_service);
-					gen.setStylesheetURI(components_stylesheet_uri);
+					gen.setStylesheetURI(temporal_xml_stylesheet_uri);
 					
-					components_generator = gen;
+					temporal_xml_components_generator = gen;
 				}
 			}
 		}
-		return components_generator;
+		return temporal_xml_components_generator;
 	}
 	
-	protected UIGenerator getComponentsXFormsGenerator() {
+	protected UIGenerator getFinalXmlComponentsGenerator() {
 		
-		if(components_xforms_generator == null) {
+		if(final_xml_components_generator == null) {
 			
 			synchronized (this) {
 				
-				if(components_xforms_generator == null) {
+				if(final_xml_components_generator == null) {
 					XSLTGenerator gen = new XSLTGenerator();
 					gen.setTransformerService(transf_service);
-					gen.setStylesheetURI(components_xforms_stylesheet_uri);
+					gen.setStylesheetURI(final_xml_stylesheet_uri);
 					
-					components_xforms_generator = gen;
+					final_xml_components_generator = gen;
 				}
 			}
 		}
-		return components_xforms_generator;
+		return final_xml_components_generator;
 	}
 }

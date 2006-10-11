@@ -14,6 +14,8 @@ import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.idega.business.IBOLookup;
+import com.idega.formbuilder.IWBundleStarter;
 import com.idega.formbuilder.business.form.beans.FormComponentFactory;
 import com.idega.formbuilder.business.form.beans.FormDocument;
 import com.idega.formbuilder.business.form.beans.IComponentProperties;
@@ -26,6 +28,10 @@ import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 import com.idega.formbuilder.business.form.manager.util.InitializationException;
 import com.idega.formbuilder.sandbox.SandboxUtil;
+import com.idega.idegaweb.IWMainApplication;
+import com.idega.presentation.IWContext;
+import com.idega.slide.business.IWSlideSession;
+import com.idega.slide.business.IWSlideSessionBean;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
@@ -40,11 +46,9 @@ public class FormManager implements IFormManager {
 	
 	private static InputStream components_xforms_stream = null;
 	private static InputStream components_xsd_stream = null;
-	private static boolean inited = false;
+	private static InputStream form_xforms_template_stream = null;
 	
-	private static String COMPONENTS_XFORMS_CONTEXT_PATH = null;
-	private static String COMPONENTS_XSD_CONTEXT_PATH = null;
-	private static String FORM_XFORMS_TEMPLATE_CONTEXT_PATH = null;
+	private static boolean inited = false;
 	
 	private static final String NOT_INITED_MSG = "Init FormManager first";
 	private static final String FB_INIT_FAILED = "Could not initialize FormManager. See \"caused by\" for details.";
@@ -150,22 +154,38 @@ public class FormManager implements IFormManager {
 	
 	public static void init(FacesContext ctx) throws InitializationException {
 		
-		COMPONENTS_XFORMS_CONTEXT_PATH = SandboxUtil.COMPONENTS_XFORMS_CONTEXT_PATH;
-		FORM_XFORMS_TEMPLATE_CONTEXT_PATH = SandboxUtil.FORM_XFORMS_TEMPLATE_CONTEXT_PATH;
-		COMPONENTS_XSD_CONTEXT_PATH = SandboxUtil.COMPONENTS_XSD_CONTEXT_PATH;
-		
 		try {
-			
-//			IWContext iwc = IWContext.getInstance();
-//			IBOSession ses_bean = IBOLookup.getSessionInstance(iwc, IWSlideSession.class);			
-//			components_xforms_stream = ((IWSlideSessionBean)ses_bean).getInputStream(COMPONENTS_XFORMS_CONTEXT_PATH);
-//			components_xsd_stream = ((IWSlideSessionBean)ses_bean).getInputStream(COMPONENTS_XSD_CONTEXT_PATH);
+
+			if(ctx != null) {
+				
+				IWMainApplication iw_app = IWMainApplication.getIWMainApplication(ctx);
+				
+//				temporary disabled
+				if(false) {
+					
+//					get streams from webdav
+					IWContext iwc = IWContext.getInstance();
+					IWSlideSessionBean ses_bean = (IWSlideSessionBean)IBOLookup.getSessionInstance(iwc, IWSlideSession.class);			
+					components_xforms_stream = ses_bean.getInputStream((String)iw_app.getAttribute(IWBundleStarter.COMPONENTS_XFORMS_CONTEXT_PATH));
+					components_xsd_stream = ses_bean.getInputStream((String)iw_app.getAttribute(IWBundleStarter.COMPONENTS_XSD_CONTEXT_PATH));
+				}
+
+				components_xforms_stream = iw_app.getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceInputStream((String)iw_app.getAttribute(IWBundleStarter.COMPONENTS_XFORMS_CONTEXT_PATH));
+				components_xsd_stream = iw_app.getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceInputStream((String)iw_app.getAttribute(IWBundleStarter.COMPONENTS_XSD_CONTEXT_PATH));
+				form_xforms_template_stream = iw_app.getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceInputStream((String)iw_app.getAttribute(IWBundleStarter.FORM_XFORMS_TEMPLATE_RESOURCES_PATH));
+				
+			} else {
+				
+				components_xforms_stream = new FileInputStream(SandboxUtil.COMPONENTS_XFORMS_CONTEXT_PATH);
+				components_xsd_stream = new FileInputStream(SandboxUtil.COMPONENTS_XSD_CONTEXT_PATH);
+				form_xforms_template_stream = new FileInputStream(SandboxUtil.FORM_XFORMS_TEMPLATE_CONTEXT_PATH);
+			}
 			
 			ComponentsGeneratorFactory.init(ctx);
 			CacheManager.getInstance().initAppContext(ctx);
 			
 		} catch (Exception e) {
-			
+			logger.error(FB_INIT_FAILED, e);
 			throw new InitializationException(FB_INIT_FAILED, e);
 		}
 		
@@ -201,26 +221,22 @@ public class FormManager implements IFormManager {
 			
 			DocumentBuilder doc_builder = FormManagerUtil.getDocumentBuilder();
 			
-			if(components_xforms_stream != null) {
-				
-				components_xforms = doc_builder.parse(components_xforms_stream);
-				components_xforms_stream = null;
-			} else
-				components_xforms = doc_builder.parse(new FileInputStream(COMPONENTS_XFORMS_CONTEXT_PATH));
+			components_xforms = doc_builder.parse(components_xforms_stream);
+			components_xforms_stream.close();
+			components_xforms_stream = null;
 			
-			if(components_xsd_stream != null) {
-				
-				components_xsd = doc_builder.parse(components_xsd_stream);
-				components_xsd_stream = null;
-			} else
-				components_xsd = doc_builder.parse(new FileInputStream(COMPONENTS_XSD_CONTEXT_PATH));
+			components_xsd = doc_builder.parse(components_xsd_stream);
+			components_xsd_stream.close();
+			components_xsd_stream = null;
 			
 			components_generator.setDocument(components_xforms);
 			components_xml = components_generator.generateBaseComponentsDocument();
 			
 			components_types = FormManagerUtil.gatherAvailableComponentsTypes(components_xml);
 			
-			form_xforms_template = doc_builder.parse(new FileInputStream(FORM_XFORMS_TEMPLATE_CONTEXT_PATH));
+			form_xforms_template = doc_builder.parse(form_xforms_template_stream);
+			form_xforms_template_stream.close();
+			form_xforms_template_stream = null;
 			
 			CacheManager cache_manager = CacheManager.getInstance();
 			cache_manager.setFormXformsTemplate(form_xforms_template);
@@ -239,6 +255,7 @@ public class FormManager implements IFormManager {
 			
 		} catch (Exception e) {
 
+			logger.error(FB_INIT_FAILED, e);
 			throw new InitializationException(FB_INIT_FAILED, e);
 		}
 	}

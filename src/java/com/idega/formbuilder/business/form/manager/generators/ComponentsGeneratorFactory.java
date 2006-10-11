@@ -6,10 +6,12 @@ import javax.faces.context.FacesContext;
 
 import org.chiba.xml.xslt.TransformerService;
 import org.chiba.xml.xslt.impl.CachingTransformerService;
+import org.chiba.xml.xslt.impl.FileResourceResolver;
 import org.chiba.xml.xslt.impl.ResourceResolver;
 
 import com.idega.formbuilder.IWBundleStarter;
 import com.idega.formbuilder.business.form.manager.util.BundleResourceResolver;
+import com.idega.formbuilder.sandbox.SandboxUtil;
 import com.idega.idegaweb.IWMainApplication;
 
 /**
@@ -25,19 +27,39 @@ public class ComponentsGeneratorFactory {
 	public static void init(FacesContext ctx) {
 		
 		if(ctx == null) {
+
+			try {
+				
+				String temporal_components_xml_stylesheet = SandboxUtil.COMPONENTS_XFORMSHTML_STYLESHEET_CONTEXT_PATH;
+				String final_components_xml_stylesheet = SandboxUtil.COMPONENTS_XFORMSXML_STYLESHEET_CONTEXT_PATH;
+				
+				FormComponentsGenerator gen = FormComponentsGenerator.getInstance();
+				gen.setTemporalXmlStylesheetUri(new URI("file", temporal_components_xml_stylesheet, null));
+				gen.setFinalXmlStylesheetUri(new URI("file", final_components_xml_stylesheet, null));
+				
+				TransformerService transf_service = new CachingTransformerService(new FileResourceResolver());
+				
+				gen.setTransformerService(transf_service);
+				
+				ComponentsGeneratorFactory.gen = gen;
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 			
 		} else {
 			
 			IWMainApplication iw_app = IWMainApplication.getIWMainApplication(ctx);
 			
-			String components_stylesheet = (String)iw_app.getAttribute(IWBundleStarter.COMPONENTS_STYLESHEET_PATH);
-			String components_xforms_stylesheet = (String)iw_app.getAttribute(IWBundleStarter.COMPONENTS_XFORMS_STYLESHEET_PATH);
+			String temporal_components_xml_stylesheet = IWBundleStarter.bundle_path_start+(String)iw_app.getAttribute(IWBundleStarter.TEMPORAL_COMPONENTS_XML_STYLESHEET_PATH);
+			String final_components_xml_stylesheet = IWBundleStarter.bundle_path_start+(String)iw_app.getAttribute(IWBundleStarter.FINAL_COMPONENTS_XML_STYLESHEET_PATH);
 			
-			if(components_stylesheet != null && components_xforms_stylesheet != null) {
+			if(temporal_components_xml_stylesheet != null && final_components_xml_stylesheet != null) {
 				
 				FormComponentsGenerator gen = FormComponentsGenerator.getInstance();
-				gen.setComponentsStylesheetUri(URI.create(components_stylesheet));
-				gen.setComponentsXformsStylesheetUri(URI.create(components_xforms_stylesheet));
+				gen.setTemporalXmlStylesheetUri(URI.create(temporal_components_xml_stylesheet));
+				gen.setFinalXmlStylesheetUri(URI.create(final_components_xml_stylesheet));
 				
 				ResourceResolver resolver = new BundleResourceResolver(iw_app);
 				TransformerService transf_service = new CachingTransformerService(resolver);

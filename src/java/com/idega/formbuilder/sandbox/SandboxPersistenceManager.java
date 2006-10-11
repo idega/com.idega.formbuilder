@@ -37,9 +37,9 @@ public class SandboxPersistenceManager extends WebdavPersistenceManager {
 			public void run() {
 				
 				try {
-					System.out.println("writing document to file");
-					
 					synchronized (SandboxPersistenceManager.class) {
+						
+						System.out.println("writing document to file_xxxxxxxxxxxxxxxx");
 						
 //						DOMUtil.prettyPrintDOM(document);
 					
