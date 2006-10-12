@@ -67,6 +67,7 @@
       <version>1.0.1</version>
       <type>jar</type>
     </dependency>
+	<!--
     <dependency>
       <groupId>ajax4jsf</groupId>
       <artifactId>ajax4jsf-cdk</artifactId>
@@ -79,6 +80,7 @@
       <version>2.3.2</version>
       <type>jar</type>
     </dependency>
+	-->
     <dependency>
       <groupId>chiba</groupId>
       <artifactId>chiba</artifactId>
