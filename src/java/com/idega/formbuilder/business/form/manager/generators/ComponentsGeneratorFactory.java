@@ -34,8 +34,9 @@ public class ComponentsGeneratorFactory {
 				String final_components_xml_stylesheet = SandboxUtil.COMPONENTS_XFORMSXML_STYLESHEET_CONTEXT_PATH;
 				
 				FormComponentsGenerator gen = FormComponentsGenerator.getInstance();
-				gen.setTemporalXmlStylesheetUri(new URI("file", temporal_components_xml_stylesheet, null));
-				gen.setFinalXmlStylesheetUri(new URI("file", final_components_xml_stylesheet, null));
+				String file_str = "file";
+				gen.setTemporalXmlStylesheetUri(new URI(file_str, temporal_components_xml_stylesheet, null));
+				gen.setFinalXmlStylesheetUri(new URI(file_str, final_components_xml_stylesheet, null));
 				
 				TransformerService transf_service = new CachingTransformerService(new FileResourceResolver());
 				
