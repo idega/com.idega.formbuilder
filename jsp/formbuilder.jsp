@@ -68,7 +68,7 @@
 										value="#{palette.components}"
 										layout="unorderedList">
 										<t:div styleClass="palette_component" id="field" forceId="true" forceIdIndex="true">
-											<h:outputLabel value="#{field.name}" onclick="addNewField(this)" rendered="true" />
+											<h:outputLabel value="#{field.name}" rendered="true" />
 											<h:outputText value="#{field.type}" style="display: none;"/>
 										</t:div>
 									</t:dataList>
@@ -98,6 +98,7 @@
 							
 							<f:verbatim>
 								<script type="text/javascript" src="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js" />
+								
 								<script type="text/javascript">
 								<!--
 								/*var dragDropObj = new DHTMLSuite_dragDrop();*/
@@ -105,6 +106,7 @@
 								</script>
 								
 							</f:verbatim>
+							
 						</t:div>
 					</t:div>
 					<t:div id="bottom_tab_container" forceId="true">
