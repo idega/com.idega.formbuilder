@@ -11,7 +11,6 @@ import org.w3c.dom.Document;
 
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
-import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 import com.idega.formbuilder.business.form.manager.util.InitializationException;
 import com.idega.presentation.IWContext;
 import com.idega.slide.business.IWSlideService;
@@ -106,19 +105,12 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 	
 	private Exception document_to_webdav_save_exception = null;
 	private String[] form_pathes = null;
-	private static final String FORMS_REPO_CONTEXT = "/files/formbuilder/forms/";
+	private static final String FORMS_REPO_CONTEXT = "/files/forms/";
 	
 	private String[] getFormPath(String form_id) {
 	
-		if(form_pathes == null) {
-			
-			String path_to_file = 
-			new StringBuffer(FORMS_REPO_CONTEXT)
-			.append(form_id)
-			.append(FormManagerUtil.slash)
-			.toString();
-			
-			form_pathes = new String[] {path_to_file, form_id+".xforms"};			
+		if(form_pathes == null) {			
+			form_pathes = new String[] {FORMS_REPO_CONTEXT+form_id+"/", form_id+".xforms"};			
 		}
 		
 		return form_pathes;
