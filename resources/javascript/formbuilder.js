@@ -29,7 +29,8 @@ function closeMessage() {
 	messageObj.close();
 }
 function addNewField(element) {
-	dwrmanager.getElement(gotComponent,"fbcomp_text");
+	var type = element.parentNode.childNodes[1].childNodes[0].nodeValue;
+	dwrmanager.getElement(gotComponent,type);
 }
 function showInnerHtml(element) {
 	alert(element.parentNode.innerHtml);
@@ -46,37 +47,42 @@ function tempCheck() {
 	alert("Great");
 }
 function startDrag(element) {
-	/*alert("onDragStart");
-	alert(element.id);*/
-	dwrmanager.getElement(gotComponent,"fbcomp_multiple_select_minimal");
-	/*alert("onDragEnd");*/
+	var type = element.childNodes[1].childNodes[0].nodeValue;
+	dwrmanager.getElement(gotComponent,type);
 }
-function gotComponent(result) {
-	alert("Result of method" + result);
-	document.getElementById('dropBox').appendChild(result.childNodes[0]);
+function gotComponent(element) {
+	$('dropBox').appendChild(createTreeNode(element.documentElement));
+}
+function createTreeNode(element) {
+	if(element.nodeName == '#text') {
+		var textNode = document.createTextNode(element.nodeValue);
+		return textNode;
+	} else {
+		var result = document.createElement(element.nodeName);
+		for(var i=0;i<element.attributes.length;i++) {
+			result.setAttribute(element.attributes[i].nodeName,element.attributes[i].nodeValue);
+		}
+		for(var j=0;j<element.childNodes.length;j++) {
+			result.appendChild(createTreeNode(element.childNodes[j]));
+		}
+		return result;
+	}
 }
 function temp(element) {
 	alert("onUpdate");
 	actionmanager.rebuildFormComponentsTree(empty);
 }
-
-/*Setup drag and drop from palette to main area with DHTMLGoodies*/
-/*var dragDropObj = new DHTMLSuite_dragDrop();
-setup('workspaceform1:firstlist');*/
-/*setup('firstlist');*/
-/*dragDropObj.init();*/
-/*var palette = document.getElementById('workspaceform1:firstlist');
+var palette = $('workspaceform1:firstlist');
 for(var i=0;i<palette.childNodes.length;i++) {
-	new Draggable('field[' + i + ']', {tag:"li",starteffect:startDrag,revert:true});
+	new Draggable('field[' + i + ']', {tag:"div",starteffect:startDrag,revert:true});
 }
-Droppables.add('dropBox',{onDrop:empty});*/
-/*Setup modal message windows functionality*/
+/*Droppables.add('dropBox',{onDrop:empty});
+Setup modal message windows functionality*/
 messageObj = new DHTML_modalMessage();
 messageObj.setShadowOffset(5);
 
 /*Setup form components drag and drop functionality with scriptaculous*/
 Position.includeScrollOffsets = true;
-/*Sortable.create("workspaceform1:firstlist",{dropOnEmpty:true,tag:"li",containment:["workspaceform1:firstlist","dropBox"],constraint:false});*/
 Sortable.create("dropBox",{dropOnEmpty:true,tag:"div","onUpdate":temp,containment:["dropBox","workspaceform1:firstlist"],scroll:"dropBox",constraint:false});
 
 								
