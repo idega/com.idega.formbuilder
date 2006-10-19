@@ -24,6 +24,12 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 	
 	private static Log logger = LogFactory.getLog(WebdavPersistenceManager.class);
 	
+	private Exception document_to_webdav_save_exception = null;
+	private String[] form_pathes = null;
+
+	protected static final String FORMS_PATH = "/files/forms";
+	protected static final String FORMS_FILE_EXTENSION = ".xhtml";
+	
 	public static IPersistenceManager getInstance() {
 		
 		return new WebdavPersistenceManager();
@@ -103,14 +109,10 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 		return inited;
 	}
 	
-	private Exception document_to_webdav_save_exception = null;
-	private String[] form_pathes = null;
-	private static final String FORMS_REPO_CONTEXT = "/files/forms/";
-	
 	private String[] getFormPath(String form_id) {
 	
 		if(form_pathes == null) {			
-			form_pathes = new String[] {FORMS_REPO_CONTEXT+form_id+"/", form_id+".xforms"};			
+			form_pathes = new String[] {FORMS_PATH+"/"+form_id+"/", form_id+FORMS_FILE_EXTENSION};			
 		}
 		
 		return form_pathes;
