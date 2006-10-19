@@ -56,6 +56,7 @@
 	padding-left: 30px;
 	padding-top: 10px;
 	padding-bottom: 10px;
+	background-color: Red;
 }
 
 #form_heading_title {
@@ -93,7 +94,7 @@
 .components_list {
 	list-style: none;
 }
-.palette_component {
+/*.palette_component {
 	width: 130px;
 	height: 20px;
 	border: 1px solid #000;
@@ -103,7 +104,7 @@
 	font-weight: bold;
 	text-align: center;
 }
-/*.form_component {
+.form_component {
 	width: 88%;
 	height: auto;
 	background-color: #FFF;		
@@ -119,6 +120,33 @@
 .form_component:active{
 	background-color: Red;
 }*/
+
+/**/
+.palette_component {
+	display:block;
+	width:128px;
+	background-color:#f5f5f5;
+	border:1px solid #dedede;
+	border-top:1px solid #eee;
+	border-left:1px solid #eee;
+	padding:4px 0 4px 30px;
+	text-decoration:none;
+	font-weight:bold;
+	color:#565656;
+	background-repeat:no-repeat;
+	background-position:6px center;
+}
+.palette_component:hover {
+	background-color:#DFEEA3;
+	border:1px solid #C6D880;
+	color:#444;
+}
+.palette_component:active {
+	background-color:#C1DF5D;
+	border:1px solid #93B825;
+	color:#333;
+}
+/**/
 .dropBox {
 	background-color: White;
 	height: 500px;

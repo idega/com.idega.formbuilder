@@ -22,7 +22,9 @@
 			<h:form id="workspaceform1">
 				<t:div styleClass="application_container" id="application_container" forceId="true">
 					<t:div styleClass="toolbar_container" id="toolbar_container" forceId="true">
-						<h:commandLink id="new_form_button" styleClass="toolbar_button float_left" actionListener="#{viewmanager.newForm}" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}"/>
+						<h:commandLink id="new_form_button" styleClass="toolbar_button float_left" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}">
+							<f:actionListener type="com.idega.formbuilder.actions.NewFormAction" />
+						</h:commandLink>
 						<h:commandLink id="save_form_button" styleClass="toolbar_button float_left" action="#{viewmanager.doStuff}" value="Save form" />
 						<h:commandLink id="delete_form_button" styleClass="toolbar_button float_left" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/confirm-delete.inc');return false" action="" value="Delete form"/>
 						<h:commandLink id="import_form_button" styleClass="toolbar_button float_left" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/upload-dialog.inc');return false" action="" value="Import form"/>
@@ -37,7 +39,7 @@
 						<t:div styleClass="options_container" id="options_container" forceId="true">
 							<t:panelTabbedPane id="options_tabbed_pane"
 								selectedIndex="1"
-								serverSideTabSwitch="true"
+								serverSideTabSwitch="false"
 						  		styleClass="tabbedPane"
 		                        activeTabStyleClass="activeTab"
 		                        inactiveTabStyleClass="inactiveTab"
@@ -80,13 +82,13 @@
 						</t:div>
 						<t:div styleClass="form_container" id="form_container" forceId="true">
 						<!--
-							<wf:container styleClass="dropBox">
+							<fb:container styleClass="dropBox">
 								<t:div styleClass="form_heading">
 									<t:outputText id="form_heading_title" forceId="true" onclick="selectFormHeader()" value="#{viewmanager.formTitle}" />
 									<t:htmlTag value="br" />
 									<t:outputText id="form_heading_description" forceId="true" value="#{viewmanager.formDescription}" />
 								</t:div>
-							</wf:container>
+							</fb:container>
 							-->
 							<t:div id="dropBox" forceId="true" styleClass="dropBox" binding="#{viewmanager.formView}">
 								<t:div styleClass="form_heading">

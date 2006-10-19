@@ -28,10 +28,10 @@ function displayMessage(url) {
 function closeMessage() {
 	messageObj.close();
 }
-function addNewField(element) {
+/*function addNewField(element) {
 	var type = element.parentNode.childNodes[1].childNodes[0].nodeValue;
 	dwrmanager.getElement(gotComponent,type);
-}
+}*/
 function showInnerHtml(element) {
 	alert(element.parentNode.innerHtml);
 	alert(element.parentNode.id);
@@ -44,14 +44,20 @@ function empty(element,dropBox) {
 	alert(dropBox.id);*/
 }
 function tempCheck() {
-	alert("Great");
+	//alert("Great");
+	$('dropBox').appendChild(currentElement);
+	currentElement = null;
+	//Sortable.destroy("dropBox");
+	Sortable.create("dropBox",{dropOnEmpty:true,tag:"div",only:"formElement",containment:["dropBox"],scroll:"dropBox",constraint:false});
+	Droppables.add('dropBox',{onDrop:dropComponent});
+	//alert($('dropBox').childNodes.length);
 }
 function startDrag(element) {
 	var type = element.childNodes[1].childNodes[0].nodeValue;
 	dwrmanager.getElement(gotComponent,type);
 }
 function gotComponent(element) {
-	$('dropBox').appendChild(createTreeNode(element.documentElement));
+	currentElement = createTreeNode(element.documentElement);
 }
 function createTreeNode(element) {
 	if(element.nodeName == '#text') {
@@ -68,21 +74,30 @@ function createTreeNode(element) {
 		return result;
 	}
 }
-function temp(element) {
-	alert("onUpdate");
-	actionmanager.rebuildFormComponentsTree(empty);
+function dropComponent(element,container) {
+	//alert("onUpdate");
+	//var componentIDs = Sortable.serialize("dropBox",{tag:"div",name:"components"});
+	//alert(componentIDs);
+	//addDecoyElement();
+	tempCheck();
+	//actionmanager.rebuildFormComponentsTree(empty);
 }
+function addDecoyElement() {
+	var decoyElement = document.createElement('div');
+	$('dropBox').appendChild(decoyElement);
+}
+var currentElement;
 var palette = $('workspaceform1:firstlist');
 for(var i=0;i<palette.childNodes.length;i++) {
 	new Draggable('field[' + i + ']', {tag:"div",starteffect:startDrag,revert:true});
 }
-/*Droppables.add('dropBox',{onDrop:empty});
-Setup modal message windows functionality*/
+Droppables.add('dropBox',{onDrop:dropComponent});
+/*Setup modal message windows functionality*/
 messageObj = new DHTML_modalMessage();
 messageObj.setShadowOffset(5);
 
 /*Setup form components drag and drop functionality with scriptaculous*/
 Position.includeScrollOffsets = true;
-Sortable.create("dropBox",{dropOnEmpty:true,tag:"div","onUpdate":temp,containment:["dropBox","workspaceform1:firstlist"],scroll:"dropBox",constraint:false});
+Sortable.create("dropBox",{dropOnEmpty:true,tag:"div",only:"formElement",containment:["dropBox"],scroll:"dropBox",constraint:false});
 
 								
