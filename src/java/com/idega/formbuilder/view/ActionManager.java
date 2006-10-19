@@ -141,7 +141,7 @@ public class ActionManager implements Serializable, ActionListener {
 		
 	}
 	
-	private IFormManager getFormManagerInstance() {
+	public static IFormManager getFormManagerInstance() {
 		return(IFormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
 	}
 	
