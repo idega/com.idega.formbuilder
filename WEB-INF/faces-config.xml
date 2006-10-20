@@ -55,6 +55,13 @@
 	          <renderer-class>com.idega.formbuilder.presentation.renderkit.GenericFormComponentRenderer</renderer-class>
 	     </renderer>
 	</render-kit>
+	<render-kit>
+	     <renderer>
+	          <component-family>formbuilder</component-family>
+	          <renderer-type>fb_formviewer</renderer-type>
+	          <renderer-class>com.idega.formbuilder.formviewer.FormViewerRenderer</renderer-class>
+	     </renderer>
+	</render-kit>
 	<component>
 		<component-type>FormViewer</component-type>
 		<component-class>com.idega.formbuilder.formviewer.FormViewer</component-class>
