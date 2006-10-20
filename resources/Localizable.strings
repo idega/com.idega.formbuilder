@@ -7,3 +7,7 @@ fbcomp_multiple_select_minimal=CUSTOM
 fbcomp_single_select_minimal=CUSTOM
 fbcomp_multiple_select=CUSTOM
 fbcomp_single_select=Dropdown menu
+input.title=Title of input
+lockey_fbcomp_1input.title=Title of input
+labels_noform_header=No form currently opened
+labels_noform_body=Press the New Form button on the toolbar
