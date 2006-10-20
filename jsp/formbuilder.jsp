@@ -20,6 +20,7 @@
 												/dwr/interface/dwrmanager.js,
 												/dwr/engine.js">
 			<h:form id="workspaceform1">
+				
 				<t:div styleClass="application_container" id="application_container" forceId="true">
 					<t:div styleClass="toolbar_container" id="toolbar_container" forceId="true">
 						<h:commandLink id="new_form_button" styleClass="toolbar_button float_left" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}">
@@ -49,7 +50,7 @@
 		                        tabContentStyleClass="tabContent"
 		                        binding="#{viewmanager.optionsPane}">
 							    <t:panelTab id="tab01" label="Form properties">
-							    	
+							    
 								    <t:outputLabel for="formTitle" value="Form title" />
 								    <t:htmlTag value="br" />
 								    <t:inputText id="formTitleInput" forceId="true" value="#{viewmanager.formTitle}">
@@ -89,13 +90,22 @@
 									<t:outputText id="form_heading_description" forceId="true" value="#{viewmanager.formDescription}" />
 								</t:div>
 							</fb:container>
+							
+							<fb:formViewer id="formViewer" styleClass="dropBox" />
 							-->
 							<t:div id="dropBox" forceId="true" styleClass="dropBox" binding="#{viewmanager.formView}">
+								<t:div id="noFormNotice" forceId="true">
+									<t:outputText id="header" forceId="true" onclick="createNewForm()" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_header']}" />
+									<t:htmlTag value="br" />
+									<t:outputText id="body" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_body']}" />
+								</t:div>
+								<!--
 								<t:div styleClass="form_heading">
 									<t:outputText id="form_heading_title" forceId="true" onclick="selectFormHeader()" value="#{viewmanager.formTitle}" />
 									<t:htmlTag value="br" />
 									<t:outputText id="form_heading_description" forceId="true" value="#{viewmanager.formDescription}" />
 								</t:div>
+								-->
 							</t:div>
 							
 							<f:verbatim>

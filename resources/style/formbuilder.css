@@ -46,9 +46,15 @@
 	width: 100%;
 }
 /*---UI Component styles---*/
+#build #stage{background:#fff;}
+#build #main{float:left;padding:0 0 20px 0;}
+#build #main form{width:466px;margin:10px 0 0 22px;}
+#build #main form ul{width:100%;}
+#build #main form li{width:100%;margin:0 0 8px 0;}
+
 .formElement {
 	width: 88%;
-	border: 5px #000 groove						! important;
+	border: 1px #000 groove						! important;
 	height: auto;	
 	margin-bottom: 10px;
 	margin-left: 5%;
@@ -56,7 +62,7 @@
 	padding-left: 30px;
 	padding-top: 10px;
 	padding-bottom: 10px;
-	background-color: Red;
+	background-color: Silver;
 }
 
 #form_heading_title {
@@ -68,31 +74,11 @@
 }
 
 
-/*#form_heading {
-	width: 88%;
-	height: auto;
-	background-color: #FFF;		
-	margin-bottom: 5px;
-	padding: 0px;
-	font-weight: bold;
-	text-align: center;
-	border: 1px solid #000;
-}
 
-.fieldInnerStructure {
-	border: 0px;
-	margin: 0px;
-	padding: 0px;
-	width: 100%;
-	height: 100%;
-	border: 1px #000 groove;
-}
-.fieldInnerStructure:hover {
-	border: 1px dotted #000;
-	background-color: Grey;
-}*/
 .components_list {
-	list-style: none;
+	float:left;
+	list-style:none;
+	margin:5px 5px 5px 0;
 }
 /*.palette_component {
 	width: 130px;
@@ -323,4 +309,29 @@ td.tabContent {
 	height: 20px; 
 	border-right: 1px solid #444; 
 	background: #9ACB34; 
+}
+
+/*NO FORM elements*/
+#noFormNotice {
+	background-color: #FFCC66;
+	cursor: pointer;
+	padding: 20px;
+	border: 1px dashed #444;
+	text-align: center !important;
+	margin: 20px;
+	display: block;
+}
+#noFormNotice #header {
+	color: Red;
+	font-family: sans-serif;
+	font-size: x-large;
+	font-weight: bold;
+	text-align: center;
+	text-transform: none;
+}
+#noFormNotice #body {
+	color: Olive;
+	font-size: large;
+	text-align: center;
+	text-transform: none;
 }
