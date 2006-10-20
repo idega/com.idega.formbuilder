@@ -26,7 +26,7 @@ public class DWRManager implements Serializable {
 	}
 	
 	public Element getElement(String type) throws Exception {
-		Element root = null;
+		/*Element root = null;
 		Document document = null;
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
@@ -67,15 +67,16 @@ public class DWRManager implements Serializable {
         }
         System.out.println("Hand composed element DOM");
         DOMUtil.prettyPrintDOM(root);
-		
+		*/
 		//System.out.println("INSIDE METHOD");
 		//IFormManager fbInstance = (IFormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
-		System.out.println("Value (type) is: " + type);
+		//System.out.println("Value (type) is: " + type);
 		String elementId = formManagerInstance.createFormComponent(type, null);
 		Element element = formManagerInstance.getLocalizedFormHtmlComponent(elementId, new Locale("en"));
-		System.out.println("Generated element DOM");
-		DOMUtil.prettyPrintDOM(element);
-		System.out.println(element);
+		element.setAttribute("class", "formElement");
+		//System.out.println("Generated element DOM");
+		//DOMUtil.prettyPrintDOM(element);
+		//System.out.println(element);
 		//root.appendChild(element.getFirstChild().cloneNode(true));
 		//element.s
 		//System.out.println("END OF METHOD");

@@ -10,6 +10,7 @@ import javax.faces.render.Renderer;
 
 import org.w3c.dom.Element;
 
+import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.formbuilder.business.form.manager.IFormManager;
 import com.idega.formbuilder.presentation.FBGenericFormComponent;
 
@@ -25,7 +26,7 @@ public class GenericFormComponentRenderer extends Renderer {
 		String elementId = null;
 		IFormManager fbInstance = null;
 		try {
-			fbInstance = (IFormManager) context.getExternalContext().getSessionMap().get("formbuilderInstance");
+			fbInstance = (IFormManager) context.getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
 			elementId = fbInstance.createFormComponent(field.getType(), null);
 			Element element = fbInstance.getLocalizedFormHtmlComponent(elementId, new Locale("en"));
 			GenericFieldParser.renderNode(element, field, writer);

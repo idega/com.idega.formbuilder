@@ -34,4 +34,28 @@ public class GenericFieldParser {
 		}
 		writer.endElement(nodeName);
 	}
+	public static void printNode(Node node, UIComponent component, ResponseWriter writer) throws IOException {
+		String nodeName = node.getNodeName();
+		System.out.println(node.getNodeName());
+		Node attr = null;
+		if(node.hasAttributes()) {
+			NamedNodeMap attributes = node.getAttributes();
+			for(int i = 0; i < attributes.getLength(); i++) {
+				attr = attributes.item(i);
+				System.out.println(attr.getNodeName() + " " + attr.getNodeValue());
+			}
+		}
+		
+		if(node.hasChildNodes()) {
+			NodeList children = node.getChildNodes();
+			for(int i = 0; i < children.getLength(); i++) {
+				if(children.item(i).getNodeName().equals("#text")) {
+					System.out.println(children.item(i).getNodeValue());
+				} else {
+					printNode(children.item(i), component, writer);
+				}
+			}
+		}
+		System.out.println(nodeName);
+	}
 }
