@@ -47,7 +47,12 @@ public class FormDesignViewRenderer extends Renderer {
 	
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
+		FormDesignView view = (FormDesignView) component;
 		writer.endElement("DIV");
+		Object values[] = new Object[2];
+		values[0] = view.getId();
+		values[1] = view.getComponentStyleClass();
+		writer.write(getEmbededJavascript(values));
 	}
 	
 	public void encodeChildren(FacesContext context, UIComponent component) throws IOException {
@@ -55,5 +60,32 @@ public class FormDesignViewRenderer extends Renderer {
 			return;
 		}
 		super.encodeChildren(context, component);
+	}
+	
+	protected String getEmbededJavascript(Object values[]) {
+		return "<script language=\"JavaScript\">"
+				+ "function setupDragAndDrop() {"
+				+ "Droppables.add(\"" + values[0] + "\",{onDrop:handleComponentDrop});"
+				+ "Position.includeScrollOffsets = true;"
+				+ "Sortable.create(\"" + values[0] + "\",{dropOnEmpty:true,tag:\"div\",only:\"" + values[1] + "\",onUpdate:testing,scroll:\"" + values[0] + "\",constraint:false});"
+				+ "}"
+				+ "function handleComponentDrop(element,container) {"
+				+ "if(currentElement != null) {"
+				+ "$(\"" + values[0] + "\").appendChild(currentElement);"
+				+ "}"
+				+ "currentElement = null;"
+				+ "Sortable.create(\"" + values[0] + "\",{dropOnEmpty:true,tag:\"div\",only:\"" + values[1] + "\",onUpdate:testing,scroll:\"" + values[0] + "\",constraint:false});"
+				+ "Droppables.add(\"" + values[0] + "\",{onDrop:handleComponentDrop});"
+				+ "}"
+				+ "function testing() {"
+				+ "var componentIDs = Sortable.serialize(\"" + values[0] + "\",{tag:\"div\",name:\"id\"});"
+				+ "var delimiter = '&id[]=';"
+				+ "var idPrefix = 'fbcomp_';"
+				+ "dwrmanager.updateComponentList(updateOrder,componentIDs,idPrefix,delimiter);"
+				+ "}"
+				+ "function updateOrder() {"
+				+ "}"
+				+ "setupDragAndDrop();"
+				+ "</script>";
 	}
 }

@@ -51,10 +51,11 @@ public class FormDesignView extends UIComponentBase {
 	}
 	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[3];
+		Object values[] = new Object[4];
 		values[0] = super.saveState(context);
 		values[1] = styleClass;
 		values[2] = id;
+		values[3] = componentStyleClass;
 		return values;
 	}
 	
@@ -63,5 +64,6 @@ public class FormDesignView extends UIComponentBase {
 		super.restoreState(context, values[0]);
 		styleClass = (String) values[1];
 		id = (String) values[2];
+		componentStyleClass = (String) values[3];
 	}
 }

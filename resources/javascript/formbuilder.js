@@ -21,25 +21,6 @@ function createNewForm() {
 	//alert(componentIDs);
 	//setupDragAndDrop();
 }
-function setupDragAndDrop() {
-	Droppables.add('dropBox',{onDrop:handleComponentDrop});
-	Position.includeScrollOffsets = true;
-	Sortable.create("dropBox",{dropOnEmpty:true,tag:"div",only:"formElement",onUpdate:testing,scroll:"dropBox",constraint:false});
-}
-function handleComponentDrop(element,container) {
-	$('dropBox').appendChild(currentElement);
-	currentElement = null;
-	Sortable.create("dropBox",{dropOnEmpty:true,tag:"div",only:"formElement",onUpdate:testing,scroll:"dropBox",constraint:false});
-	Droppables.add('dropBox',{onDrop:handleComponentDrop});
-}
-function addDecoyElement() {
-	var decoyElement = document.createElement('div');
-	$('dropBox').appendChild(decoyElement);
-}
-function testing() {
-	var componentIDs = Sortable.serialize("dropBox",{tag:"div",name:"id"});
-}
-setupDragAndDrop();
 
 /*Setup modal message windows functionality*/
 messageObj = new DHTML_modalMessage();
