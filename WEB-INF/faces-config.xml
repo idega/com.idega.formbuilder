@@ -51,24 +51,35 @@
 	<render-kit>
 	     <renderer>
 	          <component-family>formbuilder</component-family>
-	          <renderer-type>fb_genericfield</renderer-type>
-	          <renderer-class>com.idega.formbuilder.presentation.renderkit.GenericFormComponentRenderer</renderer-class>
+	          <renderer-type>fb_formComponent</renderer-type>
+	          <renderer-class>com.idega.formbuilder.presentation.renderkit.FormComponentRenderer</renderer-class>
 	     </renderer>
 	</render-kit>
 	<render-kit>
 	     <renderer>
 	          <component-family>formbuilder</component-family>
 	          <renderer-type>fb_formviewer</renderer-type>
-	          <renderer-class>com.idega.formbuilder.formviewer.FormViewerRenderer</renderer-class>
+	          <renderer-class>com.idega.formbuilder.view.design.FormDesignViewRenderer</renderer-class>
+	     </renderer>
+	</render-kit>
+	<render-kit>
+	     <renderer>
+	          <component-family>formbuilder</component-family>
+	          <renderer-type>fb_paletteComponent</renderer-type>
+	          <renderer-class>com.idega.formbuilder.presentation.renderkit.PaletteComponentRenderer</renderer-class>
 	     </renderer>
 	</render-kit>
 	<component>
-		<component-type>FormViewer</component-type>
-		<component-class>com.idega.formbuilder.formviewer.FormViewer</component-class>
+		<component-type>PaletteComponent</component-type>
+		<component-class>com.idega.formbuilder.presentation.FBPaletteComponent</component-class>
 	</component>
 	<component>
-		<component-type>FBGenericField</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBGenericFormComponent</component-class>
+		<component-type>FormDesignView</component-type>
+		<component-class>com.idega.formbuilder.view.design.FormDesignView</component-class>
+	</component>
+	<component>
+		<component-type>FBFormComponent</component-type>
+		<component-class>com.idega.formbuilder.presentation.FBFormComponent</component-class>
 	</component>
 	<component>
 		<component-type>FBFormField</component-type>

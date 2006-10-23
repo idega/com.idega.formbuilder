@@ -15,58 +15,33 @@ function displayMessage(url) {
 function closeMessage() {
 	messageObj.close();
 }
-function handleComponentDrag(element) {
-	var type = element.childNodes[1].childNodes[0].nodeValue;
-	dwrmanager.getElement(receiveComponenr,type);
-}
-function receiveComponenr(element) {
-	currentElement = createTreeNode(element.documentElement);
-}
-function createTreeNode(element) {
-	if(element.nodeName == '#text') {
-		var textNode = document.createTextNode(element.nodeValue);
-		return textNode;
-	} else {
-		var result = document.createElement(element.nodeName);
-		for(var i=0;i<element.attributes.length;i++) {
-			result.setAttribute(element.attributes[i].nodeName,element.attributes[i].nodeValue);
-		}
-		for(var j=0;j<element.childNodes.length;j++) {
-			result.appendChild(createTreeNode(element.childNodes[j]));
-		}
-		return result;
-	}
-}
 function createNewForm() {
-	$('noFormNotice').style.visibility = 'hidden';
+	//$('noFormNotice').style.visibility = 'hidden';
+	//var componentIDs = Sortable.serialize("dropBox",{tag:"div",name:"components"});
+	//alert(componentIDs);
 	//setupDragAndDrop();
 }
 function setupDragAndDrop() {
-	var palette = $('workspaceform1:firstlist');
-	for(var i=0;i<palette.childNodes.length;i++) {
-		new Draggable('field[' + i + ']', {tag:"div",starteffect:handleComponentDrag,revert:true});
-	}
 	Droppables.add('dropBox',{onDrop:handleComponentDrop});
 	Position.includeScrollOffsets = true;
-	Sortable.create("dropBox",{dropOnEmpty:true,tag:"div",only:"formElement",containment:["dropBox"],scroll:"dropBox",constraint:false});
+	Sortable.create("dropBox",{dropOnEmpty:true,tag:"div",only:"formElement",onUpdate:testing,scroll:"dropBox",constraint:false});
 }
 function handleComponentDrop(element,container) {
 	$('dropBox').appendChild(currentElement);
 	currentElement = null;
-	Sortable.create("dropBox",{dropOnEmpty:true,tag:"div",only:"formElement",containment:["dropBox"],scroll:"dropBox",constraint:false});
+	Sortable.create("dropBox",{dropOnEmpty:true,tag:"div",only:"formElement",onUpdate:testing,scroll:"dropBox",constraint:false});
 	Droppables.add('dropBox',{onDrop:handleComponentDrop});
-	var componentIDs = Sortable.serialize("dropBox",{tag:"div",name:"components"});
 }
 function addDecoyElement() {
 	var decoyElement = document.createElement('div');
 	$('dropBox').appendChild(decoyElement);
 }
-var currentElement = null;
+function testing() {
+	var componentIDs = Sortable.serialize("dropBox",{tag:"div",name:"id"});
+}
 setupDragAndDrop();
 
 /*Setup modal message windows functionality*/
 messageObj = new DHTML_modalMessage();
 messageObj.setShadowOffset(5);
-
-/*Setup form components drag and drop functionality with scriptaculous*/
 		

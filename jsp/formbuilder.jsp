@@ -20,7 +20,6 @@
 												/dwr/interface/dwrmanager.js,
 												/dwr/engine.js">
 			<h:form id="workspaceform1">
-				
 				<t:div styleClass="application_container" id="application_container" forceId="true">
 					<t:div styleClass="toolbar_container" id="toolbar_container" forceId="true">
 						<h:commandLink id="new_form_button" styleClass="toolbar_button float_left" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}">
@@ -49,8 +48,10 @@
 		                        inactiveSubStyleClass="inactiveSub"
 		                        tabContentStyleClass="tabContent"
 		                        binding="#{viewmanager.optionsPane}">
+		                        <f:verbatim>
+							    	<script type="text/javascript" src="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/palette.js" />
+							    </f:verbatim>
 							    <t:panelTab id="tab01" label="Form properties">
-							    
 								    <t:outputLabel for="formTitle" value="Form title" />
 								    <t:htmlTag value="br" />
 								    <t:inputText id="formTitleInput" forceId="true" value="#{viewmanager.formTitle}">
@@ -70,10 +71,13 @@
 										var="field"
 										value="#{palette.components}"
 										layout="unorderedList">
+										<fb:paletteComponent styleClass="palette_component" name="#{field.name}" type="#{field.type}" />
+										<!--
 										<t:div styleClass="palette_component" id="field" forceId="true" forceIdIndex="true">
 											<h:outputLabel value="#{field.name}" rendered="true" />
 											<h:outputText value="#{field.type}" style="display: none;"/>
 										</t:div>
+										-->
 									</t:dataList>
 							    </t:panelTab>
 							    <t:panelTab id="tab03" label="Field properties">
@@ -82,41 +86,31 @@
 							</t:panelTabbedPane>
 						</t:div>
 						<t:div styleClass="form_container" id="form_container" forceId="true">
-						<!--
-							<fb:container styleClass="dropBox">
-								<t:div styleClass="form_heading">
-									<t:outputText id="form_heading_title" forceId="true" onclick="selectFormHeader()" value="#{viewmanager.formTitle}" />
-									<t:htmlTag value="br" />
-									<t:outputText id="form_heading_description" forceId="true" value="#{viewmanager.formDescription}" />
-								</t:div>
-							</fb:container>
-							
-							<fb:formViewer id="formViewer" styleClass="dropBox" />
-							-->
-							<t:div id="dropBox" forceId="true" styleClass="dropBox" binding="#{viewmanager.formView}">
+							<fb:formDesignView id="dropBox" styleClass="dropBox" componentStyleClass="formElement">
 								<t:div id="noFormNotice" forceId="true">
 									<t:outputText id="header" forceId="true" onclick="createNewForm()" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_header']}" />
 									<t:htmlTag value="br" />
 									<t:outputText id="body" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_body']}" />
 								</t:div>
-								<!--
+							</fb:formDesignView>
+							<!--
+							<t:div id="dropBox" forceId="true" styleClass="dropBox" binding="#{viewmanager.formView}">
+								<t:div id="noFormNotice2" forceId="true">
+									<t:outputText id="header2" forceId="true" onclick="createNewForm()" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_header']}" />
+									<t:htmlTag value="br" />
+									<t:outputText id="body2" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_body']}" />
+								</t:div>
+								
 								<t:div styleClass="form_heading">
 									<t:outputText id="form_heading_title" forceId="true" onclick="selectFormHeader()" value="#{viewmanager.formTitle}" />
 									<t:htmlTag value="br" />
 									<t:outputText id="form_heading_description" forceId="true" value="#{viewmanager.formDescription}" />
 								</t:div>
-								-->
+								
 							</t:div>
-							
+							-->
 							<f:verbatim>
 								<script type="text/javascript" src="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js" />
-								
-								<script type="text/javascript">
-								<!--
-								/*var dragDropObj = new DHTMLSuite_dragDrop();*/
-								-->
-								</script>
-								
 							</f:verbatim>
 							
 						</t:div>

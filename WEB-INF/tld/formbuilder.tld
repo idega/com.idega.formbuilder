@@ -12,8 +12,32 @@
     <description>JSF Idega Frombuilder Tag Library</description>
 
 	<tag>
-		<name>formViewer</name>
-		<tag-class>com.idega.formbuilder.formviewer.FormViewerTag</tag-class>
+		<name>paletteComponent</name>
+		<tag-class>com.idega.formbuilder.presentation.FBPaletteComponentTag</tag-class>
+		<attribute>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>name</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>type</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>formDesignView</name>
+		<tag-class>com.idega.formbuilder.view.design.FormDesignViewTag</tag-class>
 		<attribute>
 			<name>id</name>
 			<required>false</required>
@@ -26,8 +50,8 @@
 		</attribute>
 	</tag>
 	<tag>
-		<name>genericField</name>
-		<tag-class>com.idega.formbuilder.presentation.FBGenericFormComponentTag</tag-class>
+		<name>formComponent</name>
+		<tag-class>com.idega.formbuilder.presentation.FBFormComponentTag</tag-class>
 		<attribute>
 			<name>id</name>
 			<required>false</required>
@@ -35,11 +59,6 @@
 		</attribute>
 		<attribute>
 			<name>styleClass</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>type</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
