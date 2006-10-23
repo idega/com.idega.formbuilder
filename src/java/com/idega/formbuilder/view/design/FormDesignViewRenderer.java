@@ -10,6 +10,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
+import org.apache.myfaces.custom.div.Div;
+
 import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.formbuilder.business.form.manager.IFormManager;
 import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
@@ -21,6 +23,7 @@ public class FormDesignViewRenderer extends Renderer {
 		Application application = context.getApplication();
 		IFormManager formManagerInstance = (IFormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
 		FormDesignView view = (FormDesignView) component;
+		view.getChildren().clear();
 		List<String> ids = formManagerInstance.getFormComponentsIdsList();
 		Iterator it = ids.iterator();
 		while(it.hasNext()) {
@@ -43,6 +46,32 @@ public class FormDesignViewRenderer extends Renderer {
 		writer.startElement("DIV", field);
 		writer.writeAttribute("id", field.getId(), "id");
 		writer.writeAttribute("class", field.getStyleClass(), "styleClass");
+		String status = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS);
+		if(status != null) {
+			if(status.equals("NO_FORM")) {
+				Div facet = (Div) component.getFacet("noFormNoticeFacet");
+				if (facet != null) {
+					if (facet.isRendered()) {
+						facet.encodeBegin(context);
+						//if (facet.getRendersChildren()) {
+							facet.encodeChildren(context);
+						//}
+						facet.encodeEnd(context);
+					}
+				}
+			} else if(status.equals("EMPTY_FORM")) {
+				Div facet = (Div) component.getFacet("formHeaderFacet");
+				if (facet != null) {
+					if (facet.isRendered()) {
+						facet.encodeBegin(context);
+						//if (facet.getRendersChildren()) {
+							facet.encodeChildren(context);
+						//}
+						facet.encodeEnd(context);
+					}
+				}
+			}
+		}
 	}
 	
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
@@ -60,6 +89,7 @@ public class FormDesignViewRenderer extends Renderer {
 			return;
 		}
 		super.encodeChildren(context, component);
+		
 	}
 	
 	protected String getEmbededJavascript(Object values[]) {
@@ -79,6 +109,7 @@ public class FormDesignViewRenderer extends Renderer {
 				+ "}"
 				+ "function testing() {"
 				+ "var componentIDs = Sortable.serialize(\"" + values[0] + "\",{tag:\"div\",name:\"id\"});"
+				+ "alert(componentIDs);"
 				+ "var delimiter = '&id[]=';"
 				+ "var idPrefix = 'fbcomp_';"
 				+ "dwrmanager.updateComponentList(updateOrder,componentIDs,idPrefix,delimiter);"

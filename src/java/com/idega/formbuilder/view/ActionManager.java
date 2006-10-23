@@ -1,8 +1,10 @@
 package com.idega.formbuilder.view;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIViewRoot;
@@ -84,16 +86,8 @@ public class ActionManager implements Serializable, ActionListener {
 	}
 
 	public ActionManager() throws Exception {
-		System.out.println("ACTION MANAGER CONSTRUCTOR");
-		/*try {
-			formManagerInstance = FormManagerFactory.newFormManager(FacesContext.getCurrentInstance());
-			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORM_MANAGER_INSTANCE, formManagerInstance);
-		} catch(InitializationException e) {
-			throw new Exception("FormManager instantiation failed: " + e);
-		}*/
 		try {
 			if(!isViewInitialized()) {
-				System.out.println("ATTEMPTING CREATION");
 				initialize();
 				setViewInitialized(true);
 			}
@@ -118,14 +112,8 @@ public class ActionManager implements Serializable, ActionListener {
 			formManagerInstance = FormManagerFactory.newFormManager(FacesContext.getCurrentInstance());
 			System.out.println(formManagerInstance);
 			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORM_MANAGER_INSTANCE, formManagerInstance);
-			/*fields.clear();
-			List components = formManagerInstance.getAvailableFormComponentsList();
-			Iterator it = components.iterator();
-			FormField temp = null;
-			while(it.hasNext()) {
-				temp = new FormField((String) it.next());
-				fields.add(temp);
-			}*/
+			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS, "NO_FORM");
+			
 		} catch(InitializationException e) {
 			throw new Exception("FormManager instantiation failed: " + e);
 		} catch(Exception e) {

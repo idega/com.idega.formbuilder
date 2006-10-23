@@ -22,10 +22,12 @@
 			<h:form id="workspaceform1">
 				<t:div styleClass="application_container" id="application_container" forceId="true">
 					<t:div styleClass="toolbar_container" id="toolbar_container" forceId="true">
-						<h:commandLink id="new_form_button" styleClass="toolbar_button float_left" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}">
+						<h:commandLink id="new_form_button" styleClass="toolbar_button float_left" onclick="" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}">
+							
 							<f:actionListener type="com.idega.formbuilder.actions.NewFormAction" />
+							
 						</h:commandLink>
-						<h:commandLink id="save_form_button" styleClass="toolbar_button float_left" action="#{viewmanager.doStuff}" value="Save form" />
+						<h:commandLink id="save_form_button" styleClass="toolbar_button float_left" action="" value="Save form" />
 						<h:commandLink id="delete_form_button" styleClass="toolbar_button float_left" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/confirm-delete.inc');return false" action="" value="Delete form"/>
 						<h:commandLink id="import_form_button" styleClass="toolbar_button float_left" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/upload-dialog.inc');return false" action="" value="Import form"/>
 						<h:commandLink id="export_form_button" styleClass="toolbar_button float_left" action="" value="Export form" />
@@ -87,11 +89,20 @@
 						</t:div>
 						<t:div styleClass="form_container" id="form_container" forceId="true">
 							<fb:formDesignView id="dropBox" styleClass="dropBox" componentStyleClass="formElement">
-								<t:div id="noFormNotice" forceId="true">
-									<t:outputText id="header" forceId="true" onclick="createNewForm()" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_header']}" />
-									<t:htmlTag value="br" />
-									<t:outputText id="body" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_body']}" />
-								</t:div>
+								<f:facet name="noFormNoticeFacet">
+									<t:div id="noFormNotice" forceId="true">
+										<t:outputText id="header" forceId="true" onclick="createNewForm()" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_header']}" />
+										<t:htmlTag value="br" />
+										<t:outputText id="body" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_body']}" />
+									</t:div>
+								</f:facet>
+								<f:facet name="formHeaderFacet">
+									<t:div styleClass="form_heading">
+										<t:outputText id="form_heading_title" forceId="true" onclick="selectFormHeader()" value="#{viewmanager.formTitle}" />
+										<t:htmlTag value="br" />
+										<t:outputText id="form_heading_description" forceId="true" value="#{viewmanager.formDescription}" />
+									</t:div>
+								</f:facet>
 							</fb:formDesignView>
 							<!--
 							<t:div id="dropBox" forceId="true" styleClass="dropBox" binding="#{viewmanager.formView}">
@@ -111,7 +122,7 @@
 							-->
 							<f:verbatim>
 								<script type="text/javascript" src="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js" />
-								<script language="Javascript">
+								<script type="text/javascript">
 								<!--
 								/*var messageObj = new DHTML_modalMessage();*/
 								-->

@@ -16,10 +16,13 @@ function closeMessage() {
 	messageObj.close();
 }
 function createNewForm() {
+	dwrmanager.createNewForm(decoy);
 	//$('noFormNotice').style.visibility = 'hidden';
 	//var componentIDs = Sortable.serialize("dropBox",{tag:"div",name:"components"});
 	//alert(componentIDs);
 	//setupDragAndDrop();
+}
+function decoy() {
 }
 
 /*Setup modal message windows functionality*/

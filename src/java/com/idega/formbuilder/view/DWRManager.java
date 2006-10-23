@@ -40,4 +40,11 @@ public class DWRManager implements Serializable {
 		formManagerInstance.rearrangeDocument();
 	}
 	
+	public void createNewForm() throws Exception {
+		String generatedId = new Long(System.currentTimeMillis()).toString();
+		String id = generatedId.substring(generatedId.length() - 8);
+		formManagerInstance.createFormDocument(id, null);
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS, "EMPTY_FORM");
+	}
+	
 }
