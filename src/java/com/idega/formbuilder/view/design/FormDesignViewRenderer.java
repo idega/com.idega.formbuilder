@@ -109,7 +109,6 @@ public class FormDesignViewRenderer extends Renderer {
 				+ "}"
 				+ "function testing() {"
 				+ "var componentIDs = Sortable.serialize(\"" + values[0] + "\",{tag:\"div\",name:\"id\"});"
-				+ "alert(componentIDs);"
 				+ "var delimiter = '&id[]=';"
 				+ "var idPrefix = 'fbcomp_';"
 				+ "dwrmanager.updateComponentList(updateOrder,componentIDs,idPrefix,delimiter);"
