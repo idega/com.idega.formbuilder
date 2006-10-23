@@ -111,6 +111,11 @@
 							-->
 							<f:verbatim>
 								<script type="text/javascript" src="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js" />
+								<script language="Javascript">
+								<!--
+								/*var messageObj = new DHTML_modalMessage();*/
+								-->
+								</script>
 							</f:verbatim>
 							
 						</t:div>
