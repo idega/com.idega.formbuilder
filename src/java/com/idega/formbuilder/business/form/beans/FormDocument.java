@@ -36,6 +36,8 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 	
 	public void createDocument(String form_id, LocalizedStringBean form_name) throws NullPointerException {
 		
+//		TODO: when creating new, dispose all resources so new ones doesn't collide with old ones
+		
 		if(form_id == null)
 			throw new NullPointerException("Form_id is not provided");
 		
