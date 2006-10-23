@@ -17,7 +17,10 @@ public class FormbuilderViewManager implements Singleton  {
 
 	private static final String IW_FORMBUILDER_VIEW_MANAGER_KEY = "iw_formbuilderviewmanager";
 	private static final String FORMBUILDER_ID = "formbuilder";
+	
 	public static final String FORM_MANAGER_INSTANCE = "FORM_MANAGER_INSTANCE";
+	public static final String FORMBUILDER_DESIGNVIEW_STATUS = "FORMBUILDER_DESIGNVIEW_STATUS";
+	
 	private ViewNode rootNode;
 	private IWMainApplication iwma;
 	
