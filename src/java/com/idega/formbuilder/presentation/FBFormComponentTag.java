@@ -4,13 +4,17 @@ import javax.faces.component.UIComponent;
 
 import org.apache.myfaces.shared_tomahawk.taglib.UIComponentTagBase;
 
-public class FBGenericFormComponentTag extends UIComponentTagBase {
+public class FBFormComponentTag extends UIComponentTagBase {
 	
-	private String type;
+	private String id;
 	private String styleClass;
 
 	public String getComponentType() {
-		return "FBGenericField";
+		return FBFormComponent.COMPONENT_TYPE;
+	}
+	
+	public String getRendererType() {
+		return FBFormComponent.RENDERER_TYPE;
 	}
 
 	public String getStyleClass() {
@@ -21,34 +25,32 @@ public class FBGenericFormComponentTag extends UIComponentTagBase {
 		this.styleClass = styleClass;
 	}
 
-	public String getType() {
-		return type;
+	public String getId() {
+		return id;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setId(String id) {
+		this.id = id;
 	}
 
-	public String getRendererType() {
-		return "fb_genericfield";
-	}
-
-	public FBGenericFormComponentTag() {
+	public FBFormComponentTag() {
 		super();
+		this.id = "";
+		this.styleClass = "";
 	}
 
 	public void release() {
 		super.release();
-		this.type = null;
+		this.id = null;
 		this.styleClass = null;
 	}
 	
 	public void setProperties(UIComponent component) {
 	    super.setProperties(component);
 	    if (component != null) {
-	    	FBGenericFormComponent field = (FBGenericFormComponent)component;
-			if(this.type != null) {
-				field.setType(this.type);
+	    	FBFormComponent field = (FBFormComponent)component;
+			if(this.id != null) {
+				field.setId(this.id);
 			}
 			if(this.styleClass != null) {
 				field.setStyleClass(this.styleClass);

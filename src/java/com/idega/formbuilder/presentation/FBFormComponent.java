@@ -3,14 +3,17 @@ package com.idega.formbuilder.presentation;
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
 
-public class FBGenericFormComponent extends UIComponentBase {
+import org.w3c.dom.Element;
+
+public class FBFormComponent extends UIComponentBase {
 	
-	public static final String RENDERER_TYPE = "fb_genericfield";
-	public static final String COMPONENT_TYPE = "FBGenericField";
+	public static final String RENDERER_TYPE = "fb_formComponent";
+	public static final String COMPONENT_TYPE = "FBFormComponent";
 	public static final String COMPONENT_FAMILY = "formbuilder";
 	
-	private String type;
+	private String id;
 	private String styleClass;
+	private Element element;
 
 	public String getStyleClass() {
 		return styleClass;
@@ -20,15 +23,7 @@ public class FBGenericFormComponent extends UIComponentBase {
 		this.styleClass = styleClass;
 	}
 
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public FBGenericFormComponent() {
+	public FBFormComponent() {
 		super();
 		this.setRendererType(RENDERER_TYPE);
 	}
@@ -40,7 +35,7 @@ public class FBGenericFormComponent extends UIComponentBase {
 	public Object saveState(FacesContext context) {
 		Object values[] = new Object[3];
 		values[0] = super.saveState(context);
-		values[1] = type;
+		values[1] = id;
 		values[2] = styleClass;
 		return values;
 	}
@@ -48,8 +43,24 @@ public class FBGenericFormComponent extends UIComponentBase {
 	public void restoreState(FacesContext context, Object state) {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);
-		type = (String) values[1];
+		id = (String) values[1];
 		styleClass = (String) values[2];
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public Element getElement() {
+		return element;
+	}
+
+	public void setElement(Element element) {
+		this.element = element;
 	}
 
 }
