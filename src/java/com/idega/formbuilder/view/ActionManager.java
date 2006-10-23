@@ -23,7 +23,7 @@ import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.formbuilder.business.form.manager.FormManagerFactory;
 import com.idega.formbuilder.business.form.manager.IFormManager;
 import com.idega.formbuilder.business.form.manager.util.InitializationException;
-import com.idega.formbuilder.presentation.FBGenericFormComponent;
+import com.idega.formbuilder.presentation.FBFormComponent;
 
 public class ActionManager implements Serializable, ActionListener {
 	
@@ -201,8 +201,8 @@ public class ActionManager implements Serializable, ActionListener {
 	        cloneButton.setStyleClass("hot_button");
 	        fieldButtons.getChildren().add(deleteButton);
 	        fieldButtons.getChildren().add(cloneButton);
-	        FBGenericFormComponent genericField = (FBGenericFormComponent) application.createComponent(FBGenericFormComponent.COMPONENT_TYPE);
-	        genericField.setType(this.getSelectedFieldTypeValue());
+	        FBFormComponent genericField = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
+	        //genericField.setType(this.getSelectedFieldTypeValue());
 	        fieldInnerHtml.getChildren().add(genericField);
 	        fieldInnerStructure.getChildren().add(fieldInnerHtml);
 	        fieldInnerStructure.getChildren().add(fieldButtons);
