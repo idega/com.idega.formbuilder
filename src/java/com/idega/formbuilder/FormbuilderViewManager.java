@@ -35,8 +35,13 @@ public class FormbuilderViewManager implements Singleton  {
 		  
 		  FormbuilderViewManager formbuilder_view_manager = (FormbuilderViewManager) iwma.getAttribute(IW_FORMBUILDER_VIEW_MANAGER_KEY);
 	    if(formbuilder_view_manager==null){
+	    	//iwma.getIWApplicationContext().
 	      formbuilder_view_manager = new FormbuilderViewManager(iwma);
-	      //FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE, "en");
+	      //String formId = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORMBUILDER_CURRENT_FORM_ID);
+	      //if(formId == null) {
+	    	  //FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS, "NO_FORM");
+	      //}
+	      //FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE, FacesContext.getCurrentInstance().getExternalContext().getRequestLocale());
 	      //FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_FORM_ID, null);
 	      iwma.setAttribute(IW_FORMBUILDER_VIEW_MANAGER_KEY,formbuilder_view_manager);
 	    }
