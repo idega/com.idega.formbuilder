@@ -1,16 +1,15 @@
 package com.idega.formbuilder.view;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
+import javax.faces.model.SelectItem;
 
 import org.apache.myfaces.component.html.ext.HtmlCommandLink;
 import org.apache.myfaces.component.html.ext.HtmlInputHidden;
@@ -52,6 +51,17 @@ public class ActionManager implements Serializable, ActionListener {
 	
 	private boolean viewInitialized = false;
 	
+	private SelectItem[] forms = null;
+	
+	public SelectItem[] getForms() {
+		//List<FormBean> 
+		return forms;
+	}
+
+	public void setForms(SelectItem[] forms) {
+		this.forms = forms;
+	}
+
 	public void processAction(ActionEvent ae) {
 		try {
 			

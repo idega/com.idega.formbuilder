@@ -16,13 +16,26 @@ function closeMessage() {
 	messageObj.close();
 }
 function createNewForm() {
-	dwrmanager.createNewForm(decoy);
+	var name = document.forms['newFormDialogForm'].elements['formName'].value;
+	if(name != '') {
+		dwrmanager.createNewForm(decoy,name);
+		closeMessage();
+		showLoadingMessage("Loading");
+	}
 	//$('noFormNotice').style.visibility = 'hidden';
-	//var componentIDs = Sortable.serialize("dropBox",{tag:"div",name:"components"});
-	//alert(componentIDs);
-	//setupDragAndDrop();
 }
 function decoy() {
+	closeLoadingMessage();
+}
+function closeLoadingMessage() {
+ 	var elem = document.getElementById('busybuddy');
+ 	if (elem) {
+  		if(elem.style) { 
+       		elem.style.display = 'none';
+     	} else {
+       		elem.display = 'none' ;
+     	}
+ 	}
 }
 
 /*Setup modal message windows functionality*/

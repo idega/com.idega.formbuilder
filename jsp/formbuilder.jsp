@@ -22,12 +22,14 @@
 			<h:form id="workspaceform1">
 				<t:div styleClass="application_container" id="application_container" forceId="true">
 					<t:div styleClass="toolbar_container" id="toolbar_container" forceId="true">
-						<h:commandLink id="new_form_button" styleClass="toolbar_button float_left" onclick="" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}">
-							
+						<h:commandLink id="new_form_button" styleClass="toolbar_button float_left" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/new-dialog.inc');return false" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}" />
+						<!--
 							<f:actionListener type="com.idega.formbuilder.actions.NewFormAction" />
 							
 						</h:commandLink>
+						
 						<h:commandLink id="save_form_button" styleClass="toolbar_button float_left" action="" value="Save form" />
+						-->
 						<h:commandLink id="delete_form_button" styleClass="toolbar_button float_left" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/confirm-delete.inc');return false" action="" value="Delete form"/>
 						<h:commandLink id="import_form_button" styleClass="toolbar_button float_left" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/upload-dialog.inc');return false" action="" value="Import form"/>
 						<h:commandLink id="export_form_button" styleClass="toolbar_button float_left" action="" value="Export form" />
@@ -74,12 +76,6 @@
 										value="#{palette.components}"
 										layout="unorderedList">
 										<fb:paletteComponent styleClass="palette_component" name="#{field.name}" type="#{field.type}" />
-										<!--
-										<t:div styleClass="palette_component" id="field" forceId="true" forceIdIndex="true">
-											<h:outputLabel value="#{field.name}" rendered="true" />
-											<h:outputText value="#{field.type}" style="display: none;"/>
-										</t:div>
-										-->
 									</t:dataList>
 							    </t:panelTab>
 							    <t:panelTab id="tab03" label="Field properties">

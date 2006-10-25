@@ -1,6 +1,7 @@
 package com.idega.formbuilder.view;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
@@ -10,6 +11,7 @@ import javax.faces.context.FacesContext;
 import org.w3c.dom.Element;
 
 import com.idega.formbuilder.FormbuilderViewManager;
+import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.manager.IFormManager;
 
 public class DWRManager implements Serializable {
@@ -37,14 +39,22 @@ public class DWRManager implements Serializable {
 		while(tokenizer.hasMoreTokens()) {
 			ids.add(idPrefix + tokenizer.nextToken());
 		}
+		Iterator it = ids.iterator();
+		while(it.hasNext()) {
+			System.out.println((String) it.next());
+		}
 		formManagerInstance.rearrangeDocument();
 	}
 	
-	public void createNewForm() throws Exception {
+	public void createNewForm(String name) throws Exception {
+		System.out.println("NEW FORM BEING CREATED");
 		String generatedId = new Long(System.currentTimeMillis()).toString();
 		String id = generatedId.substring(generatedId.length() - 8);
-		formManagerInstance.createFormDocument(id, null);
-		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS, "EMPTY_FORM");
+		LocalizedStringBean formName = new LocalizedStringBean();
+		formName.setString(new Locale("en"), name);
+		formManagerInstance.createFormDocument(id, formName);
+		//FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS, "EMPTY_FORM");
+		//FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_FORM_ID, id);
 	}
 	
 }
