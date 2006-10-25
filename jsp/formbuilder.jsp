@@ -86,36 +86,28 @@
 						<t:div styleClass="form_container" id="form_container" forceId="true">
 							<fb:formDesignView id="dropBox" styleClass="dropBox" componentStyleClass="formElement">
 								<f:facet name="noFormNoticeFacet">
-									<t:div id="noFormNotice" forceId="true">
-										<t:outputText id="header" forceId="true" onclick="createNewForm()" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_header']}" />
+									<t:div id="noFormNotice" styleClass="visibleFacet" forceId="true">
+										<t:outputText id="noFormNoticeHeader" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_header']}" />
 										<t:htmlTag value="br" />
-										<t:outputText id="body" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_body']}" />
+										<t:outputText id="noFormNoticeBody" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_body']}" />
 									</t:div>
 								</f:facet>
 								<f:facet name="formHeaderFacet">
-									<t:div styleClass="form_heading">
-										<t:outputText id="form_heading_title" forceId="true" onclick="selectFormHeader()" value="#{viewmanager.formTitle}" />
+									<t:div id="formHeading" styleClass="invisibleFacet" forceId="true">
+										<t:outputText id="formHeadingHeader" forceId="true" onclick="selectFormHeader()" value="#{viewmanager.formTitle}" />
 										<t:htmlTag value="br" />
-										<t:outputText id="form_heading_description" forceId="true" value="#{viewmanager.formDescription}" />
+										<t:outputText id="formHeadingBody" forceId="true" value="#{viewmanager.formDescription}" />
+										<t:htmlTag value="hr" />
+									</t:div>
+								</f:facet>
+								<f:facet name="emptyFormFacet">
+									<t:div id="emptyForm" styleClass="invisibleFacet" forceId="true">
+										<t:outputText id="emptyFormHeader" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_header']}" />
+										<t:htmlTag value="br" />
+										<t:outputText id="emptyFormBody" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_body']}" />
 									</t:div>
 								</f:facet>
 							</fb:formDesignView>
-							<!--
-							<t:div id="dropBox" forceId="true" styleClass="dropBox" binding="#{viewmanager.formView}">
-								<t:div id="noFormNotice2" forceId="true">
-									<t:outputText id="header2" forceId="true" onclick="createNewForm()" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_header']}" />
-									<t:htmlTag value="br" />
-									<t:outputText id="body2" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_body']}" />
-								</t:div>
-								
-								<t:div styleClass="form_heading">
-									<t:outputText id="form_heading_title" forceId="true" onclick="selectFormHeader()" value="#{viewmanager.formTitle}" />
-									<t:htmlTag value="br" />
-									<t:outputText id="form_heading_description" forceId="true" value="#{viewmanager.formDescription}" />
-								</t:div>
-								
-							</t:div>
-							-->
 							<f:verbatim>
 								<script type="text/javascript" src="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js" />
 								<script type="text/javascript">
@@ -132,19 +124,19 @@
 						<h:commandLink id="preview_view_button" styleClass="bottom_tab_button float_center" action="" value="Preview"/>
 						<h:commandLink id="source_view_button" styleClass="bottom_tab_button float_center" action="" value="Source"/>
 					</t:div>
+					<!--
 					<t:div id="hidden_container" forceId="true">
 						<t:commandLink id="add_field_button" forceId="true" action="#{viewmanager.addFormField}" value="" />
 						
 						<t:commandLink id="select_field_button" forceId="true" action="#{viewmanager.selectFormField}" value="">
 							<a4j:support event="onclick" reRender="options_tabbed_pane" />
 						</t:commandLink>
-						<!--
-						<a4j:commandLink id="select_field_button" action="#{viewmanager.selectFormField}" value="" reRender="options_tabbed_pane" />
-						-->
+						
 						<t:commandLink id="select_form_header_button" forceId="true" action="#{viewmanager.selectFormHeader}" value="" />
 						<t:inputHidden id="selected_field_type" forceId="true" value="#{viewmanager.selectedFieldTypeValue}" />
 						<t:inputHidden id="selected_field_id" forceId="true" binding="#{viewmanager.selectedFieldId}" />
 					</t:div>
+					-->
 				</t:div>
 			</h:form>
 		</ws:page>

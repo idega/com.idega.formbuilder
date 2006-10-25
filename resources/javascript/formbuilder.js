@@ -21,8 +21,60 @@ function createNewForm() {
 		dwrmanager.createNewForm(decoy,name);
 		closeMessage();
 		showLoadingMessage("Loading");
+		switchFacets(false, true, true);
+		clearDesignSpace();
 	}
-	//$('noFormNotice').style.visibility = 'hidden';
+	
+}
+function removeComponent(element) {
+	showLoadingMessage("Loading");
+	dwrmanager.removeComponent(removedComponent,element.id);
+}
+function removedComponent(id) {
+	var dropBox = $('dropBox');
+	var element = document.getElementById(id);
+	dropBox.removeChild(element);
+	closeLoadingMessage();
+}
+function clearDesignSpace() {
+	var dropBox = $('dropBox');
+	var child = null;
+	for(var i=dropBox.childNodes.length-1;i>-1;i--) {
+		child = dropBox.childNodes[i];
+		//alert(child + 'element');
+		if(child.getAttribute('class') == 'formElement') {
+			//alert(child + 'to be deleted');
+			dropBox.removeChild(child);
+			//dropBox.replaceChild(child,getDecoyNode());
+		}
+	}
+}
+function getDecoyNode() {
+	var node = document.createNode('div');
+	return node;
+}
+function switchFacets(noForm,heading,empty) {
+	switchVisibility('noFormNotice',noForm);
+	switchVisibility('formHeading',heading);
+	switchVisibility('emptyForm',empty);
+}
+function switchVisibility(id,makeVisible) {
+	var component = $(id);
+	if(component) {
+		if(component.style) {
+			if(makeVisible == true) {
+				component.style.display = 'block';
+			} else {
+				component.style.display = 'none';
+			}
+		} else {
+			if(makeVisible == true) {
+				component.display = 'block';
+			} else {
+				component.display = 'none';
+			}
+		}
+	}
 }
 function decoy() {
 	closeLoadingMessage();

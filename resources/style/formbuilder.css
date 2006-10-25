@@ -51,6 +51,12 @@
 #build #main form ul{width:100%;}
 #build #main form li{width:100%;margin:0 0 8px 0;}
 
+.visibleFacet {
+	display: block;
+}
+.invisibleFacet {
+	display: none;
+}
 .formElement {
 	width: 88%;
 	border: 1px #000 groove						! important;

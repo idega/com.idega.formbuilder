@@ -9,6 +9,9 @@ public class FormDesignView extends UIComponentBase {
 	public static final String COMPONENT_FAMILY = "formbuilder";
 	public static final String COMPONENT_TYPE = "FormDesignView";
 	
+	public static final String FACET_VISIBLE_STYLECLASS = "visibleFacet";
+	public static final String FACET_INVISIBLE_STYLECLASS = "invisibleFacet";
+	
 	private String id;
 	private String styleClass;
 	private String componentStyleClass;

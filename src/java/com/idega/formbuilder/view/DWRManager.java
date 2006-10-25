@@ -1,6 +1,7 @@
 package com.idega.formbuilder.view;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -48,13 +49,32 @@ public class DWRManager implements Serializable {
 	
 	public void createNewForm(String name) throws Exception {
 		System.out.println("NEW FORM BEING CREATED");
-		String generatedId = new Long(System.currentTimeMillis()).toString();
-		String id = generatedId.substring(generatedId.length() - 8);
+		System.out.println(new Date().toString());
+		System.out.println(FacesContext.getCurrentInstance().getExternalContext().getRequestLocale());
+		Locale current = (Locale) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE);
+		if(current == null) {
+			current = FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
+		}
+		//String generatedId = new Long(System.currentTimeMillis()).toString();
+		String id = generateId(name);
 		LocalizedStringBean formName = new LocalizedStringBean();
-		formName.setString(new Locale("en"), name);
+		formName.setString(current, name);
 		formManagerInstance.createFormDocument(id, formName);
-		//FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS, "EMPTY_FORM");
-		//FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_FORM_ID, id);
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS, "EMPTY_FORM");
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_FORM_ID, id);
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE, current);
+	}
+	
+	private String generateId(String name) {
+		String result = "";
+		result = name.replace(' ', '_');
+		result += "-[" + new Date() + "]";
+		return result;
+	}
+	
+	public String removeComponent(String id) throws Exception {
+		formManagerInstance.removeFormComponent(id);
+		return id;
 	}
 	
 }

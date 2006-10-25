@@ -21,10 +21,18 @@ public class FormDesignViewRenderer extends Renderer {
 	
 	private void initializeComponents(FacesContext context, UIComponent component) throws FBPostponedException {
 		Application application = context.getApplication();
+		String formId = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORMBUILDER_CURRENT_FORM_ID);
+	    System.out.println("FORM_ID: " + formId);
+		
 		IFormManager formManagerInstance = (IFormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
 		FormDesignView view = (FormDesignView) component;
 		view.getChildren().clear();
 		List<String> ids = formManagerInstance.getFormComponentsIdsList();
+		if(formId == null || formId.equals("")) {
+	    	FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS, "NO_FORM");
+	    } else if(ids.isEmpty()) {
+	    	FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS, "EMPTY_FORM");
+	    }
 		Iterator it = ids.iterator();
 		while(it.hasNext()) {
 			String nextId = (String) it.next();
@@ -46,30 +54,44 @@ public class FormDesignViewRenderer extends Renderer {
 		writer.startElement("DIV", field);
 		writer.writeAttribute("id", field.getId(), "id");
 		writer.writeAttribute("class", field.getStyleClass(), "styleClass");
+		Div facet1 = (Div) component.getFacet("noFormNoticeFacet");
+		Div facet2 = (Div) component.getFacet("formHeaderFacet");
+		Div facet3 = (Div) component.getFacet("emptyFormFacet");
+		if (facet1 != null) {
+			if (facet1.isRendered()) {
+				facet1.encodeBegin(context);
+				facet1.encodeChildren(context);
+				facet1.encodeEnd(context);
+			}
+		}
+		if (facet2 != null) {
+			if (facet2.isRendered()) {
+				facet2.encodeBegin(context);
+				facet2.encodeChildren(context);
+				facet2.encodeEnd(context);
+			}
+		}
+		if (facet3 != null) {
+			if (facet3.isRendered()) {
+				facet3.encodeBegin(context);
+				facet3.encodeChildren(context);
+				facet3.encodeEnd(context);
+			}
+		}
 		String status = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS);
 		if(status != null) {
 			if(status.equals("NO_FORM")) {
-				Div facet = (Div) component.getFacet("noFormNoticeFacet");
-				if (facet != null) {
-					if (facet.isRendered()) {
-						facet.encodeBegin(context);
-						//if (facet.getRendersChildren()) {
-							facet.encodeChildren(context);
-						//}
-						facet.encodeEnd(context);
-					}
-				}
+				switchVisibility(facet1, true);
+				switchVisibility(facet2, false);
+				switchVisibility(facet3, false);
 			} else if(status.equals("EMPTY_FORM")) {
-				Div facet = (Div) component.getFacet("formHeaderFacet");
-				if (facet != null) {
-					if (facet.isRendered()) {
-						facet.encodeBegin(context);
-						//if (facet.getRendersChildren()) {
-							facet.encodeChildren(context);
-						//}
-						facet.encodeEnd(context);
-					}
-				}
+				switchVisibility(facet2, true);
+				switchVisibility(facet3, true);
+				switchVisibility(facet1, false);
+			} else {
+				switchVisibility(facet2, true);
+				switchVisibility(facet1, false);
+				switchVisibility(facet3, false);
 			}
 		}
 	}
@@ -92,30 +114,36 @@ public class FormDesignViewRenderer extends Renderer {
 		
 	}
 	
+	protected void switchVisibility(Div component, boolean makeVisible) {
+		if(makeVisible) {
+			component.setStyleClass(component.getStyleClass() + " " + FormDesignView.FACET_VISIBLE_STYLECLASS);
+		} else {
+			component.setStyleClass(component.getStyleClass() + " " + FormDesignView.FACET_INVISIBLE_STYLECLASS);
+		}
+	}
+	
 	protected String getEmbededJavascript(Object values[]) {
 		return 	"<script language=\"JavaScript\">\n"
 				+ "function setupDragAndDrop() {\n"
-				+ "alert('Setup Drag and Drop');\n"
+				//+ "alert('Setup Drag and Drop');\n"
 				+ "Position.includeScrollOffsets = true;\n"
 				+ "Sortable.create(\"" + values[0] + "\",{dropOnEmpty:true,tag:\"div\",only:\"" + values[1] + "\",onUpdate:testing,scroll:\"" + values[0] + "\",constraint:false});\n"
 				+ "Droppables.add(\"" + values[0] + "\",{onDrop:handleComponentDrop});\n"
-				
-				
 				+ "}\n"
 				+ "function handleComponentDrop(element,container) {\n"
-				+ "alert('handleComponentDrop');\n"
+				//+ "alert('handleComponentDrop');\n"
+				+ "switchFacets(false, true, false);"
 				+ "if(currentElement != null) {\n"
 				+ "$(\"" + values[0] + "\").appendChild(currentElement);\n"
 				+ "}\n"
 				+ "currentElement = null;\n"
-				
 				+ "Sortable.create(\"" + values[0] + "\",{dropOnEmpty:true,tag:\"div\",only:\"" + values[1] + "\",onUpdate:testing,scroll:\"" + values[0] + "\",constraint:false});\n"
 				+ "Droppables.add(\"" + values[0] + "\",{onDrop:handleComponentDrop});\n"
 				+ "}\n"
 				+ "function testing() {\n"
-				+ "alert('testing');\n"
+				//+ "alert('testing');\n"
 				+ "var componentIDs = Sortable.serialize(\"" + values[0] + "\",{tag:\"div\",name:\"id\"});\n"
-				+ "alert(componentIDs);\n"
+				//+ "alert(componentIDs);\n"
 				+ "var delimiter = '&id[]=';\n"
 				+ "var idPrefix = 'fbcomp_';\n"
 				+ "dwrmanager.updateComponentList(updateOrder,componentIDs,idPrefix,delimiter);\n"
