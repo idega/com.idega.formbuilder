@@ -20,6 +20,8 @@ public class FormbuilderViewManager implements Singleton  {
 	
 	public static final String FORM_MANAGER_INSTANCE = "FORM_MANAGER_INSTANCE";
 	public static final String FORMBUILDER_DESIGNVIEW_STATUS = "FORMBUILDER_DESIGNVIEW_STATUS";
+	public static final String FORMBUILDER_CURRENT_FORM_ID = "FORMBUILDER_CURRENT_FORM_ID";
+	public static final String FORMBUILDER_CURRENT_LOCALE = "FORMBUILDER_CURRENT_LOCALE";
 	
 	private ViewNode rootNode;
 	private IWMainApplication iwma;
@@ -34,6 +36,8 @@ public class FormbuilderViewManager implements Singleton  {
 		  FormbuilderViewManager formbuilder_view_manager = (FormbuilderViewManager) iwma.getAttribute(IW_FORMBUILDER_VIEW_MANAGER_KEY);
 	    if(formbuilder_view_manager==null){
 	      formbuilder_view_manager = new FormbuilderViewManager(iwma);
+	      //FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE, "en");
+	      //FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_FORM_ID, null);
 	      iwma.setAttribute(IW_FORMBUILDER_VIEW_MANAGER_KEY,formbuilder_view_manager);
 	    }
 	    return formbuilder_view_manager;

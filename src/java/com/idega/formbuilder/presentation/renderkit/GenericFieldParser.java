@@ -34,7 +34,7 @@ public class GenericFieldParser {
 		}
 		writer.endElement(nodeName);
 	}
-	public static void printNode(Node node, UIComponent component, ResponseWriter writer) throws IOException {
+	/*public static void printNode(Node node, UIComponent component, ResponseWriter writer) throws IOException {
 		String nodeName = node.getNodeName();
 		System.out.println(node.getNodeName());
 		Node attr = null;
@@ -57,5 +57,5 @@ public class GenericFieldParser {
 			}
 		}
 		System.out.println(nodeName);
-	}
+	}*/
 }
