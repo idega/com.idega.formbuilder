@@ -73,6 +73,10 @@ public class HtmlManager {
 		return localized_html_components;
 	}
 	
+	public void clearLocalizedHtmlComponents() {
+		getLocalizedHtmlComponents().clear();
+	}
+	
 	protected Element getFormHtmlComponentLocalization(String loc_str) {
 		
 		Element loc_model = FormManagerUtil.getElementByIdFromDocument(

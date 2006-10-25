@@ -77,7 +77,7 @@ public class FormComponent implements IFormComponent {
 	public void setComponentAfterThisRerender(IFormComponent component) {
 		
 		if(component != null && component_after_me != null && !component_after_me.getId().equals(component.getId())) {
-			//TODO: go before this
+
 			xforms_manager.moveComponent(component_id, component.getId());
 			
 		} else if(component_after_me == null && component != null) {
@@ -118,8 +118,9 @@ public class FormComponent implements IFormComponent {
 	public IComponentProperties getProperties() {
 		
 		if(properties == null) {
-			properties = new ComponentProperties();
-			((ComponentProperties)properties).setXFormsManager(getXFormsManager());
+			ComponentProperties properties = new ComponentProperties();
+			properties.setParentComponent(this);
+			this.properties = properties;
 		}
 		
 		return properties;
@@ -153,5 +154,19 @@ public class FormComponent implements IFormComponent {
 	
 	public String getType() {
 		return type;
+	}
+	
+	public void updateErrorMsg() {
+		getXFormsManager().updateErrorMsg();
+		getHtmlManager().clearLocalizedHtmlComponents();
+	}
+	
+	public void updateLabel() {
+		getXFormsManager().updateLabel();
+		getHtmlManager().clearLocalizedHtmlComponents();
+	}
+	
+	public void updateConstraintRequired() {
+		getXFormsManager().updateConstraintRequired();
 	}
 }

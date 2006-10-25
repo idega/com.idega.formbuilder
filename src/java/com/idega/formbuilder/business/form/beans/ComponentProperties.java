@@ -1,7 +1,5 @@
 package com.idega.formbuilder.business.form.beans;
 
-import com.idega.formbuilder.business.form.manager.XFormsManager;
-
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
  * @version 1.0
@@ -12,31 +10,28 @@ public class ComponentProperties implements IComponentProperties {
 	private boolean required;
 	private LocalizedStringBean label;
 	private LocalizedStringBean error_msg;
-	private XFormsManager xforms_manager;
+	private FormComponent parent_component;
 	
 	public LocalizedStringBean getErrorMsg() {
 		return error_msg;
 	}
 	public void setErrorMsg(LocalizedStringBean error_msg) {
 		this.error_msg = error_msg;
-		xforms_manager.updateErrorMsg();
+		parent_component.updateErrorMsg();
 	}
 	public LocalizedStringBean getLabel() {
 		return label;
 	}
 	public void setLabel(LocalizedStringBean label) {
 		this.label = label;
-		xforms_manager.updateLabel();
+		parent_component.updateLabel();
 	}
 	public boolean isRequired() {
 		return required;
 	}
 	public void setRequired(boolean required) {
 		this.required = required;
-		xforms_manager.updateConstraintRequired();
-	}
-	public void setXFormsManager(XFormsManager xforms_manager) {
-		this.xforms_manager = xforms_manager;
+		parent_component.updateConstraintRequired();
 	}
 	public void setPlainLabel(LocalizedStringBean label) {
 		this.label = label;
@@ -46,5 +41,8 @@ public class ComponentProperties implements IComponentProperties {
 	}
 	public void setPlainErrorMsg(LocalizedStringBean error_msg) {
 		this.error_msg = error_msg;
+	}
+	public void setParentComponent(FormComponent parent_component) {
+		this.parent_component = parent_component;
 	}
 }
