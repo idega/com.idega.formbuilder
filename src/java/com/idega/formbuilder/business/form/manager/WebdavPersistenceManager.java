@@ -26,6 +26,7 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 	
 	private Exception document_to_webdav_save_exception = null;
 	private String[] form_pathes = null;
+	private boolean inited = false;
 
 	protected static final String FORMS_PATH = "/files/forms";
 	protected static final String FORMS_FILE_EXTENSION = ".xhtml";
@@ -35,9 +36,9 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 		return new WebdavPersistenceManager();
 	}
 	
-	private boolean inited = false;
-	
 	public void init(String document_id) throws NullPointerException {
+		
+		clear();
 		
 		if(document_id == null || document_id.equals(""))
 			throw new NullPointerException("Document id not provided");
@@ -116,6 +117,12 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 		}
 		
 		return form_pathes;
+	}
+	
+	protected void clear() {
+		document_to_webdav_save_exception = null;
+		form_pathes = null;
+		inited = false;
 	}
 	
 	private IWSlideService getServiceBean() {

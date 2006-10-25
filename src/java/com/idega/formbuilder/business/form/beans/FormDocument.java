@@ -36,10 +36,10 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 	
 	public void createDocument(String form_id, LocalizedStringBean form_name) throws NullPointerException {
 		
-//		TODO: when creating new, dispose all resources so new ones doesn't collide with old ones
-		
 		if(form_id == null)
 			throw new NullPointerException("Form_id is not provided");
+		
+		clear();
 		
 		this.form_id = form_id;
 		
@@ -163,5 +163,17 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 			} else
 				throw new NullPointerException("Component, which id was provided in list was not found. Provided: "+component_id);
 		}
+	}
+	
+	protected void clear() {
+		
+		form_xforms = null;
+		getFormComponentsIdList().clear();
+		getFormXsdContainedTypesDeclarations().clear();
+		
+		last_component_id = 0;
+		form_id = null;
+		
+		getFormComponents().clear();
 	}
 }

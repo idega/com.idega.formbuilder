@@ -10,7 +10,6 @@ import javax.xml.parsers.DocumentBuilder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -287,105 +286,36 @@ public class FormManager implements IFormManager {
 	public static void main(String[] args) {
 
 		try {
-			long start = System.currentTimeMillis();
 			IFormManager fm = FormManagerFactory.newFormManager(null);
-			long end = System.currentTimeMillis();
-			//System.out.println("inited in: "+(end-start));
 			
 			LocalizedStringBean title = new LocalizedStringBean();
 			title.setString(new Locale("en"), "eng title");
 			title.setString(new Locale("is"), "isl title");
 			
-			start = System.currentTimeMillis();
 			fm.createFormDocument("11", title);
-			end = System.currentTimeMillis();
-			//System.out.println("document created in: "+(end-start));
 			
-			start = System.currentTimeMillis();
-			String created = fm.createFormComponent("fbcomp_text", null);
-			String created2 = fm.createFormComponent("fbcomp_text", null);
-			String created3 = fm.createFormComponent("fbcomp_text", null);
-			
-			System.out.println("__1_");
-			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(created, new Locale("en")));
-			
-			System.out.println("__1_a");
-			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(created, new Locale("en")));
-			
-			System.out.println("__2_");
-			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(created2, new Locale("en")));
-			
-			System.out.println("__2_a");
-			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(created2, new Locale("en")));
-			
-			System.out.println("__3_");
-			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(created3, new Locale("en")));
-			
-			System.out.println("__3_a");
-			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(created3, new Locale("en")));
+			fm.createFormComponent("fbcomp_text", null);
+			fm.createFormComponent("fbcomp_text", null);
+			fm.createFormComponent("fbcomp_text", null);
 			
 			List<String> comp_ids = fm.getFormComponentsIdsList();
 			
-			String id2 = comp_ids.get(0);
+			System.out.println("comp id list: "+comp_ids);
 			
-			comp_ids.set(0, comp_ids.get(2));
-			comp_ids.set(2, id2);
+			title = new LocalizedStringBean();
+			title.setString(new Locale("en"), "eng title xxxx");
+			title.setString(new Locale("is"), "isl title xxx");
 			
-			fm.rearrangeDocument();
-//			
-//			System.out.println("compList2: "+comp_ids);
+			fm.createFormDocument("22", title);
 			
+			System.out.println("comp id list     2222222: "+comp_ids);
 			
-//			Element html = fm.getLocalizedFormHtmlComponent(created, new Locale("en"));
-//			
-//			DOMUtil.prettyPrintDOM(html);
-//			
-//			html = fm.getLocalizedFormHtmlComponent(created, new Locale("en"));
+			fm.createFormComponent("fbcomp_text", null);
+			fm.createFormComponent("fbcomp_text", null);
 			
+			comp_ids = fm.getFormComponentsIdsList();
 			
-			IComponentProperties props = fm.getComponentProperties(created);
-			
-			LocalizedStringBean loc_str = new LocalizedStringBean();
-			loc_str.setString(new Locale("en"), null);
-			props.setLabel(loc_str);
-			
-			loc_str = new LocalizedStringBean();
-			loc_str.setString(new Locale("en"), "errrrrrrrrrrrrrrrrrr");
-			
-			props.setErrorMsg(loc_str);
-			
-			fm.updateFormComponent(created);
-			
-			loc_str = new LocalizedStringBean();
-			loc_str.setString(new Locale("is"), "errrrrrrrr-----updated islandisk ---rrrrrrrrrr");
-			loc_str.setString(new Locale("en"), "errrrrrrrr-----updated eng ---rrrrrrrrrr");
-			
-			props.setErrorMsg(loc_str);
-			
-			fm.updateFormComponent(created);
-			
-			end = System.currentTimeMillis();
-			//System.out.println("text component created in: "+(end-start));
-			
-//			IComponentProperties properties = fm.getComponentProperties(created);
-//			
-//			properties.setRequired(false);
-//			properties.setErrorMsg(null);
-//			
-//			fm.updateFormComponent(created);
-//			
-//			created = fm.createFormComponent("fbcomp_email", created);
-			
-//			Element loc = fm.getLocalizedFormHtmlComponent(created, new Locale("en"));
-//			Element loc2 = fm.getLocalizedFormHtmlComponent(created, new Locale("is"));
-//			
-//			System.out.println("english one");
-//			DOMUtil.prettyPrintDOM(loc);
-//			System.out.println("icelandish");
-//			DOMUtil.prettyPrintDOM(loc2);
-//			
-//			created = fm.createFormComponent("fbcomp_email", created);
-
+			System.out.println("comp id list     333333333: "+comp_ids);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
