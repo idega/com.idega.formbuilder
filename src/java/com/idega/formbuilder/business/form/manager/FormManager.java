@@ -64,10 +64,25 @@ public class FormManager implements IFormManager {
 		form_document.persist();
 	}
 	
-	public void removeFormComponent(String component_id) throws FBPostponedException, NullPointerException {
+	public void openFormDocument(String form_id) throws FBPostponedException, NullPointerException, Exception {
 		
 		checkForPendingErrors();
-		throw new NullPointerException("__Not implemented__");
+		
+	}
+	
+	public void removeFormComponent(String component_id) throws FBPostponedException, NullPointerException, Exception {
+		
+		checkForPendingErrors();
+		
+		IFormComponent component = form_document.getFormComponent(component_id);
+		
+		if(component == null)
+			throw new NullPointerException("Component was not found");
+		
+		component.remove();
+		form_document.unregisterComponent(component_id);
+		
+		form_document.persist();
 	}
 	
 	public Element getLocalizedFormHtmlComponent(String component_id, Locale locale) throws FBPostponedException, NullPointerException {
@@ -334,9 +349,6 @@ public class FormManager implements IFormManager {
 			String id1 = fm.createFormComponent("fbcomp_text", null);
 			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(id1, new Locale("en")));
 			
-			
-			
-			
 			String id2 = fm.createFormComponent("fbcomp_text", null);
 			fm.createFormComponent("fbcomp_text", null);
 			
@@ -352,6 +364,10 @@ public class FormManager implements IFormManager {
 			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(id2, new Locale("en")));
 			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(id2, new Locale("is")));
 			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(id2, new Locale("ee")));
+			
+			System.out.println("removing:: "+id2);
+			
+			fm.removeFormComponent(id2);
 //			
 //			LocalizedStringBean bb = fm.getComponentProperties(id2).getLabel();
 //			bb.setString(new Locale("lt"), "labas rytas");

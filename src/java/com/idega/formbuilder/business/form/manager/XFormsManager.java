@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -132,8 +133,9 @@ public class XFormsManager {
 		if(component_after_this_id == null) {
 //			append element to component list
 			Element components_container = (Element)xforms_doc.getElementsByTagName("xf:group").item(0);
+			Element submit_button = DOMUtil.getLastChildElement(components_container);
 			
-			components_container.appendChild(new_xforms_element);
+			submit_button.getParentNode().insertBefore(new_xforms_element, submit_button);
 			
 		} else {
 //			insert element after component
@@ -368,6 +370,10 @@ public class XFormsManager {
 		if(before_component_id != null) {
 			
 			element_to_insert_before = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_name, before_component_id);
+		} else {
+
+			Element components_container = (Element)element_to_move.getParentNode();
+			element_to_insert_before = DOMUtil.getLastChildElement(components_container);
 		}
 		
 		xforms_component.setElement(
@@ -383,5 +389,7 @@ public class XFormsManager {
 		Element element_to_remove = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_name, component_id);
 		
 		element_to_remove.getParentNode().removeChild(element_to_remove);
+		
+//		TODO: remove all other infoo
 	}
 }
