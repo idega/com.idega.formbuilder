@@ -10,7 +10,6 @@ import javax.xml.parsers.DocumentBuilder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -333,70 +332,5 @@ public class FormManager implements IFormManager {
 		
 		form_document.rearrangeDocument();
 		form_document.persist();
-	}
-	
-	public static void main(String[] args) {
-
-		try {
-			IFormManager fm = FormManagerFactory.newFormManager(null);
-			
-			LocalizedStringBean title = new LocalizedStringBean();
-			title.setString(new Locale("en"), "eng title");
-			title.setString(new Locale("is"), "isl title");
-			
-			fm.createFormDocument("11", title);
-			
-			String id1 = fm.createFormComponent("fbcomp_text", null);
-			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(id1, new Locale("en")));
-			
-			String id2 = fm.createFormComponent("fbcomp_text", null);
-			fm.createFormComponent("fbcomp_text", null);
-			
-//			System.out.println("but props: "+fm.getSubmitButtonProperties());
-//			
-			System.out.println("localized submit: ___");
-			DOMUtil.prettyPrintDOM(fm.getLocalizedSubmitComponent(new Locale("en")));
-			
-			System.out.println("localized text: ___");
-			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(id1, new Locale("en")));
-			System.out.println("localized text 22222: ___");
-			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(id2, new Locale("en")));
-			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(id2, new Locale("en")));
-			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(id2, new Locale("is")));
-			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(id2, new Locale("ee")));
-			
-			System.out.println("removing:: "+id2);
-			
-			fm.removeFormComponent(id2);
-//			
-//			LocalizedStringBean bb = fm.getComponentProperties(id2).getLabel();
-//			bb.setString(new Locale("lt"), "labas rytas");
-//			fm.getComponentProperties(id2).setLabel(bb);
-//			fm.updateFormComponent(id2);
-//			
-//			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(id2, new Locale("lt")));
-			
-//			List<String> comp_ids = fm.getFormComponentsIdsList();
-//			
-//			System.out.println("comp id list: "+comp_ids);
-//			
-//			title = new LocalizedStringBean();
-//			title.setString(new Locale("en"), "eng title xxxx");
-//			title.setString(new Locale("is"), "isl title xxx");
-//			
-//			fm.createFormDocument("22", title);
-//			
-//			System.out.println("comp id list     2222222: "+comp_ids);
-//			
-//			fm.createFormComponent("fbcomp_text", null);
-//			fm.createFormComponent("fbcomp_text", null);
-//			
-//			comp_ids = fm.getFormComponentsIdsList();
-//			
-//			System.out.println("comp id list     333333333: "+comp_ids);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 }
