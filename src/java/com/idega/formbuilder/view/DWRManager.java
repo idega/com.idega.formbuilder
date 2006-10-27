@@ -10,6 +10,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -41,7 +42,7 @@ public class DWRManager implements Serializable {
           delete.setAttribute("onclick", "removeComponent(this)");
           Element edit = (Element) document.createElement("DIV");
           edit.setAttribute("class", "editComponentButton");
-          edit.setAttribute("onclick", "removeComponent(this)");
+          //edit.setAttribute("onclick", "removeComponent(this)");
           Element deleteIcon = (Element) element.getOwnerDocument().importNode(delete, true);
           Element editIcon = (Element) element.getOwnerDocument().importNode(edit, true);
           element.appendChild(editIcon);
@@ -63,7 +64,7 @@ public class DWRManager implements Serializable {
 		formManagerInstance.rearrangeDocument();
 	}
 	
-	public void createNewForm(String name) throws Exception {
+	public Element createNewForm(String name) throws Exception {
 		Locale current = (Locale) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE);
 		if(current == null) {
 			current = FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
@@ -72,18 +73,23 @@ public class DWRManager implements Serializable {
 		LocalizedStringBean formName = new LocalizedStringBean();
 		formName.setString(current, name);
 		formManagerInstance.createFormDocument(id, formName);
+		Element element = formManagerInstance.getLocalizedSubmitComponent(current);
+		element.setAttribute("class", "formElement");
+		Element button = (Element) element.getFirstChild();
+		button.setAttribute("disabled", "true");
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS, "EMPTY_FORM");
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_FORM_ID, id);
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE, current);
+		return element;
 	}
 	
 	public String removeComponent(String id) {
 		try {
 			formManagerInstance.removeFormComponent(id);
-			return id;
 		} catch(Exception e) {
-			return "";
+			e.printStackTrace();
 		}
+		return id;
 	}
 	
 }

@@ -18,22 +18,21 @@ function closeMessage() {
 function createNewForm() {
 	var name = document.forms['newFormDialogForm'].elements['formName'].value;
 	if(name != '') {
-		dwrmanager.createNewForm(closeLoadingMessage,name);
+		dwrmanager.createNewForm(createdNewForm,name);
 		closeMessage();
 		showLoadingMessage("Loading");
 		switchFacets(false, true, true);
-		/*alert(document.forms['workspaceform1'].elements['workspaceform1:formList'].childNodes.length);
-		var count = document.forms['workspaceform1'].elements['workspaceform1:formList'].childNodes.length;
-		for(var i=0;i<count;i++) {
-			alert(document.forms['workspaceform1'].elements['workspaceform1:formList'].childNodes[i]);
-		}*/
 		clearDesignSpace();
 	}
 	
 }
+function createdNewForm(element) {
+	$('dropBox').appendChild(createTreeNode(element.documentElement));
+	closeLoadingMessage();
+}
 function removeComponent(element) {
-	showLoadingMessage("Loading");
-	dwrmanager.removeComponent(removedComponent,element.id);
+	showLoadingMessage("Deleting");
+	dwrmanager.removeComponent(removedComponent,element.parentNode.id);
 }
 function removedComponent(id) {
 	if(id != '') {
