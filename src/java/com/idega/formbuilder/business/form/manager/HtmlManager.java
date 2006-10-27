@@ -146,9 +146,6 @@ public class HtmlManager {
 			form_document.setFormDocumentModified(false);
 		}
 		
-		System.out.println("document: ");
-		DOMUtil.prettyPrintDOM(components_xml);
-		
 		return components_xml;
 	}
 }
