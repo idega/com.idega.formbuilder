@@ -23,21 +23,18 @@
 				<t:div styleClass="application_container" id="application_container" forceId="true">
 					<t:div styleClass="toolbar_container" id="toolbar_container" forceId="true">
 						<h:commandLink id="new_form_button" styleClass="toolbar_button float_left" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/new-dialog.inc');return false" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}" />
-						<!--
-							<f:actionListener type="com.idega.formbuilder.actions.NewFormAction" />
-							
-						</h:commandLink>
-						
-						<h:commandLink id="save_form_button" styleClass="toolbar_button float_left" action="" value="Save form" />
-						-->
 						<h:commandLink id="delete_form_button" styleClass="toolbar_button float_left" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/confirm-delete.inc');return false" action="" value="Delete form"/>
 						<h:commandLink id="import_form_button" styleClass="toolbar_button float_left" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/upload-dialog.inc');return false" action="" value="Import form"/>
 						<h:commandLink id="export_form_button" styleClass="toolbar_button float_left" action="" value="Export form" />
-						<t:div styleClass="toolbar_field float_left">
-							<h:outputText value="Switch to:" />
-							<h:selectOneMenu />
-						</t:div>
+						<h:selectOneMenu id="formList" styleClass="toolbar_field float_left" value="#{viewmanager.currentFormName}">
+							<f:selectItems value="#{formList.forms}" />
+							<a4j:support event="onchange" onsubmit="switchSelectedForm()" oncomplete="formSwitched()" action="#{viewmanager.changeSelectedForm}" ajaxSingle="true" reRender="workspaceform1:tab01,form_container" />
+						</h:selectOneMenu>
 						<h:commandLink id="help_form_button" onclick="showInnerHtml(this)" styleClass="toolbar_button float_right" action="" value="Help"/>
+						<h:selectOneMenu id="localeList" styleClass="toolbar_field float_right" value="#{viewmanager.currentLocale}">
+							<f:selectItems value="#{localeList.locales}" />
+							<a4j:support event="onchange" onsubmit="switchSelectedForm()" oncomplete="formSwitched()" action="#{viewmanager.changeSelectedForm}" ajaxSingle="true" reRender="workspaceform1:tab01,form_container" />
+						</h:selectOneMenu>
 					</t:div>
 					<t:div styleClass="main_container" id="main_container" forceId="true">
 						<t:div styleClass="options_container" id="options_container" forceId="true">
@@ -50,8 +47,7 @@
 		                        disabledTabStyleClass="disabledTab"
 		                        activeSubStyleClass="activeSub"
 		                        inactiveSubStyleClass="inactiveSub"
-		                        tabContentStyleClass="tabContent"
-		                        binding="#{viewmanager.optionsPane}">
+		                        tabContentStyleClass="tabContent">
 		                        <f:verbatim>
 							    	<script type="text/javascript" src="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/palette.js" />
 							    </f:verbatim>
@@ -59,24 +55,21 @@
 								    <t:outputLabel for="formTitle" value="Form title" />
 								    <t:htmlTag value="br" />
 								    <t:inputText id="formTitleInput" forceId="true" value="#{viewmanager.formTitle}">
-								    	<a4j:support event="onkeyup" ajaxSingle="true" requestDelay="500" reRender="form_heading_title" />
+								    	<a4j:support event="onkeyup" ajaxSingle="true" requestDelay="500" reRender="formHeadingHeader" />
 								    </t:inputText>
 								    <t:htmlTag value="br" />
 								    <t:outputLabel for="formDescription" value="Description" />
 								    <t:htmlTag value="br" />
 								    <t:inputTextarea id="formDescription" forceId="true" value="#{viewmanager.formDescription}">
-								    	<a4j:support event="onkeyup" ajaxSingle="true" requestDelay="500" reRender="form_heading_description" />
+								    	<a4j:support event="onkeyup" ajaxSingle="true" requestDelay="500" reRender="formHeadingBody" />
 								    </t:inputTextarea>
 							    </t:panelTab>
 							    <t:panelTab id="tab02" label="Add new field">
-							        <t:dataList id="firstlist"
-										styleClass="components_list"
-										itemStyleClass=""
-										var="field"
-										value="#{palette.components}"
-										layout="unorderedList">
-										<fb:paletteComponent styleClass="palette_component" name="#{field.name}" type="#{field.type}" />
-									</t:dataList>
+									<fb:palette id="firstlist" 
+												styleClass="componentsList" 
+												itemStyleClass="paletteComponent" 
+												items="#{palette.components}" 
+												columns="2" />
 							    </t:panelTab>
 							    <t:panelTab id="tab03" label="Field properties">
 							        <t:outputText value="something else" />
@@ -116,7 +109,6 @@
 								-->
 								</script>
 							</f:verbatim>
-							
 						</t:div>
 					</t:div>
 					<t:div id="bottom_tab_container" forceId="true">
@@ -124,19 +116,6 @@
 						<h:commandLink id="preview_view_button" styleClass="bottom_tab_button float_center" action="" value="Preview"/>
 						<h:commandLink id="source_view_button" styleClass="bottom_tab_button float_center" action="" value="Source"/>
 					</t:div>
-					<!--
-					<t:div id="hidden_container" forceId="true">
-						<t:commandLink id="add_field_button" forceId="true" action="#{viewmanager.addFormField}" value="" />
-						
-						<t:commandLink id="select_field_button" forceId="true" action="#{viewmanager.selectFormField}" value="">
-							<a4j:support event="onclick" reRender="options_tabbed_pane" />
-						</t:commandLink>
-						
-						<t:commandLink id="select_form_header_button" forceId="true" action="#{viewmanager.selectFormHeader}" value="" />
-						<t:inputHidden id="selected_field_type" forceId="true" value="#{viewmanager.selectedFieldTypeValue}" />
-						<t:inputHidden id="selected_field_id" forceId="true" binding="#{viewmanager.selectedFieldId}" />
-					</t:div>
-					-->
 				</t:div>
 			</h:form>
 		</ws:page>

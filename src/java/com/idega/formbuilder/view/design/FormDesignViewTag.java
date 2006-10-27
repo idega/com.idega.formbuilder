@@ -43,7 +43,6 @@ public class FormDesignViewTag extends UIComponentTagBase {
 				formViewer.setStyleClass(this.styleClass);
 			}
 			if(this.componentStyleClass != null) {
-				//System.out.println("COMPONENT_STYLE_CLASS: " + this.componentStyleClass);
 				formViewer.setComponentStyleClass(this.componentStyleClass);
 			}
 		}

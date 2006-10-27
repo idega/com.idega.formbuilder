@@ -18,10 +18,15 @@ function closeMessage() {
 function createNewForm() {
 	var name = document.forms['newFormDialogForm'].elements['formName'].value;
 	if(name != '') {
-		dwrmanager.createNewForm(decoy,name);
+		dwrmanager.createNewForm(closeLoadingMessage,name);
 		closeMessage();
 		showLoadingMessage("Loading");
 		switchFacets(false, true, true);
+		/*alert(document.forms['workspaceform1'].elements['workspaceform1:formList'].childNodes.length);
+		var count = document.forms['workspaceform1'].elements['workspaceform1:formList'].childNodes.length;
+		for(var i=0;i<count;i++) {
+			alert(document.forms['workspaceform1'].elements['workspaceform1:formList'].childNodes[i]);
+		}*/
 		clearDesignSpace();
 	}
 	
@@ -31,9 +36,11 @@ function removeComponent(element) {
 	dwrmanager.removeComponent(removedComponent,element.id);
 }
 function removedComponent(id) {
-	var dropBox = $('dropBox');
-	var element = document.getElementById(id);
-	dropBox.removeChild(element);
+	if(id != '') {
+		var dropBox = $('dropBox');
+		var element = document.getElementById(id);
+		dropBox.removeChild(element);
+	}
 	closeLoadingMessage();
 }
 function clearDesignSpace() {
@@ -88,6 +95,13 @@ function closeLoadingMessage() {
        		elem.display = 'none' ;
      	}
  	}
+}
+function switchSelectedForm() {
+	showLoadingMessage("Loading");
+	return myFaces_showPanelTab(0,'workspaceform1:options_tabbed_pane_indexSubmit','workspaceform1:tab01_headerCell','workspaceform1:tab01',panelTabbedPane_5Fworkspaceform1_3Aoptions_5Ftabbed_5Fpane_5FHeadersIDs,panelTabbedPane_5Fworkspaceform1_3Aoptions_5Ftabbed_5Fpane_5FIDs,'activeTab','inactiveTab','activeSub','inactiveSub');
+}
+function formSwitched() {
+	closeLoadingMessage();
 }
 
 /*Setup modal message windows functionality*/

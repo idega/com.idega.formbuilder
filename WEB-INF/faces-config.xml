@@ -20,6 +20,16 @@
 		<managed-bean-class>com.idega.formbuilder.business.FormComponent</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>formList</managed-bean-name>
+		<managed-bean-class>com.idega.formbuilder.business.FormList</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>localeList</managed-bean-name>
+		<managed-bean-class>com.idega.formbuilder.business.LocaleList</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
 	<render-kit>
 	     <renderer>
 	          <component-family>webface</component-family>
@@ -69,6 +79,17 @@
 	          <renderer-class>com.idega.formbuilder.presentation.renderkit.PaletteComponentRenderer</renderer-class>
 	     </renderer>
 	</render-kit>
+	<render-kit>
+	     <renderer>
+	          <component-family>formbuilder</component-family>
+	          <renderer-type>fb_palette</renderer-type>
+	          <renderer-class>com.idega.formbuilder.presentation.renderkit.PaletteRenderer</renderer-class>
+	     </renderer>
+	</render-kit>
+	<component>
+		<component-type>Palette</component-type>
+		<component-class>com.idega.formbuilder.presentation.FBPalette</component-class>
+	</component>
 	<component>
 		<component-type>PaletteComponent</component-type>
 		<component-class>com.idega.formbuilder.presentation.FBPaletteComponent</component-class>

@@ -1,5 +1,7 @@
 package com.idega.formbuilder.util;
 
+import java.util.Date;
+
 import javax.faces.context.FacesContext;
 
 import com.idega.formbuilder.IWBundleStarter;
@@ -45,5 +47,12 @@ public class FBUtil {
 	public static String getResourceAbsolutePath(IWMainApplication iwma, String url) {
 		IWBundle iwb = iwma.getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER);
         return iwb.getRealPathWithFileNameString(url);
+	}
+	
+	public static String generateFormId(String name) {
+		String result = "";
+		result = name.replace(' ', '_');
+		result += "-[" + new Date() + "]";
+		return result;
 	}
 }

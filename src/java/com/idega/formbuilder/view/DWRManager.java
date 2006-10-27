@@ -1,19 +1,22 @@
 package com.idega.formbuilder.view;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
 import javax.faces.context.FacesContext;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.manager.IFormManager;
+import com.idega.formbuilder.util.FBUtil;
 
 public class DWRManager implements Serializable {
 	
@@ -28,6 +31,24 @@ public class DWRManager implements Serializable {
 		String elementId = formManagerInstance.createFormComponent(type, null);
 		Element element = formManagerInstance.getLocalizedFormHtmlComponent(elementId, new Locale("en"));
 		element.setAttribute("class", "formElement");
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		Document document = null;
+        try {
+          DocumentBuilder builder = factory.newDocumentBuilder();
+          document = builder.newDocument();
+          Element delete = (Element) document.createElement("DIV");
+          delete.setAttribute("class", "removeComponentButton");
+          delete.setAttribute("onclick", "removeComponent(this)");
+          Element edit = (Element) document.createElement("DIV");
+          edit.setAttribute("class", "editComponentButton");
+          edit.setAttribute("onclick", "removeComponent(this)");
+          Element deleteIcon = (Element) element.getOwnerDocument().importNode(delete, true);
+          Element editIcon = (Element) element.getOwnerDocument().importNode(edit, true);
+          element.appendChild(editIcon);
+          element.appendChild(deleteIcon);
+        } catch (ParserConfigurationException pce) {
+            pce.printStackTrace();
+        }
 		return element;
 	}
 	
@@ -35,28 +56,19 @@ public class DWRManager implements Serializable {
 		List<String> ids = formManagerInstance.getFormComponentsIdsList();
 		ids.clear();
 		String test = "&" + idSequence;
-		
 		StringTokenizer tokenizer = new StringTokenizer(test, delimiter);
 		while(tokenizer.hasMoreTokens()) {
 			ids.add(idPrefix + tokenizer.nextToken());
-		}
-		Iterator it = ids.iterator();
-		while(it.hasNext()) {
-			System.out.println((String) it.next());
 		}
 		formManagerInstance.rearrangeDocument();
 	}
 	
 	public void createNewForm(String name) throws Exception {
-		System.out.println("NEW FORM BEING CREATED");
-		System.out.println(new Date().toString());
-		System.out.println(FacesContext.getCurrentInstance().getExternalContext().getRequestLocale());
 		Locale current = (Locale) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE);
 		if(current == null) {
 			current = FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
 		}
-		//String generatedId = new Long(System.currentTimeMillis()).toString();
-		String id = generateId(name);
+		String id = FBUtil.generateFormId(name);
 		LocalizedStringBean formName = new LocalizedStringBean();
 		formName.setString(current, name);
 		formManagerInstance.createFormDocument(id, formName);
@@ -65,16 +77,13 @@ public class DWRManager implements Serializable {
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE, current);
 	}
 	
-	private String generateId(String name) {
-		String result = "";
-		result = name.replace(' ', '_');
-		result += "-[" + new Date() + "]";
-		return result;
-	}
-	
-	public String removeComponent(String id) throws Exception {
-		formManagerInstance.removeFormComponent(id);
-		return id;
+	public String removeComponent(String id) {
+		try {
+			formManagerInstance.removeFormComponent(id);
+			return id;
+		} catch(Exception e) {
+			return "";
+		}
 	}
 	
 }

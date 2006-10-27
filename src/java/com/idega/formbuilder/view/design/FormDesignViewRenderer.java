@@ -19,7 +19,7 @@ import com.idega.formbuilder.presentation.FBFormComponent;
 
 public class FormDesignViewRenderer extends Renderer {
 	
-	private void initializeComponents(FacesContext context, UIComponent component) throws FBPostponedException {
+	private void initializeComponent(FacesContext context, UIComponent component) throws FBPostponedException {
 		Application application = context.getApplication();
 		String formId = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORMBUILDER_CURRENT_FORM_ID);
 	    System.out.println("FORM_ID: " + formId);
@@ -45,7 +45,7 @@ public class FormDesignViewRenderer extends Renderer {
 	
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 		try {
-			initializeComponents(context, component);
+			initializeComponent(context, component);
 		} catch(FBPostponedException pe) {
 			pe.printStackTrace();
 		}
@@ -125,13 +125,11 @@ public class FormDesignViewRenderer extends Renderer {
 	protected String getEmbededJavascript(Object values[]) {
 		return 	"<script language=\"JavaScript\">\n"
 				+ "function setupDragAndDrop() {\n"
-				//+ "alert('Setup Drag and Drop');\n"
 				+ "Position.includeScrollOffsets = true;\n"
 				+ "Sortable.create(\"" + values[0] + "\",{dropOnEmpty:true,tag:\"div\",only:\"" + values[1] + "\",onUpdate:testing,scroll:\"" + values[0] + "\",constraint:false});\n"
 				+ "Droppables.add(\"" + values[0] + "\",{onDrop:handleComponentDrop});\n"
 				+ "}\n"
 				+ "function handleComponentDrop(element,container) {\n"
-				//+ "alert('handleComponentDrop');\n"
 				+ "switchFacets(false, true, false);"
 				+ "if(currentElement != null) {\n"
 				+ "$(\"" + values[0] + "\").appendChild(currentElement);\n"
@@ -141,9 +139,7 @@ public class FormDesignViewRenderer extends Renderer {
 				+ "Droppables.add(\"" + values[0] + "\",{onDrop:handleComponentDrop});\n"
 				+ "}\n"
 				+ "function testing() {\n"
-				//+ "alert('testing');\n"
 				+ "var componentIDs = Sortable.serialize(\"" + values[0] + "\",{tag:\"div\",name:\"id\"});\n"
-				//+ "alert(componentIDs);\n"
 				+ "var delimiter = '&id[]=';\n"
 				+ "var idPrefix = 'fbcomp_';\n"
 				+ "dwrmanager.updateComponentList(updateOrder,componentIDs,idPrefix,delimiter);\n"
