@@ -9,7 +9,7 @@ import java.util.Map;
  * <i><b>WARNING: </b></i>for changes to take effect, u need to use setter methods for every property change
  * 
  */
-public interface IComponentSelectProperties extends IComponentProperties {
+public interface IComponentPropertiesSelect extends IComponentProperties {
 	
 	public abstract String getExternalDataSrc();
 	

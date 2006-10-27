@@ -35,6 +35,7 @@ public class FormManagerUtil {
 	public static final String model_name = "xf:model";
 	public static final String label_name = "xf:label";
 	public static final String alert_name = "xf:alert";
+	public static final String head_tag = "head";
 	public static final String id_name = "id";
 	public static final String type_name = "type";
 	public static final String slash = "/";
@@ -163,7 +164,7 @@ public class FormManagerUtil {
 	 * @throws NullPointerException - something necessary not provided
 	 */
 	public static void putLocalizedText(String new_key, String old_key, Element element, Document xforms, LocalizedStringBean loc_string) throws NullPointerException {
-
+		
 		if(xforms == null)
 			throw new NullPointerException("XForms document not provided");
 		
@@ -190,7 +191,7 @@ public class FormManagerUtil {
 		} else
 			throw new NullPointerException("Ref and key not specified or ref has incorrect format");
 		
-		Element loc_model = getElementByIdFromDocument(xforms, "head", data_mod);
+		Element loc_model = getElementByIdFromDocument(xforms, head_tag, data_mod);
 		
 		Element loc_strings = (Element)loc_model.getElementsByTagName(loc_tag).item(0);
 		
@@ -287,7 +288,7 @@ public class FormManagerUtil {
 	
 	public static LocalizedStringBean getLocalizedStrings(String key, Document xforms_doc) {
 
-		Element loc_model = getElementByIdFromDocument(xforms_doc, "head", data_mod);
+		Element loc_model = getElementByIdFromDocument(xforms_doc, head_tag, data_mod);
 		Element loc_strings = (Element)loc_model.getElementsByTagName(loc_tag).item(0);
 		
 		NodeList key_elements = loc_strings.getElementsByTagName(key);
@@ -438,7 +439,7 @@ public class FormManagerUtil {
 	
 	public static Element getItemElementById(Document item_doc, String item_id) {
 		
-		Element item = FormManagerUtil.getElementByIdFromDocument(item_doc, "head", item_id);
+		Element item = FormManagerUtil.getElementByIdFromDocument(item_doc, head_tag, item_id);
 		if(item == null)
 			return null;
 		
@@ -452,5 +453,30 @@ public class FormManagerUtil {
 				return (Element)item_node;
 		}
 		return null;
+	}
+	
+	public static void removeTextNodes(Node node) {
+		
+		NodeList children = node.getChildNodes();
+		List<Node> childs_to_remove = new ArrayList<Node>();
+		
+		for (int i = 0; i < children.getLength(); i++) {
+			
+			Node child = children.item(i);
+			
+			if(child.getNodeType() == Node.TEXT_NODE) {
+				
+				childs_to_remove.add(child);
+				
+			} else {
+				
+				if(child.hasChildNodes())
+					removeTextNodes(child);
+			}
+		}
+		
+		for (Iterator<Node> iter = childs_to_remove.iterator(); iter.hasNext();) {
+			node.removeChild(iter.next());
+		}
 	}
 }

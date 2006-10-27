@@ -8,7 +8,6 @@ import javax.faces.context.FacesContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import com.idega.core.cache.IWCacheManager2;
 import com.idega.formbuilder.business.form.beans.XFormsComponentDataBean;
@@ -31,7 +30,6 @@ public class CacheManager implements Singleton {
 	private Document components_xml = null;
 	private List<String> components_types = null;
 	private Map<String, XFormsComponentDataBean> cached_xforms_components;
-	private Map<String, Element> cached_html_components;
 	
 	private static CacheManager me;
 	
@@ -133,7 +131,6 @@ public class CacheManager implements Singleton {
 			return;
 		
 		IWMainApplication iwma = IWMainApplication.getIWMainApplication(ctx);
-		cached_html_components = IWCacheManager2.getInstance(iwma).getCache("cached_html_components");
 		cached_xforms_components = IWCacheManager2.getInstance(iwma).getCache("cached_xforms_components");
 	}
 	
@@ -145,21 +142,8 @@ public class CacheManager implements Singleton {
 		cached_xforms_components.put(key, xbean);			
 	}
 	
-	public void cacheHtmlComponent(String key, Element ebean) {
-		
-		if(cached_html_components == null)
-			cached_html_components = new CacheMap();
-			
-		cached_html_components.put(key, ebean);			
-	}
-	
 	public XFormsComponentDataBean getCachedXformsComponent(String key) {
 		
 		return cached_xforms_components == null ? null : cached_xforms_components.get(key);
-	}
-	
-	public Element getCachedHtmlComponent(String key) {
-		
-		return cached_html_components == null ? null : cached_html_components.get(key);
 	}
 }

@@ -13,4 +13,12 @@ public interface IFormComponentParent {
 	public abstract List<String> getFormXsdContainedTypesDeclarations();
 	
 	public abstract IFormComponent getFormComponent(String component_id);
+	
+	public abstract void setFormDocumentModified(boolean changed);
+	
+	public abstract boolean isFormDocumentModified();
+	
+	public abstract Document getComponentsXml();
+	
+	public abstract void setComponentsXml(Document xml);
 }

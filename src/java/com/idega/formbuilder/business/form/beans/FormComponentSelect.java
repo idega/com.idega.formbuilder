@@ -5,6 +5,6 @@ package com.idega.formbuilder.business.form.beans;
  * @version 1.0
  * 
  */
-public class FormSelectComponent extends FormComponent {
+public class FormComponentSelect extends FormComponent {
 	
 }

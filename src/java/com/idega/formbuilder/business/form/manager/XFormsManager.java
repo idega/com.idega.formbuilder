@@ -45,15 +45,10 @@ public class XFormsManager {
 	}
 	
 	/**
-	 * Gets full component reference by component type. What "reference" means,
-	 * is that this is not the clone of node, but only reference to node.<br />
-	 * So if you need to change node, you <b>must</b> clone it first.
-	 * <p>
-	 * <b><i>WARNING:</i></b> returned node should be cloned, if you want to change it in any way.
-	 * </p>
+	 * Gets full component bycomponent type. 
 	 * 
 	 * @param component_type - used to find correct xforms component implementation
-	 * @return reference to cached element node. See WARNING for info.
+	 * @return element node.
 	 * @throws NullPointerException - component implementation could not be found by component type
 	 */
 	public XFormsComponentDataBean getXFormsComponentByType(String component_type) throws NullPointerException {
@@ -124,6 +119,7 @@ public class XFormsManager {
 		new_xforms_element.setAttribute(FormManagerUtil.id_name, component_id);
 		
 		localizeComponent(component_id, new_xforms_element, xforms_doc, cache_manager.getComponentsXforms());
+		FormManagerUtil.removeTextNodes(new_xforms_element);
 		
 		String bind_id = null;
 		
@@ -193,10 +189,11 @@ public class XFormsManager {
 			copySchemaType(cache_manager.getComponentsXsd(), xforms_doc, new_form_schema_type);
 			form_document.getFormXsdContainedTypesDeclarations().add(new_form_schema_type);
 		}
+		
 	}
 	
 	protected void localizeComponent(String comp_id, Element component_container, Document xforms_doc_to, Document xforms_doc_from) {
-
+		
 		NodeList children = component_container.getElementsByTagName("*");
 		
 		for (int i = 0; i < children.getLength(); i++) {
@@ -310,7 +307,6 @@ public class XFormsManager {
 			return;
 		
 		Element label = (Element)labels.item(0);
-		
 		
 		FormManagerUtil.putLocalizedText(null, null, 
 				label,

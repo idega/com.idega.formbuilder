@@ -22,7 +22,7 @@ public interface IFormComponent {
 
 	public abstract void setFormDocument(IFormComponentParent form_document);
 	
-	public abstract Element getHtmlRepresentationByLocale(Locale locale);
+	public abstract Element getHtmlRepresentationByLocale(Locale locale) throws Exception;
 	
 	public abstract IComponentProperties getProperties();
 }

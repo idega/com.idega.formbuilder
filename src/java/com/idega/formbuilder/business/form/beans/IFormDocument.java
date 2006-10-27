@@ -25,4 +25,6 @@ public interface IFormDocument {
 			InitializationException;
 	
 	public abstract void rearrangeDocument();
+	
+	public abstract FormComponentSubmitButton getSubmitButtonComponent();
 }

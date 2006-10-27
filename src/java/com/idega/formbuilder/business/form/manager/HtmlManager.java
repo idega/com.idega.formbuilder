@@ -4,13 +4,16 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.chiba.xml.dom.DOMUtil;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.idega.formbuilder.business.form.beans.IFormComponent;
 import com.idega.formbuilder.business.form.beans.IFormComponentParent;
+import com.idega.formbuilder.business.form.manager.generators.ComponentsGeneratorFactory;
+import com.idega.formbuilder.business.form.manager.generators.IComponentsGenerator;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 
 /**
@@ -27,8 +30,8 @@ public class HtmlManager {
 	protected CacheManager cache_manager;
 	protected IFormComponentParent form_document;
 	
-	public Element getHtmlRepresentationByLocale(Locale locale) {
-
+	public Element getHtmlRepresentationByLocale(Locale locale) throws Exception {
+		
 		Map<Locale, Element> localized_html_components = getLocalizedHtmlComponents();
 		Element localized_element = localized_html_components.get(locale);
 		
@@ -37,26 +40,13 @@ public class HtmlManager {
 		
 		if(unlocalized_html_component == null) {
 			
-			String comp_type = component.getType();
-			unlocalized_html_component = cache_manager.getCachedHtmlComponent(comp_type);
+			Element html_component = FormManagerUtil.getElementByIdFromDocument(getXFormsDocumentHtmlRepresentation(), null, component.getId());
 			
-			if(unlocalized_html_component == null) {
-				
-				Element html_component = FormManagerUtil.getElementByIdFromDocument(cache_manager.getComponentsXml(), null, comp_type);
-				
-				if(html_component == null) {
-					String msg = "Component cannot be found in temporal components xml document.";
+			if(html_component == null) {
 
-					throw new NullPointerException(msg);
-				}
-				
-				cache_manager.cacheHtmlComponent(comp_type, html_component);
-				unlocalized_html_component = (Element)html_component.cloneNode(true);
-				
-			} else
-				unlocalized_html_component = (Element)unlocalized_html_component.cloneNode(true);
-				
-			putMetaInfoOnHtmlComponent(unlocalized_html_component, component.getId(), component.getType());
+				throw new NullPointerException("Component cannot be found in document.");
+			}
+			unlocalized_html_component = html_component;
 		}
 		
 		localized_element = getFormHtmlComponentLocalization(locale.getLanguage());
@@ -80,7 +70,7 @@ public class HtmlManager {
 	protected Element getFormHtmlComponentLocalization(String loc_str) {
 		
 		Element loc_model = FormManagerUtil.getElementByIdFromDocument(
-				form_document.getXformsDocument(), "head", FormManagerUtil.data_mod
+				form_document.getXformsDocument(), FormManagerUtil.head_tag, FormManagerUtil.data_mod
 		);
 		Element loc_strings = (Element)loc_model.getElementsByTagName(FormManagerUtil.loc_tag).item(0);
 		Element localized_component = (Element)unlocalized_html_component.cloneNode(true);
@@ -91,11 +81,11 @@ public class HtmlManager {
 			
 			Node desc = descendants.item(i);
 			
-			String txt_content = FormManagerUtil.getElementsTextNodeValue(desc);
+			String localization_key = FormManagerUtil.getElementsTextNodeValue(desc);
 			
-			if(FormManagerUtil.isLocalizationKeyCorrect(txt_content)) {
+			if(FormManagerUtil.isLocalizationKeyCorrect(localization_key)) {
 				
-				NodeList localization_strings_elements = loc_strings.getElementsByTagName(txt_content);
+				NodeList localization_strings_elements = loc_strings.getElementsByTagName(localization_key);
 				
 				String localized_string = null;
 				
@@ -113,11 +103,13 @@ public class HtmlManager {
 							break;
 						}
 					}
+					if(localized_string == null && localization_strings_elements.getLength() > 0)
+						return null;
 				}
 				
 				if(localized_string == null)
 					throw new NullPointerException(
-							"Could not find localization value by provided key= "+txt_content+", language= "+loc_str);
+							"Could not find localization value by provided key= "+localization_key+", language= "+loc_str);
 				
 				FormManagerUtil.setElementsTextNodeValue(desc, localized_string);
 			}
@@ -130,44 +122,6 @@ public class HtmlManager {
 		this.component = component;
 	}
 	
-	/**
-	 * Replaces old_comp_id values with new_comp_id values on all attributes, which contained old_comp_id values.
-	 * Puts id attribute on component element with new_comp_id value. 
-	 * 
-	 * @param component - form component container
-	 * @param new_comp_id - new form component id to be set on attributes
-	 * @param old_comp_id - all form component id
-	 */
-	protected void putMetaInfoOnHtmlComponent(Element component, String new_comp_id, String old_comp_id) {
-		
-		component.setAttribute(FormManagerUtil.id_name, new_comp_id);
-		NodeList descendants = component.getElementsByTagName("*");
-		
-		for (int i = 0; i < descendants.getLength(); i++) {
-			
-			Element desc = (Element)descendants.item(i);
-			
-			String desc_text_content = FormManagerUtil.getElementsTextNodeValue(desc);
-			
-			if(FormManagerUtil.isLocalizationKeyCorrect(desc_text_content)) {
-				
-				FormManagerUtil.setElementsTextNodeValue(desc, FormManagerUtil.getComponentLocalizationKey(new_comp_id, desc_text_content));
-			}
-			
-			NamedNodeMap attributes = desc.getAttributes();
-			
-			for (int j = 0; j < attributes.getLength(); j++) {
-				Node attribute = attributes.item(j);
-				
-				String node_val = attribute.getNodeValue();
-				
-				if(node_val.contains(old_comp_id))
-					
-					attribute.setNodeValue(node_val.replace(old_comp_id, new_comp_id));
-			}
-		}
-	}
-	
 	public void setCacheManager(CacheManager cache_manager) {
 		this.cache_manager = cache_manager;
 	}
@@ -175,5 +129,26 @@ public class HtmlManager {
 	public void setFormDocument(IFormComponentParent form_document) {
 		
 		this.form_document = form_document;
+	}
+	
+	protected Document getXFormsDocumentHtmlRepresentation() throws Exception {
+		
+		Document components_xml = form_document.getComponentsXml();
+
+		if(components_xml == null || form_document.isFormDocumentModified()) {
+			
+			IComponentsGenerator components_generator = ComponentsGeneratorFactory.createComponentsGenerator();
+			
+			components_generator.setDocument((Document)form_document.getXformsDocument().cloneNode(true));
+			components_xml = components_generator.generateBaseComponentsDocument();
+			
+			form_document.setComponentsXml(components_xml);
+			form_document.setFormDocumentModified(false);
+		}
+		
+		System.out.println("document: ");
+		DOMUtil.prettyPrintDOM(components_xml);
+		
+		return components_xml;
 	}
 }

@@ -10,11 +10,13 @@ import javax.xml.parsers.DocumentBuilder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.idega.business.IBOLookup;
 import com.idega.formbuilder.IWBundleStarter;
+import com.idega.formbuilder.business.form.beans.ComponentPropertiesSubmitButton;
 import com.idega.formbuilder.business.form.beans.FormComponentFactory;
 import com.idega.formbuilder.business.form.beans.FormDocument;
 import com.idega.formbuilder.business.form.beans.IComponentProperties;
@@ -77,7 +79,37 @@ public class FormManager implements IFormManager {
 		if(component == null)
 			throw new NullPointerException("Component was not found");
 		
-		return component.getHtmlRepresentationByLocale(locale);
+		try {
+			return component.getHtmlRepresentationByLocale(locale);
+			
+		} catch (NullPointerException e) {
+			throw e;
+		} catch (Exception e) {
+			NullPointerException nul_e = new NullPointerException("Html representation could not be found.");
+			nul_e.setStackTrace(e.getStackTrace());
+			throw nul_e;
+		}
+	}
+	
+	public Element getLocalizedSubmitComponent(Locale locale) throws FBPostponedException, NullPointerException {
+		
+		checkForPendingErrors();
+		
+		IFormComponent submit_component = form_document.getSubmitButtonComponent();
+		
+		if(submit_component == null)
+			throw new NullPointerException("Submit button was not found in document");
+		
+		try {
+			return submit_component.getHtmlRepresentationByLocale(locale);
+			
+		} catch (NullPointerException e) { 
+			throw e;
+		} catch (Exception e) {
+			NullPointerException nul_e = new NullPointerException("Html representation could not be found.");
+			nul_e.setStackTrace(e.getStackTrace());
+			throw nul_e;
+		}
 	}
 	
 	public String createFormComponent(String component_type, String component_after_this_id) throws FBPostponedException, NullPointerException, Exception {
@@ -131,6 +163,11 @@ public class FormManager implements IFormManager {
 	public IComponentProperties getComponentProperties(String component_id) {
 		
 		return form_document.getFormComponent(component_id).getProperties();
+	}
+	
+	public ComponentPropertiesSubmitButton getSubmitButtonProperties() {
+		
+		return (ComponentPropertiesSubmitButton)form_document.getSubmitButtonComponent().getProperties();
 	}
 	
 	/**
@@ -294,28 +331,53 @@ public class FormManager implements IFormManager {
 			
 			fm.createFormDocument("11", title);
 			
-			fm.createFormComponent("fbcomp_text", null);
-			fm.createFormComponent("fbcomp_text", null);
-			fm.createFormComponent("fbcomp_text", null);
+			String id1 = fm.createFormComponent("fbcomp_text", null);
+			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(id1, new Locale("en")));
 			
-			List<String> comp_ids = fm.getFormComponentsIdsList();
 			
-			System.out.println("comp id list: "+comp_ids);
 			
-			title = new LocalizedStringBean();
-			title.setString(new Locale("en"), "eng title xxxx");
-			title.setString(new Locale("is"), "isl title xxx");
 			
-			fm.createFormDocument("22", title);
-			
-			System.out.println("comp id list     2222222: "+comp_ids);
-			
-			fm.createFormComponent("fbcomp_text", null);
+			String id2 = fm.createFormComponent("fbcomp_text", null);
 			fm.createFormComponent("fbcomp_text", null);
 			
-			comp_ids = fm.getFormComponentsIdsList();
+//			System.out.println("but props: "+fm.getSubmitButtonProperties());
+//			
+			System.out.println("localized submit: ___");
+			DOMUtil.prettyPrintDOM(fm.getLocalizedSubmitComponent(new Locale("en")));
 			
-			System.out.println("comp id list     333333333: "+comp_ids);
+			System.out.println("localized text: ___");
+			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(id1, new Locale("en")));
+			System.out.println("localized text 22222: ___");
+			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(id2, new Locale("en")));
+			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(id2, new Locale("en")));
+			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(id2, new Locale("is")));
+			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(id2, new Locale("ee")));
+//			
+//			LocalizedStringBean bb = fm.getComponentProperties(id2).getLabel();
+//			bb.setString(new Locale("lt"), "labas rytas");
+//			fm.getComponentProperties(id2).setLabel(bb);
+//			fm.updateFormComponent(id2);
+//			
+//			DOMUtil.prettyPrintDOM(fm.getLocalizedFormHtmlComponent(id2, new Locale("lt")));
+			
+//			List<String> comp_ids = fm.getFormComponentsIdsList();
+//			
+//			System.out.println("comp id list: "+comp_ids);
+//			
+//			title = new LocalizedStringBean();
+//			title.setString(new Locale("en"), "eng title xxxx");
+//			title.setString(new Locale("is"), "isl title xxx");
+//			
+//			fm.createFormDocument("22", title);
+//			
+//			System.out.println("comp id list     2222222: "+comp_ids);
+//			
+//			fm.createFormComponent("fbcomp_text", null);
+//			fm.createFormComponent("fbcomp_text", null);
+//			
+//			comp_ids = fm.getFormComponentsIdsList();
+//			
+//			System.out.println("comp id list     333333333: "+comp_ids);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

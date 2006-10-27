@@ -10,7 +10,7 @@ public class ComponentProperties implements IComponentProperties {
 	private boolean required;
 	private LocalizedStringBean label;
 	private LocalizedStringBean error_msg;
-	private FormComponent parent_component;
+	protected IComponentPropertiesParent parent_component;
 	
 	public LocalizedStringBean getErrorMsg() {
 		return error_msg;
@@ -42,7 +42,7 @@ public class ComponentProperties implements IComponentProperties {
 	public void setPlainErrorMsg(LocalizedStringBean error_msg) {
 		this.error_msg = error_msg;
 	}
-	public void setParentComponent(FormComponent parent_component) {
+	public void setParentComponent(IComponentPropertiesParent parent_component) {
 		this.parent_component = parent_component;
 	}
 }

@@ -25,12 +25,14 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 	private static Log logger = LogFactory.getLog(FormDocument.class);
 	
 	private Document form_xforms;
+	private Document components_xml;
 	private List<String> form_components_id_sequence;
 	private List<String> form_xsd_contained_types_declarations;
 	
 	private int last_component_id = 0;
 	private String form_id;
 	private IPersistenceManager persistence_manager;
+	private String submit_button_id;
 	
 	private Map<String, IFormComponent> form_components;
 	
@@ -63,6 +65,8 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 				logger.error("Could not set localized text for title element", e);
 			}
 		}
+		
+		loadSubmitButton();
 	}
 	
 	public void addComponent(IFormComponent component) {
@@ -75,6 +79,24 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		component.render();
 		
 		getFormComponents().put(component_id, component);
+	}
+	
+	protected void loadSubmitButton() {
+		
+		FormComponentSubmitButton component = new FormComponentSubmitButton();
+		
+		component.setFormDocument(this);
+		component.render();
+		
+		submit_button_id = component.getId();
+		
+		if(submit_button_id != null)
+			getFormComponents().put(submit_button_id, component);
+	}
+	
+	public FormComponentSubmitButton getSubmitButtonComponent() {
+		
+		return (FormComponentSubmitButton)getFormComponents().get(submit_button_id);
 	}
 	
 	protected int generateNewComponentId() {
@@ -173,7 +195,25 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		
 		last_component_id = 0;
 		form_id = null;
+		submit_button_id = null;
 		
 		getFormComponents().clear();
+	}
+	
+	private boolean document_changed = true;
+	
+	public void setFormDocumentModified(boolean changed) {
+		document_changed = changed;
+	}
+	
+	public boolean isFormDocumentModified() {
+		return document_changed;
+	}
+	public Document getComponentsXml() {
+		
+		return components_xml;
+	}
+	public void setComponentsXml(Document xml) {
+		components_xml = xml;
 	}
 }

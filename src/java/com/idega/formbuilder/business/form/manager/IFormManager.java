@@ -5,6 +5,7 @@ import java.util.Locale;
 
 import org.w3c.dom.Element;
 
+import com.idega.formbuilder.business.form.beans.ComponentPropertiesSubmitButton;
 import com.idega.formbuilder.business.form.beans.IComponentProperties;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
@@ -103,4 +104,8 @@ public interface IFormManager {
 	 * so u can use their specific methods, if needed.
 	 */
 	public abstract IComponentProperties getComponentProperties(String component_id);
+	
+	public ComponentPropertiesSubmitButton getSubmitButtonProperties();
+	
+	public Element getLocalizedSubmitComponent(Locale locale) throws FBPostponedException, NullPointerException;
 }

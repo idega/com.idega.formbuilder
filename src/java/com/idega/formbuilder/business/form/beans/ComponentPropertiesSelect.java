@@ -7,8 +7,8 @@ import java.util.Map;
  * @version 1.0
  * 
  */
-public class ComponentSelectProperties extends ComponentProperties
-implements IComponentSelectProperties {
+public class ComponentPropertiesSelect extends ComponentProperties
+implements IComponentPropertiesSelect {
 	
 	private boolean required;
 	private LocalizedStringBean empty_element_label;

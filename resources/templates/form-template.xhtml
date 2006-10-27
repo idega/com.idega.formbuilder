@@ -4,20 +4,21 @@
       xmlns:xf="http://www.w3.org/2002/xforms"
       xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <head>
-        <title><xf:output ref="instance('localized_strings')/form.title[@lang=instance('localized_strings')/current_language]" model="data_model" /></title>
+        <title><xf:output ref="instance('localized_strings')/lockey_form.title[@lang=instance('localized_strings')/current_language]" model="data_model" /></title>
 
         <xf:model id="form_id" schema="#fb-schema">
             <xf:instance id="instance1" xmlns="">
                 <data>
                 </data>
             </xf:instance>
+            <xf:submission id="submit_data_submission" action="http://www.idega.is/index.jsp" method="post" replace="all" />
         </xf:model>
         <xf:model id="data_model">
 	        <xf:instance id="localized_strings" xmlns="">
 		        <localized_strings>
 	         		<current_language>en</current_language>
-	         		<form.title lang="en">Form name english</form.title>
-	         		<form.title lang="is">Form name islenski</form.title>
+	         		<lockey_form.title lang="en">Form name english</lockey_form.title>
+	         		<lockey_submit_button.label lang="en">Submit</lockey_submit_button.label>
 	         	</localized_strings>
 	        </xf:instance>
 	      </xf:model>
@@ -26,6 +27,9 @@
     </head>
     <body>
         <xf:group appearance="full">
+          <xf:submit id="fbcomp_submit_data" submission="submit_data_submission">
+        		<xf:label ref="instance('localized_strings')/lockey_submit_button.label[@lang=instance('localized_strings')/current_language]" model="data_model" />
+        	</xf:submit>
         </xf:group>
     </body>
 </html>

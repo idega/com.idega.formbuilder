@@ -16,7 +16,7 @@ import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
  * @version 1.0
  * 
  */
-public class FormComponent implements IFormComponent {
+public class FormComponent implements IFormComponent, IComponentPropertiesParent {
 	
 	protected IFormComponent component_after_me;
 	protected String component_id;
@@ -65,6 +65,8 @@ public class FormComponent implements IFormComponent {
 			properties.setPlainRequired(false);
 			properties.setPlainErrorMsg(FormManagerUtil.getErrorLabelLocalizedStrings(getId(), xforms_doc));
 			
+			form_document.setFormDocumentModified(true);
+			
 			created = true;
 		}
 	}
@@ -110,8 +112,8 @@ public class FormComponent implements IFormComponent {
 		this.form_document = form_document; 
 	}
 	
-	public Element getHtmlRepresentationByLocale(Locale locale) {
-
+	public Element getHtmlRepresentationByLocale(Locale locale) throws Exception {
+		
 		return getHtmlManager().getHtmlRepresentationByLocale(locale);
 	}
 	
@@ -155,18 +157,17 @@ public class FormComponent implements IFormComponent {
 	public String getType() {
 		return type;
 	}
-	
 	public void updateErrorMsg() {
 		getXFormsManager().updateErrorMsg();
 		getHtmlManager().clearLocalizedHtmlComponents();
+		form_document.setFormDocumentModified(true);
 	}
-	
 	public void updateLabel() {
 		getXFormsManager().updateLabel();
 		getHtmlManager().clearLocalizedHtmlComponents();
 	}
-	
 	public void updateConstraintRequired() {
 		getXFormsManager().updateConstraintRequired();
+		form_document.setFormDocumentModified(true);
 	}
 }
