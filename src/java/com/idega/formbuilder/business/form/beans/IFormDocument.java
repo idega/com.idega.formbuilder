@@ -27,4 +27,6 @@ public interface IFormDocument {
 	public abstract void rearrangeDocument();
 	
 	public abstract FormComponentSubmitButton getSubmitButtonComponent();
+	
+	public abstract void unregisterComponent(String component_id);
 }

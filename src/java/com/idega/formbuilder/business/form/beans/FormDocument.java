@@ -138,6 +138,12 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		return form_components;
 	}
 	
+	public void unregisterComponent(String component_id) {
+		
+		getFormComponentsIdList().remove(component_id);
+		getFormComponents().remove(component_id);
+	}
+	
 	public Exception[] getSavedExceptions() {
 
 		return persistence_manager.getSavedExceptions(); 

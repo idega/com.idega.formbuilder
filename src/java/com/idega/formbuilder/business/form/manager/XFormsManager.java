@@ -357,11 +357,12 @@ public class XFormsManager {
 		this.xforms_component = xforms_component;
 	}
 	
-	public void moveComponent(String current_id, String before_component_id) {
+	public void moveComponent(String before_component_id) {
 		
 		Document xforms_doc = form_document.getXformsDocument();
+		String component_id = component.getId();
 		
-		Element element_to_move = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_name, current_id);
+		Element element_to_move = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_name, component_id);
 		Element element_to_insert_before = null;
 
 		if(before_component_id != null) {
@@ -372,5 +373,15 @@ public class XFormsManager {
 		xforms_component.setElement(
 				(Element)((Element)element_to_move.getParentNode()).insertBefore(element_to_move, element_to_insert_before)
 		);
+	}
+	
+	public void removeComponentFromXFormsDocument() {
+		
+		Document xforms_doc = form_document.getXformsDocument();
+		String component_id = component.getId();
+		
+		Element element_to_remove = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_name, component_id);
+		
+		element_to_remove.getParentNode().removeChild(element_to_remove);
 	}
 }

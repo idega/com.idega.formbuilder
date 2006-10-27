@@ -78,17 +78,19 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 	
 	public void setComponentAfterThisRerender(IFormComponent component) {
 		
+		XFormsManager xforms_manager = getXFormsManager();
+		
 		if(component != null && component_after_me != null && !component_after_me.getId().equals(component.getId())) {
 
-			xforms_manager.moveComponent(component_id, component.getId());
+			xforms_manager.moveComponent(component.getId());
 			
 		} else if(component_after_me == null && component != null) {
 			
-			xforms_manager.moveComponent(component_id, component.getId());
+			xforms_manager.moveComponent(component.getId());
 			
 		} else if(component == null && component_after_me != null) {
 			
-			xforms_manager.moveComponent(component_id, null);
+			xforms_manager.moveComponent(null);
 		}
 		component_after_me = component;
 	}
@@ -169,5 +171,12 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 	public void updateConstraintRequired() {
 		getXFormsManager().updateConstraintRequired();
 		form_document.setFormDocumentModified(true);
+	}
+	
+	public void remove() {
+		
+		form_document.setFormDocumentModified(true);
+		
+		getXFormsManager().removeComponentFromXFormsDocument();
 	}
 }

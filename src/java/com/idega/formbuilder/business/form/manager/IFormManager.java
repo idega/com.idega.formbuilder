@@ -32,13 +32,14 @@ public interface IFormManager {
 			throws FBPostponedException, NullPointerException, Exception;
 
 	/**
-	 * __NOT IMPLEMENTED YET__
+	 * Removes component from form document
+	 * 
 	 * @param component_id - form component id to remove
 	 * @throws FBPostponedException - see exception description at createFormDocument(..) javadoc 
 	 * @throws NullPointerException
 	 */
 	public abstract void removeFormComponent(String component_id)
-			throws FBPostponedException, NullPointerException;
+			throws FBPostponedException, NullPointerException, Exception;
 
 	/**
 	 * <p>

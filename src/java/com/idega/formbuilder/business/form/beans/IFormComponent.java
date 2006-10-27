@@ -25,4 +25,6 @@ public interface IFormComponent {
 	public abstract Element getHtmlRepresentationByLocale(Locale locale) throws Exception;
 	
 	public abstract IComponentProperties getProperties();
+	
+	public abstract void remove();
 }
