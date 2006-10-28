@@ -79,30 +79,46 @@ public class XFormsManager {
 			if(xforms_component != null)
 				return xforms_component;
 			
-			xforms_component = new XFormsComponentDataBean();
-			xforms_component.setElement(xforms_element);
-			
-			String bind_to = xforms_element.getAttribute("bind");
-			
-			if(bind_to != null) {
-				
-//				get binding
-				Element binding = 
-					FormManagerUtil.getElementByIdFromDocument(components_xforms, FormManagerUtil.model_tag, bind_to);
-				
-				if(binding == null)
-					throw new NullPointerException("Binding not found");
+			xforms_component = loadXFormsComponent(components_xforms, xforms_element);
 
-//				get nodeset
-				String nodeset_to = binding.getAttribute("nodeset");
-				Element nodeset = (Element)((Element)components_xforms.getElementsByTagName("xf:instance").item(0)).getElementsByTagName(nodeset_to).item(0);
-				
-				xforms_component.setBind(binding);
-				xforms_component.setNodeset(nodeset);
-				cache_manager.cacheXformsComponent(component_type, xforms_component);
-			}
+			cache_manager.cacheXformsComponent(component_type, xforms_component);
 		}
 		return (XFormsComponentDataBean)xforms_component.clone();
+	}
+	
+	public XFormsComponentDataBean loadXFormsComponentFromDocument(String component_id) {
+		
+		Document xforms_doc = form_document.getXformsDocument();
+		
+		Element my_element = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_tag, component_id);
+		
+		return loadXFormsComponent(xforms_doc, my_element);
+	}
+	
+	protected XFormsComponentDataBean loadXFormsComponent(Document components_xforms, Element xforms_element) {
+		
+		xforms_component = new XFormsComponentDataBean();
+		xforms_component.setElement(xforms_element);
+		
+		String bind_to = xforms_element.getAttribute("bind");
+		
+		if(bind_to != null) {
+			
+//			get binding
+			Element binding = 
+				FormManagerUtil.getElementByIdFromDocument(components_xforms, FormManagerUtil.model_tag, bind_to);
+			
+			if(binding == null)
+				throw new NullPointerException("Binding not found");
+
+//			get nodeset
+			String nodeset_to = binding.getAttribute("nodeset");
+			Element nodeset = (Element)((Element)components_xforms.getElementsByTagName("xf:instance").item(0)).getElementsByTagName(nodeset_to).item(0);
+			
+			xforms_component.setBind(binding);
+			xforms_component.setNodeset(nodeset);
+		}
+		return xforms_component;
 	}
 	
 	public void addComponentToDocument(String component_id, String component_after_this_id, XFormsComponentDataBean xforms_component)
@@ -134,7 +150,7 @@ public class XFormsManager {
 		if(component_after_this_id == null) {
 //			append element to component list
 			Element components_container = (Element)xforms_doc.getElementsByTagName("xf:group").item(0);
-			Element submit_button = DOMUtil.getLastChildElement(components_container);
+			Element submit_button = DOMUtil.getChildElement(components_container, FormManagerUtil.submit_tag);
 			
 			submit_button.getParentNode().insertBefore(new_xforms_element, submit_button);
 			

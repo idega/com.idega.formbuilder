@@ -1,5 +1,11 @@
 package com.idega.formbuilder.business.form.beans;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 import com.idega.repository.data.Singleton;
 
 /**
@@ -10,6 +16,35 @@ import com.idega.repository.data.Singleton;
 public class FormComponentFactory implements Singleton {
 	
 	private static FormComponentFactory me;
+	
+	private Map<String, List<String>> components_tags_classified;
+	private String type_simple;
+	private String type_select;
+	
+	private FormComponentFactory() { 
+		
+		components_tags_classified = new HashMap<String, List<String>>();
+		
+		List<String> types = new ArrayList<String>();
+		types.add("fbcomp_text");
+		types.add("fbcomp_textarea");
+		types.add("fbcomp_secret");
+		types.add("fbcomp_email");
+		components_tags_classified.put(type_simple, types);
+		
+		types = new ArrayList<String>();
+		
+		types.add("fbcomp_multiple_select_minimal");
+		types.add("xf:select");
+		types.add("fbcomp_single_select_minimal");
+		types.add("xf:select1");
+		types.add("fbcomp_multiple_select");
+		types.add("fbcomp_single_select");
+		
+		
+		components_tags_classified.put(type_select, types);
+		
+	}
 	
 	public static FormComponentFactory getInstance() {
 		
@@ -27,11 +62,33 @@ public class FormComponentFactory implements Singleton {
 	
 	public IFormComponent getFormComponentByType(String component_type) {
 		
-		FormComponent component = new FormComponent();
+		IFormComponent component = recognizeFormComponent(component_type);
 		component.setType(component_type);
 		
 		return component;
 	}
 	
-	
+	public IFormComponent recognizeFormComponent(String tag_name) {
+		
+		if(tag_name.equals(FormManagerUtil.submit_tag))
+			return new FormComponentSubmitButton();
+		
+		if(true)
+			return new FormComponent();
+		
+		List<String> types = components_tags_classified.get(type_simple);
+		
+		if(types.contains(tag_name)) {
+			
+			return new FormComponent();
+		} 
+		
+		types = components_tags_classified.get(type_select);
+		
+		if(types.contains(tag_name)) {
+			return new FormComponentSelect();
+		}
+		
+		return null;
+	}
 }

@@ -16,7 +16,6 @@ import org.w3c.dom.Element;
 import com.idega.business.IBOLookup;
 import com.idega.formbuilder.IWBundleStarter;
 import com.idega.formbuilder.business.form.beans.ComponentPropertiesSubmitButton;
-import com.idega.formbuilder.business.form.beans.FormComponentFactory;
 import com.idega.formbuilder.business.form.beans.FormDocument;
 import com.idega.formbuilder.business.form.beans.IComponentProperties;
 import com.idega.formbuilder.business.form.beans.IFormComponent;
@@ -55,18 +54,15 @@ public class FormManager implements IFormManager {
 	
 	private IFormDocument form_document;
 	
-	public void createFormDocument(String form_id, LocalizedStringBean form_name) throws FBPostponedException, NullPointerException, Exception {
-		
-		checkForPendingErrors();
+	public void createFormDocument(String form_id, LocalizedStringBean form_name) throws NullPointerException, Exception {
 		
 		form_document.createDocument(form_id, form_name);
 		form_document.persist();
 	}
 	
-	public void openFormDocument(String form_id) throws FBPostponedException, NullPointerException, Exception {
+	public void openFormDocument(String form_id) throws NullPointerException, Exception {
 		
-		checkForPendingErrors();
-		
+		form_document.loadDocument(form_id);
 	}
 	
 	public void removeFormComponent(String component_id) throws FBPostponedException, NullPointerException, Exception {
@@ -130,23 +126,11 @@ public class FormManager implements IFormManager {
 		
 		checkForPendingErrors();
 		
-		IFormComponent component = FormComponentFactory.getInstance().getFormComponentByType(component_type);
-
-		if(component_after_this_id != null) {
-			
-			IFormComponent comp_after_new = form_document.getFormComponent(component_after_this_id);
-			
-			if(comp_after_new == null)
-				throw new NullPointerException("Component after not found");
-			
-			component.setComponentAfterThis(comp_after_new);
-		}
-		
-		form_document.addComponent(component);
+		String component_id = form_document.addComponent(component_type, component_after_this_id);
 		
 		form_document.persist();
 		
-		return component.getId();
+		return component_id;
 	}
 	
 	public void updateFormComponent(String component_id) throws FBPostponedException, NullPointerException, Exception {

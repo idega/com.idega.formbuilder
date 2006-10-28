@@ -10,7 +10,7 @@ public interface IFormDocument {
 	public abstract void createDocument(String form_id,
 			LocalizedStringBean form_name) throws NullPointerException;
 
-	public abstract void addComponent(IFormComponent component);
+	public abstract String addComponent(String component_type, String component_after_this_id) throws NullPointerException;
 
 	public abstract List<String> getFormComponentsIdList();
 
@@ -19,7 +19,7 @@ public interface IFormDocument {
 	public abstract Exception[] getSavedExceptions();
 
 	public abstract void setPersistenceManager(
-			IPersistenceManager persistance_manager);
+			IPersistenceManager persistence_manager);
 
 	public abstract void persist() throws NullPointerException,
 			InitializationException;
@@ -29,4 +29,6 @@ public interface IFormDocument {
 	public abstract FormComponentSubmitButton getSubmitButtonComponent();
 	
 	public abstract void unregisterComponent(String component_id);
+	
+	public abstract void loadDocument(String form_id) throws InitializationException, Exception;
 }

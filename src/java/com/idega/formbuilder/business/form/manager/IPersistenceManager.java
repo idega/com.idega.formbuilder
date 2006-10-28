@@ -36,4 +36,10 @@ public interface IPersistenceManager {
 	 * @return exceptions array, that happened during previous request
 	 */
 	public abstract Exception[] getSavedExceptions();
+	
+	/**
+	 * loads persisted document using document_id specified using init(..) method
+	 * @return - persisted document
+	 */
+	public abstract Document loadDocument() throws InitializationException, Exception;
 }

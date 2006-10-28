@@ -54,6 +54,8 @@ public class FormManagerUtil {
 	public static final String form_id = "form_id";
 	public static final String title_tag = "title";
 	public static final String nodeset_att = "nodeset";
+	public static final String group_tag = "xf:group";
+	public static final String submit_tag = "xf:submit";
 	
 	private FormManagerUtil() { }
 	
@@ -452,5 +454,26 @@ public class FormManagerUtil {
 		for (Iterator<Node> iter = childs_to_remove.iterator(); iter.hasNext();) {
 			node.removeChild(iter.next());
 		}
+	}
+	
+	public static List<String[]> getComponentsTagNamesAndIds(Document xforms_doc) {
+		
+		Element body_element = (Element)xforms_doc.getElementsByTagName(body_tag).item(0);
+		Element group_element = (Element)body_element.getElementsByTagName(group_tag).item(0);
+		
+		List<Element> components_elements = DOMUtil.getChildElements(group_element);
+		List<String[]> components_tag_names_and_ids = new ArrayList<String[]>();
+		
+		for (Iterator<Element> iter = components_elements.iterator(); iter.hasNext();) {
+			
+			Element component_element = iter.next();
+			String[] tag_name_and_id = new String[2];
+			tag_name_and_id[0] = component_element.getTagName();
+			tag_name_and_id[1] = component_element.getAttribute(id_att);
+			
+			components_tag_names_and_ids.add(tag_name_and_id);
+		}
+		
+		return components_tag_names_and_ids;
 	}
 }

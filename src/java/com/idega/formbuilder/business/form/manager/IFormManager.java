@@ -19,7 +19,7 @@ import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
 public interface IFormManager {
 
 	/**
-	 * creates primary user form document and stores it depending on persistance manager implementation
+	 * creates primary user form document and stores it depending on persistence manager implementation
 	 * 
 	 * @param form_id - cannot be null
 	 * @param name - form name. Can be null, then default is used.
@@ -29,7 +29,7 @@ public interface IFormManager {
 	 * @throws Exception - some kind of other error occured
 	 */
 	public abstract void createFormDocument(String form_id, LocalizedStringBean name)
-			throws FBPostponedException, NullPointerException, Exception;
+			throws NullPointerException, Exception;
 
 	/**
 	 * Removes component from form document
@@ -106,7 +106,16 @@ public interface IFormManager {
 	 */
 	public abstract IComponentProperties getComponentProperties(String component_id);
 	
-	public ComponentPropertiesSubmitButton getSubmitButtonProperties();
+	public abstract ComponentPropertiesSubmitButton getSubmitButtonProperties();
 	
-	public Element getLocalizedSubmitComponent(Locale locale) throws FBPostponedException, NullPointerException;
+	public abstract Element getLocalizedSubmitComponent(Locale locale) throws FBPostponedException, NullPointerException;
+	
+	/**
+	 * Open and load document by form id
+	 * 
+	 * @param form_id
+	 * @throws NullPointerException - form_id is not provided
+	 * @throws Exception
+	 */
+	public abstract void openFormDocument(String form_id) throws NullPointerException, Exception;
 }

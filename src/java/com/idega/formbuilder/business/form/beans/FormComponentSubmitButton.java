@@ -1,15 +1,10 @@
 package com.idega.formbuilder.business.form.beans;
 
-import java.util.List;
-
-import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.idega.formbuilder.business.form.manager.CacheManager;
-import com.idega.formbuilder.business.form.manager.HtmlManager;
 import com.idega.formbuilder.business.form.manager.HtmlManagerSubmitButton;
-import com.idega.formbuilder.business.form.manager.XFormsManager;
 import com.idega.formbuilder.business.form.manager.XFormsManagerSubmitButton;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 
@@ -30,7 +25,7 @@ public class FormComponentSubmitButton extends FormComponent {
 		if(xforms_doc == null)
 			throw new NullPointerException("Form Xforms document was not provided");
 		
-		if(!created) {
+		if(load || !created) {
 			
 			XFormsManagerSubmitButton xforms_manager = getXFormsManager();
 			XFormsComponentDataBean xforms_component = xforms_manager.getXFormsSubmitComponent(xforms_doc);
@@ -48,8 +43,10 @@ public class FormComponentSubmitButton extends FormComponent {
 			
 			properties.setPlainLabel(FormManagerUtil.getLabelLocalizedStrings(getId(), xforms_doc));
 			properties.setAction("getaction from xforms doc");
-			
+
+			form_document.setFormDocumentModified(true);
 			created = true;
+			load = false;
 		}
 	}
 	

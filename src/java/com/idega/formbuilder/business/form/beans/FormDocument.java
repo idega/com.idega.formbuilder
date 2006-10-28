@@ -1,6 +1,7 @@
 package com.idega.formbuilder.business.form.beans;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -27,11 +28,10 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 	private Document form_xforms;
 	private Document components_xml;
 	private List<String> form_components_id_sequence;
-	private List<String> form_xsd_contained_types_declarations;
 	
 	private int last_component_id = 0;
 	private String form_id;
-	private IPersistenceManager persistence_manager;
+	protected IPersistenceManager persistence_manager;
 	private String submit_button_id;
 	
 	private Map<String, IFormComponent> form_components;
@@ -40,6 +40,9 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		
 		if(form_id == null)
 			throw new NullPointerException("Form_id is not provided");
+		
+		IPersistenceManager persistence_manager = getPersistenceManager();
+		persistence_manager.init(form_id);
 		
 		clear();
 		
@@ -69,7 +72,19 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		loadSubmitButton();
 	}
 	
-	public void addComponent(IFormComponent component) {
+	public String addComponent(String component_type, String component_after_this_id) throws NullPointerException {
+		
+		IFormComponent component = FormComponentFactory.getInstance().getFormComponentByType(component_type);
+
+		if(component_after_this_id != null) {
+			
+			IFormComponent comp_after_new = getFormComponent(component_after_this_id);
+			
+			if(comp_after_new == null)
+				throw new NullPointerException("Component after not found");
+			
+			component.setComponentAfterThis(comp_after_new);
+		}
 		
 		String component_id = FormManagerUtil.CTID+generateNewComponentId();
 		
@@ -79,6 +94,8 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		component.render();
 		
 		getFormComponents().put(component_id, component);
+		
+		return component_id;
 	}
 	
 	protected void loadSubmitButton() {
@@ -116,14 +133,6 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		return form_components_id_sequence;
 	}
 
-	public List<String> getFormXsdContainedTypesDeclarations() {
-		
-		if(form_xsd_contained_types_declarations == null)
-			form_xsd_contained_types_declarations = new LinkedList<String>();
-		
-		return form_xsd_contained_types_declarations;
-	}
-
 	public IFormComponent getFormComponent(String component_id) {
 		
 //		TODO: if not found, scan xforms document and load if found
@@ -149,21 +158,28 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		return persistence_manager.getSavedExceptions(); 
 	}
 	
-	public void setPersistenceManager(IPersistenceManager persistance_manager) {
+	public void setPersistenceManager(IPersistenceManager persistence_manager) {
 		
-		if(persistance_manager != null)
-			this.persistence_manager = persistance_manager;
+		if(persistence_manager != null)
+			this.persistence_manager = persistence_manager;
 	}
 	
 	public void persist() throws NullPointerException, InitializationException {
 		
-		if(persistence_manager == null)
-			throw new NullPointerException("Persistance manager is not provided");
+		IPersistenceManager persistence_manager = getPersistenceManager();
 		
 		if(!persistence_manager.isInitiated())
 				persistence_manager.init(form_id);
 		
 		persistence_manager.persistDocument(form_xforms);
+	}
+	
+	protected IPersistenceManager getPersistenceManager() throws NullPointerException {
+		
+		if(persistence_manager == null)
+			throw new NullPointerException("Persistence manager is not provided");
+		
+		return persistence_manager;
 	}
 	
 	public void rearrangeDocument() throws NullPointerException {
@@ -197,7 +213,6 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		
 		form_xforms = null;
 		getFormComponentsIdList().clear();
-		getFormXsdContainedTypesDeclarations().clear();
 		
 		last_component_id = 0;
 		form_id = null;
@@ -224,5 +239,50 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 	}
 	public String getFormId() {
 		return form_id;
+	}
+	
+	public void loadDocument(String form_id) throws InitializationException, Exception {
+		
+		if(form_id == null)
+			throw new NullPointerException("Form document id was not provided");
+		
+		IPersistenceManager persistence_manager = getPersistenceManager();
+		persistence_manager.init(form_id);
+		Document xforms_doc = persistence_manager.loadDocument();
+		clear();
+		
+		if(xforms_doc == null)
+			throw new NullPointerException("Form document was not found by provided id");
+		
+		this.form_xforms = xforms_doc;
+		this.form_id = form_id;
+		
+		List<String[]> components_tag_names_and_ids = FormManagerUtil.getComponentsTagNamesAndIds(xforms_doc);
+		
+		FormComponentFactory components_factory = FormComponentFactory.getInstance();
+		
+		List<String> components_id_list = getFormComponentsIdList();
+		
+		for (Iterator<String[]> iter = components_tag_names_and_ids.iterator(); iter.hasNext();) {
+			
+			String[] ctnaid = iter.next();
+			IFormComponent component = components_factory.recognizeFormComponent(ctnaid[0]);
+			String component_id = ctnaid[1];
+			
+			component.setId(component_id);
+			component.setFormDocument(this);
+			component.setLoad(true);
+			
+			if(component instanceof FormComponentSubmitButton) {
+				submit_button_id = component_id;
+			} else {
+				
+				components_id_list.add(component_id);
+			}
+			
+			getFormComponents().put(component_id, component);
+			
+			component.render();
+		}
 	}
 }

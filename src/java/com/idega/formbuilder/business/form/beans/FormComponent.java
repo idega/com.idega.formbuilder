@@ -26,6 +26,7 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 	
 	protected IComponentProperties properties;
 	protected boolean created = false;
+	protected boolean load = false;
 	
 	protected XFormsManager xforms_manager;
 	protected HtmlManager html_manager;
@@ -37,37 +38,51 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 		if(xforms_doc == null)
 			throw new NullPointerException("Form Xforms document was not provided");
 		
-		if(!created) {
+		if(load || !created) {
 			
 			XFormsManager xforms_manager = getXFormsManager();
-			XFormsComponentDataBean xforms_component = xforms_manager.getXFormsComponentByType(type);
+			XFormsComponentDataBean xforms_component;
 			
-			xforms_manager.addComponentToDocument(component_id, 
-					component_after_me == null ? null : component_after_me.getId(),
-					xforms_component);
-			
-			
-//			tell previous component, that I'm after him
-			List<String> id_list = form_document.getFormComponentsIdList();
-
-			for (int i = 0; i < id_list.size(); i++) {
+			if(load) {
 				
-				if(id_list.get(i).equals(component_id) && i != 0)
-					
-					form_document.getFormComponent(id_list.get(i-1)).setComponentAfterThis(this);
+				xforms_component = xforms_manager.loadXFormsComponentFromDocument(component_id);
+				
+			} else {
+				
+				xforms_component = xforms_manager.getXFormsComponentByType(type);
+				
+				xforms_manager.addComponentToDocument(component_id, 
+						component_after_me == null ? null : component_after_me.getId(),
+						xforms_component);
 			}
 			
 			xforms_manager.setXFormsComponentDataBean(xforms_component);
 			
 			ComponentProperties properties = (ComponentProperties)getProperties();
 			
-			properties.setPlainLabel(FormManagerUtil.getLabelLocalizedStrings(getId(), xforms_doc));
+			properties.setPlainLabel(FormManagerUtil.getLabelLocalizedStrings(component_id, xforms_doc));
 			properties.setPlainRequired(false);
-			properties.setPlainErrorMsg(FormManagerUtil.getErrorLabelLocalizedStrings(getId(), xforms_doc));
+			properties.setPlainErrorMsg(FormManagerUtil.getErrorLabelLocalizedStrings(component_id, xforms_doc));
 			
 			form_document.setFormDocumentModified(true);
-			
+			tellAboutMe();
 			created = true;
+			load = false;
+			
+		}
+	}
+	
+	protected void tellAboutMe() {
+		
+		List<String> id_list = form_document.getFormComponentsIdList();
+
+		for (int i = 0; i < id_list.size(); i++) {
+			
+			if(id_list.get(i).equals(component_id) && i != 0) {
+				
+				form_document.getFormComponent(id_list.get(i-1)).setComponentAfterThis(this);
+				break;
+			}
 		}
 	}
 	
@@ -108,6 +123,10 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 	
 	public void setType(String type) {
 		this.type = type;
+	}
+	
+	public void setLoad(boolean load) {
+		this.load = load;
 	}
 	
 	public void setFormDocument(IFormComponentParent form_document) {

@@ -18,12 +18,11 @@ public class XFormsManagerSubmitButton extends XFormsManager {
 		
 	}
 	
-	private static final String SUBMIT_TAG = "xf:submit";
 	private static final String SUBMISSION_ATT = "submission";
 	
 	public XFormsComponentDataBean getXFormsSubmitComponent(Document xforms_doc) {
 		
-		NodeList submits = xforms_doc.getElementsByTagName(SUBMIT_TAG);
+		NodeList submits = xforms_doc.getElementsByTagName(FormManagerUtil.submit_tag);
 		
 		if(submits == null || submits.getLength() == 0)
 			return null;

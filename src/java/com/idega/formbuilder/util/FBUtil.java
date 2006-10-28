@@ -20,20 +20,14 @@ import com.idega.presentation.IWContext;
  */
 public class FBUtil {
 	
-	private static String bundle_identifier = "com.idega.formbuilder";
-	
 	private FBUtil() { }
-	
-	public static String getBundleIdentifier() {
-		return bundle_identifier;
-	}
 	
 	public static IWBundle getBundle(){
 		return getBundle(FacesContext.getCurrentInstance());
 	}
 
 	public static IWBundle getBundle(FacesContext context){
-		return IWContext.getIWContext(context).getIWMainApplication().getBundle(getBundleIdentifier());
+		return IWContext.getIWContext(context).getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER);
 	}
 	
 	public static IWResourceBundle getResourceBundle(FacesContext context){
@@ -50,9 +44,8 @@ public class FBUtil {
 	}
 	
 	public static String generateFormId(String name) {
-		String result = "";
-		result = name.replace(' ', '_');
-		result += "-[" + new Date() + "]";
-		return result;
+		
+		String result = name+"-[" + new Date() + "]";
+		return result.replace(' ', '_');
 	}
 }

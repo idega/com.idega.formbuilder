@@ -27,4 +27,6 @@ public interface IFormComponent {
 	public abstract IComponentProperties getProperties();
 	
 	public abstract void remove();
+	
+	public abstract void setLoad(boolean load);
 }
