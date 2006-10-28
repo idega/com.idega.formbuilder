@@ -41,7 +41,7 @@ public class FormComponentSubmitButton extends FormComponent {
 			xforms_manager.setXFormsComponentDataBean(xforms_component);
 			
 			Element submit_element = xforms_component.getElement();
-			String submit_id = submit_element.getAttribute(FormManagerUtil.id_name);
+			String submit_id = submit_element.getAttribute(FormManagerUtil.id_att);
 			setId(submit_id);
 			
 			ComponentPropertiesSubmitButton properties = (ComponentPropertiesSubmitButton)getProperties();

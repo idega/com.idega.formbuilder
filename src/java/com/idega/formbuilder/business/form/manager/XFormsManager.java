@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.idega.formbuilder.business.form.beans.IComponentProperties;
@@ -62,7 +63,7 @@ public class XFormsManager {
 			return (XFormsComponentDataBean)xforms_component.clone();
 		
 		Document components_xforms = cache_manager.getComponentsXforms();
-		Element xforms_element = FormManagerUtil.getElementByIdFromDocument(components_xforms, FormManagerUtil.body_name, component_type);
+		Element xforms_element = FormManagerUtil.getElementByIdFromDocument(components_xforms, FormManagerUtil.body_tag, component_type);
 		
 		if(xforms_element == null) {
 			String msg = "Component cannot be found in components xforms document.";
@@ -87,7 +88,7 @@ public class XFormsManager {
 				
 //				get binding
 				Element binding = 
-					FormManagerUtil.getElementByIdFromDocument(components_xforms, FormManagerUtil.model_name, bind_to);
+					FormManagerUtil.getElementByIdFromDocument(components_xforms, FormManagerUtil.model_tag, bind_to);
 				
 				if(binding == null)
 					throw new NullPointerException("Binding not found");
@@ -117,7 +118,7 @@ public class XFormsManager {
 		new_xforms_element = (Element)xforms_doc.importNode(new_xforms_element, true);
 		xforms_component.setElement(new_xforms_element);
 		
-		new_xforms_element.setAttribute(FormManagerUtil.id_name, component_id);
+		new_xforms_element.setAttribute(FormManagerUtil.id_att, component_id);
 		
 		localizeComponent(component_id, new_xforms_element, xforms_doc, cache_manager.getComponentsXforms());
 		FormManagerUtil.removeTextNodes(new_xforms_element);
@@ -126,8 +127,8 @@ public class XFormsManager {
 		
 		if(xforms_component.getBind() != null) {
 			
-			bind_id = component_id+FormManagerUtil.bind_name;
-			new_xforms_element.setAttribute(FormManagerUtil.bind_name, bind_id);
+			bind_id = component_id+FormManagerUtil.bind_att;
+			new_xforms_element.setAttribute(FormManagerUtil.bind_att, bind_id);
 		}
 		
 		if(component_after_this_id == null) {
@@ -139,7 +140,7 @@ public class XFormsManager {
 			
 		} else {
 //			insert element after component
-			Element component_after_me = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_name, component_after_this_id);
+			Element component_after_me = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_tag, component_after_this_id);
 			
 			if(component_after_me != null)
 				component_after_me.getParentNode().insertBefore(new_xforms_element, component_after_me);
@@ -154,7 +155,7 @@ public class XFormsManager {
 			new_xforms_element = (Element)xforms_doc.importNode(xforms_component.getBind(), true);
 			xforms_component.setBind(new_xforms_element);
 			
-			new_form_schema_type = FormManagerUtil.insertBindElement(xforms_doc, new_xforms_element, bind_id, form_document.getFormXsdContainedTypesDeclarations());
+			new_form_schema_type = insertBindElement(new_xforms_element, bind_id);
 			
 			if(xforms_component.getNodeset() != null) {
 				
@@ -188,8 +189,7 @@ public class XFormsManager {
 		
 		if(new_form_schema_type != null) {
 
-			copySchemaType(cache_manager.getComponentsXsd(), xforms_doc, new_form_schema_type);
-			form_document.getFormXsdContainedTypesDeclarations().add(new_form_schema_type);
+			copySchemaType(cache_manager.getComponentsXsd(), xforms_doc, new_form_schema_type, component_id+new_form_schema_type);
 		}
 		
 	}
@@ -226,12 +226,12 @@ public class XFormsManager {
 	 * 
 	 * @param src - schema document to copy from
 	 * @param dest - schema document to copy to
-	 * @param type_name - name of type to copy
+	 * @param src_type_name - name of type to copy
 	 * @throws NullPointerException - some params were null or such type was not found in src document
 	 */
-	protected void copySchemaType(Document src, Document dest, String type_name) throws NullPointerException {
+	protected void copySchemaType(Document src, Document dest, String src_type_name, String dest_type_name) throws NullPointerException {
 		
-		if(src == null || dest == null || type_name == null) {
+		if(src == null || dest == null || src_type_name == null) {
 			
 			String err_msg = 
 			new StringBuffer("\nEither parameter is not provided:")
@@ -240,7 +240,7 @@ public class XFormsManager {
 			.append("\ndest: ")
 			.append(String.valueOf(dest))
 			.append("\ntype_name: ")
-			.append(type_name)
+			.append(src_type_name)
 			.toString();
 			
 			throw new NullPointerException(err_msg);
@@ -250,19 +250,21 @@ public class XFormsManager {
 		
 //		check among simple types
 		
-		Element type_to_copy = getSchemaTypeToCopy(root.getElementsByTagName(simple_type), type_name);
+		Element type_to_copy = getSchemaTypeToCopy(root.getElementsByTagName(simple_type), src_type_name);
 		
 		if(type_to_copy == null) {
 //			check among complex types
 			
-			type_to_copy = getSchemaTypeToCopy(root.getElementsByTagName(complex_type), type_name);
+			type_to_copy = getSchemaTypeToCopy(root.getElementsByTagName(complex_type), src_type_name);
 		}
 		
 		if(type_to_copy == null)
-			throw new NullPointerException("Schema type was not found by provided name: "+type_name);
+			throw new NullPointerException("Schema type was not found by provided name: "+src_type_name);
 		
 		type_to_copy = (Element)dest.importNode(type_to_copy, true);
-		((Element)dest.getElementsByTagName("xs:schema").item(0)).appendChild(type_to_copy);
+		type_to_copy.setAttribute(FormManagerUtil.name_att, dest_type_name);
+		
+		((Element)dest.getElementsByTagName(FormManagerUtil.schema_tag).item(0)).appendChild(type_to_copy);
 	}
 	
 	private Element getSchemaTypeToCopy(NodeList types, String type_name_required) {
@@ -270,7 +272,7 @@ public class XFormsManager {
 		for (int i = 0; i < types.getLength(); i++) {
 			
 			Element simple_type = (Element)types.item(i); 
-			String name_att = simple_type.getAttribute("name");
+			String name_att = simple_type.getAttribute(FormManagerUtil.name_att);
 			
 			if(name_att != null && name_att.equals(type_name_required))
 				return simple_type;
@@ -303,7 +305,7 @@ public class XFormsManager {
 		IComponentProperties props = component.getProperties();
 		LocalizedStringBean loc_str = props.getLabel();
 		
-		NodeList labels = xforms_component.getElement().getElementsByTagName(FormManagerUtil.label_name);
+		NodeList labels = xforms_component.getElement().getElementsByTagName(FormManagerUtil.label_tag);
 		
 		if(labels == null || labels.getLength() == 0)
 			return;
@@ -322,7 +324,7 @@ public class XFormsManager {
 		IComponentProperties props = component.getProperties();
 		
 		Element element = xforms_component.getElement();
-		NodeList alerts = element.getElementsByTagName(FormManagerUtil.alert_name);
+		NodeList alerts = element.getElementsByTagName(FormManagerUtil.alert_tag);
 		
 		if(alerts == null || alerts.getLength() == 0) {
 			
@@ -332,7 +334,7 @@ public class XFormsManager {
 			
 			alert = (Element)xforms_doc.importNode(alert, true);
 			element.appendChild(alert);
-			Element output = (Element)alert.getElementsByTagName(FormManagerUtil.output).item(0);
+			Element output = (Element)alert.getElementsByTagName(FormManagerUtil.output_tag).item(0);
 			
 			String new_err_id = new StringBuffer(FormManagerUtil.loc_key_identifier)
 			.append(component.getId())
@@ -344,7 +346,7 @@ public class XFormsManager {
 		} else {
 			
 			Element alert = (Element)alerts.item(0);
-			Element output = (Element)alert.getElementsByTagName(FormManagerUtil.output).item(0);
+			Element output = (Element)alert.getElementsByTagName(FormManagerUtil.output_tag).item(0);
 			
 			FormManagerUtil.putLocalizedText(
 					null, null, output, form_document.getXformsDocument(), props.getErrorMsg());
@@ -361,15 +363,18 @@ public class XFormsManager {
 	
 	public void moveComponent(String before_component_id) {
 		
+		if(form_document == null)
+			throw new NullPointerException("Parent form document not provided");
+		
 		Document xforms_doc = form_document.getXformsDocument();
 		String component_id = component.getId();
 		
-		Element element_to_move = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_name, component_id);
+		Element element_to_move = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_tag, component_id);
 		Element element_to_insert_before = null;
 
 		if(before_component_id != null) {
 			
-			element_to_insert_before = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_name, before_component_id);
+			element_to_insert_before = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_tag, before_component_id);
 		} else {
 
 			Element components_container = (Element)element_to_move.getParentNode();
@@ -383,13 +388,100 @@ public class XFormsManager {
 	
 	public void removeComponentFromXFormsDocument() {
 		
+		if(form_document == null)
+			throw new NullPointerException("Parent form document not provided");
+		
 		Document xforms_doc = form_document.getXformsDocument();
 		String component_id = component.getId();
 		
-		Element element_to_remove = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_name, component_id);
+		Element element_to_remove = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_tag, component_id);
+		
+		removeComponentLocalization(element_to_remove);
+		removeComponentBindings(element_to_remove);
 		
 		element_to_remove.getParentNode().removeChild(element_to_remove);
+	}
+	
+	protected void removeComponentBindings(Element removing_element) {
 		
-//		TODO: remove all other infoo
+		Document xforms_doc = form_document.getXformsDocument();
+		
+		String binded_to = removing_element.getAttribute(FormManagerUtil.bind_att);
+		Element bind_element = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.head_tag, binded_to);
+		String nodeset_att_value = bind_element.getAttribute(FormManagerUtil.nodeset_att);
+		
+		if(nodeset_att_value != null) {
+			
+			Element model = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.head_tag, form_document.getFormId());
+			Node nodeset = model.getElementsByTagName(nodeset_att_value).item(0);
+			nodeset.getParentNode().removeChild(nodeset);
+		}
+		
+		String schema_type_att_value = bind_element.getAttribute(FormManagerUtil.type_att);
+		
+		if(schema_type_att_value != null && schema_type_att_value.startsWith(component.getId())) {
+			
+			Element schema_element = (Element)xforms_doc.getElementsByTagName(FormManagerUtil.schema_tag).item(0);
+			
+			Element type_element_to_remove = DOMUtil.getElementByAttributeValue(schema_element, "*", FormManagerUtil.name_att, schema_type_att_value);
+			
+			if(type_element_to_remove != null)
+				schema_element.removeChild(type_element_to_remove);
+		}
+		bind_element.getParentNode().removeChild(bind_element);
+	}
+	
+	protected void removeComponentLocalization(Element removing_element) {
+		
+		NodeList children = removing_element.getElementsByTagName("*");
+		
+		Element loc_model = FormManagerUtil.getElementByIdFromDocument(
+				form_document.getXformsDocument(), FormManagerUtil.head_tag, FormManagerUtil.data_mod);
+		
+		Element loc_strings = (Element)loc_model.getElementsByTagName(FormManagerUtil.loc_tag).item(0);
+		
+		for (int i = 0; i < children.getLength(); i++) {
+			
+			Element child = (Element)children.item(i);
+			
+			String ref = child.getAttribute("ref");
+			
+			if(FormManagerUtil.isRefFormCorrect(ref)) {
+				
+				String key = FormManagerUtil.getKeyFromRef(ref);
+				
+//				those elements should be the child nodes
+				NodeList localization_elements = loc_strings.getElementsByTagName(key);
+				
+				if(localization_elements != null) {
+					
+					int elements_count = localization_elements.getLength();
+					
+					for (int j = 0; j < elements_count; j++) {
+						
+						loc_strings.removeChild(localization_elements.item(0));
+					}
+				}
+			}
+		}
+	}
+
+	public String insertBindElement(Element new_bind_element, String bind_id) {
+		
+		Document form_xforms = form_document.getXformsDocument();
+		
+		new_bind_element.setAttribute(FormManagerUtil.id_att, bind_id);
+	
+		Element model = FormManagerUtil.getElementByIdFromDocument(form_xforms, FormManagerUtil.head_tag, form_document.getFormId());
+		model.appendChild(new_bind_element);
+		
+		String type_att = new_bind_element.getAttribute(FormManagerUtil.type_att);
+		
+		if(type_att != null && type_att.startsWith(FormManagerUtil.fb_)) {
+			
+			new_bind_element.setAttribute(FormManagerUtil.type_att, component.getId()+type_att);
+			return type_att;
+		}
+		return null;
 	}
 }

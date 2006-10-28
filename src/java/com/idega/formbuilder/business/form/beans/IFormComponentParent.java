@@ -21,4 +21,6 @@ public interface IFormComponentParent {
 	public abstract Document getComponentsXml();
 	
 	public abstract void setComponentsXml(Document xml);
+	
+	public abstract String getFormId();
 }

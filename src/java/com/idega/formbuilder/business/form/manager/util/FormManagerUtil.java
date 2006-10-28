@@ -29,29 +29,31 @@ import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
  */
 public class FormManagerUtil {
 	
-	/**
-	 * Properties holded for FormManager class for optimization(?) purposes
-	 */
-	public static final String model_name = "xf:model";
-	public static final String label_name = "xf:label";
-	public static final String alert_name = "xf:alert";
+	public static final String model_tag = "xf:model";
+	public static final String label_tag = "xf:label";
+	public static final String alert_tag = "xf:alert";
 	public static final String head_tag = "head";
-	public static final String id_name = "id";
-	public static final String type_name = "type";
+	public static final String id_att = "id";
+	public static final String type_att = "type";
 	public static final String slash = "/";
 	public static final String fb_ = "fb_";
 	public static final String loc_ref_part1 = "instance('localized_strings')/";
 	public static final String loc_ref_part2 = "[@lang=instance('localized_strings')/current_language]";
 	public static final String data_mod = "data_model";
 	public static final String loc_tag = "localized_strings";
-	public static final String output = "xf:output";
-	public static final String ref_s = "ref";
-	public static final String lang = "lang";
+	public static final String output_tag = "xf:output";
+	public static final String ref_s_att = "ref";
+	public static final String lang_att = "lang";
 	public static final String CTID = "fbcomp_";
 	public static final String loc_key_identifier = "lockey_";
 	public static final String localized_entries = "localizedEntries";
-	public static final String body_name = "body";
-	public static final String bind_name = "bind";
+	public static final String body_tag = "body";
+	public static final String bind_att = "bind";
+	public static final String name_att = "name";
+	public static final String schema_tag = "xs:schema";
+	public static final String form_id = "form_id";
+	public static final String title_tag = "title";
+	public static final String nodeset_att = "nodeset";
 	
 	private FormManagerUtil() { }
 	
@@ -125,34 +127,6 @@ public class FormManagerUtil {
 		container.appendChild(new_xforms_element);
 	}
 	
-	public static String insertBindElement(Document form_xforms, Element new_xforms_element, String bind_id, List<String> form_xsd_contained_types_declarations) {
-		
-		new_xforms_element.setAttribute(id_name, bind_id);
-	
-		String type_att = new_xforms_element.getAttribute(type_name);
-		
-		NodeList models = form_xforms.getElementsByTagName(model_name);
-		
-		for (int i = 0; i < models.getLength(); i++) {
-			
-			Element model = (Element)models.item(i);
-			
-			if(!model.getAttribute(id_name).equals(data_mod)) {
-				
-				model.appendChild(new_xforms_element);
-				
-				if(type_att != null && type_att.startsWith(fb_) &&
-						!form_xsd_contained_types_declarations.contains(type_att))
-
-					return type_att;
-				
-				return null;
-			}
-		}
-		
-		return null;
-	}
-	
 	/**
 	 * Puts localized text on element. Localization is saved on the xforms document.
 	 * 
@@ -168,7 +142,7 @@ public class FormManagerUtil {
 		if(xforms == null)
 			throw new NullPointerException("XForms document not provided");
 		
-		String ref = element.getAttribute(ref_s);
+		String ref = element.getAttribute(ref_s_att);
 		
 		if(ref == null || new_key != null) {
 			
@@ -181,7 +155,7 @@ public class FormManagerUtil {
 			.append(loc_ref_part2)
 			.toString();
 			
-			element.setAttribute(ref_s, ref);
+			element.setAttribute(ref_s_att, ref);
 			
 		} else if(ref != null && isRefFormCorrect(ref)) {
 //			get key from ref
@@ -223,7 +197,7 @@ public class FormManagerUtil {
 			
 			Element loc_tag = (Element)loc_tags.item(i);
 			
-			if(!lang_strings.contains(loc_tag.getAttribute(lang))) {
+			if(!lang_strings.contains(loc_tag.getAttribute(lang_att))) {
 				
 				loc_strings.removeChild(loc_tag);
 			}
@@ -241,7 +215,7 @@ public class FormManagerUtil {
 					
 					Element loc_tag = (Element)loc_tags.item(i);
 					
-					if(loc_tag.getAttribute(lang).equals(locale.getLanguage())) {
+					if(loc_tag.getAttribute(lang_att).equals(locale.getLanguage())) {
 						
 						if(loc_string.getString(locale) != null)
 							setElementsTextNodeValue(loc_tag, loc_string.getString(locale));
@@ -256,7 +230,7 @@ public class FormManagerUtil {
 				
 //				create new localization element
 				Element new_loc_el = xforms.createElement(new_key);
-				new_loc_el.setAttribute(lang, locale.getLanguage());
+				new_loc_el.setAttribute(lang_att, locale.getLanguage());
 				new_loc_el.appendChild(xforms.createTextNode(""));
 				setElementsTextNodeValue(new_loc_el, loc_string.getString(locale) == null ? "" : loc_string.getString(locale));
 				loc_strings.appendChild(new_loc_el);
@@ -314,7 +288,7 @@ public class FormManagerUtil {
 		
 		Element component = getElementByIdFromDocument(xforms_doc, "body", component_id);
 		
-		NodeList labels = component.getElementsByTagName(FormManagerUtil.label_name);
+		NodeList labels = component.getElementsByTagName(FormManagerUtil.label_tag);
 		
 		if(labels == null || labels.getLength() == 0)
 			return new LocalizedStringBean();
@@ -335,12 +309,12 @@ public class FormManagerUtil {
 		
 		Element component = getElementByIdFromDocument(xforms_doc, "body", component_id);
 		
-		NodeList alerts = component.getElementsByTagName(FormManagerUtil.alert_name);
+		NodeList alerts = component.getElementsByTagName(FormManagerUtil.alert_tag);
 		
 		if(alerts == null || alerts.getLength() == 0)
 			return new LocalizedStringBean();
 		
-		Element output = (Element)((Element)alerts.item(0)).getElementsByTagName(FormManagerUtil.output).item(0);
+		Element output = (Element)((Element)alerts.item(0)).getElementsByTagName(FormManagerUtil.output_tag).item(0);
 		
 		String ref = output.getAttribute("ref");
 		
@@ -424,7 +398,7 @@ public class FormManagerUtil {
 			
 			if(child.getNodeType() == Node.ELEMENT_NODE && child.getNodeName().equals("div")) {
 				
-				String element_id = ((Element)child).getAttribute(FormManagerUtil.id_name);
+				String element_id = ((Element)child).getAttribute(FormManagerUtil.id_att);
 				
 				if(element_id != null && 
 						element_id.startsWith(FormManagerUtil.CTID) &&

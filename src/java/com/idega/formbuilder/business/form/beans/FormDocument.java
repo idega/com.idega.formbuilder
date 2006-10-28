@@ -47,15 +47,15 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		
 		Document form_xforms_template = CacheManager.getInstance().getFormXformsTemplateCopy();
 		
-		Element model = FormManagerUtil.getElementByIdFromDocument(form_xforms_template, "head", "form_id");
-		model.setAttribute(FormManagerUtil.id_name, form_id);
+		Element model = FormManagerUtil.getElementByIdFromDocument(form_xforms_template, FormManagerUtil.head_tag, FormManagerUtil.form_id);
+		model.setAttribute(FormManagerUtil.id_att, form_id);
 		
 		form_xforms = form_xforms_template;
 		
 		if(form_name != null) {
 			
-			Element title = (Element)form_xforms.getElementsByTagName("title").item(0);
-			Element output = (Element)title.getElementsByTagName(FormManagerUtil.output).item(0);
+			Element title = (Element)form_xforms.getElementsByTagName(FormManagerUtil.title_tag).item(0);
+			Element output = (Element)title.getElementsByTagName(FormManagerUtil.output_tag).item(0);
 			
 			try {
 				
@@ -221,5 +221,8 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 	}
 	public void setComponentsXml(Document xml) {
 		components_xml = xml;
+	}
+	public String getFormId() {
+		return form_id;
 	}
 }
