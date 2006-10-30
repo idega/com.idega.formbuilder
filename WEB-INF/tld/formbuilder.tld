@@ -12,6 +12,25 @@
     <description>JSF Idega Frombuilder Tag Library</description>
 
 	<tag>
+		<name>workspace</name>
+		<tag-class>com.idega.formbuilder.presentation.FBWorkspaceTag</tag-class>
+		<attribute>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>view</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
 		<name>palette</name>
 		<tag-class>com.idega.formbuilder.presentation.FBPaletteTag</tag-class>
 		<attribute>
