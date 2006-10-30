@@ -85,6 +85,14 @@ public class FormbuilderViewManager implements Singleton  {
 	
 	
 	public void initializeStandardNodes(IWBundle bundle){
-		initalizeContentNode(bundle);
+		ViewNode contentNode = initalizeContentNode(bundle);
+		
+		DefaultViewNode formbuilderNode = new DefaultViewNode("formbuilder",contentNode);
+		formbuilderNode.setJspUri(bundle.getJSPURI("formbuilder.jsp"));
+		formbuilderNode.setName("Formbuilder");
+		
+		DefaultViewNode adminNode = new DefaultViewNode("formadmin",contentNode);
+		adminNode.setJspUri(bundle.getJSPURI("formadmin.jsp"));
+		adminNode.setName("Form admin");
 	}
 }

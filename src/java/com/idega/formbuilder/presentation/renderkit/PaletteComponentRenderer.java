@@ -17,18 +17,21 @@ public class PaletteComponentRenderer extends Renderer {
 		FBPaletteComponent comp = (FBPaletteComponent) component;
 		writer.startElement("DIV", comp);
 		writer.writeAttribute("class", comp.getStyleClass(), "styleClass");
-		/*ValueBinding vb = comp.getValueBinding("type");
-		String type = (String) vb.getValue(context);
+		ValueBinding vb = comp.getValueBinding("type");
 		if(vb != null) {
-			writer.writeAttribute("id", vb.getValue(context), "type");
-		}*/
-		writer.writeAttribute("id", comp.getType(), "type");
+			String type = (String) vb.getValue(context);
+			writer.writeAttribute("id", type, "type");
+		} else {
+			writer.writeAttribute("id", comp.getType(), "type");
+		}
 		writer.startElement("P", null);
-		/*vb = comp.getValueBinding("name");
+		vb = comp.getValueBinding("name");
 		if(vb != null) {
-			writer.writeText(vb.getValue(context), null);
-		}*/
-		writer.writeText(comp.getName(), null);
+			String name = (String) vb.getValue(context);
+			writer.writeText(name, null);
+		} else {
+			writer.writeText(comp.getName(), null);
+		}
 		writer.endElement("P");
 		writer.endElement("DIV");
 		writer.write(getEmbededJavascript(comp.getType()));

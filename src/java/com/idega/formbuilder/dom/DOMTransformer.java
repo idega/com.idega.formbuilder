@@ -1,4 +1,4 @@
-package com.idega.formbuilder.presentation.renderkit;
+package com.idega.formbuilder.dom;
 
 import java.io.IOException;
 
@@ -9,8 +9,10 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class GenericFieldTransformer {
+public class DOMTransformer {
+	
 	public static void renderNode(Node node, UIComponent component, ResponseWriter writer) throws IOException {
+		//Node node = component
 		String nodeName = node.getNodeName();
 		writer.startElement(node.getNodeName(), component);
 		Node attr = null;
@@ -33,4 +35,5 @@ public class GenericFieldTransformer {
 		}
 		writer.endElement(nodeName);
 	}
+	
 }

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -13,7 +14,6 @@ import javax.faces.context.ResponseWriter;
 import com.idega.formbuilder.presentation.FBToolbar;
 import com.idega.webface.WFMenuItems;
 import com.idega.webface.WFTab;
-import com.idega.webface.WFUtil;
 import com.idega.webface.renderkit.ToolbarRenderer;
 
 /**

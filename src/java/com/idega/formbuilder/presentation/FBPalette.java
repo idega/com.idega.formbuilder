@@ -1,10 +1,15 @@
 package com.idega.formbuilder.presentation;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import javax.faces.application.Application;
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
+
+import com.idega.formbuilder.business.FormComponent;
 
 public class FBPalette extends UIComponentBase {
 	
@@ -28,6 +33,25 @@ public class FBPalette extends UIComponentBase {
 	
 	public String getRendererType() {
 		return FBPalette.RENDERER_TYPE;
+	}
+	
+	public void initializeComponent(FacesContext context) {
+		Application application = context.getApplication();
+		//FBPalette palette = (FBPalette) component;
+		this.getChildren().clear();
+		ValueBinding vb = this.getValueBinding("items");
+		if(vb != null) {
+			List items = (List) vb.getValue(context);
+			Iterator it = items.iterator();
+			while(it.hasNext()) {
+				FormComponent current = (FormComponent) it.next();
+				FBPaletteComponent formComponent = (FBPaletteComponent) application.createComponent(FBPaletteComponent.COMPONENT_TYPE);
+				formComponent.setStyleClass(this.getItemStyleClass());
+				formComponent.setName(current.getName());
+				formComponent.setType(current.getType());
+				this.getChildren().add(formComponent);
+			}
+		}
 	}
 
 	public int getColumns() {

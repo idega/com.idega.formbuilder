@@ -1,9 +1,15 @@
 package com.idega.formbuilder.presentation;
 
+import java.util.Locale;
+
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
 
 import org.w3c.dom.Element;
+
+import com.idega.formbuilder.FormbuilderViewManager;
+import com.idega.formbuilder.business.form.manager.IFormManager;
+import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
 
 public class FBFormComponent extends UIComponentBase {
 	
@@ -30,6 +36,14 @@ public class FBFormComponent extends UIComponentBase {
 	
 	public String getFamily() {
 		return COMPONENT_FAMILY;
+	}
+	
+	public void initializeComponent(FacesContext context) throws FBPostponedException {
+		//FBFormComponent field = (FBFormComponent) component;
+		IFormManager formManagerInstance = (IFormManager) context.getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
+		Element element = formManagerInstance.getLocalizedFormHtmlComponent(this.getId(), new Locale("en"));
+		element.setAttribute("class", this.getStyleClass());
+		this.setElement(element);
 	}
 	
 	public Object saveState(FacesContext context) {
