@@ -10,11 +10,9 @@ import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 
 import com.idega.business.IBOLookup;
-import com.idega.business.IBOLookupException;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 import com.idega.formbuilder.business.form.manager.util.InitializationException;
 import com.idega.presentation.IWContext;
-import com.idega.slide.business.IWSlideService;
 import com.idega.slide.business.IWSlideSession;
 import com.idega.slide.util.WebdavExtendedResource;
 
@@ -73,43 +71,6 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 		if(document == null)
 			throw new NullPointerException("Document is not provided");
 		
-		if(true)
-			persistDocument2(document);
-		
-		final String path_to_file = form_pathes[0];
-		final String file_name = form_pathes[1];
-		final IWSlideService service_bean = getServiceBean();
-		
-		new Thread() {
-			
-			public void run() {
-				
-				try {
-					
-//					TODO: find better method for doing this.
-					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					DOMUtil.prettyPrintDOM(document, out);
-					InputStream is = new ByteArrayInputStream(out.toByteArray());
-//					--
-					service_bean.uploadFileAndCreateFoldersFromStringAsRoot(
-							path_to_file, file_name,
-							is, "text/xml", false
-					);
-					
-					document_to_webdav_save_exception = null;
-					
-				} catch (Exception e) {
-					logger.error("Exception occured while saving document to webdav dir: ", e);
-					
-					document_to_webdav_save_exception = e;
-				}
-			}
-		}.start();
-	}
-	
-	public void persistDocument2(final Document document) throws InitializationException, NullPointerException {
-
-		
 		final WebdavExtendedResource webdav_resource = getWebdavResource();
 		
 		new Thread() {
@@ -160,21 +121,6 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 		webdav_resource = null;
 	}
 	
-	private IWSlideService getServiceBean() {
-		
-		IWSlideService service_bean = null;
-		try {
-			
-			service_bean = (IWSlideService)IBOLookup.getServiceInstance(IWContext.getInstance(), IWSlideService.class);
-			
-		} catch (IBOLookupException e) {
-			
-			logger.error("Error during lookup for IWSlideService", e);
-		}
-		
-		return service_bean;
-	}
-	
 	public Document loadDocument() throws InitializationException, Exception {
 		
 		if(!isInitiated())
@@ -193,8 +139,10 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 			try {
 				
 				IWSlideSession session = (IWSlideSession) IBOLookup.getSessionInstance(IWContext.getInstance(), IWSlideSession.class);
-				
+				System.out.println("tatata: "+form_pathes[0]+form_pathes[1]);
 				webdav_resource = session.getWebdavResource(form_pathes[0]+form_pathes[1]);
+				
+//				TODO: cant set properties when document doesn't exist in webdav. check for it
 				webdav_resource.setProperties();
 				
 			} catch (Exception e) {
