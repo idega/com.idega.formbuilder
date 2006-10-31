@@ -33,7 +33,7 @@
 						<h:commandLink id="help_form_button" onclick="showInnerHtml(this)" styleClass="toolbar_button float_right" action="" value="Help"/>
 						<h:selectOneMenu id="localeList" styleClass="toolbar_field float_right" value="#{viewmanager.currentLocale}">
 							<f:selectItems value="#{localeList.locales}" />
-							<a4j:support event="onchange" onsubmit="switchSelectedForm()" oncomplete="formSwitched()" action="#{viewmanager.changeSelectedForm}" ajaxSingle="true" reRender="workspaceform1:tab01,form_container" />
+							<a4j:support event="onchange" onsubmit="switchSelectedForm()" oncomplete="formSwitched()" action="#{viewmanager.changeSelectedForm}" ajaxSingle="true" reRender="form_container" />
 						</h:selectOneMenu>
 					</t:div>
 					<t:div styleClass="main_container" id="main_container" forceId="true">
@@ -76,34 +76,58 @@
 							    </t:panelTab>
 							</t:panelTabbedPane>
 						</t:div>
-						<fb:workspace styleClass="form_container" id="form_container" view="design">
-							<f:facet name="design">
-								<fb:formDesignView id="dropBox" styleClass="dropBox" componentStyleClass="formElement">
-									<f:facet name="noFormNoticeFacet">
-										<t:div id="noFormNotice" styleClass="visibleFacet" forceId="true">
-											<t:outputText id="noFormNoticeHeader" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_header']}" />
-											<t:htmlTag value="br" />
-											<t:outputText id="noFormNoticeBody" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_body']}" />
-										</t:div>
-									</f:facet>
-									<f:facet name="formHeaderFacet">
-										<t:div id="formHeading" styleClass="invisibleFacet" forceId="true">
-											<t:outputText id="formHeadingHeader" forceId="true" onclick="selectFormHeader()" value="#{viewmanager.formTitle}" />
-											<t:htmlTag value="br" />
-											<t:outputText id="formHeadingBody" forceId="true" value="#{viewmanager.formDescription}" />
-											<t:htmlTag value="hr" />
-										</t:div>
-									</f:facet>
-									<f:facet name="emptyFormFacet">
-										<t:div id="emptyForm" styleClass="invisibleFacet" forceId="true">
-											<t:outputText id="emptyFormHeader" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_header']}" />
-											<t:htmlTag value="br" />
-											<t:outputText id="emptyFormBody" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_body']}" />
-										</t:div>
-									</f:facet>
-								</fb:formDesignView>
-							</f:facet>
-						</fb:workspace>
+						<t:div id="form_container" forceId="true">
+							<fb:workspace styleClass="form_container" id="mainWorkspace" view="#{workspace.view}">
+								<f:facet name="design">
+									<fb:designView id="dropBox" styleClass="dropBox" componentStyleClass="formElement" status="noform">
+										<f:facet name="noFormNoticeFacet">
+											<t:div id="noFormNotice" forceId="true">
+												<t:outputText id="noFormNoticeHeader" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_header']}" />
+												<t:htmlTag value="br" />
+												<t:outputText id="noFormNoticeBody" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_body']}" />
+											</t:div>
+										</f:facet>
+										<f:facet name="formHeaderFacet">
+											<t:div id="formHeading" forceId="true">
+												<t:outputText id="formHeadingHeader" forceId="true" onclick="selectFormHeader()" value="#{viewmanager.formTitle}" />
+												<t:htmlTag value="br" />
+												<t:outputText id="formHeadingBody" forceId="true" value="#{viewmanager.formDescription}" />
+												<t:htmlTag value="hr" />
+											</t:div>
+										</f:facet>
+										<f:facet name="emptyFormFacet">
+											<t:div id="emptyForm" forceId="true">
+												<t:outputText id="emptyFormHeader" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_header']}" />
+												<t:htmlTag value="br" />
+												<t:outputText id="emptyFormBody" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_body']}" />
+											</t:div>
+										</f:facet>
+									</fb:designView>
+								</f:facet>
+								<f:facet name="preview">
+									<t:div id="emptyForm2" styleClass="visibleFacet" forceId="true">
+										<t:outputText id="emptyFormHeader3" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_header']}" />
+										<t:htmlTag value="br" />
+										<t:outputText id="emptyFormBody3" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_body']}" />
+									</t:div>
+								</f:facet>
+								<f:facet name="source">
+									<t:div id="emptyForm3" styleClass="visibleFacet" forceId="true">
+										<h:selectOneMenu id="viewList2" styleClass="toolbar_field float_right" value="#{workspace.view}">
+											<f:selectItems value="#{workspace.views}" />
+											<a4j:support event="onchange" ajaxSingle="true" reRender="form_container" />
+										</h:selectOneMenu>
+									</t:div>
+								</f:facet>
+								<f:facet name="viewSwitch">
+									<t:div id="viewSwitch" forceId="true">
+										<a4j:commandLink id="designViewButton" styleClass="toolbar_button float_right" actionListener="#{workspace.viewChanged}" reRender="form_container" ajaxSingle="true" value="Design" />
+										<a4j:commandLink id="previewViewButton" styleClass="toolbar_button float_right" actionListener="#{workspace.viewChanged}" reRender="form_container" ajaxSingle="true" value="Preview" />
+										<a4j:commandLink id="sourceViewButton" styleClass="toolbar_button float_right" actionListener="#{workspace.viewChanged}" reRender="form_container" ajaxSingle="true" value="Source" />
+									</t:div>
+								</f:facet>
+							</fb:workspace>
+						</t:div>
 						<f:verbatim>
 							<script type="text/javascript" src="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js" />
 							<script type="text/javascript">
@@ -112,17 +136,6 @@
 							-->
 							</script>
 						</f:verbatim>
-						<t:div id="bottom_tab_container" forceId="true">
-							<!--
-							<h:commandLink id="design_view_button" styleClass="bottom_tab_button float_center" action="" value="Design"/>
-							<h:commandLink id="preview_view_button" styleClass="bottom_tab_button float_center" action="" value="Preview"/>
-							<h:commandLink id="source_view_button" styleClass="bottom_tab_button float_center" action="" value="Source"/>
-							-->
-							<h:selectOneMenu id="viewList" styleClass="toolbar_field float_left" value="#{viewmanager.currentFormName}">
-								<f:selectItems value="#{formList.forms}" />
-								<a4j:support event="onchange" onsubmit="switchSelectedForm()" oncomplete="formSwitched()" action="#{viewmanager.changeSelectedForm}" ajaxSingle="true" reRender="workspaceform1:tab01,form_container" />
-							</h:selectOneMenu>
-						</t:div>
 					</t:div>
 				</t:div>
 			</h:form>

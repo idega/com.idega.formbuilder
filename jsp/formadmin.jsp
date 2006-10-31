@@ -8,7 +8,7 @@
 	<f:view>
 		<ws:page id="formbuilder">
 			<h:form id="workspaceform1">
-				<fa:FormViewer />
+				<fa:FormViewer rendered="true" />
 			</h:form>
 		</ws:page>
 	</f:view>

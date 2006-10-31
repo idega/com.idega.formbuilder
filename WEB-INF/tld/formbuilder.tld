@@ -84,8 +84,8 @@
 		</attribute>
 	</tag>
 	<tag>
-		<name>formDesignView</name>
-		<tag-class>com.idega.formbuilder.view.design.FormDesignViewTag</tag-class>
+		<name>designView</name>
+		<tag-class>com.idega.formbuilder.presentation.FBDesignViewTag</tag-class>
 		<attribute>
 			<name>id</name>
 			<required>false</required>
@@ -98,6 +98,11 @@
 		</attribute>
 		<attribute>
 			<name>componentStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>status</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
