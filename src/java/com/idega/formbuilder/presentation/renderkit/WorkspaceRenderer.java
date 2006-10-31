@@ -8,8 +8,10 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
 import javax.faces.render.Renderer;
 
+import org.apache.myfaces.custom.div.Div;
+
+import com.idega.formbuilder.presentation.FBDesignView;
 import com.idega.formbuilder.presentation.FBWorkspace;
-import com.idega.formbuilder.view.design.FormDesignView;
 
 public class WorkspaceRenderer extends Renderer {
 	
@@ -30,7 +32,7 @@ public class WorkspaceRenderer extends Renderer {
 		}
 		if(view != null) {
 			if(view.equals("design")) {
-				FormDesignView designView = (FormDesignView) workspace.getFacet(view);
+				FBDesignView designView = (FBDesignView) workspace.getFacet(view);
 				if(designView != null) {
 					if (designView.isRendered()) {
 						designView.encodeBegin(context);
@@ -39,11 +41,31 @@ public class WorkspaceRenderer extends Renderer {
 					}
 				}
 			} else if(view.equals("preview")) {
-				
+				Div facet2 = (Div) component.getFacet(view);
+				if (facet2 != null) {
+					if (facet2.isRendered()) {
+						facet2.encodeBegin(context);
+						facet2.encodeChildren(context);
+						facet2.encodeEnd(context);
+					}
+				}
 			} else if(view.equals("source")) {
-				
-			} else {
-				throw new IllegalArgumentException();
+				Div facet3 = (Div) component.getFacet(view);
+				if (facet3 != null) {
+					if (facet3.isRendered()) {
+						facet3.encodeBegin(context);
+						facet3.encodeChildren(context);
+						facet3.encodeEnd(context);
+					}
+				}
+			}
+		}
+		Div viewSwitch = (Div) workspace.getFacet("viewSwitch");
+		if(viewSwitch != null) {
+			if (viewSwitch.isRendered()) {
+				viewSwitch.encodeBegin(context);
+				viewSwitch.encodeChildren(context);
+				viewSwitch.encodeEnd(context);
 			}
 		}
 	}

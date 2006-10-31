@@ -37,7 +37,6 @@ public class FBPalette extends UIComponentBase {
 	
 	public void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
-		//FBPalette palette = (FBPalette) component;
 		this.getChildren().clear();
 		ValueBinding vb = this.getValueBinding("items");
 		if(vb != null) {
