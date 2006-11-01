@@ -142,7 +142,6 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 			try {
 				
 				IWSlideSession session = (IWSlideSession) IBOLookup.getSessionInstance(IWContext.getInstance(), IWSlideSession.class);
-				System.out.println("tatata: "+form_pathes[0]+form_pathes[1]);
 				webdav_resource = session.getWebdavResource(form_pathes[0]+form_pathes[1]);
 				
 //				TODO: cant set properties when document doesn't exist in webdav. check for it
