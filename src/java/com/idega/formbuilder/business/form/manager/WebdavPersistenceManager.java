@@ -98,7 +98,10 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 	
 	public Exception[] getSavedExceptions() {
 		
-		return document_to_webdav_save_exception != null ? new Exception[] {document_to_webdav_save_exception} : null; 
+		Exception[] saved_exceptions = document_to_webdav_save_exception != null ? new Exception[] {document_to_webdav_save_exception} : null;
+		document_to_webdav_save_exception = null;
+		
+		return saved_exceptions; 
 	}
 	
 	public boolean isInitiated() {
