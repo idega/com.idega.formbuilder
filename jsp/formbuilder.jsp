@@ -39,7 +39,7 @@
 					<t:div styleClass="main_container" id="main_container" forceId="true">
 						<t:div styleClass="options_container" id="options_container" forceId="true">
 							<t:panelTabbedPane id="options_tabbed_pane"
-								selectedIndex="1"
+								selectedIndex="#{workspace.selectedTab}"
 								serverSideTabSwitch="false"
 						  		styleClass="tabbedPane"
 		                        activeTabStyleClass="activeTab"
@@ -73,13 +73,16 @@
 							    </t:panelTab>
 							    <t:panelTab id="tab03" label="Field properties">
 							        <t:outputText value="something else" />
+							        <!--
+							        <fb:properties id="compProps" styleClass="dropBox" />
+							        -->
 							    </t:panelTab>
 							</t:panelTabbedPane>
 						</t:div>
 						<t:div id="form_container" forceId="true">
 							<fb:workspace styleClass="form_container" id="mainWorkspace" view="#{workspace.view}">
 								<f:facet name="design">
-									<fb:designView id="dropBox" styleClass="dropBox" componentStyleClass="formElement" status="noform">
+									<fb:designView id="dropBox" styleClass="dropBox" componentStyleClass="formElement" status="#{workspace.designViewStatus}">
 										<f:facet name="noFormNoticeFacet">
 											<t:div id="noFormNotice" forceId="true">
 												<t:outputText id="noFormNoticeHeader" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_header']}" />
@@ -105,18 +108,13 @@
 									</fb:designView>
 								</f:facet>
 								<f:facet name="preview">
-									<t:div id="emptyForm2" styleClass="visibleFacet" forceId="true">
-										<t:outputText id="emptyFormHeader3" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_header']}" />
-										<t:htmlTag value="br" />
-										<t:outputText id="emptyFormBody3" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_body']}" />
+									<t:div styleClass="dropBox" forceId="true">
+										<t:outputText value="No form currently selected or this component is not enabled" />
 									</t:div>
 								</f:facet>
 								<f:facet name="source">
-									<t:div id="emptyForm3" styleClass="visibleFacet" forceId="true">
-										<h:selectOneMenu id="viewList2" styleClass="toolbar_field float_right" value="#{workspace.view}">
-											<f:selectItems value="#{workspace.views}" />
-											<a4j:support event="onchange" ajaxSingle="true" reRender="form_container" />
-										</h:selectOneMenu>
+									<t:div styleClass="dropBox" forceId="true">
+										<t:outputText value="No form currently selected or this component is not enabled" />
 									</t:div>
 								</f:facet>
 								<f:facet name="viewSwitch">

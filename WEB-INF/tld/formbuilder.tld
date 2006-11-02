@@ -11,6 +11,26 @@
     <uri>http://xmlns.idega.com/com.idega.formbuilder</uri>
     <description>JSF Idega Frombuilder Tag Library</description>
 
+	
+	<tag>
+		<name>properties</name>
+		<tag-class>com.idega.formbuilder.presentation.FBComponentPropertiesPanelTag</tag-class>
+		<attribute>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>component</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
 	<tag>
 		<name>workspace</name>
 		<tag-class>com.idega.formbuilder.presentation.FBWorkspaceTag</tag-class>

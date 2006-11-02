@@ -10,14 +10,16 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.idega.formbuilder.FormbuilderViewManager;
+import com.idega.formbuilder.business.Workspace;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.manager.IFormManager;
+import com.idega.formbuilder.presentation.FBDesignView;
 import com.idega.formbuilder.util.FBUtil;
+import com.idega.webface.WFUtil;
 
 public class DWRManager implements Serializable {
 	
@@ -77,9 +79,10 @@ public class DWRManager implements Serializable {
 		element.setAttribute("class", "formElement");
 		Element button = (Element) element.getFirstChild();
 		button.setAttribute("disabled", "true");
-		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS, "EMPTY_FORM");
-		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_FORM_ID, id);
-		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE, current);
+		//FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS, "EMPTY_FORM");
+		//FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_FORM_ID, id);
+		//FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE, current);
+		((Workspace) WFUtil.getBeanInstance("workspace")).setDesignViewStatus(FBDesignView.DESIGN_VIEW_STATUS_EMPTY);
 		return element;
 	}
 	
