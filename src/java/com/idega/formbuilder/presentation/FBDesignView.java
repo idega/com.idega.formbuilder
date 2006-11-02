@@ -73,6 +73,13 @@ public class FBDesignView extends UIComponentBase {
 			formComponent.setStyleClass(this.getComponentStyleClass());
 		    this.getChildren().add(formComponent);
 		}
+		System.out.println(status);
+		if(FBDesignView.DESIGN_VIEW_STATUS_EMPTY.equals(status) || FBDesignView.DESIGN_VIEW_STATUS_ACTIVE.equals(status)) {
+			FBFormComponent submitButton = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
+			submitButton.setStyleClass(this.getComponentStyleClass());
+			submitButton.setSubmit(true);
+			this.getChildren().add(submitButton);
+		}
 	}
 
 	public String getStyleClass() {

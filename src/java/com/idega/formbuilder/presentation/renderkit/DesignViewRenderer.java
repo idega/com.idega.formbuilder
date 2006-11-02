@@ -14,30 +14,6 @@ import com.idega.formbuilder.presentation.FBDesignView;
 
 public class DesignViewRenderer extends Renderer {
 	
-	/*private void initializeComponent(FacesContext context, UIComponent component) throws FBPostponedException {
-		Application application = context.getApplication();
-		String formId = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORMBUILDER_CURRENT_FORM_ID);
-	    System.out.println("FORM_ID: " + formId);
-		
-		IFormManager formManagerInstance = (IFormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
-		FBDesignView view = (FBDesignView) component;
-		view.getChildren().clear();
-		List<String> ids = formManagerInstance.getFormComponentsIdsList();
-		if(formId == null || formId.equals("")) {
-	    	FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS, "NO_FORM");
-	    } else if(ids.isEmpty()) {
-	    	FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS, "EMPTY_FORM");
-	    }
-		Iterator it = ids.iterator();
-		while(it.hasNext()) {
-			String nextId = (String) it.next();
-			FBFormComponent formComponent = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
-			formComponent.setId(nextId);
-			formComponent.setStyleClass(view.getComponentStyleClass());
-	        view.getChildren().add(formComponent);
-		}
-	}*/
-	
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		FBDesignView designView = (FBDesignView) component;
@@ -91,47 +67,6 @@ public class DesignViewRenderer extends Renderer {
 				}
 			}
 		}
-		
-		/*Div facet1 = (Div) component.getFacet("noFormNoticeFacet");
-		Div facet2 = (Div) component.getFacet("formHeaderFacet");
-		Div facet3 = (Div) component.getFacet("emptyFormFacet");
-		if (facet1 != null) {
-			if (facet1.isRendered()) {
-				facet1.encodeBegin(context);
-				facet1.encodeChildren(context);
-				facet1.encodeEnd(context);
-			}
-		}
-		if (facet2 != null) {
-			if (facet2.isRendered()) {
-				facet2.encodeBegin(context);
-				facet2.encodeChildren(context);
-				facet2.encodeEnd(context);
-			}
-		}
-		if (facet3 != null) {
-			if (facet3.isRendered()) {
-				facet3.encodeBegin(context);
-				facet3.encodeChildren(context);
-				facet3.encodeEnd(context);
-			}
-		}
-		String status = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS);
-		if(status != null) {
-			if(status.equals("NO_FORM")) {
-				switchVisibility(facet1, true);
-				switchVisibility(facet2, false);
-				switchVisibility(facet3, false);
-			} else if(status.equals("EMPTY_FORM")) {
-				switchVisibility(facet2, true);
-				switchVisibility(facet3, true);
-				switchVisibility(facet1, false);
-			} else {
-				switchVisibility(facet2, true);
-				switchVisibility(facet1, false);
-				switchVisibility(facet3, false);
-			}
-		}*/
 	}
 	
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {

@@ -12,13 +12,18 @@ public class Workspace implements Serializable {
 	
 	private static final long serialVersionUID = -7539955904708793992L;
 	
-	private String view = "design";
+	private String view;
+	private String designViewStatus;
 	private List<SelectItem> views = new ArrayList<SelectItem>();
+	private String selectedTab;
 	
 	public Workspace() {
-		views.add(new SelectItem("design", "Design"));
-		views.add(new SelectItem("preview", "Preview"));
-		views.add(new SelectItem("source", "Source"));
+		this.selectedTab = "0";
+		this.view = "design";
+		this.designViewStatus = "noform";
+		this.views.add(new SelectItem("design", "Design"));
+		this.views.add(new SelectItem("preview", "Preview"));
+		this.views.add(new SelectItem("source", "Source"));
 	}
 	
 	public void viewChanged(ActionEvent ae) {
@@ -46,6 +51,22 @@ public class Workspace implements Serializable {
 
 	public void setViews(List<SelectItem> views) {
 		this.views = views;
+	}
+
+	public String getDesignViewStatus() {
+		return designViewStatus;
+	}
+
+	public void setDesignViewStatus(String designViewStatus) {
+		this.designViewStatus = designViewStatus;
+	}
+
+	public String getSelectedTab() {
+		return selectedTab;
+	}
+
+	public void setSelectedTab(String selectedTab) {
+		this.selectedTab = selectedTab;
 	}
 
 }

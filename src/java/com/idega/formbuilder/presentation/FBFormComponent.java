@@ -20,6 +20,15 @@ public class FBFormComponent extends UIComponentBase {
 	private String id;
 	private String styleClass;
 	private Element element;
+	private boolean submit;
+
+	public boolean isSubmit() {
+		return submit;
+	}
+
+	public void setSubmit(boolean submit) {
+		this.submit = submit;
+	}
 
 	public String getStyleClass() {
 		return styleClass;
@@ -39,11 +48,19 @@ public class FBFormComponent extends UIComponentBase {
 	}
 	
 	public void initializeComponent(FacesContext context) throws FBPostponedException {
-		//FBFormComponent field = (FBFormComponent) component;
+		Locale current = (Locale) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE);
 		IFormManager formManagerInstance = (IFormManager) context.getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
-		Element element = formManagerInstance.getLocalizedFormHtmlComponent(this.getId(), new Locale("en"));
-		element.setAttribute("class", this.getStyleClass());
-		this.setElement(element);
+		if(submit) {
+			Element element = formManagerInstance.getLocalizedSubmitComponent(current);
+			element.setAttribute("class", this.getStyleClass());
+			Element button = (Element) element.getFirstChild();
+			button.setAttribute("disabled", "true");
+			this.setElement(element);
+		} else {
+			Element element = formManagerInstance.getLocalizedFormHtmlComponent(this.getId(), current);
+			element.setAttribute("class", this.getStyleClass());
+			this.setElement(element);
+		}
 	}
 	
 	public Object saveState(FacesContext context) {
