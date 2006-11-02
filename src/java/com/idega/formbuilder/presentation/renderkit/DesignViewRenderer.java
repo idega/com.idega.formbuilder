@@ -30,6 +30,7 @@ public class DesignViewRenderer extends Renderer {
 			status = designView.getStatus();
 		}
 		if(status != null) {
+			System.out.println("Design view: " + status);
 			if(status.equals(FBDesignView.DESIGN_VIEW_STATUS_NOFORM)) {
 				Div noFormNotice = (Div) designView.getFacet(FBDesignView.DESIGN_VIEW_NOFORM_FACET);
 				if(noFormNotice != null) {

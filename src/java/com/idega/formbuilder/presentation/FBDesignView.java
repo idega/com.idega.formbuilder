@@ -6,6 +6,7 @@ import java.util.List;
 import javax.faces.application.Application;
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 
 import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.formbuilder.business.form.manager.IFormManager;
@@ -73,12 +74,20 @@ public class FBDesignView extends UIComponentBase {
 			formComponent.setStyleClass(this.getComponentStyleClass());
 		    this.getChildren().add(formComponent);
 		}
-		System.out.println(status);
-		if(FBDesignView.DESIGN_VIEW_STATUS_EMPTY.equals(status) || FBDesignView.DESIGN_VIEW_STATUS_ACTIVE.equals(status)) {
-			FBFormComponent submitButton = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
-			submitButton.setStyleClass(this.getComponentStyleClass());
-			submitButton.setSubmit(true);
-			this.getChildren().add(submitButton);
+		ValueBinding vb = this.getValueBinding("status");
+		String status = null;
+		if(vb != null) {
+			status = (String) vb.getValue(context);
+		} else {
+			status = this.getStatus();
+		}
+		if(status != null) {
+			if(FBDesignView.DESIGN_VIEW_STATUS_EMPTY.equals(status) || FBDesignView.DESIGN_VIEW_STATUS_ACTIVE.equals(status)) {
+				FBFormComponent submitButton = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
+				submitButton.setStyleClass(this.getComponentStyleClass());
+				submitButton.setSubmit(true);
+				this.getChildren().add(submitButton);
+			}
 		}
 	}
 

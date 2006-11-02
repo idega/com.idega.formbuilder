@@ -31,9 +31,9 @@
 							<a4j:support event="onchange" onsubmit="switchSelectedForm()" oncomplete="formSwitched()" action="#{viewmanager.changeSelectedForm}" ajaxSingle="true" reRender="workspaceform1:tab01,form_container" />
 						</h:selectOneMenu>
 						<h:commandLink id="help_form_button" onclick="showInnerHtml(this)" styleClass="toolbar_button float_right" action="" value="Help"/>
-						<h:selectOneMenu id="localeList" styleClass="toolbar_field float_right" value="#{viewmanager.currentLocale}">
+						<h:selectOneMenu id="localeList" styleClass="toolbar_field float_right" value="#{workspace.currentLocale}">
 							<f:selectItems value="#{localeList.locales}" />
-							<a4j:support event="onchange" onsubmit="switchSelectedForm()" oncomplete="formSwitched()" action="#{viewmanager.changeSelectedForm}" ajaxSingle="true" reRender="form_container" />
+							<a4j:support event="onchange" onsubmit="showLoadingMessage('Switching locale')" oncomplete="closeLoadingMessage()" ajaxSingle="true" reRender="form_container" />
 						</h:selectOneMenu>
 					</t:div>
 					<t:div styleClass="main_container" id="main_container" forceId="true">
@@ -82,6 +82,7 @@
 						<t:div id="form_container" forceId="true">
 							<fb:workspace styleClass="form_container" id="mainWorkspace" view="#{workspace.view}">
 								<f:facet name="design">
+									
 									<fb:designView id="dropBox" styleClass="dropBox" componentStyleClass="formElement" status="#{workspace.designViewStatus}">
 										<f:facet name="noFormNoticeFacet">
 											<t:div id="noFormNotice" forceId="true">

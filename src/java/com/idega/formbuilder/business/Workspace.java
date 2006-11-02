@@ -15,10 +15,12 @@ public class Workspace implements Serializable {
 	private String view;
 	private String designViewStatus;
 	private List<SelectItem> views = new ArrayList<SelectItem>();
-	private String selectedTab;
+	private int selectedTab;
+	private String currentLocale;
 	
 	public Workspace() {
-		this.selectedTab = "0";
+		this.currentLocale = "en";
+		this.selectedTab = 1;
 		this.view = "design";
 		this.designViewStatus = "noform";
 		this.views.add(new SelectItem("design", "Design"));
@@ -61,12 +63,20 @@ public class Workspace implements Serializable {
 		this.designViewStatus = designViewStatus;
 	}
 
-	public String getSelectedTab() {
+	public int getSelectedTab() {
 		return selectedTab;
 	}
 
-	public void setSelectedTab(String selectedTab) {
+	public void setSelectedTab(int selectedTab) {
 		this.selectedTab = selectedTab;
+	}
+
+	public String getCurrentLocale() {
+		return currentLocale;
+	}
+
+	public void setCurrentLocale(String currentLocale) {
+		this.currentLocale = currentLocale;
 	}
 
 }

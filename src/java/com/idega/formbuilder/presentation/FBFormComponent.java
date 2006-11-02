@@ -48,18 +48,23 @@ public class FBFormComponent extends UIComponentBase {
 	}
 	
 	public void initializeComponent(FacesContext context) throws FBPostponedException {
-		Locale current = (Locale) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE);
+		Locale current = (Locale) FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
+		//String currentLocale = ((Workspace) WFUtil.getBeanInstance("workspace")).getCurrentLocale();
+		String currentLocale = "asdasd";
 		IFormManager formManagerInstance = (IFormManager) context.getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
-		if(submit) {
-			Element element = formManagerInstance.getLocalizedSubmitComponent(current);
-			element.setAttribute("class", this.getStyleClass());
-			Element button = (Element) element.getFirstChild();
-			button.setAttribute("disabled", "true");
-			this.setElement(element);
-		} else {
-			Element element = formManagerInstance.getLocalizedFormHtmlComponent(this.getId(), current);
-			element.setAttribute("class", this.getStyleClass());
-			this.setElement(element);
+		if(currentLocale != null) {
+			//Locale current = new Locale(currentLocale);
+			if(submit) {
+				Element element = formManagerInstance.getLocalizedSubmitComponent(current);
+				element.setAttribute("class", this.getStyleClass());
+				Element button = (Element) element.getFirstChild();
+				button.setAttribute("disabled", "true");
+				this.setElement(element);
+			} else {
+				Element element = formManagerInstance.getLocalizedFormHtmlComponent(this.getId(), current);
+				element.setAttribute("class", this.getStyleClass());
+				this.setElement(element);
+			}
 		}
 	}
 	

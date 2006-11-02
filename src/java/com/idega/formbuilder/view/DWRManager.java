@@ -49,6 +49,7 @@ public class DWRManager implements Serializable {
           Element editIcon = (Element) element.getOwnerDocument().importNode(edit, true);
           element.appendChild(editIcon);
           element.appendChild(deleteIcon);
+          ((Workspace) WFUtil.getBeanInstance("workspace")).setDesignViewStatus(FBDesignView.DESIGN_VIEW_STATUS_ACTIVE);
         } catch (ParserConfigurationException pce) {
             pce.printStackTrace();
         }
@@ -81,8 +82,9 @@ public class DWRManager implements Serializable {
 		button.setAttribute("disabled", "true");
 		//FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS, "EMPTY_FORM");
 		//FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_FORM_ID, id);
-		//FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE, current);
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE, current);
 		((Workspace) WFUtil.getBeanInstance("workspace")).setDesignViewStatus(FBDesignView.DESIGN_VIEW_STATUS_EMPTY);
+		((Workspace) WFUtil.getBeanInstance("workspace")).setSelectedTab(1);
 		return element;
 	}
 	

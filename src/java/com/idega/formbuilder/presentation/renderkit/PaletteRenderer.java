@@ -24,11 +24,13 @@ public class PaletteRenderer extends Renderer {
 		
 		int columns = palette.getColumns();
 		int count = 1;
+		boolean inRow = false;
 		
 		Iterator it = palette.getChildren().iterator();
 		while(it.hasNext()) {
-			if((count % columns) == 1) {
+			if((count % columns) == 1 || columns == 1) {
 				writer.startElement("TR", null);
+				inRow = true;
 			}
 			FBPaletteComponent current = (FBPaletteComponent) it.next();
 			if(current != null) {
@@ -36,10 +38,15 @@ public class PaletteRenderer extends Renderer {
 				current.encodeEnd(context);
 				writer.endElement("TD");
 			}
-			if((count % columns) == 0) {
+			if((count % columns) == 0 || columns == 1) {
 				writer.endElement("TR");
+				inRow = false;
 			}
 			count++;
+			
+		}
+		if(inRow) {
+			writer.endElement("TR");
 		}
 		
 		writer.endElement("TABLE");
