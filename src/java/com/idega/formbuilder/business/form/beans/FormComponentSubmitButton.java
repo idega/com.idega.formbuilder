@@ -1,7 +1,6 @@
 package com.idega.formbuilder.business.form.beans;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import com.idega.formbuilder.business.form.manager.CacheManager;
 import com.idega.formbuilder.business.form.manager.HtmlManagerSubmitButton;
@@ -28,26 +27,30 @@ public class FormComponentSubmitButton extends FormComponent {
 		if(load || !created) {
 			
 			XFormsManagerSubmitButton xforms_manager = getXFormsManager();
-			XFormsComponentDataBean xforms_component = xforms_manager.getXFormsSubmitComponent(xforms_doc);
+			xforms_manager.loadXFormsSubmitComponent(xforms_doc);
 			
-			if(xforms_component == null)
+			String submit_id = xforms_manager.getSubmitIdFromElement();
+			
+			if(submit_id == null)
 				return;
 			
-			xforms_manager.setXFormsComponentDataBean(xforms_component);
-			
-			Element submit_element = xforms_component.getElement();
-			String submit_id = submit_element.getAttribute(FormManagerUtil.id_att);
 			setId(submit_id);
 			
-			ComponentPropertiesSubmitButton properties = (ComponentPropertiesSubmitButton)getProperties();
-			
-			properties.setPlainLabel(FormManagerUtil.getLabelLocalizedStrings(getId(), xforms_doc));
-			properties.setAction("getaction from xforms doc");
+			setProperties();
 
 			form_document.setFormDocumentModified(true);
 			created = true;
 			load = false;
 		}
+	}
+	
+	protected void setProperties() {
+		
+		ComponentPropertiesSubmitButton properties = (ComponentPropertiesSubmitButton)getProperties();
+		Document xforms_doc = form_document.getXformsDocument();
+		
+		properties.setPlainLabel(FormManagerUtil.getLabelLocalizedStrings(getId(), xforms_doc));
+		properties.setAction("getaction from xforms doc");
 	}
 	
 	public void setComponentAfterThis(IFormComponent component) { }

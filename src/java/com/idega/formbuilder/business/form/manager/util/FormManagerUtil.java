@@ -104,7 +104,7 @@ public class FormManagerUtil {
 		return DOMUtil.getElementByAttributeValue(start_element, "*", attribute_name, attribute_value);
 	}
 	
-	public static void insertNodesetElement(Document form_xforms, Element nodeset, Element new_xforms_element) {
+	public static void insertNodesetElement(Document form_xforms, Element nodeset, Element new_nodeset_element) {
 		
 		if(nodeset.hasChildNodes()) {
 			
@@ -117,7 +117,7 @@ public class FormManagerUtil {
 				if(child.getNodeType() == Node.ELEMENT_NODE) {
 
 					child = form_xforms.importNode(child, true);
-					new_xforms_element.appendChild(child);
+					new_nodeset_element.appendChild(child);
 				}
 			}
 		}
@@ -126,7 +126,7 @@ public class FormManagerUtil {
 			(Element)((Element)form_xforms
 					.getElementsByTagName("xf:instance").item(0))
 					.getElementsByTagName("data").item(0);
-		container.appendChild(new_xforms_element);
+		container.appendChild(new_nodeset_element);
 	}
 	
 	/**

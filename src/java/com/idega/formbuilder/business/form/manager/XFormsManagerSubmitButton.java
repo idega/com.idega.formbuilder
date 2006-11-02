@@ -20,29 +20,38 @@ public class XFormsManagerSubmitButton extends XFormsManager {
 	
 	private static final String SUBMISSION_ATT = "submission";
 	
-	public XFormsComponentDataBean getXFormsSubmitComponent(Document xforms_doc) {
+	public void loadXFormsSubmitComponent(Document xforms_doc) {
 		
 		NodeList submits = xforms_doc.getElementsByTagName(FormManagerUtil.submit_tag);
 		
 		if(submits == null || submits.getLength() == 0)
-			return null;
+			xforms_component = null;
 		
 		Element submit_element = (Element)submits.item(0);
 		
 		String submission_id = submit_element.getAttribute(SUBMISSION_ATT);
 		
 		if(submission_id == null)
-			return null;
+			xforms_component = null;
 		
 		Element submission_element = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.head_tag, submission_id);
 		
 		if(submission_element == null)
-			return null;
+			xforms_component = null;
 		
 		XFormsComponentDataBean xforms_component = new XFormsComponentDataBean();
 		xforms_component.setElement(submit_element);
 		xforms_component.setBind(submission_element);
 		
-		return xforms_component;
+		this.xforms_component = xforms_component;
+	}
+	
+	public String getSubmitIdFromElement() {
+		
+		if(xforms_component == null)
+			return null;
+		
+		Element submit_element = xforms_component.getElement();
+		return submit_element.getAttribute(FormManagerUtil.id_att);
 	}
 }

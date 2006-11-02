@@ -8,6 +8,7 @@ import org.w3c.dom.Element;
 
 import com.idega.formbuilder.business.form.manager.CacheManager;
 import com.idega.formbuilder.business.form.manager.HtmlManager;
+import com.idega.formbuilder.business.form.manager.IXFormsManager;
 import com.idega.formbuilder.business.form.manager.XFormsManager;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 
@@ -28,7 +29,7 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 	protected boolean created = false;
 	protected boolean load = false;
 	
-	protected XFormsManager xforms_manager;
+	protected IXFormsManager xforms_manager;
 	protected HtmlManager html_manager;
 	
 	public void render() {
@@ -40,36 +41,37 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 		
 		if(load || !created) {
 			
-			XFormsManager xforms_manager = getXFormsManager();
-			XFormsComponentDataBean xforms_component;
+			IXFormsManager xforms_manager = getXFormsManager();
 			
 			if(load) {
 				
-				xforms_component = xforms_manager.loadXFormsComponentFromDocument(component_id);
+				xforms_manager.loadXFormsComponentFromDocument(component_id);
 				
 			} else {
 				
-				xforms_component = xforms_manager.getXFormsComponentByType(type);
-				
+				xforms_manager.loadXFormsComponentByType(type);
 				xforms_manager.addComponentToDocument(component_id, 
-						component_after_me == null ? null : component_after_me.getId(),
-						xforms_component);
+						component_after_me == null ? null : component_after_me.getId());
 			}
 			
-			xforms_manager.setXFormsComponentDataBean(xforms_component);
-			
-			ComponentProperties properties = (ComponentProperties)getProperties();
-			
-			properties.setPlainLabel(FormManagerUtil.getLabelLocalizedStrings(component_id, xforms_doc));
-			properties.setPlainRequired(false);
-			properties.setPlainErrorMsg(FormManagerUtil.getErrorLabelLocalizedStrings(component_id, xforms_doc));
+			setProperties();
 			
 			form_document.setFormDocumentModified(true);
 			tellAboutMe();
+			
 			created = true;
 			load = false;
-			
 		}
+	}
+	
+	protected void setProperties() {
+		
+		ComponentProperties properties = (ComponentProperties)getProperties();
+		Document xforms_doc = form_document.getXformsDocument();
+		
+		properties.setPlainLabel(FormManagerUtil.getLabelLocalizedStrings(component_id, xforms_doc));
+		properties.setPlainRequired(false);
+		properties.setPlainErrorMsg(FormManagerUtil.getErrorLabelLocalizedStrings(component_id, xforms_doc));
 	}
 	
 	protected void tellAboutMe() {
@@ -93,7 +95,7 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 	
 	public void setComponentAfterThisRerender(IFormComponent component) {
 		
-		XFormsManager xforms_manager = getXFormsManager();
+		IXFormsManager xforms_manager = getXFormsManager();
 		
 		if(component != null && component_after_me != null && !component_after_me.getId().equals(component.getId())) {
 
@@ -149,7 +151,7 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 		return properties;
 	}
 
-	protected XFormsManager getXFormsManager() {
+	protected IXFormsManager getXFormsManager() {
 		
 		if(xforms_manager == null) {
 			

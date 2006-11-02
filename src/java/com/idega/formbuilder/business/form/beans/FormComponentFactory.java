@@ -18,8 +18,8 @@ public class FormComponentFactory implements Singleton {
 	private static FormComponentFactory me;
 	
 	private Map<String, List<String>> components_tags_classified;
-	private String type_simple;
-	private String type_select;
+	private static final String type_simple = "type_simple";
+	private static final String type_select = "type_select";
 	
 	private FormComponentFactory() { 
 		
@@ -30,6 +30,7 @@ public class FormComponentFactory implements Singleton {
 		types.add("fbcomp_textarea");
 		types.add("fbcomp_secret");
 		types.add("fbcomp_email");
+		types.add("fbcomp_upload_file");
 		components_tags_classified.put(type_simple, types);
 		
 		types = new ArrayList<String>();
@@ -40,7 +41,6 @@ public class FormComponentFactory implements Singleton {
 		types.add("xf:select1");
 		types.add("fbcomp_multiple_select");
 		types.add("fbcomp_single_select");
-		
 		
 		components_tags_classified.put(type_select, types);
 		
@@ -73,22 +73,19 @@ public class FormComponentFactory implements Singleton {
 		if(tag_name.equals(FormManagerUtil.submit_tag))
 			return new FormComponentSubmitButton();
 		
-		if(true)
-			return new FormComponent();
+//		List<String> types = components_tags_classified.get(type_simple);
+//		
+//		if(types.contains(tag_name)) {
+//			
+//			return new FormComponent();
+//		} 
 		
-		List<String> types = components_tags_classified.get(type_simple);
-		
-		if(types.contains(tag_name)) {
-			
-			return new FormComponent();
-		} 
-		
-		types = components_tags_classified.get(type_select);
+		List<String> types = components_tags_classified.get(type_select);
 		
 		if(types.contains(tag_name)) {
 			return new FormComponentSelect();
 		}
 		
-		return null;
+		return new FormComponent();
 	}
 }

@@ -16,6 +16,9 @@
                 	<single_select_minimal />
                 	<multiple_select />
                 	<single_select />
+                	<upload_file>
+                		<attachment filename="" content-type="" />
+                	</upload_file>
 							</data>
             </xf:instance>
             <xf:bind id="text" nodeset="text" type="string" />
@@ -25,8 +28,10 @@
             <xf:bind id="single_select_minimal" nodeset="single_select_minimal" type="string" />
             <xf:bind id="multiple_select" nodeset="multiple_select" type="string" />
             <xf:bind id="single_select" nodeset="single_select" type="string" />
+            <xf:bind id="upload_file" nodeset="upload_file/attachment" type="xs:base64Binary" />
             
             <xf:bind id="email" nodeset="email" type="fb_email" />
+            
         </xf:model>
         <xf:model id="data_model">
              <xf:instance id="localized_strings" xmlns="">
@@ -51,6 +56,9 @@
 	              <lockey_textarea.title lang="is">Paragraph Text islenski</lockey_textarea.title>
 	              <lockey_input.title lang="en">Single Line Field in english</lockey_input.title>
 	              <lockey_input.title lang="is">Single Line Field islenski</lockey_input.title>
+	              <lockey_upload_file.title lang="en">Upload file english</lockey_upload_file.title>
+	              <lockey_upload_file.title lang="is">Upload file islenski</lockey_upload_file.title>
+	              
 
 								<!-- playground -->	              
  	              <external_data_source_test.empty_label lang="en">Empty elementc english</external_data_source_test.empty_label>
@@ -129,6 +137,11 @@
                 <xf:label ref="instance('localized_strings')/lockey_email.title[@lang=instance('localized_strings')/current_language]" model="data_model" />
                 <xf:alert><xf:output ref="instance('localized_strings')/lockey_email.error[@lang=instance('localized_strings')/current_language]" model="data_model" /></xf:alert>
             </xf:input>
+            <xf:upload bind="upload_file" id="fbcomp_upload_file">
+			        <xf:label ref="instance('localized_strings')/lockey_upload_file.title[@lang=instance('localized_strings')/current_language]" model="data_model" />
+			        <xf:filename ref="./@filename"/>
+			        <xf:mediatype ref="./@content-type"/>
+    				</xf:upload>
             
 						<!-- playground             
 						<xf:select1 bind="single_select" id="external_data_source_test" appearance="full">
