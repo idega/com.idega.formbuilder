@@ -6,8 +6,8 @@ public class PersistenceManagerFactory {
 	
 	public static IPersistenceManager newPersistenceManager() {
 		
-		return SandboxPersistenceManager.getInstance();
-//		return WebdavPersistenceManager.getInstance();
+//		return SandboxPersistenceManager.getInstance();
+		return WebdavPersistenceManager.getInstance();
 	}
 
 }
