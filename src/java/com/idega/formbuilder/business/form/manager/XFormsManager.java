@@ -37,32 +37,25 @@ public class XFormsManager implements IXFormsManager {
 	
 	protected XFormsComponentDataBean xforms_component;
 	
-	/* (non-Javadoc)
-	 * @see com.idega.formbuilder.business.form.manager.IXFormsManager#setCacheManager(com.idega.formbuilder.business.form.manager.CacheManager)
-	 */
 	public void setCacheManager(CacheManager cache_manager) {
 		this.cache_manager = cache_manager;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.idega.formbuilder.business.form.manager.IXFormsManager#setFormDocument(com.idega.formbuilder.business.form.beans.IFormComponentParent)
-	 */
 	public void setFormDocument(IFormComponentParent form_document) {
 		
 		this.form_document = form_document;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.idega.formbuilder.business.form.manager.IXFormsManager#loadXFormsComponentByType(java.lang.String)
-	 */
 	public void loadXFormsComponentByType(String component_type) throws NullPointerException {
 		
 		cache_manager.checkForComponentType(component_type);
 		
 		XFormsComponentDataBean xforms_component = cache_manager.getCachedXformsComponent(component_type); 
 
-		if(xforms_component != null)
+		if(xforms_component != null) {
 			this.xforms_component = (XFormsComponentDataBean)xforms_component.clone();
+			return;
+		}
 		
 		Document components_xforms = cache_manager.getComponentsXforms();
 		Element xforms_element = FormManagerUtil.getElementByIdFromDocument(components_xforms, FormManagerUtil.body_tag, component_type);
@@ -78,14 +71,14 @@ public class XFormsManager implements IXFormsManager {
 			
 			xforms_component = cache_manager.getCachedXformsComponent(component_type); 
 
-			if(xforms_component != null)
-				this.xforms_component = xforms_component;
+			if(xforms_component != null) {
+				this.xforms_component = (XFormsComponentDataBean)xforms_component.clone();
+				return;
+			}
 			
-			xforms_component = loadXFormsComponent(components_xforms, xforms_element);
-
-			cache_manager.cacheXformsComponent(component_type, xforms_component);
+			loadXFormsComponent(components_xforms, xforms_element);
+			cache_manager.cacheXformsComponent(component_type, this.xforms_component);
 		}
-		this.xforms_component = (XFormsComponentDataBean)xforms_component.clone();
 	}
 	
 	public void loadXFormsComponentFromDocument(String component_id) {
@@ -94,12 +87,17 @@ public class XFormsManager implements IXFormsManager {
 		
 		Element my_element = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_tag, component_id);
 		
-		xforms_component = loadXFormsComponent(xforms_doc, my_element);
+		loadXFormsComponent(xforms_doc, my_element);
 	}
 	
-	protected XFormsComponentDataBean loadXFormsComponent(Document components_xforms, Element xforms_element) {
+	protected XFormsComponentDataBean newXFormsComponentDataBeanInstance() {
 		
-		xforms_component = new XFormsComponentDataBean();
+		return new XFormsComponentDataBean();
+	}
+	
+	protected void loadXFormsComponent(Document components_xforms, Element xforms_element) {
+		
+		xforms_component = newXFormsComponentDataBeanInstance();
 		xforms_component.setElement(xforms_element);
 		
 		String bind_to = xforms_element.getAttribute("bind");
@@ -125,12 +123,8 @@ public class XFormsManager implements IXFormsManager {
 			xforms_component.setBind(binding);
 			xforms_component.setNodeset(nodeset);
 		}
-		return xforms_component;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.idega.formbuilder.business.form.manager.IXFormsManager#addComponentToDocument(java.lang.String, java.lang.String)
-	 */
 	public void addComponentToDocument(String component_id, String component_after_this_id)
 	throws NullPointerException {
 		
@@ -308,9 +302,6 @@ public class XFormsManager implements IXFormsManager {
 		return null;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.idega.formbuilder.business.form.manager.IXFormsManager#updateConstraintRequired()
-	 */
 	public void updateConstraintRequired() throws NullPointerException {
 		
 		IComponentProperties props = component.getProperties();
@@ -330,9 +321,6 @@ public class XFormsManager implements IXFormsManager {
 			bind.removeAttribute(required_att);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.idega.formbuilder.business.form.manager.IXFormsManager#updateLabel()
-	 */
 	public void updateLabel() {
 		
 		IComponentProperties props = component.getProperties();
@@ -352,9 +340,6 @@ public class XFormsManager implements IXFormsManager {
 		);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.idega.formbuilder.business.form.manager.IXFormsManager#updateErrorMsg()
-	 */
 	public void updateErrorMsg() {
 		
 		IComponentProperties props = component.getProperties();
@@ -389,16 +374,10 @@ public class XFormsManager implements IXFormsManager {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.idega.formbuilder.business.form.manager.IXFormsManager#setFormComponent(com.idega.formbuilder.business.form.beans.IFormComponent)
-	 */
 	public void setFormComponent(IFormComponent component) {
 		this.component = component;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.idega.formbuilder.business.form.manager.IXFormsManager#moveComponent(java.lang.String)
-	 */
 	public void moveComponent(String before_component_id) {
 		
 		if(form_document == null)
@@ -424,9 +403,6 @@ public class XFormsManager implements IXFormsManager {
 		);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.idega.formbuilder.business.form.manager.IXFormsManager#removeComponentFromXFormsDocument()
-	 */
 	public void removeComponentFromXFormsDocument() {
 		
 		if(form_document == null)
@@ -507,9 +483,6 @@ public class XFormsManager implements IXFormsManager {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.idega.formbuilder.business.form.manager.IXFormsManager#insertBindElement(org.w3c.dom.Element, java.lang.String)
-	 */
 	public String insertBindElement(Element new_bind_element, String bind_id) {
 		
 		Document form_xforms = form_document.getXformsDocument();

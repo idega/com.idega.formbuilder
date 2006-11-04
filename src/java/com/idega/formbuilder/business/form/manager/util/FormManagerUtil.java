@@ -56,6 +56,13 @@ public class FormManagerUtil {
 	public static final String nodeset_att = "nodeset";
 	public static final String group_tag = "xf:group";
 	public static final String submit_tag = "xf:submit";
+	public static final String itemset_tag = "xf:itemset";
+	public static final String item_tag = "xf:item";
+	public static final String model_att = "model";
+	public static final String src_att = "xf:src";
+	public static final String item_label_tag = "item_label";
+	public static final String item_value_tag = "item_value";
+	public static final String localized_entries_tag = "localizedEntries";
 	
 	private FormManagerUtil() { }
 	
@@ -419,16 +426,7 @@ public class FormManagerUtil {
 		if(item == null)
 			return null;
 		
-		NodeList children = item.getChildNodes();
-		
-		for (int i = 0; i < children.getLength(); i++) {
-			
-			Node item_node = children.item(i);
-			
-			if(item_node.getNodeType() == Node.ELEMENT_NODE)
-				return (Element)item_node;
-		}
-		return null;
+		return DOMUtil.getFirstChildElement(item);
 	}
 	
 	public static void removeTextNodes(Node node) {

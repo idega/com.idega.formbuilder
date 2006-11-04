@@ -34,15 +34,7 @@ public class XFormsComponentDataBean implements Cloneable {
 	
 	public Object clone() {
 		
-		XFormsComponentDataBean clone;
-		
-		try {
-			clone = (XFormsComponentDataBean)super.clone();
-			
-		} catch (Exception e) {
-			
-			clone = new XFormsComponentDataBean();
-		}
+		XFormsComponentDataBean clone = getDataBeanInstance();
 		
 		if(element != null)
 			clone.setElement((Element)element.cloneNode(true));
@@ -54,5 +46,10 @@ public class XFormsComponentDataBean implements Cloneable {
 			clone.setNodeset((Element)nodeset.cloneNode(true));
 		
 		return clone;
+	}
+	
+	protected XFormsComponentDataBean getDataBeanInstance() {
+		
+		return new XFormsComponentDataBean();
 	}
 }
