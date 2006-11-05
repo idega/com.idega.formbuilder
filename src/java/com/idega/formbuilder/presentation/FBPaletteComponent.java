@@ -13,6 +13,15 @@ public class FBPaletteComponent extends UIComponentBase {
 	private String styleClass;
 	private String name;
 	private String type;
+	private String icon;
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
 
 	public FBPaletteComponent() {
 		super();
@@ -28,12 +37,13 @@ public class FBPaletteComponent extends UIComponentBase {
 	}
 	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[5];
+		Object values[] = new Object[6];
 		values[0] = super.saveState(context);
 		values[1] = styleClass;
 		values[2] = id;
 		values[3] = name;
 		values[4] = type;
+		values[5] = icon;
 		return values;
 	}
 	
@@ -44,6 +54,7 @@ public class FBPaletteComponent extends UIComponentBase {
 		id = (String) values[2];
 		name = (String) values[3];
 		type = (String) values[4];
+		icon = (String) values[5];
 	}
 
 	public String getId() {

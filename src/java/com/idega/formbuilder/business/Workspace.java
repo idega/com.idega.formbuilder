@@ -17,7 +17,25 @@ public class Workspace implements Serializable {
 	private List<SelectItem> views = new ArrayList<SelectItem>();
 	private int selectedTab;
 	private String currentLocale;
+	private String currentComponent;
+	private String formTitle;
 	
+	public String getFormTitle() {
+		return formTitle;
+	}
+
+	public void setFormTitle(String formTitle) {
+		this.formTitle = formTitle;
+	}
+
+	public String getCurrentComponent() {
+		return currentComponent;
+	}
+
+	public void setCurrentComponent(String currentComponent) {
+		this.currentComponent = currentComponent;
+	}
+
 	public Workspace() {
 		this.currentLocale = "en";
 		this.selectedTab = 1;

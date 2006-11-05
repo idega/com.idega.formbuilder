@@ -35,9 +35,15 @@ public class FBPalette extends UIComponentBase {
 		return FBPalette.RENDERER_TYPE;
 	}
 	
+	public boolean getRendersChildren() {
+		return true;
+	}
+	
 	public void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
+		System.out.println("PALETTE INITILIZATION: " + this.getChildren().size());
 		this.getChildren().clear();
+		System.out.println("PALETTE INITILIZATION: " + this.getChildren().size());
 		ValueBinding vb = this.getValueBinding("items");
 		if(vb != null) {
 			List items = (List) vb.getValue(context);
@@ -48,9 +54,11 @@ public class FBPalette extends UIComponentBase {
 				formComponent.setStyleClass(this.getItemStyleClass());
 				formComponent.setName(current.getName());
 				formComponent.setType(current.getType());
+				formComponent.setIcon(current.getIconPath());
 				this.getChildren().add(formComponent);
 			}
 		}
+		System.out.println("PALETTE INITILIZATION: " + this.getChildren().size());
 	}
 
 	public int getColumns() {

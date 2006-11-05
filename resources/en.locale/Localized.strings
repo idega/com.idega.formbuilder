@@ -1,13 +1,29 @@
 toolbar_new=New form
 toolbar_save=Save form
+
 fbcomp_text=Text Field
 fbcomp_textarea=Textarea
 fbcomp_secret=Secret Field
-fbcomp_multiple_select_minimal=CUSTOM
-fbcomp_single_select_minimal=CUSTOM
-fbcomp_multiple_select=CUSTOM
-fbcomp_single_select=Dropdown menu
+fbcomp_multiple_select_minimal=Multiple Select M
+fbcomp_single_select_minimal=Single Select M
+fbcomp_multiple_select=Multiple Select
+fbcomp_single_select=Dropdown Menu
+fbcomp_upload_file=File Upload
+fbcomp_email=Email
+
+fbcomp_text_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
+fbcomp_textarea_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
+fbcomp_secret_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
+fbcomp_multiple_select_minimal_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
+fbcomp_single_select_minimal_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
+fbcomp_multiple_select_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
+fbcomp_single_select_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
+fbcomp_upload_file_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
+fbcomp_email_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
+
 input.title=Title of input
+
+
 lockey_fbcomp_1input.title=Title of input
 labels_noform_header=No form currently opened
 labels_noform_body=Press the New Form button on the toolbar

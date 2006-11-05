@@ -6,6 +6,11 @@
 
 <faces-config>
 	<managed-bean>
+		<managed-bean-name>component</managed-bean-name>
+		<managed-bean-class>com.idega.formbuilder.business.Component</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
 		<managed-bean-name>workspace</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.business.Workspace</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>

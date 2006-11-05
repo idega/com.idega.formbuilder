@@ -8,6 +8,15 @@ public class FBFormComponentTag extends UIComponentTagBase {
 	
 	private String id;
 	private String styleClass;
+	private String onclick;
+
+	public String getOnclick() {
+		return onclick;
+	}
+
+	public void setOnclick(String onclick) {
+		this.onclick = onclick;
+	}
 
 	public String getComponentType() {
 		return FBFormComponent.COMPONENT_TYPE;
@@ -37,12 +46,14 @@ public class FBFormComponentTag extends UIComponentTagBase {
 		super();
 		this.id = "";
 		this.styleClass = "";
+		this.onclick = "";
 	}
 
 	public void release() {
 		super.release();
 		this.id = null;
 		this.styleClass = null;
+		this.onclick = null;
 	}
 	
 	public void setProperties(UIComponent component) {
@@ -54,6 +65,9 @@ public class FBFormComponentTag extends UIComponentTagBase {
 			}
 			if(this.styleClass != null) {
 				field.setStyleClass(this.styleClass);
+			}
+			if(this.onclick != null) {
+				field.setOnclick(this.onclick);
 			}
 	    }
 	}

@@ -31,29 +31,40 @@ public class DWRManager implements Serializable {
 	}
 	
 	public Element getElement(String type) throws Exception {
+		Element rootDivImported = null;
 		String elementId = formManagerInstance.createFormComponent(type, null);
-		Element element = formManagerInstance.getLocalizedFormHtmlComponent(elementId, new Locale("en"));
-		element.setAttribute("class", "formElement");
+		Element element = (Element) formManagerInstance.getLocalizedFormHtmlComponent(elementId, new Locale("en")).cloneNode(true);
+		String id = element.getAttribute("id");
+		element.removeAttribute("id");
+		//element.setAttribute("class", "formElement");
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		Document document = null;
         try {
           DocumentBuilder builder = factory.newDocumentBuilder();
           document = builder.newDocument();
-          Element delete = (Element) document.createElement("DIV");
-          delete.setAttribute("class", "removeComponentButton");
-          delete.setAttribute("onclick", "removeComponent(this)");
-          Element edit = (Element) document.createElement("DIV");
-          edit.setAttribute("class", "editComponentButton");
-          //edit.setAttribute("onclick", "removeComponent(this)");
+          Element delete = (Element) document.createElement("IMG");
+          delete.setAttribute("src", "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png");
+          delete.setAttribute("class", "speedButton");
+          delete.setAttribute("onclick", "deleteComponent(this)");
+          Element edit = (Element) document.createElement("IMG");
+          edit.setAttribute("src", "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-find-replace.png");
+          edit.setAttribute("class", "speedButton");
+          //edit.setAttribute("onclick", "editProperties(this)");
           Element deleteIcon = (Element) element.getOwnerDocument().importNode(delete, true);
           Element editIcon = (Element) element.getOwnerDocument().importNode(edit, true);
-          element.appendChild(editIcon);
-          element.appendChild(deleteIcon);
+          Element rootDiv = (Element) document.createElement("DIV");
+          rootDiv.setAttribute("id", id);
+          rootDiv.setAttribute("class", "formElement");
+          rootDiv.setAttribute("onclick", "editProperties(this)");
+          rootDivImported = (Element) element.getOwnerDocument().importNode(rootDiv, true);
+          rootDivImported.appendChild(element);
+          rootDivImported.appendChild(deleteIcon);
+          rootDivImported.appendChild(editIcon);
           ((Workspace) WFUtil.getBeanInstance("workspace")).setDesignViewStatus(FBDesignView.DESIGN_VIEW_STATUS_ACTIVE);
         } catch (ParserConfigurationException pce) {
             pce.printStackTrace();
         }
-		return element;
+		return rootDivImported;
 	}
 	
 	public void updateComponentList(String idSequence, String idPrefix, String delimiter) throws Exception {
@@ -85,6 +96,7 @@ public class DWRManager implements Serializable {
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE, current);
 		((Workspace) WFUtil.getBeanInstance("workspace")).setDesignViewStatus(FBDesignView.DESIGN_VIEW_STATUS_EMPTY);
 		((Workspace) WFUtil.getBeanInstance("workspace")).setSelectedTab(1);
+		((Workspace) WFUtil.getBeanInstance("workspace")).setFormTitle(name);
 		return element;
 	}
 	
@@ -94,6 +106,12 @@ public class DWRManager implements Serializable {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+		return id;
+	}
+	
+	public String editComponentProperties(String id) {
+		((Workspace) WFUtil.getBeanInstance("workspace")).setCurrentComponent(id);
+		((Workspace) WFUtil.getBeanInstance("workspace")).setSelectedTab(2);
 		return id;
 	}
 	

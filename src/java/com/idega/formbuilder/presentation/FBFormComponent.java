@@ -2,14 +2,18 @@ package com.idega.formbuilder.presentation;
 
 import java.util.Locale;
 
+import javax.faces.application.Application;
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
 
+import org.apache.myfaces.component.html.ext.HtmlGraphicImage;
 import org.w3c.dom.Element;
 
 import com.idega.formbuilder.FormbuilderViewManager;
+import com.idega.formbuilder.business.Workspace;
 import com.idega.formbuilder.business.form.manager.IFormManager;
 import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
+import com.idega.webface.WFUtil;
 
 public class FBFormComponent extends UIComponentBase {
 	
@@ -21,6 +25,15 @@ public class FBFormComponent extends UIComponentBase {
 	private String styleClass;
 	private Element element;
 	private boolean submit;
+	private String onclick;
+
+	public String getOnclick() {
+		return onclick;
+	}
+
+	public void setOnclick(String onclick) {
+		this.onclick = onclick;
+	}
 
 	public boolean isSubmit() {
 		return submit;
@@ -48,24 +61,54 @@ public class FBFormComponent extends UIComponentBase {
 	}
 	
 	public void initializeComponent(FacesContext context) throws FBPostponedException {
-		Locale current = (Locale) FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
-		//String currentLocale = ((Workspace) WFUtil.getBeanInstance("workspace")).getCurrentLocale();
-		String currentLocale = "asdasd";
+		//Locale current = (Locale) FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
+		Application application = context.getApplication();
+		String currentLocale = ((Workspace) WFUtil.getBeanInstance("workspace")).getCurrentLocale();
+		System.out.println("CURRENT LOCALE: " + currentLocale);
+		//String currentLocale = "asdasd";
 		IFormManager formManagerInstance = (IFormManager) context.getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
+		currentLocale = "en";
 		if(currentLocale != null) {
-			//Locale current = new Locale(currentLocale);
-			if(submit) {
-				Element element = formManagerInstance.getLocalizedSubmitComponent(current);
-				element.setAttribute("class", this.getStyleClass());
-				Element button = (Element) element.getFirstChild();
-				button.setAttribute("disabled", "true");
-				this.setElement(element);
-			} else {
-				Element element = formManagerInstance.getLocalizedFormHtmlComponent(this.getId(), current);
-				element.setAttribute("class", this.getStyleClass());
-				this.setElement(element);
+			
+			Locale current = new Locale(currentLocale);
+			if(current != null) {
+				System.out.println("CURRENT LOCALE: " + current.toString());
+				if(submit) {
+					Element element = formManagerInstance.getLocalizedSubmitComponent(current);
+					//element.setAttribute("class", this.getStyleClass());
+					Element button = (Element) element.getFirstChild();
+					button.setAttribute("disabled", "true");
+					this.setElement(element);
+				} else {
+					Element element = formManagerInstance.getLocalizedFormHtmlComponent(this.getId(), current);
+					String id = element.getAttribute("id");
+					this.setId(id);
+					element.removeAttribute("id");
+					//element.setAttribute("class", this.getStyleClass());
+					this.setElement(element);
+					this.setOnclick("editProperties(this)");
+					System.out.println("INIT START CHILD COUNT: " + this.getChildCount());
+					//Div infoButtonDiv = (Div) application.createComponent(Div.COMPONENT_TYPE);
+					HtmlGraphicImage infoButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+					infoButton.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-find-replace.png");
+					infoButton.setStyleClass("speedButton");
+					//infoButton.setOnclick("editProperties(this)");
+					HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+					deleteButton.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png");
+					deleteButton.setOnclick("deleteComponent(this)");
+					deleteButton.setStyleClass("speedButton");
+					//infoButtonDiv.getChildren().add(infoButton);
+					this.getChildren().add(deleteButton);
+					this.getChildren().add(infoButton);
+				}
 			}
 		}
+		
+		System.out.println("INIT END CHILD COUNT: " + this.getChildCount());
+	}
+	
+	public boolean getRendersChildren() {
+		return true;
 	}
 	
 	public Object saveState(FacesContext context) {

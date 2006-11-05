@@ -13,10 +13,12 @@ public class ComponentPropertiesPanelRenderer extends Renderer {
 	
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 		FBComponentPropertiesPanel panel = (FBComponentPropertiesPanel) component;
+		panel.initializeComponent(context);
 		ResponseWriter writer = context.getResponseWriter();
 		writer.startElement("DIV", panel);
 		writer.writeAttribute("id", panel.getId(), "id");
 		writer.writeAttribute("class", panel.getStyleClass(), "styleClass");
+		writer.writeAttribute("style", "display: block", null);
 	}
 	
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
@@ -29,7 +31,6 @@ public class ComponentPropertiesPanelRenderer extends Renderer {
 			return;
 		}
 		super.encodeChildren(context, component);
-		
 	}
 
 }

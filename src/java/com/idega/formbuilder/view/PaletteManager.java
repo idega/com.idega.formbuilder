@@ -19,10 +19,11 @@ public class PaletteManager implements Serializable {
 	private IFormManager formManagerInstance;
 	
 	public PaletteManager() throws Exception {
+		System.out.println("PALETTE MANAGER CONSTRUCTOR");
 		formManagerInstance = (IFormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
-		components.clear();
-		List list = formManagerInstance.getAvailableFormComponentsTypesList();
-		Iterator it = list.iterator();
+		//components.clear();
+		//List list = formManagerInstance.getAvailableFormComponentsTypesList().iterator();
+		Iterator it = formManagerInstance.getAvailableFormComponentsTypesList().iterator();
 		while(it.hasNext()) {
 			FormComponent temp = new FormComponent((String) it.next());
 			components.add(temp);
@@ -30,6 +31,7 @@ public class PaletteManager implements Serializable {
 	}
 
 	public List<FormComponent> getComponents() {
+		System.out.println("PALETTE MANAGER GETTER: " + components.size());
 		return components;
 	}
 

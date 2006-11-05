@@ -57,6 +57,17 @@
 .invisibleFacet {
 	display: none;
 }
+.speedButton {
+	display: none;
+	float: right;
+}
+.formElement:hover .speedButton {
+	display: inline;
+	cursor: pointer;
+}
+/*.formElement:hover * {
+	display: inline;
+}*/
 .removeComponentButton {
 	width: 20px;
 	height: 20px;
@@ -134,6 +145,15 @@
 	padding-left: 5%;
 	padding-right: 5%;
 	overflow: auto;
+}
+.propertiesBox {
+	margin-bottom: 10px;
+	padding-left: 5%;
+	padding-right: 5%;
+	overflow: auto;
+}
+.propertiesBox * {
+	display: block;
 }
 .toolbar_button {
 	text-decoration: none 					! important;

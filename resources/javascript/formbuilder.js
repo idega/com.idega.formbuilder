@@ -18,17 +18,36 @@ function closeMessage() {
 function createNewForm() {
 	var name = document.forms['newFormDialogForm'].elements['formName'].value;
 	if(name != '') {
+		showLoadingMessage("Loading");
 		dwrmanager.createNewForm(createdNewForm,name);
 		closeMessage();
-		showLoadingMessage("Loading");
-		switchFacets(false, true, true);
-		clearDesignSpace();
+		document.forms['workspaceform1'].elements['workspaceform1:createFormProxy'].click();
 	}
-	
+}
+function applyChanges() {
+	document.forms['workspaceform1'].elements['workspaceform1:applyChangesProxy'].click();
+}
+function deleteComponent(element) {
+	//alert(element);
+	showLoadingMessage('Removing');
+	var id = element.parentNode.id;
+	//alert(id);
+	dwrmanager.removeComponent(deletedComponent,id);
+	document.forms['workspaceform1'].elements['workspaceform1:removeCompProxy'].click();
+}
+function deletedComponent() {
+}
+function editProperties(element) {
+	//alert(element);
+	showLoadingMessage('Processing');
+	var id = element.id;
+	//alert(id);
+	dwrmanager.editComponentProperties(done,id);
+	document.forms['workspaceform1'].elements['workspaceform1:editCompProxy'].click();
+}
+function done() {
 }
 function createdNewForm(element) {
-	$('dropBox').appendChild(createTreeNode(element.documentElement));
-	closeLoadingMessage();
 }
 function removeComponent(element) {
 	showLoadingMessage("Deleting");

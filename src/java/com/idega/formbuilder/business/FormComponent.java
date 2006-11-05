@@ -15,15 +15,26 @@ public class FormComponent implements Serializable {
 	
 	private String type;
 	private String name;
+	private String iconPath;
 	
+	public String getIconPath() {
+		return iconPath;
+	}
+
+	public void setIconPath(String iconPath) {
+		this.iconPath = iconPath;
+	}
+
 	public FormComponent() {
 		this.type = "";
 		this.name = "";
+		this.iconPath = "";
 	}
 	
 	public FormComponent(String type) {
 		this.type = type;
 		this.name = (String) localizedStrings.get(type);
+		this.iconPath = (String) localizedStrings.get(type + "_icon");
 	}
 	
 	public String getType() {

@@ -102,6 +102,11 @@
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
+		<attribute>
+			<name>icon</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
 	</tag>
 	<tag>
 		<name>designView</name>
@@ -137,6 +142,11 @@
 		</attribute>
 		<attribute>
 			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>onclick</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>

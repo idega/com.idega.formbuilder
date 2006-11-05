@@ -11,13 +11,23 @@ public class FBPaletteComponentTag extends UIComponentTagBase {
 	private String styleClass;
 	private String name;
 	private String type;
+	private String icon;
 	
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
 	public FBPaletteComponentTag() {
 		super();
 		this.id = "";
 		this.styleClass = "";
 		this.name = "";
 		this.type = "";
+		this.icon = "";
 	}
 
 	public String getComponentType() {
@@ -34,6 +44,7 @@ public class FBPaletteComponentTag extends UIComponentTagBase {
 		this.styleClass = null;
 		this.name = null;
 		this.type = null;
+		this.icon = null;
 	}
 
 	public void setProperties(UIComponent component) {
@@ -60,6 +71,14 @@ public class FBPaletteComponentTag extends UIComponentTagBase {
 	                comp.setValueBinding("type", vb);
 	            } else {
 	            	comp.setType(this.type);
+	            }
+			}
+			if(this.icon != null) {
+				if (isValueReference(this.icon)) {
+	                ValueBinding vb = getFacesContext().getApplication().createValueBinding(this.icon);
+	                comp.setValueBinding("icon", vb);
+	            } else {
+	            	comp.setIcon(this.icon);
 	            }
 			}
 		}

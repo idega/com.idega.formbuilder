@@ -24,6 +24,18 @@ public class PaletteComponentRenderer extends Renderer {
 		} else {
 			writer.writeAttribute("id", comp.getType(), "type");
 		}
+		
+		writer.startElement("IMG", null);
+		//writer.writeAttribute("style", "float: left; vertical-align: middle", null);
+		vb = comp.getValueBinding("icon");
+		if(vb != null) {
+			String icon = (String) vb.getValue(context);
+			writer.writeAttribute("src", icon, "icon");
+		} else {
+			writer.writeAttribute("src", comp.getIcon(), "icon");
+		}
+		writer.endElement("IMG");
+		
 		writer.startElement("P", null);
 		vb = comp.getValueBinding("name");
 		if(vb != null) {

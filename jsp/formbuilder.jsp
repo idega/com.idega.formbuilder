@@ -24,8 +24,6 @@
 					<t:div styleClass="toolbar_container" id="toolbar_container" forceId="true">
 						<h:commandLink id="new_form_button" styleClass="toolbar_button float_left" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/new-dialog.inc');return false" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}" />
 						<h:commandLink id="delete_form_button" styleClass="toolbar_button float_left" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/confirm-delete.inc');return false" action="" value="Delete form"/>
-						<h:commandLink id="import_form_button" styleClass="toolbar_button float_left" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/upload-dialog.inc');return false" action="" value="Import form"/>
-						<h:commandLink id="export_form_button" styleClass="toolbar_button float_left" action="" value="Export form" />
 						<h:selectOneMenu id="formList" styleClass="toolbar_field float_left" value="#{viewmanager.currentFormName}">
 							<f:selectItems value="#{formList.forms}" />
 							<a4j:support event="onchange" onsubmit="switchSelectedForm()" oncomplete="formSwitched()" action="#{viewmanager.changeSelectedForm}" ajaxSingle="true" reRender="workspaceform1:tab01,form_container" />
@@ -54,7 +52,7 @@
 							    <t:panelTab id="tab01" label="Form properties">
 								    <t:outputLabel for="formTitle" value="Form title" />
 								    <t:htmlTag value="br" />
-								    <t:inputText id="formTitleInput" forceId="true" value="#{viewmanager.formTitle}">
+								    <t:inputText id="formTitleInput" forceId="true" value="#{workspace.formTitle}">
 								    	<a4j:support event="onkeyup" ajaxSingle="true" requestDelay="500" reRender="formHeadingHeader" />
 								    </t:inputText>
 								    <t:htmlTag value="br" />
@@ -73,9 +71,9 @@
 							    </t:panelTab>
 							    <t:panelTab id="tab03" label="Field properties">
 							        <t:outputText value="something else" />
-							        <!--
-							        <fb:properties id="compProps" styleClass="dropBox" />
-							        -->
+							        
+							        <fb:properties id="compProps" styleClass="propertiesBox" component="#{workspace.currentComponent}"/>
+							        
 							    </t:panelTab>
 							</t:panelTabbedPane>
 						</t:div>
@@ -93,7 +91,7 @@
 										</f:facet>
 										<f:facet name="formHeaderFacet">
 											<t:div id="formHeading" forceId="true">
-												<t:outputText id="formHeadingHeader" forceId="true" onclick="selectFormHeader()" value="#{viewmanager.formTitle}" />
+												<t:outputText id="formHeadingHeader" forceId="true" onclick="selectFormHeader()" value="#{workspace.formTitle}" />
 												<t:htmlTag value="br" />
 												<t:outputText id="formHeadingBody" forceId="true" value="#{viewmanager.formDescription}" />
 												<t:htmlTag value="hr" />
@@ -135,6 +133,12 @@
 							-->
 							</script>
 						</f:verbatim>
+						<t:div style="display: none">
+							<a4j:commandButton id="removeCompProxy" reRender="form_container" ajaxSingle="true" oncomplete="closeLoadingMessage()" styleClass="toolbar_button" />
+							<a4j:commandButton id="createFormProxy" reRender="form_container" ajaxSingle="true" oncomplete="closeLoadingMessage()" styleClass="toolbar_button" />
+							<a4j:commandButton id="editCompProxy" reRender="options_container" ajaxSingle="true" oncomplete="closeLoadingMessage()" styleClass="toolbar_button" />
+							<a4j:commandButton id="applyChangesProxy" reRender="form_container" ajaxSingle="true" styleClass="toolbar_button" />
+						</t:div>
 					</t:div>
 				</t:div>
 			</h:form>

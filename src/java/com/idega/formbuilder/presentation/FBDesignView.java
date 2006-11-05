@@ -86,7 +86,8 @@ public class FBDesignView extends UIComponentBase {
 				FBFormComponent submitButton = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
 				submitButton.setStyleClass(this.getComponentStyleClass());
 				submitButton.setSubmit(true);
-				this.getChildren().add(submitButton);
+				this.getFacets().put("submit", submitButton);
+				//this.getChildren().add(submitButton);
 			}
 		}
 	}

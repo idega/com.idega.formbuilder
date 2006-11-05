@@ -11,6 +11,7 @@ import javax.faces.render.Renderer;
 import org.apache.myfaces.custom.div.Div;
 
 import com.idega.formbuilder.presentation.FBDesignView;
+import com.idega.formbuilder.presentation.FBFormComponent;
 
 public class DesignViewRenderer extends Renderer {
 	
@@ -74,9 +75,10 @@ public class DesignViewRenderer extends Renderer {
 		ResponseWriter writer = context.getResponseWriter();
 		FBDesignView view = (FBDesignView) component;
 		writer.endElement("DIV");
-		Object values[] = new Object[2];
+		Object values[] = new Object[3];
 		values[0] = view.getId();
 		values[1] = view.getComponentStyleClass();
+		values[2] = view.getId() + "inner";
 		writer.write(getEmbededJavascript(values));
 	}
 	
@@ -84,23 +86,32 @@ public class DesignViewRenderer extends Renderer {
 		if (!component.isRendered()) {
 			return;
 		}
+		ResponseWriter writer = context.getResponseWriter();
+		FBDesignView view = (FBDesignView) component;
+		System.out.println("ENCODING CHILDREN");
+		
+		writer.startElement("DIV", null);
+		writer.writeAttribute("id", view.getId() + "inner", null);
+		
 		super.encodeChildren(context, component);
 		
-	}
-	
-	protected void switchVisibility(Div component, boolean makeVisible) {
-		if(makeVisible) {
-			component.setStyleClass(component.getStyleClass() + " " + FBDesignView.FACET_VISIBLE_STYLECLASS);
-		} else {
-			component.setStyleClass(component.getStyleClass() + " " + FBDesignView.FACET_INVISIBLE_STYLECLASS);
+		writer.endElement("DIV");
+		FBFormComponent submit = (FBFormComponent) view.getFacet("submit");
+		if (submit != null) {
+			if (submit.isRendered()) {
+				submit.encodeBegin(context);
+				submit.encodeChildren(context);
+				submit.encodeEnd(context);
+			}
 		}
+		
 	}
 	
 	protected String getEmbededJavascript(Object values[]) {
 		return 	"<script language=\"JavaScript\">\n"
 				+ "function setupDragAndDrop() {\n"
 				+ "Position.includeScrollOffsets = true;\n"
-				+ "Sortable.create(\"" + values[0] + "\",{dropOnEmpty:true,tag:\"div\",only:\"" + values[1] + "\",onUpdate:testing,scroll:\"" + values[0] + "\",constraint:false});\n"
+				+ "Sortable.create(\"" + values[2] + "\",{dropOnEmpty:true,tag:\"div\",only:\"" + values[1] + "\",onUpdate:testing,scroll:\"" + values[0] + "\",constraint:false});\n"
 				+ "Droppables.add(\"" + values[0] + "\",{onDrop:handleComponentDrop});\n"
 				+ "}\n"
 				+ "function handleComponentDrop(element,container) {\n"
@@ -108,14 +119,15 @@ public class DesignViewRenderer extends Renderer {
 				+ "if(currentElement != null) {\n"
 				+ "var length = $(\"" + values[0] + "\").childNodes.length;\n"
 				+ "var submit = $(\"" + values[0] + "\").childNodes[length-1];\n"
-				+ "$(\"" + values[0] + "\").insertBefore(currentElement,submit);\n"
+				//+ "$(\"" + values[0] + "\").insertBefore(currentElement,submit);\n"
+				+ "$(\"" + values[2] + "\").appendChild(currentElement);\n"
 				+ "}\n"
 				+ "currentElement = null;\n"
-				+ "Sortable.create(\"" + values[0] + "\",{dropOnEmpty:true,tag:\"div\",only:\"" + values[1] + "\",onUpdate:testing,scroll:\"" + values[0] + "\",constraint:false});\n"
+				+ "Sortable.create(\"" + values[2] + "\",{dropOnEmpty:true,tag:\"div\",only:\"" + values[1] + "\",onUpdate:testing,scroll:\"" + values[0] + "\",constraint:false});\n"
 				+ "Droppables.add(\"" + values[0] + "\",{onDrop:handleComponentDrop});\n"
 				+ "}\n"
 				+ "function testing() {\n"
-				+ "var componentIDs = Sortable.serialize(\"" + values[0] + "\",{tag:\"div\",name:\"id\"});\n"
+				+ "var componentIDs = Sortable.serialize(\"" + values[2] + "\",{tag:\"div\",name:\"id\"});\n"
 				+ "var delimiter = '&id[]=';\n"
 				+ "var idPrefix = 'fbcomp_';\n"
 				+ "dwrmanager.updateComponentList(updateOrder,componentIDs,idPrefix,delimiter);\n"

@@ -4,7 +4,7 @@
 			<td><img src="/images/heading3.gif"></td>
 		</tr>
 		<tr>
-			<td><p>Are you sure you want/nto delete this form?</p></td>
+			<td><p>Enter the title for the new form</p></td>
 		</tr>
 		<tr>
 			<td>

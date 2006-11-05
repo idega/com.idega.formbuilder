@@ -13,6 +13,12 @@ public class DOMTransformer {
 	
 	public static void renderNode(Node node, UIComponent component, ResponseWriter writer) throws IOException {
 		//Node node = component
+		if(node == null) {
+			System.out.println("NODE IS NULL");
+		}
+		if(component == null) {
+			System.out.println("component IS NULL");
+		}
 		String nodeName = node.getNodeName();
 		writer.startElement(node.getNodeName(), component);
 		Node attr = null;
