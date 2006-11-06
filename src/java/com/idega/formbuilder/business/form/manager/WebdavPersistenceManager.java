@@ -77,11 +77,13 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 			
 			public void run() {
 				
+				InputStream is = null;
+				
 				try {
 					
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					DOMUtil.prettyPrintDOM(document, out);
-					InputStream is = new ByteArrayInputStream(out.toByteArray());
+					is = new ByteArrayInputStream(out.toByteArray());
 					
 					webdav_resource.putMethod(is);
 					
@@ -91,6 +93,13 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 					logger.error("Exception occured while saving document to webdav dir: ", e);
 					
 					document_to_webdav_save_exception = e;
+				} finally {
+					if(is != null) {
+						try {
+							is.close();
+						} catch (Exception e) {
+						}
+					}
 				}
 			}
 		}.start();

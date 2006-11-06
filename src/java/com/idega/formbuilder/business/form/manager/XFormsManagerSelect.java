@@ -61,7 +61,7 @@ public class XFormsManagerSelect extends XFormsManager {
 			}
 			
 			loadXFormsComponent(components_xforms, xforms_element);
-			cache_manager.cacheXformsComponent(component_type, this.xforms_component);
+			cache_manager.cacheXformsComponent(component_type, (XFormsComponentSelectDataBean)this.xforms_component.clone());
 		}
 	}
 	

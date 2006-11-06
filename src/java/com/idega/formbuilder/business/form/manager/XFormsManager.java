@@ -77,7 +77,7 @@ public class XFormsManager implements IXFormsManager {
 			}
 			
 			loadXFormsComponent(components_xforms, xforms_element);
-			cache_manager.cacheXformsComponent(component_type, this.xforms_component);
+			cache_manager.cacheXformsComponent(component_type, (XFormsComponentDataBean)this.xforms_component.clone());
 		}
 	}
 	
