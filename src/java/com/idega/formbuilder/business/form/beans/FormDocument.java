@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -212,6 +213,7 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 	protected void clear() {
 		
 		form_xforms = null;
+		components_xml = null;
 		getFormComponentsIdList().clear();
 		
 		last_component_id = 0;
