@@ -33,7 +33,7 @@
 	<managed-bean>
 		<managed-bean-name>formList</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.business.FormList</managed-bean-class>
-		<managed-bean-scope>session</managed-bean-scope>
+		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
 		<managed-bean-name>localeList</managed-bean-name>

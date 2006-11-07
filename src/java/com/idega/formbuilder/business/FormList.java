@@ -1,36 +1,59 @@
 package com.idega.formbuilder.business;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.model.SelectItem;
 
-public class FormList implements Serializable {
+import com.idega.block.form.bean.FormBean;
+import com.idega.block.form.presentation.FormListViewer;
+import com.idega.repository.data.Singleton;
+
+/**
+ * It's singleton because this bean is supposed to be used as managed bean in application scope
+ * 
+ * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @version 1.0
+ * 
+ */
+public class FormList implements Singleton {
 	
-	private static final long serialVersionUID = -1462694114566788168L;
-	
-	private List<SelectItem> forms = new ArrayList<SelectItem>();
+	private List<SelectItem> forms_data;
 
 	public List<SelectItem> getForms() {
-		/*FormListViewer viewer = new FormListViewer();
-		List<FormBean> formBeans = viewer.getForms();
-		Iterator it = formBeans.iterator();
-		while(it.hasNext()) {
-			FormBean current = (FormBean) it.next();
-			forms.add(new SelectItem(new Integer(12), current.getName()));
-		}*/
-		forms.clear();
-		forms.add(new SelectItem("LABEL", "--Switch to--"));
-		forms.add(new SelectItem(new Integer(1).toString(), "Form1"));
-		forms.add(new SelectItem(new Integer(2).toString(), "Form2"));
-		forms.add(new SelectItem(new Integer(3).toString(), "Form3"));
-		forms.add(new SelectItem(new Integer(4).toString(), "Form4"));
-		return forms;
+		
+		if(forms_data == null)
+			loadFormList();
+		
+		return forms_data;
 	}
 
-	public void setForms(List<SelectItem> forms) {
-		this.forms = forms;
+	public void setForms(List<SelectItem> forms_data) {
+		this.forms_data = forms_data;
 	}
 
+	public void loadFormList() {
+		
+		if(forms_data == null)
+			forms_data = new ArrayList<SelectItem>();
+		else
+			forms_data.clear();
+		
+		FormListViewer viewer = new FormListViewer();
+		List<FormBean> form_beans = viewer.getForms();
+		
+		if(form_beans == null)
+			return;
+		
+		for (Iterator<FormBean> iter = form_beans.iterator(); iter.hasNext();) {
+			FormBean form_bean = iter.next();
+			
+			String form_id = form_bean.getFormId();
+			String form_name = form_bean.getName();
+			
+			if(form_id != null && form_name != null)
+				forms_data.add(new SelectItem(form_id, form_name));
+		}
+	}
 }
