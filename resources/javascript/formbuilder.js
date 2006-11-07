@@ -28,11 +28,9 @@ function applyChanges() {
 	document.forms['workspaceform1'].elements['workspaceform1:applyChangesProxy'].click();
 }
 function deleteComponent(element) {
-	//alert(element);
 	pressedDelete = true;
 	showLoadingMessage('Removing');
 	var id = element.parentNode.id;
-	//alert(id);
 	dwrmanager.removeComponent(deletedComponent,id);
 	document.forms['workspaceform1'].elements['workspaceform1:removeCompProxy'].click();
 }
@@ -40,9 +38,8 @@ function deletedComponent() {
 }
 function editProperties(element) {
 	//alert(pressedDelete);
-	if(pressedDelete) {
-		return;
-	} else {
+	var temp = pressedDelete;
+	if(!temp) {
 		showLoadingMessage('Processing');
 		var id = element.id;
 		dwrmanager.editComponentProperties(done,id);
