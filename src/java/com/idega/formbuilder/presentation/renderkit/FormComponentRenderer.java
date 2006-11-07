@@ -18,7 +18,6 @@ public class FormComponentRenderer extends Renderer {
 		FBFormComponent field = (FBFormComponent) component;
 		writer.startElement("DIV", field);
 		writer.writeAttribute("class", field.getStyleClass(), "styleClass");
-		System.out.println("NEW COMPONENT ID: " + field.getClientId(context));
 		writer.writeAttribute("id", field.getId(), "id");
 		try {
 			field.initializeComponent(context);
@@ -26,8 +25,6 @@ public class FormComponentRenderer extends Renderer {
 			pe.printStackTrace();
 		}
 		writer.writeAttribute("onclick", field.getOnclick(), "onclick");
-		System.out.println("CHILD COUNT: " + field.getChildCount());
-		
 		DOMTransformer.renderNode(field.getElement(), field, writer);
 	}
 	
@@ -38,10 +35,8 @@ public class FormComponentRenderer extends Renderer {
 	
 	public void encodeChildren(FacesContext context, UIComponent component) throws IOException {
 		if (!component.isRendered()) {
-			System.out.println("NOT RENDERED");
 			return;
 		}
-		System.out.println("ENCODING FORM COMPONENT");
 		super.encodeChildren(context, component);
 	}
 	

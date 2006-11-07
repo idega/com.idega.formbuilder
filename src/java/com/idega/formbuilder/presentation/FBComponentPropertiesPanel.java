@@ -5,13 +5,13 @@ import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
-import org.apache.myfaces.component.html.ext.HtmlCommandLink;
+import org.ajax4jsf.ajax.html.HtmlAjaxCommandLink;
 import org.apache.myfaces.component.html.ext.HtmlInputText;
 import org.apache.myfaces.component.html.ext.HtmlOutputLabel;
 import org.apache.myfaces.component.html.ext.HtmlSelectBooleanCheckbox;
 
 import com.idega.formbuilder.FormbuilderViewManager;
-import com.idega.formbuilder.business.Component;
+import com.idega.formbuilder.business.FormComponent;
 import com.idega.formbuilder.business.form.beans.ComponentProperties;
 import com.idega.formbuilder.business.form.beans.ComponentPropertiesSelect;
 import com.idega.formbuilder.business.form.beans.IComponentProperties;
@@ -34,8 +34,6 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 	}
 	
 	public void initializeComponent(FacesContext context) {
-		System.out.println("INITIALIZING PROPERTIES");
-		//Application application = context.getApplication();
 		Application application = context.getApplication();
 		IFormManager formManagerInstance = (IFormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
 		this.getChildren().clear();
@@ -46,19 +44,21 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 		} else {
 			componentId = this.getComponent();
 		}
-		System.out.println("COMPONENT: " + componentId);
 		if(componentId != null && !componentId.equals("")){
-			//IComponentProperties properties = formManagerInstance.getComponentProperties(componentId);
-			Component comp = (Component) WFUtil.getBeanInstance("component");
-			comp.reloadComponent(componentId, formManagerInstance);
+			FormComponent comp = (FormComponent) WFUtil.getBeanInstance("component");
+			comp.loadProperties(componentId, formManagerInstance);
 			IComponentProperties properties = comp.getProperties();
 			if(properties != null) {
 				if(properties instanceof ComponentProperties) {
-					System.out.println("COMPONENT PROPERTIES");
 					
-					HtmlCommandLink applyButton = (HtmlCommandLink) application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
+					/*HtmlCommandLink applyButton = (HtmlCommandLink) application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
 					applyButton.setValue("Apply");
-					applyButton.setOnclick("applyChanges()");
+					applyButton.setOnclick("applyChanges()");*/
+					HtmlAjaxCommandLink applyButton = new HtmlAjaxCommandLink();
+					applyButton.setValue("Apply");
+					applyButton.setOnclick("alert('YES')");
+					applyButton.setStyleClass("toolbar_button");
+					//applyButton.
 					this.getChildren().add(applyButton);
 					
 					HtmlOutputLabel requiredLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);

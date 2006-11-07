@@ -17,6 +17,10 @@ public class FBWorkspace extends UIComponentBase {
 		this.setRendererType(FBWorkspace.RENDERER_TYPE);
 	}
 	
+	public boolean getRendersChildren() {
+		return true;
+	}
+	
 	public String getFamily() {
 		return FBWorkspace.COMPONENT_FAMILY;
 	}

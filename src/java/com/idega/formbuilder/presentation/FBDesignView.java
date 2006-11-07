@@ -56,6 +56,10 @@ public class FBDesignView extends UIComponentBase {
 		this.setRendererType(FBDesignView.RENDERER_TYPE);
 	}
 	
+	public boolean getRendersChildren() {
+		return true;
+	}
+	
 	public String getFamily() {
 		return FBDesignView.COMPONENT_FAMILY;
 	}
@@ -64,43 +68,20 @@ public class FBDesignView extends UIComponentBase {
 		return FBDesignView.RENDERER_TYPE;
 	}
 	
-	private void printChildrenIDs(UIComponent comp) {
-		Iterator it = comp.getChildren().iterator();
-		while(it.hasNext()) {
-			UIComponent c = (UIComponent) it.next();
-			String nextId = c.getId();
-			System.out.println("PARENT COMPONENT:" + c + " HAS ID: " + nextId);
-			System.out.println("CHILDREN IDS: ");
-			printChildrenIDs(c);
-		}
-	}
-	
 	public void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
 		IFormManager formManagerInstance = (IFormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
-		this.getChildren().clear();
-		System.out.println("----------SIZE: " + this.getChildren().size());
+		//this.getChildren().clear();
 		List<String> ids = formManagerInstance.getFormComponentsIdsList();
 		Iterator it = ids.iterator();
-		//Div innerDiv = (Div) application.createComponent(Div.COMPONENT_TYPE);
-		//innerDiv.setId(this.getId() + "inner");
-		
 		while(it.hasNext()) {
-			
 			String nextId = (String) it.next();
-			
 			FBFormComponent formComponent = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
 			formComponent.setId(nextId);
-			//System.out.println("NEXT ID: " + formComponent.getClientId(context));
 			formComponent.setStyleClass(this.getComponentStyleClass());
 		    this.getChildren().add(formComponent);
-			//innerDiv.getChildren().add(formComponent);
 		}
-		//this.getChildren().add(innerDiv);
-		Iterator it3 = this.getChildren().iterator();
-		while(it3.hasNext()) {
-			System.out.println("---------" + ((UIComponent) it3.next()).getId());
-		}
+		
 		ValueBinding vb = this.getValueBinding("status");
 		String status = null;
 		if(vb != null) {
@@ -110,32 +91,11 @@ public class FBDesignView extends UIComponentBase {
 		}
 		if(status != null) {
 			if(FBDesignView.DESIGN_VIEW_STATUS_EMPTY.equals(status) || FBDesignView.DESIGN_VIEW_STATUS_ACTIVE.equals(status)) {
-				System.out.println("This designview has " + this.getFacets().size() + " facets");
-				Iterator it2 = this.getFacets().keySet().iterator();
-				while(it2.hasNext()) {
-					System.out.println("FACET: " + (String) it2.next());
-				}
 				FBFormComponent submitButton = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
 				submitButton.setStyleClass(this.getComponentStyleClass());
 				submitButton.setSubmit(true);
 				this.getFacets().put("submit", submitButton);
-				//this.getChildren().add(submitButton);
 			}
-		}
-		
-		
-		System.out.println("ROOT ID: " + context.getViewRoot().getId() + " INSIDE FBDESIGNVIEW " + this.getRendersChildren());
-		printChildrenIDs(context.getViewRoot(), context);
-	}
-	
-	private void printChildrenIDs(UIComponent comp, FacesContext context) {
-		Iterator it = comp.getChildren().iterator();
-		while(it.hasNext()) {
-			UIComponent c = (UIComponent) it.next();
-			String nextId = c.getClientId(context);
-			System.out.println("COMPONENT WITH ID: " + nextId + " (" + c.getParent().getId() + ")");
-			//System.out.println("CHILDREN IDS: ");
-			printChildrenIDs(c, context);
 		}
 	}
 

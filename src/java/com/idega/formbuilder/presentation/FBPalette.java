@@ -9,7 +9,7 @@ import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
-import com.idega.formbuilder.business.FormComponent;
+import com.idega.formbuilder.business.PaletteComponent;
 
 public class FBPalette extends UIComponentBase {
 	
@@ -41,15 +41,13 @@ public class FBPalette extends UIComponentBase {
 	
 	public void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
-		System.out.println("PALETTE INITILIZATION: " + this.getChildren().size());
 		this.getChildren().clear();
-		System.out.println("PALETTE INITILIZATION: " + this.getChildren().size());
 		ValueBinding vb = this.getValueBinding("items");
 		if(vb != null) {
 			List items = (List) vb.getValue(context);
 			Iterator it = items.iterator();
 			while(it.hasNext()) {
-				FormComponent current = (FormComponent) it.next();
+				PaletteComponent current = (PaletteComponent) it.next();
 				FBPaletteComponent formComponent = (FBPaletteComponent) application.createComponent(FBPaletteComponent.COMPONENT_TYPE);
 				formComponent.setStyleClass(this.getItemStyleClass());
 				formComponent.setName(current.getName());
@@ -58,7 +56,6 @@ public class FBPalette extends UIComponentBase {
 				this.getChildren().add(formComponent);
 			}
 		}
-		System.out.println("PALETTE INITILIZATION: " + this.getChildren().size());
 	}
 
 	public int getColumns() {

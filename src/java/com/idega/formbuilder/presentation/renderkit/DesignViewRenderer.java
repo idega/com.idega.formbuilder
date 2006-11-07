@@ -69,15 +69,19 @@ public class DesignViewRenderer extends Renderer {
 				}
 			}
 		}
+		writer.startElement("DIV", null);
+		writer.writeAttribute("id", designView.getId() + "inner", null);
 	}
 	
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		FBDesignView view = (FBDesignView) component;
 		
+		writer.endElement("DIV");
+		
 		FBFormComponent submit = (FBFormComponent) view.getFacet("submit");
 		if (submit != null) {
-			submit.setId("someidsdflkjsdfl");
+			submit.setId("submitB");
 			if (submit.isRendered()) {
 				submit.encodeBegin(context);
 				submit.encodeChildren(context);
@@ -97,14 +101,7 @@ public class DesignViewRenderer extends Renderer {
 		if (!component.isRendered()) {
 			return;
 		}
-		ResponseWriter writer = context.getResponseWriter();
-		FBDesignView view = (FBDesignView) component;
-		writer.startElement("DIV", null);
-		writer.writeAttribute("id", view.getId() + "inner", null);
 		super.encodeChildren(context, component);
-		writer.endElement("DIV");
-		
-		
 	}
 	
 	protected String getEmbededJavascript(Object values[]) {
@@ -132,7 +129,7 @@ public class DesignViewRenderer extends Renderer {
 				+ "var delimiter = '&id[]=';\n"
 				+ "var idPrefix = 'fbcomp_';\n"
 				+ "dwrmanager.updateComponentList(updateOrder,componentIDs,idPrefix,delimiter);\n"
-				//+ "pressedDelete = true;\n"
+				+ "pressedDelete = true;\n"
 				+ "}\n"
 				+ "function updateOrder() {\n"
 				+ "}\n"

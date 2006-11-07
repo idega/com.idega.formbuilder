@@ -22,7 +22,8 @@ public class WorkspaceRenderer extends Renderer {
 		writer.writeAttribute("id", workspace.getId(), "id");
 		writer.writeAttribute("class", workspace.getStyleClass(), "styleClass");
 		
-		workspace.getChildren().clear();
+		//workspace.getChildren().clear();
+		
 		ValueBinding vb = workspace.getValueBinding("view");
 		String view = null;
 		if(vb != null) {
@@ -79,7 +80,6 @@ public class WorkspaceRenderer extends Renderer {
 		if (!component.isRendered()) {
 			return;
 		}
-		//System.out.println("RENDERING WORKSPACE CHILDREN: " + component.getChildCount());
 		super.encodeChildren(context, component);
 		
 	}
