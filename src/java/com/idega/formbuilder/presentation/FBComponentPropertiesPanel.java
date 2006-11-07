@@ -12,6 +12,7 @@ import org.apache.myfaces.component.html.ext.HtmlSelectBooleanCheckbox;
 
 import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.formbuilder.business.FormComponent;
+import com.idega.formbuilder.business.Workspace;
 import com.idega.formbuilder.business.form.beans.ComponentProperties;
 import com.idega.formbuilder.business.form.beans.ComponentPropertiesSelect;
 import com.idega.formbuilder.business.form.beans.IComponentProperties;
@@ -58,7 +59,7 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 					applyButton.setValue("Apply");
 					applyButton.setOnclick("alert('YES')");
 					applyButton.setStyleClass("toolbar_button");
-					//applyButton.
+					applyButton.addAjaxListener((Workspace)WFUtil.getBeanInstance("workspace"));
 					this.getChildren().add(applyButton);
 					
 					HtmlOutputLabel requiredLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
