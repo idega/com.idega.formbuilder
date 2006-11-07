@@ -8,7 +8,10 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
-public class Workspace implements Serializable {
+import org.ajax4jsf.framework.ajax.AjaxEvent;
+import org.ajax4jsf.framework.ajax.AjaxListener;
+
+public class Workspace implements Serializable, AjaxListener {
 	
 	private static final long serialVersionUID = -7539955904708793992L;
 	
@@ -34,6 +37,10 @@ public class Workspace implements Serializable {
 
 	public void setCurrentComponent(String currentComponent) {
 		this.currentComponent = currentComponent;
+	}
+	
+	public void processAjax(AjaxEvent ae) {
+		System.out.println("AJAX FIRED: " + ae.getComponent().getId());
 	}
 
 	public Workspace() {
