@@ -80,6 +80,7 @@ public class FBFormComponent extends UIComponentBase {
 					button.setAttribute("disabled", "true");
 					this.setElement(element);
 				} else {
+					System.out.println("ELEMENT ID: " + this.getId());
 					Element element = formManagerInstance.getLocalizedFormHtmlComponent(this.getId(), current);
 					String id = element.getAttribute("id");
 					this.setId(id);

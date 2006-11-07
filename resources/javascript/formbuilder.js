@@ -29,6 +29,7 @@ function applyChanges() {
 }
 function deleteComponent(element) {
 	//alert(element);
+	pressedDelete = true;
 	showLoadingMessage('Removing');
 	var id = element.parentNode.id;
 	//alert(id);
@@ -38,14 +39,19 @@ function deleteComponent(element) {
 function deletedComponent() {
 }
 function editProperties(element) {
-	//alert(element);
-	showLoadingMessage('Processing');
-	var id = element.id;
-	//alert(id);
-	dwrmanager.editComponentProperties(done,id);
-	document.forms['workspaceform1'].elements['workspaceform1:editCompProxy'].click();
+	//alert(pressedDelete);
+	if(pressedDelete) {
+		return;
+	} else {
+		showLoadingMessage('Processing');
+		var id = element.id;
+		dwrmanager.editComponentProperties(done,id);
+		document.forms['workspaceform1'].elements['workspaceform1:editCompProxy'].click();
+	}
+	pressedDelete = false;
 }
 function done() {
+	
 }
 function createdNewForm(element) {
 }
@@ -121,7 +127,7 @@ function switchSelectedForm() {
 function formSwitched() {
 	closeLoadingMessage();
 }
-
+var pressedDelete = false;
 /*Setup modal message windows functionality*/
 messageObj = new DHTML_modalMessage();
 messageObj.setShadowOffset(5);

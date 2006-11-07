@@ -31,7 +31,7 @@ public class FormComponent implements Serializable {
 		this.iconPath = "";
 	}
 	
-	public FormComponent(String type) {
+	public FormComponent(String type) throws Exception {
 		this.type = type;
 		this.name = (String) localizedStrings.get(type);
 		this.iconPath = (String) localizedStrings.get(type + "_icon");

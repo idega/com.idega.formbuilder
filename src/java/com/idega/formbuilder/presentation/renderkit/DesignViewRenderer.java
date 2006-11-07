@@ -74,6 +74,17 @@ public class DesignViewRenderer extends Renderer {
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		FBDesignView view = (FBDesignView) component;
+		
+		FBFormComponent submit = (FBFormComponent) view.getFacet("submit");
+		if (submit != null) {
+			submit.setId("someidsdflkjsdfl");
+			if (submit.isRendered()) {
+				submit.encodeBegin(context);
+				submit.encodeChildren(context);
+				submit.encodeEnd(context);
+			}
+		}
+		
 		writer.endElement("DIV");
 		Object values[] = new Object[3];
 		values[0] = view.getId();
@@ -88,22 +99,11 @@ public class DesignViewRenderer extends Renderer {
 		}
 		ResponseWriter writer = context.getResponseWriter();
 		FBDesignView view = (FBDesignView) component;
-		System.out.println("ENCODING CHILDREN");
-		
 		writer.startElement("DIV", null);
 		writer.writeAttribute("id", view.getId() + "inner", null);
-		
 		super.encodeChildren(context, component);
-		
 		writer.endElement("DIV");
-		FBFormComponent submit = (FBFormComponent) view.getFacet("submit");
-		if (submit != null) {
-			if (submit.isRendered()) {
-				submit.encodeBegin(context);
-				submit.encodeChildren(context);
-				submit.encodeEnd(context);
-			}
-		}
+		
 		
 	}
 	
@@ -127,10 +127,12 @@ public class DesignViewRenderer extends Renderer {
 				+ "Droppables.add(\"" + values[0] + "\",{onDrop:handleComponentDrop});\n"
 				+ "}\n"
 				+ "function testing() {\n"
+				//+ "if(!pressedDelete) {\n"
 				+ "var componentIDs = Sortable.serialize(\"" + values[2] + "\",{tag:\"div\",name:\"id\"});\n"
 				+ "var delimiter = '&id[]=';\n"
 				+ "var idPrefix = 'fbcomp_';\n"
 				+ "dwrmanager.updateComponentList(updateOrder,componentIDs,idPrefix,delimiter);\n"
+				//+ "pressedDelete = true;\n"
 				+ "}\n"
 				+ "function updateOrder() {\n"
 				+ "}\n"

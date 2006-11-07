@@ -79,8 +79,9 @@
 						</t:div>
 						<t:div id="form_container" forceId="true">
 							<fb:workspace styleClass="form_container" id="mainWorkspace" view="#{workspace.view}">
-								<f:facet name="design">
+								
 									
+								<f:facet name="design">
 									<fb:designView id="dropBox" styleClass="dropBox" componentStyleClass="formElement" status="#{workspace.designViewStatus}">
 										<f:facet name="noFormNoticeFacet">
 											<t:div id="noFormNotice" forceId="true">
@@ -105,6 +106,7 @@
 											</t:div>
 										</f:facet>
 									</fb:designView>
+									
 								</f:facet>
 								<f:facet name="preview">
 									<t:div styleClass="dropBox" forceId="true">
@@ -123,6 +125,7 @@
 										<a4j:commandLink id="sourceViewButton" styleClass="toolbar_button float_right" actionListener="#{workspace.viewChanged}" reRender="form_container" ajaxSingle="true" value="Source" />
 									</t:div>
 								</f:facet>
+								
 							</fb:workspace>
 						</t:div>
 						<f:verbatim>

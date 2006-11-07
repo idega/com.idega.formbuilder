@@ -24,7 +24,11 @@ public class ComponentPalette implements Serializable {
 		System.out.println("---------------------");
 		while(it.hasNext()) {
 			System.out.println("XXXXXXXXXXXXXXXXXX");
+			try {
 			temp = new FormComponent((String) it.next());
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 			System.out.println("XXXXXXXXXXXXXXXXXX");
 			fields.add(temp);
 			System.out.println("XXXXXXXXXXXXXXXXXX");
@@ -39,7 +43,11 @@ public class ComponentPalette implements Serializable {
 		Iterator it = list.iterator();
 		FormComponent temp = null;
 		while(it.hasNext()) {
-			temp = new FormComponent((String) it.next());
+			try {
+				temp = new FormComponent((String) it.next());
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
 			fields.add(temp);
 		}
 	}

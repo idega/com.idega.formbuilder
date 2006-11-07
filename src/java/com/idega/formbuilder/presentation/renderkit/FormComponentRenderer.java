@@ -18,6 +18,7 @@ public class FormComponentRenderer extends Renderer {
 		FBFormComponent field = (FBFormComponent) component;
 		writer.startElement("DIV", field);
 		writer.writeAttribute("class", field.getStyleClass(), "styleClass");
+		System.out.println("NEW COMPONENT ID: " + field.getClientId(context));
 		writer.writeAttribute("id", field.getId(), "id");
 		try {
 			field.initializeComponent(context);

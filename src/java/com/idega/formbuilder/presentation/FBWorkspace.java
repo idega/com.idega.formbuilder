@@ -39,7 +39,7 @@ public class FBWorkspace extends UIComponentBase {
 	
 	public Object saveState(FacesContext context) {
 		Object values[] = new Object[3];
-		values[0] = super.saveState(context);
+		values[0] = super.saveState(context); 
 		values[1] = styleClass;
 		values[2] = view;
 		return values;

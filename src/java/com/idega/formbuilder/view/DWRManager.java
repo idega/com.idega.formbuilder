@@ -10,6 +10,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -33,6 +34,7 @@ public class DWRManager implements Serializable {
 	public Element getElement(String type) throws Exception {
 		Element rootDivImported = null;
 		String elementId = formManagerInstance.createFormComponent(type, null);
+		System.out.println("ELEMENT ID: " + elementId);
 		Element element = (Element) formManagerInstance.getLocalizedFormHtmlComponent(elementId, new Locale("en")).cloneNode(true);
 		String id = element.getAttribute("id");
 		element.removeAttribute("id");
@@ -87,7 +89,9 @@ public class DWRManager implements Serializable {
 		LocalizedStringBean formName = new LocalizedStringBean();
 		formName.setString(current, name);
 		formManagerInstance.createFormDocument(id, formName);
-		Element element = formManagerInstance.getLocalizedSubmitComponent(current);
+		System.out.println("NEW FORM CREATED: " + id + "---------------------");
+		Element element = formManagerInstance.getLocalizedSubmitComponent(new Locale("en"));
+		DOMUtil.prettyPrintDOM(element);
 		element.setAttribute("class", "formElement");
 		Element button = (Element) element.getFirstChild();
 		button.setAttribute("disabled", "true");
@@ -105,6 +109,9 @@ public class DWRManager implements Serializable {
 			formManagerInstance.removeFormComponent(id);
 		} catch(Exception e) {
 			e.printStackTrace();
+		}
+		if(formManagerInstance.getFormComponentsIdsList().isEmpty()) {
+			((Workspace) WFUtil.getBeanInstance("workspace")).setDesignViewStatus(FBDesignView.DESIGN_VIEW_STATUS_EMPTY);
 		}
 		return id;
 	}

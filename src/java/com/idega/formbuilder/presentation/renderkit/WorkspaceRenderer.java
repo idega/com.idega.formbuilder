@@ -79,6 +79,7 @@ public class WorkspaceRenderer extends Renderer {
 		if (!component.isRendered()) {
 			return;
 		}
+		//System.out.println("RENDERING WORKSPACE CHILDREN: " + component.getChildCount());
 		super.encodeChildren(context, component);
 		
 	}
