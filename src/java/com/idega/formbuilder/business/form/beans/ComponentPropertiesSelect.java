@@ -9,13 +9,13 @@ public class ComponentPropertiesSelect extends ComponentProperties implements IC
 	
 	private LocalizedStringBean empty_element_label;
 	private String external_data_src;
-	private LocalizedItemsetBean itemset;
+	private ILocalizedItemset itemset;
 	private Integer data_src_used = LOCAL_DATA_SRC;
 	
-	public LocalizedItemsetBean getItemset() {
+	public ILocalizedItemset getItemset() {
 		return itemset;
 	}
-	public void setItemsetPlain(LocalizedItemsetBean itemset) {
+	public void setItemsetPlain(ILocalizedItemset itemset) {
 		this.itemset = itemset;
 	}
 	public LocalizedStringBean getEmptyElementLabel() {

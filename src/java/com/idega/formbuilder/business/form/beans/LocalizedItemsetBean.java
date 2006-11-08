@@ -19,7 +19,7 @@ import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
  * @version 1.0
  * 
  */
-public class LocalizedItemsetBean {
+public class LocalizedItemsetBean implements ILocalizedItemset {
 	
 	private Map<Locale, List<ItemBean>> itemsets;
 	private Map<Locale, Element> localized_entries;
@@ -104,6 +104,7 @@ public class LocalizedItemsetBean {
 		}
 		return items;
 	}
+	
 	public void setItems(Locale locale, List<ItemBean> items) {
 		
 		if(items == null) {

@@ -14,6 +14,7 @@ import org.w3c.dom.Element;
 import com.idega.formbuilder.business.form.beans.ComponentPropertiesSelect;
 import com.idega.formbuilder.business.form.beans.IComponentPropertiesSelect;
 import com.idega.formbuilder.business.form.beans.IComponentPropertiesSelectParent;
+import com.idega.formbuilder.business.form.beans.ILocalizedItemset;
 import com.idega.formbuilder.business.form.beans.ItemBean;
 import com.idega.formbuilder.business.form.beans.LocalizedItemsetBean;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
@@ -178,7 +179,7 @@ public class XFormsManagerSelect extends XFormsManager {
 		
 		return external_instance.getAttribute(FormManagerUtil.src_att);
 	}
-	public LocalizedItemsetBean getItemset() {
+	public ILocalizedItemset getItemset() {
 
 		Element local_instance = ((XFormsComponentSelectDataBean)xforms_component).getLocalItemsetInstance();
 		
@@ -264,7 +265,7 @@ public class XFormsManagerSelect extends XFormsManager {
 		for (Iterator<Element> iter = child_elements.iterator(); iter.hasNext();)
 			local_instance.removeChild(iter.next());
 		
-		LocalizedItemsetBean itemset = ((IComponentPropertiesSelect)component.getProperties()).getItemset();
+		ILocalizedItemset itemset = ((IComponentPropertiesSelect)component.getProperties()).getItemset();
 		
 		if(itemset == null)
 			return;

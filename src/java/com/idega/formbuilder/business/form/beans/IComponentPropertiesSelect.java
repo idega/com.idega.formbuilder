@@ -11,7 +11,7 @@ public interface IComponentPropertiesSelect extends IComponentProperties {
 	public static final int LOCAL_DATA_SRC = 1;
 	public static final int EXTERNAL_DATA_SRC = 2;
 	
-	public abstract LocalizedItemsetBean getItemset();
+	public abstract ILocalizedItemset getItemset();
 
 	public abstract LocalizedStringBean getEmptyElementLabel();
 
