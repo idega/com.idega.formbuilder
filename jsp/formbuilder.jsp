@@ -23,13 +23,14 @@
 				<t:div styleClass="application_container" id="application_container" forceId="true">
 					<t:div styleClass="toolbar_container" id="toolbar_container" forceId="true">
 						<h:commandLink id="new_form_button" styleClass="toolbar_button float_left" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/new-dialog.inc');return false" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}" />
-						<h:commandLink id="delete_form_button" styleClass="toolbar_button float_left" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/confirm-delete.inc');return false" action="" value="Delete form"/>
 						<!--
+						<h:commandLink id="delete_form_button" styleClass="toolbar_button float_left" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/confirm-delete.inc');return false" action="" value="Delete form"/>
+						-->
 						<h:selectOneMenu id="formList" styleClass="toolbar_field float_left" value="#{viewmanager.currentFormName}">
 							<f:selectItems value="#{formList.forms}" />
 							<a4j:support event="onchange" onsubmit="switchSelectedForm()" oncomplete="formSwitched()" action="#{viewmanager.changeSelectedForm}" ajaxSingle="true" reRender="workspaceform1:tab01,form_container" />
 						</h:selectOneMenu>
-						-->
+						
 						<h:commandLink id="help_form_button" onclick="showInnerHtml(this)" styleClass="toolbar_button float_right" action="" value="Help"/>
 						<h:selectOneMenu id="localeList" styleClass="toolbar_field float_right" value="#{workspace.currentLocale}">
 							<f:selectItems value="#{localeList.locales}" />
