@@ -97,7 +97,7 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 						HtmlSelectOneRadio dataSrcSwitch = (HtmlSelectOneRadio) application.createComponent(HtmlSelectOneRadio.COMPONENT_TYPE);
 						dataSrcSwitch.setStyleClass("inlineRadioButton");
 						dataSrcSwitch.setOnchange("alert('OK')");
-						dataSrcSwitch.setValueChangeListener(application.createMethodBinding("#{dataSources.switchDataSource}", null));
+						//dataSrcSwitch.setValueChangeListener(application.createMethodBinding("#{dataSources.switchDataSource}", null));
 						dataSrcSwitch.setValueBinding("value", application.createValueBinding("#{dataSources.selectedDataSource}"));
 						UISelectItems dataSrcs = (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
 						dataSrcs.setValueBinding("value", application.createValueBinding("#{dataSources.sources}"));
