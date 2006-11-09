@@ -10,6 +10,7 @@ import javax.faces.component.html.HtmlSelectOneRadio;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
+import org.ajax4jsf.ajax.html.HtmlAjaxSupport;
 import org.apache.myfaces.custom.fileupload.HtmlInputFileUpload;
 
 import com.idega.formbuilder.FormbuilderViewManager;
@@ -95,23 +96,36 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 						
 						HtmlSelectOneRadio dataSrcSwitch = (HtmlSelectOneRadio) application.createComponent(HtmlSelectOneRadio.COMPONENT_TYPE);
 						dataSrcSwitch.setStyleClass("inlineRadioButton");
+						dataSrcSwitch.setOnchange("alert('OK')");
+						dataSrcSwitch.setValueChangeListener(application.createMethodBinding("#{dataSources.switchDataSource}", null));
 						dataSrcSwitch.setValueBinding("value", application.createValueBinding("#{dataSources.selectedDataSource}"));
 						UISelectItems dataSrcs = (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
 						dataSrcs.setValueBinding("value", application.createValueBinding("#{dataSources.sources}"));
 						dataSrcSwitch.getChildren().add(dataSrcs);
+						
+						
+						HtmlAjaxSupport ajaxSupport = new HtmlAjaxSupport();
+						ajaxSupport.setEvent("onchange");
+						ajaxSupport.setReRender("options_container");
+						dataSrcSwitch.getChildren().add(ajaxSupport);
+						
 						this.getChildren().add(dataSrcSwitch);
 						
 						String currentDataSrc = ((DataSourceList) WFUtil.getBeanInstance("dataSources")).getSelectedDataSource();
-						/*
+						System.out.println(currentDataSrc);
 						if(currentDataSrc != null && !currentDataSrc.equals("")) {
 							if(currentDataSrc.equals("1")) {
-								
+								HtmlOutputLabel advancedL2 = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+								advancedL2.setValue("Select options properties");
+								this.getChildren().add(advancedL2);
 							} else if(currentDataSrc.equals("2")) {
 								HtmlInputFileUpload fileUpload = (HtmlInputFileUpload) application.createComponent(HtmlInputFileUpload.COMPONENT_TYPE);
+								//fileUpload.
+								this.getChildren().add(fileUpload);
 							} else {
-								System.out.println("INVAlID INSTANCE VARIABLE");
+								System.out.println("INVALID INSTANCE VARIABLE");
 							}
-						}*/
+						}
 					}
 				}
 			}
