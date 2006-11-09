@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import com.idega.formbuilder.business.form.beans.IComponentPropertiesSelect;
@@ -38,6 +39,10 @@ private static final long serialVersionUID = -1462694112346788168L;
 
 	public void setSources(List<SelectItem> sources) {
 		this.sources = sources;
+	}
+	
+	public void switchDataSource(ValueChangeEvent vce) {
+		System.out.println("ACTION FIRED");
 	}
 
 }
