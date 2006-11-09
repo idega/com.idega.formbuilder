@@ -6,6 +6,11 @@
 
 <faces-config>
 	<managed-bean>
+		<managed-bean-name>dataSources</managed-bean-name>
+		<managed-bean-class>com.idega.formbuilder.business.DataSourceList</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
 		<managed-bean-name>component</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.business.FormComponent</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>

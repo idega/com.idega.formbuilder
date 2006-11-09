@@ -92,10 +92,10 @@ public class FBFormComponent extends UIComponentBase {
 					element.setAttribute("id", this.getId() + "_i");
 					this.setElement(element);
 					this.setOnclick("editProperties(this)");
-					HtmlGraphicImage infoButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
-					infoButton.setId("ib" + this.getId());
-					infoButton.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-find-replace.png");
-					infoButton.setStyleClass("speedButton");
+					//HtmlGraphicImage infoButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+					//infoButton.setId("ib" + this.getId());
+					//infoButton.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-find-replace.png");
+					//infoButton.setStyleClass("speedButton");
 					//infoButton.setOnclick("editProperties(this)");
 					HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
 					deleteButton.setId("db" + this.getId());
@@ -103,7 +103,7 @@ public class FBFormComponent extends UIComponentBase {
 					deleteButton.setOnclick("deleteComponent(this)");
 					deleteButton.setStyleClass("speedButton");
 					this.getChildren().add(deleteButton);
-					this.getChildren().add(infoButton);
+					//this.getChildren().add(infoButton);
 				}
 			}
 		}

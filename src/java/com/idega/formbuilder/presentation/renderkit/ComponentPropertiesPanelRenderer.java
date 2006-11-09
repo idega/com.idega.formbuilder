@@ -24,6 +24,7 @@ public class ComponentPropertiesPanelRenderer extends Renderer {
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		writer.endElement("DIV");
+		//writer.write(getEmbededJavascript(null));
 	}
 	
 	public void encodeChildren(FacesContext context, UIComponent component) throws IOException {
@@ -33,4 +34,12 @@ public class ComponentPropertiesPanelRenderer extends Renderer {
 		super.encodeChildren(context, component);
 	}
 
+	protected String getEmbededJavascript(Object values[]) {
+		return 	"<script language=\"JavaScript\">\n"
+				+ "function applyChanges() {\n"
+				+ "document.forms['workspaceform1'].elements['workspaceform1:applyButton'].click();\n"
+				+ "}\n"
+				+ "</script>\n";
+	}
+	
 }

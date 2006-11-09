@@ -24,6 +24,13 @@ function createNewForm() {
 		document.forms['workspaceform1'].elements['workspaceform1:createFormProxy'].click();
 	}
 }
+function saveProperties() {
+	showLoadingMessage("Saving");
+	dwrmanager.saveChanges(deletedComponent);
+}
+function savedProperties() {
+	closeLoadingMessage();
+}
 function applyChanges() {
 	document.forms['workspaceform1'].elements['workspaceform1:applyChangesProxy'].click();
 }
@@ -37,7 +44,6 @@ function deleteComponent(element) {
 function deletedComponent() {
 }
 function editProperties(element) {
-	//alert(pressedDelete);
 	var temp = pressedDelete;
 	if(!temp) {
 		showLoadingMessage('Processing');
@@ -69,11 +75,8 @@ function clearDesignSpace() {
 	var child = null;
 	for(var i=dropBox.childNodes.length-1;i>-1;i--) {
 		child = dropBox.childNodes[i];
-		//alert(child + 'element');
 		if(child.getAttribute('class') == 'formElement') {
-			//alert(child + 'to be deleted');
 			dropBox.removeChild(child);
-			//dropBox.replaceChild(child,getDecoyNode());
 		}
 	}
 }

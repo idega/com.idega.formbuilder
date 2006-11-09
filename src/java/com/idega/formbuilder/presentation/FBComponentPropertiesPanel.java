@@ -2,21 +2,22 @@ package com.idega.formbuilder.presentation;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponentBase;
+import javax.faces.component.UISelectItems;
+import javax.faces.component.html.HtmlInputText;
+import javax.faces.component.html.HtmlOutputLabel;
+import javax.faces.component.html.HtmlSelectBooleanCheckbox;
+import javax.faces.component.html.HtmlSelectOneRadio;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
-import org.ajax4jsf.ajax.html.HtmlAjaxCommandLink;
-import org.apache.myfaces.component.html.ext.HtmlInputText;
-import org.apache.myfaces.component.html.ext.HtmlOutputLabel;
-import org.apache.myfaces.component.html.ext.HtmlSelectBooleanCheckbox;
+import org.apache.myfaces.custom.fileupload.HtmlInputFileUpload;
 
 import com.idega.formbuilder.FormbuilderViewManager;
+import com.idega.formbuilder.business.DataSourceList;
 import com.idega.formbuilder.business.FormComponent;
-import com.idega.formbuilder.business.Workspace;
 import com.idega.formbuilder.business.form.beans.ComponentProperties;
 import com.idega.formbuilder.business.form.beans.ComponentPropertiesSelect;
 import com.idega.formbuilder.business.form.beans.IComponentProperties;
-import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.manager.IFormManager;
 import com.idega.webface.WFUtil;
 
@@ -52,62 +53,65 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 			if(properties != null) {
 				if(properties instanceof ComponentProperties) {
 					
-					/*HtmlCommandLink applyButton = (HtmlCommandLink) application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
-					applyButton.setValue("Apply");
-					applyButton.setOnclick("applyChanges()");*/
-					HtmlAjaxCommandLink applyButton = new HtmlAjaxCommandLink();
-					applyButton.setValue("Apply");
-					applyButton.setOnclick("alert('YES')");
-					applyButton.setStyleClass("toolbar_button");
-					applyButton.addAjaxListener((Workspace)WFUtil.getBeanInstance("workspace"));
-					this.getChildren().add(applyButton);
-					
 					HtmlOutputLabel requiredLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-					requiredLabel.setId(componentId + "prop_required_label");
 					requiredLabel.setValue("Required field");
-					requiredLabel.setFor(componentId + "prop_required");
+					requiredLabel.setFor("propertyRequired");
 					this.getChildren().add(requiredLabel);
 					
 					HtmlSelectBooleanCheckbox required = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
-					required.setId(componentId + "prop_required");
+					required.setId("propertyRequired");
 					required.setValueBinding("value", application.createValueBinding("#{component.required}"));
-					//required.setValue(new Boolean(properties.isRequired()));
+					required.setOnchange("applyChanges()");
 					this.getChildren().add(required);
 					
 					
 					HtmlOutputLabel titleLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-					titleLabel.setId(componentId + "PropTitleLabel");
 					titleLabel.setValue("Field name");
-					titleLabel.setFor(componentId + "PropTitle");
+					titleLabel.setFor("propertyTitle");
 					this.getChildren().add(titleLabel);
 					
 					HtmlInputText title = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
-					title.setId(componentId + "PropTitle");
-					LocalizedStringBean labels = properties.getLabel();
+					title.setId("propertyTitle");
+					title.setOnblur("applyChanges()");
 					title.setValueBinding("value", application.createValueBinding("#{component.label}"));
-					//title.setValue(labels.getString(new Locale("en")));
 					this.getChildren().add(title);
 					
 					
 					HtmlOutputLabel errorMsgLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-					errorMsgLabel.setId(componentId + "PropErrorMsgLabel");
 					errorMsgLabel.setValue("Error message");
-					errorMsgLabel.setFor(componentId + "PropErrorMsg");
+					errorMsgLabel.setFor("propertyErrorMessage");
 					this.getChildren().add(errorMsgLabel);
 					
 					HtmlInputText errorMsg = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
-					errorMsg.setId(componentId + "PropErrorMsg");
-					LocalizedStringBean msgs = properties.getErrorMsg();
+					errorMsg.setId("propertyErrorMessage");
+					errorMsg.setOnblur("applyChanges()");
 					errorMsg.setValueBinding("value", application.createValueBinding("#{component.errorMsg}"));
-					//errorMsg.setValue(msgs.getString(new Locale("en")));
 					this.getChildren().add(errorMsg);
 					
 					if(properties instanceof ComponentPropertiesSelect) {
-						HtmlOutputLabel notImplemented = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-						//notImplemented.setId(componentId + "PropErrorMsgLabel");
-						notImplemented.setValue("Advanced propertied of this component are not implemented yet");
-						//errorMsgLabel.setFor(componentId + "PropErrorMsg");
-						this.getChildren().add(notImplemented);
+						HtmlOutputLabel advancedL = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+						advancedL.setValue("Select options properties");
+						this.getChildren().add(advancedL);
+						
+						HtmlSelectOneRadio dataSrcSwitch = (HtmlSelectOneRadio) application.createComponent(HtmlSelectOneRadio.COMPONENT_TYPE);
+						dataSrcSwitch.setStyleClass("inlineRadioButton");
+						dataSrcSwitch.setValueBinding("value", application.createValueBinding("#{dataSources.selectedDataSource}"));
+						UISelectItems dataSrcs = (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
+						dataSrcs.setValueBinding("value", application.createValueBinding("#{dataSources.sources}"));
+						dataSrcSwitch.getChildren().add(dataSrcs);
+						this.getChildren().add(dataSrcSwitch);
+						
+						String currentDataSrc = ((DataSourceList) WFUtil.getBeanInstance("dataSources")).getSelectedDataSource();
+						/*
+						if(currentDataSrc != null && !currentDataSrc.equals("")) {
+							if(currentDataSrc.equals("1")) {
+								
+							} else if(currentDataSrc.equals("2")) {
+								HtmlInputFileUpload fileUpload = (HtmlInputFileUpload) application.createComponent(HtmlInputFileUpload.COMPONENT_TYPE);
+							} else {
+								System.out.println("INVAlID INSTANCE VARIABLE");
+							}
+						}*/
 					}
 				}
 			}

@@ -15,6 +15,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.idega.formbuilder.FormbuilderViewManager;
+import com.idega.formbuilder.business.FormComponent;
 import com.idega.formbuilder.business.Workspace;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.manager.IFormManager;
@@ -31,10 +32,13 @@ public class DWRManager implements Serializable {
 		formManagerInstance = (IFormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
 	}
 	
+	public void saveChanges() throws Exception {
+		//((FormComponent) WFUtil.getBeanInstance("component")).saveProperties();
+	}
+	
 	public Element getElement(String type) throws Exception {
 		Element rootDivImported = null;
 		String elementId = formManagerInstance.createFormComponent(type, null);
-		System.out.println("ELEMENT ID: " + elementId);
 		Element element = (Element) formManagerInstance.getLocalizedFormHtmlComponent(elementId, new Locale("en")).cloneNode(true);
 		String id = element.getAttribute("id");
 		element.removeAttribute("id");
@@ -48,12 +52,12 @@ public class DWRManager implements Serializable {
           delete.setAttribute("src", "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png");
           delete.setAttribute("class", "speedButton");
           delete.setAttribute("onclick", "deleteComponent(this)");
-          Element edit = (Element) document.createElement("IMG");
-          edit.setAttribute("src", "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-find-replace.png");
-          edit.setAttribute("class", "speedButton");
+          //Element edit = (Element) document.createElement("IMG");
+          //edit.setAttribute("src", "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-find-replace.png");
+          //edit.setAttribute("class", "speedButton");
           //edit.setAttribute("onclick", "editProperties(this)");
           Element deleteIcon = (Element) element.getOwnerDocument().importNode(delete, true);
-          Element editIcon = (Element) element.getOwnerDocument().importNode(edit, true);
+          //Element editIcon = (Element) element.getOwnerDocument().importNode(edit, true);
           Element rootDiv = (Element) document.createElement("DIV");
           rootDiv.setAttribute("id", id);
           rootDiv.setAttribute("class", "formElement");
@@ -61,7 +65,7 @@ public class DWRManager implements Serializable {
           rootDivImported = (Element) element.getOwnerDocument().importNode(rootDiv, true);
           rootDivImported.appendChild(element);
           rootDivImported.appendChild(deleteIcon);
-          rootDivImported.appendChild(editIcon);
+          //rootDivImported.appendChild(editIcon);
           ((Workspace) WFUtil.getBeanInstance("workspace")).setDesignViewStatus(FBDesignView.DESIGN_VIEW_STATUS_ACTIVE);
         } catch (ParserConfigurationException pce) {
             pce.printStackTrace();
@@ -89,15 +93,15 @@ public class DWRManager implements Serializable {
 		LocalizedStringBean formName = new LocalizedStringBean();
 		formName.setString(current, name);
 		formManagerInstance.createFormDocument(id, formName);
-		System.out.println("NEW FORM CREATED: " + id + "---------------------");
+		//System.out.println("NEW FORM CREATED: " + id + "---------------------");
 		Element element = formManagerInstance.getLocalizedSubmitComponent(new Locale("en"));
-		DOMUtil.prettyPrintDOM(element);
-		element.setAttribute("class", "formElement");
+		//DOMUtil.prettyPrintDOM(element);
+		//element.setAttribute("class", "formElement");
 		Element button = (Element) element.getFirstChild();
 		button.setAttribute("disabled", "true");
 		//FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS, "EMPTY_FORM");
 		//FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_FORM_ID, id);
-		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE, current);
+		//FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE, current);
 		((Workspace) WFUtil.getBeanInstance("workspace")).setDesignViewStatus(FBDesignView.DESIGN_VIEW_STATUS_EMPTY);
 		((Workspace) WFUtil.getBeanInstance("workspace")).setSelectedTab(1);
 		((Workspace) WFUtil.getBeanInstance("workspace")).setFormTitle(name);

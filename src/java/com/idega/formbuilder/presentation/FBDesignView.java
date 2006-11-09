@@ -71,8 +71,9 @@ public class FBDesignView extends UIComponentBase {
 	public void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
 		IFormManager formManagerInstance = (IFormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
-		//this.getChildren().clear();
+		this.getChildren().clear();
 		List<String> ids = formManagerInstance.getFormComponentsIdsList();
+		System.out.println("NUMBER OF COMPONENTS: " + ids.size());
 		Iterator it = ids.iterator();
 		while(it.hasNext()) {
 			String nextId = (String) it.next();
