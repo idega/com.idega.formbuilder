@@ -75,6 +75,9 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		DOMUtil.prettyPrintDOM(document, out);
 		
+		System.out.println("we are saving: ");
+		DOMUtil.prettyPrintDOM(document);
+		
 		new Thread() {
 			
 			public void run() {
@@ -82,9 +85,10 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 				InputStream is = null;
 				
 				try {
-					System.out.println("saving to webdav: "+System.currentTimeMillis());
 					
 					is = new ByteArrayInputStream(out.toByteArray());
+					
+					System.out.println("saving to webdav: "+is);
 					
 					webdav_resource.putMethod(is);
 					
@@ -97,14 +101,15 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 					logger.error("Exception occured while saving document to webdav dir: ", e);
 					
 					document_to_webdav_save_exception = e;
-				} finally {
-					if(is != null) {
-						try {
-							is.close();
-						} catch (Exception e) {
-						}
-					}
 				}
+//				finally {
+//					if(is != null) {
+//						try {
+//							is.close();
+//						} catch (Exception e) {
+//						}
+//					}
+//				}
 			}
 		}.start();
 	}
@@ -159,8 +164,9 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 				System.out.println("FORM PATH:_________     "+form_pathes[0]+form_pathes[1]);
 				webdav_resource = session.getWebdavResource(form_pathes[0]+form_pathes[1]);
 				
-				if(webdav_resource.exists() || true)
-					webdav_resource.setProperties();
+				webdav_resource.setProperties();
+//				if(webdav_resource.exists() || true)
+//					webdav_resource.setProperties();
 				
 			} catch (Exception e) {
 				
