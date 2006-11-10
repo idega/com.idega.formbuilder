@@ -150,11 +150,13 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 	
 	protected WebdavExtendedResource getWebdavResource() {
 		
-		if(webdav_resource == null) {
+		if(webdav_resource == null || true) {
 			
 			try {
 				
 				IWSlideSession session = (IWSlideSession) IBOLookup.getSessionInstance(IWContext.getInstance(), IWSlideSession.class);
+				
+				System.out.println("FORM PATH:_________     "+form_pathes[0]+form_pathes[1]);
 				webdav_resource = session.getWebdavResource(form_pathes[0]+form_pathes[1]);
 				
 				if(webdav_resource.exists())
