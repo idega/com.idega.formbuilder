@@ -125,5 +125,5 @@ public interface IFormManager {
 	
 	public abstract LocalizedStringBean getFormTitle();
 	
-	public abstract void setFormTitle(LocalizedStringBean form_name);
+	public abstract void setFormTitle(LocalizedStringBean form_name) throws FBPostponedException, Exception;
 }

@@ -159,7 +159,7 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 				System.out.println("FORM PATH:_________     "+form_pathes[0]+form_pathes[1]);
 				webdav_resource = session.getWebdavResource(form_pathes[0]+form_pathes[1]);
 				
-				if(webdav_resource.exists())
+				if(webdav_resource.exists() || true)
 					webdav_resource.setProperties();
 				
 			} catch (Exception e) {

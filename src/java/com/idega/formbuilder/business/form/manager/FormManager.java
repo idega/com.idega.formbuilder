@@ -333,7 +333,11 @@ public class FormManager implements IFormManager {
 		return form_document.getFormTitle();
 	}
 	
-	public void setFormTitle(LocalizedStringBean form_name) {
+	public void setFormTitle(LocalizedStringBean form_name) throws FBPostponedException, Exception {
+		
+		checkForPendingErrors();
+		
 		form_document.setFormTitle(form_name);
+		form_document.persist();
 	}
 }
