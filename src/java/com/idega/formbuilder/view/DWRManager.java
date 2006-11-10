@@ -89,7 +89,8 @@ public class DWRManager implements Serializable {
 		if(current == null) {
 			current = FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
 		}
-		String id = FBUtil.generateFormId(name);
+//		String id = FBUtil.generateFormId(name);
+		String id = "thisisformid";
 		LocalizedStringBean formName = new LocalizedStringBean();
 		formName.setString(current, name);
 		formManagerInstance.createFormDocument(id, formName);

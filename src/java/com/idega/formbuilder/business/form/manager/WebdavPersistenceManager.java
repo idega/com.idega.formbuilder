@@ -139,7 +139,19 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 		document_to_webdav_save_exception = null;
 		form_pathes = null;
 		inited = false;
-		webdav_resource = null;
+		
+		if(webdav_resource != null) {
+			
+			try {
+				
+//				TODO: think, how to close resource when user looses reference to manager instance, or session timeouts.
+				webdav_resource.close();
+			} catch (Exception e) {
+				logger.error("Error when closing webdav resource", e);
+			}
+			
+			webdav_resource = null;
+		}
 	}
 	
 	public Document loadDocument() throws InitializationException, Exception {
@@ -165,6 +177,7 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 				webdav_resource = session.getWebdavResource(form_pathes[0]+form_pathes[1]);
 				
 				webdav_resource.setProperties();
+				
 //				if(webdav_resource.exists() || true)
 //					webdav_resource.setProperties();
 				
