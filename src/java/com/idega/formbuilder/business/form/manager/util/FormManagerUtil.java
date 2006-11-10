@@ -1,5 +1,7 @@
 package com.idega.formbuilder.business.form.manager.util;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -10,6 +12,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
 import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -63,6 +67,8 @@ public class FormManagerUtil {
 	public static final String item_label_tag = "item_label";
 	public static final String item_value_tag = "item_value";
 	public static final String localized_entries_tag = "localizedEntries";
+	public static final String default_language_tag = "default_language";
+	
 	
 	private FormManagerUtil() { }
 	
@@ -293,6 +299,14 @@ public class FormManagerUtil {
 		return loc_str_bean;
 	}
 	
+	public static LocalizedStringBean getTitleLocalizedStrings(Document xforms_doc) {
+		
+		Element title = (Element)xforms_doc.getElementsByTagName(FormManagerUtil.title_tag).item(0);
+		Element output = (Element)title.getElementsByTagName(FormManagerUtil.output_tag).item(0);
+		
+		return getElementLocalizedStrings(output, xforms_doc);
+	}
+	
 	public static LocalizedStringBean getLabelLocalizedStrings(String component_id, Document xforms_doc) {
 		
 		Element component = getElementByIdFromDocument(xforms_doc, "body", component_id);
@@ -304,7 +318,12 @@ public class FormManagerUtil {
 		
 		Element label = (Element)labels.item(0);
 		
-		String ref = label.getAttribute("ref");
+		return getElementLocalizedStrings(label, xforms_doc);
+	}
+	
+	public static LocalizedStringBean getElementLocalizedStrings(Element element, Document xforms_doc) {
+		
+		String ref = element.getAttribute("ref");
 		
 		if(!isRefFormCorrect(ref))
 			return new LocalizedStringBean();
@@ -312,6 +331,23 @@ public class FormManagerUtil {
 		String key = getKeyFromRef(ref);
 		
 		return getLocalizedStrings(key, xforms_doc);
+	}
+	
+	public static Locale getDefaultFormLocale(Document form_xforms) {
+		
+		Element loc_model = getElementByIdFromDocument(form_xforms, head_tag, data_mod);
+		Element loc_strings = (Element)loc_model.getElementsByTagName(loc_tag).item(0);
+		NodeList default_language_node_list = loc_strings.getElementsByTagName(default_language_tag);
+		
+		if(default_language_node_list == null || default_language_node_list.getLength() == 0)
+			return null;
+		
+		String lang = getElementsTextNodeValue((Element)default_language_node_list.item(0));
+		
+		if(lang == null)
+			return null;
+		
+		return new Locale(lang);
 	}
 	
 	public static LocalizedStringBean getErrorLabelLocalizedStrings(String component_id, Document xforms_doc) {
@@ -473,5 +509,18 @@ public class FormManagerUtil {
 		}
 		
 		return components_tag_names_and_ids;
+	}
+	
+	public static String serializeDocument(Document document) throws IOException {
+		
+		OutputFormat output_format = new OutputFormat();
+		output_format.setOmitXMLDeclaration(true);
+		
+		StringWriter writer = new StringWriter();
+		XMLSerializer serializer = new XMLSerializer(writer, output_format);
+		serializer.asDOMSerializer();
+		serializer.serialize(document.getDocumentElement());
+		
+		return writer.toString();
 	}
 }

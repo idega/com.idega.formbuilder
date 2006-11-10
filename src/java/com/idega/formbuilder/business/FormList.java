@@ -11,7 +11,7 @@ import com.idega.block.form.presentation.FormListViewer;
 import com.idega.repository.data.Singleton;
 
 /**
- * It's singleton because this bean is supposed to be used as managed bean in application scope
+ * It's implementing singleton because this bean is supposed to be used as managed bean in application scope
  * 
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
  * @version 1.0
