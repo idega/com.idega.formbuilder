@@ -13,9 +13,10 @@ public interface IPersistenceManager {
 	 * 
 	 * @throws InitializationException - IPersistenceManager was not initiated before
 	 * @throws NullPointerException - document was not provided, __implementation specific__
+	 * @throws Expcetion - some exception before actual saving
 	 */
-	public abstract void persistDocument(final Document document)
-			throws InitializationException, NullPointerException;
+	public abstract void persistDocument(Document document)
+			throws InitializationException, NullPointerException, Exception;
 
 	/**
 	 * 

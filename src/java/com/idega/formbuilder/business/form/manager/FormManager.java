@@ -317,4 +317,23 @@ public class FormManager implements IFormManager {
 		form_document.rearrangeDocument();
 		form_document.persist();
 	}
+	
+	public String getFormSourceCode() throws Exception {
+		
+		return form_document.getXFormsDocumentSourceCode();
+	}
+	
+	public void setFormSourceCode(String new_source_code) throws Exception {
+		
+		form_document.setXFormsDocumentSourceCode(new_source_code);
+	}
+	
+	public LocalizedStringBean getFormTitle() {
+		
+		return form_document.getFormTitle();
+	}
+	
+	public void setFormTitle(LocalizedStringBean form_name) {
+		form_document.setFormTitle(form_name);
+	}
 }

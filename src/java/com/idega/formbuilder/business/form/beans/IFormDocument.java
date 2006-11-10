@@ -22,7 +22,7 @@ public interface IFormDocument {
 			IPersistenceManager persistence_manager);
 
 	public abstract void persist() throws NullPointerException,
-			InitializationException;
+			InitializationException, Exception;
 	
 	public abstract void rearrangeDocument();
 	
@@ -31,4 +31,12 @@ public interface IFormDocument {
 	public abstract void unregisterComponent(String component_id);
 	
 	public abstract void loadDocument(String form_id) throws InitializationException, Exception;
+	
+	public abstract String getXFormsDocumentSourceCode() throws Exception;
+	
+	public abstract void setXFormsDocumentSourceCode(String src_code) throws Exception;
+	
+	public abstract void setFormTitle(LocalizedStringBean form_name);
+	
+	public abstract LocalizedStringBean getFormTitle();
 }

@@ -63,7 +63,7 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 	 * That means, successful request overrides unsuccessful traces.
 	 * </p>
 	 */
-	public void persistDocument(final Document document) throws InitializationException, NullPointerException {
+	public void persistDocument(Document document) throws InitializationException, NullPointerException, Exception {
 		
 		if(!isInitiated())
 			throw new InitializationException("Persistence manager is not initialized");
@@ -72,6 +72,8 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 			throw new NullPointerException("Document is not provided");
 		
 		final WebdavExtendedResource webdav_resource = getWebdavResource();
+		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+		DOMUtil.prettyPrintDOM(document, out);
 		
 		new Thread() {
 			
@@ -82,8 +84,6 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 				try {
 					System.out.println("saving to webdav: "+System.currentTimeMillis());
 					
-					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					DOMUtil.prettyPrintDOM(document, out);
 					is = new ByteArrayInputStream(out.toByteArray());
 					
 					webdav_resource.putMethod(is);

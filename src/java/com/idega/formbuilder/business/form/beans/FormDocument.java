@@ -6,12 +6,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.parsers.DocumentBuilder;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.idega.data.StringInputStream;
 import com.idega.formbuilder.business.form.manager.CacheManager;
 import com.idega.formbuilder.business.form.manager.IPersistenceManager;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
@@ -56,19 +58,8 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		
 		form_xforms = form_xforms_template;
 		
-		if(form_name != null) {
-			
-			Element title = (Element)form_xforms.getElementsByTagName(FormManagerUtil.title_tag).item(0);
-			Element output = (Element)title.getElementsByTagName(FormManagerUtil.output_tag).item(0);
-			
-			try {
-				
-				FormManagerUtil.putLocalizedText(null, null, output, form_xforms, form_name);
-				
-			} catch (Exception e) {
-				logger.error("Could not set localized text for title element", e);
-			}
-		}
+		if(form_name != null)
+			setFormTitle(form_name);
 		
 		loadSubmitButton();
 	}
@@ -165,7 +156,7 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 			this.persistence_manager = persistence_manager;
 	}
 	
-	public void persist() throws NullPointerException, InitializationException {
+	public void persist() throws NullPointerException, InitializationException, Exception {
 		
 		IPersistenceManager persistence_manager = getPersistenceManager();
 		
@@ -243,18 +234,9 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		return form_id;
 	}
 	
-	public void loadDocument(String form_id) throws InitializationException, Exception {
+	protected void loadDocument(Document xforms_doc, String form_id) throws InitializationException, Exception {
 		
-		if(form_id == null)
-			throw new NullPointerException("Form document id was not provided");
-		
-		IPersistenceManager persistence_manager = getPersistenceManager();
-		persistence_manager.init(form_id);
-		Document xforms_doc = persistence_manager.loadDocument();
 		clear();
-		
-		if(xforms_doc == null)
-			throw new NullPointerException("Form document was not found by provided id");
 		
 		this.form_xforms = xforms_doc;
 		this.form_id = form_id;
@@ -286,5 +268,58 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 			
 			component.render();
 		}
+	}
+	
+	public void loadDocument(String form_id) throws InitializationException, Exception {
+		
+		if(form_id == null)
+			throw new NullPointerException("Form document id was not provided");
+		
+		IPersistenceManager persistence_manager = getPersistenceManager();
+		persistence_manager.init(form_id);
+		Document xforms_doc = persistence_manager.loadDocument();
+		
+		if(xforms_doc == null)
+			throw new NullPointerException("Form document was not found by provided id");
+		
+		loadDocument(xforms_doc, form_id);
+	}
+	
+	public String getXFormsDocumentSourceCode() throws Exception {
+		
+		return FormManagerUtil.serializeDocument(form_xforms);
+	}
+	public void setXFormsDocumentSourceCode(String src_code) throws Exception {
+		
+		DocumentBuilder builder = FormManagerUtil.getDocumentBuilder();
+		Document new_xforms_document = builder.parse(new StringInputStream(src_code));
+		
+		Element new_document_root = (Element)form_xforms.adoptNode(new_xforms_document.getDocumentElement());
+		
+		form_xforms.replaceChild(new_document_root, form_xforms.getDocumentElement());
+		
+		loadDocument(form_xforms, form_id);
+	}
+	
+	public void setFormTitle(LocalizedStringBean form_name) {
+		
+		if(form_name == null)
+			throw new NullPointerException("Form name is not provided.");
+		
+		Element title = (Element)form_xforms.getElementsByTagName(FormManagerUtil.title_tag).item(0);
+		Element output = (Element)title.getElementsByTagName(FormManagerUtil.output_tag).item(0);
+		
+		try {
+			
+			FormManagerUtil.putLocalizedText(null, null, output, form_xforms, form_name);
+			
+		} catch (Exception e) {
+			logger.error("Could not set localized text for title element", e);
+		}
+	}
+	
+	public LocalizedStringBean getFormTitle() {
+		
+		return FormManagerUtil.getTitleLocalizedStrings(form_xforms);
 	}
 }

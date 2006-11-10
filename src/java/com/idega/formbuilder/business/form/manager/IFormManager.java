@@ -118,4 +118,12 @@ public interface IFormManager {
 	 * @throws Exception
 	 */
 	public abstract void openFormDocument(String form_id) throws NullPointerException, Exception;
+	
+	public abstract String getFormSourceCode() throws Exception;
+	
+	public abstract void setFormSourceCode(String new_source_code) throws Exception;
+	
+	public abstract LocalizedStringBean getFormTitle();
+	
+	public abstract void setFormTitle(LocalizedStringBean form_name);
 }
