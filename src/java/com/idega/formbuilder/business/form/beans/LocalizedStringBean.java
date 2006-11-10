@@ -1,6 +1,7 @@
 package com.idega.formbuilder.business.form.beans;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -47,5 +48,21 @@ public class LocalizedStringBean {
 	
 	public void clear() {
 		strings.clear();
+	}
+	public String toString() {
+		
+		StringBuffer to_string = new StringBuffer("LocalizedStringBean:");
+		
+		
+		for (Iterator<Locale> iter = strings.keySet().iterator(); iter.hasNext();) {
+			Locale locale = iter.next();
+			
+			to_string.append("\nlocale: ")
+			.append(locale.getLanguage())
+			.append(" value: ")
+			.append(strings.get(locale));
+		}
+		
+		return to_string.toString();
 	}
 }

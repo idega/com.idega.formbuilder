@@ -45,4 +45,15 @@ public class ComponentProperties implements IComponentProperties {
 	public void setParentComponent(IComponentPropertiesParent parent_component) {
 		this.parent_component = parent_component;
 	}
+	public String toString() {
+		return new StringBuffer()
+		.append("\nrequired: ")
+		.append(required)
+		.append("\nlabel: ")
+		.append(label)
+		.append("\nerror_msg: ")
+		.append(error_msg)
+		
+		.toString();
+	}
 }

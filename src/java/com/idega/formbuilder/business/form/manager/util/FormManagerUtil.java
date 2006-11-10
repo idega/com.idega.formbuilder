@@ -301,8 +301,8 @@ public class FormManagerUtil {
 	
 	public static LocalizedStringBean getTitleLocalizedStrings(Document xforms_doc) {
 		
-		Element title = (Element)xforms_doc.getElementsByTagName(FormManagerUtil.title_tag).item(0);
-		Element output = (Element)title.getElementsByTagName(FormManagerUtil.output_tag).item(0);
+		Element title = (Element)xforms_doc.getElementsByTagName(title_tag).item(0);
+		Element output = (Element)title.getElementsByTagName(output_tag).item(0);
 		
 		return getElementLocalizedStrings(output, xforms_doc);
 	}
