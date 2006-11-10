@@ -46,6 +46,6 @@ public class FBUtil {
 	public static String generateFormId(String name) {
 		
 		String result = name+"-[" + new Date() + "]";
-		return result.replace(' ', '_');
+		return result.replace(' ', '_').replace(':', '_');
 	}
 }
