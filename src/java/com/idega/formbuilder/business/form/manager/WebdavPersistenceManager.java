@@ -10,9 +10,11 @@ import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 
 import com.idega.business.IBOLookup;
+import com.idega.business.IBOLookupException;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 import com.idega.formbuilder.business.form.manager.util.InitializationException;
 import com.idega.presentation.IWContext;
+import com.idega.slide.business.IWSlideService;
 import com.idega.slide.business.IWSlideSession;
 import com.idega.slide.util.WebdavExtendedResource;
 
@@ -50,6 +52,70 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 	
 	protected WebdavPersistenceManager() { }
 	
+//	/**
+//	 * see IPersistenceManager javadoc for additional info
+//	 * 
+//	 * Implementation specific:
+//	 * <p>
+//	 * <b>imporant:</b> method uses thread to upload file.
+//	 * So, if something bad happens during this process
+//	 * exceptions thrown are saved.<br />
+//	 * Those excepptions should be time to time checked.<br />
+//	 * Exceptions are set to null everytime, when no exception is thrown.<br />
+//	 * That means, successful request overrides unsuccessful traces.
+//	 * </p>
+//	 */
+//	public void persistDocument(Document document) throws InitializationException, NullPointerException, Exception {
+//		
+//		if(!isInitiated())
+//			throw new InitializationException("Persistence manager is not initialized");
+//		
+//		if(document == null)
+//			throw new NullPointerException("Document is not provided");
+//		
+//		final WebdavExtendedResource webdav_resource = getWebdavResource();
+//		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+//		DOMUtil.prettyPrintDOM(document, out);
+//		
+//		System.out.println("we are saving: ");
+//		DOMUtil.prettyPrintDOM(document);
+//		
+//		new Thread() {
+//			
+//			public void run() {
+//				
+//				InputStream is = null;
+//				
+//				try {
+//					
+//					is = new ByteArrayInputStream(out.toByteArray());
+//					
+//					System.out.println("saving to webdav: "+is);
+//					
+//					webdav_resource.putMethod(is);
+//					
+//					document_to_webdav_save_exception = null;
+//					
+//					long end = System.currentTimeMillis();
+//					System.out.println("saved: "+end);
+//					
+//				} catch (Exception e) {
+//					logger.error("Exception occured while saving document to webdav dir: ", e);
+//					
+//					document_to_webdav_save_exception = e;
+//				}
+////				finally {
+////					if(is != null) {
+////						try {
+////							is.close();
+////						} catch (Exception e) {
+////						}
+////					}
+////				}
+//			}
+//		}.start();
+//	}
+	
 	/**
 	 * see IPersistenceManager javadoc for additional info
 	 * 
@@ -71,45 +137,33 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 		if(document == null)
 			throw new NullPointerException("Document is not provided");
 		
-		final WebdavExtendedResource webdav_resource = getWebdavResource();
+		final String path_to_file = form_pathes[0];
+		final String file_name = form_pathes[1];
+		final IWSlideService service_bean = getServiceBean();
+		
+//		TODO: find better method for doing this.
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		DOMUtil.prettyPrintDOM(document, out);
-		
-		System.out.println("we are saving: ");
-		DOMUtil.prettyPrintDOM(document);
 		
 		new Thread() {
 			
 			public void run() {
 				
-				InputStream is = null;
-				
 				try {
 					
-					is = new ByteArrayInputStream(out.toByteArray());
-					
-					System.out.println("saving to webdav: "+is);
-					
-					webdav_resource.putMethod(is);
+					InputStream is = new ByteArrayInputStream(out.toByteArray());
+					service_bean.uploadFileAndCreateFoldersFromStringAsRoot(
+							path_to_file, file_name,
+							is, "text/xml", false
+					);
 					
 					document_to_webdav_save_exception = null;
-					
-					long end = System.currentTimeMillis();
-					System.out.println("saved: "+end);
 					
 				} catch (Exception e) {
 					logger.error("Exception occured while saving document to webdav dir: ", e);
 					
 					document_to_webdav_save_exception = e;
 				}
-//				finally {
-//					if(is != null) {
-//						try {
-//							is.close();
-//						} catch (Exception e) {
-//						}
-//					}
-//				}
 			}
 		}.start();
 	}
@@ -167,19 +221,15 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 	
 	protected WebdavExtendedResource getWebdavResource() {
 		
-		if(webdav_resource == null || true) {
+		if(webdav_resource == null) {
 			
 			try {
 				
 				IWSlideSession session = (IWSlideSession) IBOLookup.getSessionInstance(IWContext.getInstance(), IWSlideSession.class);
-				
-				System.out.println("FORM PATH:_________     "+form_pathes[0]+form_pathes[1]);
 				webdav_resource = session.getWebdavResource(form_pathes[0]+form_pathes[1]);
 				
-				webdav_resource.setProperties();
-				
-//				if(webdav_resource.exists() || true)
-//					webdav_resource.setProperties();
+				if(webdav_resource.exists())
+					webdav_resource.setProperties();
 				
 			} catch (Exception e) {
 				
@@ -189,4 +239,20 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 		return webdav_resource;
 	}
 	
+	IWSlideService service_bean;
+	
+	protected IWSlideService getServiceBean() {
+		
+		IWSlideService service_bean = null;
+		try {
+			
+			service_bean = (IWSlideService)IBOLookup.getServiceInstance(IWContext.getInstance(), IWSlideService.class);
+			
+		} catch (IBOLookupException e) {
+			
+			logger.error("Error during lookup for IWSlideService", e);
+		}
+		
+		return service_bean;
+	}
 }

@@ -18,6 +18,7 @@ import com.idega.formbuilder.business.Workspace;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.manager.IFormManager;
 import com.idega.formbuilder.presentation.FBDesignView;
+import com.idega.formbuilder.util.FBUtil;
 import com.idega.webface.WFUtil;
 
 public class DWRManager implements Serializable {
@@ -86,8 +87,7 @@ public class DWRManager implements Serializable {
 		if(current == null) {
 			current = FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
 		}
-//		String id = FBUtil.generateFormId(name);
-		String id = "thisisformid";
+		String id = FBUtil.generateFormId(name);
 		LocalizedStringBean formName = new LocalizedStringBean();
 		formName.setString(current, name);
 		formManagerInstance.createFormDocument(id, formName);
