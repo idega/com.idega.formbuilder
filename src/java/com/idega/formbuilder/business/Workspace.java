@@ -14,7 +14,7 @@ import org.ajax4jsf.framework.ajax.AjaxListener;
 
 import com.idega.webface.WFUtil;
 
-public class Workspace implements Serializable, AjaxListener, ActionListener {
+public class Workspace implements Serializable {
 	
 	private static final long serialVersionUID = -7539955904708793992L;
 	
@@ -33,28 +33,13 @@ public class Workspace implements Serializable, AjaxListener, ActionListener {
 	public void setFormTitle(String formTitle) {
 		this.formTitle = formTitle;
 	}
-	
-	public void saveProperties() throws Exception {
-		System.out.println("EVENT FIRED");
-		//((FormComponent) WFUtil.getBeanInstance("component")).saveProperties();
-	}
 
 	public String getCurrentComponent() {
-		System.out.println("GETTING CURRENT COMPONENT");
 		return currentComponent;
 	}
 
 	public void setCurrentComponent(String currentComponent) {
-		System.out.println("SETTING CURRENT COMPONENT");
 		this.currentComponent = currentComponent;
-	}
-	
-	public void processAction(ActionEvent ae) {
-		
-	}
-	
-	public void processAjax(AjaxEvent ae) {
-		System.out.println("AJAX FIRED: " + ae.getComponent().getId());
 	}
 
 	public Workspace() {
@@ -79,12 +64,12 @@ public class Workspace implements Serializable, AjaxListener, ActionListener {
 	}
 
 	public String getView() {
-		System.out.println("SETTING VIEW");
+		System.out.println("GETTING VIEW");
 		return view;
 	}
 
 	public void setView(String view) {
-		System.out.println("SETTING GETTING");
+		System.out.println("SETTING VIEW");
 		this.view = view;
 	}
 

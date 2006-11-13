@@ -7,37 +7,58 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
 import com.idega.formbuilder.business.form.beans.IComponentProperties;
+import com.idega.formbuilder.business.form.beans.IComponentPropertiesSelect;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.manager.IFormManager;
+import com.idega.webface.WFUtil;
 
 public class FormComponent implements Serializable {
 	
 	private static final long serialVersionUID = -7539955909568793992L;
 	
+	private IFormManager formManagerInstance;
+	
+	private String id;
+	
 	private Boolean required;
 	private String label;
 	private String errorMsg;
+	
+	private String externalSrc;
+	private String emptyLabel;
+	
 	private LocalizedStringBean labelStringBean;
 	private LocalizedStringBean errorStringBean;
+	private LocalizedStringBean emptyLabelBean;
+	
 	private IComponentProperties properties;
-	private String id;
-	private IFormManager formManagerInstance;
 	
 	public FormComponent() {
 		this.required = new Boolean(false);
 		this.label = "";
 		this.errorMsg = "";
+		
+		this.externalSrc = "";
+		this.emptyLabel = "";
+		
 		this.labelStringBean = null;
 		this.errorStringBean = null;
+		this.emptyLabelBean = null;
 	}
 	
 	public void loadProperties(String id, IFormManager formManagerInstance) {
 		this.formManagerInstance = formManagerInstance;
 		this.id = id;
 		this.properties = formManagerInstance.getComponentProperties(id);
+		
 		this.required = properties.isRequired();
 		this.labelStringBean = properties.getLabel();
 		this.errorStringBean = properties.getErrorMsg();
+		
+		if(properties instanceof IComponentPropertiesSelect) {
+			this.externalSrc = ((IComponentPropertiesSelect) properties).getExternalDataSrc();
+			this.emptyLabelBean = ((IComponentPropertiesSelect) properties).getEmptyElementLabel();
+		}
 	}
 	
 	public void saveProperties(ActionEvent ae) throws Exception {
@@ -57,6 +78,31 @@ public class FormComponent implements Serializable {
 			properties.setRequired(required);
 			properties.setErrorMsg(errorStringBean);
 			properties.setLabel(labelStringBean);
+			if(properties instanceof IComponentPropertiesSelect) {
+				String texternal = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:propertyExternal");
+				if(texternal != null) {
+					System.out.println("DATA SOURCE: " + texternal);
+					this.setExternalSrc(texternal);
+				}
+				String temptylabel = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:propertyEmptyLabel");
+				if(temptylabel != null) {
+					this.setEmptyLabel(temptylabel);
+				}
+				IComponentPropertiesSelect propertiesSelect = (IComponentPropertiesSelect) properties;
+				
+				if(propertiesSelect != null) {
+					propertiesSelect.setEmptyElementLabel(emptyLabelBean);
+					if(propertiesSelect.getDataSrcUsed() != null) {
+						if(((DataSourceList) WFUtil.getBeanInstance("dataSources")).getSelectedDataSource() == new Integer(IComponentPropertiesSelect.EXTERNAL_DATA_SRC).toString()) {
+							propertiesSelect.setExternalDataSrc(texternal);
+						} else {
+							
+						}
+					} else {
+						System.out.println("DATA SOURCE UNKNOWN");
+					}
+				}
+			}
 		}
 		formManagerInstance.updateFormComponent(id);
 	}
@@ -115,6 +161,32 @@ public class FormComponent implements Serializable {
 	public void setLabel(String label) {
 		this.label = label;
 		labelStringBean.setString(new Locale("en"), this.label);
+	}
+
+	public String getExternalSrc() {
+		return externalSrc;
+	}
+
+	public void setExternalSrc(String externalSrc) {
+		this.externalSrc = externalSrc;
+	}
+
+	public String getEmptyLabel() {
+		emptyLabel = emptyLabelBean.getString(new Locale("en"));
+		return emptyLabel;
+	}
+
+	public void setEmptyLabel(String emptyLabel) {
+		this.emptyLabel = emptyLabel;
+		emptyLabelBean.setString(new Locale("en"), emptyLabel);
+	}
+
+	public LocalizedStringBean getEmptyLabelBean() {
+		return emptyLabelBean;
+	}
+
+	public void setEmptyLabelBean(LocalizedStringBean emptyLabelBean) {
+		this.emptyLabelBean = emptyLabelBean;
 	}
 
 }

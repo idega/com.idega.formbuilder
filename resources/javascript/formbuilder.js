@@ -31,7 +31,12 @@ function saveProperties() {
 function savedProperties() {
 	closeLoadingMessage();
 }
+function switchDataSrc() {
+	//alert('switching');
+	document.forms['workspaceform1'].elements['workspaceform1:switchSrcProxy'].click();
+}
 function applyChanges() {
+	//alert('saving...');
 	document.forms['workspaceform1'].elements['workspaceform1:applyChangesProxy'].click();
 }
 function deleteComponent(element) {

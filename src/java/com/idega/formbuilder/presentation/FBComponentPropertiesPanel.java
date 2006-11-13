@@ -10,9 +10,6 @@ import javax.faces.component.html.HtmlSelectOneRadio;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
-import org.ajax4jsf.ajax.html.HtmlAjaxSupport;
-import org.apache.myfaces.custom.fileupload.HtmlInputFileUpload;
-
 import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.formbuilder.business.DataSourceList;
 import com.idega.formbuilder.business.FormComponent;
@@ -90,40 +87,55 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 					this.getChildren().add(errorMsg);
 					
 					if(properties instanceof ComponentPropertiesSelect) {
+						
+						HtmlOutputLabel emptyLabelLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+						emptyLabelLabel.setValue("Empty element label");
+						emptyLabelLabel.setFor("propertyEmptyLabel");
+						this.getChildren().add(emptyLabelLabel);
+						
+						HtmlInputText emptyLabel = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+						emptyLabel.setId("propertyEmptyLabel");
+						emptyLabel.setOnblur("applyChanges()");
+						emptyLabel.setValueBinding("value", application.createValueBinding("#{component.emptyLabel}"));
+						this.getChildren().add(emptyLabel);
+						
+						
 						HtmlOutputLabel advancedL = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 						advancedL.setValue("Select options properties");
 						this.getChildren().add(advancedL);
 						
 						HtmlSelectOneRadio dataSrcSwitch = (HtmlSelectOneRadio) application.createComponent(HtmlSelectOneRadio.COMPONENT_TYPE);
 						dataSrcSwitch.setStyleClass("inlineRadioButton");
-						dataSrcSwitch.setOnchange("alert('OK')");
-						//dataSrcSwitch.setValueChangeListener(application.createMethodBinding("#{dataSources.switchDataSource}", null));
+						dataSrcSwitch.setOnchange("switchDataSrc()");
 						dataSrcSwitch.setValueBinding("value", application.createValueBinding("#{dataSources.selectedDataSource}"));
 						UISelectItems dataSrcs = (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
 						dataSrcs.setValueBinding("value", application.createValueBinding("#{dataSources.sources}"));
 						dataSrcSwitch.getChildren().add(dataSrcs);
-						
-						
-						HtmlAjaxSupport ajaxSupport = new HtmlAjaxSupport();
-						ajaxSupport.setEvent("onchange");
-						ajaxSupport.setReRender("options_container");
-						dataSrcSwitch.getChildren().add(ajaxSupport);
-						
 						this.getChildren().add(dataSrcSwitch);
 						
 						String currentDataSrc = ((DataSourceList) WFUtil.getBeanInstance("dataSources")).getSelectedDataSource();
-						System.out.println(currentDataSrc);
 						if(currentDataSrc != null && !currentDataSrc.equals("")) {
 							if(currentDataSrc.equals("1")) {
-								HtmlOutputLabel advancedL2 = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-								advancedL2.setValue("Select options properties");
-								this.getChildren().add(advancedL2);
+								
+								HtmlOutputLabel local = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+								local.setValue("List of values");
+								this.getChildren().add(local);
+								
+								
+								
 							} else if(currentDataSrc.equals("2")) {
-								HtmlInputFileUpload fileUpload = (HtmlInputFileUpload) application.createComponent(HtmlInputFileUpload.COMPONENT_TYPE);
-								//fileUpload.
-								this.getChildren().add(fileUpload);
-							} else {
-								System.out.println("INVALID INSTANCE VARIABLE");
+								
+								HtmlOutputLabel externalSrcLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+								externalSrcLabel.setValue("External data source");
+								externalSrcLabel.setFor("propertyExternal");
+								this.getChildren().add(externalSrcLabel);
+								
+								HtmlInputText external = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+								external.setId("propertyExternal");
+								external.setOnblur("applyChanges()");
+								external.setValueBinding("value", application.createValueBinding("#{component.externalSrc}"));
+								this.getChildren().add(external);
+								
 							}
 						}
 					}

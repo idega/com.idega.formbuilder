@@ -10,17 +10,14 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.idega.formbuilder.FormbuilderViewManager;
-import com.idega.formbuilder.business.FormComponent;
 import com.idega.formbuilder.business.Workspace;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.manager.IFormManager;
 import com.idega.formbuilder.presentation.FBDesignView;
-import com.idega.formbuilder.util.FBUtil;
 import com.idega.webface.WFUtil;
 
 public class DWRManager implements Serializable {

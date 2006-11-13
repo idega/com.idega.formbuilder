@@ -69,8 +69,9 @@ public class ActionManager implements Serializable {
 	
 	private void initialize() throws Exception {
 		try {
+			System.out.println("CREATING FORM MANAGER");
 			formManagerInstance = FormManagerFactory.newFormManager(FacesContext.getCurrentInstance());
-			System.out.println(formManagerInstance);
+			System.out.println("CREATED FORM MANAGER");
 			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORM_MANAGER_INSTANCE, formManagerInstance);
 			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS, "NO_FORM");
 			
