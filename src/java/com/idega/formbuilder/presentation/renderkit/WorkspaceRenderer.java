@@ -3,6 +3,7 @@ package com.idega.formbuilder.presentation.renderkit;
 import java.io.IOException;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
@@ -10,7 +11,6 @@ import javax.faces.render.Renderer;
 
 import org.apache.myfaces.custom.div.Div;
 
-import com.idega.formbuilder.presentation.FBDesignView;
 import com.idega.formbuilder.presentation.FBWorkspace;
 
 public class WorkspaceRenderer extends Renderer {
@@ -33,7 +33,7 @@ public class WorkspaceRenderer extends Renderer {
 		}
 		if(view != null) {
 			if(view.equals("design")) {
-				FBDesignView designView = (FBDesignView) workspace.getFacet(view);
+				UIComponentBase designView = (UIComponentBase) workspace.getFacet(view);
 				if(designView != null) {
 					if (designView.isRendered()) {
 						designView.encodeBegin(context);
@@ -42,7 +42,7 @@ public class WorkspaceRenderer extends Renderer {
 					}
 				}
 			} else if(view.equals("preview")) {
-				Div facet2 = (Div) component.getFacet(view);
+				UIComponentBase facet2 = (UIComponentBase) component.getFacet(view);
 				if (facet2 != null) {
 					if (facet2.isRendered()) {
 						facet2.encodeBegin(context);
@@ -51,7 +51,7 @@ public class WorkspaceRenderer extends Renderer {
 					}
 				}
 			} else if(view.equals("source")) {
-				Div facet3 = (Div) component.getFacet(view);
+				UIComponentBase facet3 = (UIComponentBase) component.getFacet(view);
 				if (facet3 != null) {
 					if (facet3.isRendered()) {
 						facet3.encodeBegin(context);
