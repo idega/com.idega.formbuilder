@@ -10,6 +10,15 @@ public class ItemBean {
 	String label;
 	String value;
 	
+	public ItemBean() {
+		
+	}
+	
+	public ItemBean(String value, String label) {
+		this.value = value;
+		this.label = label;
+	}
+	
 	public String getLabel() {
 		return label;
 	}

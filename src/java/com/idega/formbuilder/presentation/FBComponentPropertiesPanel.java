@@ -1,7 +1,9 @@
 package com.idega.formbuilder.presentation;
 
 import javax.faces.application.Application;
+import javax.faces.component.UIColumn;
 import javax.faces.component.UIComponentBase;
+import javax.faces.component.UIData;
 import javax.faces.component.UISelectItems;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.component.html.HtmlOutputLabel;
@@ -9,6 +11,8 @@ import javax.faces.component.html.HtmlSelectBooleanCheckbox;
 import javax.faces.component.html.HtmlSelectOneRadio;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+
+import org.apache.myfaces.component.html.ext.HtmlOutputText;
 
 import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.formbuilder.business.DataSourceList;
@@ -118,10 +122,24 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 							if(currentDataSrc.equals("1")) {
 								
 								HtmlOutputLabel local = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-								local.setValue("List of values");
+								local.setValue("ASDKLAJSDLKASJDs");
 								this.getChildren().add(local);
 								
+								System.out.println("RENDERING SELECT OPTIONS");
+								UIData selectOptions = (UIData) application.createComponent(UIData.COMPONENT_TYPE);
+								selectOptions.setValueBinding("value", application.createValueBinding("#{options.items}"));
+								selectOptions.setVar("item");
+								UIColumn labels = (UIColumn) application.createComponent(UIColumn.COMPONENT_TYPE);
+								HtmlOutputText label = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+								label.setValueBinding("value", application.createValueBinding("#{item.label}"));
+								labels.getChildren().add(label);
+								selectOptions.getChildren().add(labels);
+								this.getChildren().add(selectOptions);
 								
+								System.out.println("RENDERING SELECT OPTIONS");
+								HtmlOutputLabel local2 = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+								local2.setValue("BLA BLA BLA");
+								this.getChildren().add(local2);
 								
 							} else if(currentDataSrc.equals("2")) {
 								

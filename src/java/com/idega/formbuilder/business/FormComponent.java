@@ -1,6 +1,7 @@
 package com.idega.formbuilder.business;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Locale;
 
 import javax.faces.context.FacesContext;
@@ -8,6 +9,8 @@ import javax.faces.event.ActionEvent;
 
 import com.idega.formbuilder.business.form.beans.IComponentProperties;
 import com.idega.formbuilder.business.form.beans.IComponentPropertiesSelect;
+import com.idega.formbuilder.business.form.beans.ILocalizedItemset;
+import com.idega.formbuilder.business.form.beans.ItemBean;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.manager.IFormManager;
 import com.idega.webface.WFUtil;
@@ -26,10 +29,12 @@ public class FormComponent implements Serializable {
 	
 	private String externalSrc;
 	private String emptyLabel;
+	private List<ItemBean> items;
 	
 	private LocalizedStringBean labelStringBean;
 	private LocalizedStringBean errorStringBean;
 	private LocalizedStringBean emptyLabelBean;
+	private ILocalizedItemset itemset;
 	
 	private IComponentProperties properties;
 	
@@ -40,10 +45,12 @@ public class FormComponent implements Serializable {
 		
 		this.externalSrc = "";
 		this.emptyLabel = "";
+		this.items = null;
 		
 		this.labelStringBean = null;
 		this.errorStringBean = null;
 		this.emptyLabelBean = null;
+		this.itemset = null;
 	}
 	
 	public void loadProperties(String id, IFormManager formManagerInstance) {
@@ -58,6 +65,7 @@ public class FormComponent implements Serializable {
 		if(properties instanceof IComponentPropertiesSelect) {
 			this.externalSrc = ((IComponentPropertiesSelect) properties).getExternalDataSrc();
 			this.emptyLabelBean = ((IComponentPropertiesSelect) properties).getEmptyElementLabel();
+			this.itemset = ((IComponentPropertiesSelect) properties).getItemset();
 		}
 	}
 	
@@ -187,6 +195,37 @@ public class FormComponent implements Serializable {
 
 	public void setEmptyLabelBean(LocalizedStringBean emptyLabelBean) {
 		this.emptyLabelBean = emptyLabelBean;
+	}
+
+	public ILocalizedItemset getItemset() {
+		return itemset;
+	}
+
+	public void setItemset(ILocalizedItemset itemset) {
+		this.itemset = itemset;
+	}
+
+	public List<ItemBean> getItems() {
+		//items = itemset.getItems(new Locale("en"));
+		System.out.println("GETTING ITEMS");
+		items.clear();
+		items.add(new ItemBean("tiger", "Tiger"));
+		items.add(new ItemBean("dolphin", "Dolphin"));
+		items.add(new ItemBean("mustang", "Mustang"));
+		items.add(new ItemBean("panther", "Panther"));
+		items.add(new ItemBean("leopard", "Leopard"));
+		return items;
+	}
+
+	public void setItems(List<ItemBean> items) {
+		items.clear();
+		items.add(new ItemBean("tiger", "Tiger"));
+		items.add(new ItemBean("dolphin", "Dolphin"));
+		items.add(new ItemBean("mustang", "Mustang"));
+		items.add(new ItemBean("panther", "Panther"));
+		items.add(new ItemBean("leopard", "Leopard"));
+		//this.items = items;
+		//itemset.setItems(new Locale("en"), items);
 	}
 
 }

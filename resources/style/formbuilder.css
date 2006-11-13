@@ -21,7 +21,7 @@
 }
 #options_container {
 	float:left;
-	width: 477px;
+	width: 300px;
 	height: 500px;
 	background:#fff;
 	margin-right: 0px;
@@ -218,7 +218,7 @@
 
 /*---Options tabbed pane styles---*/
 table.tabbedPane { 
-	width: 475px                             ! important;
+	width: 300px                             ! important;
     height: 500px                            ! important;
     vertical-align: top                      ! important;
     border-collapse: separate                ! important;
@@ -235,7 +235,7 @@ td.activeTab {
 	font-size: 12px                          ! important;
 	horizontal-align: center                 ! important;
 	text-align: center                       ! important;
-	width: 155px							 ! important;
+	width: 100px							 ! important;
 }
 td.activeTab input { 
 	background-color: #e0e0ec                ! important;
@@ -257,7 +257,7 @@ td.inactiveTab {
 	font-size: 12px                          ! important;
 	horizontal-align: center                 ! important;
 	text-align: center                       ! important;
-	width: 155px							 ! important;
+	width: 100px							 ! important;
 }
 td.inactiveTab input { 
 	background-color: #c8c8d8                ! important;
