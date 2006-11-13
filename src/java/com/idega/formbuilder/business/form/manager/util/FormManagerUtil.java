@@ -68,7 +68,9 @@ public class FormManagerUtil {
 	public static final String item_value_tag = "item_value";
 	public static final String localized_entries_tag = "localizedEntries";
 	public static final String default_language_tag = "default_language";
-	
+	public static final String form_id_tag = "form_id";
+	public static final String submission_tag = "xf:submission";
+	public static final String action_att = "action";
 	
 	private FormManagerUtil() { }
 	

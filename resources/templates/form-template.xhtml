@@ -9,9 +9,10 @@
         <xf:model id="form_id" schema="#fb-schema">
             <xf:instance id="instance1" xmlns="">
                 <data>
+	                <form_id></form_id>
                 </data>
             </xf:instance>
-            <xf:submission id="submit_data_submission" action="http://www.idega.is/index.jsp" method="post" replace="all" />
+            <xf:submission id="submit_data_submission" action="webdav:/content/forms/sumbissions/" method="post" replace="all" />
         </xf:model>
         <xf:model id="data_model">
 	        <xf:instance id="localized_strings" xmlns="">

@@ -51,17 +51,26 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		
 		this.form_id = form_id;
 		
-		Document form_xforms_template = CacheManager.getInstance().getFormXformsTemplateCopy();
+		form_xforms = CacheManager.getInstance().getFormXformsTemplateCopy();
 		
-		Element model = FormManagerUtil.getElementByIdFromDocument(form_xforms_template, FormManagerUtil.head_tag, FormManagerUtil.form_id);
-		model.setAttribute(FormManagerUtil.id_att, form_id);
-		
-		form_xforms = form_xforms_template;
+		putIdValues();
 		
 		if(form_name != null)
 			setFormTitle(form_name);
 		
 		loadSubmitButton();
+	}
+	
+	protected void putIdValues() {
+		Element model = FormManagerUtil.getElementByIdFromDocument(form_xforms, FormManagerUtil.head_tag, FormManagerUtil.form_id);
+		model.setAttribute(FormManagerUtil.id_att, form_id);
+		
+		Element form_id_element = (Element)model.getElementsByTagName(FormManagerUtil.form_id_tag).item(0);
+		form_id_element.setTextContent(form_id);
+		
+		Element submission_element = (Element)model.getElementsByTagName(FormManagerUtil.submission_tag).item(0);
+		String action_att_val = submission_element.getAttribute(FormManagerUtil.action_att);
+		submission_element.setAttribute(FormManagerUtil.action_att, action_att_val+form_id);
 	}
 	
 	public String addComponent(String component_type, String component_after_this_id) throws NullPointerException {
