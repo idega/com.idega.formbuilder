@@ -243,14 +243,15 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 	
 	protected IWSlideService getServiceBean() {
 		
-		IWSlideService service_bean = null;
-		try {
+		if(service_bean == null) {
 			
-			service_bean = (IWSlideService)IBOLookup.getServiceInstance(IWContext.getInstance(), IWSlideService.class);
-			
-		} catch (IBOLookupException e) {
-			
-			logger.error("Error during lookup for IWSlideService", e);
+			try {
+				service_bean = (IWSlideService)IBOLookup.getServiceInstance(IWContext.getInstance(), IWSlideService.class);
+				
+			} catch (IBOLookupException e) {
+				
+				logger.error("Error during lookup for IWSlideService", e);
+			}
 		}
 		
 		return service_bean;
