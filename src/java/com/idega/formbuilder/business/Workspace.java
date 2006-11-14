@@ -3,18 +3,19 @@ package com.idega.formbuilder.business;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 import javax.faces.model.SelectItem;
 
-import org.ajax4jsf.framework.ajax.AjaxEvent;
-import org.ajax4jsf.framework.ajax.AjaxListener;
+import org.apache.myfaces.component.html.ext.HtmlSelectOneMenu;
 
-import com.idega.webface.WFUtil;
+import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
+import com.idega.formbuilder.view.ActionManager;
 
-public class Workspace implements Serializable {
+public class Workspace implements Serializable, ActionListener {
 	
 	private static final long serialVersionUID = -7539955904708793992L;
 	
@@ -29,8 +30,20 @@ public class Workspace implements Serializable {
 	public String getFormTitle() {
 		return formTitle;
 	}
+	
+	public void processAction(ActionEvent ae) {
+		String buttonId = ae.getComponent().getClientId(FacesContext.getCurrentInstance());
+		System.out.println(buttonId);
+	}
 
 	public void setFormTitle(String formTitle) {
+		LocalizedStringBean bean = new LocalizedStringBean();
+		bean.setString(new Locale("en"), formTitle);
+		try {
+			ActionManager.getFormManagerInstance().setFormTitle(bean);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		this.formTitle = formTitle;
 	}
 
@@ -52,15 +65,30 @@ public class Workspace implements Serializable {
 		this.views.add(new SelectItem("source", "Source"));
 	}
 	
+	public void formChanged(ActionEvent ae) {
+		String buttonId = ae.getComponent().getClientId(FacesContext.getCurrentInstance());
+		System.out.println(buttonId);
+	}
+	
 	public void viewChanged(ActionEvent ae) {
 		String buttonId = ae.getComponent().getClientId(FacesContext.getCurrentInstance());
+		String selectedForm = "";
 		if(buttonId.endsWith(":designViewButton")) {
 			view = "design";
 		} else if(buttonId.endsWith(":previewViewButton")) {
 			view = "preview";
 		} else if(buttonId.endsWith(":sourceViewButton")) {
 			view = "source";
+		} else if(buttonId.equals("workspace1:formList")) {
+			selectedForm = (String) ((HtmlSelectOneMenu) ae.getComponent()).getValue();
+			System.out.println("NEW FORM SELECTED: " + selectedForm);
 		}
+		System.out.println("FORM CHANGE EVENT " + buttonId);
+	}
+	
+	public void formChange(ActionEvent ae) {
+		String buttonId = ae.getComponent().getClientId(FacesContext.getCurrentInstance());
+		System.out.println("FORM CHANGE EVENT " + buttonId);
 	}
 
 	public String getView() {

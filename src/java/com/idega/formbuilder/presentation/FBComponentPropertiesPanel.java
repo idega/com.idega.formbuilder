@@ -40,6 +40,7 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 	public void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
 		IFormManager formManagerInstance = (IFormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
+		String currentDataSrc = null;
 		this.getChildren().clear();
 		ValueBinding vb = this.getValueBinding("component");
 		String componentId = null;
@@ -53,6 +54,74 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 			comp.loadProperties(componentId, formManagerInstance);
 			IComponentProperties properties = comp.getProperties();
 			if(properties != null) {
+				
+				if(properties instanceof ComponentPropertiesSelect) {
+					
+					HtmlOutputLabel emptyLabelLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+					emptyLabelLabel.setValue("Empty element label");
+					emptyLabelLabel.setFor("propertyEmptyLabel");
+					this.getChildren().add(emptyLabelLabel);
+					
+					HtmlInputText emptyLabel = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+					emptyLabel.setId("propertyEmptyLabel");
+					emptyLabel.setOnblur("applyChanges()");
+					emptyLabel.setValueBinding("value", application.createValueBinding("#{component.emptyLabel}"));
+					this.getChildren().add(emptyLabel);
+					
+					
+					HtmlOutputLabel advancedL = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+					advancedL.setValue("Select options properties");
+					this.getChildren().add(advancedL);
+					
+					HtmlSelectOneRadio dataSrcSwitch = (HtmlSelectOneRadio) application.createComponent(HtmlSelectOneRadio.COMPONENT_TYPE);
+					dataSrcSwitch.setStyleClass("inlineRadioButton");
+					dataSrcSwitch.setOnchange("switchDataSrc()");
+					dataSrcSwitch.setValueBinding("value", application.createValueBinding("#{dataSources.selectedDataSource}"));
+					UISelectItems dataSrcs = (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
+					dataSrcs.setValueBinding("value", application.createValueBinding("#{dataSources.sources}"));
+					dataSrcSwitch.getChildren().add(dataSrcs);
+					this.getChildren().add(dataSrcSwitch);
+					
+					currentDataSrc = ((DataSourceList) WFUtil.getBeanInstance("dataSources")).getSelectedDataSource();
+					if(currentDataSrc != null && !currentDataSrc.equals("")) {
+						if(currentDataSrc.equals("1")) {
+							
+							HtmlOutputLabel local = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+							local.setValue("ASDKLAJSDLKASJDs");
+							this.getChildren().add(local);
+							
+							System.out.println("RENDERING SELECT OPTIONS");
+							UIData selectOptions = (UIData) application.createComponent(UIData.COMPONENT_TYPE);
+							selectOptions.setValueBinding("value", application.createValueBinding("#{options.items}"));
+							selectOptions.setVar("item");
+							UIColumn labels = (UIColumn) application.createComponent(UIColumn.COMPONENT_TYPE);
+							HtmlOutputText label = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+							label.setValueBinding("value", application.createValueBinding("#{item.label}"));
+							labels.getChildren().add(label);
+							selectOptions.getChildren().add(labels);
+							this.getChildren().add(selectOptions);
+							
+							System.out.println("RENDERING SELECT OPTIONS");
+							HtmlOutputLabel local2 = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+							local2.setValue("BLA BLA BLA");
+							this.getChildren().add(local2);
+							
+						} else if(currentDataSrc.equals("2")) {
+							
+							HtmlOutputLabel externalSrcLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+							externalSrcLabel.setValue("External data source");
+							externalSrcLabel.setFor("propertyExternal");
+							this.getChildren().add(externalSrcLabel);
+							
+							HtmlInputText external = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+							external.setId("propertyExternal");
+							external.setOnblur("applyChanges()");
+							external.setValueBinding("value", application.createValueBinding("#{component.externalSrc}"));
+							this.getChildren().add(external);
+							
+						}
+					}
+				}
 				if(properties instanceof ComponentProperties) {
 					
 					HtmlOutputLabel requiredLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
@@ -90,73 +159,7 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 					errorMsg.setValueBinding("value", application.createValueBinding("#{component.errorMsg}"));
 					this.getChildren().add(errorMsg);
 					
-					if(properties instanceof ComponentPropertiesSelect) {
-						
-						HtmlOutputLabel emptyLabelLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-						emptyLabelLabel.setValue("Empty element label");
-						emptyLabelLabel.setFor("propertyEmptyLabel");
-						this.getChildren().add(emptyLabelLabel);
-						
-						HtmlInputText emptyLabel = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
-						emptyLabel.setId("propertyEmptyLabel");
-						emptyLabel.setOnblur("applyChanges()");
-						emptyLabel.setValueBinding("value", application.createValueBinding("#{component.emptyLabel}"));
-						this.getChildren().add(emptyLabel);
-						
-						
-						HtmlOutputLabel advancedL = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-						advancedL.setValue("Select options properties");
-						this.getChildren().add(advancedL);
-						
-						HtmlSelectOneRadio dataSrcSwitch = (HtmlSelectOneRadio) application.createComponent(HtmlSelectOneRadio.COMPONENT_TYPE);
-						dataSrcSwitch.setStyleClass("inlineRadioButton");
-						dataSrcSwitch.setOnchange("switchDataSrc()");
-						dataSrcSwitch.setValueBinding("value", application.createValueBinding("#{dataSources.selectedDataSource}"));
-						UISelectItems dataSrcs = (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
-						dataSrcs.setValueBinding("value", application.createValueBinding("#{dataSources.sources}"));
-						dataSrcSwitch.getChildren().add(dataSrcs);
-						this.getChildren().add(dataSrcSwitch);
-						
-						String currentDataSrc = ((DataSourceList) WFUtil.getBeanInstance("dataSources")).getSelectedDataSource();
-						if(currentDataSrc != null && !currentDataSrc.equals("")) {
-							if(currentDataSrc.equals("1")) {
-								
-								HtmlOutputLabel local = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-								local.setValue("ASDKLAJSDLKASJDs");
-								this.getChildren().add(local);
-								
-								System.out.println("RENDERING SELECT OPTIONS");
-								UIData selectOptions = (UIData) application.createComponent(UIData.COMPONENT_TYPE);
-								selectOptions.setValueBinding("value", application.createValueBinding("#{options.items}"));
-								selectOptions.setVar("item");
-								UIColumn labels = (UIColumn) application.createComponent(UIColumn.COMPONENT_TYPE);
-								HtmlOutputText label = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-								label.setValueBinding("value", application.createValueBinding("#{item.label}"));
-								labels.getChildren().add(label);
-								selectOptions.getChildren().add(labels);
-								this.getChildren().add(selectOptions);
-								
-								System.out.println("RENDERING SELECT OPTIONS");
-								HtmlOutputLabel local2 = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-								local2.setValue("BLA BLA BLA");
-								this.getChildren().add(local2);
-								
-							} else if(currentDataSrc.equals("2")) {
-								
-								HtmlOutputLabel externalSrcLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-								externalSrcLabel.setValue("External data source");
-								externalSrcLabel.setFor("propertyExternal");
-								this.getChildren().add(externalSrcLabel);
-								
-								HtmlInputText external = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
-								external.setId("propertyExternal");
-								external.setOnblur("applyChanges()");
-								external.setValueBinding("value", application.createValueBinding("#{component.externalSrc}"));
-								this.getChildren().add(external);
-								
-							}
-						}
-					}
+					
 				}
 			}
 		}

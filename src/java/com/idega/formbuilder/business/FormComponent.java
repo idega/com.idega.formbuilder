@@ -65,7 +65,7 @@ public class FormComponent implements Serializable {
 		if(properties instanceof IComponentPropertiesSelect) {
 			this.externalSrc = ((IComponentPropertiesSelect) properties).getExternalDataSrc();
 			this.emptyLabelBean = ((IComponentPropertiesSelect) properties).getEmptyElementLabel();
-			this.itemset = ((IComponentPropertiesSelect) properties).getItemset();
+			//this.itemset = ((IComponentPropertiesSelect) properties).getItemset();
 		}
 	}
 	

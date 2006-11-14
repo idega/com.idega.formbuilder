@@ -3,6 +3,7 @@ package com.idega.formbuilder.view;
 import java.io.Serializable;
 
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 
 import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.formbuilder.business.form.manager.FormManagerFactory;
@@ -27,7 +28,8 @@ public class ActionManager implements Serializable {
 	private String currentFormName = null;
 	private String currentLocale = null;
 	
-	public void changeSelectedForm() {
+	public void changeSelectedForm(ActionEvent ae) {
+		System.out.println("Please put the description of the form here");
 		return;
 	}
 
