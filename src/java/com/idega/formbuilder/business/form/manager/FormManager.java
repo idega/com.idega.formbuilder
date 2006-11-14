@@ -193,7 +193,7 @@ public class FormManager implements IFormManager {
 			if(ctx != null) {
 				
 				IWMainApplication iw_app = IWMainApplication.getIWMainApplication(ctx);
-				
+
 //				temporary disabled
 				if(false) {
 					
@@ -339,5 +339,15 @@ public class FormManager implements IFormManager {
 		
 		form_document.setFormTitle(form_name);
 		form_document.persist();
+	}
+	
+	public String getFormId() {
+		
+		return form_document.getFormId();
+	}
+	
+	public Document getFormXFormsDocument() {
+		
+		return form_document.getFormXFormsDocument();
 	}
 }

@@ -115,19 +115,19 @@
 		             <local_src>
              		 </local_src>
              </xf:instance>
-             <xf:instance id="fbcomp_multiple_select_minimal_eds" xmlns="" xf:src="">
+             <xf:instance id="fbcomp_multiple_select_minimal_eds" xmlns="">
 		             <ext_src>
              		 </ext_src>
              </xf:instance>
-             <xf:instance id="fbcomp_single_select_minimal_eds" xmlns="" xf:src="">
+             <xf:instance id="fbcomp_single_select_minimal_eds" xmlns="">
 		             <ext_src>
              		 </ext_src>
              </xf:instance>
-             <xf:instance id="fbcomp_multiple_select_eds" xmlns="" xf:src="">
+             <xf:instance id="fbcomp_multiple_select_eds" xmlns="">
 		             <ext_src>
              		 </ext_src>
              </xf:instance>
-             <xf:instance id="fbcomp_single_select_eds" xmlns="" xf:src="">
+             <xf:instance id="fbcomp_single_select_eds" xmlns="">
 		             <ext_src>
              		 </ext_src>
              </xf:instance>
@@ -183,8 +183,8 @@
             </xf:input>
             <xf:upload bind="upload_file" id="fbcomp_upload_file">
 			        <xf:label ref="instance('localized_strings')/lockey_upload_file.title[@lang=instance('localized_strings')/current_language]" model="data_model" />
-			        <xf:filename ref="./@filename"/>
-			        <xf:mediatype ref="./@content-type"/>
+			        <xf:filename ref="./attachment/@filename"/>
+			        <xf:mediatype ref="./attachment/@content-type"/>
     				</xf:upload>
             
 						<!-- playground             

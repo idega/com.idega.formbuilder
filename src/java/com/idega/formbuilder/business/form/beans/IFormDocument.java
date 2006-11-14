@@ -2,6 +2,8 @@ package com.idega.formbuilder.business.form.beans;
 
 import java.util.List;
 
+import org.w3c.dom.Document;
+
 import com.idega.formbuilder.business.form.manager.IPersistenceManager;
 import com.idega.formbuilder.business.form.manager.util.InitializationException;
 
@@ -39,4 +41,8 @@ public interface IFormDocument {
 	public abstract void setFormTitle(LocalizedStringBean form_name);
 	
 	public abstract LocalizedStringBean getFormTitle();
+	
+	public abstract String getFormId();
+	
+	public abstract Document getFormXFormsDocument();
 }

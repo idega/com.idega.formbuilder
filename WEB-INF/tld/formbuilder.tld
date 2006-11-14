@@ -248,6 +248,10 @@
 		</attribute>
 	</tag>
 	<tag>
+		<name>formpreview</name>
+		<tag-class>com.idega.formbuilder.presentation.FBFormPreviewTag</tag-class>
+	</tag>
+	<tag>
 		<name>toolbarbutton</name>
 		<tag-class>com.idega.formbuilder.presentation.FBToolbarButtonTag</tag-class>
 		<attribute>

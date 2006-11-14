@@ -1,10 +1,5 @@
 package com.idega.formbuilder.business.form.manager;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.chiba.xml.dom.DOMUtil;
@@ -15,7 +10,6 @@ import com.idega.formbuilder.business.form.beans.ComponentPropertiesSelect;
 import com.idega.formbuilder.business.form.beans.IComponentPropertiesSelect;
 import com.idega.formbuilder.business.form.beans.IComponentPropertiesSelectParent;
 import com.idega.formbuilder.business.form.beans.ILocalizedItemset;
-import com.idega.formbuilder.business.form.beans.ItemBean;
 import com.idega.formbuilder.business.form.beans.LocalizedItemsetBean;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.beans.XFormsComponentDataBean;
@@ -252,65 +246,7 @@ public class XFormsManagerSelect extends XFormsManager {
 		
 		return buf.toString();
 	}
-	
-	public void updateItemset() {
-		
-		Element local_instance = ((XFormsComponentSelectDataBean)xforms_component).getLocalItemsetInstance();
-		
-		if(local_instance == null)
-			throw new NullPointerException("local_instance is null");
-		
-		List<Element> child_elements = DOMUtil.getChildElements(local_instance);
-		
-		for (Iterator<Element> iter = child_elements.iterator(); iter.hasNext();)
-			local_instance.removeChild(iter.next());
-		
-		ILocalizedItemset itemset = ((IComponentPropertiesSelect)component.getProperties()).getItemset();
-		
-		if(itemset == null)
-			return;
-		
-		Set<Locale> locales = itemset.getItemsetKeySet();
-		
-		if(locales == null)
-			return;
-		
-		Document xforms_doc = form_document.getXformsDocument();
-		
-		Element item_element = FormManagerUtil.getItemElementById(cache_manager.getComponentsXforms(), "item_src");
-		
-		for (Iterator<Locale> iter = locales.iterator(); iter.hasNext();) {
-			Locale locale = iter.next();
-			
-			List<ItemBean> items = itemset.getItems(locale);
-			
-			if(items == null || items.isEmpty())
-				continue;
-			
-			Element localized_entries_element = xforms_doc.createElement(FormManagerUtil.localized_entries_tag);
-			localized_entries_element.setAttribute(FormManagerUtil.lang_att, locale.getLanguage());
-			
-			for (Iterator<ItemBean> iterator = items.iterator(); iterator.hasNext();) {
-				ItemBean item = iterator.next();
-				
-			}
-		}
-		
-//		<localizedEntries lang="en"> 
-//		<item>
-//    <item_label>choose coountry</item_label>
-//    <item_value></item_value>
-//  </item>
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	}
+
 	public void updateEmptyElementLabel() {
 		
 		LocalizedStringBean loc_str = ((IComponentPropertiesSelect)component.getProperties()).getEmptyElementLabel();
@@ -342,5 +278,19 @@ public class XFormsManagerSelect extends XFormsManager {
 			return;
 		
 		external_instance.setAttribute(FormManagerUtil.src_att, external_data_src);
+	}
+	
+	public void removeSelectComponentSourcesFromXFormsDocument() {
+		
+		XFormsComponentSelectDataBean xforms_component = (XFormsComponentSelectDataBean)this.xforms_component;
+		Element data_src_element = xforms_component.getExternalItemsetInstance();
+		
+		if(data_src_element != null)
+			data_src_element.getParentNode().removeChild(data_src_element);
+		
+		data_src_element = xforms_component.getLocalItemsetInstance();
+		
+		if(data_src_element != null)
+			data_src_element.getParentNode().removeChild(data_src_element);
 	}
 }

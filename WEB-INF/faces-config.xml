@@ -164,4 +164,8 @@
 		<component-type>FBToolbarButton</component-type>
 		<component-class>com.idega.formbuilder.presentation.FBToolbarButton</component-class>
 	</component>
+	<component>
+		<component-type>FBFormPreview</component-type>
+		<component-class>com.idega.formbuilder.presentation.FBFormPreview</component-class>
+	</component>
 </faces-config>

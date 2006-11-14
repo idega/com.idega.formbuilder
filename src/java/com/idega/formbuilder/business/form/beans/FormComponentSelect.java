@@ -71,4 +71,10 @@ public class FormComponentSelect extends FormComponent implements IComponentProp
 		getHtmlManager().clearLocalizedHtmlComponents();
 		form_document.setFormDocumentModified(true);
 	}
+	
+	public void remove() {
+		
+		((XFormsManagerSelect)getXFormsManager()).removeSelectComponentSourcesFromXFormsDocument();
+		super.remove();
+	}
 }

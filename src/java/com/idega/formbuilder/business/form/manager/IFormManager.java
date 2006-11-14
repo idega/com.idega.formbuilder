@@ -3,6 +3,7 @@ package com.idega.formbuilder.business.form.manager;
 import java.util.List;
 import java.util.Locale;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.idega.formbuilder.business.form.beans.ComponentPropertiesSubmitButton;
@@ -126,4 +127,8 @@ public interface IFormManager {
 	public abstract LocalizedStringBean getFormTitle();
 	
 	public abstract void setFormTitle(LocalizedStringBean form_name) throws FBPostponedException, Exception;
+	
+	public abstract String getFormId();
+	
+	public abstract Document getFormXFormsDocument();
 }

@@ -242,6 +242,9 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 	public String getFormId() {
 		return form_id;
 	}
+	public Document getFormXFormsDocument() {
+		return (Document)form_xforms.cloneNode(true);
+	}
 	
 	protected void loadDocument(Document xforms_doc, String form_id) throws InitializationException, Exception {
 		
