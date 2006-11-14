@@ -66,8 +66,16 @@ public class Workspace implements Serializable, ActionListener {
 	}
 	
 	public void formChanged(ActionEvent ae) {
-		String buttonId = ae.getComponent().getClientId(FacesContext.getCurrentInstance());
-		System.out.println(buttonId);
+		/*String buttonId = ae.getComponent().getClientId(FacesContext.getCurrentInstance());
+		/*System.out.println(buttonId);
+		 * 
+		 */
+		String formId = (String) ((HtmlSelectOneMenu) ae.getComponent()).getValue();
+		try {
+			ActionManager.getFormManagerInstance().openFormDocument(formId);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void viewChanged(ActionEvent ae) {
