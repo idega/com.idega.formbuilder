@@ -12,7 +12,7 @@ import javax.faces.component.html.HtmlSelectOneRadio;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
-import org.apache.myfaces.component.html.ext.HtmlOutputText;
+import org.apache.myfaces.component.html.ext.HtmlGraphicImage;
 
 import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.formbuilder.business.DataSourceList;
@@ -39,6 +39,7 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 	
 	public void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
+		boolean isSelect = false;
 		IFormManager formManagerInstance = (IFormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
 		String currentDataSrc = null;
 		this.getChildren().clear();
@@ -56,8 +57,8 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 			if(properties != null) {
 				
 				if(properties instanceof ComponentPropertiesSelect) {
-					
-					HtmlOutputLabel emptyLabelLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+					isSelect = true;
+					/*HtmlOutputLabel emptyLabelLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 					emptyLabelLabel.setValue("Empty element label");
 					emptyLabelLabel.setFor("propertyEmptyLabel");
 					this.getChildren().add(emptyLabelLabel);
@@ -86,25 +87,20 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 					if(currentDataSrc != null && !currentDataSrc.equals("")) {
 						if(currentDataSrc.equals("1")) {
 							
-							HtmlOutputLabel local = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-							local.setValue("ASDKLAJSDLKASJDs");
-							this.getChildren().add(local);
 							
-							System.out.println("RENDERING SELECT OPTIONS");
+							
+							//System.out.println("RENDERING SELECT OPTIONS");
 							UIData selectOptions = (UIData) application.createComponent(UIData.COMPONENT_TYPE);
 							selectOptions.setValueBinding("value", application.createValueBinding("#{options.items}"));
 							selectOptions.setVar("item");
 							UIColumn labels = (UIColumn) application.createComponent(UIColumn.COMPONENT_TYPE);
-							HtmlOutputText label = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+							HtmlInputText label = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 							label.setValueBinding("value", application.createValueBinding("#{item.label}"));
 							labels.getChildren().add(label);
 							selectOptions.getChildren().add(labels);
 							this.getChildren().add(selectOptions);
 							
-							System.out.println("RENDERING SELECT OPTIONS");
-							HtmlOutputLabel local2 = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-							local2.setValue("BLA BLA BLA");
-							this.getChildren().add(local2);
+							
 							
 						} else if(currentDataSrc.equals("2")) {
 							
@@ -120,7 +116,7 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 							this.getChildren().add(external);
 							
 						}
-					}
+					}*/
 				}
 				if(properties instanceof ComponentProperties) {
 					
@@ -160,6 +156,85 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 					this.getChildren().add(errorMsg);
 					
 					
+				}
+				if(isSelect) {
+					HtmlOutputLabel emptyLabelLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+					emptyLabelLabel.setValue("Empty element label");
+					emptyLabelLabel.setFor("propertyEmptyLabel");
+					this.getChildren().add(emptyLabelLabel);
+					
+					HtmlInputText emptyLabel = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+					emptyLabel.setId("propertyEmptyLabel");
+					emptyLabel.setOnblur("applyChanges()");
+					emptyLabel.setValueBinding("value", application.createValueBinding("#{component.emptyLabel}"));
+					this.getChildren().add(emptyLabel);
+					
+					
+					HtmlOutputLabel advancedL = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+					advancedL.setValue("Select options properties");
+					this.getChildren().add(advancedL);
+					
+					HtmlSelectOneRadio dataSrcSwitch = (HtmlSelectOneRadio) application.createComponent(HtmlSelectOneRadio.COMPONENT_TYPE);
+					dataSrcSwitch.setStyleClass("inlineRadioButton");
+					dataSrcSwitch.setOnchange("switchDataSrc()");
+					dataSrcSwitch.setValueBinding("value", application.createValueBinding("#{dataSources.selectedDataSource}"));
+					UISelectItems dataSrcs = (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
+					dataSrcs.setValueBinding("value", application.createValueBinding("#{dataSources.sources}"));
+					dataSrcSwitch.getChildren().add(dataSrcs);
+					this.getChildren().add(dataSrcSwitch);
+					
+					currentDataSrc = ((DataSourceList) WFUtil.getBeanInstance("dataSources")).getSelectedDataSource();
+					if(currentDataSrc != null && !currentDataSrc.equals("")) {
+						if(currentDataSrc.equals("1")) {
+							
+							
+							
+							UIData selectOptions = (UIData) application.createComponent(UIData.COMPONENT_TYPE);
+							selectOptions.setValueBinding("value", application.createValueBinding("#{component.items}"));
+							selectOptions.setVar("item");
+							
+							UIColumn labels = (UIColumn) application.createComponent(UIColumn.COMPONENT_TYPE);
+							
+							HtmlGraphicImage addButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+							addButton.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/new_16.gif");
+							//button.setStyleClass("speedButton");
+							addButton.setOnclick("alert('Not implemented')");
+							
+							labels.getFacets().put("header", addButton);
+							
+							HtmlInputText label = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+							label.setValueBinding("value", application.createValueBinding("#{item.label}"));
+							
+							UIColumn buttons = (UIColumn) application.createComponent(UIColumn.COMPONENT_TYPE);
+							
+							HtmlGraphicImage button = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+							button.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png");
+							//button.setStyleClass("speedButton");
+							button.setOnclick("alert('Not implemented')");
+							
+							buttons.getChildren().add(button);
+							labels.getChildren().add(label);
+							selectOptions.getChildren().add(labels);
+							selectOptions.getChildren().add(buttons);
+							this.getChildren().add(selectOptions);
+							
+							
+							
+						} else if(currentDataSrc.equals("2")) {
+							
+							HtmlOutputLabel externalSrcLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+							externalSrcLabel.setValue("External data source");
+							externalSrcLabel.setFor("propertyExternal");
+							this.getChildren().add(externalSrcLabel);
+							
+							HtmlInputText external = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+							external.setId("propertyExternal");
+							external.setOnblur("applyChanges()");
+							external.setValueBinding("value", application.createValueBinding("#{component.externalSrc}"));
+							this.getChildren().add(external);
+							
+						}
+					}
 				}
 			}
 		}
