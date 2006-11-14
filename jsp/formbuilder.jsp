@@ -26,9 +26,7 @@
 						
 						<h:selectOneMenu id="formList" styleClass="toolbar_field float_left" value="#{viewmanager.currentFormName}">
 							<f:selectItems value="#{formList.forms}" />
-							
 							<a4j:support event="onchange" onsubmit="switchSelectedForm()" actionListener="#{workspace.formChanged}" oncomplete="formSwitched()" ajaxSingle="false" reRender="main_container" />
-							
 						</h:selectOneMenu>
 						<!--
 						

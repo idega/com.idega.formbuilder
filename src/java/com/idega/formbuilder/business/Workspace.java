@@ -13,7 +13,9 @@ import javax.faces.model.SelectItem;
 import org.apache.myfaces.component.html.ext.HtmlSelectOneMenu;
 
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
+import com.idega.formbuilder.business.form.manager.IFormManager;
 import com.idega.formbuilder.view.ActionManager;
+import com.idega.webface.WFUtil;
 
 public class Workspace implements Serializable, ActionListener {
 	
@@ -39,8 +41,12 @@ public class Workspace implements Serializable, ActionListener {
 	public void setFormTitle(String formTitle) {
 		LocalizedStringBean bean = new LocalizedStringBean();
 		bean.setString(new Locale("en"), formTitle);
+		IFormManager am = ((ActionManager)WFUtil.getBeanInstance("viewmanager")).getFormManagerInstance();
 		try {
-			ActionManager.getFormManagerInstance().setFormTitle(bean);
+			if(am.getFormId() != null && !am.getFormId().equals("")) {
+				am.setFormTitle(bean);
+			}
+			//ActionManager.getFormManagerInstance().setFormTitle(bean);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -65,16 +71,20 @@ public class Workspace implements Serializable, ActionListener {
 		this.views.add(new SelectItem("source", "Source"));
 	}
 	
-	public void formChanged(ActionEvent ae) {
+	public void formChanged(ActionEvent ae) throws Exception {
 		/*String buttonId = ae.getComponent().getClientId(FacesContext.getCurrentInstance());
 		/*System.out.println(buttonId);
 		 * 
 		 */
 		String formId = (String) ((HtmlSelectOneMenu) ae.getComponent()).getValue();
-		try {
-			ActionManager.getFormManagerInstance().openFormDocument(formId);
-		} catch(Exception e) {
-			e.printStackTrace();
+		if(formId != null && !formId.equals("")) {
+			try {
+				((ActionManager)WFUtil.getBeanInstance("viewmanager")).getFormManagerInstance().openFormDocument(formId);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			throw new Exception("Invalid form ID");
 		}
 	}
 	

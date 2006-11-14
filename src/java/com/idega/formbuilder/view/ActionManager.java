@@ -14,7 +14,7 @@ public class ActionManager implements Serializable {
 	
 	private static final long serialVersionUID = -753995343458793992L;
 	
-	private IFormManager formManagerInstance = null;
+	private IFormManager formManagerInstance;
 	
 	private String selectedFieldTypeValue;
 	private String text;
@@ -58,7 +58,9 @@ public class ActionManager implements Serializable {
 	}
 
 	public ActionManager() throws Exception {
-		try {
+		formManagerInstance = FormManagerFactory.newFormManager(FacesContext.getCurrentInstance());
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORM_MANAGER_INSTANCE, formManagerInstance);
+		/*try {
 			if(!isViewInitialized()) {
 				initialize();
 				setViewInitialized(true);
@@ -66,7 +68,7 @@ public class ActionManager implements Serializable {
 		} catch(Exception e) {
 			setViewInitialized(false);
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	private void initialize() throws Exception {
@@ -118,6 +120,10 @@ public class ActionManager implements Serializable {
 
 	public void setCurrentLocale(String currentLocale) {
 		this.currentLocale = currentLocale;
+	}
+
+	public void setFormManagerInstance(IFormManager formManagerInstance) {
+		this.formManagerInstance = formManagerInstance;
 	}
 
 }
