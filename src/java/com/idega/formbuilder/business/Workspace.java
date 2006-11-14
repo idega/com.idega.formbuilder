@@ -76,7 +76,8 @@ public class Workspace implements Serializable, ActionListener {
 		/*System.out.println(buttonId);
 		 * 
 		 */
-		String formId = (String) ((HtmlSelectOneMenu) ae.getComponent()).getValue();
+		
+		String formId = (String) ((javax.faces.component.html.HtmlSelectOneMenu) ae.getComponent()).getValue();
 		if(formId != null && !formId.equals("")) {
 			try {
 				((ActionManager)WFUtil.getBeanInstance("viewmanager")).getFormManagerInstance().openFormDocument(formId);
