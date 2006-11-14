@@ -284,13 +284,9 @@ public class XFormsManagerSelect extends XFormsManager {
 		
 		XFormsComponentSelectDataBean xforms_component = (XFormsComponentSelectDataBean)this.xforms_component;
 		Element data_src_element = xforms_component.getExternalItemsetInstance();
-		
-		if(data_src_element != null)
-			data_src_element.getParentNode().removeChild(data_src_element);
+		data_src_element.getParentNode().removeChild(data_src_element);
 		
 		data_src_element = xforms_component.getLocalItemsetInstance();
-		
-		if(data_src_element != null)
-			data_src_element.getParentNode().removeChild(data_src_element);
+		data_src_element.getParentNode().removeChild(data_src_element);
 	}
 }
