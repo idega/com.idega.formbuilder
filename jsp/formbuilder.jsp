@@ -109,12 +109,12 @@
 								</f:facet>
 								<f:facet name="preview">
 									<t:div styleClass="dropBox" forceId="true">
-										<t:outputText value="No form currently selected or this component is not enabled" />
+										<fb:formpreview />
 									</t:div>
 								</f:facet>
 								<f:facet name="source">
 									<t:div styleClass="dropBox" forceId="true">
-										<t:outputText value="No form currently selected or this component is not enabled" />
+										<fb:formsourceedit />
 									</t:div>
 								</f:facet>
 								<f:facet name="viewSwitch">

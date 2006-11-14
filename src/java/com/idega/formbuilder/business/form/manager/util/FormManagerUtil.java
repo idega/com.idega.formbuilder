@@ -74,17 +74,24 @@ public class FormManagerUtil {
 	
 	private FormManagerUtil() { }
 	
-	private static DocumentBuilderFactory factory = null;
+	private static DocumentBuilder builder;
 	
 	public static DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
 		
-		if(factory == null) {
-			factory = DocumentBuilderFactory.newInstance();
+		if(builder == null) {
+			
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		    factory.setNamespaceAware(true);
 		    factory.setValidating(false);
+			
+			builder = factory.newDocumentBuilder();
+			
+			System.out.println("getting builder: "+builder.getClass());
 		}
-
-	    return factory.newDocumentBuilder();
+		
+		System.out.println("builder: "+builder.getClass());
+		
+	    return builder;
 	}
 	
 	/**

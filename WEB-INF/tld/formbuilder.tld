@@ -252,6 +252,10 @@
 		<tag-class>com.idega.formbuilder.presentation.FBFormPreviewTag</tag-class>
 	</tag>
 	<tag>
+		<name>formsourceedit</name>
+		<tag-class>com.idega.formbuilder.presentation.FBFormSourceEditTag</tag-class>
+	</tag>
+	<tag>
 		<name>toolbarbutton</name>
 		<tag-class>com.idega.formbuilder.presentation.FBToolbarButtonTag</tag-class>
 		<attribute>

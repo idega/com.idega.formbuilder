@@ -353,3 +353,8 @@ td.tabContent {
 	text-align: center;
 	text-transform: none;
 }
+
+.com_idega_formbuilder_presentation_FBFormSourceEdit_container textarea {
+	width: 100%;
+	height: 400px;
+}

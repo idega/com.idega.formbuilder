@@ -50,6 +50,11 @@
 		<managed-bean-class>com.idega.formbuilder.business.LocaleList</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>formSourceCodeManager</managed-bean-name>
+		<managed-bean-class>com.idega.formbuilder.business.FormSourceCodeManager</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
 	<render-kit>
 	     <renderer>
 	          <component-family>webface</component-family>
@@ -167,5 +172,9 @@
 	<component>
 		<component-type>FBFormPreview</component-type>
 		<component-class>com.idega.formbuilder.presentation.FBFormPreview</component-class>
+	</component>
+	<component>
+		<component-type>FBFormSourceEdit</component-type>
+		<component-class>com.idega.formbuilder.presentation.FBFormSourceEdit</component-class>
 	</component>
 </faces-config>
