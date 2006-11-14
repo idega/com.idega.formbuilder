@@ -183,8 +183,8 @@
             </xf:input>
             <xf:upload bind="upload_file" id="fbcomp_upload_file">
 			        <xf:label ref="instance('localized_strings')/lockey_upload_file.title[@lang=instance('localized_strings')/current_language]" model="data_model" />
-			        <xf:filename ref="./attachment/@filename"/>
-			        <xf:mediatype ref="./attachment/@content-type"/>
+			        <xf:filename ref="attachment/@filename"/>
+			        <xf:mediatype ref="attachment/@content-type"/>
     				</xf:upload>
             
 						<!-- playground             
