@@ -44,7 +44,7 @@ public class FBSelectValuesList extends UIComponentBase {
 		this.getChildren().clear();
 		
 		HtmlGraphicImage addButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
-		addButton.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/new_16.gif");
+		addButton.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png");
 		//button.setStyleClass("speedButton");
 		addButton.setOnclick("alert('Not implemented')");
 		this.getChildren().add(addButton);
