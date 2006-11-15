@@ -61,6 +61,7 @@
       <version>3.5.0</version>
       <type>jar</type>
     </dependency>
+    <!--
    <dependency>
       <groupId>ajax4jsf</groupId>
       <artifactId>ajax4jsf</artifactId>
@@ -79,16 +80,11 @@
       <version>2.3.2</version>
       <type>jar</type>
     </dependency>
+    -->
     <dependency>
       <groupId>chiba</groupId>
       <artifactId>chiba</artifactId>
       <version>1.3-SNAPSHOT</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>com.idega.block.platform</groupId>
-      <artifactId>com.idega.block.formadmin</artifactId>
-      <version>3.5.0</version>
       <type>jar</type>
     </dependency>
   </dependencies>
