@@ -4,12 +4,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.application.Application;
-import javax.faces.component.UIComponent;
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
-
-import org.apache.myfaces.custom.div.Div;
 
 import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.formbuilder.business.form.manager.IFormManager;

@@ -51,6 +51,12 @@ public class FormComponent implements Serializable {
 		this.errorStringBean = null;
 		this.emptyLabelBean = null;
 		this.itemset = null;
+		
+		items.add(new ItemBean("tiger", "Tiger"));
+		items.add(new ItemBean("dolphin", "Dolphin"));
+		items.add(new ItemBean("mustang", "Mustang"));
+		items.add(new ItemBean("panther", "Panther"));
+		items.add(new ItemBean("leopard", "Leopard"));
 	}
 	
 	public void loadProperties(String id, IFormManager formManagerInstance) {
@@ -206,7 +212,7 @@ public class FormComponent implements Serializable {
 	}
 
 	public List<ItemBean> getItems() {
-		items = itemset.getItems(new Locale("en"));
+		//items = itemset.getItems(new Locale("en"));
 		/*System.out.println("GETTING ITEMS");
 		items.clear();
 		items.add(new ItemBean("tiger", "Tiger"));
@@ -225,7 +231,7 @@ public class FormComponent implements Serializable {
 		items.add(new ItemBean("panther", "Panther"));
 		items.add(new ItemBean("leopard", "Leopard"));*/
 		this.items = items;
-		itemset.setItems(new Locale("en"), items);
+		//itemset.setItems(new Locale("en"), items);
 	}
 
 }

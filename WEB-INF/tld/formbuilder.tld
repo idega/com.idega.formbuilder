@@ -13,6 +13,25 @@
 
 	
 	<tag>
+		<name>selectValues</name>
+		<tag-class>com.idega.formbuilder.presentation.FBSelectValuesListTag</tag-class>
+		<attribute>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>itemSet</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
 		<name>properties</name>
 		<tag-class>com.idega.formbuilder.presentation.FBComponentPropertiesPanelTag</tag-class>
 		<attribute>

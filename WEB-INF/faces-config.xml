@@ -125,6 +125,17 @@
 	          <renderer-class>com.idega.formbuilder.presentation.renderkit.ComponentPropertiesPanelRenderer</renderer-class>
 	     </renderer>
 	</render-kit>
+	<render-kit>
+	     <renderer>
+	          <component-family>formbuilder</component-family>
+	          <renderer-type>fb_selectvalueslist</renderer-type>
+	          <renderer-class>com.idega.formbuilder.presentation.renderkit.SelectValuesListRenderer</renderer-class>
+	     </renderer>
+	</render-kit>
+	<component>
+		<component-type>SelectValuesList</component-type>
+		<component-class>com.idega.formbuilder.presentation.FBSelectValuesList</component-class>
+	</component>
 	<component>
 		<component-type>Workspace</component-type>
 		<component-class>com.idega.formbuilder.presentation.FBWorkspace</component-class>
