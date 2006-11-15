@@ -85,11 +85,7 @@ public class FormManagerUtil {
 		    factory.setValidating(false);
 			
 			builder = factory.newDocumentBuilder();
-			
-			System.out.println("getting builder: "+builder.getClass());
 		}
-		
-		System.out.println("builder: "+builder.getClass());
 		
 	    return builder;
 	}

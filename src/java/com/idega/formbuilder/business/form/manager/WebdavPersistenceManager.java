@@ -3,14 +3,19 @@ package com.idega.formbuilder.business.form.manager;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.webdav.lib.PropertyName;
+import org.apache.webdav.lib.WebdavResource;
 import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 
+import com.idega.block.formadmin.business.beans.AvailableFormsLister;
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
+import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 import com.idega.formbuilder.business.form.manager.util.InitializationException;
 import com.idega.presentation.IWContext;
@@ -33,6 +38,8 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 
 	protected static final String FORMS_PATH = "/files/forms";
 	protected static final String FORMS_FILE_EXTENSION = ".xhtml";
+	
+	protected PropertyName property_name;
 	
 	public static IPersistenceManager getInstance() {
 		
@@ -144,6 +151,9 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 //		TODO: find better method for doing this.
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		DOMUtil.prettyPrintDOM(document, out);
+		final String form_title = lookupFormTitleFromDocument(document);
+		
+		final PropertyName property_name = AvailableFormsLister.getInstance().getFormPropertyName();
 		
 		new Thread() {
 			
@@ -157,6 +167,11 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 							is, "text/xml", false
 					);
 					
+					WebdavResource webdav_res = service_bean.getWebdavResourceAuthenticatedAsRoot(path_to_file);
+					webdav_res.proppatchMethod(property_name, form_title, true);
+					
+					AvailableFormsLister.getInstance().setAvailableFormsChanged();
+
 					document_to_webdav_save_exception = null;
 					
 				} catch (Exception e) {
@@ -224,8 +239,8 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 		if(webdav_resource == null) {
 			
 			try {
-				
 				IWSlideSession session = (IWSlideSession) IBOLookup.getSessionInstance(IWContext.getInstance(), IWSlideSession.class);
+				
 				webdav_resource = session.getWebdavResource(form_pathes[0]+form_pathes[1]);
 				
 				if(webdav_resource.exists())
@@ -255,5 +270,21 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 		}
 		
 		return service_bean;
+	}
+	
+	protected String lookupFormTitleFromDocument(Document form_document) {
+		LocalizedStringBean localized_title = FormManagerUtil.getTitleLocalizedStrings(form_document);
+		
+		if(localized_title == null)
+			return "";
+		
+		Locale default_locale = FormManagerUtil.getDefaultFormLocale(form_document);
+		
+		if(default_locale == null)
+			default_locale = new Locale("en");
+		
+		String title = localized_title.getString(default_locale);
+		
+		return title == null ? "" : title;
 	}
 }
