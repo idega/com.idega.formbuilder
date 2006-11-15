@@ -2,10 +2,10 @@ package com.idega.formbuilder.business;
 
 import java.util.List;
 import javax.faces.model.SelectItem;
-import com.idega.block.formadmin.business.beans.AvailableFormsLister;
+import com.idega.block.form.business.AvailableFormsLister;
 
 /**
- * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @author <a href="mailto:civilis@idega.com">Vytautas ï¿½ivilis</a>
  * @version 1.0
  * 
  */

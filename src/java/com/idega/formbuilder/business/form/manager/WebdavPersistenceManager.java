@@ -12,7 +12,7 @@ import org.apache.webdav.lib.WebdavResource;
 import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 
-import com.idega.block.formadmin.business.beans.AvailableFormsLister;
+import com.idega.block.form.business.AvailableFormsLister;
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
@@ -24,7 +24,7 @@ import com.idega.slide.business.IWSlideSession;
 import com.idega.slide.util.WebdavExtendedResource;
 
 /**
- * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @author <a href="mailto:civilis@idega.com">Vytautas ï¿½ivilis</a>
  * @version 1.0
  * 
  */
