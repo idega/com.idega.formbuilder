@@ -84,7 +84,7 @@
     <dependency>
       <groupId>chiba</groupId>
       <artifactId>chiba</artifactId>
-      <version>1.3-SNAPSHOT</version>
+      <version>1.3.0</version>
       <type>jar</type>
     </dependency>
   </dependencies>
