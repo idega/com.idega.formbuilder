@@ -18,7 +18,7 @@ public class SelectValuesListRenderer extends Renderer {
 		writer.startElement("DIV", valuesList);
 		writer.writeAttribute("id", valuesList.getId(), "id");
 		writer.writeAttribute("class", valuesList.getStyleClass(), "styleClass");
-		writer.writeAttribute("style", "width: 350px; height: 180px; overflow: auto;", null);
+		writer.writeAttribute("style", "width: 300px; height: 180px; overflow: auto;", null);
 	}
 	
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
@@ -41,6 +41,12 @@ public class SelectValuesListRenderer extends Renderer {
 		}
 		super.encodeChildren(context, component);
 		
+	}
+	
+	public void decode(FacesContext context, UIComponent component) {
+		ResponseWriter writer = context.getResponseWriter();
+		FBSelectValuesList valuesList = (FBSelectValuesList) component;
+		System.out.println("THIS IS DECODING---------------");
 	}
 	
 }

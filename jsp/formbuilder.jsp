@@ -28,10 +28,10 @@
 							<f:selectItems value="#{formList.forms}" />
 							<a4j:support event="onchange" onsubmit="switchSelectedForm()" actionListener="#{workspace.formChanged}" oncomplete="formSwitched()" ajaxSingle="false" reRender="main_container" />
 						</h:selectOneMenu>
-						
+						-->
 						
 						<h:commandLink id="load_form_button" actionListener="#{workspace.formChanged}" styleClass="toolbar_field float_left" value="Load" />
-						-->
+						
 						<h:commandLink id="help_form_button" onclick="showInnerHtml(this)" styleClass="toolbar_button float_right" action="" value="Help"/>
 						<h:selectOneMenu id="localeList" styleClass="toolbar_field float_right" value="#{workspace.currentLocale}">
 							<f:selectItems value="#{localeList.locales}" />
@@ -59,12 +59,14 @@
 								    <t:inputText id="formTitleInput" forceId="true" value="#{workspace.formTitle}">
 								    	<a4j:support event="onkeyup" ajaxSingle="true" requestDelay="500" reRender="formHeadingHeader" />
 								    </t:inputText>
+								    
 								    <t:htmlTag value="br" />
 								    <t:outputLabel for="formDescription" value="Description" />
 								    <t:htmlTag value="br" />
 								    <t:inputTextarea id="formDescription" forceId="true" value="#{viewmanager.formDescription}">
 								    	<a4j:support event="onkeyup" ajaxSingle="true" requestDelay="500" reRender="formHeadingBody" />
 								    </t:inputTextarea>
+								    
 							    </t:panelTab>
 							    <t:panelTab id="tab02" label="Add new field">
 									<fb:palette id="firstlist" 

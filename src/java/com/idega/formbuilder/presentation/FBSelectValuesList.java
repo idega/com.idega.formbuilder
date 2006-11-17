@@ -22,6 +22,7 @@ public class FBSelectValuesList extends UIComponentBase {
 	
 	private static final String INLINE_DIV_STYLE = "display: inline";
 	private static final String HIDDEN_DIV_STYLE = "display: none";
+	private static final String HAND_CURSOR_STYLE = "cursor: pointer";
 	
 	private static final String DIV_PREFIX = "rowDiv_";
 	private static final String DELETE_BUTTON_PREFIX = "delB_";
@@ -86,7 +87,6 @@ public class FBSelectValuesList extends UIComponentBase {
 	}
 	
 	protected UIComponent getNextSelectRow(String field, String value, int index, FacesContext context) {
-		System.out.println(field);
 		Application application = context.getApplication();
 		
 		FBDivision row = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
@@ -115,14 +115,14 @@ public class FBSelectValuesList extends UIComponentBase {
 		expandButton.setValue(EXPAND_BUTTON_IMG);
 		expandButton.setId(EXPAND_BUTTON_PREFIX + index);
 		expandButton.setStyle(INLINE_DIV_STYLE);
-		expandButton.setOnclick("expandOrCollape(this,true)");
+		expandButton.setOnclick("expandOrCollapse(this,true)");
 		row.getChildren().add(expandButton);
 		
 		return row;
 	}
 	
 	public static Object[] getJavascriptParameters(String componentId) {
-		Object values[] = new Object[8];
+		Object values[] = new Object[12];
 		values[0] = componentId;
 		values[1] = DELETE_BUTTON_IMG;
 		values[2] = EXPAND_BUTTON_IMG;
@@ -132,6 +132,9 @@ public class FBSelectValuesList extends UIComponentBase {
 		values[6] = LABEL_FIELD_PREFIX;
 		values[7] = DIV_PREFIX;
 		values[8] = COLLAPSE_BUTTON_IMG;
+		values[9] = HAND_CURSOR_STYLE;
+		values[10] = HIDDEN_DIV_STYLE;
+		values[11] = VALUE_FIELD_PREFIX;
 		return values;
 	}
 	
@@ -151,17 +154,22 @@ public class FBSelectValuesList extends UIComponentBase {
 	}
 	
 	public static String getEmbededJavascript(Object values[]) {
-		//String id = (String) values[0];
 		StringBuilder result = new StringBuilder();
 		result.append("<script language=\"JavaScript\">\n");
 		
-		result.append("function expandOrCollape(node,expand) {\n");
+		result.append("function expandOrCollapse(node,expand) {\n");
 		result.append("if(expand) {\n");
 		result.append("node.previousSibling.setAttribute('style','display: inline;');\n");
+		result.append("var value = node.previousSibling.getAttribute('value');\n");
+		//result.append("if(value.length == 0) {\n");
+		//result.append("node.previousSibling.setAttribute('value',node.previousSibling.previousSibling.getAttribute('value'));\n");
+		//result.append("}\n");
 		result.append("node.setAttribute('src',\"" + values[8] + "\");\n");
+		result.append("node.setAttribute('onclick','expandOrCollapse(this,false)');\n");
 		result.append("} else {\n");
 		result.append("node.previousSibling.setAttribute('style','display: none;');\n");
 		result.append("node.setAttribute('src',\"" + values[2] + "\");\n");
+		result.append("node.setAttribute('onclick','expandOrCollapse(this,true)');\n");
 		result.append("}\n");
 		result.append("}\n");
 		
@@ -171,12 +179,8 @@ public class FBSelectValuesList extends UIComponentBase {
 		result.append("}\n");
 		
 		result.append("function deleteThisRow(ind) {\n");
-		//result.append("alert(ind);\n");
-		//result.append("var currRow = document.getElementById(\"" + "workspaceform1:" + values[7] + "\"+ind);\n");
 		result.append("var currRow = document.getElementById(ind);\n");
 		result.append("$(\"" + values[0] + "\").removeChild(currRow);\n");
-		//result.append("var newInd = getNextRowIndex();\n");
-		//result.append("$(\"" + values[0] + "\").appendChild(getEmptySelect(newInd));\n");
 		result.append("}\n");
 		
 		result.append("function getEmptySelect(index) {\n");
@@ -184,22 +188,27 @@ public class FBSelectValuesList extends UIComponentBase {
 		result.append("result.setAttribute('id',\"" + "workspaceform1:" + values[7] + "\"+index);\n");
 		result.append("var remB = document.createElement('img');\n");
 		result.append("remB.setAttribute('style',\"" + values[5] + "\");\n");
-		//result.append("alert(index);\n");
 		result.append("remB.setAttribute('onclick','deleteThisRow(this.parentNode.id)');\n");
 		result.append("remB.setAttribute('id',\"" + values[3] + "\"+index);\n");
 		result.append("remB.setAttribute('src',\"" + values[1] + "\");\n");
-		result.append("var field = document.createElement('input');\n");
-		result.append("field.setAttribute('id',\"" + values[6] + "\"+index);\n");
-		result.append("field.setAttribute('type','text');\n");
-		result.append("field.setAttribute('style',\"" + values[5] + "\");\n");
-		result.append("field.setAttribute('value','');\n");
+		result.append("var label = document.createElement('input');\n");
+		result.append("label.setAttribute('id',\"" + values[6] + "\"+index);\n");
+		result.append("label.setAttribute('type','text');\n");
+		result.append("label.setAttribute('style',\"" + values[5] + "\");\n");
+		result.append("label.setAttribute('value','');\n");
+		result.append("var value = document.createElement('input');\n");
+		result.append("value.setAttribute('id',\"" + values[11] + "\"+index);\n");
+		result.append("value.setAttribute('type','text');\n");
+		result.append("value.setAttribute('style',\"" + values[10] + "\");\n");
+		result.append("value.setAttribute('value','');\n");
 		result.append("var expB = document.createElement('img');\n");
 		result.append("expB.setAttribute('style',\"" + values[5] + "\");\n");
-		//result.append("expB.setAttribute('onclick','alert('Not implemented')');\n");
 		result.append("expB.setAttribute('id',\"" + values[4] + "\"+index);\n");
 		result.append("expB.setAttribute('src',\"" + values[2] + "\");\n");
+		result.append("expB.setAttribute('onclick','expandOrCollapse(this,true)');\n");
 		result.append("result.appendChild(remB);\n");
-		result.append("result.appendChild(field);\n");
+		result.append("result.appendChild(label);\n");
+		result.append("result.appendChild(value);\n");
 		result.append("result.appendChild(expB);\n");
 		result.append("return result;\n");
 		result.append("}\n");
@@ -213,6 +222,7 @@ public class FBSelectValuesList extends UIComponentBase {
 		result.append("return ind;\n");
 		result.append("}\n");
 		result.append("}\n");
+		
 		result.append("</script>\n");
 		return result.toString();
 		

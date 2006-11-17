@@ -2,8 +2,10 @@ package com.idega.formbuilder.business;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -40,7 +42,6 @@ public class FormComponent implements Serializable {
 	private IComponentProperties properties;
 	
 	public FormComponent() {
-		//this.items = new ArrayList<ItemBean>();
 		
 		this.required = new Boolean(false);
 		this.label = "";
@@ -48,7 +49,6 @@ public class FormComponent implements Serializable {
 		
 		this.externalSrc = "";
 		this.emptyLabel = "";
-		//this.items = null;
 		
 		this.labelStringBean = null;
 		this.errorStringBean = null;
@@ -84,6 +84,8 @@ public class FormComponent implements Serializable {
 	}
 	
 	public void saveProperties(ActionEvent ae) throws Exception {
+		System.out.println("SAVING COMPONENT PROPERTIES");
+		//this.printParameterMap();
 		String trequired = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:propertyRequired");
 		if(trequired != null && !trequired.equals("")) {
 			this.setRequired(new Boolean(trequired));
@@ -123,10 +125,39 @@ public class FormComponent implements Serializable {
 					} else {
 						System.out.println("DATA SOURCE UNKNOWN");
 					}
+					this.setItems(this.decodeSelectItems());
 				}
 			}
 		}
 		formManagerInstance.updateFormComponent(id);
+	}
+	
+	private List<ItemBean> decodeSelectItems() {
+		List<ItemBean> result = new ArrayList<ItemBean>();
+		Set keys = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().keySet();
+		Iterator it = keys.iterator();
+		while(it.hasNext()) {
+			String currentParam = (String) it.next();
+			System.out.println(currentParam);
+			if(currentParam.contains("labelF_")) {
+				String index = currentParam.substring(currentParam.length()-1);
+				ItemBean item = new ItemBean();
+				item.setLabel((String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(currentParam));
+				item.setValue((String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspace1:valueF_" + index));
+				System.out.println(index);
+				result.add(item);
+			}
+		}
+		return result;
+	}
+	
+	private void printParameterMap() {
+		Set keys = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().keySet();
+		Iterator it = keys.iterator();
+		while(it.hasNext()) {
+			System.out.println((String) it.next());
+		}
+		
 	}
 	
 	public IComponentProperties getProperties() {
@@ -228,10 +259,12 @@ public class FormComponent implements Serializable {
 		items.add(new ItemBean("mustang", "Mustang"));
 		items.add(new ItemBean("panther", "Panther"));
 		items.add(new ItemBean("leopard", "Leopard"));*/
+		items = itemset.getItems(new Locale("en"));
 		return items;
 	}
 
 	public void setItems(List<ItemBean> items) {
+		System.out.println("SETTING ITEMS");
 		/*items.clear();
 		items.add(new ItemBean("tiger", "Tiger"));
 		items.add(new ItemBean("dolphin", "Dolphin"));
@@ -239,7 +272,7 @@ public class FormComponent implements Serializable {
 		items.add(new ItemBean("panther", "Panther"));
 		items.add(new ItemBean("leopard", "Leopard"));*/
 		this.items = items;
-		//itemset.setItems(new Locale("en"), items);
+		itemset.setItems(new Locale("en"), items);
 	}
 
 }
