@@ -405,6 +405,8 @@ public class FormManagerUtil {
 				return;
 			}
 		}
+		Node text_node = element.getOwnerDocument().createTextNode(value);
+		element.appendChild(text_node);
 	}
 	
 	/**
