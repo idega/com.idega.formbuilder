@@ -306,7 +306,7 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		DocumentBuilder builder = FormManagerUtil.getDocumentBuilder();
 		Document new_xforms_document = builder.parse(new StringInputStream(src_code));
 		
-		Element new_document_root = (Element)form_xforms.adoptNode(new_xforms_document.getDocumentElement());
+		Element new_document_root = (Element)form_xforms.importNode(new_xforms_document.getDocumentElement(), true);
 		form_xforms.replaceChild(new_document_root, form_xforms.getDocumentElement());
 		
 		loadDocument(form_xforms, form_id);

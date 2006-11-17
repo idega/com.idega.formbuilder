@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
-import javax.faces.component.html.HtmlForm;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
@@ -35,6 +34,7 @@ public class FBFormSourceEdit extends WFContainer {
 		HtmlInputTextarea textarea = new HtmlInputTextarea();
 		textarea.setRendered(true);
 		textarea.setValueBinding(value_att, app.createValueBinding("#{formSourceCodeManager.sourceCode}"));
+		textarea.setWrap("false");
 		
 		HtmlCommandButton src_submit = new HtmlCommandButton();
 		src_submit.setRendered(true);

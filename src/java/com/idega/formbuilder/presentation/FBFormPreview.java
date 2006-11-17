@@ -8,7 +8,6 @@ import javax.faces.context.ResponseWriter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 
 import com.idega.block.formreader.business.FormReader;
@@ -52,9 +51,6 @@ public class FBFormPreview extends UIComponentBase {
 			if(form_manager != null) {
 				
 				Document x = form_manager.getFormXFormsDocument();
-				
-				System.out.println("xxx: ");
-				DOMUtil.prettyPrintDOM(x);
 				
 				FormReader form_reader = FormReader.getInstance();
 				form_reader.init();

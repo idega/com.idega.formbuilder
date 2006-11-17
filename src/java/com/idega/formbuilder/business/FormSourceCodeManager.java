@@ -44,9 +44,7 @@ public class FormSourceCodeManager implements ActionListener {
 			
 			if(form_manager != null) {
 				
-				String src = form_manager.getFormSourceCode();
-				
-				return src;
+				return form_manager.getFormSourceCode();
 			}
 			
 		} catch (Exception e) {
@@ -57,6 +55,7 @@ public class FormSourceCodeManager implements ActionListener {
 	}
 	
 	public void setSourceCode(String source_code) {
+		
 		this.source_code = source_code;
 	}
 }
