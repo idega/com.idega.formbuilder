@@ -126,6 +126,7 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 							
 							FBSelectValuesList selectValues = (FBSelectValuesList) application.createComponent(FBSelectValuesList.COMPONENT_TYPE);
 							selectValues.setValueBinding("itemSet", application.createValueBinding("#{component.items}"));
+							selectValues.setId("selectOpts");
 							this.getChildren().add(selectValues);
 							
 						} else if(currentDataSrc.equals("2")) {

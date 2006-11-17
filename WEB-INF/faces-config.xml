@@ -133,6 +133,10 @@
 	     </renderer>
 	</render-kit>
 	<component>
+		<component-type>Division</component-type>
+		<component-class>com.idega.formbuilder.presentation.FBDivision</component-class>
+	</component>
+	<component>
 		<component-type>SelectValuesList</component-type>
 		<component-class>com.idega.formbuilder.presentation.FBSelectValuesList</component-class>
 	</component>

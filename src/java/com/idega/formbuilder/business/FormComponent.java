@@ -1,6 +1,7 @@
 package com.idega.formbuilder.business;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,7 +30,7 @@ public class FormComponent implements Serializable {
 	
 	private String externalSrc;
 	private String emptyLabel;
-	private List<ItemBean> items;
+	private List<ItemBean> items = new ArrayList<ItemBean>();
 	
 	private LocalizedStringBean labelStringBean;
 	private LocalizedStringBean errorStringBean;
@@ -39,24 +40,20 @@ public class FormComponent implements Serializable {
 	private IComponentProperties properties;
 	
 	public FormComponent() {
+		//this.items = new ArrayList<ItemBean>();
+		
 		this.required = new Boolean(false);
 		this.label = "";
 		this.errorMsg = "";
 		
 		this.externalSrc = "";
 		this.emptyLabel = "";
-		this.items = null;
+		//this.items = null;
 		
 		this.labelStringBean = null;
 		this.errorStringBean = null;
 		this.emptyLabelBean = null;
 		this.itemset = null;
-		
-		items.add(new ItemBean("tiger", "Tiger"));
-		items.add(new ItemBean("dolphin", "Dolphin"));
-		items.add(new ItemBean("mustang", "Mustang"));
-		items.add(new ItemBean("panther", "Panther"));
-		items.add(new ItemBean("leopard", "Leopard"));
 	}
 	
 	public void loadProperties(String id, IFormManager formManagerInstance) {
@@ -72,6 +69,17 @@ public class FormComponent implements Serializable {
 			this.externalSrc = ((IComponentPropertiesSelect) properties).getExternalDataSrc();
 			this.emptyLabelBean = ((IComponentPropertiesSelect) properties).getEmptyElementLabel();
 			this.itemset = ((IComponentPropertiesSelect) properties).getItemset();
+		}
+		
+		if(items == null) {
+			System.out.println("ITEMS IS NULL MOTERFUKER");
+		} else {
+			items.clear();
+			items.add(new ItemBean("tiger", "Tiger"));
+			items.add(new ItemBean("dolphin", "Dolphin"));
+			items.add(new ItemBean("mustang", "Mustang"));
+			items.add(new ItemBean("panther", "Panther"));
+			items.add(new ItemBean("leopard", "Leopard"));
 		}
 	}
 	

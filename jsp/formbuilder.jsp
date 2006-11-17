@@ -23,12 +23,12 @@
 				<t:div styleClass="application_container" id="application_container" forceId="true">
 					<t:div styleClass="toolbar_container" id="toolbar_container" forceId="true">
 						<h:commandLink id="new_form_button" styleClass="toolbar_button float_left" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/new-dialog.inc');return false" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}" />
-						
+						<!--
 						<h:selectOneMenu id="formList" styleClass="toolbar_field float_left" value="#{viewmanager.currentFormName}">
 							<f:selectItems value="#{formList.forms}" />
 							<a4j:support event="onchange" onsubmit="switchSelectedForm()" actionListener="#{workspace.formChanged}" oncomplete="formSwitched()" ajaxSingle="false" reRender="main_container" />
 						</h:selectOneMenu>
-						<!--
+						
 						
 						<h:commandLink id="load_form_button" actionListener="#{workspace.formChanged}" styleClass="toolbar_field float_left" value="Load" />
 						-->

@@ -18,6 +18,7 @@ public class SelectValuesListRenderer extends Renderer {
 		writer.startElement("DIV", valuesList);
 		writer.writeAttribute("id", valuesList.getId(), "id");
 		writer.writeAttribute("class", valuesList.getStyleClass(), "styleClass");
+		writer.writeAttribute("style", "width: 350px; height: 180px; overflow: auto;", null);
 	}
 	
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
@@ -26,9 +27,12 @@ public class SelectValuesListRenderer extends Renderer {
 		
 		writer.endElement("DIV");
 		
-		Object values[] = new Object[3];
+		writer.startElement("DIV", null);
+		writer.writeAttribute("style", "display: none", null);
+		Object values[] = new Object[1];
 		values[0] = valuesList.getId();
-		//writer.write(getEmbededJavascript(values));
+		writer.write(FBSelectValuesList.getEmbededJavascript(FBSelectValuesList.getJavascriptParameters(valuesList.getId())));
+		writer.endElement("DIV");
 	}
 	
 	public void encodeChildren(FacesContext context, UIComponent component) throws IOException {
@@ -36,6 +40,7 @@ public class SelectValuesListRenderer extends Renderer {
 			return;
 		}
 		super.encodeChildren(context, component);
+		
 	}
 	
 }
