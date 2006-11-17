@@ -66,7 +66,7 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		model.setAttribute(FormManagerUtil.id_att, form_id);
 		
 		Element form_id_element = (Element)model.getElementsByTagName(FormManagerUtil.form_id_tag).item(0);
-		form_id_element.setTextContent(form_id);
+		FormManagerUtil.setElementsTextNodeValue(form_id_element, form_id);
 		
 		Element submission_element = (Element)model.getElementsByTagName(FormManagerUtil.submission_tag).item(0);
 		String action_att_val = submission_element.getAttribute(FormManagerUtil.action_att);

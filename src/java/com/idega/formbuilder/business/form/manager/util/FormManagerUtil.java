@@ -394,12 +394,17 @@ public class FormManagerUtil {
 	
 	public static void setElementsTextNodeValue(Node element, String value) {
 		
-		Node txt_node = element.getFirstChild();
+		NodeList children = element.getChildNodes();
 		
-		if(txt_node == null || txt_node.getNodeType() != Node.TEXT_NODE)
-			return;
+		for (int i = 0; i < children.getLength(); i++) {
 			
-		txt_node.setNodeValue(value);
+			Node child = children.item(i);
+			
+			if(child != null && child.getNodeType() == Node.TEXT_NODE) {
+				child.setNodeValue(value);
+				return;
+			}
+		}
 	}
 	
 	/**
