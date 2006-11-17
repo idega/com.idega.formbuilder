@@ -63,7 +63,7 @@ public class FormManagerUtil {
 	public static final String itemset_tag = "xf:itemset";
 	public static final String item_tag = "xf:item";
 	public static final String model_att = "model";
-	public static final String src_att = "xf:src";
+	public static final String src_att = "src";
 	public static final String item_label_tag = "item_label";
 	public static final String item_value_tag = "item_value";
 	public static final String localized_entries_tag = "localizedEntries";
