@@ -16,7 +16,6 @@ import com.idega.formbuilder.business.form.beans.ILocalizedItemset;
 import com.idega.formbuilder.business.form.beans.ItemBean;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.manager.IFormManager;
-import com.idega.webface.WFUtil;
 
 public class FormComponent implements Serializable {
 	
@@ -40,6 +39,7 @@ public class FormComponent implements Serializable {
 	private ILocalizedItemset itemset;
 	
 	private IComponentProperties properties;
+	private IComponentPropertiesSelect selectProperties;
 	
 	public FormComponent() {
 		
@@ -66,20 +66,10 @@ public class FormComponent implements Serializable {
 		this.errorStringBean = properties.getErrorMsg();
 		
 		if(properties instanceof IComponentPropertiesSelect) {
+			System.out.println("LOADING PROPERTIES OF SELECT COMPONENT");
 			this.externalSrc = ((IComponentPropertiesSelect) properties).getExternalDataSrc();
 			this.emptyLabelBean = ((IComponentPropertiesSelect) properties).getEmptyElementLabel();
 			this.itemset = ((IComponentPropertiesSelect) properties).getItemset();
-		}
-		
-		if(items == null) {
-			System.out.println("ITEMS IS NULL MOTERFUKER");
-		} else {
-			items.clear();
-			items.add(new ItemBean("tiger", "Tiger"));
-			items.add(new ItemBean("dolphin", "Dolphin"));
-			items.add(new ItemBean("mustang", "Mustang"));
-			items.add(new ItemBean("panther", "Panther"));
-			items.add(new ItemBean("leopard", "Leopard"));
 		}
 	}
 	
@@ -115,20 +105,25 @@ public class FormComponent implements Serializable {
 				IComponentPropertiesSelect propertiesSelect = (IComponentPropertiesSelect) properties;
 				
 				if(propertiesSelect != null) {
+					System.out.println("SAVING SELECT COMPONENT PROPERTIES");
 					propertiesSelect.setEmptyElementLabel(emptyLabelBean);
+					this.setItems(this.decodeSelectItems());
+					/*
 					if(propertiesSelect.getDataSrcUsed() != null) {
 						if(((DataSourceList) WFUtil.getBeanInstance("dataSources")).getSelectedDataSource() == new Integer(IComponentPropertiesSelect.EXTERNAL_DATA_SRC).toString()) {
 							propertiesSelect.setExternalDataSrc(texternal);
 						} else {
 							
+							this.setItems(this.decodeSelectItems());
 						}
 					} else {
 						System.out.println("DATA SOURCE UNKNOWN");
 					}
-					this.setItems(this.decodeSelectItems());
+					*/
 				}
 			}
 		}
+		System.out.println("SAVED ITEMSET SIZE: " + ((IComponentPropertiesSelect) formManagerInstance.getComponentProperties(id)).getItemset().getItems(new Locale("en")).size());
 		formManagerInstance.updateFormComponent(id);
 	}
 	
@@ -138,7 +133,7 @@ public class FormComponent implements Serializable {
 		Iterator it = keys.iterator();
 		while(it.hasNext()) {
 			String currentParam = (String) it.next();
-			System.out.println(currentParam);
+			//System.out.println(currentParam);
 			if(currentParam.contains("labelF_")) {
 				String index = currentParam.substring(currentParam.length()-1);
 				ItemBean item = new ItemBean();
@@ -148,6 +143,7 @@ public class FormComponent implements Serializable {
 				result.add(item);
 			}
 		}
+		System.out.println("TOTAL SELECT OPTIONS FOUND: " + result.size());
 		return result;
 	}
 	
@@ -252,19 +248,25 @@ public class FormComponent implements Serializable {
 
 	public List<ItemBean> getItems() {
 		//items = itemset.getItems(new Locale("en"));
-		/*System.out.println("GETTING ITEMS");
-		items.clear();
+		System.out.println("GETTING ITEMS");
+		/*items.clear();
 		items.add(new ItemBean("tiger", "Tiger"));
 		items.add(new ItemBean("dolphin", "Dolphin"));
 		items.add(new ItemBean("mustang", "Mustang"));
 		items.add(new ItemBean("panther", "Panther"));
 		items.add(new ItemBean("leopard", "Leopard"));*/
-		items = itemset.getItems(new Locale("en"));
+		items = ((IComponentPropertiesSelect) properties).getItemset().getItems(new Locale("en"));
+		/*items.add(new ItemBean("tiger", "Tiger"));
+		items.add(new ItemBean("dolphin", "Dolphin"));
+		items.add(new ItemBean("mustang", "Mustang"));
+		items.add(new ItemBean("panther", "Panther"));
+		items.add(new ItemBean("leopard", "Leopard"));*/
+		//items = itemset.getItems(new Locale("en"));
 		return items;
 	}
 
 	public void setItems(List<ItemBean> items) {
-		System.out.println("SETTING ITEMS");
+		System.out.println("SETTING ITEMS: " + items.size());
 		/*items.clear();
 		items.add(new ItemBean("tiger", "Tiger"));
 		items.add(new ItemBean("dolphin", "Dolphin"));
@@ -272,7 +274,8 @@ public class FormComponent implements Serializable {
 		items.add(new ItemBean("panther", "Panther"));
 		items.add(new ItemBean("leopard", "Leopard"));*/
 		this.items = items;
-		itemset.setItems(new Locale("en"), items);
+		((IComponentPropertiesSelect) properties).getItemset().setItems(new Locale("en"), items);
+		System.out.println("AFTER SETTING ITEMS: " + ((IComponentPropertiesSelect) properties).getItemset().getItems(new Locale("en")).size());
 	}
 
 }

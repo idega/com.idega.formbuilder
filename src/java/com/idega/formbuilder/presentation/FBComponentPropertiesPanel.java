@@ -106,7 +106,12 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 					emptyLabel.setValueBinding("value", application.createValueBinding("#{component.emptyLabel}"));
 					this.getChildren().add(emptyLabel);
 					
+					FBSelectValuesList selectValues = (FBSelectValuesList) application.createComponent(FBSelectValuesList.COMPONENT_TYPE);
+					selectValues.setValueBinding("itemSet", application.createValueBinding("#{component.items}"));
+					selectValues.setId("selectOpts");
+					this.getChildren().add(selectValues);
 					
+					/*
 					HtmlOutputLabel advancedL = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 					advancedL.setValue("Select options properties");
 					this.getChildren().add(advancedL);
@@ -143,7 +148,7 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 							this.getChildren().add(external);
 							
 						}
-					}
+					}*/
 				}
 			}
 		}

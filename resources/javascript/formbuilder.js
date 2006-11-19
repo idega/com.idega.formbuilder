@@ -21,7 +21,7 @@ function createNewForm() {
 		showLoadingMessage("Loading");
 		dwrmanager.createNewForm(createdNewForm,name);
 		closeMessage();
-		document.forms['workspaceform1'].elements['workspaceform1:createFormProxy'].click();
+		//document.forms['workspaceform1'].elements['workspaceform1:createFormProxy'].click();
 	}
 }
 function saveProperties() {
@@ -62,6 +62,7 @@ function done() {
 	
 }
 function createdNewForm(element) {
+	document.forms['workspaceform1'].elements['workspaceform1:createFormProxy'].click();
 }
 function removeComponent(element) {
 	showLoadingMessage("Deleting");
