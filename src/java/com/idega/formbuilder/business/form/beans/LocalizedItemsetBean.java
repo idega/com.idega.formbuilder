@@ -48,6 +48,7 @@ public class LocalizedItemsetBean implements ILocalizedItemset {
 				continue;
 			
 			Locale locale = new Locale(lang);
+			
 			localized_entries.put(locale, localized_entry);
 			itemsets.put(locale, null);
 		}
@@ -75,9 +76,9 @@ public class LocalizedItemsetBean implements ILocalizedItemset {
 		
 		items = new ArrayList<ItemBean>();
 		
-		if(itemsets.containsKey(locale)) {
-			
-			Element localized_entry = localized_entries.get(locale);
+		Element localized_entry = localized_entries.get(locale);
+		
+		if(localized_entry != null) {
 			
 			List<Element> items_elements = DOMUtil.getChildElements(localized_entry);
 			
@@ -121,17 +122,18 @@ public class LocalizedItemsetBean implements ILocalizedItemset {
 			
 			if(localized_entries.containsKey(locale)) {
 				localized_entries_element = localized_entries.get(locale);
+				
+				List<Element> child_elements = DOMUtil.getChildElements(localized_entries_element);
+				
+				for (Iterator<Element> iter = child_elements.iterator(); iter.hasNext();)
+					localized_entries_element.removeChild(iter.next());
+				
 			} else {
 				
 				localized_entries_element = local_data_src_element.getOwnerDocument().createElement(FormManagerUtil.localized_entries_tag);
 				localized_entries_element.setAttribute(FormManagerUtil.lang_att, locale.getLanguage());
 				local_data_src_element.appendChild(localized_entries_element);
 			}
-			
-			List<Element> child_elements = DOMUtil.getChildElements(localized_entries_element);
-			
-			for (Iterator<Element> iter = child_elements.iterator(); iter.hasNext();)
-				localized_entries_element.removeChild(iter.next());
 
 			if(!items.isEmpty()) {
 				
@@ -158,6 +160,8 @@ public class LocalizedItemsetBean implements ILocalizedItemset {
 					}
 				}
 			}
+			localized_entries.put(locale, localized_entries_element);
+			itemsets.put(locale, items);
 		}
 		
 		
