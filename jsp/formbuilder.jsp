@@ -33,11 +33,12 @@
 						<h:commandLink id="load_form_button" actionListener="#{workspace.formChanged}" styleClass="toolbar_field float_left" value="Load" />
 						
 						<h:commandLink id="help_form_button" onclick="showInnerHtml(this)" styleClass="toolbar_button float_right" action="" value="Help"/>
-						-->
+						
 						<h:selectOneMenu id="localeList" styleClass="toolbar_field float_right" value="#{workspace.currentLocale}">
 							<f:selectItems value="#{localeList.locales}" />
 							<a4j:support event="onchange" onsubmit="showLoadingMessage('Switching locale')" oncomplete="closeLoadingMessage()" ajaxSingle="true" reRender="form_container" />
 						</h:selectOneMenu>
+						-->
 					</t:div>
 					<t:div styleClass="main_container" id="main_container" forceId="true">
 						<t:div styleClass="options_container" id="options_container" forceId="true">
@@ -60,14 +61,14 @@
 								    <t:inputText id="formTitleInput" forceId="true" value="#{workspace.formTitle}">
 								    	<a4j:support event="onkeyup" ajaxSingle="true" requestDelay="500" reRender="formHeadingHeader" />
 								    </t:inputText>
-								    
+								    <!--
 								    <t:htmlTag value="br" />
 								    <t:outputLabel for="formDescription" value="Description" />
 								    <t:htmlTag value="br" />
 								    <t:inputTextarea id="formDescription" forceId="true" value="#{viewmanager.formDescription}">
 								    	<a4j:support event="onkeyup" ajaxSingle="true" requestDelay="500" reRender="formHeadingBody" />
 								    </t:inputTextarea>
-								    
+								    -->
 							    </t:panelTab>
 							    <t:panelTab id="tab02" label="Add new field">
 									<fb:palette id="firstlist" 

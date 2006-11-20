@@ -138,12 +138,13 @@ public class FormComponent implements Serializable {
 				String index = currentParam.substring(currentParam.length()-1);
 				ItemBean item = new ItemBean();
 				item.setLabel((String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(currentParam));
-				item.setValue((String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspace1:valueF_" + index));
+				item.setValue((String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:valueF_" + index));
 				System.out.println(index);
 				result.add(item);
 			}
 		}
 		System.out.println("TOTAL SELECT OPTIONS FOUND: " + result.size());
+		printItemSet(result);
 		return result;
 	}
 	
@@ -256,6 +257,7 @@ public class FormComponent implements Serializable {
 		items.add(new ItemBean("panther", "Panther"));
 		items.add(new ItemBean("leopard", "Leopard"));*/
 		items = ((IComponentPropertiesSelect) properties).getItemset().getItems(new Locale("en"));
+		printItemSet(items);
 		/*items.add(new ItemBean("tiger", "Tiger"));
 		items.add(new ItemBean("dolphin", "Dolphin"));
 		items.add(new ItemBean("mustang", "Mustang"));
@@ -273,9 +275,19 @@ public class FormComponent implements Serializable {
 		items.add(new ItemBean("mustang", "Mustang"));
 		items.add(new ItemBean("panther", "Panther"));
 		items.add(new ItemBean("leopard", "Leopard"));*/
+		printItemSet(items);
 		this.items = items;
 		((IComponentPropertiesSelect) properties).getItemset().setItems(new Locale("en"), items);
 		System.out.println("AFTER SETTING ITEMS: " + ((IComponentPropertiesSelect) properties).getItemset().getItems(new Locale("en")).size());
+		printItemSet(((IComponentPropertiesSelect) properties).getItemset().getItems(new Locale("en")));
+	}
+	
+	private void printItemSet(List<ItemBean> items) {
+		Iterator it = items.iterator();
+		while(it.hasNext()) {
+			ItemBean current = (ItemBean) it.next();
+			System.out.println("ROW: " + current.getLabel() + " : " + current.getValue());
+		}
 	}
 
 }

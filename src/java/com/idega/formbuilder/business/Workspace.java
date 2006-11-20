@@ -7,17 +7,14 @@ import java.util.Locale;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.faces.event.ActionListener;
 import javax.faces.model.SelectItem;
-
-import org.apache.myfaces.component.html.ext.HtmlSelectOneMenu;
 
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.manager.IFormManager;
 import com.idega.formbuilder.view.ActionManager;
 import com.idega.webface.WFUtil;
 
-public class Workspace implements Serializable, ActionListener {
+public class Workspace implements Serializable {
 	
 	private static final long serialVersionUID = -7539955904708793992L;
 	
@@ -32,11 +29,6 @@ public class Workspace implements Serializable, ActionListener {
 	public String getFormTitle() {
 		return formTitle;
 	}
-	
-	public void processAction(ActionEvent ae) {
-		String buttonId = ae.getComponent().getClientId(FacesContext.getCurrentInstance());
-		System.out.println(buttonId);
-	}
 
 	public void setFormTitle(String formTitle) {
 		LocalizedStringBean bean = new LocalizedStringBean();
@@ -46,7 +38,6 @@ public class Workspace implements Serializable, ActionListener {
 			if(am.getFormId() != null && !am.getFormId().equals("")) {
 				am.setFormTitle(bean);
 			}
-			//ActionManager.getFormManagerInstance().setFormTitle(bean);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -72,15 +63,18 @@ public class Workspace implements Serializable, ActionListener {
 	}
 	
 	public void formChanged(ActionEvent ae) throws Exception {
-		/*String buttonId = ae.getComponent().getClientId(FacesContext.getCurrentInstance());
-		/*System.out.println(buttonId);
-		 * 
-		 */
-		
 		String formId = (String) ((javax.faces.component.html.HtmlSelectOneMenu) ae.getComponent().getParent()).getValue();
 		if(formId != null && !formId.equals("")) {
 			try {
-				((ActionManager)WFUtil.getBeanInstance("viewmanager")).getFormManagerInstance().openFormDocument(formId);
+				IFormManager formManagerInstance = (IFormManager) ((ActionManager)WFUtil.getBeanInstance("viewmanager")).getFormManagerInstance();
+				formManagerInstance.openFormDocument(formId);
+				if(formManagerInstance.getFormComponentsIdsList().size() > 0) {
+					this.designViewStatus = "active";
+				} else {
+					this.designViewStatus = "empty";
+				}
+				this.view = "design";
+				this.selectedTab = 1;
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
@@ -91,32 +85,20 @@ public class Workspace implements Serializable, ActionListener {
 	
 	public void viewChanged(ActionEvent ae) {
 		String buttonId = ae.getComponent().getClientId(FacesContext.getCurrentInstance());
-		String selectedForm = "";
 		if(buttonId.endsWith(":designViewButton")) {
 			view = "design";
 		} else if(buttonId.endsWith(":previewViewButton")) {
 			view = "preview";
 		} else if(buttonId.endsWith(":sourceViewButton")) {
 			view = "source";
-		} else if(buttonId.equals("workspace1:formList")) {
-			selectedForm = (String) ((HtmlSelectOneMenu) ae.getComponent()).getValue();
-			System.out.println("NEW FORM SELECTED: " + selectedForm);
 		}
-		System.out.println("FORM CHANGE EVENT " + buttonId);
-	}
-	
-	public void formChange(ActionEvent ae) {
-		String buttonId = ae.getComponent().getClientId(FacesContext.getCurrentInstance());
-		System.out.println("FORM CHANGE EVENT " + buttonId);
 	}
 
 	public String getView() {
-		System.out.println("GETTING VIEW");
 		return view;
 	}
 
 	public void setView(String view) {
-		System.out.println("SETTING VIEW");
 		this.view = view;
 	}
 
