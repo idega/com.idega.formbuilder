@@ -26,7 +26,7 @@
 						
 						<t:selectOneMenu id="formList" styleClass="toolbar_field float_left" forceId="true" value="#{viewmanager.currentFormName}">
 							<f:selectItems value="#{formList.forms}" />
-							<a4j:support event="onchange" onsubmit="switchSelectedForm()" actionListener="#{workspace.formChanged}" oncomplete="formSwitched()" ajaxSingle="false" reRender="main_container" />
+							<a4j:support event="onchange" onsubmit="switchSelectedForm()" actionListener="#{workspace.formChanged}" oncomplete="closeLoadingMessage()" ajaxSingle="false" reRender="form_container,formHeading,options_container" />
 						</t:selectOneMenu>
 						
 						<!--
@@ -97,16 +97,19 @@
 										<f:facet name="formHeaderFacet">
 											<t:div id="formHeading" forceId="true">
 												<t:outputText id="formHeadingHeader" forceId="true" onclick="selectFormHeader()" value="#{workspace.formTitle}" />
+												<!--
 												<t:htmlTag value="br" />
 												<t:outputText id="formHeadingBody" forceId="true" value="#{viewmanager.formDescription}" />
+												-->
 												<t:htmlTag value="hr" />
+												
 											</t:div>
 										</f:facet>
 										<f:facet name="emptyFormFacet">
 											<t:div id="emptyForm" forceId="true">
-												<t:outputText id="emptyFormHeader" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_header']}" />
+												<t:outputText id="emptyFormHeader" forceId="true" value="This form is empty" />
 												<t:htmlTag value="br" />
-												<t:outputText id="emptyFormBody" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['labels_noform_body']}" />
+												<t:outputText id="emptyFormBody" forceId="true" value="To add components to the form, drag them from the palette on the left" />
 											</t:div>
 										</f:facet>
 									</fb:designView>

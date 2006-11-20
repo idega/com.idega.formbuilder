@@ -6,9 +6,11 @@ import javax.faces.component.UISelectItems;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.component.html.HtmlOutputLabel;
 import javax.faces.component.html.HtmlSelectBooleanCheckbox;
-import javax.faces.component.html.HtmlSelectOneRadio;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+
+import org.apache.myfaces.component.html.ext.HtmlSelectOneRadio;
+import org.apache.myfaces.custom.div.Div;
 
 import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.formbuilder.business.DataSourceList;
@@ -106,12 +108,12 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 					emptyLabel.setValueBinding("value", application.createValueBinding("#{component.emptyLabel}"));
 					this.getChildren().add(emptyLabel);
 					
-					FBSelectValuesList selectValues = (FBSelectValuesList) application.createComponent(FBSelectValuesList.COMPONENT_TYPE);
+					/*FBSelectValuesList selectValues = (FBSelectValuesList) application.createComponent(FBSelectValuesList.COMPONENT_TYPE);
 					selectValues.setValueBinding("itemSet", application.createValueBinding("#{component.items}"));
 					selectValues.setId("selectOpts");
-					this.getChildren().add(selectValues);
+					this.getChildren().add(selectValues);*/
 					
-					/*
+					
 					HtmlOutputLabel advancedL = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 					advancedL.setValue("Select options properties");
 					this.getChildren().add(advancedL);
@@ -148,7 +150,7 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 							this.getChildren().add(external);
 							
 						}
-					}*/
+					}
 				}
 			}
 		}

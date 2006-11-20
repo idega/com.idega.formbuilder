@@ -18,7 +18,7 @@ public class SelectValuesListRenderer extends Renderer {
 		writer.startElement("DIV", valuesList);
 		writer.writeAttribute("id", valuesList.getId(), "id");
 		writer.writeAttribute("class", valuesList.getStyleClass(), "styleClass");
-		writer.writeAttribute("style", "width: 300px; height: 180px; overflow: auto;", null);
+		writer.writeAttribute("style", "width: 320px; height: 180px; overflow: auto;", null);
 	}
 	
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {

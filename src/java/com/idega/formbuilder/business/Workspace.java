@@ -27,11 +27,18 @@ public class Workspace implements Serializable {
 	private String formTitle;
 	
 	public String getFormTitle() {
+		if(!designViewStatus.equals("noform")) {
+			IFormManager am = ((ActionManager)WFUtil.getBeanInstance("viewmanager")).getFormManagerInstance();
+			LocalizedStringBean title = am.getFormTitle();
+			//this.formTitle = title.getString(new Locale("en"));
+			System.out.println("GETTING FORM TITLE: " + title.getString(new Locale("en")));
+		}	
 		return formTitle;
 	}
 
 	public void setFormTitle(String formTitle) {
-		LocalizedStringBean bean = new LocalizedStringBean();
+		System.out.println("SETTING FORM TITLE: " + formTitle);
+		/*LocalizedStringBean bean = new LocalizedStringBean();
 		bean.setString(new Locale("en"), formTitle);
 		IFormManager am = ((ActionManager)WFUtil.getBeanInstance("viewmanager")).getFormManagerInstance();
 		try {
@@ -40,7 +47,7 @@ public class Workspace implements Serializable {
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 		this.formTitle = formTitle;
 	}
 
@@ -53,6 +60,8 @@ public class Workspace implements Serializable {
 	}
 
 	public Workspace() {
+		this.formTitle = "";
+		
 		this.currentLocale = "en";
 		this.selectedTab = 1;
 		this.view = "design";
@@ -75,6 +84,8 @@ public class Workspace implements Serializable {
 				}
 				this.view = "design";
 				this.selectedTab = 1;
+				this.currentComponent = null;
+				this.formTitle = getFormTitle();
 			} catch(Exception e) {
 				e.printStackTrace();
 			}

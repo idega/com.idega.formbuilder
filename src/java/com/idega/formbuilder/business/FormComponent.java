@@ -16,6 +16,7 @@ import com.idega.formbuilder.business.form.beans.ILocalizedItemset;
 import com.idega.formbuilder.business.form.beans.ItemBean;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.manager.IFormManager;
+import com.idega.webface.WFUtil;
 
 public class FormComponent implements Serializable {
 	
@@ -39,7 +40,6 @@ public class FormComponent implements Serializable {
 	private ILocalizedItemset itemset;
 	
 	private IComponentProperties properties;
-	private IComponentPropertiesSelect selectProperties;
 	
 	public FormComponent() {
 		
@@ -54,6 +54,8 @@ public class FormComponent implements Serializable {
 		this.errorStringBean = null;
 		this.emptyLabelBean = null;
 		this.itemset = null;
+		
+		
 	}
 	
 	public void loadProperties(String id, IFormManager formManagerInstance) {
@@ -86,18 +88,21 @@ public class FormComponent implements Serializable {
 		}
 		String terror = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:propertyErrorMessage");
 		if(terror != null) {
+			System.out.println("Setting error message");
 			this.setErrorMsg(terror);
 		}
 		if(properties != null) {
 			properties.setRequired(required);
-			properties.setErrorMsg(errorStringBean);
+			if(errorStringBean == null) {
+				System.out.println("ERROR STRING BEAN is null");
+			} else {
+				System.out.println("ERROR STRING BEAN: " + this.errorStringBean.getString(new Locale("en")));
+				properties.setErrorMsg(errorStringBean);
+			}
+			
 			properties.setLabel(labelStringBean);
 			if(properties instanceof IComponentPropertiesSelect) {
-				String texternal = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:propertyExternal");
-				if(texternal != null) {
-					System.out.println("DATA SOURCE: " + texternal);
-					this.setExternalSrc(texternal);
-				}
+				
 				String temptylabel = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:propertyEmptyLabel");
 				if(temptylabel != null) {
 					this.setEmptyLabel(temptylabel);
@@ -107,27 +112,38 @@ public class FormComponent implements Serializable {
 				if(propertiesSelect != null) {
 					System.out.println("SAVING SELECT COMPONENT PROPERTIES");
 					propertiesSelect.setEmptyElementLabel(emptyLabelBean);
-					this.setItems(this.decodeSelectItems());
-					/*
+					//this.setItems(this.decodeSelectItems());
+					
+					
 					if(propertiesSelect.getDataSrcUsed() != null) {
-						if(((DataSourceList) WFUtil.getBeanInstance("dataSources")).getSelectedDataSource() == new Integer(IComponentPropertiesSelect.EXTERNAL_DATA_SRC).toString()) {
+						String dataSrc = ((DataSourceList) WFUtil.getBeanInstance("dataSources")).getSelectedDataSource();
+						System.out.println("SELECTED DATA SOURCE: " + dataSrc);
+						if(dataSrc.equals(new Integer(IComponentPropertiesSelect.EXTERNAL_DATA_SRC).toString())) {
+							String texternal = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:propertyExternal");
+							if(texternal != null) {
+								System.out.println("DATA SOURCE: " + texternal);
+								this.setExternalSrc(texternal);
+							}
+							
 							propertiesSelect.setExternalDataSrc(texternal);
 						} else {
 							
 							this.setItems(this.decodeSelectItems());
+							System.out.println("SAVED ITEMSET SIZE: " + ((IComponentPropertiesSelect) formManagerInstance.getComponentProperties(id)).getItemset().getItems(new Locale("en")).size());
 						}
 					} else {
 						System.out.println("DATA SOURCE UNKNOWN");
 					}
-					*/
+					
 				}
 			}
 		}
-		System.out.println("SAVED ITEMSET SIZE: " + ((IComponentPropertiesSelect) formManagerInstance.getComponentProperties(id)).getItemset().getItems(new Locale("en")).size());
+		
 		formManagerInstance.updateFormComponent(id);
 	}
 	
 	private List<ItemBean> decodeSelectItems() {
+		printParameterMap();
 		List<ItemBean> result = new ArrayList<ItemBean>();
 		Set keys = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().keySet();
 		Iterator it = keys.iterator();
@@ -135,12 +151,21 @@ public class FormComponent implements Serializable {
 			String currentParam = (String) it.next();
 			//System.out.println(currentParam);
 			if(currentParam.contains("labelF_")) {
-				String index = currentParam.substring(currentParam.length()-1);
-				ItemBean item = new ItemBean();
-				item.setLabel((String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(currentParam));
-				item.setValue((String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:valueF_" + index));
-				System.out.println(index);
-				result.add(item);
+				if(currentParam.contains("workspaceform1:")) {
+					String index = currentParam.substring(currentParam.length()-1);
+					ItemBean item = new ItemBean();
+					item.setLabel((String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(currentParam));
+					item.setValue((String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:valueF_" + index));
+					System.out.println(index);
+					result.add(item);
+				} else {
+					String index = currentParam.substring(currentParam.length()-1);
+					ItemBean item = new ItemBean();
+					item.setLabel((String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(currentParam));
+					item.setValue((String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("valueF_" + index));
+					System.out.println(index);
+					result.add(item);
+				}
 			}
 		}
 		System.out.println("TOTAL SELECT OPTIONS FOUND: " + result.size());
@@ -149,6 +174,7 @@ public class FormComponent implements Serializable {
 	}
 	
 	private void printParameterMap() {
+		System.out.println("PRINTING PARAMETER MAP");
 		Set keys = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().keySet();
 		Iterator it = keys.iterator();
 		while(it.hasNext()) {
@@ -176,7 +202,9 @@ public class FormComponent implements Serializable {
 	
 	public void setErrorMsg(String errorMsg) {
 		this.errorMsg = errorMsg;
+		System.out.println("INSIDE SETTER FOR ERROR MESSAGE");
 		this.errorStringBean.setString(new Locale("en"), errorMsg);
+		System.out.println("ENDING SETTER FOR ERROR MESSAGE: " + this.errorStringBean.getString(new Locale("en")));
 	}
 	
 	public Boolean isRequired() {
@@ -249,7 +277,7 @@ public class FormComponent implements Serializable {
 
 	public List<ItemBean> getItems() {
 		//items = itemset.getItems(new Locale("en"));
-		System.out.println("GETTING ITEMS");
+		
 		/*items.clear();
 		items.add(new ItemBean("tiger", "Tiger"));
 		items.add(new ItemBean("dolphin", "Dolphin"));
@@ -257,6 +285,7 @@ public class FormComponent implements Serializable {
 		items.add(new ItemBean("panther", "Panther"));
 		items.add(new ItemBean("leopard", "Leopard"));*/
 		items = ((IComponentPropertiesSelect) properties).getItemset().getItems(new Locale("en"));
+		System.out.println("GETTING ITEMS: " + items);
 		printItemSet(items);
 		/*items.add(new ItemBean("tiger", "Tiger"));
 		items.add(new ItemBean("dolphin", "Dolphin"));

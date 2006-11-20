@@ -15,10 +15,14 @@ function displayMessage(url) {
 function closeMessage() {
 	messageObj.close();
 }
+function addEmptyOption() {
+	alert('Adding new option');
+	$('workspaceform1:addNewOption').click();
+}
 function createNewForm() {
 	var name = document.forms['newFormDialogForm'].elements['formName'].value;
 	if(name != '') {
-		showLoadingMessage("Loading");
+		showLoadingMessage("Creating");
 		dwrmanager.createNewForm(createdNewForm,name);
 		closeMessage();
 		//document.forms['workspaceform1'].elements['workspaceform1:createFormProxy'].click();
@@ -36,8 +40,7 @@ function switchDataSrc() {
 	document.forms['workspaceform1'].elements['workspaceform1:switchSrcProxy'].click();
 }
 function applyChanges() {
-	//alert('saving...');
-	document.forms['workspaceform1'].elements['workspaceform1:applyChangesProxy'].click();
+	$('workspaceform1:applyChangesProxy').click();
 }
 function deleteComponent(element) {
 	pressedDelete = true;
@@ -51,18 +54,19 @@ function deletedComponent() {
 function editProperties(element) {
 	var temp = pressedDelete;
 	if(!temp) {
-		showLoadingMessage('Processing');
+		showLoadingMessage('Retrieving');
 		var id = element.id;
 		dwrmanager.editComponentProperties(done,id);
-		document.forms['workspaceform1'].elements['workspaceform1:editCompProxy'].click();
 	}
 	pressedDelete = false;
 }
 function done() {
-	
+	$('workspaceform1:editCompProxy').click();
+	//document.forms['workspaceform1'].elements['workspaceform1:editCompProxy'].click();
 }
 function createdNewForm(element) {
-	document.forms['workspaceform1'].elements['workspaceform1:createFormProxy'].click();
+	$('workspaceform1:createFormProxy').click();
+	//document.forms['workspaceform1'].elements['workspaceform1:createFormProxy'].click();
 }
 function removeComponent(element) {
 	showLoadingMessage("Deleting");

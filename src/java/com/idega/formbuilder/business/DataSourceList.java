@@ -44,6 +44,7 @@ public class DataSourceList implements Serializable {
 	}
 
 	public DataSourceList() {
+		sources.clear();
 		sources.add(new SelectItem(localDataSrc, "List of values"));
 		sources.add(new SelectItem(externalDataSrc, "External file"));
 	}
@@ -58,9 +59,11 @@ public class DataSourceList implements Serializable {
 	
 	public void switchDataSource(ActionEvent ae) {
 		if(selectedDataSource.equals("1")) {
-			setSelectedDataSource("2");
+			selectedDataSource = "2";
+			((IComponentPropertiesSelect)((FormComponent) WFUtil.getBeanInstance("component")).getProperties()).setDataSrcUsed(IComponentPropertiesSelect.EXTERNAL_DATA_SRC);
 		} else if(selectedDataSource.equals("2")) {
-			setSelectedDataSource("1");
+			selectedDataSource = "1";
+			((IComponentPropertiesSelect)((FormComponent) WFUtil.getBeanInstance("component")).getProperties()).setDataSrcUsed(IComponentPropertiesSelect.LOCAL_DATA_SRC);
 		}
 	}
 

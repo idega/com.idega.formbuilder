@@ -56,12 +56,14 @@ public class FBSelectValuesList extends UIComponentBase {
 	}
 	
 	public void initializeComponent(FacesContext context) {
+		System.out.println("INITIALIZING VALUE LIST");
 		Application application = context.getApplication();
 		this.getChildren().clear();
 		
 		HtmlGraphicImage addButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
 		addButton.setValue(ADD_BUTTON_IMG);
 		addButton.setOnclick("addNewEmptySelect()");
+		//addButton.setOnclick("addEmptyOption()");
 		this.getChildren().add(addButton);
 		
 		ValueBinding vb = this.getValueBinding("itemSet");
@@ -73,11 +75,13 @@ public class FBSelectValuesList extends UIComponentBase {
 		listSize = items.size();
 		
 		if(listSize < 1) {
+			System.out.println("3 FIELDS");
 			for(int i = 0; i < 3; i++) {
 				this.getChildren().add(getNextSelectRow("", "", i, context));
 			}
 			
 		} else {
+			System.out.println(listSize + " FIELDS");
 			for(int i = 0; i < listSize; i++) {
 				String label = items.get(i).getLabel();
 				String value = items.get(i).getValue();
