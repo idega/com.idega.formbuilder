@@ -9,26 +9,11 @@ import org.apache.myfaces.custom.div.Div;
 
 public class FBDivision extends Div {
 	
-	//public static final String RENDERER_TYPE = "fb_selectvalueslist";
-	//public static final String COMPONENT_FAMILY = "formbuilder";
 	public static final String COMPONENT_TYPE = "Division";
-	
-	/*public FBDiv() {
-		super();
-		this.setRendererType(FBSelectValuesList.RENDERER_TYPE);
-	}*/
 	
 	public boolean getRendersChildren() {
 		return true;
 	}
-	
-	/*public String getFamily() {
-		return FBSelectValuesList.COMPONENT_FAMILY;
-	}*/
-	
-	/*public String getRendererType() {
-		return FBSelectValuesList.RENDERER_TYPE;
-	}*/
 	
 	public Object saveState(FacesContext context) {
 		Object values[] = new Object[1];
