@@ -58,7 +58,7 @@ public class FormComponent implements Serializable {
 		this.emptyLabelBean = null;
 		this.itemset = null;
 		
-		this.emptyOptions = 0;
+		this.emptyOptions = 3;
 	}
 	
 	public void loadProperties(String id, IFormManager formManagerInstance) {
@@ -75,11 +75,11 @@ public class FormComponent implements Serializable {
 			this.externalSrc = ((IComponentPropertiesSelect) properties).getExternalDataSrc();
 			this.emptyLabelBean = ((IComponentPropertiesSelect) properties).getEmptyElementLabel();
 			this.itemset = ((IComponentPropertiesSelect) properties).getItemset();
-			if(this.itemset.getItems(new Locale("en")).size() == 0) {
+			/*if(this.itemset.getItems(new Locale("en")).size() == 0) {
 				this.emptyOptions = 3;
 			} else {
 				this.emptyOptions = 0;
-			}
+			}*/
 		}
 	}
 	
@@ -126,27 +126,29 @@ public class FormComponent implements Serializable {
 					System.out.println("SAVING SELECT COMPONENT PROPERTIES");
 					propertiesSelect.setEmptyElementLabel(emptyLabelBean);
 					//this.setItems(this.decodeSelectItems());
-					
-					
-					if(propertiesSelect.getDataSrcUsed() != null) {
-						String dataSrc = ((DataSourceList) WFUtil.getBeanInstance("dataSources")).getSelectedDataSource();
-						System.out.println("SELECTED DATA SOURCE: " + dataSrc);
-						if(dataSrc.equals(new Integer(IComponentPropertiesSelect.EXTERNAL_DATA_SRC).toString())) {
-							String texternal = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:propertyExternal");
-							if(texternal != null) {
-								System.out.println("DATA SOURCE: " + texternal);
-								this.setExternalSrc(texternal);
-							}
-							
-							propertiesSelect.setExternalDataSrc(texternal);
-						} else {
-							
-							this.setItems(this.decodeSelectItems());
-							System.out.println("SAVED ITEMSET SIZE: " + ((IComponentPropertiesSelect) formManagerInstance.getComponentProperties(id)).getItemset().getItems(new Locale("en")).size());
+					String dataSrc = ((DataSourceList) WFUtil.getBeanInstance("dataSources")).getSelectedDataSource();
+					System.out.println("SELECTED DATA SOURCE: " + dataSrc);
+					if(dataSrc.equals(new Integer(IComponentPropertiesSelect.EXTERNAL_DATA_SRC).toString())) {
+						String texternal = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:propertyExternal");
+						if(texternal != null) {
+							System.out.println("DATA SOURCE: " + texternal);
+							this.setExternalSrc(texternal);
 						}
+						
+						propertiesSelect.setExternalDataSrc(texternal);
+					} else {
+						
+						this.setItems(this.decodeSelectItems());
+						System.out.println("SAVED ITEMSET SIZE: " + ((IComponentPropertiesSelect) formManagerInstance.getComponentProperties(id)).getItemset().getItems(new Locale("en")).size());
+					}
+					
+					/*
+					if(propertiesSelect.getDataSrcUsed() != null) {
+						
 					} else {
 						System.out.println("DATA SOURCE UNKNOWN");
 					}
+					*/
 					
 				}
 			}
@@ -348,6 +350,14 @@ public class FormComponent implements Serializable {
 			ItemBean current = (ItemBean) it.next();
 			System.out.println("ROW: " + current.getLabel() + " : " + current.getValue());
 		}
+	}
+
+	public int getEmptyOptions() {
+		return emptyOptions;
+	}
+
+	public void setEmptyOptions(int emptyOptions) {
+		this.emptyOptions = emptyOptions;
 	}
 
 }

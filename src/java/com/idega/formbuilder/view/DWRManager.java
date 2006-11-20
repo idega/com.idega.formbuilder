@@ -14,6 +14,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.idega.formbuilder.FormbuilderViewManager;
+import com.idega.formbuilder.business.FormComponent;
 import com.idega.formbuilder.business.Workspace;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.manager.IFormManager;
@@ -103,6 +104,7 @@ public class DWRManager implements Serializable {
 		((Workspace) WFUtil.getBeanInstance("workspace")).setDesignViewStatus(FBDesignView.DESIGN_VIEW_STATUS_EMPTY);
 		((Workspace) WFUtil.getBeanInstance("workspace")).setSelectedTab(1);
 		((Workspace) WFUtil.getBeanInstance("workspace")).setFormTitle(name);
+		((FormComponent) WFUtil.getBeanInstance("component")).setEmptyOptions(3);
 		return element;
 	}
 	
