@@ -182,12 +182,12 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 	}
 	public void updateErrorMsg() {
 		getXFormsManager().updateErrorMsg();
-		getHtmlManager().clearLocalizedHtmlComponents();
+		getHtmlManager().clearHtmlComponents();
 		form_document.setFormDocumentModified(true);
 	}
 	public void updateLabel() {
 		getXFormsManager().updateLabel();
-		getHtmlManager().clearLocalizedHtmlComponents();
+		getHtmlManager().clearHtmlComponents();
 	}
 	public void updateConstraintRequired() {
 		getXFormsManager().updateConstraintRequired();
@@ -197,7 +197,6 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 	public void remove() {
 		
 		form_document.setFormDocumentModified(true);
-		
 		getXFormsManager().removeComponentFromXFormsDocument();
 	}
 }

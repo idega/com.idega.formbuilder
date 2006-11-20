@@ -51,24 +51,24 @@ public class FormComponentSelect extends FormComponent implements IComponentProp
 	public void updateDataSrcUsed() {
 		
 		((XFormsManagerSelect)getXFormsManager()).updateDataSrcUsed();
-		getHtmlManager().clearLocalizedHtmlComponents();
+		getHtmlManager().clearHtmlComponents();
 		form_document.setFormDocumentModified(true);
 	}
 	
 	public void updateItemset() {
-		getHtmlManager().clearLocalizedHtmlComponents();
+		getHtmlManager().clearHtmlComponents();
 		form_document.setFormDocumentModified(true);
 	}
 	
 	public void updateEmptyElementLabel() {
 		((XFormsManagerSelect)getXFormsManager()).updateEmptyElementLabel();
-		getHtmlManager().clearLocalizedHtmlComponents();
+		getHtmlManager().clearHtmlComponents();
 		form_document.setFormDocumentModified(true);
 	}
 	
 	public void updateExternalDataSrc() {
 		((XFormsManagerSelect)getXFormsManager()).updateExternalDataSrc();
-		getHtmlManager().clearLocalizedHtmlComponents();
+		getHtmlManager().clearHtmlComponents();
 		form_document.setFormDocumentModified(true);
 	}
 	

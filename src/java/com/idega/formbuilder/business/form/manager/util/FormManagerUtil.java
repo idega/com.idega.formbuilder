@@ -382,29 +382,40 @@ public class FormManagerUtil {
 	
 	public static String getElementsTextNodeValue(Node element) {
 		
-		Node txt_node = element.getFirstChild();
-		
-		if(txt_node == null || txt_node.getNodeType() != Node.TEXT_NODE) {
-			return null;
-		}
-		String node_value = txt_node.getNodeValue();
-		
-		return node_value == null ? "" : node_value.trim();
-	}
-	
-	public static void setElementsTextNodeValue(Node element, String value) {
-		
 		NodeList children = element.getChildNodes();
+		StringBuffer text_value = new StringBuffer();
 		
 		for (int i = 0; i < children.getLength(); i++) {
 			
 			Node child = children.item(i);
 			
 			if(child != null && child.getNodeType() == Node.TEXT_NODE) {
-				child.setNodeValue(value);
-				return;
+				String node_value = child.getNodeValue();
+				
+				if(node_value != null && node_value.length() > 0)
+					text_value.append(node_value);
 			}
 		}
+		
+		return text_value.toString();
+	}
+	
+	public static void setElementsTextNodeValue(Node element, String value) {
+		
+		NodeList children = element.getChildNodes();
+		List<Node> childs_to_remove = new ArrayList<Node>();
+		
+		for (int i = 0; i < children.getLength(); i++) {
+			
+			Node child = children.item(i);
+			
+			if(child != null && child.getNodeType() == Node.TEXT_NODE)
+				childs_to_remove.add(child);
+		}
+		
+		for (Iterator<Node> iter = childs_to_remove.iterator(); iter.hasNext();)
+			element.removeChild(iter.next());
+		
 		Node text_node = element.getOwnerDocument().createTextNode(value);
 		element.appendChild(text_node);
 	}

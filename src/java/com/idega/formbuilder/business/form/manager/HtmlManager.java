@@ -62,8 +62,10 @@ public class HtmlManager {
 		return localized_html_components;
 	}
 	
-	public void clearLocalizedHtmlComponents() {
+	public void clearHtmlComponents() {
+		
 		getLocalizedHtmlComponents().clear();
+		unlocalized_html_component = null;
 	}
 	
 	protected Element getFormHtmlComponentLocalization(String loc_str) {
@@ -79,8 +81,7 @@ public class HtmlManager {
 		for (int i = 0; i < descendants.getLength(); i++) {
 			
 			Node desc = descendants.item(i);
-			
-			String localization_key = FormManagerUtil.getElementsTextNodeValue(desc);
+			String localization_key = FormManagerUtil.getElementsTextNodeValue(desc).trim();
 			
 			if(FormManagerUtil.isLocalizationKeyCorrect(localization_key)) {
 				
@@ -137,8 +138,8 @@ public class HtmlManager {
 		if(components_xml == null || form_document.isFormDocumentModified()) {
 			
 			IComponentsGenerator components_generator = ComponentsGeneratorFactory.createComponentsGenerator();
-			
 			components_generator.setDocument((Document)form_document.getXformsDocument().cloneNode(true));
+//			components_xml = components_generator.generateFormHtmlDocument();
 			components_xml = components_generator.generateBaseComponentsDocument();
 			
 			form_document.setComponentsXml(components_xml);
