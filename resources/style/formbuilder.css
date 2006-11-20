@@ -218,7 +218,7 @@
 
 /*---Options tabbed pane styles---*/
 table.tabbedPane { 
-	width: 300px                             ! important;
+	width: 400px                             ! important;
     height: 500px                            ! important;
     vertical-align: top                      ! important;
     border-collapse: separate                ! important;

@@ -62,8 +62,8 @@ public class FBSelectValuesList extends UIComponentBase {
 		
 		HtmlGraphicImage addButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
 		addButton.setValue(ADD_BUTTON_IMG);
-		addButton.setOnclick("addNewEmptySelect()");
-		//addButton.setOnclick("addEmptyOption()");
+		//addButton.setOnclick("addNewEmptySelect()");
+		addButton.setOnclick("addEmptyOption()");
 		this.getChildren().add(addButton);
 		
 		ValueBinding vb = this.getValueBinding("itemSet");

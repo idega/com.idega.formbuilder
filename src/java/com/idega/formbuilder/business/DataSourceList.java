@@ -30,7 +30,7 @@ public class DataSourceList implements Serializable {
 			if(icps.getDataSrcUsed() != null) {
 				this.selectedDataSource = icps.getDataSrcUsed().toString();
 			} else {
-				this.selectedDataSource = externalDataSrc;
+				this.selectedDataSource = localDataSrc;
 			}
 		} else {
 			System.out.println("Wronf instance type");
@@ -44,6 +44,7 @@ public class DataSourceList implements Serializable {
 	}
 
 	public DataSourceList() {
+		selectedDataSource = localDataSrc;
 		sources.clear();
 		sources.add(new SelectItem(localDataSrc, "List of values"));
 		sources.add(new SelectItem(externalDataSrc, "External file"));

@@ -16,7 +16,7 @@ function closeMessage() {
 	messageObj.close();
 }
 function addEmptyOption() {
-	alert('Adding new option');
+	//alert('Adding new option');
 	$('workspaceform1:addNewOption').click();
 }
 function createNewForm() {

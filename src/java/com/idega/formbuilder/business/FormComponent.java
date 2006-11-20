@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import javax.faces.context.FacesContext;
@@ -41,6 +42,8 @@ public class FormComponent implements Serializable {
 	
 	private IComponentProperties properties;
 	
+	private int emptyOptions;
+	
 	public FormComponent() {
 		
 		this.required = new Boolean(false);
@@ -55,7 +58,7 @@ public class FormComponent implements Serializable {
 		this.emptyLabelBean = null;
 		this.itemset = null;
 		
-		
+		this.emptyOptions = 0;
 	}
 	
 	public void loadProperties(String id, IFormManager formManagerInstance) {
@@ -72,7 +75,17 @@ public class FormComponent implements Serializable {
 			this.externalSrc = ((IComponentPropertiesSelect) properties).getExternalDataSrc();
 			this.emptyLabelBean = ((IComponentPropertiesSelect) properties).getEmptyElementLabel();
 			this.itemset = ((IComponentPropertiesSelect) properties).getItemset();
+			if(this.itemset.getItems(new Locale("en")).size() == 0) {
+				this.emptyOptions = 3;
+			} else {
+				this.emptyOptions = 0;
+			}
 		}
+	}
+	
+	public void addEmptyOption(ActionEvent ae) {
+		System.out.println("ADDING NEW OPTION");
+		this.emptyOptions++;
 	}
 	
 	public void saveProperties(ActionEvent ae) throws Exception {
@@ -146,26 +159,41 @@ public class FormComponent implements Serializable {
 		printParameterMap();
 		List<ItemBean> result = new ArrayList<ItemBean>();
 		Set keys = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().keySet();
+		Map parameters = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		Iterator it = keys.iterator();
 		while(it.hasNext()) {
 			String currentParam = (String) it.next();
 			//System.out.println(currentParam);
 			if(currentParam.contains("labelF_")) {
 				if(currentParam.contains("workspaceform1:")) {
-					String index = currentParam.substring(currentParam.length()-1);
-					ItemBean item = new ItemBean();
-					item.setLabel((String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(currentParam));
-					item.setValue((String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:valueF_" + index));
-					System.out.println(index);
-					result.add(item);
-				} else {
+					String label = (String) parameters.get(currentParam);
+					if(!label.equals("")) {
+						ItemBean item = new ItemBean();
+						String index = currentParam.substring(currentParam.length()-1);
+						item.setLabel(label);
+						String value = (String) parameters.get("workspaceform1:valueF_" + index);
+						if(!value.equals("")) {
+							item.setValue(value);
+						} else {
+							item.setValue(label);
+						}
+						System.out.println(index);
+						result.add(item);
+					}
+					
+					
+					
+					
+					//String
+					
+				} /*else {
 					String index = currentParam.substring(currentParam.length()-1);
 					ItemBean item = new ItemBean();
 					item.setLabel((String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(currentParam));
 					item.setValue((String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("valueF_" + index));
 					System.out.println(index);
 					result.add(item);
-				}
+				}*/
 			}
 		}
 		System.out.println("TOTAL SELECT OPTIONS FOUND: " + result.size());
@@ -285,6 +313,9 @@ public class FormComponent implements Serializable {
 		items.add(new ItemBean("panther", "Panther"));
 		items.add(new ItemBean("leopard", "Leopard"));*/
 		items = ((IComponentPropertiesSelect) properties).getItemset().getItems(new Locale("en"));
+		for(int i = 0; i < emptyOptions; i++) {
+			items.add(new ItemBean());
+		}
 		System.out.println("GETTING ITEMS: " + items);
 		printItemSet(items);
 		/*items.add(new ItemBean("tiger", "Tiger"));
