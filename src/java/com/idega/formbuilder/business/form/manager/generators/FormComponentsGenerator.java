@@ -15,6 +15,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.idega.block.formreader.business.FormReader;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 import com.idega.repository.data.Singleton;
 
@@ -32,10 +33,12 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 	
 	private URI final_xml_stylesheet_uri;
 	private URI temporal_xml_stylesheet_uri;
+	private String base_form_uri;
 	
 	private TransformerService transf_service;
 	private UIGenerator temporal_xml_components_generator;
 	private UIGenerator final_xml_components_generator;
+	private FormReader form_reader;
 	
 	private Document xforms_doc = null;
 	
@@ -68,7 +71,7 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 		this.xforms_doc = xforms_doc;
 	}
 	
-	public Document generateBaseComponentsDocument() throws NullPointerException, ParserConfigurationException, XFormsException {
+	public Document generateBaseComponentsDocument() throws NullPointerException, ParserConfigurationException, XFormsException, Exception {
 		
 		if(!isInitiated()) {
 			
@@ -102,16 +105,64 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
     	gen.setInput(xforms_doc);
     	
     	DocumentBuilder document_builder = factory.newDocumentBuilder();
-    	
         Document temp_xml_doc = document_builder.newDocument();
         gen.setOutput(temp_xml_doc);
-    	
     	gen.generate();
     	
     	/*
     	 * generate final components xml
     	 */
     	gen = getFinalXmlComponentsGenerator();
+    	gen.setInput(temp_xml_doc);
+    	
+    	temp_xml_doc = document_builder.newDocument();
+    	gen.setOutput(temp_xml_doc);
+    	
+    	gen.generate();
+    	
+    	return temp_xml_doc;
+	}
+	
+	public Document generateFormHtmlDocument() throws NullPointerException, ParserConfigurationException, XFormsException, Exception {
+		
+		if(!isInitiated()) {
+			
+			String err_msg = new StringBuffer("Either is not provided:")
+			.append("\nstylesheet uri: ")
+			.append(final_xml_stylesheet_uri)
+			.append("\nxforms doc: ")
+			.append(xforms_doc)
+			.toString();
+			
+			throw new NullPointerException(err_msg);
+		}
+		
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        
+        factory.setNamespaceAware(true);
+        factory.setValidating(false);
+        
+        /*
+         * generate temporal xml document from components xforms document
+         */
+        FormReader form_reader = getFormReader();
+        form_reader.setBaseFormURI(base_form_uri);
+        
+//        	TODO: there could be only one stylesheet used for all this, do it if u master it enough for components.xsl
+    	copyLocalizationKeysToElements(xforms_doc);
+    	
+    	form_reader.setFormDocument(xforms_doc);
+    	
+    	DocumentBuilder document_builder = factory.newDocumentBuilder();
+        Document temp_xml_doc = document_builder.newDocument();
+
+        form_reader.setOutput(temp_xml_doc);
+        form_reader.generate();
+    	
+    	/*
+    	 * generate final components xml
+    	 */
+    	UIGenerator gen = getFinalXmlComponentsGenerator();
     	gen.setInput(temp_xml_doc);
     	
     	temp_xml_doc = document_builder.newDocument();
@@ -173,6 +224,28 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 			}
 		}
 		return temporal_xml_components_generator;
+	}
+	
+	protected FormReader getFormReader() throws Exception {
+		
+		if(form_reader == null) {
+			
+			synchronized (this) {
+				
+				if(form_reader == null) {
+					
+					FormReader form_reader = FormReader.getInstance();
+					form_reader.init();
+					
+					this.form_reader = form_reader;
+				}
+			}
+		}
+		return form_reader;
+	}
+	
+	public void setFormComponentsBaseUri(String base_uri) {
+		base_form_uri = base_uri;
 	}
 	
 	protected UIGenerator getFinalXmlComponentsGenerator() {

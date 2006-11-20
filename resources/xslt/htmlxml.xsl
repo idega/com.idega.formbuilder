@@ -7,7 +7,6 @@
     xmlns:chiba="http://chiba.sourceforge.net/xforms"
     exclude-result-prefixes="xhtml xforms chiba xlink">
     <!-- Copyright 2005 Chibacon -->
-    
 
     <xsl:include href="ui.xsl"/>
     <xsl:include href="html-form-controls.xsl"/>
@@ -20,17 +19,6 @@
     <!-- This is the most basic transformator for HTML browser clients and assumes support for HTML 4 tagset     -->
     <!-- but does NOT rely on javascript.                                                                        -->
     <!-- author: joern turner                                                                                    -->
-    
-    <!-- revision 1.0 
-			    author: Vytautas Čivilis
-			    
-			    output method changed from html to xml
-			    removed &amp;copy; symbol, so xml parsers can undestand document
-			    
-			    
-			    it actually generates the same document, but conformed to xml
-     -->
-    
     <!-- ####################################################################################################### -->
 
     <!-- ############################################ PARAMS ################################################### -->
@@ -59,8 +47,7 @@
     <!--- path to javascript files -->
     <xsl:param name="scriptPath" select="''"/>
 
-    <!-- path to core CSS file -->
-    <xsl:param name="CSSPath" select="''"/>
+    <xsl:param name="keepalive-pulse" select="'0'"/>
 
     <!-- ############################################ VARIABLES ################################################ -->
     <!-- ### checks, whether this form uses uploads. Used to set form enctype attribute ### -->
@@ -81,12 +68,11 @@
 	<!-- ### checks, whether this form makes use of <textarea xforms:mediatype='text/html'/> ### -->
 	<xsl:variable name="uses-html-textarea" select="boolean(//xforms:textarea[@xforms:mediatype='text/html'])"/>
 
-    <!-- ### the CSS stylesheet to use ### -->
-    <xsl:variable name="default-css" select="concat($contextroot,$CSSPath,'xforms.css')"/>
-
     <xsl:variable name="default-hint-appearance" select="'bubble'"/>
 
-              <xsl:output method="xml" encoding="UTF-8" indent="yes" />
+    <xsl:output method="html" version="4.01" encoding="UTF-8" indent="yes"
+                doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN"
+                doctype-system="http://www.w3.org/TR/html4/loose.dtd"/>
     <!-- ### transcodes the XHMTL namespaced elements to HTML ### -->
     <!--<xsl:namespace-alias stylesheet-prefix="xhtml" result-prefix="#default"/>-->
 
@@ -102,13 +88,13 @@
     </xsl:template>
 
     <xsl:template match="xhtml:head">
-        <head>
+        <div id="chiba-head">
             <!-- copy all meta tags except 'contenttype' -->
             <xsl:call-template name="getMeta" />
 
-            <title>
+            <h1 class="title">
                 <xsl:value-of select="$form-name"/>
-            </title>
+            </h1>
 
             <!-- copy base if present -->
             <xsl:if test="xhtml:base">
@@ -119,9 +105,6 @@
                 </base>
             </xsl:if>
 
-
-            <!-- include Chiba default stylesheet -->
-            <link rel="stylesheet" type="text/css" href="{$default-css}"/>
 
 			<xsl:if test="$scripted='true'and $uses-html-textarea">
 				<!-- Insert here a custom CSS for textarea mediatype='text/html'-->
@@ -138,7 +121,6 @@
                 <script type="text/javascript">
                     var djConfig = {
                     baseRelativePath: "<xsl:value-of select="concat($contextroot,$scriptPath,'dojo-0.3.1')"/>",
-                    debugAtAllCost: true,
                     isDebug: <xsl:value-of select="$debug-enabled"/> };
                 </script>
 
@@ -149,6 +131,9 @@
                 <script type="text/javascript">
                     dojo.setModulePrefix("chiba","chiba/");
                     dojo.require("dojo.event.*");
+
+                    var chibaSessionKey;
+					var pulseInterval;
 
                     var calendarInstance = false;
                     var calendarActiveInstance = null;
@@ -169,26 +154,30 @@
                             }
                         }
                     }
+                    dojo.addOnLoad(function(){
+                           chibaSessionKey = <xsl:value-of select="$sessionKey"/>;
+                           <xsl:if test="$keepalive-pulse != 0">
+							   pulseInterval= <xsl:value-of select="$keepalive-pulse"/>;
+                               pulse();
+                           </xsl:if>
+                        }
+                    );
                 </script>
-
-                <script type="text/javascript" src="{concat($contextroot,$scriptPath,'prototype.js')}">&#160;</script>
-                <xsl:text>
-</xsl:text>
 
                 <!-- for DWR AJAX -->
                 <script type="text/javascript" src="{concat($contextroot,$scriptPath,'FluxInterface.js')}">&#160;</script>
                 <xsl:text>
 </xsl:text>
                 <!-- for DWR AJAX -->
-                <script type="text/javascript" src="{concat($contextroot,'/Flux/engine.js')}">&#160;</script>
+                <script type="text/javascript" src="{concat($contextroot,'/dwr/engine.js')}">&#160;</script>
                 <xsl:text>
 </xsl:text>
                 <!-- for DWR AJAX -->
-                <script type="text/javascript" src="{concat($contextroot,'/Flux/interface/Flux.js')}">&#160;</script>
+                <script type="text/javascript" src="{concat($contextroot,'/dwr/interface/Flux.js')}">&#160;</script>
                 <xsl:text>
 </xsl:text>
                 <!-- for DWR AJAX -->
-                <script type="text/javascript" src="{concat($contextroot,'/Flux/util.js')}">&#160;</script>
+                <script type="text/javascript" src="{concat($contextroot,'/dwr/util.js')}">&#160;</script>
                 <xsl:text>
 </xsl:text>
                 <!-- XForms Client -->
@@ -197,13 +186,6 @@
 </xsl:text>
                 <!-- general xforms utils -->
                 <script type="text/javascript" src="{concat($contextroot,$scriptPath,'xforms-util.js')}">&#160;</script>
-                <xsl:text>
-</xsl:text>
-                <!-- scriptaculous lib -->
-                <script type="text/javascript" src="{concat($contextroot,$scriptPath,'scriptaculous/src/scriptaculous.js')}">&#160;</script>
-                <xsl:text>
-</xsl:text>
-                <script type="text/javascript" src="{concat($contextroot,$scriptPath,'scriptaculous/src/effects.js')}">&#160;</script>
                 <xsl:text>
 </xsl:text>
 
@@ -234,7 +216,7 @@
 </xsl:text>
                 </xsl:for-each>
             </xsl:if>
-        </head>
+        </div>
     </xsl:template>
 
     <xsl:template name="getMeta">
@@ -295,9 +277,9 @@
     </xsl:template>
 
     <xsl:template match="xhtml:html">
-        <html>
+	    <div>
             <xsl:apply-templates/>
-        </html>
+		</div>
     </xsl:template>
 
     <xsl:template match="xhtml:link">
@@ -305,10 +287,10 @@
     </xsl:template>
 
     <xsl:template match="xhtml:body">
-        <body>
+        <div id="chiba-body">
             <xsl:copy-of select="@*"/>
             <div id="loading">
-                <img src="resources/images/indicator.gif" class="disabled" id="indicator" alt="zzzzzzzzzzz"></img>
+                <img src="{concat($contextroot,'/idegaweb/bundles/com.idega.block.form.bundle/resources/images/indicator.gif')}" class="disabled" id="indicator" alt="loading" />
             </div>
 
             <xsl:variable name="outermostNodeset"
@@ -327,32 +309,19 @@
                     <xsl:call-template name="createForm"/>
                 </xsl:otherwise>
             </xsl:choose>
-
-            <span id="legend">
-                <span id="required-msg">
-                <span style="color:#A42322;">*</span> - required</span> |
-                <b>?</b> - help
-            </span>
-            <div id="chiba-logo">
-                <a href="resources/jsp/forms.jsp">
-                    <img src="resources/images/poweredby_sw.gif" style="border:none;" alt="powered by Chiba"/>
-                </a>
-            </div>
-            <div id="copyright">
-                <xsl:text disable-output-escaping="yes"> 2001-2005 Chiba Project</xsl:text>
-            </div>
             <xsl:if test="$scripted='true' and $debug-enabled='true'">
                 <script type="text/javascript">
                     dojo.require("dojo.widget.DebugConsole");
                 </script>
 
                 <div dojoType="DebugConsole"
-                     style="position:absolute;right:0px;top:0px;width:600px;height:400px;"
+                     style="position:absolute;right:10px;bottom:10px;width:600px;height:400px;"
                      title="DEBUG"
                      hasShadow="true"
                      displayCloseAction="true"></div>
             </xsl:if>
-        </body>
+            <div id="messagePane" style="display:none;">message</div>
+        </div>
     </xsl:template>
 
     <!--

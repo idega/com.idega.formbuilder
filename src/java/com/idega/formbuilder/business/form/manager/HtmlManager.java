@@ -139,8 +139,7 @@ public class HtmlManager {
 			
 			IComponentsGenerator components_generator = ComponentsGeneratorFactory.createComponentsGenerator();
 			components_generator.setDocument((Document)form_document.getXformsDocument().cloneNode(true));
-//			components_xml = components_generator.generateFormHtmlDocument();
-			components_xml = components_generator.generateBaseComponentsDocument();
+			components_xml = components_generator.generateFormHtmlDocument();
 			
 			form_document.setComponentsXml(components_xml);
 			form_document.setFormDocumentModified(false);

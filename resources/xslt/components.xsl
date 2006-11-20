@@ -8,11 +8,11 @@
     
       <xsl:template match="/">
 				<form_components>
-					<xsl:apply-templates select="html/body/form/fieldset" />
+					<xsl:apply-templates select="div/div[@id = 'chiba-body']/form/fieldset" />
 				</form_components>
 			</xsl:template>
 
-			<xsl:template match="html/body/form/fieldset">
+			<xsl:template match="div/div/form/fieldset">
 					<xsl:copy-of select ="div[starts-with(@id, 'fbcomp_')]" />
 					<xsl:copy-of select ="span[starts-with(@id, 'fbcomp_')]" />
 			</xsl:template>
