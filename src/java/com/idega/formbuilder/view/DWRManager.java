@@ -31,8 +31,16 @@ public class DWRManager implements Serializable {
 		formManagerInstance = (IFormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
 	}
 	
-	public void saveChanges() throws Exception {
-		//((FormComponent) WFUtil.getBeanInstance("component")).saveProperties();
+	public void removeOption(String id) {
+		if(id != null && id.contains("_")) {
+			int index = Integer.parseInt(id.substring(id.length()-1));
+			int size = ((FormComponent) WFUtil.getBeanInstance("component")).getItems().size();
+			if(index < size) {
+				((FormComponent) WFUtil.getBeanInstance("component")).getItems().remove(index);
+			} else {
+				//((FormComponent) WFUtil.getBeanInstance("component"));
+			}
+		}
 	}
 	
 	public Element getElement(String type) throws Exception {
@@ -41,7 +49,6 @@ public class DWRManager implements Serializable {
 		Element element = (Element) formManagerInstance.getLocalizedFormHtmlComponent(elementId, new Locale("en")).cloneNode(true);
 		String id = element.getAttribute("id");
 		element.removeAttribute("id");
-		//element.setAttribute("class", "formElement");
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		Document document = null;
         try {
@@ -51,12 +58,7 @@ public class DWRManager implements Serializable {
           delete.setAttribute("src", "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png");
           delete.setAttribute("class", "speedButton");
           delete.setAttribute("onclick", "deleteComponent(this)");
-          //Element edit = (Element) document.createElement("IMG");
-          //edit.setAttribute("src", "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-find-replace.png");
-          //edit.setAttribute("class", "speedButton");
-          //edit.setAttribute("onclick", "editProperties(this)");
           Element deleteIcon = (Element) element.getOwnerDocument().importNode(delete, true);
-          //Element editIcon = (Element) element.getOwnerDocument().importNode(edit, true);
           Element rootDiv = (Element) document.createElement("DIV");
           rootDiv.setAttribute("id", id);
           rootDiv.setAttribute("class", "formElement");
@@ -64,7 +66,6 @@ public class DWRManager implements Serializable {
           rootDivImported = (Element) element.getOwnerDocument().importNode(rootDiv, true);
           rootDivImported.appendChild(element);
           rootDivImported.appendChild(deleteIcon);
-          //rootDivImported.appendChild(editIcon);
           ((Workspace) WFUtil.getBeanInstance("workspace")).setDesignViewStatus(FBDesignView.DESIGN_VIEW_STATUS_ACTIVE);
         } catch (ParserConfigurationException pce) {
             pce.printStackTrace();
@@ -92,19 +93,12 @@ public class DWRManager implements Serializable {
 		LocalizedStringBean formName = new LocalizedStringBean();
 		formName.setString(current, name);
 		formManagerInstance.createFormDocument(id, formName);
-		//System.out.println("NEW FORM CREATED: " + id + "---------------------");
 		Element element = formManagerInstance.getLocalizedSubmitComponent(new Locale("en"));
-		//DOMUtil.prettyPrintDOM(element);
-		//element.setAttribute("class", "formElement");
 		Element button = (Element) element.getFirstChild();
 		button.setAttribute("disabled", "true");
-		//FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS, "EMPTY_FORM");
-		//FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_FORM_ID, id);
-		//FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE, current);
 		((Workspace) WFUtil.getBeanInstance("workspace")).setDesignViewStatus(FBDesignView.DESIGN_VIEW_STATUS_EMPTY);
 		((Workspace) WFUtil.getBeanInstance("workspace")).setSelectedTab(1);
 		((Workspace) WFUtil.getBeanInstance("workspace")).setFormTitle(name);
-		((FormComponent) WFUtil.getBeanInstance("component")).setEmptyOptions(3);
 		return element;
 	}
 	

@@ -72,7 +72,6 @@ public class FBFormComponent extends UIComponentBase {
 	}
 	
 	public void initializeComponent(FacesContext context) throws FBPostponedException {
-		//Locale current = (Locale) FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
 		Application application = context.getApplication();
 		this.getChildren().clear();
 		String currentLocale = ((Workspace) WFUtil.getBeanInstance("workspace")).getCurrentLocale();
@@ -92,18 +91,12 @@ public class FBFormComponent extends UIComponentBase {
 					element.setAttribute("id", this.getId() + "_i");
 					this.setElement(element);
 					this.setOnclick("editProperties(this)");
-					//HtmlGraphicImage infoButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
-					//infoButton.setId("ib" + this.getId());
-					//infoButton.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-find-replace.png");
-					//infoButton.setStyleClass("speedButton");
-					//infoButton.setOnclick("editProperties(this)");
 					HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
 					deleteButton.setId("db" + this.getId());
 					deleteButton.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png");
 					deleteButton.setOnclick("deleteComponent(this)");
 					deleteButton.setStyleClass("speedButton");
 					this.getChildren().add(deleteButton);
-					//this.getChildren().add(infoButton);
 				}
 			}
 		}

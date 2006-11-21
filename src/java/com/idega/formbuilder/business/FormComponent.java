@@ -42,7 +42,8 @@ public class FormComponent implements Serializable {
 	
 	private IComponentProperties properties;
 	
-	private int emptyOptions;
+	private int optionsCount;
+	private boolean addEmptyOption;
 	
 	public FormComponent() {
 		
@@ -58,7 +59,8 @@ public class FormComponent implements Serializable {
 		this.emptyLabelBean = null;
 		this.itemset = null;
 		
-		this.emptyOptions = 3;
+		this.optionsCount = 3;
+		this.addEmptyOption= false;
 	}
 	
 	public void loadProperties(String id, IFormManager formManagerInstance) {
@@ -75,22 +77,20 @@ public class FormComponent implements Serializable {
 			this.externalSrc = ((IComponentPropertiesSelect) properties).getExternalDataSrc();
 			this.emptyLabelBean = ((IComponentPropertiesSelect) properties).getEmptyElementLabel();
 			this.itemset = ((IComponentPropertiesSelect) properties).getItemset();
-			/*if(this.itemset.getItems(new Locale("en")).size() == 0) {
-				this.emptyOptions = 3;
-			} else {
-				this.emptyOptions = 0;
-			}*/
 		}
+	}
+	
+	public void removeOption(ActionEvent ae) {
+		System.out.println("REMOVE OPTION: " + ae.getComponent().getId());
 	}
 	
 	public void addEmptyOption(ActionEvent ae) {
 		System.out.println("ADDING NEW OPTION");
-		this.emptyOptions++;
+		this.addEmptyOption = true;
 	}
 	
 	public void saveProperties(ActionEvent ae) throws Exception {
 		System.out.println("SAVING COMPONENT PROPERTIES");
-		//this.printParameterMap();
 		String trequired = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:propertyRequired");
 		if(trequired != null && !trequired.equals("")) {
 			this.setRequired(new Boolean(trequired));
@@ -182,20 +182,7 @@ public class FormComponent implements Serializable {
 						System.out.println(index);
 						result.add(item);
 					}
-					
-					
-					
-					
-					//String
-					
-				} /*else {
-					String index = currentParam.substring(currentParam.length()-1);
-					ItemBean item = new ItemBean();
-					item.setLabel((String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(currentParam));
-					item.setValue((String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("valueF_" + index));
-					System.out.println(index);
-					result.add(item);
-				}*/
+				}
 			}
 		}
 		System.out.println("TOTAL SELECT OPTIONS FOUND: " + result.size());
@@ -306,37 +293,28 @@ public class FormComponent implements Serializable {
 	}
 
 	public List<ItemBean> getItems() {
-		//items = itemset.getItems(new Locale("en"));
-		
-		/*items.clear();
-		items.add(new ItemBean("tiger", "Tiger"));
-		items.add(new ItemBean("dolphin", "Dolphin"));
-		items.add(new ItemBean("mustang", "Mustang"));
-		items.add(new ItemBean("panther", "Panther"));
-		items.add(new ItemBean("leopard", "Leopard"));*/
 		items = ((IComponentPropertiesSelect) properties).getItemset().getItems(new Locale("en"));
-		for(int i = 0; i < emptyOptions; i++) {
+		System.out.println("GETTING ITEMS: " + items.size());
+		System.out.println("optionsCount: " + optionsCount);
+		int k = optionsCount - items.size();
+		System.out.println("K: " + k);
+		for(int i = 0; i < k; i++) {
+			System.out.println("ADDING NEW ITEMBEAN");
 			items.add(new ItemBean());
 		}
-		System.out.println("GETTING ITEMS: " + items);
+		System.out.println("addEmptyOption: " + addEmptyOption);
+		if(addEmptyOption) {
+			items.add(new ItemBean());
+			this.addEmptyOption = false;
+			optionsCount++;
+		}
+		System.out.println("GETTING ITEMS: " + items.size());
 		printItemSet(items);
-		/*items.add(new ItemBean("tiger", "Tiger"));
-		items.add(new ItemBean("dolphin", "Dolphin"));
-		items.add(new ItemBean("mustang", "Mustang"));
-		items.add(new ItemBean("panther", "Panther"));
-		items.add(new ItemBean("leopard", "Leopard"));*/
-		//items = itemset.getItems(new Locale("en"));
 		return items;
 	}
 
 	public void setItems(List<ItemBean> items) {
 		System.out.println("SETTING ITEMS: " + items.size());
-		/*items.clear();
-		items.add(new ItemBean("tiger", "Tiger"));
-		items.add(new ItemBean("dolphin", "Dolphin"));
-		items.add(new ItemBean("mustang", "Mustang"));
-		items.add(new ItemBean("panther", "Panther"));
-		items.add(new ItemBean("leopard", "Leopard"));*/
 		printItemSet(items);
 		this.items = items;
 		((IComponentPropertiesSelect) properties).getItemset().setItems(new Locale("en"), items);
@@ -350,14 +328,6 @@ public class FormComponent implements Serializable {
 			ItemBean current = (ItemBean) it.next();
 			System.out.println("ROW: " + current.getLabel() + " : " + current.getValue());
 		}
-	}
-
-	public int getEmptyOptions() {
-		return emptyOptions;
-	}
-
-	public void setEmptyOptions(int emptyOptions) {
-		this.emptyOptions = emptyOptions;
 	}
 
 }

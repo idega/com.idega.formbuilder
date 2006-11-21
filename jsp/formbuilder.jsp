@@ -142,6 +142,7 @@
 							</script>
 						</f:verbatim>
 						<t:div style="display: none">
+							<a4j:commandButton id="removeOption" reRender="options_container" ajaxSingle="false" />
 							<a4j:commandButton id="addNewOption" reRender="options_container" ajaxSingle="true" actionListener="#{component.addEmptyOption}" />
 							<a4j:commandButton id="switchSrcProxy" reRender="options_container" ajaxSingle="true" actionListener="#{dataSources.switchDataSource}" styleClass="toolbar_button" />
 							<a4j:commandButton id="removeCompProxy" reRender="form_container" ajaxSingle="true" oncomplete="closeLoadingMessage()" styleClass="toolbar_button" />

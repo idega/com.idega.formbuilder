@@ -6,10 +6,12 @@ import java.util.List;
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIComponentBase;
+import javax.faces.component.html.HtmlGraphicImage;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import javax.faces.event.ActionEvent;
 
-import org.apache.myfaces.component.html.ext.HtmlGraphicImage;
+import org.ajax4jsf.ajax.html.HtmlAjaxSupport;
 import org.apache.myfaces.component.html.ext.HtmlInputText;
 
 import com.idega.formbuilder.business.form.beans.ItemBean;
@@ -62,9 +64,19 @@ public class FBSelectValuesList extends UIComponentBase {
 		
 		HtmlGraphicImage addButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
 		addButton.setValue(ADD_BUTTON_IMG);
-		//addButton.setOnclick("addNewEmptySelect()");
 		addButton.setOnclick("addEmptyOption()");
-		this.getChildren().add(addButton);
+		//this.getChildren().add(addButton);
+		
+		
+		
+		/*HtmlAjaxSupport proxy = (HtmlAjaxSupport) application.createComponent(HtmlAjaxSupport.COMPONENT_TYPE);
+		proxy.setEvent("onclick");
+		proxy.setReRender("options_container");
+		proxy.setActionListener(application.createMethodBinding("#{component.addEmptyOption}", new Class[]{ActionEvent.class}));
+		proxy.setAjaxSingle(true);
+		addButton.getChildren().add(proxy);*/
+		this.getFacets().put("addOptionButton", addButton);
+		//this.getChildren().add(addButton);
 		
 		ValueBinding vb = this.getValueBinding("itemSet");
 		List<ItemBean> items = new ArrayList<ItemBean>();
@@ -74,7 +86,13 @@ public class FBSelectValuesList extends UIComponentBase {
 		}
 		listSize = items.size();
 		
-		if(listSize < 1) {
+		System.out.println(listSize + " FIELDS");
+		for(int i = 0; i < listSize; i++) {
+			String label = items.get(i).getLabel();
+			String value = items.get(i).getValue();
+			this.getChildren().add(getNextSelectRow(label, value, i, context));
+		}
+		/*if(listSize < 1) {
 			System.out.println("3 FIELDS");
 			for(int i = 0; i < 3; i++) {
 				this.getChildren().add(getNextSelectRow("", "", i, context));
@@ -87,7 +105,7 @@ public class FBSelectValuesList extends UIComponentBase {
 				String value = items.get(i).getValue();
 				this.getChildren().add(getNextSelectRow(label, value, i, context));
 			}
-		}
+		}*/
 	}
 	
 	protected UIComponent getNextSelectRow(String field, String value, int index, FacesContext context) {
@@ -101,6 +119,7 @@ public class FBSelectValuesList extends UIComponentBase {
 		deleteButton.setId(DELETE_BUTTON_PREFIX + index);
 		deleteButton.setStyle(INLINE_DIV_STYLE);
 		deleteButton.setOnclick("deleteThisRow(this.parentNode.id)");
+		//deleteButton.setOnclick("removeOption()");
 		row.getChildren().add(deleteButton);
 		
 		HtmlInputText labelF = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
@@ -126,7 +145,7 @@ public class FBSelectValuesList extends UIComponentBase {
 	}
 	
 	public static Object[] getJavascriptParameters(String componentId) {
-		Object values[] = new Object[12];
+		Object values[] = new Object[13];
 		values[0] = componentId;
 		values[1] = DELETE_BUTTON_IMG;
 		values[2] = EXPAND_BUTTON_IMG;
@@ -139,6 +158,7 @@ public class FBSelectValuesList extends UIComponentBase {
 		values[9] = HAND_CURSOR_STYLE;
 		values[10] = HIDDEN_DIV_STYLE;
 		values[11] = VALUE_FIELD_PREFIX;
+		values[12] = componentId + "Inner";
 		return values;
 	}
 	
@@ -183,8 +203,14 @@ public class FBSelectValuesList extends UIComponentBase {
 		result.append("}\n");
 		
 		result.append("function deleteThisRow(ind) {\n");
-		result.append("var currRow = document.getElementById(ind);\n");
-		result.append("$(\"" + values[0] + "\").removeChild(currRow);\n");
+		result.append("alert(ind);\n");
+		result.append("dwrmanager.removeOption(removedOption,ind);\n");
+		//result.append("var currRow = document.getElementById(ind);\n");
+		//result.append("$(\"" + values[12] + "\").removeChild(currRow);\n");
+		result.append("}\n");
+		
+		result.append("function removedOption() {\n");
+		result.append("$('workspaceform1:removeOption').click();\n");
 		result.append("}\n");
 		
 		result.append("function getEmptySelect(index) {\n");

@@ -19,6 +19,10 @@ function addEmptyOption() {
 	//alert('Adding new option');
 	$('workspaceform1:addNewOption').click();
 }
+function removeOption() {
+	alert('Removing option');
+	$('workspaceform1:removeOption').click();
+}
 function createNewForm() {
 	var name = document.forms['newFormDialogForm'].elements['formName'].value;
 	if(name != '') {
@@ -62,11 +66,9 @@ function editProperties(element) {
 }
 function done() {
 	$('workspaceform1:editCompProxy').click();
-	//document.forms['workspaceform1'].elements['workspaceform1:editCompProxy'].click();
 }
 function createdNewForm(element) {
 	$('workspaceform1:createFormProxy').click();
-	//document.forms['workspaceform1'].elements['workspaceform1:createFormProxy'].click();
 }
 function removeComponent(element) {
 	showLoadingMessage("Deleting");
@@ -132,7 +134,6 @@ function closeLoadingMessage() {
 }
 function switchSelectedForm() {
 	showLoadingMessage("Loading");
-	//return myFaces_showPanelTab(0,'workspaceform1:options_tabbed_pane_indexSubmit','workspaceform1:tab01_headerCell','workspaceform1:tab01',panelTabbedPane_5Fworkspaceform1_3Aoptions_5Ftabbed_5Fpane_5FHeadersIDs,panelTabbedPane_5Fworkspaceform1_3Aoptions_5Ftabbed_5Fpane_5FIDs,'activeTab','inactiveTab','activeSub','inactiveSub');
 }
 function formSwitched() {
 	closeLoadingMessage();

@@ -18,13 +18,27 @@ public class SelectValuesListRenderer extends Renderer {
 		writer.startElement("DIV", valuesList);
 		writer.writeAttribute("id", valuesList.getId(), "id");
 		writer.writeAttribute("class", valuesList.getStyleClass(), "styleClass");
-		writer.writeAttribute("style", "width: 320px; height: 180px; overflow: auto;", null);
+		writer.writeAttribute("style", "width: 320px; height: 180px;", null);
+		
+		UIComponent addOptionButton = (UIComponent) valuesList.getFacet("addOptionButton");
+		if(addOptionButton != null) {
+			if (addOptionButton.isRendered()) {
+				addOptionButton.encodeBegin(context);
+				addOptionButton.encodeChildren(context);
+				addOptionButton.encodeEnd(context);
+			}
+		}
+		
+		writer.startElement("DIV", null);
+		writer.writeAttribute("id", valuesList.getId() + "Inner", null);
+		writer.writeAttribute("style", "width: 320px; height: 150px; overflow: auto;", null);
 	}
 	
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		FBSelectValuesList valuesList = (FBSelectValuesList) component;
 		
+		writer.endElement("DIV");
 		writer.endElement("DIV");
 		
 		writer.startElement("DIV", null);
@@ -42,11 +56,5 @@ public class SelectValuesListRenderer extends Renderer {
 		super.encodeChildren(context, component);
 		
 	}
-	
-	public void decode(FacesContext context, UIComponent component) {
-		ResponseWriter writer = context.getResponseWriter();
-		FBSelectValuesList valuesList = (FBSelectValuesList) component;
-		System.out.println("THIS IS DECODING---------------");
-	}
-	
+
 }
