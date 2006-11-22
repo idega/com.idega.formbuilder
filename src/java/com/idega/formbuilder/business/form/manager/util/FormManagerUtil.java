@@ -314,7 +314,7 @@ public class FormManagerUtil {
 	
 	public static LocalizedStringBean getLabelLocalizedStrings(String component_id, Document xforms_doc) {
 		
-		Element component = getElementByIdFromDocument(xforms_doc, "body", component_id);
+		Element component = getElementByIdFromDocument(xforms_doc, body_tag, component_id);
 		
 		NodeList labels = component.getElementsByTagName(FormManagerUtil.label_tag);
 		
@@ -336,6 +336,16 @@ public class FormManagerUtil {
 		String key = getKeyFromRef(ref);
 		
 		return getLocalizedStrings(key, xforms_doc);
+	}
+	
+	public static void clearLocalizedMessagesFromDocument(Document doc) {
+		
+		Element loc_model = getElementByIdFromDocument(doc, head_tag, data_mod);
+		Element loc_strings = (Element)loc_model.getElementsByTagName(loc_tag).item(0);
+		List<Element> loc_elements = DOMUtil.getChildElements(loc_strings);
+		
+		for (Iterator<Element> iter = loc_elements.iterator(); iter.hasNext();)
+			FormManagerUtil.removeTextNodes(iter.next());
 	}
 	
 	public static Locale getDefaultFormLocale(Document form_xforms) {

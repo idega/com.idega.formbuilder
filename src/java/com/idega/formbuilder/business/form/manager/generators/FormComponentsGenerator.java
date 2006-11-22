@@ -3,7 +3,6 @@ package com.idega.formbuilder.business.form.manager.generators;
 import java.net.URI;
 
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.chiba.adapter.ui.UIGenerator;
@@ -89,22 +88,16 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 			throw new NullPointerException(err_msg);
 		}
 		
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        
-        factory.setNamespaceAware(true);
-        factory.setValidating(false);
-        
         /*
          * generate temporal xml document from components xforms document
          */
         UIGenerator gen = getTemporalXmlComponentsGenerator();
         
-//        	TODO: there could be only one stylesheet used for all this, do it if u master it enough for components.xsl
     	copyLocalizationKeysToElements(xforms_doc);
     	
     	gen.setInput(xforms_doc);
     	
-    	DocumentBuilder document_builder = factory.newDocumentBuilder();
+    	DocumentBuilder document_builder = FormManagerUtil.getDocumentBuilder();
         Document temp_xml_doc = document_builder.newDocument();
         gen.setOutput(temp_xml_doc);
     	gen.generate();
@@ -137,26 +130,22 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 			throw new NullPointerException(err_msg);
 		}
 		
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        
-        factory.setNamespaceAware(true);
-        factory.setValidating(false);
-        
-        /*
+		/*
          * generate temporal xml document from components xforms document
          */
         FormReader form_reader = getFormReader();
         form_reader.setBaseFormURI(base_form_uri);
         
-//        	TODO: there could be only one stylesheet used for all this, do it if u master it enough for components.xsl
+        FormManagerUtil.clearLocalizedMessagesFromDocument(xforms_doc);
     	copyLocalizationKeysToElements(xforms_doc);
     	
     	form_reader.setFormDocument(xforms_doc);
     	
-    	DocumentBuilder document_builder = factory.newDocumentBuilder();
+    	DocumentBuilder document_builder = FormManagerUtil.getDocumentBuilder();
         Document temp_xml_doc = document_builder.newDocument();
 
         form_reader.setOutput(temp_xml_doc);
+        
         form_reader.generate();
     	
     	/*
@@ -227,6 +216,15 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 	}
 	
 	protected FormReader getFormReader() throws Exception {
+
+		if(true) {
+			
+			FormReader form_reader = FormReader.getInstance();
+			form_reader.init();
+			
+			this.form_reader = form_reader;
+			return form_reader;
+		}
 		
 		if(form_reader == null) {
 			
