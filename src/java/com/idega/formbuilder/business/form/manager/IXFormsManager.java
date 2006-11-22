@@ -41,4 +41,5 @@ public interface IXFormsManager {
 	public abstract String insertBindElement(Element new_bind_element,
 			String bind_id);
 
+	public abstract void changeBindName(String new_bind_name);
 }

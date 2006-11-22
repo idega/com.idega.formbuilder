@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -36,6 +37,8 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 	private String form_id;
 	protected IPersistenceManager persistence_manager;
 	private String submit_button_id;
+	
+	private Locale default_document_locale;
 	
 	private Map<String, IFormComponent> form_components;
 	
@@ -219,6 +222,7 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		last_component_id = 0;
 		form_id = null;
 		submit_button_id = null;
+		default_document_locale = null;
 		
 		getFormComponents().clear();
 	}
@@ -332,5 +336,13 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 	public LocalizedStringBean getFormTitle() {
 		
 		return FormManagerUtil.getTitleLocalizedStrings(form_xforms);
+	}
+	
+	public Locale getDefaultLocale() {
+		
+		if(default_document_locale == null)
+			default_document_locale = FormManagerUtil.getDefaultFormLocale(form_xforms);
+		
+		return default_document_locale;
 	}
 }

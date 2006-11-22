@@ -2,6 +2,7 @@ package com.idega.formbuilder.business.form.manager;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.chiba.xml.dom.DOMUtil;
@@ -500,5 +501,17 @@ public class XFormsManager implements IXFormsManager {
 			return type_att;
 		}
 		return null;
+	}
+	
+	public void changeBindName(String new_bind_name) {
+		
+		String bind_name = StringEscapeUtils.escapeHtml(new_bind_name.replace(' ', '_'));
+		
+		Element bind_element = xforms_component.getBind();
+		Element nodeset_element = xforms_component.getNodeset();
+		bind_element.setAttribute(FormManagerUtil.nodeset_att, bind_name);
+		
+		nodeset_element = (Element)nodeset_element.getOwnerDocument().renameNode(nodeset_element, nodeset_element.getNamespaceURI(), bind_name);
+		xforms_component.setNodeset(nodeset_element);
 	}
 }

@@ -56,6 +56,9 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 			
 			setProperties();
 			
+			if(!created)
+				changeBindNames();
+			
 			form_document.setFormDocumentModified(true);
 			tellAboutMe();
 			
@@ -72,6 +75,20 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 		properties.setPlainLabel(FormManagerUtil.getLabelLocalizedStrings(component_id, xforms_doc));
 		properties.setPlainRequired(false);
 		properties.setPlainErrorMsg(FormManagerUtil.getErrorLabelLocalizedStrings(component_id, xforms_doc));
+	}
+	
+	protected void changeBindNames() {
+		
+		LocalizedStringBean localized_label = properties.getLabel();
+		String default_locale_label = localized_label.getString(form_document.getDefaultLocale());
+		
+		getXFormsManager().changeBindName(
+				new StringBuffer(getId())
+				.append(FormManagerUtil.bind_att)
+				.append('_')
+				.append(default_locale_label)
+				.toString()
+		);
 	}
 	
 	protected void tellAboutMe() {
@@ -188,6 +205,8 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 	public void updateLabel() {
 		getXFormsManager().updateLabel();
 		getHtmlManager().clearHtmlComponents();
+		
+		changeBindNames();
 	}
 	public void updateConstraintRequired() {
 		getXFormsManager().updateConstraintRequired();
