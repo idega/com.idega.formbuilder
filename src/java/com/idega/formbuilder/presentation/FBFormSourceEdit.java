@@ -34,7 +34,7 @@ public class FBFormSourceEdit extends WFContainer {
 		HtmlInputTextarea textarea = new HtmlInputTextarea();
 		textarea.setRendered(true);
 		textarea.setValueBinding(value_att, app.createValueBinding("#{formSourceCodeManager.sourceCode}"));
-		textarea.setWrap("false");
+		textarea.setWrap("off");
 		
 		HtmlCommandButton src_submit = new HtmlCommandButton();
 		src_submit.setRendered(true);

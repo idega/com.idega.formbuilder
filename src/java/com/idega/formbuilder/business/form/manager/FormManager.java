@@ -232,10 +232,7 @@ public class FormManager implements IFormManager {
 	 */
 	protected static void init() throws InitializationException {
 		
-		long start = 0;
-		
-		if(logger.isDebugEnabled())
-			start = System.currentTimeMillis();
+		long start = System.currentTimeMillis();
 			
 		if(inited) {
 			
@@ -281,11 +278,8 @@ public class FormManager implements IFormManager {
 			
 			inited = true;
 			
-			if(logger.isDebugEnabled()) {
-				long end = System.currentTimeMillis();
-				
-				logger.debug("init() time: "+(end-start));
-			}
+			long end = System.currentTimeMillis();
+			logger.info("FormManager initialized in: "+(end-start));
 			
 		} catch (Exception e) {
 

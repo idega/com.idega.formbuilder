@@ -9,6 +9,7 @@ import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
+import com.idega.slide.business.IWSlideServiceBean;
 
 /**
  * <p>
@@ -47,5 +48,15 @@ public class FBUtil {
 		
 		String result = name+"-"+ new Date();
 		return result.replace(' ', '_').replace(':', '_');
+	}
+	
+	private static String webdav_server_url;
+	
+	public static String getWebdavServerUrl(FacesContext ctx) {
+		
+		if(webdav_server_url == null)
+			webdav_server_url = new IWSlideServiceBean().getWebdavServerURL().toString();
+		
+		return webdav_server_url;
 	}
 }

@@ -72,6 +72,11 @@ public class FormManagerUtil {
 	public static final String submission_tag = "xf:submission";
 	public static final String action_att = "action";
 	
+	private static final String line_sep = "line.separator";
+	private static final String xml_mediatype = "text/html";
+	private static final String utf_8_encoding = "UTF-8";
+	private static OutputFormat output_format;
+	
 	private FormManagerUtil() { }
 	
 	private static DocumentBuilder builder;
@@ -544,13 +549,27 @@ public class FormManagerUtil {
 		return components_tag_names_and_ids;
 	}
 	
+	private static OutputFormat getOutputFormat() {
+		
+		if(output_format == null) {
+			
+			OutputFormat output_format = new OutputFormat();
+			output_format.setOmitXMLDeclaration(true);
+			output_format.setLineSeparator(System.getProperty(line_sep));
+			output_format.setIndent(4);
+			output_format.setIndenting(true);
+			output_format.setMediaType(xml_mediatype);
+			output_format.setEncoding(utf_8_encoding);
+			FormManagerUtil.output_format = output_format;
+		}
+		
+		return output_format;
+	}
+	
 	public static String serializeDocument(Document document) throws IOException {
 		
-		OutputFormat output_format = new OutputFormat();
-		output_format.setOmitXMLDeclaration(true);
-		
 		StringWriter writer = new StringWriter();
-		XMLSerializer serializer = new XMLSerializer(writer, output_format);
+		XMLSerializer serializer = new XMLSerializer(writer, getOutputFormat());
 		serializer.asDOMSerializer();
 		serializer.serialize(document.getDocumentElement());
 		

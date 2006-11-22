@@ -12,6 +12,7 @@ import org.w3c.dom.Document;
 
 import com.idega.block.formreader.business.FormReader;
 import com.idega.formbuilder.business.form.manager.IFormManager;
+import com.idega.formbuilder.util.FBUtil;
 import com.idega.formbuilder.view.ActionManager;
 
 /**
@@ -54,6 +55,8 @@ public class FBFormPreview extends UIComponentBase {
 				
 				FormReader form_reader = FormReader.getInstance();
 				form_reader.init();
+				
+				form_reader.setBaseFormURI(FBUtil.getWebdavServerUrl(ctx)+"/files/public/");
 				form_reader.setFormDocument(x);
 				
 				form_reader.setOutput(response_writer);

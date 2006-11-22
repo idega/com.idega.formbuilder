@@ -24,7 +24,7 @@ import com.idega.slide.business.IWSlideSession;
 import com.idega.slide.util.WebdavExtendedResource;
 
 /**
- * @author <a href="mailto:civilis@idega.com">Vytautas ï¿½ivilis</a>
+ * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
  * @version 1.0
  * 
  */
