@@ -30,7 +30,7 @@ public class DataSourceList implements Serializable {
 			if(icps.getDataSrcUsed() != null) {
 				this.selectedDataSource = icps.getDataSrcUsed().toString();
 			} else {
-				this.selectedDataSource = localDataSrc;
+				setSelectedDataSource(localDataSrc);
 			}
 		} else {
 			System.out.println("Wronf instance type");
