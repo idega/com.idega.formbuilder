@@ -23,7 +23,7 @@ import org.w3c.dom.NodeList;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 
 /**
- * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @author <a href="mailto:civilis@idega.com">Vytautas ï¿½ivilis</a>
  * @version 1.0
  *
  * FormManager helper class (yep, that means some methods can be tightly coupled)
@@ -359,13 +359,12 @@ public class FormManagerUtil {
 		Element loc_strings = (Element)loc_model.getElementsByTagName(loc_tag).item(0);
 		NodeList default_language_node_list = loc_strings.getElementsByTagName(default_language_tag);
 		
-		if(default_language_node_list == null || default_language_node_list.getLength() == 0)
-			return null;
-		
-		String lang = getElementsTextNodeValue((Element)default_language_node_list.item(0));
-		
+		String lang = null;
+		if(default_language_node_list != null && default_language_node_list.getLength() != 0) {
+			lang = getElementsTextNodeValue((Element)default_language_node_list.item(0));
+		}		
 		if(lang == null)
-			return null;
+			lang = "en";			
 		
 		return new Locale(lang);
 	}
