@@ -2,6 +2,7 @@ package com.idega.formbuilder.business.form.manager;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
@@ -24,7 +25,7 @@ import com.idega.slide.business.IWSlideSession;
 import com.idega.slide.util.WebdavExtendedResource;
 
 /**
- * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @author <a href="mailto:civilis@idega.com">Vytautas ï¿½ivilis</a>
  * @version 1.0
  * 
  */
@@ -36,10 +37,8 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 	private String[] form_pathes = null;
 	private boolean inited = false;
 
-	protected static final String FORMS_PATH = "/files/forms";
-	protected static final String FORMS_FILE_EXTENSION = ".xhtml";
-	
-	protected PropertyName property_name;
+	public static final String FORMS_PATH = "/files/forms";
+	public static final String FORMS_FILE_EXTENSION = ".xhtml";
 	
 	public static IPersistenceManager getInstance() {
 		
@@ -208,50 +207,37 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 		document_to_webdav_save_exception = null;
 		form_pathes = null;
 		inited = false;
-		
-		if(webdav_resource != null) {
-			
-			try {
-				
-//				TODO: think, how to close resource when user looses reference to manager instance, or session timeouts.
-				webdav_resource.close();
-			} catch (Exception e) {
-				logger.error("Error when closing webdav resource", e);
-			}
-			
-			webdav_resource = null;
-		}
 	}
 	
 	public Document loadDocument() throws InitializationException, Exception {
-		
-		if(!isInitiated())
+		if (!isInitiated())
 			throw new InitializationException("Persistence manager is not initialized");
-
-		InputStream is = getWebdavResource().getMethodData();
-		return FormManagerUtil.getDocumentBuilder().parse(is);
+		
+		IWSlideSession session = getIWSlideSession();
+		Document document = null;
+		try {
+			WebdavExtendedResource webdav_resource = session.getWebdavResource(form_pathes[0] + form_pathes[1]);
+			if (webdav_resource.exists())
+				webdav_resource.setProperties();
+			InputStream is = webdav_resource.getMethodData();
+			document = FormManagerUtil.getDocumentBuilder().parse(is);
+			webdav_resource.close();
+		}
+		catch (IOException e) {
+			logger.error("Error reading document from Webdav", e);
+		}
+		return document;
 	}
 	
-	protected WebdavExtendedResource webdav_resource;
-	
-	protected WebdavExtendedResource getWebdavResource() {
-		
-		if(webdav_resource == null) {
-			
-			try {
-				IWSlideSession session = (IWSlideSession) IBOLookup.getSessionInstance(IWContext.getInstance(), IWSlideSession.class);
-				
-				webdav_resource = session.getWebdavResource(form_pathes[0]+form_pathes[1]);
-				
-				if(webdav_resource.exists())
-					webdav_resource.setProperties();
-				
-			} catch (Exception e) {
-				
-				logger.error("Error getting WebdavExtendedResource", e);
-			}
-		}		
-		return webdav_resource;
+	protected IWSlideSession getIWSlideSession() {
+		IWSlideSession session = null;
+		try {
+			session = (IWSlideSession) IBOLookup.getSessionInstance(IWContext.getInstance(), IWSlideSession.class);
+		}
+		catch (Exception e) {
+			logger.error("Error getting IWSlideSession", e);
+		}
+		return session;
 	}
 	
 	IWSlideService service_bean;
@@ -279,9 +265,6 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 			return "";
 		
 		Locale default_locale = FormManagerUtil.getDefaultFormLocale(form_document);
-		
-		if(default_locale == null)
-			default_locale = new Locale("en");
 		
 		String title = localized_title.getString(default_locale);
 		
