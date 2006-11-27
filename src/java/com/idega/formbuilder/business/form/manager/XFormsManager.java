@@ -504,14 +504,13 @@ public class XFormsManager implements IXFormsManager {
 	}
 	
 	public void changeBindName(String new_bind_name) {
-		
-		String bind_name = StringEscapeUtils.escapeHtml(new_bind_name.replace(' ', '_'));
-		
+
+		new_bind_name = FormManagerUtil.escapeNonXmlTagSymbols(new_bind_name.replace(' ', '_'));
 		Element bind_element = xforms_component.getBind();
 		Element nodeset_element = xforms_component.getNodeset();
-		bind_element.setAttribute(FormManagerUtil.nodeset_att, bind_name);
+		bind_element.setAttribute(FormManagerUtil.nodeset_att, new_bind_name);
 		
-		nodeset_element = (Element)nodeset_element.getOwnerDocument().renameNode(nodeset_element, nodeset_element.getNamespaceURI(), bind_name);
+		nodeset_element = (Element)nodeset_element.getOwnerDocument().renameNode(nodeset_element, nodeset_element.getNamespaceURI(), new_bind_name);
 		xforms_component.setNodeset(nodeset_element);
 	}
 }

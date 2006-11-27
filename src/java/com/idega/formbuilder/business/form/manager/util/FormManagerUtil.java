@@ -2,11 +2,14 @@ package com.idega.formbuilder.business.form.manager.util;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -23,7 +26,7 @@ import org.w3c.dom.NodeList;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 
 /**
- * @author <a href="mailto:civilis@idega.com">Vytautas ï¿½ivilis</a>
+ * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
  * @version 1.0
  *
  * FormManager helper class (yep, that means some methods can be tightly coupled)
@@ -359,12 +362,16 @@ public class FormManagerUtil {
 		Element loc_strings = (Element)loc_model.getElementsByTagName(loc_tag).item(0);
 		NodeList default_language_node_list = loc_strings.getElementsByTagName(default_language_tag);
 		
+		if(default_language_node_list == null || default_language_node_list.getLength() == 0)
+			return null;
+		
 		String lang = null;
+		
 		if(default_language_node_list != null && default_language_node_list.getLength() != 0) {
 			lang = getElementsTextNodeValue((Element)default_language_node_list.item(0));
-		}		
+		}
 		if(lang == null)
-			lang = "en";			
+			lang = "en";
 		
 		return new Locale(lang);
 	}
@@ -573,5 +580,35 @@ public class FormManagerUtil {
 		serializer.serialize(document.getDocumentElement());
 		
 		return writer.toString();
+	}
+	
+	private static Pattern non_xml_pattern; 
+	
+	public static String escapeNonXmlTagSymbols(String string) {
+		
+		StringBuffer result = new StringBuffer();
+
+	    StringCharacterIterator iterator = new StringCharacterIterator(string);
+	    
+	    Character character =  iterator.current();
+	    
+	    if(non_xml_pattern == null) {
+	    	synchronized (FormManagerUtil.class) {
+				
+	    		if(non_xml_pattern == null) {
+	    			non_xml_pattern = Pattern.compile("[a-zA-Z0-9{-}{_}]");
+	    		}
+			}
+	    }
+	    
+	    while (character != CharacterIterator.DONE ) {
+	    	
+	    	if(non_xml_pattern.matcher(character.toString()).matches())
+	    		result.append(character);
+	        
+	        character = iterator.next();
+	    }
+	    
+	    return result.toString();
 	}
 }
