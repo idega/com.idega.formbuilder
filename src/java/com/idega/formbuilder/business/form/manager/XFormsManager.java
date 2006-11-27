@@ -2,7 +2,6 @@ package com.idega.formbuilder.business.form.manager;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.chiba.xml.dom.DOMUtil;
@@ -512,5 +511,60 @@ public class XFormsManager implements IXFormsManager {
 		
 		nodeset_element = (Element)nodeset_element.getOwnerDocument().renameNode(nodeset_element, nodeset_element.getNamespaceURI(), new_bind_name);
 		xforms_component.setNodeset(nodeset_element);
+	}
+	
+	public void updatePhaseNumber() {
+		
+		IComponentProperties props = component.getProperties();
+		Integer phase_number = props.getPhaseNumber();
+		
+		if(phase_number == null) {
+			Element bind_element = xforms_component.getBind();
+			bind_element.removeAttribute(FormManagerUtil.relevant_att);
+			return;
+		}
+		
+		Element wizzard_instance_element = form_document.getWizzardElement();
+		
+		if(wizzard_instance_element == null) {
+			
+			wizzard_instance_element = FormManagerUtil.getItemElementById(cache_manager.getComponentsXforms(), FormManagerUtil.wizzard_comp_template_id);
+			wizzard_instance_element = FormManagerUtil.insertWizzardElement(form_document.getXformsDocument(), wizzard_instance_element);
+			form_document.setWizzardElement(wizzard_instance_element);
+		}
+		
+		Element wizzard_element = DOMUtil.getFirstChildElement(wizzard_instance_element);
+		NodeList pages = wizzard_element.getElementsByTagName(FormManagerUtil.page_tag);
+		boolean wizzard_contains_page_number = false;
+		
+		if(pages != null)
+			
+			for (int i = 0; i < pages.getLength() && !wizzard_contains_page_number; i++) {
+				
+				Element page = (Element)pages.item(i);
+				
+				String page_number = page.getAttribute(FormManagerUtil.number_att);
+				
+				if(page_number != null && page_number.equals(String.valueOf(phase_number)))
+					wizzard_contains_page_number = true;
+			}
+		
+		if(!wizzard_contains_page_number) {
+			
+			Element page = FormManagerUtil.getItemElementById(cache_manager.getComponentsXforms(), FormManagerUtil.wizzard_page_template_id);
+			page = (Element)wizzard_element.appendChild(form_document.getXformsDocument().importNode(page, true));
+			page.setAttribute(FormManagerUtil.number_att, String.valueOf(phase_number));
+		}
+		
+		Element bind_element = xforms_component.getBind();
+		bind_element.setAttribute(
+				FormManagerUtil.relevant_att, FormManagerUtil.constructRelevantAttValue(String.valueOf(phase_number))
+		);
+	}
+	
+	public Integer extractPhaseNumber() {
+		
+		String relevant_att = xforms_component.getBind().getAttribute(FormManagerUtil.relevant_att);
+		return FormManagerUtil.extractPhaseFromRelevantAttribute(relevant_att);
 	}
 }

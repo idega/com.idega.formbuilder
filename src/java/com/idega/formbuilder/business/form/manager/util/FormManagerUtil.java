@@ -74,6 +74,12 @@ public class FormManagerUtil {
 	public static final String form_id_tag = "form_id";
 	public static final String submission_tag = "xf:submission";
 	public static final String action_att = "action";
+	public static final String wizzard_id_att_val = "wizzard-controller";
+	public static final String wizzard_comp_template_id = "wizzard-controller-instance";
+	public static final String page_tag = "page";
+	public static final String number_att = "number";
+	public static final String wizzard_page_template_id = "wizzard-page";
+	public static final String relevant_att = "relevant";
 	
 	private static final String line_sep = "line.separator";
 	private static final String xml_mediatype = "text/html";
@@ -153,6 +159,13 @@ public class FormManagerUtil {
 					.getElementsByTagName("xf:instance").item(0))
 					.getElementsByTagName("data").item(0);
 		container.appendChild(new_nodeset_element);
+	}
+	
+	public static Element insertWizzardElement(Document xforms_document, Element wizzard_element) {
+		
+		Element first_model_element = DOMUtil.getChildElement(xforms_document.getElementsByTagName(head_tag).item(0), model_tag);
+		wizzard_element = (Element)xforms_document.importNode(wizzard_element, true);
+		return (Element)first_model_element.appendChild(wizzard_element);
 	}
 	
 	/**
@@ -378,7 +391,7 @@ public class FormManagerUtil {
 	
 	public static LocalizedStringBean getErrorLabelLocalizedStrings(String component_id, Document xforms_doc) {
 		
-		Element component = getElementByIdFromDocument(xforms_doc, "body", component_id);
+		Element component = getElementByIdFromDocument(xforms_doc, body_tag, component_id);
 		
 		NodeList alerts = component.getElementsByTagName(FormManagerUtil.alert_tag);
 		
@@ -387,7 +400,7 @@ public class FormManagerUtil {
 		
 		Element output = (Element)((Element)alerts.item(0)).getElementsByTagName(FormManagerUtil.output_tag).item(0);
 		
-		String ref = output.getAttribute("ref");
+		String ref = output.getAttribute(ref_s_att);
 		
 		if(!isRefFormCorrect(ref))
 			return new LocalizedStringBean();
@@ -610,5 +623,42 @@ public class FormManagerUtil {
 	    }
 	    
 	    return result.toString();
+	}
+	
+	public static String constructRelevantAttValue(String page_number) {
+		
+//		instance('wizzard-controller')/page[@number='?']/@relevant='no'
+		
+		return new StringBuffer("instance('")
+		.append(wizzard_id_att_val)
+		.append("')/page[@number='")
+		.append(page_number)
+		.append("']/@relevant='no'")
+		.toString();
+	}
+	
+	public static Integer extractPhaseFromRelevantAttribute(String relevant_att) {
+
+		if(relevant_att == null)
+			return null;
+		
+		String starts_with = new StringBuffer("instance('")
+		.append(wizzard_id_att_val)
+		.append("')/page[@number='")
+		.toString();
+		
+		String ends_with = "']/@relevant='";
+		
+		if(!relevant_att.startsWith(starts_with) || relevant_att.indexOf(ends_with) < 0)
+			return null;
+		
+		String phase = relevant_att.substring(relevant_att.indexOf(starts_with)+starts_with.length(), relevant_att.indexOf(ends_with));
+		
+		try {
+			return Integer.parseInt(phase);
+		} catch (Exception e) {
+			
+			return null;
+		}
 	}
 }

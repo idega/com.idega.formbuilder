@@ -240,7 +240,7 @@ public class WebdavPersistenceManager implements IPersistenceManager {
 		return session;
 	}
 	
-	IWSlideService service_bean;
+	private IWSlideService service_bean;
 	
 	protected IWSlideService getServiceBean() {
 		

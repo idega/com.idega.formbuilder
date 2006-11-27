@@ -29,6 +29,8 @@ public interface IXFormsManager {
 	public abstract void updateConstraintRequired() throws NullPointerException;
 
 	public abstract void updateLabel();
+	
+	public abstract void updatePhaseNumber();
 
 	public abstract void updateErrorMsg();
 
@@ -42,4 +44,6 @@ public interface IXFormsManager {
 			String bind_id);
 
 	public abstract void changeBindName(String new_bind_name);
+	
+	public abstract Integer extractPhaseNumber();
 }

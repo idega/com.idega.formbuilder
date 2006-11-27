@@ -1,5 +1,6 @@
 package com.idega.formbuilder.business.form.beans;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -37,6 +38,7 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 	private String form_id;
 	protected IPersistenceManager persistence_manager;
 	private String submit_button_id;
+	private Element wizzard_instance_element;
 	
 	private Locale default_document_locale;
 	
@@ -344,5 +346,48 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 			default_document_locale = FormManagerUtil.getDefaultFormLocale(form_xforms);
 		
 		return default_document_locale;
+	}
+	
+	public Element getWizzardElement() {
+		
+		if(wizzard_instance_element == null)
+			wizzard_instance_element = FormManagerUtil.getElementByIdFromDocument(form_xforms, FormManagerUtil.head_tag, FormManagerUtil.wizzard_id_att_val);
+		
+//		if wizzard_instance_element not found - leave creation of it to xformsmanager,
+		
+		return wizzard_instance_element;
+	}
+	
+	public void setWizzardElement(Element wizzard_element) {
+		
+		wizzard_instance_element = wizzard_element;
+	}
+	
+	public Map<Integer, List<String>> getComponentsInPhases() {
+		
+		Map<String, IFormComponent> form_components = getFormComponents();
+		Map<Integer, List<String>> components_in_phases = new HashMap<Integer, List<String>>();
+		
+		for (Iterator<String> iter = form_components.keySet().iterator(); iter.hasNext();) {
+			
+			String comp_id = iter.next();
+			IComponentProperties props = form_components.get(comp_id).getProperties();
+			
+			Integer phase_nr = props.getPhaseNumber();
+			if(phase_nr == null)
+				phase_nr = 0;
+			
+			List<String> components_ids = components_in_phases.get(phase_nr);
+				
+			if(components_ids == null) {
+				
+				components_ids = new ArrayList<String>();
+				components_in_phases.put(phase_nr, components_ids);
+			}
+			
+			components_ids.add(comp_id);
+		}
+		
+		return components_in_phases;
 	}
 }

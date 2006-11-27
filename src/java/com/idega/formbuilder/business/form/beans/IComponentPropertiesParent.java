@@ -8,4 +8,5 @@ public interface IComponentPropertiesParent {
 
 	public abstract void updateConstraintRequired();
 
+	public abstract void updatePhaseNumber();
 }

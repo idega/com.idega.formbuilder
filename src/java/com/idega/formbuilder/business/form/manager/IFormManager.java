@@ -2,6 +2,7 @@ package com.idega.formbuilder.business.form.manager;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -131,4 +132,6 @@ public interface IFormManager {
 	public abstract String getFormId();
 	
 	public abstract Document getFormXFormsDocument();
+	
+	public abstract Map<Integer, List<String>> getComponentsInPhases();
 }

@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.faces.context.FacesContext;
 import javax.xml.parsers.DocumentBuilder;
@@ -343,5 +344,10 @@ public class FormManager implements IFormManager {
 	public Document getFormXFormsDocument() {
 		
 		return form_document.getFormXFormsDocument();
+	}
+	
+	public Map<Integer, List<String>> getComponentsInPhases() {
+		
+		return form_document.getComponentsInPhases();
 	}
 }

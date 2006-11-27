@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public interface IFormComponentParent {
 	
@@ -24,4 +25,8 @@ public interface IFormComponentParent {
 	public abstract String getFormId();
 	
 	public abstract Locale getDefaultLocale();
+	
+	public abstract Element getWizzardElement();
+	
+	public abstract void setWizzardElement(Element wizzard_element);
 }

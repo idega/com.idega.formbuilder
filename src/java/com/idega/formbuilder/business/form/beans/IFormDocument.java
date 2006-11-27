@@ -1,6 +1,7 @@
 package com.idega.formbuilder.business.form.beans;
 
 import java.util.List;
+import java.util.Map;
 
 import org.w3c.dom.Document;
 
@@ -45,4 +46,6 @@ public interface IFormDocument {
 	public abstract String getFormId();
 	
 	public abstract Document getFormXFormsDocument();
+	
+	public abstract Map<Integer, List<String>> getComponentsInPhases();
 }

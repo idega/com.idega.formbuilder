@@ -19,4 +19,8 @@ public interface IComponentProperties {
 	public abstract boolean isRequired();
 
 	public abstract void setRequired(boolean required);
+	
+	public abstract Integer getPhaseNumber();
+	
+	public abstract void setPhaseNumber(Integer phase_number);
 }

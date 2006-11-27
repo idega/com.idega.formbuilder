@@ -10,6 +10,8 @@ public class ComponentProperties implements IComponentProperties {
 	private boolean required;
 	private LocalizedStringBean label;
 	private LocalizedStringBean error_msg;
+	private Integer phase_number;
+	
 	protected IComponentPropertiesParent parent_component;
 	
 	public LocalizedStringBean getErrorMsg() {
@@ -53,7 +55,24 @@ public class ComponentProperties implements IComponentProperties {
 		.append(label)
 		.append("\nerror_msg: ")
 		.append(error_msg)
+		.append("\nphase number: ")
+		.append(phase_number)
 		
 		.toString();
+	}
+	public Integer getPhaseNumber() {
+		return phase_number;
+	}
+	public void setPhaseNumber(Integer phase_number) {
+		
+		if(phase_number == 0)
+			phase_number = null;
+		
+		this.phase_number = phase_number;
+		parent_component.updatePhaseNumber();
+	}
+	
+	public void setPlainPhaseNumber(Integer phase_number) {
+		this.phase_number = phase_number;
 	}
 }

@@ -75,6 +75,7 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 		properties.setPlainLabel(FormManagerUtil.getLabelLocalizedStrings(component_id, xforms_doc));
 		properties.setPlainRequired(false);
 		properties.setPlainErrorMsg(FormManagerUtil.getErrorLabelLocalizedStrings(component_id, xforms_doc));
+		properties.setPlainPhaseNumber(getXFormsManager().extractPhaseNumber());
 	}
 	
 	protected void changeBindNames() {
@@ -207,6 +208,10 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 		getHtmlManager().clearHtmlComponents();
 		
 		changeBindNames();
+	}
+	
+	public void updatePhaseNumber() {
+		getXFormsManager().updatePhaseNumber();
 	}
 	public void updateConstraintRequired() {
 		getXFormsManager().updateConstraintRequired();
