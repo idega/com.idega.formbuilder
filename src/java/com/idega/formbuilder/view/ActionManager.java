@@ -8,7 +8,6 @@ import javax.faces.event.ActionEvent;
 import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.formbuilder.business.form.manager.FormManagerFactory;
 import com.idega.formbuilder.business.form.manager.IFormManager;
-import com.idega.formbuilder.business.form.manager.util.InitializationException;
 
 public class ActionManager implements Serializable {
 	
@@ -71,7 +70,7 @@ public class ActionManager implements Serializable {
 		}*/
 	}
 	
-	private void initialize() throws Exception {
+	/*private void initialize() throws Exception {
 		try {
 			System.out.println("CREATING FORM MANAGER");
 			formManagerInstance = FormManagerFactory.newFormManager(FacesContext.getCurrentInstance());
@@ -84,7 +83,7 @@ public class ActionManager implements Serializable {
 		} catch(Exception e) {
 			throw new Exception("UIManager instantiation failed: " + e);
 		}
-	}
+	}*/
 	
 	public static IFormManager getFormManagerInstance() {
 		return(IFormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);

@@ -26,6 +26,7 @@ public class Workspace implements Serializable {
 	private String currentComponent;
 	private String formTitle;
 	
+	@SuppressWarnings("static-access")
 	public String getFormTitle() {
 		if(!designViewStatus.equals("noform")) {
 			IFormManager am = ((ActionManager)WFUtil.getBeanInstance("viewmanager")).getFormManagerInstance();
@@ -71,11 +72,12 @@ public class Workspace implements Serializable {
 		this.views.add(new SelectItem("source", "Source"));
 	}
 	
+	@SuppressWarnings("static-access")
 	public void formChanged(ActionEvent ae) throws Exception {
 		String formId = (String) ((javax.faces.component.html.HtmlSelectOneMenu) ae.getComponent().getParent()).getValue();
 		if(formId != null && !formId.equals("")) {
 			try {
-				IFormManager formManagerInstance = (IFormManager) ((ActionManager)WFUtil.getBeanInstance("viewmanager")).getFormManagerInstance();
+				IFormManager formManagerInstance = ((ActionManager)WFUtil.getBeanInstance("viewmanager")).getFormManagerInstance();
 				formManagerInstance.openFormDocument(formId);
 				if(formManagerInstance.getFormComponentsIdsList().size() > 0) {
 					this.designViewStatus = "active";

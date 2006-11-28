@@ -10,7 +10,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
 import org.apache.myfaces.component.html.ext.HtmlSelectOneRadio;
-import org.apache.myfaces.custom.div.Div;
 
 import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.formbuilder.business.DataSourceList;

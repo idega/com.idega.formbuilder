@@ -54,12 +54,12 @@ public class DWRManager implements Serializable {
         try {
           DocumentBuilder builder = factory.newDocumentBuilder();
           document = builder.newDocument();
-          Element delete = (Element) document.createElement("IMG");
+          Element delete = document.createElement("IMG");
           delete.setAttribute("src", "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png");
           delete.setAttribute("class", "speedButton");
           delete.setAttribute("onclick", "deleteComponent(this)");
           Element deleteIcon = (Element) element.getOwnerDocument().importNode(delete, true);
-          Element rootDiv = (Element) document.createElement("DIV");
+          Element rootDiv = document.createElement("DIV");
           rootDiv.setAttribute("id", id);
           rootDiv.setAttribute("class", "formElement");
           rootDiv.setAttribute("onclick", "editProperties(this)");

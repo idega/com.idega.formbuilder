@@ -31,9 +31,9 @@ import com.idega.slide.util.WebdavExtendedResource;
  */
 public class WebdavPersistenceManager implements IPersistenceManager {
 	
-	private static Log logger = LogFactory.getLog(WebdavPersistenceManager.class);
+	protected static Log logger = LogFactory.getLog(WebdavPersistenceManager.class);
 	
-	private Exception document_to_webdav_save_exception = null;
+	protected Exception document_to_webdav_save_exception = null;
 	private String[] form_pathes = null;
 	private boolean inited = false;
 

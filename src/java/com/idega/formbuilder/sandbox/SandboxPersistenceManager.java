@@ -1,7 +1,6 @@
 package com.idega.formbuilder.sandbox;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 import org.chiba.xml.dom.DOMUtil;
@@ -60,7 +59,7 @@ public class SandboxPersistenceManager extends WebdavPersistenceManager {
 		}.start();
 	}
 	
-	private Exception some_crazy_exception;
+	protected Exception some_crazy_exception;
 	
 	public Exception[] getSavedExceptions() {
 

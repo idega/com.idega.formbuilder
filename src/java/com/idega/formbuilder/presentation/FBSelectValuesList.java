@@ -9,9 +9,7 @@ import javax.faces.component.UIComponentBase;
 import javax.faces.component.html.HtmlGraphicImage;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
-import javax.faces.event.ActionEvent;
 
-import org.ajax4jsf.ajax.html.HtmlAjaxSupport;
 import org.apache.myfaces.component.html.ext.HtmlInputText;
 
 import com.idega.formbuilder.business.form.beans.ItemBean;

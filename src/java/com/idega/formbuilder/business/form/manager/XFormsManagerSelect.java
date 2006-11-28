@@ -6,7 +6,6 @@ import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.idega.formbuilder.business.form.beans.ComponentPropertiesSelect;
 import com.idega.formbuilder.business.form.beans.IComponentPropertiesSelect;
 import com.idega.formbuilder.business.form.beans.IComponentPropertiesSelectParent;
 import com.idega.formbuilder.business.form.beans.ILocalizedItemset;
@@ -140,9 +139,9 @@ public class XFormsManagerSelect extends XFormsManager {
 		String data_src_instance_id = nodeset_att_value.substring("instance('".length(), nodeset_att_value.indexOf("')"));
 		
 		if(data_src_instance_id.endsWith("_eds"))
-			return ComponentPropertiesSelect.EXTERNAL_DATA_SRC;
+			return IComponentPropertiesSelect.EXTERNAL_DATA_SRC;
 		else if(data_src_instance_id.endsWith("_lds"))
-			return ComponentPropertiesSelect.LOCAL_DATA_SRC;
+			return IComponentPropertiesSelect.LOCAL_DATA_SRC;
 		
 		return null;
 	}
@@ -284,9 +283,13 @@ public class XFormsManagerSelect extends XFormsManager {
 		
 		XFormsComponentSelectDataBean xforms_component = (XFormsComponentSelectDataBean)this.xforms_component;
 		Element data_src_element = xforms_component.getExternalItemsetInstance();
-		data_src_element.getParentNode().removeChild(data_src_element);
+		
+		if(data_src_element != null)
+			data_src_element.getParentNode().removeChild(data_src_element);
 		
 		data_src_element = xforms_component.getLocalItemsetInstance();
-		data_src_element.getParentNode().removeChild(data_src_element);
+		
+		if(data_src_element != null)
+			data_src_element.getParentNode().removeChild(data_src_element);
 	}
 }

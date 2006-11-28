@@ -1,8 +1,6 @@
 package com.idega.formbuilder.generators.test;
 
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -10,7 +8,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 
 import com.idega.formbuilder.business.form.manager.generators.FormComponentsGenerator;
@@ -102,9 +99,9 @@ public class FormComponentsGeneratorTest extends TestCase {
 		
 		try {
 			
-			String absolute_components_xforms_path = getClass().getResource("myBasicTest.xhtml").getPath();
-			String absolute_components_xforms_stylesheet_path = getClass().getResource("htmlxml.xsl").getPath();
-			String absolute_components_stylesheet_path = getClass().getResource("components.xsl").getPath();
+			/*String absolute_components_xforms_path =*/ getClass().getResource("myBasicTest.xhtml").getPath();
+			/*String absolute_components_xforms_stylesheet_path =*/ getClass().getResource("htmlxml.xsl").getPath();
+			/*String absolute_components_stylesheet_path =*/ getClass().getResource("components.xsl").getPath();
 			
 			IComponentsGenerator fcg = FormComponentsGenerator.getInstance();
 			

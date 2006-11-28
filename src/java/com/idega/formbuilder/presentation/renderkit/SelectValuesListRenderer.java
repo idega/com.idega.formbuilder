@@ -20,7 +20,7 @@ public class SelectValuesListRenderer extends Renderer {
 		writer.writeAttribute("class", valuesList.getStyleClass(), "styleClass");
 		writer.writeAttribute("style", "width: 320px; height: 180px;", null);
 		
-		UIComponent addOptionButton = (UIComponent) valuesList.getFacet("addOptionButton");
+		UIComponent addOptionButton = valuesList.getFacet("addOptionButton");
 		if(addOptionButton != null) {
 			if (addOptionButton.isRendered()) {
 				addOptionButton.encodeBegin(context);

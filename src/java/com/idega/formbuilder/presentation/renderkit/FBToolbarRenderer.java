@@ -87,7 +87,7 @@ public class FBToolbarRenderer extends ToolbarRenderer {
 		}
 		
 		Iterator iter = itemList.iterator();
-		boolean isFirstItem = true;
+		//boolean isFirstItem = true;
 		boolean hasNext = iter.hasNext();
 		
 		while (hasNext) {
