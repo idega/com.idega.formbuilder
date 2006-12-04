@@ -375,16 +375,12 @@ public class FormManagerUtil {
 		Element loc_strings = (Element)loc_model.getElementsByTagName(loc_tag).item(0);
 		NodeList default_language_node_list = loc_strings.getElementsByTagName(default_language_tag);
 		
-		if(default_language_node_list == null || default_language_node_list.getLength() == 0)
-			return null;
-		
 		String lang = null;
-		
 		if(default_language_node_list != null && default_language_node_list.getLength() != 0) {
 			lang = getElementsTextNodeValue(default_language_node_list.item(0));
-		}
+		}		
 		if(lang == null)
-			lang = "en";
+			lang = "en";			
 		
 		return new Locale(lang);
 	}
@@ -636,7 +632,7 @@ public class FormManagerUtil {
 		.append("']/@relevant='no'")
 		.toString();
 	}
-	
+		
 	public static Integer extractPhaseFromRelevantAttribute(String relevant_att) {
 
 		if(relevant_att == null)
