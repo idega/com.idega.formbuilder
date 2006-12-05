@@ -567,4 +567,15 @@ public class XFormsManager implements IXFormsManager {
 		String relevant_att = xforms_component.getBind().getAttribute(FormManagerUtil.relevant_att);
 		return FormManagerUtil.extractPhaseFromRelevantAttribute(relevant_att);
 	}
+	
+	public void updateP3pType() {
+		
+		IComponentProperties props = component.getProperties();
+		String p3ptype = props.getP3ptype();
+		
+		if(p3ptype == null)
+			xforms_component.getBind().removeAttribute(FormManagerUtil.p3ptype_att);
+		else
+			xforms_component.getBind().setAttribute(FormManagerUtil.p3ptype_att, p3ptype);
+	}
 }

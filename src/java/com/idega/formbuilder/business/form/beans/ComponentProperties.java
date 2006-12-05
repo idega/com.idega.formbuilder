@@ -11,6 +11,7 @@ public class ComponentProperties implements IComponentProperties {
 	private LocalizedStringBean label;
 	private LocalizedStringBean error_msg;
 	private Integer phase_number;
+	private String p3ptype;
 	
 	protected IComponentPropertiesParent parent_component;
 	
@@ -74,5 +75,15 @@ public class ComponentProperties implements IComponentProperties {
 	
 	public void setPlainPhaseNumber(Integer phase_number) {
 		this.phase_number = phase_number;
+	}
+	public String getP3ptype() {
+		return p3ptype;
+	}
+	public void setP3ptype(String p3ptype) {
+		this.p3ptype = p3ptype;
+		parent_component.updateP3pType();
+	}
+	public void setPlainP3ptype(String p3ptype) {
+		this.p3ptype = p3ptype;
 	}
 }

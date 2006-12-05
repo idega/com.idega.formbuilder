@@ -213,6 +213,10 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 	public void updatePhaseNumber() {
 		getXFormsManager().updatePhaseNumber();
 	}
+	public void updateP3pType() {
+		
+		getXFormsManager().updateP3pType();
+	}
 	public void updateConstraintRequired() {
 		getXFormsManager().updateConstraintRequired();
 		form_document.setFormDocumentModified(true);

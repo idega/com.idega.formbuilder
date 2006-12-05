@@ -46,4 +46,6 @@ public interface IXFormsManager {
 	public abstract void changeBindName(String new_bind_name);
 	
 	public abstract Integer extractPhaseNumber();
+	
+	public abstract void updateP3pType();
 }

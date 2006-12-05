@@ -23,4 +23,8 @@ public interface IComponentProperties {
 	public abstract Integer getPhaseNumber();
 	
 	public abstract void setPhaseNumber(Integer phase_number);
+	
+	public abstract String getP3ptype();
+	
+	public abstract void setP3ptype(String p3ptype);
 }

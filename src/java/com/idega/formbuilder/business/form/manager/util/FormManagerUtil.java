@@ -80,6 +80,7 @@ public class FormManagerUtil {
 	public static final String number_att = "number";
 	public static final String wizzard_page_template_id = "wizzard-page";
 	public static final String relevant_att = "relevant";
+	public static final String p3ptype_att = "p3ptype";
 	
 	private static final String line_sep = "line.separator";
 	private static final String xml_mediatype = "text/html";
