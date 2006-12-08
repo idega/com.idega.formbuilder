@@ -11,7 +11,7 @@ import org.w3c.dom.NodeList;
 
 import com.idega.formbuilder.business.form.beans.IFormComponent;
 import com.idega.formbuilder.business.form.beans.IFormComponentParent;
-import com.idega.formbuilder.business.form.manager.generators.ComponentsGeneratorFactory;
+import com.idega.formbuilder.business.form.manager.generators.FormComponentsGenerator;
 import com.idega.formbuilder.business.form.manager.generators.IComponentsGenerator;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 
@@ -137,7 +137,7 @@ public class HtmlManager {
 
 		if(components_xml == null || form_document.isFormDocumentModified()) {
 			
-			IComponentsGenerator components_generator = ComponentsGeneratorFactory.createComponentsGenerator();
+			IComponentsGenerator components_generator = FormComponentsGenerator.getInstance();
 			components_generator.setDocument((Document)form_document.getXformsDocument().cloneNode(true));
 //			components_xml = components_generator.generateFormHtmlDocument();
 			components_xml = components_generator.generateBaseComponentsDocument();
