@@ -15,6 +15,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.idega.block.formreader.business.FormReader;
+import com.idega.formbuilder.IWBundleStarter;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 import com.idega.repository.data.Singleton;
 
@@ -30,16 +31,19 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 	
 	protected static FormComponentsGenerator me = null;
 	
-	private URI final_xml_stylesheet_uri;
-	private URI temporal_xml_stylesheet_uri;
-	private String base_form_uri;
+	private final URI final_xml_stylesheet_uri =
+		URI.create("bundle://"+IWBundleStarter.IW_BUNDLE_IDENTIFIER+"/"+"resources/xslt/components.xsl");
+	private final URI temporal_xml_stylesheet_uri =
+		URI.create("bundle://"+IWBundleStarter.IW_BUNDLE_IDENTIFIER+"/"+"resources/xslt/htmlxml.xsl");
 	
 	private TransformerService transf_service;
+	private Document xforms_doc;
+
+	private String base_form_uri;
+
 	private UIGenerator temporal_xml_components_generator;
 	private UIGenerator final_xml_components_generator;
-	private FormReader form_reader;
-	
-	private Document xforms_doc = null;
+	private FormReader form_reader;	
 	
 	public static FormComponentsGenerator getInstance() {
 		
@@ -58,15 +62,10 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 	protected FormComponentsGenerator() { }
 
 	public boolean isInitiated() {
-		
-		return final_xml_stylesheet_uri != null && 
-		temporal_xml_stylesheet_uri != null &&
-		xforms_doc != null && transf_service != null;
-		 
+		return xforms_doc != null && transf_service != null;
 	}
 	
 	public void setDocument(Document xforms_doc) {
-		
 		this.xforms_doc = xforms_doc;
 	}
 	
@@ -75,10 +74,6 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 		if(!isInitiated()) {
 			
 			String err_msg = new StringBuffer("Either is not provided:")
-			.append("\ncomponents xforms stylesheet uri: ")
-			.append(final_xml_stylesheet_uri)
-			.append("\ncomponents stylesheet uri: ")
-			.append(temporal_xml_stylesheet_uri)
 			.append("\nxforms doc: ")
 			.append(xforms_doc)
 			.append("\ntransformer service: ")
@@ -183,14 +178,6 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 				child.appendChild(key_node);
 			}
 		}
-	}
-	
-	public void setTemporalXmlStylesheetUri(URI uri) {
-		temporal_xml_stylesheet_uri = uri;
-	}
-	
-	public void setFinalXmlStylesheetUri(URI uri) {
-		final_xml_stylesheet_uri = uri;
 	}
 	
 	public void setTransformerService(TransformerService transf_service) {

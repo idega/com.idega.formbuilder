@@ -11,10 +11,12 @@ import javax.xml.parsers.DocumentBuilder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.chiba.xml.xslt.TransformerService;
+import org.chiba.xml.xslt.impl.CachingTransformerService;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.idega.business.IBOLookup;
+import com.idega.block.form.business.BundleResourceResolver;
 import com.idega.formbuilder.IWBundleStarter;
 import com.idega.formbuilder.business.form.beans.ComponentPropertiesSubmitButton;
 import com.idega.formbuilder.business.form.beans.FormDocument;
@@ -22,16 +24,13 @@ import com.idega.formbuilder.business.form.beans.IComponentProperties;
 import com.idega.formbuilder.business.form.beans.IFormComponent;
 import com.idega.formbuilder.business.form.beans.IFormDocument;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
-import com.idega.formbuilder.business.form.manager.generators.ComponentsGeneratorFactory;
-import com.idega.formbuilder.business.form.manager.generators.IComponentsGenerator;
+import com.idega.formbuilder.business.form.manager.generators.FormComponentsGenerator;
 import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 import com.idega.formbuilder.business.form.manager.util.InitializationException;
-import com.idega.formbuilder.sandbox.SandboxUtil;
+import com.idega.idegaweb.DefaultIWBundle;
+import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWMainApplication;
-import com.idega.presentation.IWContext;
-import com.idega.slide.business.IWSlideSession;
-import com.idega.slide.business.IWSlideSessionBean;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
@@ -44,10 +43,10 @@ public class FormManager implements IFormManager {
 	
 	private static Log logger = LogFactory.getLog(FormManager.class);
 	
-	private static InputStream components_xforms_stream = null;
-	private static InputStream components_xsd_stream = null;
-	private static InputStream form_xforms_template_stream = null;
-	
+	public static final String COMPONENTS_XFORMS_CONTEXT_PATH = "resources/templates/myComponents.xhtml";
+	public static final String COMPONENTS_XSD_CONTEXT_PATH = "resources/templates/default-components.xsd";
+	public static final String FORM_XFORMS_TEMPLATE_RESOURCES_PATH = "resources/templates/form-template.xhtml";
+
 	private static boolean inited = false;
 	
 	private static final String NOT_INITED_MSG = "Init FormManager first";
@@ -187,89 +186,49 @@ public class FormManager implements IFormManager {
 	}
 	
 	public static void init(FacesContext ctx) throws InitializationException {
-		
-		try {
-
-			if(ctx != null) {
-				
-				IWMainApplication iw_app = IWMainApplication.getIWMainApplication(ctx);
-
-//				temporary disabled
-				if(false) {
-					
-//					get streams from webdav
-					IWContext iwc = IWContext.getInstance();
-					IWSlideSessionBean ses_bean = (IWSlideSessionBean)IBOLookup.getSessionInstance(iwc, IWSlideSession.class);			
-					components_xforms_stream = ses_bean.getInputStream((String)iw_app.getAttribute(IWBundleStarter.COMPONENTS_XFORMS_CONTEXT_PATH));
-					components_xsd_stream = ses_bean.getInputStream((String)iw_app.getAttribute(IWBundleStarter.COMPONENTS_XSD_CONTEXT_PATH));
-				}
-
-				components_xforms_stream = iw_app.getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceInputStream((String)iw_app.getAttribute(IWBundleStarter.COMPONENTS_XFORMS_CONTEXT_PATH));
-				components_xsd_stream = iw_app.getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceInputStream((String)iw_app.getAttribute(IWBundleStarter.COMPONENTS_XSD_CONTEXT_PATH));
-				form_xforms_template_stream = iw_app.getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceInputStream((String)iw_app.getAttribute(IWBundleStarter.FORM_XFORMS_TEMPLATE_RESOURCES_PATH));
-				
-			} else {
-				
-				components_xforms_stream = new FileInputStream(SandboxUtil.COMPONENTS_XFORMS_CONTEXT_PATH);
-				components_xsd_stream = new FileInputStream(SandboxUtil.COMPONENTS_XSD_CONTEXT_PATH);
-				form_xforms_template_stream = new FileInputStream(SandboxUtil.FORM_XFORMS_TEMPLATE_CONTEXT_PATH);
-			}
-			
-			ComponentsGeneratorFactory.init(ctx);
-			CacheManager.getInstance().initAppContext(ctx);
-			
-		} catch (Exception e) {
-			logger.error(FB_INIT_FAILED, e);
-			throw new InitializationException(FB_INIT_FAILED, e);
-		}
-		
-		init();
-	}
-	
-	/**
-	 * Should be called, before getting an instance of this class
-	 * @throws InstantiationException - smth bad happened during init phase
-	 */
-	protected static void init() throws InitializationException {
-		
-		long start = System.currentTimeMillis();
-			
-		if(inited) {
-			
+		if(inited) {			
 			logger.error("init(): tried to call, when already inited");
 			throw new InitializationException("FormManager is already initialized.");
 		}
-		
+
+		long start = System.currentTimeMillis();
 		try {
+			// setup where to get files from - workspace or bundle
+			String bundleInWorkspace = null;
+			IWBundle bundle = null;
 			
-			IComponentsGenerator components_generator = ComponentsGeneratorFactory.createComponentsGenerator();
+			String workspaceDir = System.getProperty(DefaultIWBundle.SYSTEM_BUNDLES_RESOURCE_DIR);
+			if (workspaceDir != null) {
+				bundleInWorkspace = workspaceDir + "/" + IWBundleStarter.IW_BUNDLE_IDENTIFIER + "/";
+			}
 			
-			Document components_xforms = null;
-			Document components_xsd = null;
-			Document components_xml = null;
-			List<String> components_types = null;
-			Document form_xforms_template = null;
+			TransformerService transf_service = null;
+			if(ctx != null) {
+				IWMainApplication iw_app = IWMainApplication.getIWMainApplication(ctx);
+				bundle = iw_app.getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER);
+				transf_service = (TransformerService) iw_app.getAttribute(TransformerService.class.getName());
+			}
+			else {
+				transf_service = new CachingTransformerService(new BundleResourceResolver(null));
+			}
+
+			// load xml files
+			Document components_xforms = getDocumentFromBundle(bundleInWorkspace, bundle, COMPONENTS_XFORMS_CONTEXT_PATH);
+			Document components_xsd = getDocumentFromBundle(bundleInWorkspace, bundle, COMPONENTS_XSD_CONTEXT_PATH);
+			Document form_xforms_template = getDocumentFromBundle(bundleInWorkspace, bundle, FORM_XFORMS_TEMPLATE_RESOURCES_PATH);
 			
-			DocumentBuilder doc_builder = FormManagerUtil.getDocumentBuilder();
-			
-			components_xforms = doc_builder.parse(components_xforms_stream);
-			components_xforms_stream.close();
-			components_xforms_stream = null;
-			
-			components_xsd = doc_builder.parse(components_xsd_stream);
-			components_xsd_stream.close();
-			components_xsd_stream = null;
-			
+			// setup ComponentsGenerator
+			FormComponentsGenerator components_generator = FormComponentsGenerator.getInstance();
+			components_generator.setTransformerService(transf_service);
 			components_generator.setDocument(components_xforms);
-			components_xml = components_generator.generateBaseComponentsDocument();
 			
-			components_types = FormManagerUtil.gatherAvailableComponentsTypes(components_xml);
+			Document components_xml = components_generator.generateBaseComponentsDocument();
+			List<String> components_types = FormManagerUtil.gatherAvailableComponentsTypes(components_xml);
 			
-			form_xforms_template = doc_builder.parse(form_xforms_template_stream);
-			form_xforms_template_stream.close();
-			form_xforms_template_stream = null;
-			
+			// cache results
 			CacheManager cache_manager = CacheManager.getInstance();
+			cache_manager.initAppContext(ctx);
+			
 			cache_manager.setFormXformsTemplate(form_xforms_template);
 			cache_manager.setComponentsTypes(components_types);
 			cache_manager.setComponentsXforms(components_xforms);
@@ -286,6 +245,33 @@ public class FormManager implements IFormManager {
 			logger.error(FB_INIT_FAILED, e);
 			throw new InitializationException(FB_INIT_FAILED, e);
 		}
+	}
+	
+	/**
+	 * Parses xml file specified by pathWithinBundle and returns document.
+	 * If bundleInWorkspace is not null, it is used, otherwise bundle should be provided.
+	 * 
+	 * @param bundleInWorkspace
+	 * @param bundle
+	 * @param pathWithinBundle
+	 * @return
+	 * @throws Exception
+	 */
+	private static Document getDocumentFromBundle(String bundleInWorkspace, IWBundle bundle, String pathWithinBundle) throws Exception {
+		Document doc = null;
+		InputStream stream = null;
+		if (bundleInWorkspace != null) {
+			stream = new FileInputStream(bundleInWorkspace + pathWithinBundle);
+		}
+		else {
+			stream = bundle.getResourceInputStream(pathWithinBundle);
+		}
+
+		DocumentBuilder doc_builder = FormManagerUtil.getDocumentBuilder();
+		doc = doc_builder.parse(stream);
+		stream.close();
+
+		return doc;
 	}
 	
 	/**
