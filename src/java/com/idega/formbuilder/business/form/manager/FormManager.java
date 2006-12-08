@@ -181,7 +181,6 @@ public class FormManager implements IFormManager {
 		FormManager fm = new FormManager();
 		
 		IFormDocument form_document = new FormDocument();
-		form_document.setPersistenceManager(PersistenceManagerFactory.newPersistenceManager());
 		fm.form_document = form_document;
 			
 		return fm;

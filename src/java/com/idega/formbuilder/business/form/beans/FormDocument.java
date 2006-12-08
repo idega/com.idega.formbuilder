@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.xml.parsers.DocumentBuilder;
 
@@ -15,11 +17,15 @@ import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.idega.block.form.business.FormsService;
+import com.idega.business.IBOLookup;
+import com.idega.business.IBOLookupException;
 import com.idega.data.StringInputStream;
 import com.idega.formbuilder.business.form.manager.CacheManager;
-import com.idega.formbuilder.business.form.manager.IPersistenceManager;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 import com.idega.formbuilder.business.form.manager.util.InitializationException;
+import com.idega.idegaweb.IWApplicationContext;
+import com.idega.idegaweb.IWMainApplication;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
@@ -36,21 +42,27 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 	
 	private int last_component_id = 0;
 	private String form_id;
-	protected IPersistenceManager persistence_manager;
 	private String submit_button_id;
 	private Element wizzard_instance_element;
+
+	private boolean document_changed = true;
+
+	protected FormsService formsService;
+	private boolean saving = false;
+	private Timer saveTimer;
 	
 	private Locale default_document_locale;
 	
 	private Map<String, IFormComponent> form_components;
 	
+	public FormDocument() {
+		saveTimer = new Timer("FormDocument save");		
+	}
+	
 	public void createDocument(String form_id, LocalizedStringBean form_name) throws NullPointerException {
 		
 		if(form_id == null)
 			throw new NullPointerException("Form_id is not provided");
-		
-		IPersistenceManager persistence_manager = getPersistenceManager();
-		persistence_manager.init(form_id);
 		
 		clear();
 		
@@ -161,33 +173,35 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 	
 	public Exception[] getSavedExceptions() {
 
-		return persistence_manager.getSavedExceptions(); 
+		return new Exception[0]; 
 	}
 	
-	public void setPersistenceManager(IPersistenceManager persistence_manager) {
-		
-		if(persistence_manager != null)
-			this.persistence_manager = persistence_manager;
+	public void persist() {
+		// if document is already scheduled for saving don't do anything
+		if (!saving) {
+			saving = true;
+			TimerTask saveTask = new FormSaveTask();
+			// will save current state of document after 5 seconds
+			saveTimer.schedule(saveTask, 5000);
+		}
 	}
 	
-	public void persist() throws NullPointerException, InitializationException, Exception {
-		
-		IPersistenceManager persistence_manager = getPersistenceManager();
-		
-		if(!persistence_manager.isInitiated())
-				persistence_manager.init(form_id);
-		
-		persistence_manager.persistDocument(form_xforms);
+	/**
+	 * Saves a document
+	 */
+	private class FormSaveTask extends TimerTask {
+
+		public void run() {
+			try {
+				getFormsService().saveForm(form_id, form_xforms);
+			}
+			catch (Exception e) {
+				logger.error("Error saving form document", e);
+			}
+			saving = false;
+		}
 	}
-	
-	protected IPersistenceManager getPersistenceManager() throws NullPointerException {
-		
-		if(persistence_manager == null)
-			throw new NullPointerException("Persistence manager is not provided");
-		
-		return persistence_manager;
-	}
-	
+
 	public void rearrangeDocument() throws NullPointerException {
 		
 		int size = form_components_id_sequence.size();
@@ -228,8 +242,6 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		
 		getFormComponents().clear();
 	}
-	
-	private boolean document_changed = true;
 	
 	public void setFormDocumentModified(boolean changed) {
 		document_changed = changed;
@@ -293,9 +305,7 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		if(form_id == null)
 			throw new NullPointerException("Form document id was not provided");
 		
-		IPersistenceManager persistence_manager = getPersistenceManager();
-		persistence_manager.init(form_id);
-		Document xforms_doc = persistence_manager.loadDocument();
+		Document xforms_doc = getFormsService().loadForm(form_id);
 		
 		if(xforms_doc == null)
 			throw new NullPointerException("Form document was not found by provided id");
@@ -390,4 +400,19 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		
 		return components_in_phases;
 	}
+
+	private FormsService getFormsService() {
+		
+		if (this.formsService == null) {
+		try {
+			IWApplicationContext iwc = IWMainApplication.getDefaultIWApplicationContext();
+			this.formsService = (FormsService) IBOLookup.getServiceInstance(iwc, FormsService.class);
+		}
+		catch (IBOLookupException e) {
+			logger.error("Could not find FormsService");
+		}
+		}
+		return this.formsService;
+	}
+	
 }
