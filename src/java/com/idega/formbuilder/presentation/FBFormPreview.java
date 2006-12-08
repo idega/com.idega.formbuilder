@@ -53,8 +53,7 @@ public class FBFormPreview extends UIComponentBase {
 				
 				Document x = form_manager.getFormXFormsDocument();
 				
-				FormReader form_reader = FormReader.getInstance();
-				form_reader.init();
+				FormReader form_reader = new FormReader();
 				
 				form_reader.setBaseFormURI(FBUtil.getWebdavServerUrl(ctx)+"/files/public/");
 				form_reader.setFormDocument(x);

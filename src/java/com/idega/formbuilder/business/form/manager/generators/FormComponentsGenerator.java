@@ -216,26 +216,10 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 	}
 	
 	protected FormReader getFormReader() throws Exception {
-
-		if(true) {
-			
-			FormReader form_reader = FormReader.getInstance();
-			form_reader.init();
-			
-			this.form_reader = form_reader;
-			return form_reader;
-		}
-		
 		if(form_reader == null) {
-			
 			synchronized (this) {
-				
 				if(form_reader == null) {
-					
-					FormReader form_reader = FormReader.getInstance();
-					form_reader.init();
-					
-					this.form_reader = form_reader;
+					this.form_reader = new FormReader();
 				}
 			}
 		}
