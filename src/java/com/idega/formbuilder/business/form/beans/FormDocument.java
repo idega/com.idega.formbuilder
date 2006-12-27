@@ -43,7 +43,7 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 	private int last_component_id = 0;
 	private String form_id;
 	private String submit_button_id;
-	private Element wizzard_instance_element;
+	private Element wizard_instance_element;
 
 	private boolean document_changed = true;
 
@@ -358,19 +358,19 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		return default_document_locale;
 	}
 	
-	public Element getWizzardElement() {
+	public Element getWizardElement() {
 		
-		if(wizzard_instance_element == null)
-			wizzard_instance_element = FormManagerUtil.getElementByIdFromDocument(form_xforms, FormManagerUtil.head_tag, FormManagerUtil.wizzard_id_att_val);
+		if(wizard_instance_element == null)
+			wizard_instance_element = FormManagerUtil.getElementByIdFromDocument(form_xforms, FormManagerUtil.head_tag, FormManagerUtil.wizard_id_att_val);
 		
-//		if wizzard_instance_element not found - leave creation of it to xformsmanager,
+//		if wizard_instance_element not found - leave creation of it to xformsmanager,
 		
-		return wizzard_instance_element;
+		return wizard_instance_element;
 	}
 	
-	public void setWizzardElement(Element wizzard_element) {
+	public void setWizardElement(Element wizard_element) {
 		
-		wizzard_instance_element = wizzard_element;
+		wizard_instance_element = wizard_element;
 	}
 	
 	public Map<Integer, List<String>> getComponentsInPhases() {

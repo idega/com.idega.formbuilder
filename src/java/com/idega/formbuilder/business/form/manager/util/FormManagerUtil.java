@@ -74,11 +74,11 @@ public class FormManagerUtil {
 	public static final String form_id_tag = "form_id";
 	public static final String submission_tag = "xf:submission";
 	public static final String action_att = "action";
-	public static final String wizzard_id_att_val = "wizzard-controller";
-	public static final String wizzard_comp_template_id = "wizzard-controller-instance";
+	public static final String wizard_id_att_val = "wizard-controller";
+	public static final String wizard_comp_template_id = "wizard-controller-instance";
 	public static final String page_tag = "page";
 	public static final String number_att = "number";
-	public static final String wizzard_page_template_id = "wizzard-page";
+	public static final String wizard_page_template_id = "wizard-page";
 	public static final String relevant_att = "relevant";
 	public static final String p3ptype_att = "p3ptype";
 	
@@ -162,11 +162,11 @@ public class FormManagerUtil {
 		container.appendChild(new_nodeset_element);
 	}
 	
-	public static Element insertWizzardElement(Document xforms_document, Element wizzard_element) {
+	public static Element insertWizardElement(Document xforms_document, Element wizard_element) {
 		
 		Element first_model_element = DOMUtil.getChildElement(xforms_document.getElementsByTagName(head_tag).item(0), model_tag);
-		wizzard_element = (Element)xforms_document.importNode(wizzard_element, true);
-		return (Element)first_model_element.appendChild(wizzard_element);
+		wizard_element = (Element)xforms_document.importNode(wizard_element, true);
+		return (Element)first_model_element.appendChild(wizard_element);
 	}
 	
 	/**
@@ -624,10 +624,10 @@ public class FormManagerUtil {
 	
 	public static String constructRelevantAttValue(String page_number) {
 		
-//		instance('wizzard-controller')/page[@number='?']/@relevant='no'
+//		instance('wizard-controller')/page[@number='?']/@relevant='no'
 		
 		return new StringBuffer("instance('")
-		.append(wizzard_id_att_val)
+		.append(wizard_id_att_val)
 		.append("')/page[@number='")
 		.append(page_number)
 		.append("']/@relevant='no'")
@@ -640,7 +640,7 @@ public class FormManagerUtil {
 			return null;
 		
 		String starts_with = new StringBuffer("instance('")
-		.append(wizzard_id_att_val)
+		.append(wizard_id_att_val)
 		.append("')/page[@number='")
 		.toString();
 		

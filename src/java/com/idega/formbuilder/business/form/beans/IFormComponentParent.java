@@ -26,7 +26,7 @@ public interface IFormComponentParent {
 	
 	public abstract Locale getDefaultLocale();
 	
-	public abstract Element getWizzardElement();
+	public abstract Element getWizardElement();
 	
-	public abstract void setWizzardElement(Element wizzard_element);
+	public abstract void setWizardElement(Element wizard_element);
 }

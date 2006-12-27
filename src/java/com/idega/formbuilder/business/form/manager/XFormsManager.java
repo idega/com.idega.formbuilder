@@ -524,35 +524,36 @@ public class XFormsManager implements IXFormsManager {
 			return;
 		}
 		
-		Element wizzard_instance_element = form_document.getWizzardElement();
+		Element wizard_instance_element = form_document.getWizardElement();
 		
-		if(wizzard_instance_element == null) {
+		if(wizard_instance_element == null) {
 			
-			wizzard_instance_element = FormManagerUtil.getItemElementById(cache_manager.getComponentsXforms(), FormManagerUtil.wizzard_comp_template_id);
-			wizzard_instance_element = FormManagerUtil.insertWizzardElement(form_document.getXformsDocument(), wizzard_instance_element);
-			form_document.setWizzardElement(wizzard_instance_element);
+			wizard_instance_element = FormManagerUtil.getItemElementById(cache_manager.getComponentsXforms(), FormManagerUtil.wizard_comp_template_id);
+			wizard_instance_element = FormManagerUtil.insertWizardElement(form_document.getXformsDocument(), wizard_instance_element);
+			form_document.setWizardElement(wizard_instance_element);
 		}
 		
-		Element wizzard_element = DOMUtil.getFirstChildElement(wizzard_instance_element);
-		NodeList pages = wizzard_element.getElementsByTagName(FormManagerUtil.page_tag);
-		boolean wizzard_contains_page_number = false;
+		Element wizard_element = DOMUtil.getFirstChildElement(wizard_instance_element);
+		NodeList pages = wizard_element.getElementsByTagName(FormManagerUtil.page_tag);
+		boolean wizard_contains_page_number = false;
 		
-		if(pages != null)
+		if(pages != null) {
 			
-			for (int i = 0; i < pages.getLength() && !wizzard_contains_page_number; i++) {
+			for (int i = 0; i < pages.getLength() && !wizard_contains_page_number; i++) {
 				
 				Element page = (Element)pages.item(i);
 				
 				String page_number = page.getAttribute(FormManagerUtil.number_att);
 				
 				if(page_number != null && page_number.equals(String.valueOf(phase_number)))
-					wizzard_contains_page_number = true;
+					wizard_contains_page_number = true;
 			}
+		}
 		
-		if(!wizzard_contains_page_number) {
+		if(!wizard_contains_page_number) {
 			
-			Element page = FormManagerUtil.getItemElementById(cache_manager.getComponentsXforms(), FormManagerUtil.wizzard_page_template_id);
-			page = (Element)wizzard_element.appendChild(form_document.getXformsDocument().importNode(page, true));
+			Element page = FormManagerUtil.getItemElementById(cache_manager.getComponentsXforms(), FormManagerUtil.wizard_page_template_id);
+			page = (Element)wizard_element.appendChild(form_document.getXformsDocument().importNode(page, true));
 			page.setAttribute(FormManagerUtil.number_att, String.valueOf(phase_number));
 		}
 		
