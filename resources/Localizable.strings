@@ -4,10 +4,10 @@ toolbar_save=Save form
 fbcomp_text=Text Field
 fbcomp_textarea=Textarea
 fbcomp_secret=Secret Field
-fbcomp_multiple_select_minimal=Multiple Select M
-fbcomp_single_select_minimal=Single Select M
-fbcomp_multiple_select=Multiple Select
-fbcomp_single_select=Dropdown Menu
+fbcomp_multiple_select_minimal=List
+fbcomp_single_select_minimal=Dropdown menu
+fbcomp_multiple_select=Checkbox
+fbcomp_single_select=Radiobutton
 fbcomp_upload_file=File Upload
 fbcomp_email=Email
 
