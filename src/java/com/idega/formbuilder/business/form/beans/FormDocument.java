@@ -267,7 +267,6 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 	protected void loadDocument(Document xforms_doc, String form_id) throws InitializationException, Exception {
 		
 		clear();
-		
 		this.form_xforms = xforms_doc;
 		this.form_id = form_id;
 		
@@ -298,6 +297,8 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 			
 			component.render();
 		}
+		
+		last_component_id = FormManagerUtil.getLastId(getFormComponentsIdList());
 	}
 	
 	public void loadDocument(String form_id) throws InitializationException, Exception {

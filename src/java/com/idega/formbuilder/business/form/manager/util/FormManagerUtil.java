@@ -658,4 +658,25 @@ public class FormManagerUtil {
 			return null;
 		}
 	}
+	
+	public static int getLastId(List<String> id_list) {
+		
+		if(id_list == null)
+			return 0;
+		
+		int max = 0;
+		
+		for (Iterator<String> iter = id_list.iterator(); iter.hasNext();) {
+			String id = iter.next();
+			
+			try {
+				int cur = Integer.parseInt(id.substring(CTID.length()));
+				
+				if(cur > max)
+					max = cur;
+				
+			} catch (Exception e) { }
+		}
+		return max;
+	}
 }
