@@ -29,9 +29,9 @@ public class Workspace implements Serializable {
 	@SuppressWarnings("static-access")
 	public String getFormTitle() {
 		if(!designViewStatus.equals("noform")) {
-			IFormManager am = ((ActionManager)WFUtil.getBeanInstance("viewmanager")).getFormManagerInstance();
+			IFormManager am = ActionManager.getFormManagerInstance();
 			LocalizedStringBean title = am.getFormTitle();
-			//this.formTitle = title.getString(new Locale("en"));
+			this.formTitle = title.getString(new Locale("en"));
 			System.out.println("GETTING FORM TITLE: " + title.getString(new Locale("en")));
 		}	
 		return formTitle;
@@ -39,16 +39,16 @@ public class Workspace implements Serializable {
 
 	public void setFormTitle(String formTitle) {
 		System.out.println("SETTING FORM TITLE: " + formTitle);
-		/*LocalizedStringBean bean = new LocalizedStringBean();
+		LocalizedStringBean bean = new LocalizedStringBean();
 		bean.setString(new Locale("en"), formTitle);
-		IFormManager am = ((ActionManager)WFUtil.getBeanInstance("viewmanager")).getFormManagerInstance();
+		IFormManager am = ActionManager.getFormManagerInstance();
 		try {
 			if(am.getFormId() != null && !am.getFormId().equals("")) {
 				am.setFormTitle(bean);
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
-		}*/
+		}
 		this.formTitle = formTitle;
 	}
 
