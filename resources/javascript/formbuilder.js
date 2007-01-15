@@ -1,10 +1,12 @@
-function selectFormField(selectedField) {
+/*function selectFormField(selectedField) {
 	document.forms['workspaceform1'].elements['selected_field_id'].value=selectedField.parentNode.id;
 	document.getElementById('select_field_button').onclick();
 }
 function selectFormHeader() {
 	document.getElementById('select_form_header_button').onclick();
-}
+}*/
+
+//Handles the display of a modal dialog window
 function displayMessage(url) {
 	messageObj.setSource(url);
 	messageObj.setCssClassMessageBox(false);
@@ -15,24 +17,45 @@ function displayMessage(url) {
 function closeMessage() {
 	messageObj.close();
 }
-function addEmptyOption() {
-	//alert('Adding new option');
+//---------------------------------------------
+
+//Handles the closing of the loading indicator
+function closeLoadingMessage() {
+ 	var elem = document.getElementById('busybuddy');
+ 	if (elem) {
+  		if(elem.style) { 
+       		elem.style.display = 'none';
+     	} else {
+       		elem.display = 'none' ;
+     	}
+ 	}
+}
+//--------------------------------------------
+/*function addEmptyOption() {
 	$('workspaceform1:addNewOption').click();
 }
 function removeOption() {
 	alert('Removing option');
 	$('workspaceform1:removeOption').click();
 }
+*/
+
+//Handles the creation of a new form
 function createNewForm() {
 	var name = document.forms['newFormDialogForm'].elements['formName'].value;
 	if(name != '') {
 		showLoadingMessage("Creating");
 		dwrmanager.createNewForm(createdNewForm,name);
 		closeMessage();
-		//document.forms['workspaceform1'].elements['workspaceform1:createFormProxy'].click();
 	}
 }
-function saveProperties() {
+function createdNewForm(element) {
+	$('workspaceform1:createFormProxy').click();
+}
+//--------------------------------
+
+
+/*function saveProperties() {
 	showLoadingMessage("Saving");
 	dwrmanager.saveChanges(deletedComponent);
 }
@@ -40,49 +63,70 @@ function savedProperties() {
 	closeLoadingMessage();
 }
 function switchDataSrc() {
-	//alert('switching');
 	document.forms['workspaceform1'].elements['workspaceform1:switchSrcProxy'].click();
 }
 function applyChanges() {
 	$('workspaceform1:applyChangesProxy').click();
-}
-function deleteComponent(element) {
+}*/
+
+//Handles the deletion of a form component created with JSF
+function deleteComponentJSF(element) {
 	pressedDelete = true;
 	showLoadingMessage('Removing');
 	var id = element.parentNode.id;
-	dwrmanager.removeComponent(deletedComponent,id);
-	document.forms['workspaceform1'].elements['workspaceform1:removeCompProxy'].click();
+	dwrmanager.removeComponent(deletedComponentJSF,id);
 }
-function deletedComponent() {
+function deletedComponentJSF() {
+	$('workspaceform1:removeCompProxy').click();
 }
-function editProperties(element) {
-	var temp = pressedDelete;
-	if(!temp) {
-		showLoadingMessage('Retrieving');
-		var id = element.id;
-		dwrmanager.editComponentProperties(done,id);
-	}
-	pressedDelete = false;
+//----------------------------------------
+
+//Handles the deletion of a form component created with Javascript
+function deleteComponentJS(element) {
+	showLoadingMessage('Removing');
+	dwrmanager.removeComponent(deletedComponentJS,element.parentNode.id);
 }
-function done() {
-	$('workspaceform1:editCompProxy').click();
-}
-function createdNewForm(element) {
-	$('workspaceform1:createFormProxy').click();
-}
-function removeComponent(element) {
-	showLoadingMessage("Deleting");
-	dwrmanager.removeComponent(removedComponent,element.parentNode.id);
-}
-function removedComponent(id) {
+function deletedComponentJS(id) {
 	if(id != '') {
-		var dropBox = $('dropBox');
-		var element = document.getElementById(id);
-		dropBox.removeChild(element);
+		var dropBox = $('dropBoxinner');
+		if(dropBox) {
+			var element = document.getElementById(id);
+			if(element) {
+				dropBox.removeChild(element);
+				if(dropBox.childNodes.length == 0) {
+					var empty = $('workspaceform1:emptyForm');
+					if(empty) {
+						if(empty.style) {
+							empty.style.display = 'block';
+						} else {
+							empty.display = 'block';
+						}
+					}
+				}
+			}
+		}
 	}
 	closeLoadingMessage();
 }
-function clearDesignSpace() {
+//----------------------------------------
+
+//Handles the retrieval of component properties on mouse click
+function editProperties(id) {
+	var temp = pressedDelete;
+	if(!temp) {
+		showLoadingMessage('Fetching');
+		//var id = element.id;
+		dwrmanager.getComponentProperties(gotComponentProperties,id);
+	}
+	pressedDelete = false;
+}
+function gotComponentProperties() {
+	$('workspaceform1:getCompProperties').click();
+}
+//-------------------------------------------
+
+
+/*function clearDesignSpace() {
 	var dropBox = $('dropBox');
 	var child = null;
 	for(var i=dropBox.childNodes.length-1;i>-1;i--) {
@@ -118,20 +162,11 @@ function switchVisibility(id,makeVisible) {
 			}
 		}
 	}
-}
+}*/
 function decoy() {
 	closeLoadingMessage();
 }
-function closeLoadingMessage() {
- 	var elem = document.getElementById('busybuddy');
- 	if (elem) {
-  		if(elem.style) { 
-       		elem.style.display = 'none';
-     	} else {
-       		elem.display = 'none' ;
-     	}
- 	}
-}
+
 function switchSelectedForm() {
 	showLoadingMessage("Loading");
 }

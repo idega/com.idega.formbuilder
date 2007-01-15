@@ -11,13 +11,16 @@ import javax.faces.render.Renderer;
 
 import org.apache.myfaces.custom.div.Div;
 
-import com.idega.formbuilder.presentation.FBWorkspace;
+import com.idega.formbuilder.presentation.FBViewPanel;
 
 public class WorkspaceRenderer extends Renderer {
 	
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
-		FBWorkspace workspace = (FBWorkspace) component;
+		FBViewPanel workspace = (FBViewPanel) component;
 		ResponseWriter writer = context.getResponseWriter();
+		//workspace.initializeComponent(context);
+		
+		
 		writer.startElement("DIV", workspace);
 		writer.writeAttribute("id", workspace.getId(), "id");
 		writer.writeAttribute("class", workspace.getStyleClass(), "styleClass");

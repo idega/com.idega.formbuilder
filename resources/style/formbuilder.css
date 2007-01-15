@@ -1,87 +1,23 @@
 /*---Page layout styles---*/
-#application_container {
-	border: 1px #000 groove;
-	margin: 10px;
-	height: 100%;
-	text-align: center;
-	font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
+#optionsPanel {
+	width: 300px;
+	float: left;
+	height: 700px;
+	background: LightGrey;
+	padding: 5px;
+	border: 0px solid Black;
 }
-#toolbar_container {
-	margin-top: 5px;
-	margin-left: 5px;
-	margin-right: 5px;
-	background: #E2EBED;
-	height: 24px;
-}
-#main_container {
-	margin: 5px;
-	padding-bottom: 0px;
-	background: #F2F2F2;
-	height: 500px;
-}
-#options_container {
-	float:left;
-	width: 450px;
-	height: 500px;
-	background:#fff;
-	margin-right: 0px;
-	margin-bottom: 0px;
-	padding-bottom: 0px;
-}
-#form_container {
-	margin-left: 35%;
-	margin-bottom: 0px;
-	height: 500px;
-}
-#hidden_container {
-	display: none;
-}
-#bottom_tab_container {
-	border: 1px #000 groove;
-	margin: 0px;
-	padding-top: 0px;
-	padding: 0px;
-	height: 20px;
-	width: 100%;
-}
-/*---UI Component styles---*/
-#build #stage{background:#fff;}
-#build #main{float:left;padding:0 0 20px 0;}
-#build #main form{width:466px;margin:10px 0 0 22px;}
-#build #main form ul{width:100%;}
-#build #main form li{width:100%;margin:0 0 8px 0;}
-
-.visibleFacet {
+#viewPanel {
 	display: block;
+	width: 70%;
+	height: 700px;
+	background: LightGrey;
+	border: 0px solid Black;
 }
-.invisibleFacet {
-	display: none;
-}
-.speedButton {
-	display: none;
-	float: right;
-}
-.formElement:hover .speedButton {
-	display: inline;
-	cursor: pointer;
-}
-.inlineRadioButton * {
-	display: inline 						! important;
-}
-/*.formElement:hover * {
-	display: inline;
-}*/
-.removeComponentButton {
-	width: 20px;
-	height: 20px;
-	float: right;
-	background: url(../images/edit-delete.png) no-repeat;
-}
-.editComponentButton {
-	width: 20px;
-	height: 20px;
-	float: right;
-	background: url(../images/edit-find-replace.png) no-repeat;
+.sourceView {
+	width: 300px;
+	height: 500px;
+	background-color: Red;
 }
 .formElement {
 	width: 88%;
@@ -94,6 +30,17 @@
 	padding-bottom: 10px;
 	
 }
+.formElementSel {
+	background-color: Silver;
+	width: 88%;
+	height: auto;	
+	margin-bottom: 10px;
+	margin-left: 5%;
+	margin-right: 5%;
+	padding-left: 30px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
 .formElement:hover {
 	border:1px solid #93B825;
 	padding-top: 9px;
@@ -103,32 +50,87 @@
 .formElement:active {
 	background-color: Silver;
 }
-#formHeadingHeader {
-	font-family: sans-serif;
-	font-size: x-large;
-	font-weight: bold;
+.speedButton {
+	display: none;
+	float: right;
+}
+.formElement:hover .speedButton {
+	display: inline;
+	cursor: pointer;
+}
+.viewTabs {
+	background-color: Red;
+}
+.selectedTab {
+	background-color: Blue;
+	display: inline;
+}
+.unselectedTab {
+	background-color: White;
+	display: inline;
+}
+.formHeading {
+	font-size: 24px;
 	text-align: center;
-	text-transform: none;
+}
+.formHeading:hover {
+	cursor: pointer;
+	background-color: Yellow;
+}
+/*.sourceView textarea {
+	width: 100%;
+	height: 400px;
+  	font-size: 11px;
+  	color:#4a4a4a;
+ 	background-color: Red;
+}*/
+.toolbarButton {
+	text-decoration: none 					! important;
+	color: #000;
+	height: 12px;
+	width: 250px;
+	/*line-height: 20px;*/
+	vertical-align: middle;
+	border: none;
+	background-color: #FAFAFA;
+	margin: 2px;
+	padding: 1px;
+	display: block;
+	font-size: 1.0em;
+}
+.toolbarButton:hover {
+	border: 1px solid #000;
+	margin: 1px;
+}
+.toolbarButton:hover {
+	color: #FFF;
+	background-color: #317082;
+	text-decoration: none;
+}
+.floatLeft {
+	float: left;
+}
+.floatRight {
+	float: right;
 }
 .componentsList {
-	float:left;
-	list-style:none;
-	margin:5px 5px 5px 0;
+	float: left;
+	list-style: none;
+	margin: 0px;
 }
 .paletteComponent {
 	display: block;
-	width: 150px;
-	margin: 10px 10px 0px 10px;
+	width: 120px;
+	margin: 5px 5px 0px 5px;
 	background-color:#f5f5f5;
 	border:1px solid #dedede;
-	border-top:1px solid #eee;
-	border-left:1px solid #eee;
-	text-align: center;
-	padding-top: 0px;
-	padding-bottom: 0px;
-	text-decoration:none;
-	font-weight:bold;
-	color:#565656;
+	text-align: left;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 5px;
+	text-decoration: none;
+	font-weight: bold;
+	color: #565656;
 	background-repeat:no-repeat;
 	background-position:6px center;
 }
@@ -141,6 +143,11 @@
 	background-color:#C1DF5D;
 	border:1px solid #93B825;
 	color:#333;
+}
+.menuPanelTitle {
+	background: White;
+	text-decoration: none;
+	padding: 10px;
 }
 .dropBox {
 	background-color: White;
@@ -162,9 +169,9 @@
 .toolbar_button {
 	text-decoration: none 					! important;
 	color: #000;
-	height: 20px;
-	width: 75px;
-	line-height: 20px;
+	height: 12px;
+	width: 250px;
+	/*line-height: 20px;*/
 	vertical-align: middle;
 	border: none;
 	background-color: #FAFAFA;
@@ -215,81 +222,6 @@
 	padding: 10px;
 	
 }
-
-/*---Options tabbed pane styles---*/
-table.tabbedPane { 
-	width: 400px                             ! important;
-    height: 500px                            ! important;
-    vertical-align: top                      ! important;
-    border-collapse: separate                ! important;
-    border-spacing: 0px                      ! important; 
-}
-td.activeTab { 
-	background-color: #e0e0ec                ! important;
-	border-top: 2px solid #fff               ! important;
-	border-left: 2px solid #fff              ! important;
-	border-right: 2px solid #aaacae          ! important;
-	border-bottom: 0px none                  ! important;
-	padding: 0px                             ! important;
-	height: 20px                             ! important;
-	font-size: 12px                          ! important;
-	horizontal-align: center                 ! important;
-	text-align: center                       ! important;
-	width: 100px							 ! important;
-}
-td.activeTab input { 
-	background-color: #e0e0ec                ! important;
-	font-size: 12px                          ! important;
-	horizontal-align: center                 ! important;
-	text-align: center                       ! important;
-	border: none							 ! important;
-	height: 20px							 ! important;
-	margin: 0px								 ! important;
-}
-td.inactiveTab { 
-	background-color: #c8c8d8                ! important;
-	border-top: 2px solid #e3e5e7            ! important;
-	border-left: 2px solid #ebecef           ! important;
-	border-right: 2px solid #8a8c8e          ! important;
-	border-bottom: 0px none                  ! important;
-	padding: 0px                             ! important;
-	height: 20px                             ! important;
-	font-size: 12px                          ! important;
-	horizontal-align: center                 ! important;
-	text-align: center                       ! important;
-	width: 100px							 ! important;
-}
-td.inactiveTab input { 
-	background-color: #c8c8d8                ! important;
-	font-size: 12px                          ! important;
-	horizontal-align: center                 ! important;
-	text-align: center                       ! important;
-	border: none							 ! important;
-	height: 20px							 ! important;
-	margin: 0px								 ! important;
-}
-td.activeSub { 
-	background-color: #e0e0ec                ! important;
-	padding: 0px                             ! important;
-	border-left: 2px solid #fff              ! important;
-	border-right: 2px solid #aaacae          ! important; 
-}
-td.inactiveSub { 
-	background-color: #fff                   ! important;
-    padding: 0px                             ! important; 
-}
-td.tabContent { 
-	background-color: #e0e0ec                ! important;
-	border-top: 0px none                     ! important;
-	border-left: 2px solid #fff              ! important;
-	border-right: 2px solid #aaacae          ! important;
-	border-bottom: 2px solid #aaacae         ! important;
-	vertical-align: top                      ! important;
-	padding: 20px                            ! important;
-	height: 100%                             ! important;
-	text-align: justify                      ! important; 
-} 
-
 /*---Popup model dialog styles---*/
 .modalDialog_transparentDivs {	
 	filter: alpha(opacity=40);
@@ -327,37 +259,4 @@ td.tabContent {
 	height: 20px; 
 	border-right: 1px solid #444; 
 	background: #9ACB34; 
-}
-
-/*NO FORM elements*/
-#noFormNotice {
-	background-color: #FFCC66;
-	cursor: pointer;
-	padding: 20px;
-	border: 1px dashed #444;
-	text-align: center !important;
-	margin: 20px;
-	display: block;
-}
-#noFormNotice #header {
-	color: Red;
-	font-family: sans-serif;
-	font-size: x-large;
-	font-weight: bold;
-	text-align: center;
-	text-transform: none;
-}
-#noFormNotice #body {
-	color: Olive;
-	font-size: large;
-	text-align: center;
-	text-transform: none;
-}
-
-.com_idega_formbuilder_presentation_FBFormSourceEdit_container textarea {
-	width: 100%;
-	height: 400px;
-  font-size: 11px;
-  color:#4a4a4a;
- 	background-color: #fafafa;
 }

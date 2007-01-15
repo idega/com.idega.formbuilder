@@ -1,7 +1,7 @@
 var currentElement = null;
 function handleComponentDrag(element) {
 	var type = element.id;
-	dwrmanager.getElement(receiveComponent,type);
+	dwrmanager.createComponent(receiveComponent,type);
 }
 function receiveComponent(element) {
 	currentElement = createTreeNode(element.documentElement);
@@ -12,6 +12,9 @@ function createTreeNode(element) {
 		return textNode;
 	} else {
 		var result = document.createElement(element.nodeName);
+		if(element.nodeName == 'input' || element.nodeName == 'textarea' || element.nodeName == 'select') {
+			result.setAttribute('disabled','true');
+		}
 		for(var i=0;i<element.attributes.length;i++) {
 			result.setAttribute(element.attributes[i].nodeName,element.attributes[i].nodeValue);
 		}

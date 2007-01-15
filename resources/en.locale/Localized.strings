@@ -27,3 +27,5 @@ input.title=Title of input
 lockey_fbcomp_1input.title=Title of input
 labels_noform_header=No form currently opened
 labels_noform_body=Press the New Form button on the toolbar
+labels_empty_form_header=This form is currently empty
+labels_empty_form_body=To add elements - drag them from the palette
