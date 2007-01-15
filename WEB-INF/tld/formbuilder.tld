@@ -13,6 +13,53 @@
 
 	
 	<tag>
+		<name>division</name>
+		<tag-class>com.idega.formbuilder.presentation.FBDivisionTag</tag-class>
+		<attribute>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>workspace</name>
+		<tag-class>com.idega.formbuilder.presentation.FBWorkspaceTag</tag-class>
+		<attribute>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>view</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>formPropertiesPanel</name>
+		<tag-class>com.idega.formbuilder.presentation.FBFormPropertiesPanelTag</tag-class>
+		<attribute>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
 		<name>selectValues</name>
 		<tag-class>com.idega.formbuilder.presentation.FBSelectValuesListTag</tag-class>
 		<attribute>
@@ -32,7 +79,7 @@
 		</attribute>
 	</tag>
 	<tag>
-		<name>properties</name>
+		<name>componentPropertiesPanel</name>
 		<tag-class>com.idega.formbuilder.presentation.FBComponentPropertiesPanelTag</tag-class>
 		<attribute>
 			<name>id</name>
@@ -51,8 +98,8 @@
 		</attribute>
 	</tag>
 	<tag>
-		<name>workspace</name>
-		<tag-class>com.idega.formbuilder.presentation.FBWorkspaceTag</tag-class>
+		<name>viewPanel</name>
+		<tag-class>com.idega.formbuilder.presentation.FBViewPanelTag</tag-class>
 		<attribute>
 			<name>id</name>
 			<required>false</required>
