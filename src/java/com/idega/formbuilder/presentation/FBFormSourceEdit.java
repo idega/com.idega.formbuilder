@@ -8,7 +8,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
-import org.apache.myfaces.component.html.ext.HtmlCommandButton;
+import org.ajax4jsf.ajax.UIAjaxCommandButton;
 import org.apache.myfaces.component.html.ext.HtmlInputTextarea;
 
 import com.idega.webface.WFContainer;
@@ -34,12 +34,19 @@ public class FBFormSourceEdit extends WFContainer {
 		HtmlInputTextarea textarea = new HtmlInputTextarea();
 		textarea.setRendered(true);
 		textarea.setValueBinding(value_att, app.createValueBinding("#{formSourceCodeManager.sourceCode}"));
-		textarea.setWrap("off");
+		textarea.setWrap("false");
 		
-		HtmlCommandButton src_submit = new HtmlCommandButton();
+		/*HtmlCommandButton src_submit = new HtmlCommandButton();
 		src_submit.setRendered(true);
 		src_submit.setActionListener(app.createMethodBinding("#{formSourceCodeManager.processAction}", new Class[]{ActionEvent.class}));
-		src_submit.setValue("change source code");
+		src_submit.setValue("change source code");*/
+		
+		UIAjaxCommandButton src_submit = (UIAjaxCommandButton) app.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
+		src_submit.setAjaxSingle(false);
+		src_submit.setReRender("mainApplication");
+		src_submit.setActionListener(app.createMethodBinding("#{formSourceCodeManager.processAction}", new Class[]{ActionEvent.class}));
+		src_submit.setValueBinding("value", app.createValueBinding("#{localizedStrings['com.idega.formbuilder']['change_source_code']}"));
+		src_submit.setOncomplete("alert('FINISHED')");
 		
 		WFContainer form_container = new WFContainer();
 		form_container.setStyleClass(container_style);

@@ -2,23 +2,7 @@ package com.idega.formbuilder.presentation;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponentBase;
-import javax.faces.component.UISelectItems;
-import javax.faces.component.html.HtmlInputText;
-import javax.faces.component.html.HtmlOutputLabel;
-import javax.faces.component.html.HtmlSelectBooleanCheckbox;
 import javax.faces.context.FacesContext;
-import javax.faces.el.ValueBinding;
-
-import org.apache.myfaces.component.html.ext.HtmlSelectOneRadio;
-
-import com.idega.formbuilder.FormbuilderViewManager;
-import com.idega.formbuilder.business.DataSourceList;
-import com.idega.formbuilder.business.FormComponent;
-import com.idega.formbuilder.business.form.beans.ComponentProperties;
-import com.idega.formbuilder.business.form.beans.ComponentPropertiesSelect;
-import com.idega.formbuilder.business.form.beans.IComponentProperties;
-import com.idega.formbuilder.business.form.manager.IFormManager;
-import com.idega.webface.WFUtil;
 
 public class FBComponentPropertiesPanel extends UIComponentBase {
 
@@ -35,8 +19,18 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 	}
 	
 	public void initializeComponent(FacesContext context) {
+		//System.out.println("INITIAZILING COMPONENT PROPERTIES PANEL");
+		
 		Application application = context.getApplication();
-		boolean isSelect = false;
+		this.getChildren().clear();
+		
+		FBBasicProperties simpleProperties = (FBBasicProperties) application.createComponent(FBBasicProperties.COMPONENT_TYPE);
+		this.getChildren().add(simpleProperties);
+		
+		FBAdvancedProperties advancedProperties = (FBAdvancedProperties) application.createComponent(FBAdvancedProperties.COMPONENT_TYPE);
+		this.getChildren().add(advancedProperties);
+		
+		/*boolean isSelect = false;
 		IFormManager formManagerInstance = (IFormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
 		String currentDataSrc = null;
 		this.getChildren().clear();
@@ -57,6 +51,7 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 					isSelect = true;
 				}
 				if(properties instanceof ComponentProperties) {
+					
 					
 					HtmlOutputLabel requiredLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 					requiredLabel.setValue("Required field");
@@ -107,10 +102,7 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 					emptyLabel.setValueBinding("value", application.createValueBinding("#{component.emptyLabel}"));
 					this.getChildren().add(emptyLabel);
 					
-					/*FBSelectValuesList selectValues = (FBSelectValuesList) application.createComponent(FBSelectValuesList.COMPONENT_TYPE);
-					selectValues.setValueBinding("itemSet", application.createValueBinding("#{component.items}"));
-					selectValues.setId("selectOpts");
-					this.getChildren().add(selectValues);*/
+					
 					
 					
 					HtmlOutputLabel advancedL = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
@@ -153,6 +145,7 @@ public class FBComponentPropertiesPanel extends UIComponentBase {
 				}
 			}
 		}
+		*/
 	}
 	
 	public boolean getRendersChildren() {
