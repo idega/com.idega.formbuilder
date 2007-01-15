@@ -12,15 +12,11 @@ import org.w3c.dom.NodeList;
 public class DOMTransformer {
 	
 	public static void renderNode(Node node, UIComponent component, ResponseWriter writer) throws IOException {
-		//Node node = component
-		if(node == null) {
-			System.out.println("NODE IS NULL");
-		}
-		if(component == null) {
-			System.out.println("component IS NULL");
-		}
 		String nodeName = node.getNodeName();
 		writer.startElement(node.getNodeName(), component);
+		if(nodeName.equalsIgnoreCase("input") || nodeName.equalsIgnoreCase("textarea") || nodeName.equalsIgnoreCase("select")) {
+			writer.writeAttribute("disabled", "true", null);
+		}
 		Node attr = null;
 		if(node.hasAttributes()) {
 			NamedNodeMap attributes = node.getAttributes();
