@@ -11,6 +11,7 @@ import javax.faces.el.ValueBinding;
 import javax.faces.event.ActionEvent;
 
 import org.ajax4jsf.ajax.UIAjaxSupport;
+import org.apache.myfaces.component.html.ext.HtmlCommandButton;
 import org.apache.myfaces.component.html.ext.HtmlCommandLink;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
 import org.apache.myfaces.component.html.ext.HtmlSelectOneMenu;
@@ -67,7 +68,7 @@ public class FBMenu extends IWBaseComponent {
 		Application application = context.getApplication();
 		this.getChildren().clear();
 		
-		HtmlCommandLink newFormButton = (HtmlCommandLink) application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
+		HtmlCommandButton newFormButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
 		newFormButton.setId("newFormButton");
 		newFormButton.setOnclick("displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/new-dialog.inc');return false");
 		newFormButton.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['toolbar_new']}"));
@@ -157,7 +158,7 @@ public class FBMenu extends IWBaseComponent {
 		this.getFacets().put("tab1", tab1);
 		this.getFacets().put("tab2", tab2);
 		this.getFacets().put("tab3", tab3);
-		this.getFacets().put("tab4", tab4);
+//		this.getFacets().put("tab4", tab4);
 		
 		this.getFacets().put(NO_MENU_FACET, noMenuLabel);
 	}
@@ -169,7 +170,7 @@ public class FBMenu extends IWBaseComponent {
 		writer.writeAttribute("id", getId(), "id");
 		writer.writeAttribute("style", "width: 300px;", null);
 		
-		HtmlCommandLink newFormB = (HtmlCommandLink) getFacet(NEW_FORM_BUTTON_FACET);
+		UIComponent newFormB = (UIComponent) getFacet(NEW_FORM_BUTTON_FACET);
 		if(newFormB != null) {
 //			newFormB.setRendered(true);
 			renderChild(context, newFormB);
@@ -199,27 +200,27 @@ public class FBMenu extends IWBaseComponent {
 				FBMenuPanel tab1 = (FBMenuPanel) getFacet("tab1");
 				FBMenuPanel tab2 = (FBMenuPanel) getFacet("tab2");
 				FBMenuPanel tab3 = (FBMenuPanel) getFacet("tab3");
-				FBMenuPanel tab4 = (FBMenuPanel) getFacet("tab4");
+//				FBMenuPanel tab4 = (FBMenuPanel) getFacet("tab4");
 				if(selectedMenu.equals("0")) {
 					tab1.setExpanded(true);
 					tab2.setExpanded(false);
 					tab3.setExpanded(false);
-					tab4.setExpanded(false);
+//					tab4.setExpanded(false);
 				} else if(selectedMenu.equals("1")) {
 					tab1.setExpanded(false);
 					tab2.setExpanded(true);
 					tab3.setExpanded(false);
-					tab4.setExpanded(false);
+//					tab4.setExpanded(false);
 				} else if(selectedMenu.equals("2")) {
 					tab1.setExpanded(false);
 					tab2.setExpanded(false);
 					tab3.setExpanded(true);
-					tab4.setExpanded(false);
+//					tab4.setExpanded(false);
 				} else if(selectedMenu.equals("3")) {
 					tab1.setExpanded(false);
 					tab2.setExpanded(false);
 					tab3.setExpanded(false);
-					tab4.setExpanded(true);
+//					tab4.setExpanded(true);
 				}
 			}
 		} else {
@@ -261,10 +262,10 @@ public class FBMenu extends IWBaseComponent {
 			if(tab3 != null) {
 				renderChild(context, tab3);
 			}
-			FBMenuPanel tab4 = (FBMenuPanel) getFacet("tab4");
+			/*FBMenuPanel tab4 = (FBMenuPanel) getFacet("tab4");
 			if(tab4 != null) {
 				renderChild(context, tab4);
-			}
+			}*/
 		}
 	}
 	

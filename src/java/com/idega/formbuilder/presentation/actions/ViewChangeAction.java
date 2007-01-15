@@ -31,7 +31,7 @@ public class ViewChangeAction implements ActionListener {
 	}
 	
 	private boolean openForm() {
-		String id = ((FormDocument) WFUtil.getBeanInstance("formDocument")).getFormId();
+		String id = ((FormDocument) WFUtil.getBeanInstance("formDocument")).getFormTitle();
 		if(id != null && !id.equals("")) {
 			return true;
 		} else {

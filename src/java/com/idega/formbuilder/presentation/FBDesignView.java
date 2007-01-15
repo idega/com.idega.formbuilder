@@ -10,12 +10,9 @@ import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
-import javax.faces.event.ActionEvent;
 
-import org.ajax4jsf.ajax.UIAjaxSupport;
 import org.apache.myfaces.custom.htmlTag.HtmlTag;
 
-import com.idega.formbuilder.business.form.manager.IFormManager;
 import com.idega.formbuilder.view.ActionManager;
 import com.idega.presentation.IWBaseComponent;
 
@@ -97,13 +94,12 @@ public class FBDesignView extends IWBaseComponent {
 		formHeadingHeader.setId("formHeadingHeader");
 		formHeading.getChildren().add(formHeadingHeader);
 		
-		UIAjaxSupport formHeadingS = (UIAjaxSupport) application.createComponent("org.ajax4jsf.ajax.Support");
+		/*UIAjaxSupport formHeadingS = (UIAjaxSupport) application.createComponent("org.ajax4jsf.ajax.Support");
 		formHeadingS.setEvent("onclick");
 		formHeadingS.setReRender("mainApplication");
 		formHeadingS.setActionListener(application.createMethodBinding("#{selectHeaderAction.processAction}", new Class[]{ActionEvent.class}));
 		formHeadingS.setAjaxSingle(true);
-//		formHeadingS.setOnsubmit("alert('Support here')");
-		formHeadingHeader.getChildren().add(formHeadingS); 
+		formHeadingHeader.getChildren().add(formHeadingS); */
 		
 		HtmlTag hr = (HtmlTag) application.createComponent(HtmlTag.COMPONENT_TYPE);
 		hr.setValue("hr");
@@ -144,10 +140,9 @@ public class FBDesignView extends IWBaseComponent {
 		
 		this.getChildren().clear();
 		
-		IFormManager formManagerInstance = ActionManager.getFormManagerInstance();
+//		IFormManager formManagerInstance = ActionManager.getFormManagerInstance();
 		
-		List<String> ids = formManagerInstance.getFormComponentsIdsList();
-//		System.out.println("NUMBER OF COMPONENTS: " + ids.size());
+		List<String> ids = ActionManager.getFormManagerInstance().getFormComponentsIdsList();
 		Iterator it = ids.iterator();
 //		String selectedComponent = null;
 		ValueBinding vb = this.getValueBinding("selectedComponent");

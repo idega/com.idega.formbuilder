@@ -6,7 +6,6 @@ import java.util.Iterator;
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
 import javax.faces.el.MethodBinding;
 import javax.faces.event.ActionEvent;
 
@@ -56,7 +55,6 @@ public class FBMenuPanel extends IWBaseComponent {
 	public FBMenuPanel() {
 		super();
 		this.setRendererType(null);
-		
 	}
 	
 	public boolean getRendersChildren() {
@@ -73,15 +71,11 @@ public class FBMenuPanel extends IWBaseComponent {
 	
 	protected void initializeComponent(FacesContext context) {		
 		Application application = context.getApplication();
-//		String methodB = null;
-//		super.initializeComponent(context);
 		FBDivision emptyPanel = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
 		
 		HtmlOutputText out = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		out.setValue("Empty panel");
 		emptyPanel.getChildren().add(out);
-		
-		
 		
 		FBDivision headerPanel = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
 		headerPanel.setStyleClass("menuPanelTitle");
@@ -90,11 +84,9 @@ public class FBMenuPanel extends IWBaseComponent {
 		UIAjaxCommandLink header = (UIAjaxCommandLink) application.createComponent(UIAjaxCommandLink.COMPONENT_TYPE);
 		header.setId(getId() + "Title");
 		MethodBinding mb = application.createMethodBinding("#{switchMenuAction.processAction}", new Class[]{ActionEvent.class});
-//		methodB = mb.getExpressionString();
 		header.setActionListener(mb);
 		header.setAjaxSingle(true);
 		header.setReRender("mainApplication");
-		
 		
 		header.setValueBinding("value", this.getValueBinding("title"));
 		

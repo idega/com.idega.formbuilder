@@ -59,14 +59,28 @@
 	cursor: pointer;
 }
 .viewTabs {
-	background-color: Red;
+	background-color: #f5f5f5;
+	padding-top: 10px;
+	height: 20px;
 }
 .selectedTab {
-	background-color: Blue;
+	padding-bottom: 10px;
+	padding-top: 10px;
+	padding-left: 20px;
+	padding-right: 20px;
+	text-decoration: none;
+	height: auto;
+	background-color: #DFEEA3;
 	display: inline;
 }
 .unselectedTab {
-	background-color: White;
+	padding-bottom: 10px;
+	padding-top: 10px;
+	padding-left: 20px;
+	padding-right: 20px;
+	text-decoration: none;
+	height: auto;
+	background-color: #f5f5f5;
 	display: inline;
 }
 .formHeading {
@@ -114,16 +128,17 @@
 	float: right;
 }
 .componentsList {
-	float: left;
+	/*float: left;*/
 	list-style: none;
-	margin: 0px;
+	margin-bottom: 10px;
+	margin-top: 10px;
 }
 .paletteComponent {
 	display: block;
 	width: 120px;
 	margin: 5px 5px 0px 5px;
-	background-color:#f5f5f5;
-	border:1px solid #dedede;
+	background-color: #f5f5f5;
+	border: 1px solid #dedede;
 	text-align: left;
 	padding-top: 3px;
 	padding-bottom: 3px;
@@ -148,6 +163,8 @@
 	background: White;
 	text-decoration: none;
 	padding: 10px;
+	border: 1px solid Black;
+	height: 15px;
 }
 .dropBox {
 	background-color: White;
