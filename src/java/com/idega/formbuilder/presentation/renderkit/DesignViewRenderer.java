@@ -18,7 +18,7 @@ public class DesignViewRenderer extends Renderer {
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		FBDesignView designView = (FBDesignView) component;
-		designView.initializeComponent(context);
+		//designView.initializeComponent(context);
 		writer.startElement("DIV", designView);
 		writer.writeAttribute("id", designView.getId(), "id");
 		writer.writeAttribute("class", designView.getStyleClass(), "styleClass");

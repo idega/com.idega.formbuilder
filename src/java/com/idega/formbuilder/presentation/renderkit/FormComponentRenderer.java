@@ -7,7 +7,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
-import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
 import com.idega.formbuilder.dom.DOMTransformer;
 import com.idega.formbuilder.presentation.FBFormComponent;
 
@@ -19,11 +18,11 @@ public class FormComponentRenderer extends Renderer {
 		writer.startElement("DIV", field);
 		writer.writeAttribute("class", field.getStyleClass(), "styleClass");
 		writer.writeAttribute("id", field.getId(), "id");
-		try {
+		/*try {
 			field.initializeComponent(context);
 		} catch(FBPostponedException pe) {
 			pe.printStackTrace();
-		}
+		}*/
 		writer.writeAttribute("onclick", field.getOnclick(), "onclick");
 		DOMTransformer.renderNode(field.getElement(), field, writer);
 	}
