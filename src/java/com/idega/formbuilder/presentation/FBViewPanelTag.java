@@ -5,29 +5,19 @@ import javax.faces.el.ValueBinding;
 
 import org.apache.myfaces.shared_impl.taglib.UIComponentTagBase;
 
-public class FBWorkspaceTag extends UIComponentTagBase {
-
+public class FBViewPanelTag extends UIComponentTagBase {
+	
 	private String styleClass;
-	private String id;
 	private String view;
 	
-	public FBWorkspaceTag() {
+	public FBViewPanelTag() {
 		super();
 		this.styleClass = "";
-		this.id = "";
 		this.view = "";
 	}
 
 	public String getComponentType() {
-		return FBWorkspace.COMPONENT_TYPE;
-	}
-
-	public String getView() {
-		return view;
-	}
-
-	public void setView(String view) {
-		this.view = view;
+		return FBViewPanel.COMPONENT_TYPE;
 	}
 
 	public String getRendererType() {
@@ -37,19 +27,15 @@ public class FBWorkspaceTag extends UIComponentTagBase {
 	public void release() {
 		super.release();
 		this.styleClass = null;
-		this.id = null;
 		this.view = null;
 	}
 	
 	public void setProperties(UIComponent component) {
 		super.setProperties(component);
 		if(component != null) {
-			FBWorkspace workspace = (FBWorkspace) component;
+			FBViewPanel workspace = (FBViewPanel) component;
 			if(this.styleClass != null) {
 				workspace.setStyleClass(this.styleClass);
-			}
-			if(this.id != null) {
-				workspace.setId(this.id);
 			}
 			if(this.view != null) {
 				if (isValueReference(this.view)) {
@@ -70,12 +56,12 @@ public class FBWorkspaceTag extends UIComponentTagBase {
 		this.styleClass = styleClass;
 	}
 
-	public String getId() {
-		return id;
+	public String getView() {
+		return view;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setView(String view) {
+		this.view = view;
 	}
 
 }

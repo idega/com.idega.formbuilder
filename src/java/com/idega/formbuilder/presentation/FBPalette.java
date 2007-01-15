@@ -9,7 +9,7 @@ import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
-import com.idega.formbuilder.business.PaletteComponent;
+import com.idega.formbuilder.presentation.beans.PaletteComponent;
 
 public class FBPalette extends UIComponentBase {
 	

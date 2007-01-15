@@ -1,13 +1,19 @@
 package com.idega.formbuilder.presentation;
 
-import javax.faces.component.UIComponentBase;
-import javax.faces.context.FacesContext;
+import java.io.IOException;
 
-public class FBPaletteComponent extends UIComponentBase {
+import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
+import javax.faces.el.ValueBinding;
+
+import com.idega.presentation.IWBaseComponent;
+
+public class FBPaletteComponent extends IWBaseComponent {
 	
-	public static final String RENDERER_TYPE = "fb_paletteComponent";
 	public static final String COMPONENT_FAMILY = "formbuilder";
 	public static final String COMPONENT_TYPE = "PaletteComponent";
+	
+	private static final String INLINE_DIV_STYLE = "display: inline;";
 	
 	private String id;
 	private String styleClass;
@@ -25,7 +31,7 @@ public class FBPaletteComponent extends UIComponentBase {
 
 	public FBPaletteComponent() {
 		super();
-		this.setRendererType(FBPaletteComponent.RENDERER_TYPE);
+		this.setRendererType(null);
 	}
 	
 	public String getFamily() {
@@ -33,7 +39,55 @@ public class FBPaletteComponent extends UIComponentBase {
 	}
 
 	public String getRendererType() {
-		return FBPaletteComponent.RENDERER_TYPE;
+		return null;
+	}
+	
+	public void encodeEnd(FacesContext context) throws IOException {
+		ResponseWriter writer = context.getResponseWriter();
+		writer.startElement("DIV", this);
+		writer.writeAttribute("class", styleClass, "styleClass");
+		ValueBinding vb = getValueBinding("type");
+		String type = null;
+		if(vb != null) {
+			type = (String) vb.getValue(context);	
+		} else {
+			type = getType();
+		}
+		writer.writeAttribute("id", type, "type");
+		writer.startElement("IMG", null);
+		writer.writeAttribute("style", INLINE_DIV_STYLE, null);
+		vb = getValueBinding("icon");
+		String icon = null;
+		if(vb != null) {
+			icon = (String) vb.getValue(context);
+		} else {
+			icon = getIcon();
+		}
+		writer.writeAttribute("src", icon, "icon");
+		writer.endElement("IMG");
+		
+		writer.startElement("P", null);
+		writer.writeAttribute("style", INLINE_DIV_STYLE, null);
+		vb = getValueBinding("name");
+		String name = null;
+		if(vb != null) {
+			name = (String) vb.getValue(context);
+		} else {
+			name = getName();
+		}
+		writer.writeText(name, null);
+		writer.endElement("P");
+		writer.endElement("DIV");
+		writer.write(getEmbededJavascript(type));
+	}
+	
+	public static String getEmbededJavascript(String id) {
+		StringBuilder result = new StringBuilder();
+		result.append("<script language=\"JavaScript\">\n");
+		result.append("new Draggable(\"" + id + "\", {tag:\"div\",starteffect:handleComponentDrag,revert:true});\n");
+		result.append("</script>\n");
+		return result.toString();
+		
 	}
 	
 	public Object saveState(FacesContext context) {

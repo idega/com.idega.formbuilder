@@ -24,26 +24,24 @@ public class FBFormPreview extends UIComponentBase {
 	
 	private static Log logger = LogFactory.getLog(FBFormPreview.class);
 	
-	private static final String COMPONENT_FAMILY = "formbuilder";
+	public static final String COMPONENT_FAMILY = "formbuilder";
 	public static final String COMPONENT_TYPE = "FBFormPreview";
+	
 	private static final String container_tag = "div";
 	
-	@Override
 	public String getFamily() {
 		return COMPONENT_FAMILY;
 	}
 	
-	@Override
 	public void encodeBegin(FacesContext ctx) throws IOException {
+		ResponseWriter writer = ctx.getResponseWriter();
 		super.encodeBegin(ctx);
 		
-		ctx.getResponseWriter().startElement(container_tag, null);
+		writer.startElement(container_tag, this);
 	}
 	
-	@Override
 	public void encodeEnd(FacesContext ctx) throws IOException {
-		
-		ResponseWriter response_writer = ctx.getResponseWriter();
+		ResponseWriter writer = ctx.getResponseWriter();
 		
 		try {
 			
@@ -58,15 +56,14 @@ public class FBFormPreview extends UIComponentBase {
 				form_reader.setBaseFormURI(FBUtil.getWebdavServerUrl(ctx)+"/files/public/");
 				form_reader.setFormDocument(x);
 				
-				form_reader.setOutput(response_writer);
+				form_reader.setOutput(writer);
 				form_reader.generate();
 			}
 			
 		} catch (Exception e) {
 			logger.error("Error when parsing form to response writer", e);
 		}
-		
-		response_writer.endElement(container_tag);
+		writer.endElement(container_tag);
 		super.encodeEnd(ctx);
 	}
 }

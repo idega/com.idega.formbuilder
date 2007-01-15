@@ -23,7 +23,7 @@ public class FBFormComponentTag extends UIComponentTagBase {
 	}
 	
 	public String getRendererType() {
-		return FBFormComponent.RENDERER_TYPE;
+		return null;
 	}
 
 	public String getStyleClass() {

@@ -1,32 +1,51 @@
 package com.idega.formbuilder.presentation;
 
-import java.util.Iterator;
+import java.io.IOException;
 import java.util.Locale;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
 
 import org.apache.myfaces.component.html.ext.HtmlGraphicImage;
 import org.w3c.dom.Element;
 
-import com.idega.formbuilder.FormbuilderViewManager;
-import com.idega.formbuilder.business.Workspace;
 import com.idega.formbuilder.business.form.manager.IFormManager;
 import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
-import com.idega.webface.WFUtil;
+import com.idega.formbuilder.dom.DOMTransformer;
+import com.idega.formbuilder.view.ActionManager;
+import com.idega.presentation.IWBaseComponent;
 
-public class FBFormComponent extends UIComponentBase {
+public class FBFormComponent extends IWBaseComponent {
 	
-	public static final String RENDERER_TYPE = "fb_formComponent";
-	public static final String COMPONENT_TYPE = "FBFormComponent";
+	public static final String COMPONENT_TYPE = "FormComponent";
 	public static final String COMPONENT_FAMILY = "formbuilder";
+	
+	private static final String DELETE_BUTTON_FACET = "DELETE_BUTTON_FACET";
 	
 	private String styleClass;
 	private Element element;
 	private boolean submit;
 	private String onclick;
+	private boolean selected;
+	private String selectedStyleClass;
+
+	public String getSelectedStyleClass() {
+		return selectedStyleClass;
+	}
+
+	public void setSelectedStyleClass(String selectedStyleClass) {
+		this.selectedStyleClass = selectedStyleClass;
+	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
 
 	public String getOnclick() {
 		return onclick;
@@ -51,52 +70,49 @@ public class FBFormComponent extends UIComponentBase {
 	public void setStyleClass(String styleClass) {
 		this.styleClass = styleClass;
 	}
-	
-	public void printChildrenIDs(UIComponent comp, FacesContext context) {
-		Iterator it = comp.getChildren().iterator();
-		while(it.hasNext()) {
-			UIComponent c = (UIComponent) it.next();
-			String nextId = c.getClientId(context);
-			System.out.println("COMPONENT WITH ID: " + nextId + " (" + c.getParent().getId() + ")");
-			printChildrenIDs(c, context);
-		}
-	}
 
 	public FBFormComponent() {
 		super();
-		this.setRendererType(RENDERER_TYPE);
+		this.setRendererType(null);
+	}
+	
+	public String getRendererType() {
+		return null;
 	}
 	
 	public String getFamily() {
 		return COMPONENT_FAMILY;
 	}
 	
-	public void initializeComponent(FacesContext context) throws FBPostponedException {
+	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
 		this.getChildren().clear();
-		String currentLocale = ((Workspace) WFUtil.getBeanInstance("workspace")).getCurrentLocale();
-		IFormManager formManagerInstance = (IFormManager) context.getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
-		currentLocale = "en";
+		IFormManager formManagerInstance = ActionManager.getFormManagerInstance();
+		String currentLocale = "en";
 		if(currentLocale != null) {
 			Locale current = new Locale(currentLocale);
 			if(current != null) {
-				if(submit) {
-					Element element = formManagerInstance.getLocalizedSubmitComponent(current);
-					Element button = (Element) element.getFirstChild();
-					button.setAttribute("disabled", "true");
-					this.setElement(element);
-				} else {
-					System.out.println(this.getId());
-					Element element = formManagerInstance.getLocalizedFormHtmlComponent(this.getId(), current);
-					element.setAttribute("id", this.getId() + "_i");
-					this.setElement(element);
-					this.setOnclick("editProperties(this)");
-					HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
-					deleteButton.setId("db" + this.getId());
-					deleteButton.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png");
-					deleteButton.setOnclick("deleteComponent(this)");
-					deleteButton.setStyleClass("speedButton");
-					this.getChildren().add(deleteButton);
+				try {
+					if(submit) {
+						Element element = formManagerInstance.getLocalizedSubmitComponent(current);
+						Element button = (Element) element.getFirstChild();
+						button.setAttribute("disabled", "true");
+						this.setElement(element);
+					} else {
+						Element element = formManagerInstance.getLocalizedFormHtmlComponent(this.getId(), current);
+						element.setAttribute("id", this.getId() + "_i");
+						this.setElement(element);
+						this.setOnclick("editProperties(this.id)");
+						HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+						deleteButton.setId("db" + this.getId());
+						deleteButton.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png");
+						deleteButton.setOnclick("deleteComponentJSF(this)");
+						deleteButton.setStyleClass("speedButton");
+						
+						this.getFacets().put(DELETE_BUTTON_FACET, deleteButton);
+					}
+				} catch(FBPostponedException e) {
+					e.printStackTrace();
 				}
 			}
 		}
@@ -106,10 +122,49 @@ public class FBFormComponent extends UIComponentBase {
 		return true;
 	}
 	
+	public void encodeBegin(FacesContext context) throws IOException {
+		boolean selected;
+		ResponseWriter writer = context.getResponseWriter();
+		super.encodeBegin(context);
+		writer.startElement("DIV", this);
+		selected = isSelected();
+		if(!selected) {
+			writer.writeAttribute("class", getStyleClass(), "styleClass");
+		} else {
+			writer.writeAttribute("class", getSelectedStyleClass(), "styleClass");
+		}
+		writer.writeAttribute("id", getId(), "id");
+		writer.writeAttribute("onclick", getOnclick(), "onclick");
+		DOMTransformer.renderNode(getElement(), this, writer);
+	}
+	
+	public void encodeEnd(FacesContext context) throws IOException {
+		ResponseWriter writer = context.getResponseWriter();
+		writer.endElement("DIV");
+		super.encodeEnd(context);
+	}
+	
+	public void encodeChildren(FacesContext context) throws IOException {
+//		int i = 0;
+		if (!isRendered()) {
+			return;
+		}
+//		i = this.getFacets().keySet().size();
+		UIComponent deleteButton = getFacet(DELETE_BUTTON_FACET);
+		if(deleteButton != null) {
+			renderChild(context, deleteButton);
+		}
+	}
+	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[2];
+		Object values[] = new Object[7];
 		values[0] = super.saveState(context);
 		values[1] = styleClass;
+		values[2] = element;
+		values[3] = submit;
+		values[4] = onclick;
+		values[5] = selected;
+		values[6] = selectedStyleClass;
 		return values;
 	}
 	
@@ -117,6 +172,11 @@ public class FBFormComponent extends UIComponentBase {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);
 		styleClass = (String) values[1];
+		element = (Element) values[2];
+		submit = (Boolean) values[3];
+		onclick = (String) values[4];
+		selected = (Boolean) values[5];
+		selectedStyleClass = (String) values[6];
 	}
 
 	public Element getElement() {

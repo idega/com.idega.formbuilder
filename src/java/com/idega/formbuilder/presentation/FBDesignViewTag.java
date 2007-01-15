@@ -20,7 +20,7 @@ public class FBDesignViewTag extends UIComponentTagBase {
 	}
 	
 	public String getRendererType() {
-		return FBDesignView.RENDERER_TYPE;
+		return null;
 	}
 	
 	public String getComponentType() {
