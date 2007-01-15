@@ -6,10 +6,13 @@ import java.util.List;
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIComponentBase;
+import javax.faces.component.html.HtmlCommandButton;
 import javax.faces.component.html.HtmlGraphicImage;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import javax.faces.event.ActionEvent;
 
+import org.ajax4jsf.ajax.html.HtmlAjaxSupport;
 import org.apache.myfaces.component.html.ext.HtmlInputText;
 
 import com.idega.formbuilder.business.form.beans.ItemBean;
@@ -63,18 +66,27 @@ public class FBSelectValuesList extends UIComponentBase {
 		HtmlGraphicImage addButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
 		addButton.setValue(ADD_BUTTON_IMG);
 		addButton.setOnclick("addEmptyOption()");
-		//this.getChildren().add(addButton);
 		
 		
-		
-		/*HtmlAjaxSupport proxy = (HtmlAjaxSupport) application.createComponent(HtmlAjaxSupport.COMPONENT_TYPE);
+		HtmlAjaxSupport proxy = (HtmlAjaxSupport) application.createComponent(HtmlAjaxSupport.COMPONENT_TYPE);
 		proxy.setEvent("onclick");
 		proxy.setReRender("options_container");
 		proxy.setActionListener(application.createMethodBinding("#{component.addEmptyOption}", new Class[]{ActionEvent.class}));
 		proxy.setAjaxSingle(true);
-		addButton.getChildren().add(proxy);*/
+		addButton.getChildren().add(proxy);
 		this.getFacets().put("addOptionButton", addButton);
-		//this.getChildren().add(addButton);
+		
+		HtmlCommandButton button1 = new HtmlCommandButton();
+		button1.setId("asdaasd");
+		button1.setRendered(true);
+		button1.setValue("DUMMY2");
+		button1.setActionListener(application.createMethodBinding("#{component.dummyActionMethod}", new Class[]{ActionEvent.class}));
+		this.getChildren().add(button1);
+		
+		/*HtmlCommandButton dummyB = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
+		dummyB.setValue("DUMMY");
+		dummyB.setActionListener(application.createMethodBinding("#{component.dummyActionMethod}", new Class[]{ActionEvent.class}));
+		this.getChildren().add(dummyB);*/
 		
 		ValueBinding vb = this.getValueBinding("itemSet");
 		List<ItemBean> items = new ArrayList<ItemBean>();
@@ -90,20 +102,6 @@ public class FBSelectValuesList extends UIComponentBase {
 			String value = items.get(i).getValue();
 			this.getChildren().add(getNextSelectRow(label, value, i, context));
 		}
-		/*if(listSize < 1) {
-			System.out.println("3 FIELDS");
-			for(int i = 0; i < 3; i++) {
-				this.getChildren().add(getNextSelectRow("", "", i, context));
-			}
-			
-		} else {
-			System.out.println(listSize + " FIELDS");
-			for(int i = 0; i < listSize; i++) {
-				String label = items.get(i).getLabel();
-				String value = items.get(i).getValue();
-				this.getChildren().add(getNextSelectRow(label, value, i, context));
-			}
-		}*/
 	}
 	
 	protected UIComponent getNextSelectRow(String field, String value, int index, FacesContext context) {

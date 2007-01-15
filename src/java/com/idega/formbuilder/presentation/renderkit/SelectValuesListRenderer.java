@@ -15,12 +15,13 @@ public class SelectValuesListRenderer extends Renderer {
 		ResponseWriter writer = context.getResponseWriter();
 		FBSelectValuesList valuesList = (FBSelectValuesList) component;
 		valuesList.initializeComponent(context);
+		
 		writer.startElement("DIV", valuesList);
 		writer.writeAttribute("id", valuesList.getId(), "id");
 		writer.writeAttribute("class", valuesList.getStyleClass(), "styleClass");
 		writer.writeAttribute("style", "width: 320px; height: 180px;", null);
 		
-		UIComponent addOptionButton = valuesList.getFacet("addOptionButton");
+		UIComponent addOptionButton = (UIComponent) valuesList.getFacet("addOptionButton");
 		if(addOptionButton != null) {
 			if (addOptionButton.isRendered()) {
 				addOptionButton.encodeBegin(context);
