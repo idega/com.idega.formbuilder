@@ -3,17 +3,17 @@ package com.idega.formbuilder.view;
 import java.io.Serializable;
 
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 
 import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.formbuilder.business.form.manager.FormManagerFactory;
 import com.idega.formbuilder.business.form.manager.IFormManager;
+import com.idega.formbuilder.business.form.manager.util.InitializationException;
 
 public class ActionManager implements Serializable {
 	
 	private static final long serialVersionUID = -753995343458793992L;
 	
-	private IFormManager formManagerInstance;
+	private static IFormManager formManagerInstance = null;
 	
 	private String selectedFieldTypeValue;
 	private String text;
@@ -26,11 +26,6 @@ public class ActionManager implements Serializable {
 	
 	private String currentFormName = null;
 	private String currentLocale = null;
-	
-	public void changeSelectedForm(ActionEvent ae) {
-		System.out.println("Please put the description of the form here");
-		return;
-	}
 
 	public String getCurrentFormName() {
 		return currentFormName;
@@ -56,37 +51,25 @@ public class ActionManager implements Serializable {
 		this.selectedFieldTypeValue = selectedFieldTypeValue;
 	}
 
-	public ActionManager() throws Exception {
-		formManagerInstance = FormManagerFactory.newFormManager(FacesContext.getCurrentInstance());
-		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORM_MANAGER_INSTANCE, formManagerInstance);
-		/*try {
-			if(!isViewInitialized()) {
-				initialize();
-				setViewInitialized(true);
-			}
-		} catch(Exception e) {
-			setViewInitialized(false);
-			e.printStackTrace();
-		}*/
-	}
-	
-	/*private void initialize() throws Exception {
-		try {
-			System.out.println("CREATING FORM MANAGER");
+	/*public ActionManager() throws Exception {
+		if(formManagerInstance == null) {
 			formManagerInstance = FormManagerFactory.newFormManager(FacesContext.getCurrentInstance());
-			System.out.println("CREATED FORM MANAGER");
 			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORM_MANAGER_INSTANCE, formManagerInstance);
-			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS, "NO_FORM");
-			
-		} catch(InitializationException e) {
-			throw new Exception("FormManager instantiation failed: " + e);
-		} catch(Exception e) {
-			throw new Exception("UIManager instantiation failed: " + e);
 		}
 	}*/
 	
 	public static IFormManager getFormManagerInstance() {
-		return(IFormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
+		if(formManagerInstance == null) {
+			try {
+				formManagerInstance = FormManagerFactory.newFormManager(FacesContext.getCurrentInstance());
+			} catch(InitializationException ie) {
+				ie.printStackTrace();
+			}
+			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORM_MANAGER_INSTANCE, formManagerInstance);
+			return formManagerInstance;
+		} else {
+			return (IFormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
+		}
 	}
 
 	public String getFormDescription() {
