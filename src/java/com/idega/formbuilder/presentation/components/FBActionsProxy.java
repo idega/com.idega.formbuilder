@@ -11,11 +11,11 @@ import javax.faces.event.ActionEvent;
 
 import org.ajax4jsf.ajax.UIAjaxCommandButton;
 
-import com.idega.presentation.IWBaseComponent;
+import com.idega.formbuilder.presentation.FBComponentBase;
 
-public class FBActionsProxy extends IWBaseComponent {
+public class FBActionsProxy extends FBComponentBase {
 	
-	public static final String COMPONENT_FAMILY = "formbuilder";
+//	public static final String COMPONENT_FAMILY = "formbuilder";
 	public static final String COMPONENT_TYPE = "ActionsProxy";
 	
 	public FBActionsProxy() {
@@ -23,7 +23,7 @@ public class FBActionsProxy extends IWBaseComponent {
 		this.setRendererType(null);
 	}
 	
-	public boolean getRendersChildren() {
+	/*public boolean getRendersChildren() {
 		return true;
 	}
 	
@@ -33,7 +33,7 @@ public class FBActionsProxy extends IWBaseComponent {
 	
 	public String getRendererType() {
 		return null;
-	}
+	}*/
 	
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
@@ -66,10 +66,24 @@ public class FBActionsProxy extends IWBaseComponent {
 //		deleteComponent.setActionListener(application.createMethodBinding("#{createFormAction.processAction}", new Class[]{ActionEvent.class}));
 		getProperties.setReRender("mainApplication");
 		
-		this.getChildren().add(createForm);
-		this.getChildren().add(deleteComponent);
-		this.getChildren().add(getProperties);
-		this.getChildren().add(changeMenu);
+		UIAjaxCommandButton saveFormTitle = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
+		saveFormTitle.setId("saveFormTitle");
+		saveFormTitle.setAjaxSingle(false);
+		saveFormTitle.setActionListener(application.createMethodBinding("#{formDocument.saveFormTitle}", new Class[]{ActionEvent.class}));
+		saveFormTitle.setReRender("mainApplication");
+		
+		UIAjaxCommandButton saveSubmitLabel = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
+		saveSubmitLabel.setId("saveSubmitLabel");
+		saveSubmitLabel.setAjaxSingle(false);
+		saveSubmitLabel.setActionListener(application.createMethodBinding("#{formDocument.saveSubmitLabel}", new Class[]{ActionEvent.class}));
+		saveSubmitLabel.setReRender("mainApplication");
+		
+		add(createForm);
+		add(deleteComponent);
+		add(getProperties);
+		add(changeMenu);
+		add(saveFormTitle);
+		add(saveSubmitLabel);
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
@@ -92,16 +106,5 @@ public class FBActionsProxy extends IWBaseComponent {
 			renderChild(context, (UIComponent) it.next());
 		}
 	}
-	
-	/*public Object saveState(FacesContext context) {
-		Object values[] = new Object[4];
-		values[0] = super.saveState(context);
-		return values;
-	}
-	
-	public void restoreState(FacesContext context, Object state) {
-		Object values[] = (Object[]) state;
-		super.restoreState(context, values[0]);
-	}*/
 
 }

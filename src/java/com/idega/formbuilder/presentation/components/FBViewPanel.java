@@ -10,13 +10,12 @@ import javax.faces.el.ValueBinding;
 import javax.faces.event.ActionEvent;
 
 import org.ajax4jsf.ajax.html.HtmlAjaxCommandLink;
-import org.ajax4jsf.ajax.html.HtmlAjaxStatus;
 
-import com.idega.presentation.IWBaseComponent;
+import com.idega.formbuilder.presentation.FBComponentBase;
 
-public class FBViewPanel extends IWBaseComponent {
+public class FBViewPanel extends FBComponentBase {
 	
-	public static final String COMPONENT_FAMILY = "formbuilder";
+//	public static final String COMPONENT_FAMILY = "formbuilder";
 	public static final String COMPONENT_TYPE = "ViewPanel";
 	
 	private static final String SWITCHER_FACET = "SWITCHER_FACET";
@@ -28,6 +27,7 @@ public class FBViewPanel extends IWBaseComponent {
 	
 	public static final String CONTENT_DIV_FACET = "body";
 	
+	private String id;
 	private String styleClass;
 	private String view;
 
@@ -36,7 +36,7 @@ public class FBViewPanel extends IWBaseComponent {
 		this.setRendererType(null);
 	}
 	
-	public boolean getRendersChildren() {
+	/*public boolean getRendersChildren() {
 		return true;
 	}
 	
@@ -46,7 +46,7 @@ public class FBViewPanel extends IWBaseComponent {
 	
 	public String getRendererType() {
 		return null;
-	}
+	}*/
 	
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
@@ -109,25 +109,25 @@ public class FBViewPanel extends IWBaseComponent {
 		designView.setStyleClass("dropBox");
 		designView.setComponentStyleClass("formElement");
 		designView.setValueBinding("status", application.createValueBinding("#{workspace.designViewStatus}"));
-		this.getFacets().put(DESIGN_VIEW, designView);
+		addFacet(DESIGN_VIEW, designView);
 		
 		FBSourceView sourceView = (FBSourceView) application.createComponent(FBSourceView.COMPONENT_TYPE);
 		sourceView.setStyleClass("sourceView");
 		sourceView.setId("sourceView");
-		this.getFacets().put(SOURCE_VIEW, sourceView);
+		addFacet(SOURCE_VIEW, sourceView);
 		
 		FBFormPreview previewView = (FBFormPreview) application.createComponent(FBFormPreview.COMPONENT_TYPE);
 		previewView.setId("previewView");
-		this.getFacets().put(PREVIEW_VIEW, previewView);
+		addFacet(PREVIEW_VIEW, previewView);
 		
-		this.getFacets().put(SWITCHER_FACET, switcher);
+		addFacet(SWITCHER_FACET, switcher);
 		
-		HtmlAjaxStatus status = new HtmlAjaxStatus();
-		status.setStartText("Working");
-		status.setStartStyle("background-color: Red; font-size: 16px; font-weight: Bold; float: right;");
-		status.setLayout("inline");
+//		HtmlAjaxStatus status = new HtmlAjaxStatus();
+//		status.setStartText("Working");
+//		status.setStartStyle("background-color: Red; font-size: 16px; font-weight: Bold; float: right;");
+//		status.setLayout("inline");
 		
-		this.getFacets().put(STATUS_FACET, status);
+//		this.getFacets().put(STATUS_FACET, status);
 	}
 
 	public String getStyleClass() {
@@ -162,8 +162,8 @@ public class FBViewPanel extends IWBaseComponent {
 		} else {
 			view = getView();
 		}
-//		UIComponent status = (UIComponent) getFacet(STATUS_FACET);
-		UIComponent viewSwitch = (UIComponent) getFacet(SWITCHER_FACET);
+		UIComponent status = getFacet(STATUS_FACET);
+		UIComponent viewSwitch = getFacet(SWITCHER_FACET);
 		if(viewSwitch != null) {
 			if(view.equals(DESIGN_VIEW)) {
 				UIComponent designView = getFacet(view);
@@ -172,7 +172,7 @@ public class FBViewPanel extends IWBaseComponent {
 					((FBDivision) viewSwitch.getChildren().get(1)).setStyleClass("unselectedTab");
 					((FBDivision) viewSwitch.getChildren().get(2)).setStyleClass("unselectedTab");
 					renderChild(context, viewSwitch);
-//					renderChild(context, status);
+					renderChild(context, status);
 					renderChild(context, designView);
 				}
 			} else if(view.equals(PREVIEW_VIEW)) {
@@ -182,7 +182,7 @@ public class FBViewPanel extends IWBaseComponent {
 					((FBDivision) viewSwitch.getChildren().get(0)).setStyleClass("unselectedTab");
 					((FBDivision) viewSwitch.getChildren().get(2)).setStyleClass("unselectedTab");
 					renderChild(context, viewSwitch);
-//					renderChild(context, status);
+					renderChild(context, status);
 					renderChild(context, previewView);
 				}
 			} else if(view.equals(SOURCE_VIEW)) {
@@ -192,7 +192,7 @@ public class FBViewPanel extends IWBaseComponent {
 					((FBDivision) viewSwitch.getChildren().get(1)).setStyleClass("unselectedTab");
 					((FBDivision) viewSwitch.getChildren().get(0)).setStyleClass("unselectedTab");
 					renderChild(context, viewSwitch);
-//					renderChild(context, status);
+					renderChild(context, status);
 					renderChild(context, sourceView);
 				}
 			}
@@ -207,18 +207,20 @@ public class FBViewPanel extends IWBaseComponent {
 	}
 	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[3];
+		Object values[] = new Object[4];
 		values[0] = super.saveState(context); 
-		values[1] = styleClass;
-		values[2] = view;
+		values[1] = id;
+		values[2] = styleClass;
+		values[3] = view;
 		return values;
 	}
 	
 	public void restoreState(FacesContext context, Object state) {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);
-		styleClass = (String) values[1];
-		view = (String) values[2];
+		id = (String) values[1];
+		styleClass = (String) values[2];
+		view = (String) values[3];
 	}
 
 }

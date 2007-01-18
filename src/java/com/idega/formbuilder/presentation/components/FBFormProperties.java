@@ -7,16 +7,14 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.component.html.HtmlOutputLabel;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 
-import org.ajax4jsf.ajax.UIAjaxSupport;
 import org.apache.myfaces.custom.htmlTag.HtmlTag;
 
-import com.idega.presentation.IWBaseComponent;
+import com.idega.formbuilder.presentation.FBComponentBase;
 
-public class FBFormProperties extends IWBaseComponent {
+public class FBFormProperties extends FBComponentBase {
 	
-	public static final String COMPONENT_FAMILY = "formbuilder";
+//	public static final String COMPONENT_FAMILY = "formbuilder";
 	public static final String COMPONENT_TYPE = "FormProperties";
 	
 	private static final String WFBLOCK_CONTENT_FACET = "WFBLOCK_CONTENT_FACET";
@@ -26,7 +24,7 @@ public class FBFormProperties extends IWBaseComponent {
 		this.setRendererType(null);
 	}
 	
-	public boolean getRendersChildren() {
+	/*public boolean getRendersChildren() {
 		return true;
 	}
 	
@@ -36,7 +34,7 @@ public class FBFormProperties extends IWBaseComponent {
 	
 	public String getRendererType() {
 		return null;
-	}
+	}*/
 	
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
@@ -50,7 +48,7 @@ public class FBFormProperties extends IWBaseComponent {
 		pageInfo.setTitlebar(bar);*/
 		
 		FBDivision formHeading = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
-		formHeading.setId("none");
+		formHeading.setId("formProps");
 //		formHeading.setStyleClass("formHeading");
 		
 		
@@ -62,16 +60,18 @@ public class FBFormProperties extends IWBaseComponent {
 		HtmlInputText title = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		title.setId("formTitle");
 		title.setValueBinding("value", application.createValueBinding("#{formDocument.formTitle}"));
+		title.setOnblur("$('workspaceform1:saveFormTitle').click();");
 		
-		UIAjaxSupport formTitleS = (UIAjaxSupport) application.createComponent("org.ajax4jsf.ajax.Support");
-		formTitleS.setEvent("onblur");
-		formTitleS.setOnsubmit("showLoadingMessage('Saving')");
-		formTitleS.setReRender("mainApplication");
-//		formTitleS.setActionListener(application.createMethodBinding("#{formDocument.processAction}", new Class[]{ActionEvent.class}));
-		formTitleS.setAction(application.createMethodBinding("#{formDocument.processAction}", new Class[]{ActionEvent.class}));
-		formTitleS.setAjaxSingle(false);
-		formTitleS.setOncomplete("closeLoadingMessage()");
-		title.getChildren().add(formTitleS);
+//		UIAjaxSupport formTitleS = (UIAjaxSupport) application.createComponent("org.ajax4jsf.ajax.Support");
+//		formTitleS.setEvent("onblur");
+//		formTitleS.setOnsubmit("showLoadingMessage('Saving')");
+//		formTitleS.setOnsubmit(arg0)
+//		formTitleS.setReRender("mainApplication");
+//		formTitleS.setActionListener(application.createMethodBinding("#{formDocument.saveFormTitle}", new Class[]{ActionEvent.class}));
+//		formTitleS.setAction(application.createMethodBinding("#{formDocument.processAction}", new Class[]{ActionEvent.class}));
+//		formTitleS.setAjaxSingle(true);
+//		formTitleS.setOncomplete("closeLoadingMessage()");
+//		title.getChildren().add(formTitleS);
 		
 		formHeading.getChildren().add(title);
 		
@@ -82,41 +82,41 @@ public class FBFormProperties extends IWBaseComponent {
 		
 		HtmlOutputLabel submitLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 		submitLabel.setValue("Submit button label");
-		submitLabel.setFor("submitLabel2");
+		submitLabel.setFor("submitLabel");
 		formHeading.getChildren().add(submitLabel);
 		
 		HtmlInputText submit = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
-		submit.setId("submitLabel2");
-		//title.setOnblur("applyChanges()");
+		submit.setId("submitLabel");
+		submit.setOnblur("$('workspaceform1:saveSubmitLabel').click();");
 		submit.setValueBinding("value", application.createValueBinding("#{formDocument.submitLabel}"));
 		
 
-		UIAjaxSupport submitLabelS = (UIAjaxSupport) application.createComponent("org.ajax4jsf.ajax.Support");
+		/*UIAjaxSupport submitLabelS = (UIAjaxSupport) application.createComponent("org.ajax4jsf.ajax.Support");
 		submitLabelS.setEvent("onblur");
 		submitLabelS.setReRender("mainApplication");
-//		formTitleS.setReRender("formHeadingHeader");
+		formTitleS.setReRender("formHeadingHeader");
 		submitLabelS.setActionListener(application.createMethodBinding("#{updateTitleAction.processAction}", new Class[]{ActionEvent.class}));
 		submitLabelS.setAjaxSingle(false);
-//		submitLabelS.setOnsubmit("alert('Support here')");
-		submit.getChildren().add(submitLabelS); 
+		submitLabelS.setOnsubmit("alert('Support here')");
+		submit.getChildren().add(submitLabelS); */
 		
 		formHeading.getChildren().add(submit);
 		
-		this.getFacets().put(WFBLOCK_CONTENT_FACET, formHeading);
+		addFacet(WFBLOCK_CONTENT_FACET, formHeading);
 	}
 	
 	public void encodeChildren(FacesContext context) throws IOException {
 		if (!isRendered()) {
 			return;
 		}
-		UIComponent body = (UIComponent) getFacet(WFBLOCK_CONTENT_FACET);
+		UIComponent body = getFacet(WFBLOCK_CONTENT_FACET);
 		if(body != null) {
-//			renderChild(context, body);
-			if(body.isRendered()) {
+			renderChild(context, body);
+			/*if(body.isRendered()) {
 				body.encodeBegin(context);
 				body.encodeChildren(context);
 				body.encodeEnd(context);
-			}
+			}*/
 		}
 	}
 	

@@ -14,13 +14,13 @@ import org.w3c.dom.Element;
 import com.idega.formbuilder.business.form.manager.IFormManager;
 import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
 import com.idega.formbuilder.dom.DOMTransformer;
+import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.view.ActionManager;
-import com.idega.presentation.IWBaseComponent;
 
-public class FBFormComponent extends IWBaseComponent {
+public class FBFormComponent extends FBComponentBase {
 	
 	public static final String COMPONENT_TYPE = "FormComponent";
-	public static final String COMPONENT_FAMILY = "formbuilder";
+//	public static final String COMPONENT_FAMILY = "formbuilder";
 	
 	private static final String DELETE_BUTTON_FACET = "DELETE_BUTTON_FACET";
 	
@@ -76,13 +76,13 @@ public class FBFormComponent extends IWBaseComponent {
 		this.setRendererType(null);
 	}
 	
-	public String getRendererType() {
+	/*public String getRendererType() {
 		return null;
 	}
 	
 	public String getFamily() {
 		return COMPONENT_FAMILY;
-	}
+	}*/
 	
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
@@ -118,9 +118,9 @@ public class FBFormComponent extends IWBaseComponent {
 		}
 	}
 	
-	public boolean getRendersChildren() {
+	/*public boolean getRendersChildren() {
 		return true;
-	}
+	}*/
 	
 	public void encodeBegin(FacesContext context) throws IOException {
 		boolean selected;
@@ -134,7 +134,11 @@ public class FBFormComponent extends IWBaseComponent {
 			writer.writeAttribute("class", getSelectedStyleClass(), "styleClass");
 		}
 		writer.writeAttribute("id", getId(), "id");
-		writer.writeAttribute("onclick", getOnclick(), "onclick");
+		if(submit) {
+			writer.writeAttribute("onclick", "A4J.AJAX.Submit('_viewRoot','workspaceform1',event,{'parameters':{'workspaceform1:formHeadingHeaderS':'workspaceform1:formHeadingHeaderS'},'actionUrl':'/workspace/formbuilder/','single':true})", "onclick");
+		} else {
+			writer.writeAttribute("onclick", getOnclick(), "onclick");
+		}
 		DOMTransformer.renderNode(getElement(), this, writer);
 	}
 	
@@ -145,11 +149,9 @@ public class FBFormComponent extends IWBaseComponent {
 	}
 	
 	public void encodeChildren(FacesContext context) throws IOException {
-//		int i = 0;
 		if (!isRendered()) {
 			return;
 		}
-//		i = this.getFacets().keySet().size();
 		UIComponent deleteButton = getFacet(DELETE_BUTTON_FACET);
 		if(deleteButton != null) {
 			renderChild(context, deleteButton);

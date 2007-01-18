@@ -97,7 +97,7 @@ public class FBDesignView extends IWBaseComponent {
 		formHeadingS.setId("formHeadingHeaderS");
 		formHeadingS.setEvent("onclick");
 		formHeadingS.setReRender("workspaceform1:ajaxMenuPanel");
-		formHeadingS.setActionListener(application.createMethodBinding("#{formDocument.processAction}", new Class[]{ActionEvent.class}));
+		formHeadingS.setActionListener(application.createMethodBinding("#{formDocument.loadFormProperties}", new Class[]{ActionEvent.class}));
 		formHeadingS.setAjaxSingle(true);
 		formHeadingHeader.getChildren().add(formHeadingS); 
 		
