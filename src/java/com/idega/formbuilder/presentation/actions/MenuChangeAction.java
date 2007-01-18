@@ -6,7 +6,7 @@ import javax.faces.event.ActionListener;
 import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.webface.WFUtil;
 
-public class SampleAction implements ActionListener {
+public class MenuChangeAction implements ActionListener {
 	
 	public void processAction(ActionEvent ae) {
 		String senderId = ae.getComponent().getId();

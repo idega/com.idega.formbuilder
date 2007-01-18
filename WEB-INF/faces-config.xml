@@ -11,11 +11,6 @@
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
-		<managed-bean-name>myAction</managed-bean-name>
-		<managed-bean-class>com.idega.formbuilder.presentation.actions.MyFirstAction</managed-bean-class>
-		<managed-bean-scope>application</managed-bean-scope>
-	</managed-bean>
-	<managed-bean>
 		<managed-bean-name>formComponent</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.presentation.beans.FormComponent</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
@@ -31,24 +26,9 @@
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
-		<managed-bean-name>updateTitleAction</managed-bean-name>
-		<managed-bean-class>com.idega.formbuilder.presentation.actions.UpdateTitleAction</managed-bean-class>
-		<managed-bean-scope>session</managed-bean-scope>
-	</managed-bean>
-	<managed-bean>
-		<managed-bean-name>showFormPropertiesAction</managed-bean-name>
-		<managed-bean-class>com.idega.formbuilder.presentation.actions.ShowFormPropertiesAction</managed-bean-class>
-		<managed-bean-scope>session</managed-bean-scope>
-	</managed-bean>
-	<managed-bean>
 		<managed-bean-name>openFormAction</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.presentation.actions.FormChangeAction</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
-	</managed-bean>
-	<managed-bean>
-		<managed-bean-name>sampleAction</managed-bean-name>
-		<managed-bean-class>com.idega.formbuilder.presentation.actions.SampleAction</managed-bean-class>
-		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
 		<managed-bean-name>viewChangeAction</managed-bean-name>
