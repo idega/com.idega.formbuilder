@@ -8,8 +8,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
-import com.idega.formbuilder.presentation.FBPalette;
-import com.idega.formbuilder.presentation.FBPaletteComponent;
+import com.idega.formbuilder.presentation.components.FBPalette;
+import com.idega.formbuilder.presentation.components.FBPaletteComponent;
 
 public class PaletteRenderer extends Renderer {
 	

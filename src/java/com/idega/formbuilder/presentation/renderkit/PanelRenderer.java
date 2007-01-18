@@ -7,7 +7,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
-import com.idega.formbuilder.presentation.FBPanel;
+import com.idega.formbuilder.presentation.components.FBPanel;
 
 public class PanelRenderer extends Renderer {
 	

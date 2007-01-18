@@ -7,7 +7,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
-import com.idega.formbuilder.presentation.FBFormField;
+import com.idega.formbuilder.presentation.components.FBFormField;
 
 
 public class FieldRenderer extends Renderer {

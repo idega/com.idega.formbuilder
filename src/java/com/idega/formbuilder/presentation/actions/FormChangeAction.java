@@ -14,10 +14,11 @@ import com.idega.webface.WFUtil;
 public class FormChangeAction implements ActionListener {
 	
 	public void processAction(ActionEvent ae) {
+		IFormManager formManagerInstance = ActionManager.getFormManagerInstance();
 		String formId = ((FormDocument) WFUtil.getBeanInstance("formDocument")).getFormId();
 		if(formId != null && !formId.equals("") && !formId.equals("INACTIVE")) {
 			try {
-				ActionManager.getFormManagerInstance().openFormDocument(formId);
+				formManagerInstance.openFormDocument(formId);
 				if(ActionManager.getFormManagerInstance().getFormComponentsIdsList().size() > 0) {
 					((Workspace) WFUtil.getBeanInstance("workspace")).setDesignViewStatus("active");
 				} else {
@@ -26,12 +27,8 @@ public class FormChangeAction implements ActionListener {
 				((Workspace) WFUtil.getBeanInstance("workspace")).setView("design");
 				((Workspace) WFUtil.getBeanInstance("workspace")).setRenderedMenu(true);
 				((Workspace) WFUtil.getBeanInstance("workspace")).setSelectedMenu("0");
-				IFormManager formManagerInstance = ActionManager.getFormManagerInstance();
 				((FormDocument) WFUtil.getBeanInstance("formDocument")).setFormTitle(formManagerInstance.getFormTitle().getString(new Locale("en")));
 				((FormDocument) WFUtil.getBeanInstance("formDocument")).setSubmitLabel(formManagerInstance.getSubmitButtonProperties().getLabel().getString(new Locale("en")));
-//				((FormDocument) WFUtil.getBeanInstance("formDocument")).setFormTitle(ActionManager.getFormManagerInstance().getFormTitle().getString(new Locale("en")));
-//				((FormDocument) WFUtil.getBeanInstance("formDocument")).setSubmitLabel(ActionManager.getFormManagerInstance().getFormTitle().getString(new Locale("en")));
-//				this.currentComponent = null;
 			} catch(Exception e) {
 				e.printStackTrace();
 			}

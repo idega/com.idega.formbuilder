@@ -16,9 +16,9 @@ import org.w3c.dom.Element;
 import com.idega.formbuilder.FormbuilderViewManager;
 //import com.idega.formbuilder.business.FormComponent;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
-import com.idega.formbuilder.presentation.FBDesignView;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.presentation.beans.Workspace;
+import com.idega.formbuilder.presentation.components.FBDesignView;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.webface.WFUtil;
 
@@ -42,6 +42,22 @@ public class DWRManager implements Serializable {
 			}
 		}
 	}*/
+	
+	private void setSelectedMenu(String selectedMenu) {
+		((Workspace) WFUtil.getBeanInstance("workspace")).setSelectedMenu(selectedMenu);
+	}
+	
+	public void changeMenu(String id) {
+		if(id.equals("workspaceform1:tab1Title")) {
+			setSelectedMenu("0");
+		} else if(id.equals("workspaceform1:tab2Title")) {
+			setSelectedMenu("1");
+		} else if(id.equals("workspaceform1:tab3Title")) {
+			setSelectedMenu("2");
+		} else if(id.equals("workspaceform1:tab4Title")) {
+			setSelectedMenu("3");
+		}
+	}
 	
 	public Element createComponent(String type) throws Exception {
 		Element rootDivImported = null;

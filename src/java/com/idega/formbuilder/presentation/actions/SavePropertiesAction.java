@@ -2,25 +2,29 @@ package com.idega.formbuilder.presentation.actions;
 
 import java.io.Serializable;
 
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 
+import com.idega.formbuilder.presentation.beans.FormDocument;
+import com.idega.webface.WFUtil;
+
 public class SavePropertiesAction implements ActionListener, Serializable {
 	
-	private static final long serialVersionUID = -1462694119586709168L;
+	private static final long serialVersionUID = -1462694687346788168L;
 	
-	private String test;
+	String temp;
 	
+	public String getTemp() {
+		return temp;
+	}
+
+	public void setTemp(String temp) {
+		this.temp = temp;
+	}
+
 	public SavePropertiesAction() {
-		this.test = "sample text";
-	}
-
-	public String getTest() {
-		return test;
-	}
-
-	public void setTest(String test) {
-		this.test = test;
+		temp = "sampletext";
 	}
 
 	public void processAction(ActionEvent ae) {
@@ -30,8 +34,10 @@ public class SavePropertiesAction implements ActionListener, Serializable {
 		temp.split("asd");
 	}
 	
-	public void saveProperties() {
-		System.out.println("SavePropertiesAction");
+	public void saveFormTitle(ActionEvent ae) {
+		System.out.println(ae.getComponent().getClientId(FacesContext.getCurrentInstance()));
+		((FormDocument) WFUtil.getBeanInstance("formDocument")).setFormTitle(ae.getComponent().getId());
+
 	}
 
 }

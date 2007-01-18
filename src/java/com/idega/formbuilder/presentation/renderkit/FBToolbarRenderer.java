@@ -11,7 +11,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-import com.idega.formbuilder.presentation.FBToolbar;
+import com.idega.formbuilder.presentation.components.FBToolbar;
 import com.idega.webface.WFMenuItems;
 import com.idega.webface.WFTab;
 import com.idega.webface.renderkit.ToolbarRenderer;

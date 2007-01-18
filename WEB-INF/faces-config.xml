@@ -11,6 +11,11 @@
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
+		<managed-bean-name>myAction</managed-bean-name>
+		<managed-bean-class>com.idega.formbuilder.presentation.actions.MyFirstAction</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
 		<managed-bean-name>formComponent</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.presentation.beans.FormComponent</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
@@ -31,8 +36,8 @@
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
-		<managed-bean-name>selectHeaderAction</managed-bean-name>
-		<managed-bean-class>com.idega.formbuilder.presentation.actions.SelectHeaderAction</managed-bean-class>
+		<managed-bean-name>showFormPropertiesAction</managed-bean-name>
+		<managed-bean-class>com.idega.formbuilder.presentation.actions.ShowFormPropertiesAction</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
@@ -41,9 +46,9 @@
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
-		<managed-bean-name>switchMenuAction</managed-bean-name>
-		<managed-bean-class>com.idega.formbuilder.presentation.actions.MenuChangeAction</managed-bean-class>
-		<managed-bean-scope>session</managed-bean-scope>
+		<managed-bean-name>sampleAction</managed-bean-name>
+		<managed-bean-class>com.idega.formbuilder.presentation.actions.SampleAction</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
 		<managed-bean-name>viewChangeAction</managed-bean-name>
@@ -58,23 +63,6 @@
 	<managed-bean>
 		<managed-bean-name>dataSources</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.presentation.beans.DataSourceList</managed-bean-class>
-		<managed-bean-scope>session</managed-bean-scope>
-	</managed-bean>
-	<!--
-	<managed-bean>
-		<managed-bean-name>component</managed-bean-name>
-		<managed-bean-class>com.idega.formbuilder.business.FormComponent</managed-bean-class>
-		<managed-bean-scope>session</managed-bean-scope>
-	</managed-bean>
-	<managed-bean>
-		<managed-bean-name>workspace</managed-bean-name>
-		<managed-bean-class>com.idega.formbuilder.business.Workspace</managed-bean-class>
-		<managed-bean-scope>session</managed-bean-scope>
-	</managed-bean>
-	-->
-	<managed-bean>
-		<managed-bean-name>viewmanager</managed-bean-name>
-		<managed-bean-class>com.idega.formbuilder.view.ActionManager</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
   	<managed-bean>
@@ -181,106 +169,106 @@
 	</render-kit>
 	<component>
 		<component-type>SourceView</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBSourceView</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBSourceView</component-class>
 	</component>
 	<component>
 		<component-type>ActionsProxy</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBActionsProxy</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBActionsProxy</component-class>
 	</component>
 	<component>
 		<component-type>MenuPanel</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBMenuPanel</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBMenuPanel</component-class>
 	</component>
 	<component>
 		<component-type>Menu</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBMenu</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBMenu</component-class>
 	</component>
 	<component>
 		<component-type>Workspace</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBWorkspace</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBWorkspace</component-class>
 	</component>
 	<component>
 		<component-type>FormPropertiesPanel</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBFormPropertiesPanel</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBFormPropertiesPanel</component-class>
 	</component>
 	<component>
 		<component-type>AdvancedProperties</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBAdvancedProperties</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBAdvancedProperties</component-class>
 	</component>
 	<component>
 		<component-type>SubmitProperties</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBSubmitProperties</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBSubmitProperties</component-class>
 	</component>
 	<component>
 		<component-type>FormProperties</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBFormProperties</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBFormProperties</component-class>
 	</component>
 	<component>
 		<component-type>BasicProperties</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBBasicProperties</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBBasicProperties</component-class>
 	</component>
 	<component>
 		<component-type>Division</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBDivision</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBDivision</component-class>
 	</component>
 	<component>
 		<component-type>SelectValuesList</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBSelectValuesList</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBSelectValuesList</component-class>
 	</component>
 	<component>
 		<component-type>ViewPanel</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBViewPanel</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBViewPanel</component-class>
 	</component>
 	<component>
 		<component-type>ComponentPropertiesPanel</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBComponentPropertiesPanel</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBComponentPropertiesPanel</component-class>
 	</component>
 	<component>
 		<component-type>Palette</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBPalette</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBPalette</component-class>
 	</component>
 	<component>
 		<component-type>PaletteComponent</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBPaletteComponent</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBPaletteComponent</component-class>
 	</component>
 	<component>
 		<component-type>DesignView</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBDesignView</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBDesignView</component-class>
 	</component>
 	<component>
 		<component-type>FormComponent</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBFormComponent</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBFormComponent</component-class>
 	</component>
 	<component>
 		<component-type>FBFormField</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBFormField</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBFormField</component-class>
 	</component>
 	<component>
 		<component-type>FBToolbar</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBToolbar</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBToolbar</component-class>
 	</component>
 	<component>
 		<component-type>FBPanel</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBPanel</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBPanel</component-class>
 	</component>
 	<component>
 		<component-type>FBContainer</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBContainer</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBContainer</component-class>
 	</component>
 	<component>
 		<component-type>FBToolbarButton</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBToolbarButton</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBToolbarButton</component-class>
 	</component>
 	<component>
 		<component-type>FBFormPreview</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBFormPreview</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBFormPreview</component-class>
 	</component>
 	<component>
 		<component-type>FBFormSourceEdit</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBFormSourceEdit</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBFormSourceEdit</component-class>
 	</component>
 	<component>
 		<component-type>FormStepsViewer</component-type>
-		<component-class>com.idega.formbuilder.presentation.FBFormStepsViewer</component-class>
+		<component-class>com.idega.formbuilder.presentation.components.FBFormStepsViewer</component-class>
 	</component>
 </faces-config>

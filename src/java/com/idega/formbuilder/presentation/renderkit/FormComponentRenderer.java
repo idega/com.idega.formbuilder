@@ -8,7 +8,7 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
 import com.idega.formbuilder.dom.DOMTransformer;
-import com.idega.formbuilder.presentation.FBFormComponent;
+import com.idega.formbuilder.presentation.components.FBFormComponent;
 
 public class FormComponentRenderer extends Renderer {
 	

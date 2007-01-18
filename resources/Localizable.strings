@@ -37,3 +37,7 @@ view_design=Design
 component_palette_panel=Field Palette
 field_properties_panel=Field Properties
 form_properties_panel=Form Properties
+
+no_menu_label=No menu available for this view
+
+change_source_code=Save changes

@@ -27,7 +27,6 @@ public class ViewChangeAction implements ActionListener {
 			setView("source");
 			setRenderedMenu(false);
 		}
-		
 	}
 	
 	private boolean openForm() {

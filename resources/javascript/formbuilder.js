@@ -167,6 +167,13 @@ function decoy() {
 	closeLoadingMessage();
 }
 
+function changeMenu(id) {
+	dwrmanager.changeMenu(changedMenu,id);
+}
+function changedMenu() {
+	$('workspaceform1:changeMenuProxy').click();
+}
+
 function switchSelectedForm() {
 	showLoadingMessage("Loading");
 }

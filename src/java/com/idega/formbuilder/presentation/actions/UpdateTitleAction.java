@@ -2,13 +2,15 @@ package com.idega.formbuilder.presentation.actions;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.faces.event.ActionListener;
 
-public class UpdateTitleAction implements ActionListener {
+import com.idega.formbuilder.presentation.beans.FormDocument;
+import com.idega.webface.WFUtil;
 
-	public void processAction(ActionEvent ae) {
+public class UpdateTitleAction {
+
+	public void saveFormTitle(ActionEvent ae) {
 		System.out.println(ae.getComponent().getClientId(FacesContext.getCurrentInstance()));
-//		WFUtil.getBeanInstance("formDocument")
+		((FormDocument) WFUtil.getBeanInstance("formDocument")).setFormTitle(ae.getComponent().getId());
 
 	}
 

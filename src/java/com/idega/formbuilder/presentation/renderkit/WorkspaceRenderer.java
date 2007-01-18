@@ -11,7 +11,7 @@ import javax.faces.render.Renderer;
 
 import org.apache.myfaces.custom.div.Div;
 
-import com.idega.formbuilder.presentation.FBViewPanel;
+import com.idega.formbuilder.presentation.components.FBViewPanel;
 
 public class WorkspaceRenderer extends Renderer {
 	

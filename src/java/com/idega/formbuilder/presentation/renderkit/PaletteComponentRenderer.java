@@ -8,7 +8,7 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
 import javax.faces.render.Renderer;
 
-import com.idega.formbuilder.presentation.FBPaletteComponent;
+import com.idega.formbuilder.presentation.components.FBPaletteComponent;
 
 public class PaletteComponentRenderer extends Renderer {
 	

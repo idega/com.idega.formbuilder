@@ -2,7 +2,12 @@ package com.idega.formbuilder.presentation.beans;
 
 import java.io.Serializable;
 
-public class FormDocument implements Serializable {
+import javax.faces.event.ActionEvent;
+import javax.faces.event.ActionListener;
+
+import com.idega.webface.WFUtil;
+
+public class FormDocument implements Serializable, ActionListener {
 	
 	private static final long serialVersionUID = -1462694112346788168L;
 	
@@ -18,6 +23,10 @@ public class FormDocument implements Serializable {
 		this.stepCount = 0;
 		this.selectedComponent = "";
 		this.submitLabel = "";
+	}
+	
+	public void processAction(ActionEvent ae) {
+		((Workspace) WFUtil.getBeanInstance("workspace")).setSelectedMenu("2");
 	}
 	
 	public String getSelectedComponent() {

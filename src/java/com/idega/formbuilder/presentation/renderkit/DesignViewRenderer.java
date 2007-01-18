@@ -10,8 +10,8 @@ import javax.faces.render.Renderer;
 
 import org.apache.myfaces.custom.div.Div;
 
-import com.idega.formbuilder.presentation.FBDesignView;
-import com.idega.formbuilder.presentation.FBFormComponent;
+import com.idega.formbuilder.presentation.components.FBDesignView;
+import com.idega.formbuilder.presentation.components.FBFormComponent;
 
 public class DesignViewRenderer extends Renderer {
 	

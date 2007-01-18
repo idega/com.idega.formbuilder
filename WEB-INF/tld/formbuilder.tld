@@ -14,7 +14,7 @@
 	
 	<tag>
 		<name>division</name>
-		<tag-class>com.idega.formbuilder.presentation.FBDivisionTag</tag-class>
+		<tag-class>com.idega.formbuilder.presentation.tags.FBDivisionTag</tag-class>
 		<attribute>
 			<name>id</name>
 			<required>false</required>
@@ -28,7 +28,7 @@
 	</tag>
 	<tag>
 		<name>workspace</name>
-		<tag-class>com.idega.formbuilder.presentation.FBWorkspaceTag</tag-class>
+		<tag-class>com.idega.formbuilder.presentation.tags.FBWorkspaceTag</tag-class>
 		<attribute>
 			<name>id</name>
 			<required>false</required>
@@ -47,7 +47,7 @@
 	</tag>
 	<tag>
 		<name>formPropertiesPanel</name>
-		<tag-class>com.idega.formbuilder.presentation.FBFormPropertiesPanelTag</tag-class>
+		<tag-class>com.idega.formbuilder.presentation.tags.FBFormPropertiesPanelTag</tag-class>
 		<attribute>
 			<name>id</name>
 			<required>false</required>
@@ -61,7 +61,7 @@
 	</tag>
 	<tag>
 		<name>selectValues</name>
-		<tag-class>com.idega.formbuilder.presentation.FBSelectValuesListTag</tag-class>
+		<tag-class>com.idega.formbuilder.presentation.tags.FBSelectValuesListTag</tag-class>
 		<attribute>
 			<name>id</name>
 			<required>false</required>
@@ -80,7 +80,7 @@
 	</tag>
 	<tag>
 		<name>componentPropertiesPanel</name>
-		<tag-class>com.idega.formbuilder.presentation.FBComponentPropertiesPanelTag</tag-class>
+		<tag-class>com.idega.formbuilder.presentation.tags.FBComponentPropertiesPanelTag</tag-class>
 		<attribute>
 			<name>id</name>
 			<required>false</required>
@@ -99,7 +99,7 @@
 	</tag>
 	<tag>
 		<name>viewPanel</name>
-		<tag-class>com.idega.formbuilder.presentation.FBViewPanelTag</tag-class>
+		<tag-class>com.idega.formbuilder.presentation.tags.FBViewPanelTag</tag-class>
 		<attribute>
 			<name>id</name>
 			<required>false</required>
@@ -118,7 +118,7 @@
 	</tag>
 	<tag>
 		<name>palette</name>
-		<tag-class>com.idega.formbuilder.presentation.FBPaletteTag</tag-class>
+		<tag-class>com.idega.formbuilder.presentation.tags.FBPaletteTag</tag-class>
 		<attribute>
 			<name>id</name>
 			<required>false</required>
@@ -147,7 +147,7 @@
 	</tag>
 	<tag>
 		<name>paletteComponent</name>
-		<tag-class>com.idega.formbuilder.presentation.FBPaletteComponentTag</tag-class>
+		<tag-class>com.idega.formbuilder.presentation.tags.FBPaletteComponentTag</tag-class>
 		<attribute>
 			<name>id</name>
 			<required>false</required>
@@ -176,7 +176,7 @@
 	</tag>
 	<tag>
 		<name>designView</name>
-		<tag-class>com.idega.formbuilder.presentation.FBDesignViewTag</tag-class>
+		<tag-class>com.idega.formbuilder.presentation.tags.FBDesignViewTag</tag-class>
 		<attribute>
 			<name>id</name>
 			<required>false</required>
@@ -200,7 +200,7 @@
 	</tag>
 	<tag>
 		<name>formComponent</name>
-		<tag-class>com.idega.formbuilder.presentation.FBFormComponentTag</tag-class>
+		<tag-class>com.idega.formbuilder.presentation.tags.FBFormComponentTag</tag-class>
 		<attribute>
 			<name>id</name>
 			<required>false</required>
@@ -219,7 +219,7 @@
 	</tag>
 	<tag>
 		<name>formField</name>
-		<tag-class>com.idega.formbuilder.presentation.FBFormFieldTag</tag-class>
+		<tag-class>com.idega.formbuilder.presentation.tags.FBFormFieldTag</tag-class>
 		<attribute>
 			<name>id</name>
 			<required>false</required>
@@ -243,7 +243,7 @@
 	</tag>
 	<tag>
 		<name>toolbar</name>
-		<tag-class>com.idega.formbuilder.presentation.FBToolbarTag</tag-class>
+		<tag-class>com.idega.formbuilder.presentation.tags.FBToolbarTag</tag-class>
 		<attribute>
 			<name>id</name>
 			<required>false</required>
@@ -262,7 +262,7 @@
 	</tag>
 	<tag>
 		<name>fbpanel</name>
-		<tag-class>com.idega.formbuilder.presentation.FBPanelTag</tag-class>
+		<tag-class>com.idega.formbuilder.presentation.tags.FBPanelTag</tag-class>
 		<attribute>
 			<name>id</name>
 			<required>false</required>
@@ -291,7 +291,7 @@
 	</tag>
 	<tag>
 		<name>container</name>
-		<tag-class>com.idega.formbuilder.presentation.FBContainerTag</tag-class>
+		<tag-class>com.idega.formbuilder.presentation.tags.FBContainerTag</tag-class>
 		<attribute>
 			<name>id</name>
 			<required>false</required>
@@ -315,15 +315,15 @@
 	</tag>
 	<tag>
 		<name>formpreview</name>
-		<tag-class>com.idega.formbuilder.presentation.FBFormPreviewTag</tag-class>
+		<tag-class>com.idega.formbuilder.presentation.tags.FBFormPreviewTag</tag-class>
 	</tag>
 	<tag>
 		<name>formsourceedit</name>
-		<tag-class>com.idega.formbuilder.presentation.FBFormSourceEditTag</tag-class>
+		<tag-class>com.idega.formbuilder.presentation.tags.FBFormSourceEditTag</tag-class>
 	</tag>
 	<tag>
 		<name>toolbarbutton</name>
-		<tag-class>com.idega.formbuilder.presentation.FBToolbarButtonTag</tag-class>
+		<tag-class>com.idega.formbuilder.presentation.tags.FBToolbarButtonTag</tag-class>
 		<attribute>
 			<name>id</name>
 			<required>false</required>
