@@ -78,12 +78,33 @@ public class FBActionsProxy extends FBComponentBase {
 		saveSubmitLabel.setActionListener(application.createMethodBinding("#{formDocument.saveSubmitLabel}", new Class[]{ActionEvent.class}));
 		saveSubmitLabel.setReRender("mainApplication");
 		
+		UIAjaxCommandButton saveCompLabel = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
+		saveCompLabel.setId("saveCompLabel");
+		saveCompLabel.setAjaxSingle(false);
+		saveCompLabel.setActionListener(application.createMethodBinding("#{formComponent.saveComponentLabel}", new Class[]{ActionEvent.class}));
+		saveCompLabel.setReRender("mainApplication");
+		
+		UIAjaxCommandButton saveCompReq = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
+		saveCompReq.setId("saveCompReq");
+		saveCompReq.setAjaxSingle(false);
+		saveCompReq.setActionListener(application.createMethodBinding("#{formComponent.saveComponentRequired}", new Class[]{ActionEvent.class}));
+		saveCompReq.setReRender("mainApplication");
+		
+		UIAjaxCommandButton saveCompErr = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
+		saveCompErr.setId("saveCompErr");
+		saveCompErr.setAjaxSingle(false);
+		saveCompErr.setActionListener(application.createMethodBinding("#{formComponent.saveComponentErrorMessage}", new Class[]{ActionEvent.class}));
+		saveCompErr.setReRender("mainApplication");
+		
 		add(createForm);
 		add(deleteComponent);
 		add(getProperties);
 		add(changeMenu);
 		add(saveFormTitle);
 		add(saveSubmitLabel);
+		add(saveCompLabel);
+		add(saveCompReq);
+		add(saveCompErr);
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {

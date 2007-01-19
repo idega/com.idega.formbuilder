@@ -24,10 +24,12 @@ public class FormDocument implements Serializable {
 	private LocalizedStringBean submitLabelBean;
 	
 	public FormDocument() {
-		this.formTitle = "";
 		this.formId = "";
+		
 		this.stepCount = 0;
 		this.selectedComponent = "";
+		
+		this.formTitle = "";
 		this.submitLabel = "";
 		
 		this.formTitleBean = null;

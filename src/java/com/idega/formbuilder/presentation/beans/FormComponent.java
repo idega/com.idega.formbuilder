@@ -3,6 +3,9 @@ package com.idega.formbuilder.presentation.beans;
 import java.io.Serializable;
 import java.util.Locale;
 
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+
 import com.idega.formbuilder.business.form.beans.IComponentProperties;
 import com.idega.formbuilder.business.form.beans.IComponentPropertiesSelect;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
@@ -19,10 +22,12 @@ public class FormComponent implements Serializable {
 	private Boolean required;
 	private String label;
 	private String errorMessage;
+	
 	private String emptyLabel;
 	
 	private LocalizedStringBean labelStringBean;
 	private LocalizedStringBean errorStringBean;
+	
 	private LocalizedStringBean emptyLabelBean;
 	
 	public LocalizedStringBean getErrorStringBean() {
@@ -56,23 +61,48 @@ public class FormComponent implements Serializable {
 	
 	public void loadProperties(String id) {
 		this.id = id;
-		this.properties = ActionManager.getFormManagerInstance().getComponentProperties(id);
+		properties = ActionManager.getFormManagerInstance().getComponentProperties(id);
 		
-		this.required = properties.isRequired();
-		this.labelStringBean = properties.getLabel();
-		this.errorStringBean = properties.getErrorMsg();
+		required = properties.isRequired();
 		
-		this.errorMessage = errorStringBean.getString(new Locale("en"));
-		this.label = labelStringBean.getString(new Locale("en"));
+		labelStringBean = properties.getLabel();
+		label = labelStringBean.getString(new Locale("en"));
+		
+		errorStringBean = properties.getErrorMsg();
+		errorMessage = errorStringBean.getString(new Locale("en"));
 		
 		if(properties instanceof IComponentPropertiesSelect) {
 			IComponentPropertiesSelect selectProperties = (IComponentPropertiesSelect) properties;
-//			System.out.println("LOADING PROPERTIES OF SELECT COMPONENT");
-//			this.externalSrc = ((IComponentPropertiesSelect) properties).getExternalDataSrc();
-			this.emptyLabelBean = selectProperties.getEmptyElementLabel();
-//			this.itemset = ((IComponentPropertiesSelect) properties).getItemset();
 			
-			this.emptyLabel = emptyLabelBean.getString(new Locale("en"));
+			emptyLabelBean = selectProperties.getEmptyElementLabel();
+			emptyLabel = emptyLabelBean.getString(new Locale("en"));
+			
+//			this.externalSrc = ((IComponentPropertiesSelect) properties).getExternalDataSrc();
+//			this.itemset = ((IComponentPropertiesSelect) properties).getItemset();
+		}
+	}
+	
+	public void saveComponentLabel(ActionEvent ae) throws Exception {
+		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:propertyTitle");
+		if(value != null) {
+			setLabel(value);
+			ActionManager.getFormManagerInstance().updateFormComponent(id);
+		}
+	}
+	
+	public void saveComponentRequired(ActionEvent ae) throws Exception {
+		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:propertyRequired");
+		if(value != null) {
+			setRequired(new Boolean(value));
+			ActionManager.getFormManagerInstance().updateFormComponent(id);
+		}
+	}
+	
+	public void saveComponentErrorMessage(ActionEvent ae) throws Exception {
+		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:propertyErrorMessage");
+		if(value != null) {
+			setErrorMessage(value);
+			ActionManager.getFormManagerInstance().updateFormComponent(id);
 		}
 	}
 	
@@ -90,6 +120,8 @@ public class FormComponent implements Serializable {
 
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
+		this.errorStringBean.setString(new Locale("en"), errorMessage);
+		this.properties.setErrorMsg(errorStringBean);
 	}
 
 	public String getLabel() {
@@ -98,6 +130,8 @@ public class FormComponent implements Serializable {
 
 	public void setLabel(String label) {
 		this.label = label;
+		this.labelStringBean.setString(new Locale("en"), label);
+		this.properties.setLabel(labelStringBean);
 	}
 
 	public Boolean getRequired() {
@@ -106,6 +140,7 @@ public class FormComponent implements Serializable {
 
 	public void setRequired(Boolean required) {
 		this.required = required;
+		this.properties.setRequired(required);
 	}
 
 	public IComponentProperties getProperties() {
