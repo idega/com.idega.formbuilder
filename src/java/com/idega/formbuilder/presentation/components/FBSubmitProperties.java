@@ -70,7 +70,7 @@ public class FBSubmitProperties extends IWBaseComponent {
 			return;
 		}
 		this.getChildren().clear();
-		UIComponent body = (UIComponent) getFacet(WFBLOCK_CONTENT_FACET);
+		UIComponent body = getFacet(WFBLOCK_CONTENT_FACET);
 		if(body != null) {
 			System.out.println("WFBLOCK_CONTENT_FACET");
 			renderChild(context, body);

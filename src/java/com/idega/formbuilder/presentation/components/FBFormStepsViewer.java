@@ -118,11 +118,11 @@ public class FBFormStepsViewer extends IWBaseComponent {
 		writer.startElement("DIV", null);
 		writer.writeAttribute("class", styleClass, null);
 		
-		UIComponent add = (UIComponent) getFacet(NEW_STEP_BUTTON_FACET);
+		UIComponent add = getFacet(NEW_STEP_BUTTON_FACET);
 		if(add != null) {
 			renderChild(context, add);
 		}
-		UIComponent remove = (UIComponent) getFacet(REMOVE_STEP_BUTTON_FACET);
+		UIComponent remove = getFacet(REMOVE_STEP_BUTTON_FACET);
 		if(remove != null) {
 			renderChild(context, remove);
 		}

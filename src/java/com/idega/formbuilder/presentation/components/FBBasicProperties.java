@@ -128,7 +128,7 @@ public class FBBasicProperties extends IWBaseComponent {
 		if (!isRendered()) {
 			return;
 		}
-		UIComponent body = (UIComponent) getFacet(WFBLOCK_CONTENT_FACET);
+		UIComponent body = getFacet(WFBLOCK_CONTENT_FACET);
 		if(body != null) {
 			if (body.isRendered()) {
 				body.encodeBegin(context);

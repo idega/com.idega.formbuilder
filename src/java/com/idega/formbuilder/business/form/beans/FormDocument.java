@@ -34,21 +34,21 @@ import com.idega.idegaweb.IWMainApplication;
  */
 public class FormDocument implements IFormDocument, IFormComponentParent {
 	
-	private static Log logger = LogFactory.getLog(FormDocument.class);
+	static Log logger = LogFactory.getLog(FormDocument.class);
 	
-	private Document form_xforms;
+	Document form_xforms;
 	private Document components_xml;
 	private List<String> form_components_id_sequence;
 	
 	private int last_component_id = 0;
-	private String form_id;
+	String form_id;
 	private String submit_button_id;
 	private Element wizard_instance_element;
 
 	private boolean document_changed = true;
 
 	protected FormsService formsService;
-	private boolean saving = false;
+	boolean saving = false;
 	private Timer saveTimer;
 	
 	private Locale default_document_locale;
@@ -189,7 +189,7 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 	/**
 	 * Saves a document
 	 */
-	private class FormSaveTask extends TimerTask {
+	protected class FormSaveTask extends TimerTask {
 
 		public void run() {
 			try {
@@ -402,7 +402,7 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		return components_in_phases;
 	}
 
-	private FormsService getFormsService() {
+	FormsService getFormsService() {
 		
 		if (this.formsService == null) {
 		try {

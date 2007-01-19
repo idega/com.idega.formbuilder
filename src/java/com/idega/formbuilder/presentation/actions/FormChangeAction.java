@@ -14,7 +14,6 @@ import com.idega.webface.WFUtil;
 public class FormChangeAction implements ActionListener {
 	
 	public void processAction(ActionEvent ae) {
-		String temp;
 		IFormManager formManagerInstance = ActionManager.getFormManagerInstance();
 		String formId = ((FormDocument) WFUtil.getBeanInstance("formDocument")).getFormId();
 		if(formId != null && !formId.equals("") && !formId.equals("INACTIVE")) {
@@ -28,7 +27,7 @@ public class FormChangeAction implements ActionListener {
 				((Workspace) WFUtil.getBeanInstance("workspace")).setView("design");
 				((Workspace) WFUtil.getBeanInstance("workspace")).setRenderedMenu(true);
 				((Workspace) WFUtil.getBeanInstance("workspace")).setSelectedMenu("0");
-				temp = formManagerInstance.getFormTitle().getString(new Locale("en"));
+				formManagerInstance.getFormTitle().getString(new Locale("en"));
 				((FormDocument) WFUtil.getBeanInstance("formDocument")).setFormTitle(formManagerInstance.getFormTitle().getString(new Locale("en")));
 //				((FormDocument) WFUtil.getBeanInstance("formDocument")).setSubmitLabel(formManagerInstance.getSubmitButtonProperties().getLabel().getString(new Locale("en")));
 			} catch(Exception e) {

@@ -85,7 +85,7 @@ public class FBAdvancedProperties extends IWBaseComponent {
 			return;
 		}
 		if(!((FormComponent) WFUtil.getBeanInstance("formComponent")).isSimple()) {
-			UIComponent body = (UIComponent) getFacet(WFBLOCK_CONTENT_FACET);
+			UIComponent body = getFacet(WFBLOCK_CONTENT_FACET);
 			if(body != null) {
 				renderChild(context, body);
 			}

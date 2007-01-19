@@ -105,7 +105,7 @@ public class ActionManager implements Serializable {
 	}
 
 	public void setFormManagerInstance(IFormManager formManagerInstance) {
-		this.formManagerInstance = formManagerInstance;
+		ActionManager.formManagerInstance = formManagerInstance;
 	}
 
 }

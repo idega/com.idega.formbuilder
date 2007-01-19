@@ -174,7 +174,7 @@ public class FBDesignView extends IWBaseComponent {
 		}
 		if(status != null) {
 			if(status.equals(FBDesignView.DESIGN_VIEW_STATUS_NOFORM)) {
-				UIComponent noFormNotice = (UIComponent) getFacet(FBDesignView.DESIGN_VIEW_NOFORM_FACET);
+				UIComponent noFormNotice = getFacet(FBDesignView.DESIGN_VIEW_NOFORM_FACET);
 				if(noFormNotice != null) {
 					/*if (noFormNotice.isRendered()) {
 						noFormNotice.encodeBegin(context);
@@ -184,7 +184,7 @@ public class FBDesignView extends IWBaseComponent {
 					renderChild(context, noFormNotice);
 				}
 			} else if(status.equals(FBDesignView.DESIGN_VIEW_STATUS_EMPTY)) {
-				UIComponent formHeader = (UIComponent) getFacet(FBDesignView.DESIGN_VIEW_HEADER_FACET);
+				UIComponent formHeader = getFacet(FBDesignView.DESIGN_VIEW_HEADER_FACET);
 				if (formHeader != null) {
 					if (formHeader.isRendered()) {
 						formHeader.encodeBegin(context);
@@ -193,7 +193,7 @@ public class FBDesignView extends IWBaseComponent {
 					}
 //					renderChild(context, formHeader);
 				}
-				UIComponent emptyNotice = (UIComponent) getFacet(FBDesignView.DESIGN_VIEW_EMPTY_FACET);
+				UIComponent emptyNotice = getFacet(FBDesignView.DESIGN_VIEW_EMPTY_FACET);
 				if (emptyNotice != null) {
 					/*if (emptyNotice.isRendered()) {
 						emptyNotice.encodeBegin(context);
@@ -203,7 +203,7 @@ public class FBDesignView extends IWBaseComponent {
 					renderChild(context, emptyNotice);
 				}
 			} else if(status.equals(FBDesignView.DESIGN_VIEW_STATUS_ACTIVE)) {
-				UIComponent formHeader = (UIComponent) getFacet(FBDesignView.DESIGN_VIEW_HEADER_FACET);
+				UIComponent formHeader = getFacet(FBDesignView.DESIGN_VIEW_HEADER_FACET);
 				if (formHeader != null) {
 					if (formHeader.isRendered()) {
 						formHeader.encodeBegin(context);

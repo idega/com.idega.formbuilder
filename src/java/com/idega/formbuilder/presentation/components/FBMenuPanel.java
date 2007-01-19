@@ -94,10 +94,9 @@ public class FBMenuPanel extends FBComponentBase {
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
-		String i;
 		super.encodeBegin(context);
 		UIComponent header = getFacet(COMPONENT_HEADER_FACET);
-		i = ((HtmlAjaxCommandLink) header.getChildren().get(0)).getReRender().toString();
+		((HtmlAjaxCommandLink) header.getChildren().get(0)).getReRender().toString();
 		if(header != null) {
 			renderChild(context, header);
 		}
