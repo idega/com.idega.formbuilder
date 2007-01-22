@@ -133,17 +133,13 @@ public class FBDesignView extends IWBaseComponent {
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
-//		String temp;
 		Application application = context.getApplication();
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeBegin(context);
 		this.getChildren().clear();
 		
-//		IFormManager formManagerInstance = ActionManager.getFormManagerInstance();
-		
 		List<String> ids = ActionManager.getFormManagerInstance().getFormComponentsIdsList();
 		Iterator it = ids.iterator();
-//		String selectedComponent = null;
 		ValueBinding vb = this.getValueBinding("selectedComponent");
 		if(vb != null) {
 			selectedComponent = (String) vb.getValue(context);
@@ -176,11 +172,6 @@ public class FBDesignView extends IWBaseComponent {
 			if(status.equals(FBDesignView.DESIGN_VIEW_STATUS_NOFORM)) {
 				UIComponent noFormNotice = getFacet(FBDesignView.DESIGN_VIEW_NOFORM_FACET);
 				if(noFormNotice != null) {
-					/*if (noFormNotice.isRendered()) {
-						noFormNotice.encodeBegin(context);
-						noFormNotice.encodeChildren(context);
-						noFormNotice.encodeEnd(context);
-					}*/
 					renderChild(context, noFormNotice);
 				}
 			} else if(status.equals(FBDesignView.DESIGN_VIEW_STATUS_EMPTY)) {

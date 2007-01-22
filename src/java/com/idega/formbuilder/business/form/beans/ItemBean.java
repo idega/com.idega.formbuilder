@@ -1,11 +1,15 @@
 package com.idega.formbuilder.business.form.beans;
 
+import java.io.Serializable;
+
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
  * @version 1.0
  * 
  */
-public class ItemBean {
+public class ItemBean implements Serializable {
+	
+	private static final long serialVersionUID = -1462694199485788168L;
 	
 	String label;
 	String value;

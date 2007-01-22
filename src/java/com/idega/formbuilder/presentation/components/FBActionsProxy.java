@@ -96,6 +96,17 @@ public class FBActionsProxy extends FBComponentBase {
 		saveCompErr.setActionListener(application.createMethodBinding("#{formComponent.saveComponentErrorMessage}", new Class[]{ActionEvent.class}));
 		saveCompErr.setReRender("mainApplication");
 		
+		UIAjaxCommandButton switcher = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
+		switcher.setId("srcSwitcher");
+		switcher.setAjaxSingle(false);
+		switcher.setActionListener(application.createMethodBinding("#{formComponent.saveComponentDataSource}", new Class[]{ActionEvent.class}));
+		switcher.setReRender("workspaceform1:ajaxMenuPanel");
+		
+		UIAjaxCommandButton refreshView = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
+		refreshView.setId("refreshView");
+		refreshView.setAjaxSingle(true);
+		refreshView.setReRender("workspaceform1:ajaxViewPanel");
+		
 		add(createForm);
 		add(deleteComponent);
 		add(getProperties);
@@ -105,6 +116,8 @@ public class FBActionsProxy extends FBComponentBase {
 		add(saveCompLabel);
 		add(saveCompReq);
 		add(saveCompErr);
+		add(switcher);
+		add(refreshView);
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {

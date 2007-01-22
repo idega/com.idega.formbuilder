@@ -10,6 +10,7 @@ import javax.faces.el.ValueBinding;
 import javax.faces.event.ActionEvent;
 
 import org.ajax4jsf.ajax.html.HtmlAjaxCommandLink;
+import org.ajax4jsf.ajax.html.HtmlAjaxStatus;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
 
@@ -122,12 +123,12 @@ public class FBViewPanel extends FBComponentBase {
 		
 		addFacet(SWITCHER_FACET, switcher);
 		
-//		HtmlAjaxStatus status = new HtmlAjaxStatus();
-//		status.setStartText("Working");
-//		status.setStartStyle("background-color: Red; font-size: 16px; font-weight: Bold; float: right;");
-//		status.setLayout("inline");
+		HtmlAjaxStatus status = new HtmlAjaxStatus();
+		status.setStartText("Working");
+		status.setStartStyle("background-color: Red; font-size: 16px; font-weight: Bold; float: right;");
+		status.setLayout("inline");
 		
-//		this.getFacets().put(STATUS_FACET, status);
+		this.getFacets().put(STATUS_FACET, status);
 	}
 
 	public String getStyleClass() {

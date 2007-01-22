@@ -1,26 +1,23 @@
 package com.idega.formbuilder.presentation.components;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIComponentBase;
-import javax.faces.component.html.HtmlCommandButton;
 import javax.faces.component.html.HtmlGraphicImage;
 import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
-import javax.faces.event.ActionEvent;
 
-import org.ajax4jsf.ajax.html.HtmlAjaxSupport;
 import org.apache.myfaces.component.html.ext.HtmlInputText;
 
 import com.idega.formbuilder.business.form.beans.ItemBean;
+import com.idega.formbuilder.presentation.FBComponentBase;
 
-public class FBSelectValuesList extends UIComponentBase {
+public class FBSelectValuesList extends FBComponentBase {
 	
-	public static final String RENDERER_TYPE = "fb_selectvalueslist";
-	public static final String COMPONENT_FAMILY = "formbuilder";
 	public static final String COMPONENT_TYPE = "SelectValuesList";
 	
 	private static final String INLINE_DIV_STYLE = "display: inline";
@@ -38,73 +35,53 @@ public class FBSelectValuesList extends UIComponentBase {
 	private static final String EXPAND_BUTTON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-redo.png";
 	private static final String COLLAPSE_BUTTON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-undo.png";
 
+	private static final String ADD_NEW_BUTTON = "ADD_NEW_BUTTON";
+	private static final String EXPAND_ALL_BUTTON = "EXPAND_ALL_BUTTON";
+	private static final String COLLAPSE_ALL_BUTTON = "COLLAPSE_ALL_BUTTON";
+	
+	private String id;
 	private String styleClass;
 	private List<ItemBean> itemSet = new ArrayList<ItemBean>();
 	
 	public FBSelectValuesList() {
 		super();
-		this.setRendererType(FBSelectValuesList.RENDERER_TYPE);
+		this.setRendererType(null);
 	}
 	
-	public boolean getRendersChildren() {
-		return true;
-	}
-	
-	public String getFamily() {
-		return FBSelectValuesList.COMPONENT_FAMILY;
-	}
-	
-	public String getRendererType() {
-		return FBSelectValuesList.RENDERER_TYPE;
-	}
-	
-	public void initializeComponent(FacesContext context) {
-		System.out.println("INITIALIZING VALUE LIST");
+	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
 		this.getChildren().clear();
 		
 		HtmlGraphicImage addButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+		addButton.setId("addButton");
 		addButton.setValue(ADD_BUTTON_IMG);
-		addButton.setOnclick("addEmptyOption()");
+		addButton.setOnclick("addNewItem()");
+		addFacet(ADD_NEW_BUTTON, addButton);
 		
+		HtmlGraphicImage expandAllButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+		expandAllButton.setId("expandAllButton");
+		expandAllButton.setValue(EXPAND_BUTTON_IMG);
+//		expandAllButton.setOnclick("addEmptyOption()");
+		addFacet(EXPAND_ALL_BUTTON, expandAllButton);
 		
-		HtmlAjaxSupport proxy = (HtmlAjaxSupport) application.createComponent(HtmlAjaxSupport.COMPONENT_TYPE);
-		proxy.setEvent("onclick");
-		proxy.setReRender("options_container");
-		proxy.setActionListener(application.createMethodBinding("#{component.addEmptyOption}", new Class[]{ActionEvent.class}));
-		proxy.setAjaxSingle(true);
-		addButton.getChildren().add(proxy);
-		this.getFacets().put("addOptionButton", addButton);
-		
-		HtmlCommandButton button1 = new HtmlCommandButton();
-		button1.setId("asdaasd");
-		button1.setRendered(true);
-		button1.setValue("DUMMY2");
-		button1.setActionListener(application.createMethodBinding("#{component.dummyActionMethod}", new Class[]{ActionEvent.class}));
-		this.getChildren().add(button1);
-		
-		/*HtmlCommandButton dummyB = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
-		dummyB.setValue("DUMMY");
-		dummyB.setActionListener(application.createMethodBinding("#{component.dummyActionMethod}", new Class[]{ActionEvent.class}));
-		this.getChildren().add(dummyB);*/
+		HtmlGraphicImage collapseAllButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+		collapseAllButton.setId("collapseAllButton");
+		collapseAllButton.setValue(COLLAPSE_BUTTON_IMG);
+//		collapseAllButton.setOnclick("addEmptyOption()");
+		addFacet(COLLAPSE_ALL_BUTTON, collapseAllButton);
 		
 		ValueBinding vb = this.getValueBinding("itemSet");
-		List<ItemBean> items = new ArrayList<ItemBean>();
-		int listSize;
 		if(vb != null) {
-			items = (List<ItemBean>) vb.getValue(context);
+			itemSet = (List<ItemBean>) vb.getValue(context);
 		}
-		listSize = items.size();
-		
-		System.out.println(listSize + " FIELDS");
-		for(int i = 0; i < listSize; i++) {
-			String label = items.get(i).getLabel();
-			String value = items.get(i).getValue();
-			this.getChildren().add(getNextSelectRow(label, value, i, context));
+		for(int i = 0; i < itemSet.size(); i++) {
+			String label = itemSet.get(i).getLabel();
+			String value = itemSet.get(i).getValue();
+			add(getNextSelectRow(label, value, i, context));
 		}
 	}
 	
-	protected UIComponent getNextSelectRow(String field, String value, int index, FacesContext context) {
+	private UIComponent getNextSelectRow(String field, String value, int index, FacesContext context) {
 		Application application = context.getApplication();
 		
 		FBDivision row = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
@@ -114,20 +91,21 @@ public class FBSelectValuesList extends UIComponentBase {
 		deleteButton.setValue(DELETE_BUTTON_IMG);
 		deleteButton.setId(DELETE_BUTTON_PREFIX + index);
 		deleteButton.setStyle(INLINE_DIV_STYLE);
-		deleteButton.setOnclick("deleteThisRow(this.parentNode.id)");
-		//deleteButton.setOnclick("removeOption()");
+		deleteButton.setOnclick("deleteThisItem(this.parentNode.id)");
 		row.getChildren().add(deleteButton);
 		
 		HtmlInputText labelF = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		labelF.setValue(field);
 		labelF.setId(LABEL_FIELD_PREFIX + index);
 		labelF.setStyle(INLINE_DIV_STYLE);
+		labelF.setOnblur("saveLabel(this)");
 		row.getChildren().add(labelF);
 		
 		HtmlInputText valueF = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		valueF.setValue(value);
 		valueF.setId(VALUE_FIELD_PREFIX + index);
 		valueF.setStyle(HIDDEN_DIV_STYLE);
+		valueF.setOnblur("saveValue(this)");
 		row.getChildren().add(valueF);
 		
 		HtmlGraphicImage expandButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
@@ -138,6 +116,56 @@ public class FBSelectValuesList extends UIComponentBase {
 		row.getChildren().add(expandButton);
 		
 		return row;
+	}
+	
+	public void encodeBegin(FacesContext context) throws IOException {
+		super.encodeBegin(context);
+		ResponseWriter writer = context.getResponseWriter();
+		
+		writer.startElement("DIV", this);
+		writer.writeAttribute("id", getId(), "id");
+		writer.writeAttribute("class", getStyleClass(), "styleClass");
+		writer.writeAttribute("style", "width: 320px; height: 180px;", null);
+		
+		UIComponent addOptionButton = getFacet(ADD_NEW_BUTTON);
+		if(addOptionButton != null) {
+			renderChild(context, addOptionButton);
+		}
+		
+		writer.startElement("DIV", null);
+		writer.writeAttribute("id", getId() + "Inner", null);
+		writer.writeAttribute("style", "width: 320px; height: 150px; overflow: auto;", null);
+	}
+	
+	public void encodeEnd(FacesContext context) throws IOException {
+		ResponseWriter writer = context.getResponseWriter();
+		
+		writer.endElement("DIV");
+		writer.endElement("DIV");
+		
+		writer.startElement("DIV", null);
+		writer.writeAttribute("style", "display: none", null);
+		Object values[] = new Object[1];
+		values[0] = getId();
+		writer.write(getEmbededJavascript(getJavascriptParameters(getId())));
+		writer.endElement("DIV");
+		
+		super.encodeEnd(context);
+	}
+	
+	public void encodeChildren(FacesContext context) throws IOException {
+		if (!isRendered()) {
+			return;
+		}
+		ValueBinding vb = this.getValueBinding("itemSet");
+		if(vb != null) {
+			itemSet = (List<ItemBean>) vb.getValue(context);
+		}
+		for(int i = 0; i < itemSet.size(); i++) {
+			String label = itemSet.get(i).getLabel();
+			String value = itemSet.get(i).getValue();
+			renderChild(context, getNextSelectRow(label, value, i, context));
+		}
 	}
 	
 	public static Object[] getJavascriptParameters(String componentId) {
@@ -159,18 +187,20 @@ public class FBSelectValuesList extends UIComponentBase {
 	}
 	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[3];
+		Object values[] = new Object[4];
 		values[0] = super.saveState(context);
-		values[1] = styleClass;
-		values[2] = itemSet;
+		values[1] = id;
+		values[2] = styleClass;
+		values[3] = itemSet;
 		return values;
 	}
 	
 	public void restoreState(FacesContext context, Object state) {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);
-		styleClass = (String) values[1];
-		itemSet = (List<ItemBean>) values[2];
+		id = (String) values[1];
+		styleClass = (String) values[2];
+		itemSet = (List<ItemBean>) values[3];
 	}
 	
 	public static String getEmbededJavascript(Object values[]) {
@@ -193,20 +223,37 @@ public class FBSelectValuesList extends UIComponentBase {
 		result.append("}\n");
 		result.append("}\n");
 		
-		result.append("function addNewEmptySelect() {\n");
+		result.append("function saveLabel(element) {\n");
+		result.append("var index = element.id.split('_')[1];\n");
+		result.append("var value = element.value;\n");
+//		result.append("var value = element.getAttribute('value');\n");
+//		result.append("alert(value);\n");
+//		result.append("var value = element.getAttribute('value');\n");
+		result.append("dwrmanager.saveLabel(removedItem,index,value);\n");
+		result.append("}\n");
+		
+		result.append("function saveValue(element) {\n");
+		result.append("var index = element.id.split('_')[1];\n");
+		result.append("var value = element.value;\n");
+		result.append("dwrmanager.saveValue(removedItem,index,value);\n");
+		result.append("}\n");
+		
+		result.append("function addNewItem() {\n");
 		result.append("var newInd = getNextRowIndex();\n");
-		result.append("$(\"" + values[0] + "\").appendChild(getEmptySelect(newInd));\n");
+		result.append("$(\"" + values[0] + "\").lastChild.appendChild(getEmptySelect(newInd));\n");
 		result.append("}\n");
 		
-		result.append("function deleteThisRow(ind) {\n");
-		result.append("alert(ind);\n");
-		result.append("dwrmanager.removeOption(removedOption,ind);\n");
-		//result.append("var currRow = document.getElementById(ind);\n");
-		//result.append("$(\"" + values[12] + "\").removeChild(currRow);\n");
+		result.append("function deleteThisItem(ind) {\n");
+		
+		result.append("var index = ind.split('_')[1];\n");
+//		result.append("alert(index);\n");
+		result.append("dwrmanager.removeItem(removedItem,index);\n");
+		result.append("var currRow = document.getElementById(ind);\n");
+		result.append("$(\"" + values[12] + "\").removeChild(currRow);\n");
 		result.append("}\n");
 		
-		result.append("function removedOption() {\n");
-		result.append("$('workspaceform1:removeOption').click();\n");
+		result.append("function removedItem() {\n");
+		result.append("$('workspaceform1:refreshView').click();\n");
 		result.append("}\n");
 		
 		result.append("function getEmptySelect(index) {\n");
@@ -214,7 +261,7 @@ public class FBSelectValuesList extends UIComponentBase {
 		result.append("result.setAttribute('id',\"" + "workspaceform1:" + values[7] + "\"+index);\n");
 		result.append("var remB = document.createElement('img');\n");
 		result.append("remB.setAttribute('style',\"" + values[5] + "\");\n");
-		result.append("remB.setAttribute('onclick','deleteThisRow(this.parentNode.id)');\n");
+		result.append("remB.setAttribute('onclick','deleteThisItem(this.parentNode.id)');\n");
 		result.append("remB.setAttribute('id',\"" + values[3] + "\"+index);\n");
 		result.append("remB.setAttribute('src',\"" + values[1] + "\");\n");
 		result.append("var label = document.createElement('input');\n");
@@ -222,11 +269,13 @@ public class FBSelectValuesList extends UIComponentBase {
 		result.append("label.setAttribute('type','text');\n");
 		result.append("label.setAttribute('style',\"" + values[5] + "\");\n");
 		result.append("label.setAttribute('value','');\n");
+		result.append("label.setAttribute('onblur', 'saveLabel(this)');\n");
 		result.append("var value = document.createElement('input');\n");
 		result.append("value.setAttribute('id',\"" + values[11] + "\"+index);\n");
 		result.append("value.setAttribute('type','text');\n");
 		result.append("value.setAttribute('style',\"" + values[10] + "\");\n");
 		result.append("value.setAttribute('value','');\n");
+		result.append("value.setAttribute('onblur', 'saveValue(this)');\n");
 		result.append("var expB = document.createElement('img');\n");
 		result.append("expB.setAttribute('style',\"" + values[5] + "\");\n");
 		result.append("expB.setAttribute('id',\"" + values[4] + "\"+index);\n");
@@ -240,7 +289,8 @@ public class FBSelectValuesList extends UIComponentBase {
 		result.append("}\n");
 		
 		result.append("function getNextRowIndex() {\n");
-		result.append("var lastC = $(\"" + values[0] + "\").lastChild;\n");
+		result.append("var lastC = $(\"" + values[0] + "\").lastChild.lastChild;\n");
+//		result.append("alert(lastC.id);\n");
 		result.append("if(lastC) {\n");
 		result.append("var lastCId = lastC.id;\n");
 		result.append("var ind = lastCId.split('_')[1];\n");
@@ -268,6 +318,14 @@ public class FBSelectValuesList extends UIComponentBase {
 
 	public void setStyleClass(String styleClass) {
 		this.styleClass = styleClass;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }

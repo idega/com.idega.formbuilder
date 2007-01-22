@@ -7,7 +7,6 @@ import java.util.List;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
-//import com.idega.formbuilder.business.FormComponent;
 import com.idega.formbuilder.business.form.beans.IComponentProperties;
 import com.idega.formbuilder.business.form.beans.IComponentPropertiesSelect;
 import com.idega.webface.WFUtil;
@@ -24,7 +23,7 @@ public class DataSourceList implements Serializable {
 	private String selectedDataSource;
 	
 	public String getSelectedDataSource() {
-		FormComponent fc = (FormComponent) WFUtil.getBeanInstance("component");
+		FormComponent fc = (FormComponent) WFUtil.getBeanInstance("formComponent");
 		IComponentProperties icp = fc.getProperties();
 		if(icp instanceof IComponentPropertiesSelect) {
 			IComponentPropertiesSelect icps = (IComponentPropertiesSelect) icp;
@@ -39,7 +38,7 @@ public class DataSourceList implements Serializable {
 
 	public void setSelectedDataSource(String selectedDataSource) {
 		this.selectedDataSource = selectedDataSource;
-		((IComponentPropertiesSelect)((FormComponent) WFUtil.getBeanInstance("component")).getProperties()).setDataSrcUsed(Integer.parseInt(selectedDataSource));
+		((IComponentPropertiesSelect)((FormComponent) WFUtil.getBeanInstance("formComponent")).getProperties()).setDataSrcUsed(Integer.parseInt(selectedDataSource));
 	}
 
 	public DataSourceList() {
@@ -60,10 +59,10 @@ public class DataSourceList implements Serializable {
 	public void switchDataSource(ActionEvent ae) {
 		if(selectedDataSource.equals("1")) {
 			selectedDataSource = "2";
-			((IComponentPropertiesSelect)((FormComponent) WFUtil.getBeanInstance("component")).getProperties()).setDataSrcUsed(IComponentPropertiesSelect.EXTERNAL_DATA_SRC);
+			((IComponentPropertiesSelect)((FormComponent) WFUtil.getBeanInstance("formComponent")).getProperties()).setDataSrcUsed(IComponentPropertiesSelect.EXTERNAL_DATA_SRC);
 		} else if(selectedDataSource.equals("2")) {
 			selectedDataSource = "1";
-			((IComponentPropertiesSelect)((FormComponent) WFUtil.getBeanInstance("component")).getProperties()).setDataSrcUsed(IComponentPropertiesSelect.LOCAL_DATA_SRC);
+			((IComponentPropertiesSelect)((FormComponent) WFUtil.getBeanInstance("formComponent")).getProperties()).setDataSrcUsed(IComponentPropertiesSelect.LOCAL_DATA_SRC);
 		}
 	}
 
