@@ -14,8 +14,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.idega.formbuilder.FormbuilderViewManager;
-//import com.idega.formbuilder.business.FormComponent;
+import com.idega.formbuilder.business.form.beans.IComponentPropertiesSelect;
+import com.idega.formbuilder.business.form.beans.ItemBean;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
+import com.idega.formbuilder.presentation.beans.FormComponent;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.formbuilder.presentation.components.FBDesignView;
@@ -25,26 +27,55 @@ import com.idega.webface.WFUtil;
 public class DWRManager implements Serializable {
 	
 	private static final long serialVersionUID = -753995343458793992L;
-//	private IFormManager formManagerInstance;
 	
-	/*public DWRManager() {
-		formManagerInstance = (IFormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
-	}*/
+	public void removeItem(int index) {
+		List<ItemBean> items = ((FormComponent) WFUtil.getBeanInstance("formComponent")).getItems();
+		items.remove(index);
+		((FormComponent) WFUtil.getBeanInstance("formComponent")).setItems(items);
+	}
 	
-	/*public void removeOption(String id) {
-		if(id != null && id.contains("_")) {
-			int index = Integer.parseInt(id.substring(id.length()-1));
-			int size = ((FormComponent) WFUtil.getBeanInstance("component")).getItems().size();
-			if(index < size) {
-				((FormComponent) WFUtil.getBeanInstance("component")).getItems().remove(index);
-			} else {
-				((FormComponent) WFUtil.getBeanInstance("component"));
-			}
+	public void saveLabel(int index, String value) {
+		List<ItemBean> items = ((FormComponent) WFUtil.getBeanInstance("formComponent")).getItems();
+		if(index >= items.size()) {
+			ItemBean newItem = new ItemBean();
+			newItem.setLabel(value);
+			items.add(newItem);
+		} else {
+			items.get(index).setLabel(value);
 		}
-	}*/
+		((FormComponent) WFUtil.getBeanInstance("formComponent")).setItems(items);
+	}
+	
+	public void saveValue(int index, String value) {
+		List<ItemBean> items = ((FormComponent) WFUtil.getBeanInstance("formComponent")).getItems();
+		if(index >= items.size()) {
+			ItemBean newItem = new ItemBean();
+			newItem.setValue(value);
+			items.add(newItem);
+		} else {
+			items.get(index).setValue(value);
+		}
+		((FormComponent) WFUtil.getBeanInstance("formComponent")).setItems(items);
+	}
 	
 	private void setSelectedMenu(String selectedMenu) {
 		((Workspace) WFUtil.getBeanInstance("workspace")).setSelectedMenu(selectedMenu);
+	}
+	
+	public void switchDataSource() {
+		/*if(selectedDataSource.equals("1")) {
+			selectedDataSource = "2";
+			((IComponentPropertiesSelect)((FormComponent) WFUtil.getBeanInstance("formComponent")).getProperties()).setDataSrcUsed(IComponentPropertiesSelect.EXTERNAL_DATA_SRC);
+		} else if(selectedDataSource.equals("2")) {
+			selectedDataSource = "1";
+			((IComponentPropertiesSelect)((FormComponent) WFUtil.getBeanInstance("formComponent")).getProperties()).setDataSrcUsed(IComponentPropertiesSelect.LOCAL_DATA_SRC);
+		}*/
+		Integer current = ((IComponentPropertiesSelect)((FormComponent) WFUtil.getBeanInstance("formComponent")).getProperties()).getDataSrcUsed();
+		if(current == IComponentPropertiesSelect.EXTERNAL_DATA_SRC) {
+			((IComponentPropertiesSelect)((FormComponent) WFUtil.getBeanInstance("formComponent")).getProperties()).setDataSrcUsed(IComponentPropertiesSelect.LOCAL_DATA_SRC);
+		} else {
+			((IComponentPropertiesSelect)((FormComponent) WFUtil.getBeanInstance("formComponent")).getProperties()).setDataSrcUsed(IComponentPropertiesSelect.EXTERNAL_DATA_SRC);
+		}
 	}
 	
 	public void changeMenu(String id) {

@@ -126,6 +126,13 @@ function gotComponentProperties() {
 //-------------------------------------------
 
 
+function switchDataSource() {
+	dwrmanager.switchDataSource(switchedDataSrc);
+}
+function switchedDataSrc() {
+	$('workspaceform1:srcSwitcher').click();
+}
+
 /*function clearDesignSpace() {
 	var dropBox = $('dropBox');
 	var child = null;

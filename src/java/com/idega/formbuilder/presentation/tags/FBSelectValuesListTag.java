@@ -23,7 +23,7 @@ public class FBSelectValuesListTag extends UIComponentTagBase {
 	}
 
 	public String getRendererType() {
-		return FBSelectValuesList.RENDERER_TYPE;
+		return null;
 	}
 	
 	public void release() {

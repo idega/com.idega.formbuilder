@@ -14,7 +14,7 @@ public class SelectValuesListRenderer extends Renderer {
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		FBSelectValuesList valuesList = (FBSelectValuesList) component;
-		valuesList.initializeComponent(context);
+//		valuesList.initializeComponent(context);
 		
 		writer.startElement("DIV", valuesList);
 		writer.writeAttribute("id", valuesList.getId(), "id");

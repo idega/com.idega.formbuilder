@@ -163,7 +163,7 @@ public class FBViewPanel extends FBComponentBase {
 		} else {
 			view = getView();
 		}
-		UIComponent status = getFacet(STATUS_FACET);
+//		UIComponent status = getFacet(STATUS_FACET);
 		UIComponent viewSwitch = getFacet(SWITCHER_FACET);
 		if(viewSwitch != null) {
 			if(view.equals(DESIGN_VIEW)) {
@@ -173,7 +173,7 @@ public class FBViewPanel extends FBComponentBase {
 					((FBDivision) viewSwitch.getChildren().get(1)).setStyleClass("unselectedTab");
 					((FBDivision) viewSwitch.getChildren().get(2)).setStyleClass("unselectedTab");
 					renderChild(context, viewSwitch);
-					renderChild(context, status);
+//					renderChild(context, status);
 					renderChild(context, designView);
 				}
 			} else if(view.equals(PREVIEW_VIEW)) {
@@ -183,7 +183,7 @@ public class FBViewPanel extends FBComponentBase {
 					((FBDivision) viewSwitch.getChildren().get(0)).setStyleClass("unselectedTab");
 					((FBDivision) viewSwitch.getChildren().get(2)).setStyleClass("unselectedTab");
 					renderChild(context, viewSwitch);
-					renderChild(context, status);
+//					renderChild(context, status);
 					renderChild(context, previewView);
 				}
 			} else if(view.equals(SOURCE_VIEW)) {
@@ -193,7 +193,7 @@ public class FBViewPanel extends FBComponentBase {
 					((FBDivision) viewSwitch.getChildren().get(1)).setStyleClass("unselectedTab");
 					((FBDivision) viewSwitch.getChildren().get(0)).setStyleClass("unselectedTab");
 					renderChild(context, viewSwitch);
-					renderChild(context, status);
+//					renderChild(context, status);
 					renderChild(context, sourceView);
 				}
 			}
