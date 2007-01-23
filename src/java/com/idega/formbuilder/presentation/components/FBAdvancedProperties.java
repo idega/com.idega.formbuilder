@@ -8,9 +8,7 @@ import javax.faces.component.UISelectItems;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.component.html.HtmlOutputLabel;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 
-import org.ajax4jsf.ajax.UIAjaxSupport;
 import org.apache.myfaces.component.html.ext.HtmlSelectOneRadio;
 
 import com.idega.formbuilder.business.form.beans.IComponentPropertiesSelect;
