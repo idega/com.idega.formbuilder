@@ -27,11 +27,6 @@
 	max-height: 200px;
 	min-height: 50px;
 }
-.sourceView {
-	width: 300px;
-	height: 500px;
-	background-color: Red;
-}
 .dropBox {
 	height: 100%;
 	margin-top: 10px;
@@ -74,6 +69,8 @@
 	padding-top: 9px;
 	padding-bottom: 9px;
 	padding-left: 29px;
+	cursor: pointer;
+	background-color: Silver;
 }
 .formElement:active {
 	background-color: Silver;
@@ -91,32 +88,47 @@
 	padding-top: 10px;
 	height: 20px;
 }
-.noMenuLabel {
-	background-color: Yellow;
+#noFormNotice,#emptyForm {
+	background-color: LightGrey;
 	padding-left: 30px;
 	padding-right: 30px;
 	padding-bottom: 40px;
 	padding-top: 35px;
 	text-align: center;
 	vertical-align: middle;
-	border: 2px solid #93B825;
+	border: 2px dotted Black;
 	font-size: 20px;
-	width: 200px;
+	margin: 20px;
+	height: 100px;
+	display: block;
+}
+.noMenuLabel {
+	background-color: Grey;
+	padding-left: 30px;
+	padding-right: 30px;
+	padding-bottom: 40px;
+	padding-top: 35px;
+	text-align: center;
+	vertical-align: middle;
+	border: 2px dotted Black;
+	font-size: 20px;
+	margin: 20px;
 	height: 100px;
 	display: block;
 }
 .sourceView {
-	display: inline;
+	/*display: inline;
 	position: relative;
 	top: 0px;
 	left: 0px;
 	width: 100%;
+	background-color: Silver;*/
 }
 .sourceView textarea {
+	top: 20px;
+	bottom: 20px;
+	width: 80%;
 	height: 500px;
-	width: 500px;
-	margin-left: 20px;
-	margin-right: 20px;
 }
 .sourceView input {
 	align: center;
@@ -147,7 +159,7 @@
 }
 .formHeading:hover {
 	cursor: pointer;
-	background-color: Yellow;
+	background-color: Grey;
 }
 /*.sourceView textarea {
 	width: 100%;
