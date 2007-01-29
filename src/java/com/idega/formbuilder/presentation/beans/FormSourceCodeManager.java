@@ -21,7 +21,6 @@ public class FormSourceCodeManager implements ActionListener {
 	
 	public void processAction(ActionEvent event) {
 		
-		System.out.println("SAVING SOURCE CODE");
 		if(source_code == null)
 			return;
 		

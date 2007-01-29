@@ -5,16 +5,14 @@ import java.io.IOException;
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 
-import org.ajax4jsf.ajax.UIAjaxCommandButton;
+import org.apache.myfaces.component.html.ext.HtmlCommandButton;
 import org.apache.myfaces.component.html.ext.HtmlInputTextarea;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
 
 public class FBSourceView extends FBComponentBase {
 	
-//	public static final String COMPONENT_FAMILY = "formbuilder";
 	public static final String COMPONENT_TYPE = "SourceView";
 	
 	private static final String CONTENT_DIV_FACET = "CONTENT_DIV_FACET";
@@ -27,18 +25,6 @@ public class FBSourceView extends FBComponentBase {
 		super();
 		this.setRendererType(null);
 	}
-	
-	/*public boolean getRendersChildren() {
-		return true;
-	}
-	
-	public String getFamily() {
-		return FBSourceView.COMPONENT_FAMILY;
-	}
-	
-	public String getRendererType() {
-		return null;
-	}*/
 	
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
@@ -54,17 +40,18 @@ public class FBSourceView extends FBComponentBase {
 		textarea.setWrap("false");
 		textarea.setId("sourceTextarea");
 		
-		UIAjaxCommandButton srcSubmit = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
+		HtmlCommandButton srcSubmit = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
 		srcSubmit.setId("saveSrcBtn");
-		srcSubmit.setAjaxSingle(false);
-		srcSubmit.setReRender("mainApplication");
-		srcSubmit.setActionListener(application.createMethodBinding("#{formSourceCodeManager.processAction}", new Class[]{ActionEvent.class}));
+		srcSubmit.setOnclick("$('workspaceform1:saveCode').click();");
+//		srcSubmit.setAjaxSingle(false);
+//		srcSubmit.setReRender("mainApplication");
+//		srcSubmit.setActionListener(application.createMethodBinding("#{formSourceCodeManager.processAction}", new Class[]{ActionEvent.class}));
 		srcSubmit.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['change_source_code']}"));
 		
 		content.getChildren().add(textarea);
 		content.getChildren().add(srcSubmit);
 		
-		this.getFacets().put(CONTENT_DIV_FACET, content);
+		addFacet(CONTENT_DIV_FACET, content);
 		
 	}
 	
