@@ -125,7 +125,7 @@ public class FBSelectValuesList extends FBComponentBase {
 		writer.startElement("DIV", this);
 		writer.writeAttribute("id", getId(), "id");
 		writer.writeAttribute("class", getStyleClass(), "styleClass");
-		writer.writeAttribute("style", "width: 320px; height: 180px;", null);
+//		writer.writeAttribute("style", "width: 320px; height: 180px;", null);
 		
 		UIComponent addOptionButton = getFacet(ADD_NEW_BUTTON);
 		if(addOptionButton != null) {
@@ -134,7 +134,7 @@ public class FBSelectValuesList extends FBComponentBase {
 		
 		writer.startElement("DIV", null);
 		writer.writeAttribute("id", getId() + "Inner", null);
-		writer.writeAttribute("style", "width: 320px; height: 150px; overflow: auto;", null);
+		writer.writeAttribute("class", getStyleClass() + "Inner", null);
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {

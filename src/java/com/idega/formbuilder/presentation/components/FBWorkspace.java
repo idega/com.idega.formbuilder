@@ -15,11 +15,11 @@ import com.idega.formbuilder.presentation.FBComponentBase;
 
 public class FBWorkspace extends FBComponentBase {
 	
-//	public static final String COMPONENT_FAMILY = "formbuilder";
 	public static final String COMPONENT_TYPE = "Workspace";
 	
-	public static final String WORKSPACE_MENU_FACET = "menu";
-	public static final String WORKSPACE_VIEW_FACET = "view";
+	private static final String WORKSPACE_MENU_FACET = "menu";
+	private static final String WORKSPACE_VIEW_FACET = "view";
+	private static final String WORKSPACE_PAGES_PANEL_FACET = "pages";
 	private static final String WORKSPACE_ACTIONS_PROXY_FACET = "proxy";
 	
 	private String id;
@@ -30,18 +30,6 @@ public class FBWorkspace extends FBComponentBase {
 		super();
 		this.setRendererType(null);
 	}
-	
-	/*public boolean getRendersChildren() {
-		return true;
-	}*/
-	
-	/*public String getFamily() {
-		return FBWorkspace.COMPONENT_FAMILY;
-	}*/
-	
-	/*public String getRendererType() {
-		return null;
-	}*/
 	
 	protected void initializeComponent(FacesContext context) {		
 		Application application = context.getApplication();
@@ -71,10 +59,20 @@ public class FBWorkspace extends FBComponentBase {
 		views.setStyleClass("formContainer");
 		viewPanel.getChildren().add(views);
 		
+		HtmlAjaxOutputPanel pagesPanel = new HtmlAjaxOutputPanel();
+		pagesPanel.setId("ajaxPagesPanel");
+		
+		FBPagesPanel pages = (FBPagesPanel) application.createComponent(FBPagesPanel.COMPONENT_TYPE);
+		pages.setId("pagesPanel");
+		pages.setValueBinding("pages", application.createValueBinding("#{formDocument.pages}"));
+		pagesPanel.getChildren().add(pages);
+		
+		
 		FBActionsProxy actionsProxy = (FBActionsProxy) application.createComponent(FBActionsProxy.COMPONENT_TYPE);
 		
 		addFacet(WORKSPACE_MENU_FACET, menuPanel);
 		addFacet(WORKSPACE_VIEW_FACET, viewPanel);
+		addFacet(WORKSPACE_PAGES_PANEL_FACET, pagesPanel);
 		addFacet(WORKSPACE_ACTIONS_PROXY_FACET, actionsProxy);
 	}
 	
@@ -99,30 +97,21 @@ public class FBWorkspace extends FBComponentBase {
 		}
 		UIComponent menu = getFacet(WORKSPACE_MENU_FACET);
 		if(menu != null) {
-			/*if(menu.isRendered()) {
-				menu.encodeBegin(context);
-				menu.encodeChildren(context);
-				menu.encodeEnd(context);
-			}*/
-			this.renderChild(context, menu);
+			renderChild(context, menu);
 		}
 		UIComponent view = getFacet(WORKSPACE_VIEW_FACET);
 		if(view != null) {
-			/*if(view.isRendered()) {
-				view.encodeBegin(context);
-				view.encodeChildren(context);
-				view.encodeEnd(context);
-			}*/
-			this.renderChild(context, view);
+			renderChild(context, view);
 		}
+		/*if(((Workspace)WFUtil.getBeanInstance("workspace")).isPagesPanelVisible()) {
+			UIComponent pagesPanel = getFacet(WORKSPACE_PAGES_PANEL_FACET);
+			if(pagesPanel != null) {f
+				renderChild(context, pagesPanel);
+			}
+		}*/
 		UIComponent proxy = getFacet(WORKSPACE_ACTIONS_PROXY_FACET);
 		if(proxy != null) {
-			/*if(proxy.isRendered()) {
-				proxy.encodeBegin(context);
-				proxy.encodeChildren(context);
-				proxy.encodeEnd(context);
-			}*/
-			this.renderChild(context, proxy);
+			renderChild(context, proxy);
 		}
 	}
 	

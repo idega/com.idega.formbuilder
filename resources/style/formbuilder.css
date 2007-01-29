@@ -1,27 +1,55 @@
 /*---Page layout styles---*/
 #optionsPanel {
-	width: 300px;
+	position: relative;
+	top: 5px;
+	width: 30%;
+	bottom: 5px;
 	float: left;
 	height: 700px;
-	background: LightGrey;
 	padding: 5px;
+	background: LightGrey;
 	border: 0px solid Black;
 }
 #viewPanel {
+	position: relative;
+	top: 5px;
+	left: -24px;
+	bottom: 5px;
 	display: block;
-	width: 70%;
-	height: 700px;
-	background: LightGrey;
+	float: right;
+	height: 600px;
+	width: 73%;
 	border: 0px solid Black;
+}
+#selectOpts {
+	/*background-color: Red;*/
+	overflow: auto;
+	max-height: 200px;
+	min-height: 50px;
 }
 .sourceView {
 	width: 300px;
 	height: 500px;
 	background-color: Red;
 }
+.dropBox {
+	height: 100%;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding-left: 5%;
+	padding-right: 5%;
+	overflow: auto;
+}
+.fbPropertyItemLabel {
+	padding: 10px;
+	width: 120px;
+	border: 1px solid #93B825;
+	display: inline;
+	background-color: Red;
+}
 .formElement {
 	width: 88%;
-	height: auto;	
+	height: auto;
 	margin-bottom: 10px;
 	margin-left: 5%;
 	margin-right: 5%;
@@ -196,23 +224,15 @@
 	border: 1px solid Black;
 	height: 15px;
 }
-.dropBox {
-	background-color: White;
-	height: 500px;
-	margin-bottom: 10px;
-	padding-left: 5%;
-	padding-right: 5%;
-	overflow: auto;
-}
 .propertiesBox {
 	margin-bottom: 10px;
 	padding-left: 5%;
 	padding-right: 5%;
 	overflow: none;
 }
-.propertiesBox * {
+/*.propertiesBox * {
 	display: block;
-}
+}*/
 .toolbar_button {
 	text-decoration: none 					! important;
 	color: #000;

@@ -15,12 +15,11 @@ import javax.faces.event.ActionEvent;
 import org.ajax4jsf.ajax.UIAjaxSupport;
 import org.apache.myfaces.custom.htmlTag.HtmlTag;
 
+import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.view.ActionManager;
-import com.idega.presentation.IWBaseComponent;
 
-public class FBDesignView extends IWBaseComponent {
+public class FBDesignView extends FBComponentBase {
 	
-	public static final String COMPONENT_FAMILY = "formbuilder";
 	public static final String COMPONENT_TYPE = "DesignView";
 	
 	public static final String DESIGN_VIEW_STATUS_NOFORM = "noform";
@@ -50,22 +49,9 @@ public class FBDesignView extends IWBaseComponent {
 		this.setRendererType(null);
 	}
 	
-	public boolean getRendersChildren() {
-		return true;
-	}
-	
-	public String getFamily() {
-		return FBDesignView.COMPONENT_FAMILY;
-	}
-	
-	public String getRendererType() {
-		return null;
-	}
-	
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
 		this.getChildren().clear();
-		
 		
 		FBDivision noFormNotice = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
 		noFormNotice.setId("noFormNotice");
@@ -177,31 +163,16 @@ public class FBDesignView extends IWBaseComponent {
 			} else if(status.equals(FBDesignView.DESIGN_VIEW_STATUS_EMPTY)) {
 				UIComponent formHeader = getFacet(FBDesignView.DESIGN_VIEW_HEADER_FACET);
 				if (formHeader != null) {
-					if (formHeader.isRendered()) {
-						formHeader.encodeBegin(context);
-						formHeader.encodeChildren(context);
-						formHeader.encodeEnd(context);
-					}
-//					renderChild(context, formHeader);
+					renderChild(context, formHeader);
 				}
 				UIComponent emptyNotice = getFacet(FBDesignView.DESIGN_VIEW_EMPTY_FACET);
 				if (emptyNotice != null) {
-					/*if (emptyNotice.isRendered()) {
-						emptyNotice.encodeBegin(context);
-						emptyNotice.encodeChildren(context);
-						emptyNotice.encodeEnd(context);
-					}*/
 					renderChild(context, emptyNotice);
 				}
 			} else if(status.equals(FBDesignView.DESIGN_VIEW_STATUS_ACTIVE)) {
 				UIComponent formHeader = getFacet(FBDesignView.DESIGN_VIEW_HEADER_FACET);
 				if (formHeader != null) {
-					if (formHeader.isRendered()) {
-						formHeader.encodeBegin(context);
-						formHeader.encodeChildren(context);
-						formHeader.encodeEnd(context);
-					}
-//					renderChild(context, formHeader);
+					renderChild(context, formHeader);
 				}
 			}
 		}
@@ -219,12 +190,7 @@ public class FBDesignView extends IWBaseComponent {
 			if (submit != null) {
 				submit.setSubmit(true);
 				submit.setId("submitB");
-				if (submit.isRendered()) {
-					submit.encodeBegin(context);
-					submit.encodeChildren(context);
-					submit.encodeEnd(context);
-				}
-//				renderChild(context, submit);
+				renderChild(context, submit);
 			}
 		}
 		
@@ -302,7 +268,6 @@ public class FBDesignView extends IWBaseComponent {
 				+ "}\n"
 				
 				+ "function updateOrder() {}\n"
-//				+ "}\n"
 				
 				+ "setupDragAndDrop();\n"
 				

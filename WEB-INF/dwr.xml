@@ -2,9 +2,6 @@
 
 <dwr>
   <allow>
-    <create creator="new" javascript="actionmanager">
-      <param name="class" value="com.idega.formbuilder.view.ActionManager"/>
-    </create>
     <create creator="new" javascript="dwrmanager">
       <param name="class" value="com.idega.formbuilder.view.DWRManager"/>
     </create>

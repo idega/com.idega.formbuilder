@@ -20,19 +20,16 @@
 		<managed-bean-class>com.idega.formbuilder.presentation.beans.FormDocument</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
+	<!--
 	<managed-bean>
 		<managed-bean-name>openFormAction</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.presentation.actions.FormChangeAction</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
+	-->
 	<managed-bean>
 		<managed-bean-name>viewChangeAction</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.presentation.actions.ViewChangeAction</managed-bean-class>
-		<managed-bean-scope>session</managed-bean-scope>
-	</managed-bean>
-	<managed-bean>
-		<managed-bean-name>options</managed-bean-name>
-		<managed-bean-class>com.idega.formbuilder.presentation.beans.SelectOptions</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
@@ -142,6 +139,14 @@
 	          <renderer-class>com.idega.formbuilder.presentation.renderkit.SelectValuesListRenderer</renderer-class>
 	     </renderer>
 	</render-kit>
+	<component>
+		<component-type>FormPage</component-type>
+		<component-class>com.idega.formbuilder.presentation.components.FBFormPage</component-class>
+	</component>
+	<component>
+		<component-type>PagesPanel</component-type>
+		<component-class>com.idega.formbuilder.presentation.components.FBPagesPanel</component-class>
+	</component>
 	<component>
 		<component-type>SourceView</component-type>
 		<component-class>com.idega.formbuilder.presentation.components.FBSourceView</component-class>

@@ -2,7 +2,6 @@ package com.idega.formbuilder.presentation.components;
 
 import java.io.IOException;
 
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
@@ -12,6 +11,8 @@ public class FBDivision extends Div {
 	
 	public static final String COMPONENT_TYPE = "Division";
 	
+	public String id;
+	public String styleClass;
 	public String onclick;
 	
 	public boolean getRendersChildren() {
@@ -19,28 +20,40 @@ public class FBDivision extends Div {
 	}
 	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[2];
+		Object values[] = new Object[4];
 		values[0] = super.saveState(context);
-		values[1] = onclick;
+		values[1] = id;
+		values[2] = styleClass;
+		values[3] = onclick;
 		return values;
 	}
 	
 	public void restoreState(FacesContext context, Object state) {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);
-		this.onclick = (String) values[1];
+		id = (String) values[1];
+		styleClass = (String) values[2];
+		onclick = (String) values[3];
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
+		String temp = id;
+		String temp2 = styleClass;
 		super.encodeBegin(context);
 		ResponseWriter writer = context.getResponseWriter();
+		if(id != null && !id.equals("")) {
+			writer.writeAttribute("id", getId(), null);
+		}
+		if(styleClass != null && !styleClass.equals("")) {
+			writer.writeAttribute("styleClass", getStyleClass(), null);
+		}
 		if(onclick != null && !onclick.equals("")) {
-			writer.writeAttribute("onClick", this.getOnclick(), null);
+			writer.writeAttribute("onClick", getOnclick(), null);
 		}
 	}
 		
 	
-	public void encodeEnd(FacesContext context) throws IOException {
+	/*public void encodeEnd(FacesContext context) throws IOException {
 		super.encodeEnd(context);
 	}
 	
@@ -49,7 +62,7 @@ public class FBDivision extends Div {
 			return;
 		}
 		super.encodeChildren(context);
-	}
+	}*/
 
 	public String getOnclick() {
 		return onclick;
@@ -57,6 +70,22 @@ public class FBDivision extends Div {
 
 	public void setOnclick(String onclick) {
 		this.onclick = onclick;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getStyleClass() {
+		return styleClass;
+	}
+
+	public void setStyleClass(String styleClass) {
+		this.styleClass = styleClass;
 	}
 
 }

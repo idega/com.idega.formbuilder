@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
-import javax.faces.context.FacesContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -13,10 +12,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.idega.formbuilder.FormbuilderViewManager;
-import com.idega.formbuilder.business.form.beans.IComponentPropertiesSelect;
 import com.idega.formbuilder.business.form.beans.ItemBean;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
+import com.idega.formbuilder.business.form.manager.IFormManager;
+import com.idega.formbuilder.presentation.beans.DataSourceList;
 import com.idega.formbuilder.presentation.beans.FormComponent;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.presentation.beans.Workspace;
@@ -30,8 +29,10 @@ public class DWRManager implements Serializable {
 	
 	public void removeItem(int index) {
 		List<ItemBean> items = ((FormComponent) WFUtil.getBeanInstance("formComponent")).getItems();
-		items.remove(index);
-		((FormComponent) WFUtil.getBeanInstance("formComponent")).setItems(items);
+		if(index < items.size()) {
+			items.remove(index);
+			((FormComponent) WFUtil.getBeanInstance("formComponent")).setItems(items);
+		}
 	}
 	
 	public void saveLabel(int index, String value) {
@@ -39,9 +40,11 @@ public class DWRManager implements Serializable {
 		if(index >= items.size()) {
 			ItemBean newItem = new ItemBean();
 			newItem.setLabel(value);
+			newItem.setValue(value);
 			items.add(newItem);
 		} else {
 			items.get(index).setLabel(value);
+			items.get(index).setValue(value);
 		}
 		((FormComponent) WFUtil.getBeanInstance("formComponent")).setItems(items);
 	}
@@ -63,18 +66,12 @@ public class DWRManager implements Serializable {
 	}
 	
 	public void switchDataSource() {
-		/*if(selectedDataSource.equals("1")) {
-			selectedDataSource = "2";
-			((IComponentPropertiesSelect)((FormComponent) WFUtil.getBeanInstance("formComponent")).getProperties()).setDataSrcUsed(IComponentPropertiesSelect.EXTERNAL_DATA_SRC);
-		} else if(selectedDataSource.equals("2")) {
-			selectedDataSource = "1";
-			((IComponentPropertiesSelect)((FormComponent) WFUtil.getBeanInstance("formComponent")).getProperties()).setDataSrcUsed(IComponentPropertiesSelect.LOCAL_DATA_SRC);
-		}*/
-		Integer current = ((IComponentPropertiesSelect)((FormComponent) WFUtil.getBeanInstance("formComponent")).getProperties()).getDataSrcUsed();
-		if(current == IComponentPropertiesSelect.EXTERNAL_DATA_SRC) {
-			((IComponentPropertiesSelect)((FormComponent) WFUtil.getBeanInstance("formComponent")).getProperties()).setDataSrcUsed(IComponentPropertiesSelect.LOCAL_DATA_SRC);
+		FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
+		String current = formComponent.getDataSrc();
+		if(current.equals(DataSourceList.externalDataSrc)) {
+			formComponent.setDataSrc(DataSourceList.localDataSrc);
 		} else {
-			((IComponentPropertiesSelect)((FormComponent) WFUtil.getBeanInstance("formComponent")).getProperties()).setDataSrcUsed(IComponentPropertiesSelect.EXTERNAL_DATA_SRC);
+			formComponent.setDataSrc(DataSourceList.externalDataSrc);
 		}
 	}
 	
@@ -132,24 +129,47 @@ public class DWRManager implements Serializable {
 	}
 	
 	public Element createNewForm(String name) throws Exception {
-		Locale current = (Locale) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE);
+		/*Locale current = (Locale) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE);
 		if(current == null) {
 			current = FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
+		}*/
+		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
+		if(workspace != null) {
+			Locale locale = workspace.getLocale();
+			IFormManager formManagerInstance = ActionManager.getFormManagerInstance();
+			
+			String id = FBUtil.generateFormId(name);
+			LocalizedStringBean formName = new LocalizedStringBean();
+			formName.setString(locale, name);
+			formManagerInstance.createFormDocument(id, formName);
+			
+			Element element = formManagerInstance.getLocalizedSubmitComponent(locale);
+			if(element != null) {
+				Element button = (Element) element.getFirstChild();
+				if(button != null) {
+					button.setAttribute("disabled", "true");
+					
+					workspace.setView("design");
+					workspace.setDesignViewStatus("empty");
+					workspace.setSelectedMenu("0");
+					workspace.setRenderedMenu(true);
+					
+					FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
+					if(formDocument != null) {
+						formDocument.clearFormDocumentInfo();
+						formDocument.setFormTitle(name);
+						formDocument.setFormId(id);
+					}
+					FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
+					if(formComponent != null) {
+						formComponent.clearFormComponentInfo();
+					}
+				}
+			}
+			return element;
 		}
-		String id = FBUtil.generateFormId(name);
-		LocalizedStringBean formName = new LocalizedStringBean();
-		formName.setString(current, name);
-		ActionManager.getFormManagerInstance().createFormDocument(id, formName);
-		Element element = ActionManager.getFormManagerInstance().getLocalizedSubmitComponent(new Locale("en"));
-		Element button = (Element) element.getFirstChild();
-		button.setAttribute("disabled", "true");
-		((Workspace) WFUtil.getBeanInstance("workspace")).setView("design");
-		((Workspace) WFUtil.getBeanInstance("workspace")).setDesignViewStatus("empty");
-		((Workspace) WFUtil.getBeanInstance("workspace")).setSelectedMenu("0");
-		((Workspace) WFUtil.getBeanInstance("workspace")).setRenderedMenu(true);
-		((FormDocument) WFUtil.getBeanInstance("formDocument")).setFormTitle(name);
-		((FormDocument) WFUtil.getBeanInstance("formDocument")).setFormId(id);
-		return element;
+		
+		return null;
 	}
 	
 	public String removeComponent(String id) {

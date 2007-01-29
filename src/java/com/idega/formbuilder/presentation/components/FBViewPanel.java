@@ -4,29 +4,35 @@ import java.io.IOException;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
+import javax.faces.component.html.HtmlGraphicImage;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.ActionEvent;
 
+import org.ajax4jsf.ajax.UIAjaxSupport;
 import org.ajax4jsf.ajax.html.HtmlAjaxCommandLink;
 import org.ajax4jsf.ajax.html.HtmlAjaxStatus;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.formbuilder.presentation.beans.Workspace;
+import com.idega.webface.WFUtil;
 
 public class FBViewPanel extends FBComponentBase {
 	
-//	public static final String COMPONENT_FAMILY = "formbuilder";
 	public static final String COMPONENT_TYPE = "ViewPanel";
 	
 	private static final String SWITCHER_FACET = "SWITCHER_FACET";
 	private static final String STATUS_FACET = "STATUS_FACET";
+	private static final String SHOW_PAGES_BUTTON = "SHOW_PAGES_BUTTON";
+	private static final String PAGES_PANEL = "PAGES_PANEL";
 	
 	private static final String DESIGN_VIEW = "design";
 	private static final String SOURCE_VIEW = "source";
 	private static final String PREVIEW_VIEW = "preview";
 	
-	public static final String CONTENT_DIV_FACET = "body";
+	private static final String SHOW_PAGES_BUTTON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-redo.png";
+//	private static final String HIDE_PAGES_BUTTON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-undo.png";
 	
 	private String id;
 	private String styleClass;
@@ -36,18 +42,6 @@ public class FBViewPanel extends FBComponentBase {
 		super();
 		this.setRendererType(null);
 	}
-	
-	/*public boolean getRendersChildren() {
-		return true;
-	}
-	
-	public String getFamily() {
-		return FBViewPanel.COMPONENT_FAMILY;
-	}
-	
-	public String getRendererType() {
-		return null;
-	}*/
 	
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
@@ -128,7 +122,22 @@ public class FBViewPanel extends FBComponentBase {
 		status.setStartStyle("background-color: Red; font-size: 16px; font-weight: Bold; float: right;");
 		status.setLayout("inline");
 		
-		this.getFacets().put(STATUS_FACET, status);
+		addFacet(STATUS_FACET, status);
+		
+		
+		HtmlGraphicImage showPagesButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+		showPagesButton.setId("showPagesButton");
+		showPagesButton.setStyle("display: inline;");
+		showPagesButton.setValue(SHOW_PAGES_BUTTON_IMG);
+		
+		UIAjaxSupport showPagesButtonS = (UIAjaxSupport) application.createComponent("org.ajax4jsf.ajax.Support");
+		showPagesButtonS.setEvent("onclick");
+		showPagesButtonS.setAjaxSingle(true);
+		showPagesButtonS.setReRender("mainApplication");
+		showPagesButtonS.setActionListener(application.createMethodBinding("#{workspace.togglePagesPanel}", new Class[]{ActionEvent.class}));
+		showPagesButton.getChildren().add(showPagesButtonS);
+		
+		addFacet(SHOW_PAGES_BUTTON, showPagesButton);
 	}
 
 	public String getStyleClass() {
@@ -163,8 +172,9 @@ public class FBViewPanel extends FBComponentBase {
 		} else {
 			view = getView();
 		}
-//		UIComponent status = getFacet(STATUS_FACET);
+		UIComponent status = getFacet(STATUS_FACET);
 		UIComponent viewSwitch = getFacet(SWITCHER_FACET);
+		UIComponent pagesButton = getFacet(SHOW_PAGES_BUTTON);
 		if(viewSwitch != null) {
 			if(view.equals(DESIGN_VIEW)) {
 				UIComponent designView = getFacet(view);
@@ -173,6 +183,13 @@ public class FBViewPanel extends FBComponentBase {
 					((FBDivision) viewSwitch.getChildren().get(1)).setStyleClass("unselectedTab");
 					((FBDivision) viewSwitch.getChildren().get(2)).setStyleClass("unselectedTab");
 					renderChild(context, viewSwitch);
+//					renderChild(context, pagesButton);
+					if(((Workspace)WFUtil.getBeanInstance("workspace")).isPagesPanelVisible()) {
+						UIComponent pagesPanel = getFacet(PAGES_PANEL);
+						if(pagesPanel != null) {
+							renderChild(context, pagesPanel);
+						}
+					}
 //					renderChild(context, status);
 					renderChild(context, designView);
 				}
@@ -183,6 +200,7 @@ public class FBViewPanel extends FBComponentBase {
 					((FBDivision) viewSwitch.getChildren().get(0)).setStyleClass("unselectedTab");
 					((FBDivision) viewSwitch.getChildren().get(2)).setStyleClass("unselectedTab");
 					renderChild(context, viewSwitch);
+//					renderChild(context, pagesButton);
 //					renderChild(context, status);
 					renderChild(context, previewView);
 				}
@@ -193,6 +211,7 @@ public class FBViewPanel extends FBComponentBase {
 					((FBDivision) viewSwitch.getChildren().get(1)).setStyleClass("unselectedTab");
 					((FBDivision) viewSwitch.getChildren().get(0)).setStyleClass("unselectedTab");
 					renderChild(context, viewSwitch);
+//					renderChild(context, pagesButton);
 //					renderChild(context, status);
 					renderChild(context, sourceView);
 				}

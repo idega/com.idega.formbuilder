@@ -20,7 +20,6 @@ import com.idega.formbuilder.presentation.FBComponentBase;
 
 public class FBMenu extends FBComponentBase {
 
-//	public static final String COMPONENT_FAMILY = "formbuilder";
 	public static final String COMPONENT_TYPE = "Menu";
 	
 	private static final String NO_MENU_FACET = "NO_MENU_FACET";
@@ -58,18 +57,6 @@ public class FBMenu extends FBComponentBase {
 		this.setRendererType(null);
 	}
 	
-	/*public boolean getRendersChildren() {
-		return true;
-	}
-	
-	public String getFamily() {
-		return FBMenu.COMPONENT_FAMILY;
-	}
-	
-	public String getRendererType() {
-		return null;
-	}*/
-	
 	protected void initializeComponent(FacesContext context) {		
 		Application application = context.getApplication();
 		this.getChildren().clear();
@@ -82,7 +69,6 @@ public class FBMenu extends FBComponentBase {
 		HtmlSelectOneMenu selectFormMenu = (HtmlSelectOneMenu) application.createComponent(HtmlSelectOneMenu.COMPONENT_TYPE);
 		selectFormMenu.setId("selectFormMenu");
 		selectFormMenu.setValueBinding("value", application.createValueBinding("#{formDocument.formId}"));
-		
 		UISelectItems forms = (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
 		forms.setValueBinding("value", application.createValueBinding("#{formSelector.forms}"));
 		selectFormMenu.getChildren().add(forms);
@@ -93,7 +79,7 @@ public class FBMenu extends FBComponentBase {
 		selectSupport.setOncomplete("closeLoadingMessage()");
 		selectSupport.setAjaxSingle(false);
 		selectSupport.setReRender("mainApplication");
-		selectSupport.setActionListener(application.createMethodBinding("#{openFormAction.processAction}", new Class[]{ActionEvent.class}));
+		selectSupport.setActionListener(application.createMethodBinding("#{workspace.changeForm}", new Class[]{ActionEvent.class}));
 		selectFormMenu.getChildren().add(selectSupport);
 		
 		
