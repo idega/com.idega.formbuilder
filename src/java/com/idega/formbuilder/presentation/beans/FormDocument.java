@@ -70,17 +70,17 @@ public class FormDocument implements Serializable {
 	}
 	
 	public void saveFormTitle(ActionEvent ae) throws Exception {
-		String yes = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:formTitle");
-		if(yes != null) {
-			setFormTitle(yes);
+		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("formTitle");
+		if(value != null) {
+			setFormTitle(value);
 			ActionManager.getFormManagerInstance().setFormTitle(formTitleBean);
 		}
 	}
 	
 	public void saveSubmitLabel(ActionEvent ae) throws Exception {
-		String yes = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:submitLabel");
-		if(yes != null) {
-			setSubmitLabel(yes);
+		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("submitLabel");
+		if(value != null) {
+			setSubmitLabel(value);
 			ActionManager.getFormManagerInstance().getSubmitButtonProperties().setLabel(submitLabelBean);
 		}
 	}
