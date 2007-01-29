@@ -1,6 +1,8 @@
 package com.idega.formbuilder.presentation.beans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.faces.context.FacesContext;
@@ -19,6 +21,7 @@ public class FormDocument implements Serializable {
 	private int stepCount;
 	private String selectedComponent;
 	private String submitLabel;
+	private List<String> pages;
 	
 	private LocalizedStringBean formTitleBean;
 	private LocalizedStringBean submitLabelBean;
@@ -34,6 +37,22 @@ public class FormDocument implements Serializable {
 		
 		this.formTitleBean = null;
 		this.submitLabelBean = null;
+		
+		this.pages = new ArrayList<String>();
+		
+		this.pages.add("Page1");
+		this.pages.add("Page2");
+		this.pages.add("Page3");
+		this.pages.add("Page4");
+		this.pages.add("Page5");
+	}
+	
+	public void clearFormDocumentInfo() {
+		this.formId = "";
+		this.formTitle = "";
+		this.formTitleBean = null;
+		this.submitLabel = "";
+		this.submitLabelBean = null;
 	}
 	
 	public void loadFormProperties(ActionEvent ae) {
@@ -44,6 +63,10 @@ public class FormDocument implements Serializable {
 		submitLabel = submitLabelBean.getString(new Locale("en"));
 		
 		((Workspace) WFUtil.getBeanInstance("workspace")).setSelectedMenu("2");
+	}
+	
+	public void loadFormInfo(ActionEvent ae) {
+//		pages = 
 	}
 	
 	public void saveFormTitle(ActionEvent ae) throws Exception {
@@ -81,7 +104,9 @@ public class FormDocument implements Serializable {
 	}
 	public void setFormTitle(String formTitle) {
 		this.formTitle = formTitle;
-		this.formTitleBean.setString(new Locale("en"), formTitle);
+		if(formTitleBean != null) {
+			formTitleBean.setString(new Locale("en"), formTitle);
+		}
 	}
 	public int getStepCount() {
 		return stepCount;
@@ -96,7 +121,9 @@ public class FormDocument implements Serializable {
 
 	public void setSubmitLabel(String submitLabel) {
 		this.submitLabel = submitLabel;
-		this.submitLabelBean.setString(new Locale("en"), submitLabel);
+		if(submitLabelBean != null) {
+			submitLabelBean.setString(new Locale("en"), submitLabel);
+		}
 	}
 
 	public LocalizedStringBean getFormTitleBean() {
@@ -113,6 +140,14 @@ public class FormDocument implements Serializable {
 
 	public void setSubmitLabelBean(LocalizedStringBean submitLabelBean) {
 		this.submitLabelBean = submitLabelBean;
+	}
+
+	public List<String> getPages() {
+		return pages;
+	}
+
+	public void setPages(List<String> pages) {
+		this.pages = pages;
 	}
 
 }

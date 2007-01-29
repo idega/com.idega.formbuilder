@@ -15,25 +15,12 @@ import com.idega.formbuilder.presentation.FBComponentBase;
 
 public class FBActionsProxy extends FBComponentBase {
 	
-//	public static final String COMPONENT_FAMILY = "formbuilder";
 	public static final String COMPONENT_TYPE = "ActionsProxy";
 	
 	public FBActionsProxy() {
 		super();
 		this.setRendererType(null);
 	}
-	
-	/*public boolean getRendersChildren() {
-		return true;
-	}
-	
-	public String getFamily() {
-		return COMPONENT_FAMILY;
-	}
-	
-	public String getRendererType() {
-		return null;
-	}*/
 	
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
@@ -78,6 +65,8 @@ public class FBActionsProxy extends FBComponentBase {
 		saveSubmitLabel.setActionListener(application.createMethodBinding("#{formDocument.saveSubmitLabel}", new Class[]{ActionEvent.class}));
 		saveSubmitLabel.setReRender("mainApplication");
 		
+		//Save basic component properties
+		
 		UIAjaxCommandButton saveCompLabel = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
 		saveCompLabel.setId("saveCompLabel");
 		saveCompLabel.setAjaxSingle(false);
@@ -95,6 +84,20 @@ public class FBActionsProxy extends FBComponentBase {
 		saveCompErr.setAjaxSingle(false);
 		saveCompErr.setActionListener(application.createMethodBinding("#{formComponent.saveComponentErrorMessage}", new Class[]{ActionEvent.class}));
 		saveCompErr.setReRender("mainApplication");
+		
+		//Save advanced component properties
+		
+		UIAjaxCommandButton saveEmptyLabel = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
+		saveEmptyLabel.setId("saveEmptyLabel");
+		saveEmptyLabel.setAjaxSingle(false);
+		saveEmptyLabel.setActionListener(application.createMethodBinding("#{formComponent.saveComponentEmptyLabel}", new Class[]{ActionEvent.class}));
+		saveEmptyLabel.setReRender("mainApplication");
+		
+		UIAjaxCommandButton saveExtSrc = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
+		saveExtSrc.setId("saveExtSrc");
+		saveExtSrc.setAjaxSingle(false);
+		saveExtSrc.setActionListener(application.createMethodBinding("#{formComponent.saveComponentExternalSource}", new Class[]{ActionEvent.class}));
+		saveExtSrc.setReRender("mainApplication");
 		
 		UIAjaxCommandButton switcher = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
 		switcher.setId("srcSwitcher");
@@ -116,6 +119,8 @@ public class FBActionsProxy extends FBComponentBase {
 		add(saveCompLabel);
 		add(saveCompReq);
 		add(saveCompErr);
+		add(saveEmptyLabel);
+		add(saveExtSrc);
 		add(switcher);
 		add(refreshView);
 	}

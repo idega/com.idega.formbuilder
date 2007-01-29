@@ -37,6 +37,26 @@ public class FormComponent implements Serializable {
 	private LocalizedStringBean emptyLabelBean;
 	private ILocalizedItemset itemset;
 	
+	private String dataSrc;
+	
+	public String getDataSrc() {
+		if(properties instanceof IComponentPropertiesSelect) {
+			IComponentPropertiesSelect icps = (IComponentPropertiesSelect) properties;
+			if(icps.getDataSrcUsed() != null) {
+				this.dataSrc = icps.getDataSrcUsed().toString();
+			} else {
+				this.setDataSrc(DataSourceList.localDataSrc);
+			}
+		}
+		return dataSrc;
+	}
+
+	public void setDataSrc(String dataSrc) {
+		this.dataSrc = dataSrc;
+		((IComponentPropertiesSelect) properties).setDataSrcUsed(Integer.parseInt(dataSrc));
+	
+	}
+
 	public LocalizedStringBean getErrorStringBean() {
 		return errorStringBean;
 	}
@@ -65,6 +85,22 @@ public class FormComponent implements Serializable {
 		this.errorStringBean = null;
 		this.emptyLabelBean = null;
 		this.itemset = null;
+		
+		this.dataSrc = DataSourceList.localDataSrc;
+	}
+	
+	public void clearFormComponentInfo() {
+		this.id = "";
+		this.label = "";
+		this.labelStringBean = null;
+		this.errorMessage = "";
+		this.errorStringBean = null;
+		this.required = false;
+		this.emptyLabel = "";
+		this.emptyLabelBean = null;
+		this.itemset = null;
+		
+		this.properties = null;
 	}
 	
 	public void loadProperties(String id) {
@@ -99,7 +135,7 @@ public class FormComponent implements Serializable {
 	}
 	
 	public void saveComponentLabel(ActionEvent ae) throws Exception {
-		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:propertyTitle");
+		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("propertyTitle");
 		if(value != null) {
 			setLabel(value);
 			ActionManager.getFormManagerInstance().updateFormComponent(id);
@@ -107,15 +143,17 @@ public class FormComponent implements Serializable {
 	}
 	
 	public void saveComponentRequired(ActionEvent ae) throws Exception {
-		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:propertyRequired");
+		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("propertyRequired");
 		if(value != null) {
-			setRequired(new Boolean(value));
-			ActionManager.getFormManagerInstance().updateFormComponent(id);
+			setRequired(true);
+		} else {
+			setRequired(false);
 		}
+		ActionManager.getFormManagerInstance().updateFormComponent(id);
 	}
 	
 	public void saveComponentErrorMessage(ActionEvent ae) throws Exception {
-		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:propertyErrorMessage");
+		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("propertyErrorMessage");
 		if(value != null) {
 			setErrorMessage(value);
 			ActionManager.getFormManagerInstance().updateFormComponent(id);
@@ -123,18 +161,26 @@ public class FormComponent implements Serializable {
 	}
 	
 	public void saveComponentEmptyLabel(ActionEvent ae) throws Exception {
-		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:propertyErrorMessage");
+		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("propertyEmptyLabel");
 		if(value != null) {
-			setErrorMessage(value);
+			setEmptyLabel(value);
+			ActionManager.getFormManagerInstance().updateFormComponent(id);
+		}
+	}
+	
+	public void saveComponentExternalSource(ActionEvent ae) throws Exception {
+		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("propertyExternal");
+		if(value != null) {
+			this.setExternalSrc(value);
 			ActionManager.getFormManagerInstance().updateFormComponent(id);
 		}
 	}
 	
 	public void saveComponentDataSource(ActionEvent ae) throws Exception {
-		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:dataSrcSwitch");
-		if(value != null) {
-			setErrorMessage(value);
-			ActionManager.getFormManagerInstance().updateFormComponent(id);
+		if(dataSrc.equals(DataSourceList.externalDataSrc)) {
+			setDataSrc(DataSourceList.localDataSrc);
+		} else {
+			setDataSrc(DataSourceList.externalDataSrc);
 		}
 	}
 	
@@ -196,6 +242,8 @@ public class FormComponent implements Serializable {
 
 	public void setEmptyLabel(String emptyLabel) {
 		this.emptyLabel = emptyLabel;
+		this.emptyLabelBean.setString(new Locale("en"), emptyLabel);
+		((IComponentPropertiesSelect) this.properties).setEmptyElementLabel(emptyLabelBean);
 	}
 
 	public LocalizedStringBean getEmptyLabelBean() {
@@ -222,7 +270,6 @@ public class FormComponent implements Serializable {
 	public void setItems(List<ItemBean> items) {
 		this.items = items;
 		this.itemset.setItems(new Locale("en"), items);
-		System.out.println(itemset.getItems(new Locale("en")).toString());
 		try {
 			ActionManager.getFormManagerInstance().updateFormComponent(id);
 		} catch(Exception e) {

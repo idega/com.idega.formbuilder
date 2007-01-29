@@ -1,11 +1,16 @@
 package com.idega.formbuilder.presentation.beans;
 
 import java.io.Serializable;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
+
+import com.idega.formbuilder.business.form.manager.IFormManager;
+import com.idega.formbuilder.view.ActionManager;
+import com.idega.webface.WFUtil;
 
 public class Workspace implements Serializable, ActionListener {
 	
@@ -15,12 +20,65 @@ public class Workspace implements Serializable, ActionListener {
 	private boolean renderedMenu;
 	private String view;
 	private String designViewStatus;
+	private boolean pagesPanelVisible;
 	
+	private Locale locale;
+	
+	public Locale getLocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
+	}
+
 	public Workspace() {
 		this.renderedMenu = false;
 		this.selectedMenu = "0";
 		this.view = "design";
 		this.designViewStatus = "noform";
+		this.pagesPanelVisible = false;
+		this.locale = new Locale("en");
+	}
+	
+	public void changeForm(ActionEvent ae) {
+		IFormManager formManagerInstance = ActionManager.getFormManagerInstance();
+		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
+		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
+		String formId = formDocument.getFormId();
+		if(formId != null && !formId.equals("") && !formId.equals("INACTIVE")) {
+			try {
+				formManagerInstance.openFormDocument(formId);
+				if(formManagerInstance.getFormComponentsIdsList().size() > 0) {
+					workspace.setDesignViewStatus("active");
+				} else {
+					workspace.setDesignViewStatus("empty");
+				}
+				workspace.setView("design");
+				workspace.setRenderedMenu(true);
+				workspace.setSelectedMenu("0");
+				String title = formManagerInstance.getFormTitle().getString(locale);
+				String submit = formManagerInstance.getSubmitButtonProperties().getLabel().getString(locale);
+				formDocument.clearFormDocumentInfo();
+				formDocument.setFormTitle(title);
+				formDocument.setSubmitLabel(submit);
+				
+				FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
+				if(formComponent != null) {
+					formComponent.clearFormComponentInfo();
+				}
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void togglePagesPanel(ActionEvent ae) {
+		if(pagesPanelVisible) {
+			pagesPanelVisible = false;
+		} else {
+			pagesPanelVisible = true;
+		}
 	}
 	
 	public void switchMenu() {
@@ -94,6 +152,14 @@ public class Workspace implements Serializable, ActionListener {
 
 	public void setDesignViewStatus(String designViewStatus) {
 		this.designViewStatus = designViewStatus;
+	}
+
+	public boolean isPagesPanelVisible() {
+		return pagesPanelVisible;
+	}
+
+	public void setPagesPanelVisible(boolean pagesPanelVisible) {
+		this.pagesPanelVisible = pagesPanelVisible;
 	}
 
 }
