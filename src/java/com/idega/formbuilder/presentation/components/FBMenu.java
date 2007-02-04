@@ -23,9 +23,9 @@ public class FBMenu extends FBComponentBase {
 	public static final String COMPONENT_TYPE = "Menu";
 	
 	private static final String NO_MENU_FACET = "NO_MENU_FACET";
-	private static final String MENU_TOOLBAR_FACET = "MENU_TOOLBAR_FACET";
+//	private static final String MENU_TOOLBAR_FACET = "MENU_TOOLBAR_FACET";
 	private static final String NEW_BUTTON_FACET = "NEW_BUTTON_FACET";
-	private static final String FORM_LIST_FACET = "NEW_BUTTON_FACET";
+	private static final String FORM_LIST_FACET = "FORM_LIST_FACET";
 	
 	private static final String MENU_TAB_1 = "tab1";
 	private static final String MENU_TAB_2 = "tab2";

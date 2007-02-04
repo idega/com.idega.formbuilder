@@ -15,9 +15,9 @@ import javax.faces.event.ActionEvent;
 import org.ajax4jsf.ajax.UIAjaxSupport;
 import org.apache.myfaces.custom.htmlTag.HtmlTag;
 
+import com.idega.formbuilder.business.form.Page;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormPage;
-import com.idega.formbuilder.view.ActionManager;
 import com.idega.webface.WFUtil;
 
 public class FBDesignView extends FBComponentBase {
@@ -117,7 +117,6 @@ public class FBDesignView extends FBComponentBase {
 		submitButton.setStyleClass(this.getComponentStyleClass());
 		submitButton.setSubmit(true);
 		addFacet(SUBMIT_BUTTON_FACET, submitButton);
-		
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
@@ -127,27 +126,31 @@ public class FBDesignView extends FBComponentBase {
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeBegin(context);
 		
-		FormPage page = (FormPage) WFUtil.getBeanInstance("formPage");
-		List<String> ids = page.getPage().getContainedComponentsIdList();
-		Iterator it = ids.iterator();
-		ValueBinding vb = this.getValueBinding("selectedComponent");
-		if(vb != null) {
-			selectedComponent = (String) vb.getValue(context);
-		}
-		while(it.hasNext()) {
-			String nextId = (String) it.next();
-			FBFormComponent formComponent = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
-			formComponent.setId(nextId);
-			formComponent.setStyleClass(this.getComponentStyleClass());
-			if(nextId.equals(selectedComponent)) {
-				formComponent.setSelected(true);
-			} else {
-				formComponent.setSelected(false);
-			}
-			formComponent.setSelectedStyleClass(this.getComponentStyleClass() + "Sel");
-		    getChildren().add(formComponent);
-		}
+		ValueBinding vb;
 		
+		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
+		if(page != null) {
+			List<String> ids = page.getContainedComponentsIdList();
+			Iterator it = ids.iterator();
+			vb = getValueBinding("selectedComponent");
+			if(vb != null) {
+				selectedComponent = (String) vb.getValue(context);
+			}
+			while(it.hasNext()) {
+				String nextId = (String) it.next();
+				FBFormComponent formComponent = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
+				formComponent.setId(nextId);
+				formComponent.setStyleClass(this.getComponentStyleClass());
+				if(nextId.equals(selectedComponent)) {
+					formComponent.setSelected(true);
+				} else {
+					formComponent.setSelected(false);
+				}
+				formComponent.setSelectedStyleClass(this.getComponentStyleClass() + "Sel");
+			    add(formComponent);
+			}
+		}
+
 		writer.startElement("DIV", this);
 		writer.writeAttribute("id", getId(), "id");
 		writer.writeAttribute("class", getStyleClass(), "styleClass");
@@ -159,22 +162,22 @@ public class FBDesignView extends FBComponentBase {
 			status = getStatus();
 		}
 		if(status != null) {
-			if(status.equals(FBDesignView.DESIGN_VIEW_STATUS_NOFORM)) {
-				UIComponent noFormNotice = getFacet(FBDesignView.DESIGN_VIEW_NOFORM_FACET);
+			if(status.equals(DESIGN_VIEW_STATUS_NOFORM)) {
+				UIComponent noFormNotice = getFacet(DESIGN_VIEW_NOFORM_FACET);
 				if(noFormNotice != null) {
 					renderChild(context, noFormNotice);
 				}
-			} else if(status.equals(FBDesignView.DESIGN_VIEW_STATUS_EMPTY)) {
-				UIComponent formHeader = getFacet(FBDesignView.DESIGN_VIEW_HEADER_FACET);
+			} else if(status.equals(DESIGN_VIEW_STATUS_EMPTY)) {
+				UIComponent formHeader = getFacet(DESIGN_VIEW_HEADER_FACET);
 				if (formHeader != null) {
 					renderChild(context, formHeader);
 				}
-				UIComponent emptyNotice = getFacet(FBDesignView.DESIGN_VIEW_EMPTY_FACET);
+				UIComponent emptyNotice = getFacet(DESIGN_VIEW_EMPTY_FACET);
 				if (emptyNotice != null) {
 					renderChild(context, emptyNotice);
 				}
-			} else if(status.equals(FBDesignView.DESIGN_VIEW_STATUS_ACTIVE)) {
-				UIComponent formHeader = getFacet(FBDesignView.DESIGN_VIEW_HEADER_FACET);
+			} else if(status.equals(DESIGN_VIEW_STATUS_ACTIVE)) {
+				UIComponent formHeader = getFacet(DESIGN_VIEW_HEADER_FACET);
 				if (formHeader != null) {
 					renderChild(context, formHeader);
 				}

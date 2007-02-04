@@ -39,10 +39,6 @@ public class FBWorkspace extends FBComponentBase {
 			view = (String) vb.getValue(context);
 		}
 		
-//		HtmlAjaxRegion menuPanelRegion = new HtmlAjaxRegion();
-//		menuPanelRegion.setSelfRendered(true);
-////		menuPanelRegion
-		
 		HtmlAjaxOutputPanel menuPanel = new HtmlAjaxOutputPanel();
 		menuPanel.setId("ajaxMenuPanel");
 		
@@ -52,8 +48,6 @@ public class FBWorkspace extends FBComponentBase {
 		menu.setValueBinding("selectedMenu", application.createValueBinding("#{workspace.selectedMenu}"));
 		menu.setValueBinding("show", application.createValueBinding("#{workspace.renderedMenu}"));
 		addChild(menu, menuPanel);
-//		menuPanel.getChildren().add(menu);
-//		menuPanelRegion.getChildren().add(menuPanel);
 		
 		HtmlAjaxOutputPanel viewPanel = new HtmlAjaxOutputPanel();
 		viewPanel.setId("ajaxViewPanel");
@@ -63,8 +57,6 @@ public class FBWorkspace extends FBComponentBase {
 		views.setId("viewPanel");
 		views.setStyleClass("formContainer");
 		addChild(views, viewPanel);
-//		viewPanel.getChildren().add(views);
-		
 		
 		FBActionsProxy actionsProxy = (FBActionsProxy) application.createComponent(FBActionsProxy.COMPONENT_TYPE);
 		
