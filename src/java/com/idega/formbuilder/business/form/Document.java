@@ -55,4 +55,6 @@ public interface Document extends Container {
 	public abstract List<String> getContainedPagesIdList();
 	
 	public abstract void save();
+	
+	public abstract org.w3c.dom.Document getXformsDocument();
 }

@@ -70,6 +70,9 @@ public class SandboxFormManagerTest {
 				ComponentSelect se = (ComponentSelect)select;
 				PropertiesSelect prop_sel = se.getProperties();
 				System.out.println("select label: "+prop_sel.getLabel());
+				se.getProperties().getLabel().setString(new Locale("en"), "I'm the select component");
+				se.getProperties().setLabel(se.getProperties().getLabel());
+				System.out.println("select label2: "+prop_sel.getLabel());
 			}
 			
 			ButtonArea page1_button_area = page.getButtonArea();
