@@ -1,12 +1,14 @@
 package com.idega.formbuilder.business.form.beans;
 
+import com.idega.formbuilder.business.form.PropertiesComponent;
+
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
  * @version 1.0
  * 
  * <i><b>WARNING: </b></i>for changes to take effect, u need to use setter methods for every property change
  */
-public interface IComponentPropertiesSelect extends IComponentProperties {
+public interface IComponentPropertiesSelect extends PropertiesComponent {
 	
 	public static final int LOCAL_DATA_SRC = 1;
 	public static final int EXTERNAL_DATA_SRC = 2;

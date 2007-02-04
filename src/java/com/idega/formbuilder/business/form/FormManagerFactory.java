@@ -1,7 +1,8 @@
-package com.idega.formbuilder.business.form.manager;
+package com.idega.formbuilder.business.form;
 
 import javax.faces.context.FacesContext;
 
+import com.idega.formbuilder.business.form.manager.FormManager;
 import com.idega.formbuilder.business.form.manager.util.InitializationException;
 
 
@@ -22,7 +23,7 @@ public class FormManagerFactory {
 	 * @return IFormManager instance
 	 * @throws InitializationException - IFormManager could not be initialized
 	 */
-	public static IFormManager newFormManager(FacesContext ctx) throws InitializationException {
+	public static DocumentManager newFormManager(FacesContext ctx) throws InitializationException {
 		
 		if(!FormManager.isInited()) {
 			

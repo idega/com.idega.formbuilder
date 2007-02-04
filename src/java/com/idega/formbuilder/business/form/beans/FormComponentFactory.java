@@ -2,9 +2,11 @@ package com.idega.formbuilder.business.form.beans;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.idega.formbuilder.business.form.ConstButtonType;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 import com.idega.repository.data.Singleton;
 
@@ -20,6 +22,12 @@ public class FormComponentFactory implements Singleton {
 	private Map<String, List<String>> components_tags_classified;
 	private static final String type_simple = "type_simple";
 	private static final String type_select = "type_select";
+	private static final String type_non_display = "type_non_display";
+	public static final String page_type_tag = FormManagerUtil.group_tag;
+	public static final String page_type = "fbcomp_page";
+	public static final String button_type = FormManagerUtil.trigger_tag;
+	public static final String button_area_type = "button_area";
+	public static final String fbcomp_button_area = "fbcomp_button_area";
 	
 	private FormComponentFactory() { 
 		
@@ -32,6 +40,11 @@ public class FormComponentFactory implements Singleton {
 		types.add("fbcomp_email");
 		types.add("fbcomp_upload_file");
 		components_tags_classified.put(type_simple, types);
+		
+		List<String> non_display_types = new ArrayList<String>();
+		non_display_types.add(fbcomp_button_area);
+		non_display_types.add("fbcomp_page");
+		components_tags_classified.put(type_non_display, non_display_types);
 		
 		types = new ArrayList<String>();
 		
@@ -68,24 +81,30 @@ public class FormComponentFactory implements Singleton {
 		return component;
 	}
 	
-	public IFormComponent recognizeFormComponent(String tag_name) {
-		
-		if(tag_name.equals(FormManagerUtil.submit_tag))
-			return new FormComponentSubmitButton();
-		
-//		List<String> types = components_tags_classified.get(type_simple);
-//		
-//		if(types.contains(tag_name)) {
-//			
-//			return new FormComponent();
-//		} 
+	public IFormComponent recognizeFormComponent(String component_type) {
 		
 		List<String> types = components_tags_classified.get(type_select);
 		
-		if(types.contains(tag_name)) {
+		if(types.contains(component_type))
 			return new FormComponentSelect();
-		}
+		if(component_type.equals(page_type_tag) || component_type.equals(page_type))
+			return new FormComponentPage();
+		if(component_type.equals(button_area_type) || component_type.equals(fbcomp_button_area))
+			return new FormComponentButtonArea();
+		if(component_type.equals(button_type) || ConstButtonType.getButtonTypes().contains(component_type))
+			return new FormComponentButton();
 		
 		return new FormComponent();
+	}
+	
+	public void filterNonDisplayComponents(List<String> all_components_types) {
+		
+		List<String> non_disp_types = components_tags_classified.get(type_non_display);
+		
+		for (Iterator<String> iter = all_components_types.iterator(); iter.hasNext();) {
+			
+			if(non_disp_types.contains(iter.next()))
+				iter.remove();
+		}
 	}
 }

@@ -14,10 +14,17 @@
             </xf:instance>
             <xf:instance xmlns="" id="wizard-controller" relevant="false()">
 	            <wizard>
-							</wizard>
+	            	<page-1 relevant="yes" />
+	            	<page-2 relevant="no" />
+					<page-3 relevant="no" />
+				</wizard>
             </xf:instance>
             
-            <xf:submission id="submit_data_submission" action="webdav:/files/forms/submissions/" method="put" replace="all" />
+            <xf:bind id="page-1-bind" nodeset="instance('wizard-controller')/page-1" relevant="instance('wizard-controller')/page-1/@relevant='yes'" />
+            <xf:bind id="page-2-bind" nodeset="instance('wizard-controller')/page-2" relevant="instance('wizard-controller')/page-2/@relevant='yes'" />
+            <xf:bind id="page-3-bind" nodeset="instance('wizard-controller')/page-3" relevant="instance('wizard-controller')/page-3/@relevant='yes'" />
+            
+            <xf:submission id="submit_data_submission" action="webdav:/files/forms/submissions/" method="put" replace="none" />
         </xf:model>
         <xf:model id="data_model">
 	        <xf:instance id="localized_strings" xmlns="">
@@ -25,7 +32,13 @@
 			        <default_language>en</default_language>
 	         		<current_language>en</current_language>
 	         		<lockey_form.title lang="en">Form name english</lockey_form.title>
-	         		<lockey_submit_button.label lang="en">Submit</lockey_submit_button.label>
+	         		<lockey_page-1.label lang="en">First page</lockey_page-1.label>
+	         		<lockey_page-2.label lang="en">Form confirmation</lockey_page-2.label>
+	         		<lockey_page-3.label lang="en">Confirmed</lockey_page-3.label>
+	         		<lockey_page-1-next.label lang="en">Next page</lockey_page-1-next.label>
+	         		<lockey_page-2-previous.label lang="en">Previous page</lockey_page-2-previous.label>
+	         		<lockey_page-2-submit.label lang="en">Confirm</lockey_page-2-submit.label>
+	         		<lockey_page-3.info lang="en">Form submitted, thank You!</lockey_page-3.info>
 	         	</localized_strings>
 	        </xf:instance>
 	      </xf:model>
@@ -34,9 +47,52 @@
     </head>
     <body>
         <xf:group appearance="full">
-          <xf:submit id="fbcomp_submit_data" submission="submit_data_submission">
-        		<xf:label ref="instance('localized_strings')/lockey_submit_button.label[@lang=instance('localized_strings')/current_language]" model="data_model" />
-        	</xf:submit>
+	   	  <xf:group id="fbcomp_1" bind="page-1-bind" appearance="full">
+	   	  	<xf:label ref="instance('localized_strings')/lockey_page-1.label[@lang=instance('localized_strings')/current_language]" model="data_model" />
+	   	  	
+	   	  	<div id="fbcomp_2" name="button_area">
+		   	  	<xf:trigger id="fbcomp_3" name="fbcomp_button_next">
+			   	  	<xf:label ref="instance('localized_strings')/lockey_page-1-next.label[@lang=instance('localized_strings')/current_language]" model="data_model" />
+	                <xf:action>
+	                    <xf:revalidate />
+	                    <xf:setvalue ref="instance('wizard-controller')/page-1/@relevant" value="'no'" />
+	                    <xf:setvalue ref="instance('wizard-controller')/page-2/@relevant" value="'yes'" />
+	                </xf:action>
+	            </xf:trigger>
+	   	  	</div>
+	   	  	
+	   	  </xf:group>
+	   	  <xf:group id="fbcomp_4" bind="page-2-bind" appearance="full">
+	   	  	<xf:label ref="instance('localized_strings')/lockey_page-2.label[@lang=instance('localized_strings')/current_language]" model="data_model" />
+	   	  	
+	   	  	<div id="fbcomp_5" name="button_area">
+			   	<xf:trigger id="fbcomp_6" name="fbcomp_button_previous">
+			   	  	<xf:label ref="instance('localized_strings')/lockey_page-2-previous.label[@lang=instance('localized_strings')/current_language]" model="data_model" />
+	                <xf:action>
+	                    <xf:revalidate />
+	                    <xf:setvalue ref="instance('wizard-controller')/page-1/@relevant" value="'yes'" />
+	                    <xf:setvalue ref="instance('wizard-controller')/page-2/@relevant" value="'no'" />
+	                </xf:action>
+	            </xf:trigger>
+	            <xf:trigger id="fbcomp_7" name="fbcomp_button_submit">
+			   	  	<xf:label ref="instance('localized_strings')/lockey_page-2-submit.label[@lang=instance('localized_strings')/current_language]" model="data_model" />
+	                <xf:action>
+	                    <xf:setvalue ref="instance('wizard-controller')/page-1/@relevant" value="'yes'" />
+	                    <xf:setvalue ref="instance('wizard-controller')/page-2/@relevant" value="'yes'" />
+	                    <xf:recalculate />
+	                    <xf:send submission="submit_data_submission" />
+	                    <xf:setvalue ref="instance('wizard-controller')/page-1/@relevant" value="'no'" />
+	                    <xf:setvalue ref="instance('wizard-controller')/page-2/@relevant" value="'no'" />
+	                    <xf:setvalue ref="instance('wizard-controller')/page-3/@relevant" value="'yes'" />
+	                    <xf:recalculate />
+	                </xf:action>
+	            </xf:trigger>
+	   	  	</div>
+	   	  </xf:group>
+	   	  <xf:group id="fbcomp_8" bind="page-3-bind" appearance="full">
+	   	  	<xf:label ref="instance('localized_strings')/lockey_page-3.label[@lang=instance('localized_strings')/current_language]" model="data_model" />
+	   	  	<xf:output ref="instance('localized_strings')/lockey_page-3.info[@lang=instance('localized_strings')/current_language]" model="data_model" />
+	   	  </xf:group>
         </xf:group>
     </body>
 </html>

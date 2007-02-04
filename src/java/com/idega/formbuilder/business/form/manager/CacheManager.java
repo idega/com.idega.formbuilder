@@ -1,15 +1,15 @@
 package com.idega.formbuilder.business.form.manager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.faces.context.FacesContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 
 import com.idega.core.cache.IWCacheManager2;
+import com.idega.formbuilder.business.form.beans.FormComponentFactory;
 import com.idega.formbuilder.business.form.beans.XFormsComponentDataBean;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.repository.data.Singleton;
@@ -22,13 +22,12 @@ import com.idega.util.caching.CacheMap;
  */
 public class CacheManager implements Singleton {
 	
-	private static Log logger = LogFactory.getLog(CacheManager.class);
-	
-	private Document form_xforms_template = null;
-	private Document components_xforms = null;
-	private Document components_xsd = null;
-	private Document components_xml = null;
-	private List<String> components_types = null;
+	private Document form_xforms_template;
+	private Document components_xforms;
+	private Document components_xsd;
+	private Document components_xml;
+	private List<String> all_components_types;
+	private List<String> components_types_to_list;
 	private Map<String, XFormsComponentDataBean> cached_xforms_components;
 	
 	private static CacheManager me;
@@ -64,11 +63,19 @@ public class CacheManager implements Singleton {
 	}
 
 	public List<String> getComponentsTypes() {
-		return components_types;
+		return components_types_to_list;
 	}
-
-	public void setComponentsTypes(List<String> components_types) {
-		this.components_types = components_types;
+	
+	public void setAllComponentsTypes(List<String> components_types) {
+		this.all_components_types = components_types;
+		setComponentsTypes(components_types);
+	}
+	
+	protected void setComponentsTypes(List<String> components_types) {
+		components_types_to_list = new ArrayList<String>(); 
+		components_types_to_list.addAll(components_types);
+		
+		FormComponentFactory.getInstance().filterNonDisplayComponents(components_types_to_list);
 	}
 
 	public Document getComponentsXforms() {
@@ -97,14 +104,13 @@ public class CacheManager implements Singleton {
 	
 	public void checkForComponentType(String component_type) throws NullPointerException {
 		
-		if(components_types == null || component_type == null || !components_types.contains(component_type)) {
-			
+		if(all_components_types == null || component_type == null || !all_components_types.contains(component_type)) {
 			String msg;
 			
 			if(component_type == null)
 				msg = "Component type is not provided (provided null)";
 			
-			else if(components_types == null)
+			else if(all_components_types == null)
 				msg = "Components types are not initialized";
 				
 			else
@@ -116,13 +122,7 @@ public class CacheManager implements Singleton {
 	
 	public List<String> getAvailableFormComponentsTypesList() {
 		
-		if(components_xforms == null) {
-			
-			logger.error("getFormComponentsList: components_xforms is null. Should not happen ever. Something bad.");
-			return null;
-		}
-		
-		return components_types;
+		return all_components_types;
 	}
 	
 	public void initAppContext(FacesContext ctx) {

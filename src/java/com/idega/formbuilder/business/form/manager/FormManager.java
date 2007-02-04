@@ -3,8 +3,6 @@ package com.idega.formbuilder.business.form.manager;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 import javax.faces.context.FacesContext;
 import javax.xml.parsers.DocumentBuilder;
@@ -14,14 +12,11 @@ import org.apache.commons.logging.LogFactory;
 import org.chiba.xml.xslt.TransformerService;
 import org.chiba.xml.xslt.impl.CachingTransformerService;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import com.idega.block.form.business.BundleResourceResolver;
 import com.idega.formbuilder.IWBundleStarter;
-import com.idega.formbuilder.business.form.beans.ComponentPropertiesSubmitButton;
+import com.idega.formbuilder.business.form.DocumentManager;
 import com.idega.formbuilder.business.form.beans.FormDocument;
-import com.idega.formbuilder.business.form.beans.IComponentProperties;
-import com.idega.formbuilder.business.form.beans.IFormComponent;
 import com.idega.formbuilder.business.form.beans.IFormDocument;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.manager.generators.FormComponentsGenerator;
@@ -36,10 +31,8 @@ import com.idega.idegaweb.IWMainApplication;
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
  * @version 1.0
  * 
- * Class responsible for managing user's currently editing form.
- * 
  */
-public class FormManager implements IFormManager {
+public class FormManager implements DocumentManager {
 	
 	private static Log logger = LogFactory.getLog(FormManager.class);
 	
@@ -54,96 +47,20 @@ public class FormManager implements IFormManager {
 	
 	private IFormDocument form_document;
 	
-	public void createFormDocument(String form_id, LocalizedStringBean form_name) throws NullPointerException, Exception {
+	public com.idega.formbuilder.business.form.Document createForm(String form_id, LocalizedStringBean form_name) throws NullPointerException, Exception {
 		
-		form_document.createDocument(form_id, form_name);
+		FormDocument form_document = FormDocument.createDocument(form_id, form_name);
 		form_document.persist();
+		this.form_document = form_document;
+		
+		return form_document.getDocument();
 	}
 	
-	public void openFormDocument(String form_id) throws NullPointerException, Exception {
+	public com.idega.formbuilder.business.form.Document openForm(String form_id) throws NullPointerException, Exception {
 		
-		form_document.loadDocument(form_id);
-	}
-	
-	public void removeFormComponent(String component_id) throws FBPostponedException, NullPointerException, Exception {
-		
-		checkForPendingErrors();
-		
-		IFormComponent component = form_document.getFormComponent(component_id);
-		
-		if(component == null)
-			throw new NullPointerException("Component was not found");
-		
-		component.remove();
-		form_document.unregisterComponent(component_id);
-		
-		form_document.persist();
-	}
-	
-	public Element getLocalizedFormHtmlComponent(String component_id, Locale locale) throws FBPostponedException, NullPointerException {
-		
-		checkForPendingErrors();
-		
-		IFormComponent component = form_document.getFormComponent(component_id);
-		
-		if(component == null)
-			throw new NullPointerException("Component was not found");
-		
-		try {
-			return component.getHtmlRepresentationByLocale(locale);
-			
-		} catch (NullPointerException e) {
-			throw e;
-		} catch (Exception e) {
-			NullPointerException nul_e = new NullPointerException("Html representation could not be found.");
-			nul_e.setStackTrace(e.getStackTrace());
-			throw nul_e;
-		}
-	}
-	
-	public Element getLocalizedSubmitComponent(Locale locale) throws FBPostponedException, NullPointerException {
-		
-		checkForPendingErrors();
-		
-		IFormComponent submit_component = form_document.getSubmitButtonComponent();
-		
-		if(submit_component == null)
-			throw new NullPointerException("Submit button was not found in document");
-		
-		try {
-			return submit_component.getHtmlRepresentationByLocale(locale);
-			
-		} catch (NullPointerException e) { 
-			throw e;
-		} catch (Exception e) {
-			NullPointerException nul_e = new NullPointerException("Html representation could not be found.");
-			nul_e.setStackTrace(e.getStackTrace());
-			throw nul_e;
-		}
-	}
-	
-	public String createFormComponent(String component_type, String component_after_this_id) throws FBPostponedException, NullPointerException, Exception {
-		
-		checkForPendingErrors();
-		
-		String component_id = form_document.addComponent(component_type, component_after_this_id);
-		
-		form_document.persist();
-		
-		return component_id;
-	}
-	
-	public void updateFormComponent(String component_id) throws FBPostponedException, NullPointerException, Exception {
-		
-		checkForPendingErrors();
-		
-		IFormComponent component = form_document.getFormComponent(component_id);
-		
-		if(component == null)
-			throw new NullPointerException("Component with such an id was not found on document");
-		
-		component.render();
-		form_document.persist();
+		FormDocument form_document = FormDocument.loadDocument(form_id);
+		this.form_document = form_document;
+		return form_document.getDocument();
 	}
 	
 	protected FormManager() {	}
@@ -153,36 +70,21 @@ public class FormManager implements IFormManager {
 		return CacheManager.getInstance().getAvailableFormComponentsTypesList();
 	}
 	
-	public List<String> getFormComponentsIdsList() {
+	public com.idega.formbuilder.business.form.Document getCurrentDocument() {
 		
-		return form_document.getFormComponentsIdList();
-	}
-	
-	public IComponentProperties getComponentProperties(String component_id) {
-		
-		return form_document.getFormComponent(component_id).getProperties();
-	}
-	
-	public ComponentPropertiesSubmitButton getSubmitButtonProperties() {
-		
-		return (ComponentPropertiesSubmitButton)form_document.getSubmitButtonComponent().getProperties();
+		return ((FormDocument)form_document).getDocument();
 	}
 	
 	/**
 	 * @return instance of this class. FormManager must be initiated first by calling init()
 	 * @throws InitializationException - if FormManager was not initiated before.
 	 */
-	public static IFormManager getInstance() throws InitializationException {
+	public static DocumentManager getInstance() throws InitializationException {
 		
 		if(!inited)
 			throw new InitializationException(NOT_INITED_MSG);
 		
-		FormManager fm = new FormManager();
-		
-		IFormDocument form_document = new FormDocument();
-		fm.form_document = form_document;
-			
-		return fm;
+		return new FormManager();
 	}
 	
 	public static void init(FacesContext ctx) throws InitializationException {
@@ -230,7 +132,7 @@ public class FormManager implements IFormManager {
 			cache_manager.initAppContext(ctx);
 			
 			cache_manager.setFormXformsTemplate(form_xforms_template);
-			cache_manager.setComponentsTypes(components_types);
+			cache_manager.setAllComponentsTypes(components_types);
 			cache_manager.setComponentsXforms(components_xforms);
 			cache_manager.setComponentsXml(components_xml);
 			cache_manager.setComponentsXsd(components_xsd);
@@ -285,54 +187,7 @@ public class FormManager implements IFormManager {
 		if(saved_exceptions != null && saved_exceptions.length != 0)
 			throw new FBPostponedException(saved_exceptions[0]);
 	}
-	
 	public static boolean isInited() {
 		return inited;
-	}
-	
-	public void rearrangeDocument() throws FBPostponedException, Exception {
-		
-		checkForPendingErrors();
-		
-		form_document.rearrangeDocument();
-		form_document.persist();
-	}
-	
-	public String getFormSourceCode() throws Exception {
-		
-		return form_document.getXFormsDocumentSourceCode();
-	}
-	
-	public void setFormSourceCode(String new_source_code) throws Exception {
-		
-		form_document.setXFormsDocumentSourceCode(new_source_code);
-	}
-	
-	public LocalizedStringBean getFormTitle() {
-		
-		return form_document.getFormTitle();
-	}
-	
-	public void setFormTitle(LocalizedStringBean form_name) throws FBPostponedException, Exception {
-		
-		checkForPendingErrors();
-		
-		form_document.setFormTitle(form_name);
-		form_document.persist();
-	}
-	
-	public String getFormId() {
-		
-		return form_document.getFormId();
-	}
-	
-	public Document getFormXFormsDocument() {
-		
-		return form_document.getFormXFormsDocument();
-	}
-	
-	public Map<Integer, List<String>> getComponentsInPhases() {
-		
-		return form_document.getComponentsInPhases();
 	}
 }

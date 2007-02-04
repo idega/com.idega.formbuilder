@@ -7,6 +7,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.chiba.adapter.ui.UIGenerator;
 import org.chiba.adapter.ui.XSLTGenerator;
+import org.chiba.xml.dom.DOMUtil;
 import org.chiba.xml.xforms.exception.XFormsException;
 import org.chiba.xml.xslt.TransformerService;
 import org.w3c.dom.Document;
@@ -39,7 +40,7 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 	private TransformerService transf_service;
 	private Document xforms_doc;
 
-	private String base_form_uri;
+//	private String base_form_uri;
 
 	private UIGenerator temporal_xml_components_generator;
 	private UIGenerator final_xml_components_generator;
@@ -89,13 +90,13 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
         UIGenerator gen = getTemporalXmlComponentsGenerator();
         
     	copyLocalizationKeysToElements(xforms_doc);
-    	
     	gen.setInput(xforms_doc);
     	
     	DocumentBuilder document_builder = FormManagerUtil.getDocumentBuilder();
         Document temp_xml_doc = document_builder.newDocument();
         gen.setOutput(temp_xml_doc);
     	gen.generate();
+    	
     	
     	/*
     	 * generate final components xml
@@ -110,7 +111,7 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
     	
     	return temp_xml_doc;
 	}
-	
+/*	
 	public Document generateFormHtmlDocument() throws NullPointerException, ParserConfigurationException, XFormsException, Exception {
 		
 		if(!isInitiated()) {
@@ -125,9 +126,9 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 			throw new NullPointerException(err_msg);
 		}
 		
-		/*
-         * generate temporal xml document from components xforms document
-         */
+		
+//      generate temporal xml document from components xforms document
+         
         FormReader form_reader = getFormReader();
         form_reader.setBaseFormURI(base_form_uri);
         
@@ -142,10 +143,8 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
         form_reader.setOutput(temp_xml_doc);
         
         form_reader.generate();
-    	
-    	/*
-    	 * generate final components xml
-    	 */
+        
+//    	generate final components xml
     	UIGenerator gen = getFinalXmlComponentsGenerator();
     	gen.setInput(temp_xml_doc);
     	
@@ -156,19 +155,20 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
     	
     	return temp_xml_doc;
 	}
+*/
 	
 	private static void copyLocalizationKeysToElements(Document managed_doc) {
 		
-		Element components_container = (Element)managed_doc.getElementsByTagName("xf:group").item(0);
+		Element components_container = (Element)managed_doc.getElementsByTagName(FormManagerUtil.group_tag).item(0);
 		
 		NodeList child_elements = components_container.getElementsByTagName("*");
 		
 		for (int i = 0; i < child_elements.getLength(); i++) {
 			Element child = (Element)child_elements.item(i);
 			
-			if(child.hasAttribute("ref")) {
+			if(child.hasAttribute(FormManagerUtil.ref_s_att)) {
 				
-				String ref = child.getAttribute("ref");
+				String ref = child.getAttribute(FormManagerUtil.ref_s_att);
 				
 				if(!FormManagerUtil.isRefFormCorrect(ref))
 					continue;
@@ -213,9 +213,9 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
 		return form_reader;
 	}
 	
-	public void setFormComponentsBaseUri(String base_uri) {
-		base_form_uri = base_uri;
-	}
+//	public void setFormComponentsBaseUri(String base_uri) {
+//		base_form_uri = base_uri;
+//	}
 	
 	protected UIGenerator getFinalXmlComponentsGenerator() {
 		

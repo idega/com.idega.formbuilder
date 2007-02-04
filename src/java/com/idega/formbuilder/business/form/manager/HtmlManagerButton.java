@@ -9,12 +9,13 @@ import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
  * @version 1.0
  * 
  */
-public class HtmlManagerSubmitButton extends HtmlManager {
+public class HtmlManagerButton extends HtmlManager {
 	
+	@Override
 	protected Element getFormHtmlComponentLocalization(String loc_str) {
 		
 		Element loc_model = FormManagerUtil.getElementByIdFromDocument(
-				form_document.getXformsDocument(), FormManagerUtil.head_tag, FormManagerUtil.data_mod
+				component_parent.getXformsDocument(), FormManagerUtil.head_tag, FormManagerUtil.data_mod
 		);
 		Element loc_strings = (Element)loc_model.getElementsByTagName(FormManagerUtil.loc_tag).item(0);
 		Element localized_component = (Element)unlocalized_html_component.cloneNode(true);

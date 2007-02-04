@@ -46,6 +46,8 @@ public class FormManagerUtil {
 	public static final String fb_ = "fb_";
 	public static final String loc_ref_part1 = "instance('localized_strings')/";
 	public static final String loc_ref_part2 = "[@lang=instance('localized_strings')/current_language]";
+	public static final String inst_start = "instance('";
+	public static final String inst_end = "')";
 	public static final String data_mod = "data_model";
 	public static final String loc_tag = "localized_strings";
 	public static final String output_tag = "xf:output";
@@ -74,6 +76,8 @@ public class FormManagerUtil {
 	public static final String form_id_tag = "form_id";
 	public static final String submission_tag = "xf:submission";
 	public static final String action_att = "action";
+	public static final String action_tag = "xf:action";
+	public static final String setvalue_tag = "xf:setvalue";
 	public static final String wizard_id_att_val = "wizard-controller";
 	public static final String wizard_comp_template_id = "wizard-controller-instance";
 	public static final String page_tag = "page";
@@ -81,6 +85,14 @@ public class FormManagerUtil {
 	public static final String wizard_page_template_id = "wizard-page";
 	public static final String relevant_att = "relevant";
 	public static final String p3ptype_att = "p3ptype";
+	public static final String instance_tag = "xf:instance";
+	public static final String div_tag = "div";
+	public static final String trigger_tag = "xf:trigger";
+	public static final String relevant_yes = "@relevant='yes'";
+	public static final String relevant = "@relevant";
+	public static final String yes = "yes";
+	public static final String no = "no";
+	public static final String value_att = "value";
 	
 	private static final String line_sep = "line.separator";
 	private static final String xml_mediatype = "text/html";
@@ -139,9 +151,20 @@ public class FormManagerUtil {
 	
 	public static void insertNodesetElement(Document form_xforms, Element nodeset, Element new_nodeset_element) {
 		
-		if(nodeset.hasChildNodes()) {
+		copyChildren(nodeset, new_nodeset_element);	
+		
+		Element container = 
+			(Element)((Element)form_xforms
+					.getElementsByTagName(instance_tag).item(0))
+					.getElementsByTagName("data").item(0);
+		container.appendChild(new_nodeset_element);
+	}
+	
+	private static void copyChildren(Element from, Element to) {
+		
+		if(from.hasChildNodes()) {
 			
-			NodeList children = nodeset.getChildNodes();
+			NodeList children = from.getChildNodes();
 			
 			for (int i = 0; i < children.getLength(); i++) {
 				
@@ -149,17 +172,11 @@ public class FormManagerUtil {
 				
 				if(child.getNodeType() == Node.ELEMENT_NODE) {
 
-					child = form_xforms.importNode(child, true);
-					new_nodeset_element.appendChild(child);
+					child = to.getOwnerDocument().importNode(child, true);
+					to.appendChild(child);
 				}
 			}
 		}
-		
-		Element container = 
-			(Element)((Element)form_xforms
-					.getElementsByTagName("xf:instance").item(0))
-					.getElementsByTagName("data").item(0);
-		container.appendChild(new_nodeset_element);
 	}
 	
 	public static Element insertWizardElement(Document xforms_document, Element wizard_element) {
@@ -334,9 +351,7 @@ public class FormManagerUtil {
 		return getElementLocalizedStrings(output, xforms_doc);
 	}
 	
-	public static LocalizedStringBean getLabelLocalizedStrings(String component_id, Document xforms_doc) {
-		
-		Element component = getElementByIdFromDocument(xforms_doc, body_tag, component_id);
+	public static LocalizedStringBean getLabelLocalizedStrings(Element component, Document xforms_doc) {
 		
 		NodeList labels = component.getElementsByTagName(FormManagerUtil.label_tag);
 		
@@ -350,7 +365,7 @@ public class FormManagerUtil {
 	
 	public static LocalizedStringBean getElementLocalizedStrings(Element element, Document xforms_doc) {
 		
-		String ref = element.getAttribute("ref");
+		String ref = element.getAttribute(FormManagerUtil.ref_s_att);
 		
 		if(!isRefFormCorrect(ref))
 			return new LocalizedStringBean();
@@ -386,9 +401,7 @@ public class FormManagerUtil {
 		return new Locale(lang);
 	}
 	
-	public static LocalizedStringBean getErrorLabelLocalizedStrings(String component_id, Document xforms_doc) {
-		
-		Element component = getElementByIdFromDocument(xforms_doc, body_tag, component_id);
+	public static LocalizedStringBean getErrorLabelLocalizedStrings(Element component, Document xforms_doc) {
 		
 		NodeList alerts = component.getElementsByTagName(FormManagerUtil.alert_tag);
 		
@@ -495,7 +508,7 @@ public class FormManagerUtil {
 			
 			Node child = children.item(i);
 			
-			if(child.getNodeType() == Node.ELEMENT_NODE && child.getNodeName().equals("div")) {
+			if(child.getNodeType() == Node.ELEMENT_NODE) {
 				
 				String element_id = ((Element)child).getAttribute(FormManagerUtil.id_att);
 				
@@ -621,62 +634,32 @@ public class FormManagerUtil {
 	    
 	    return result.toString();
 	}
-	
-	public static String constructRelevantAttValue(String page_number) {
 		
-//		instance('wizard-controller')/page[@number='?']/@relevant='no'
+	public static int parseIdNumber(String id) {
 		
-		return new StringBuffer("instance('")
-		.append(wizard_id_att_val)
-		.append("')/page[@number='")
-		.append(page_number)
-		.append("']/@relevant='no'")
-		.toString();
-	}
-		
-	public static Integer extractPhaseFromRelevantAttribute(String relevant_att) {
-
-		if(relevant_att == null)
-			return null;
-		
-		String starts_with = new StringBuffer("instance('")
-		.append(wizard_id_att_val)
-		.append("')/page[@number='")
-		.toString();
-		
-		String ends_with = "']/@relevant='";
-		
-		if(!relevant_att.startsWith(starts_with) || relevant_att.indexOf(ends_with) < 0)
-			return null;
-		
-		String phase = relevant_att.substring(relevant_att.indexOf(starts_with)+starts_with.length(), relevant_att.indexOf(ends_with));
-		
-		try {
-			return Integer.parseInt(phase);
-		} catch (Exception e) {
-			
-			return null;
-		}
-	}
-	
-	public static int getLastId(List<String> id_list) {
-		
-		if(id_list == null)
+		if(id == null)
 			return 0;
 		
-		int max = 0;
+		return Integer.parseInt(id.substring(CTID.length()));
+	}
+	
+	public static Element getComponentsContainerElement(Document xforms_doc) {
+
+		Element body_element = (Element)xforms_doc.getElementsByTagName(body_tag).item(0);
+		return (Element)body_element.getElementsByTagName(group_tag).item(0);
+	}
+	
+	public static void insertPageNodeset(Document xforms_doc, Element nodeset, Element new_nodeset_element) {
 		
-		for (Iterator<String> iter = id_list.iterator(); iter.hasNext();) {
-			String id = iter.next();
-			
-			try {
-				int cur = Integer.parseInt(id.substring(CTID.length()));
-				
-				if(cur > max)
-					max = cur;
-				
-			} catch (Exception e) { }
-		}
-		return max;
+		copyChildren(nodeset, new_nodeset_element);
+		
+		Element container = 
+			(Element)DOMUtil.getChildElements(
+					getElementByIdFromDocument(xforms_doc, head_tag, wizard_id_att_val)).get(0);
+		
+		container.appendChild(new_nodeset_element);
+	}
+	public static boolean isEmpty(String str) {
+		return str == null || str.equals("");
 	}
 }

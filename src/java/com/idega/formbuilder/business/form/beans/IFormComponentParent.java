@@ -1,18 +1,19 @@
 package com.idega.formbuilder.business.form.beans;
 
-import java.util.List;
 import java.util.Locale;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.idega.formbuilder.business.form.Page;
+
 public interface IFormComponentParent {
 	
 	public abstract Document getXformsDocument();
 	
-	public abstract List<String> getFormComponentsIdList();
+	public abstract Page getPage(String component_id);
 	
-	public abstract IFormComponent getFormComponent(String component_id);
+	public abstract IFormComponent getContainedComponent(String component_id);
 	
 	public abstract void setFormDocumentModified(boolean changed);
 	

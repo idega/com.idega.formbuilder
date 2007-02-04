@@ -1,16 +1,17 @@
 package com.idega.formbuilder.business.form.beans;
 
+import com.idega.formbuilder.business.form.PropertiesComponent;
+
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
  * @version 1.0
  * 
  */
-public class ComponentProperties implements IComponentProperties {
+public class ComponentProperties implements PropertiesComponent {
 	
 	private boolean required;
 	private LocalizedStringBean label;
 	private LocalizedStringBean error_msg;
-	private Integer phase_number;
 	private String p3ptype;
 	
 	protected IComponentPropertiesParent parent_component;
@@ -56,26 +57,10 @@ public class ComponentProperties implements IComponentProperties {
 		.append(label)
 		.append("\nerror_msg: ")
 		.append(error_msg)
-		.append("\nphase number: ")
-		.append(phase_number)
 		
 		.toString();
 	}
-	public Integer getPhaseNumber() {
-		return phase_number;
-	}
-	public void setPhaseNumber(Integer phase_number) {
-		
-		if(phase_number == 0)
-			phase_number = null;
-		
-		this.phase_number = phase_number;
-		parent_component.updatePhaseNumber();
-	}
-	
-	public void setPlainPhaseNumber(Integer phase_number) {
-		this.phase_number = phase_number;
-	}
+
 	public String getP3ptype() {
 		return p3ptype;
 	}

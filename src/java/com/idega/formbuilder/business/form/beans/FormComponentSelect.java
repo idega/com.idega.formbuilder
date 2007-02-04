@@ -1,5 +1,6 @@
 package com.idega.formbuilder.business.form.beans;
 
+import com.idega.formbuilder.business.form.PropertiesComponent;
 import com.idega.formbuilder.business.form.manager.CacheManager;
 import com.idega.formbuilder.business.form.manager.IXFormsManager;
 import com.idega.formbuilder.business.form.manager.XFormsManagerSelect;
@@ -17,14 +18,14 @@ public class FormComponentSelect extends FormComponent implements IComponentProp
 			
 			xforms_manager = new XFormsManagerSelect();
 			xforms_manager.setCacheManager(CacheManager.getInstance());
-			xforms_manager.setFormDocument(form_document);
+			xforms_manager.setComponentParent(parent);
 			xforms_manager.setFormComponent(this);
 		}
 		
 		return xforms_manager;
 	}
 	
-	public IComponentProperties getProperties() {
+	public PropertiesComponent getProperties() {
 		
 		if(properties == null) {
 			ComponentPropertiesSelect properties = new ComponentPropertiesSelect();
@@ -52,24 +53,24 @@ public class FormComponentSelect extends FormComponent implements IComponentProp
 		
 		((XFormsManagerSelect)getXFormsManager()).updateDataSrcUsed();
 		getHtmlManager().clearHtmlComponents();
-		form_document.setFormDocumentModified(true);
+		parent.setFormDocumentModified(true);
 	}
 	
 	public void updateItemset() {
 		getHtmlManager().clearHtmlComponents();
-		form_document.setFormDocumentModified(true);
+		parent.setFormDocumentModified(true);
 	}
 	
 	public void updateEmptyElementLabel() {
 		((XFormsManagerSelect)getXFormsManager()).updateEmptyElementLabel();
 		getHtmlManager().clearHtmlComponents();
-		form_document.setFormDocumentModified(true);
+		parent.setFormDocumentModified(true);
 	}
 	
 	public void updateExternalDataSrc() {
 		((XFormsManagerSelect)getXFormsManager()).updateExternalDataSrc();
 		getHtmlManager().clearHtmlComponents();
-		form_document.setFormDocumentModified(true);
+		parent.setFormDocumentModified(true);
 	}
 	
 	public void remove() {

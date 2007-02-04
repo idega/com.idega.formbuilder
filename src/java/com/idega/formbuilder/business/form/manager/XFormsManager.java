@@ -7,12 +7,11 @@ import org.apache.commons.logging.LogFactory;
 import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.idega.formbuilder.business.form.beans.IComponentProperties;
+import com.idega.formbuilder.business.form.PropertiesComponent;
 import com.idega.formbuilder.business.form.beans.IFormComponent;
-import com.idega.formbuilder.business.form.beans.IFormComponentParent;
+import com.idega.formbuilder.business.form.beans.IFormComponentContainer;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.beans.XFormsComponentDataBean;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
@@ -27,33 +26,34 @@ public class XFormsManager implements IXFormsManager {
 	private static Log logger = LogFactory.getLog(XFormsManager.class);
 	
 	protected CacheManager cache_manager;
-	protected IFormComponentParent form_document;
+	protected IFormComponentContainer component_parent;
 	protected IFormComponent component;
+	protected XFormsComponentDataBean xforms_component;
 	
 	private static final String simple_type = "xs:simpleType";
 	private static final String complex_type = "xs:complexType";
 	private static final String required_att = "required";
 	private static final String true_xpath = "true()";
 	
-	protected XFormsComponentDataBean xforms_component;
-	
 	public void setCacheManager(CacheManager cache_manager) {
 		this.cache_manager = cache_manager;
 	}
 	
-	public void setFormDocument(IFormComponentParent form_document) {
+	public void setComponentParent(IFormComponentContainer component_parent) {
 		
-		this.form_document = form_document;
+		this.component_parent = component_parent;
 	}
 	
 	public void loadXFormsComponentByType(String component_type) throws NullPointerException {
 		
 		cache_manager.checkForComponentType(component_type);
 		
-		XFormsComponentDataBean xforms_component = cache_manager.getCachedXformsComponent(component_type); 
-
+		XFormsComponentDataBean xforms_component = cache_manager.getCachedXformsComponent(component_type);
+		
 		if(xforms_component != null) {
 			this.xforms_component = (XFormsComponentDataBean)xforms_component.clone();
+
+			DOMUtil.prettyPrintDOM(this.xforms_component.getElement());
 			return;
 		}
 		
@@ -61,7 +61,7 @@ public class XFormsManager implements IXFormsManager {
 		Element xforms_element = FormManagerUtil.getElementByIdFromDocument(components_xforms, FormManagerUtil.body_tag, component_type);
 		
 		if(xforms_element == null) {
-			String msg = "Component cannot be found in components xforms document.";
+			String msg = "Component cannot be found in components xforms document by provided type: "+component_type;
 			logger.error(msg+
 				" Should not happen. Take a look, why component is registered in components_types, but is not present in components xforms document.");
 			throw new NullPointerException(msg);
@@ -73,6 +73,7 @@ public class XFormsManager implements IXFormsManager {
 
 			if(xforms_component != null) {
 				this.xforms_component = (XFormsComponentDataBean)xforms_component.clone();
+				DOMUtil.prettyPrintDOM(this.xforms_component.getElement());
 				return;
 			}
 			
@@ -83,15 +84,13 @@ public class XFormsManager implements IXFormsManager {
 	
 	public void loadXFormsComponentFromDocument(String component_id) {
 		
-		Document xforms_doc = form_document.getXformsDocument();
-		
+		Document xforms_doc = component_parent.getXformsDocument();
 		Element my_element = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_tag, component_id);
 		
 		loadXFormsComponent(xforms_doc, my_element);
 	}
 	
 	protected XFormsComponentDataBean newXFormsComponentDataBeanInstance() {
-		
 		return new XFormsComponentDataBean();
 	}
 	
@@ -99,120 +98,124 @@ public class XFormsManager implements IXFormsManager {
 		
 		xforms_component = newXFormsComponentDataBeanInstance();
 		xforms_component.setElement(xforms_element);
+		getBindingsAndNodesets(components_xforms);
+	}
+	
+	protected void setBindingsAndNodesets() {
 		
-		String bind_to = xforms_element.getAttribute("bind");
-		
-		if(bind_to != null) {
+		if(xforms_component.getBind() != null) {
 			
-//			get binding
-			Element binding = 
-				FormManagerUtil.getElementByIdFromDocument(components_xforms, FormManagerUtil.model_tag, bind_to);
+//			insert bind element
+			String component_id = component.getId();
+			Document xforms_doc = component_parent.getXformsDocument();
 			
-			if(binding == null)
-				throw new NullPointerException("Binding not found");
+			String bind_id = component_id+FormManagerUtil.bind_att;
+			xforms_component.getElement().setAttribute(FormManagerUtil.bind_att, bind_id);
+			
+			Element element = (Element)xforms_doc.importNode(xforms_component.getBind(), true);
+			xforms_component.setBind(element);
+			
+			String new_form_schema_type = insertBindElement(element, bind_id);
+			
+			if(new_form_schema_type != null) {
 
-//			get nodeset
-			String nodeset_to = binding.getAttribute("nodeset");
-			
-			if(nodeset_to.contains(FormManagerUtil.slash)) {
-				nodeset_to = nodeset_to.substring(0, nodeset_to.indexOf(FormManagerUtil.slash));
+				copySchemaType(cache_manager.getComponentsXsd(), xforms_doc, new_form_schema_type, component_id+new_form_schema_type);
 			}
 			
-			Element nodeset = (Element)((Element)components_xforms.getElementsByTagName("xf:instance").item(0)).getElementsByTagName(nodeset_to).item(0);
-			
-			xforms_component.setBind(binding);
-			xforms_component.setNodeset(nodeset);
+			insertNodesetElement(bind_id);
 		}
 	}
 	
-	public void addComponentToDocument(String component_id, String component_after_this_id)
-	throws NullPointerException {
+	protected void getBindingsAndNodesets(Document components_xforms) {
 		
-		if(form_document == null)
+		String bind_to = xforms_component.getElement().getAttribute(FormManagerUtil.bind_att);
+		
+		if(!FormManagerUtil.isEmpty(bind_to)) {
+			
+//			get binding
+			Element binding = 
+				FormManagerUtil.getElementByIdFromDocument(components_xforms, FormManagerUtil.head_tag, bind_to);
+			
+			if(binding == null)
+				throw new NullPointerException("Binding not found by provided bind value: "+bind_to);
+			
+			xforms_component.setBind(binding);
+			setNodeset(components_xforms);
+		}
+	}
+	
+	protected void setNodeset(Document components_xforms) {
+		
+//		get nodeset
+		String nodeset_to = xforms_component.getBind().getAttribute(FormManagerUtil.nodeset_att);
+		
+		if(nodeset_to == null)
+			return;
+		
+		String instance_id = null;
+		
+		if(nodeset_to.contains(FormManagerUtil.inst_start)) {
+			instance_id = nodeset_to.substring(
+					nodeset_to.indexOf(FormManagerUtil.inst_start)
+					+FormManagerUtil.inst_start.length(),
+					nodeset_to.indexOf(FormManagerUtil.inst_end)
+			);
+		}
+		
+		if(nodeset_to.contains(FormManagerUtil.slash)) {
+			nodeset_to = nodeset_to.substring(nodeset_to.indexOf(FormManagerUtil.slash)+1);
+		}
+		Element nodeset = null;
+		
+		if(instance_id != null) {
+			nodeset = (Element)(FormManagerUtil.getElementByIdFromDocument(components_xforms, FormManagerUtil.head_tag, instance_id)).getElementsByTagName(nodeset_to).item(0);
+		} else {
+			nodeset = (Element)((Element)components_xforms.getElementsByTagName(FormManagerUtil.instance_tag).item(0)).getElementsByTagName(nodeset_to).item(0);
+		}
+		
+		xforms_component.setNodeset(nodeset);
+	}
+	
+	public void addComponentToDocument() {
+		
+		if(component_parent == null)
 			throw new NullPointerException("Parent form document not provided");
 		
-		Document xforms_doc = form_document.getXformsDocument();
+		Document xforms_doc = component_parent.getXformsDocument();
+		Element component_element = xforms_component.getElement();
 		
-		Element new_xforms_element = xforms_component.getElement();
+		component_element = (Element)xforms_doc.importNode(component_element, true);
+		xforms_component.setElement(component_element);
 		
-		new_xforms_element = (Element)xforms_doc.importNode(new_xforms_element, true);
-		xforms_component.setElement(new_xforms_element);
+		String component_id = component.getId();
+		component_element.setAttribute(FormManagerUtil.id_att, component_id);
 		
-		new_xforms_element.setAttribute(FormManagerUtil.id_att, component_id);
+		localizeComponent(component_id, component_element, xforms_doc, cache_manager.getComponentsXforms());
+		FormManagerUtil.removeTextNodes(component_element);
 		
-		localizeComponent(component_id, new_xforms_element, xforms_doc, cache_manager.getComponentsXforms());
-		FormManagerUtil.removeTextNodes(new_xforms_element);
+		setBindingsAndNodesets();
 		
-		String bind_id = null;
-		
-		if(xforms_component.getBind() != null) {
-			
-			bind_id = component_id+FormManagerUtil.bind_att;
-			new_xforms_element.setAttribute(FormManagerUtil.bind_att, bind_id);
-		}
-		
-		if(component_after_this_id == null) {
-//			append element to component list
-			Element components_container = (Element)xforms_doc.getElementsByTagName("xf:group").item(0);
-			Element submit_button = DOMUtil.getChildElement(components_container, FormManagerUtil.submit_tag);
-			
-			submit_button.getParentNode().insertBefore(new_xforms_element, submit_button);
+		if(component.getComponentAfterThis() == null) {
+			Element components_container = component_parent.getComponentXFormsManager().getComponentElement();
+			components_container.appendChild(component_element);
+			component_parent.getContainedComponentsIdList().add(component_id);
 			
 		} else {
-//			insert element after component
-			Element component_after_me = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_tag, component_after_this_id);
+			Element component_after_me = component.getComponentAfterThis().getComponentXFormsManager().getComponentElement();
+			component_after_me.getParentNode().insertBefore(component_element, component_after_me);
 			
-			if(component_after_me != null)
-				component_after_me.getParentNode().insertBefore(new_xforms_element, component_after_me);
-			else
-				throw new NullPointerException("Component, after which new component should be placed, was not found");
-		}
-		
-		String new_form_schema_type = null;
-		
-		if(xforms_component.getBind() != null) {
-//			insert bind element
-			new_xforms_element = (Element)xforms_doc.importNode(xforms_component.getBind(), true);
-			xforms_component.setBind(new_xforms_element);
+			List<String> parent_components_id_list = component_parent.getContainedComponentsIdList();
 			
-			new_form_schema_type = insertBindElement(new_xforms_element, bind_id);
+			String component_after_this_id = component.getComponentAfterThis().getId();
 			
-			if(xforms_component.getNodeset() != null) {
+			for (int i = 0; i < parent_components_id_list.size(); i++) {
 				
-				new_xforms_element.setAttribute("nodeset", bind_id);
-				
-//				insert nodeset element
-				
-				new_xforms_element = xforms_doc.createElement(bind_id);
-				
-				FormManagerUtil.insertNodesetElement(
-						xforms_doc, xforms_component.getNodeset(), new_xforms_element
-				);
-				
-				xforms_component.setNodeset(new_xforms_element);
-			}
-		}
-		
-		if(component_after_this_id != null) {
-			
-			List<String> form_components_id_list = form_document.getFormComponentsIdList();
-			
-			//find index and insert
-			for (int i = 0; i < form_components_id_list.size(); i++) {
-				
-				if(form_components_id_list.get(i).equals(component_after_this_id)) {
-					form_components_id_list.add(i, component_id);
+				if(parent_components_id_list.get(i).equals(component_after_this_id)) {
+					parent_components_id_list.add(i, component_id);
 					break;
 				}
 			}
-		} else
-			form_document.getFormComponentsIdList().add(component_id);
-		
-		if(new_form_schema_type != null) {
-
-			copySchemaType(cache_manager.getComponentsXsd(), xforms_doc, new_form_schema_type, component_id+new_form_schema_type);
 		}
-		
 	}
 	
 	protected void localizeComponent(String comp_id, Element component_container, Document xforms_doc_to, Document xforms_doc_from) {
@@ -223,7 +226,7 @@ public class XFormsManager implements IXFormsManager {
 			
 			Element child = (Element)children.item(i);
 			
-			String ref = child.getAttribute("ref");
+			String ref = child.getAttribute(FormManagerUtil.ref_s_att);
 			
 			if(FormManagerUtil.isRefFormCorrect(ref)) {
 				
@@ -304,7 +307,7 @@ public class XFormsManager implements IXFormsManager {
 	
 	public void updateConstraintRequired() throws NullPointerException {
 		
-		IComponentProperties props = component.getProperties();
+		PropertiesComponent props = component.getProperties();
 		
 		Element bind = xforms_component.getBind();
 		
@@ -323,7 +326,7 @@ public class XFormsManager implements IXFormsManager {
 	
 	public void updateLabel() {
 		
-		IComponentProperties props = component.getProperties();
+		PropertiesComponent props = component.getProperties();
 		LocalizedStringBean loc_str = props.getLabel();
 		
 		NodeList labels = xforms_component.getElement().getElementsByTagName(FormManagerUtil.label_tag);
@@ -335,14 +338,14 @@ public class XFormsManager implements IXFormsManager {
 		
 		FormManagerUtil.putLocalizedText(null, null, 
 				label,
-				form_document.getXformsDocument(),
+				component_parent.getXformsDocument(),
 				loc_str
 		);
 	}
 	
 	public void updateErrorMsg() {
 		
-		IComponentProperties props = component.getProperties();
+		PropertiesComponent props = component.getProperties();
 		
 		Element element = xforms_component.getElement();
 		NodeList alerts = element.getElementsByTagName(FormManagerUtil.alert_tag);
@@ -351,7 +354,7 @@ public class XFormsManager implements IXFormsManager {
 			
 			Element alert = FormManagerUtil.getItemElementById(cache_manager.getComponentsXforms(), "alert");
 			
-			Document xforms_doc = form_document.getXformsDocument();
+			Document xforms_doc = component_parent.getXformsDocument();
 			
 			alert = (Element)xforms_doc.importNode(alert, true);
 			element.appendChild(alert);
@@ -370,7 +373,7 @@ public class XFormsManager implements IXFormsManager {
 			Element output = (Element)alert.getElementsByTagName(FormManagerUtil.output_tag).item(0);
 			
 			FormManagerUtil.putLocalizedText(
-					null, null, output, form_document.getXformsDocument(), props.getErrorMsg());
+					null, null, output, component_parent.getXformsDocument(), props.getErrorMsg());
 		}
 	}
 	
@@ -380,10 +383,10 @@ public class XFormsManager implements IXFormsManager {
 	
 	public void moveComponent(String before_component_id) {
 		
-		if(form_document == null)
+		if(component_parent == null)
 			throw new NullPointerException("Parent form document not provided");
 		
-		Document xforms_doc = form_document.getXformsDocument();
+		Document xforms_doc = component_parent.getXformsDocument();
 		String component_id = component.getId();
 		
 		Element element_to_move = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_tag, component_id);
@@ -405,55 +408,49 @@ public class XFormsManager implements IXFormsManager {
 	
 	public void removeComponentFromXFormsDocument() {
 		
-		if(form_document == null)
+		if(component_parent == null)
 			throw new NullPointerException("Parent form document not provided");
+
+		removeComponentLocalization();
+		removeComponentBindings();
 		
-		Document xforms_doc = form_document.getXformsDocument();
-		String component_id = component.getId();
-		
-		Element element_to_remove = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_tag, component_id);
-		
-		removeComponentLocalization(element_to_remove);
-		removeComponentBindings(element_to_remove);
-		
+		Element element_to_remove = xforms_component.getElement();
 		element_to_remove.getParentNode().removeChild(element_to_remove);
 	}
 	
-	protected void removeComponentBindings(Element removing_element) {
+	protected void removeComponentBindings() {
 		
-		Document xforms_doc = form_document.getXformsDocument();
+		Document xforms_doc = component_parent.getXformsDocument();
 		
-		String binded_to = removing_element.getAttribute(FormManagerUtil.bind_att);
-		Element bind_element = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.head_tag, binded_to);
-		String nodeset_att_value = bind_element.getAttribute(FormManagerUtil.nodeset_att);
+		Element bind_element = xforms_component.getBind();
 		
-		if(nodeset_att_value != null) {
+		if(bind_element != null) {
 			
-			Element model = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.head_tag, form_document.getFormId());
-			Node nodeset = model.getElementsByTagName(nodeset_att_value).item(0);
+			String schema_type_att_value = bind_element.getAttribute(FormManagerUtil.type_att);
+			
+			if(schema_type_att_value != null && schema_type_att_value.startsWith(component.getId())) {
+				
+				Element schema_element = (Element)xforms_doc.getElementsByTagName(FormManagerUtil.schema_tag).item(0);
+				
+				Element type_element_to_remove = DOMUtil.getElementByAttributeValue(schema_element, "*", FormManagerUtil.name_att, schema_type_att_value);
+				
+				if(type_element_to_remove != null)
+					schema_element.removeChild(type_element_to_remove);
+			}
+			bind_element.getParentNode().removeChild(bind_element);
+		}
+		Element nodeset = xforms_component.getNodeset();
+		
+		if(nodeset != null)
 			nodeset.getParentNode().removeChild(nodeset);
-		}
-		
-		String schema_type_att_value = bind_element.getAttribute(FormManagerUtil.type_att);
-		
-		if(schema_type_att_value != null && schema_type_att_value.startsWith(component.getId())) {
-			
-			Element schema_element = (Element)xforms_doc.getElementsByTagName(FormManagerUtil.schema_tag).item(0);
-			
-			Element type_element_to_remove = DOMUtil.getElementByAttributeValue(schema_element, "*", FormManagerUtil.name_att, schema_type_att_value);
-			
-			if(type_element_to_remove != null)
-				schema_element.removeChild(type_element_to_remove);
-		}
-		bind_element.getParentNode().removeChild(bind_element);
 	}
 	
-	protected void removeComponentLocalization(Element removing_element) {
+	protected void removeComponentLocalization() {
 		
-		NodeList children = removing_element.getElementsByTagName("*");
+		NodeList children = xforms_component.getElement().getElementsByTagName("*");
 		
 		Element loc_model = FormManagerUtil.getElementByIdFromDocument(
-				form_document.getXformsDocument(), FormManagerUtil.head_tag, FormManagerUtil.data_mod);
+				component_parent.getXformsDocument(), FormManagerUtil.head_tag, FormManagerUtil.data_mod);
 		
 		Element loc_strings = (Element)loc_model.getElementsByTagName(FormManagerUtil.loc_tag).item(0);
 		
@@ -461,7 +458,7 @@ public class XFormsManager implements IXFormsManager {
 			
 			Element child = (Element)children.item(i);
 			
-			String ref = child.getAttribute("ref");
+			String ref = child.getAttribute(FormManagerUtil.ref_s_att);
 			
 			if(FormManagerUtil.isRefFormCorrect(ref)) {
 				
@@ -485,11 +482,11 @@ public class XFormsManager implements IXFormsManager {
 
 	public String insertBindElement(Element new_bind_element, String bind_id) {
 		
-		Document form_xforms = form_document.getXformsDocument();
+		Document form_xforms = component_parent.getXformsDocument();
 		
 		new_bind_element.setAttribute(FormManagerUtil.id_att, bind_id);
 	
-		Element model = FormManagerUtil.getElementByIdFromDocument(form_xforms, FormManagerUtil.head_tag, form_document.getFormId());
+		Element model = FormManagerUtil.getElementByIdFromDocument(form_xforms, FormManagerUtil.head_tag, component_parent.getFormId());
 		model.appendChild(new_bind_element);
 		
 		String type_att = new_bind_element.getAttribute(FormManagerUtil.type_att);
@@ -502,81 +499,61 @@ public class XFormsManager implements IXFormsManager {
 		return null;
 	}
 	
+	protected void insertNodesetElement(String bind_id) {
+		
+		if(xforms_component.getNodeset() != null) {
+			
+			Document xforms_doc = component_parent.getXformsDocument();
+//			insert nodeset element
+			Element nodeset_element = xforms_doc.createElement(bind_id);
+			
+			FormManagerUtil.insertNodesetElement(
+					xforms_doc, xforms_component.getNodeset(), nodeset_element
+			);
+			
+			xforms_component.setNodeset(nodeset_element);
+		}
+	}
+	
 	public void changeBindName(String new_bind_name) {
 
-		new_bind_name = FormManagerUtil.escapeNonXmlTagSymbols(new_bind_name.replace(' ', '_'));
 		Element bind_element = xforms_component.getBind();
+		
+		if(bind_element == null)
+			return;
+		new_bind_name = FormManagerUtil.escapeNonXmlTagSymbols(new_bind_name.replace(' ', '_'));
 		Element nodeset_element = xforms_component.getNodeset();
 		bind_element.setAttribute(FormManagerUtil.nodeset_att, new_bind_name);
-		
 		nodeset_element = (Element)nodeset_element.getOwnerDocument().renameNode(nodeset_element, nodeset_element.getNamespaceURI(), new_bind_name);
 		xforms_component.setNodeset(nodeset_element);
 	}
 	
-	public void updatePhaseNumber() {
-		
-		IComponentProperties props = component.getProperties();
-		Integer phase_number = props.getPhaseNumber();
-		
-		if(phase_number == null) {
-			Element bind_element = xforms_component.getBind();
-			bind_element.removeAttribute(FormManagerUtil.relevant_att);
-			return;
-		}
-		
-		Element wizard_instance_element = form_document.getWizardElement();
-		
-		if(wizard_instance_element == null) {
-			
-			wizard_instance_element = FormManagerUtil.getItemElementById(cache_manager.getComponentsXforms(), FormManagerUtil.wizard_comp_template_id);
-			wizard_instance_element = FormManagerUtil.insertWizardElement(form_document.getXformsDocument(), wizard_instance_element);
-			form_document.setWizardElement(wizard_instance_element);
-		}
-		
-		Element wizard_element = DOMUtil.getFirstChildElement(wizard_instance_element);
-		NodeList pages = wizard_element.getElementsByTagName(FormManagerUtil.page_tag);
-		boolean wizard_contains_page_number = false;
-		
-		if(pages != null) {
-			
-			for (int i = 0; i < pages.getLength() && !wizard_contains_page_number; i++) {
-				
-				Element page = (Element)pages.item(i);
-				
-				String page_number = page.getAttribute(FormManagerUtil.number_att);
-				
-				if(page_number != null && page_number.equals(String.valueOf(phase_number)))
-					wizard_contains_page_number = true;
-			}
-		}
-		
-		if(!wizard_contains_page_number) {
-			
-			Element page = FormManagerUtil.getItemElementById(cache_manager.getComponentsXforms(), FormManagerUtil.wizard_page_template_id);
-			page = (Element)wizard_element.appendChild(form_document.getXformsDocument().importNode(page, true));
-			page.setAttribute(FormManagerUtil.number_att, String.valueOf(phase_number));
-		}
-		
-		Element bind_element = xforms_component.getBind();
-		bind_element.setAttribute(
-				FormManagerUtil.relevant_att, FormManagerUtil.constructRelevantAttValue(String.valueOf(phase_number))
-		);
-	}
-	
-	public Integer extractPhaseNumber() {
-		
-		String relevant_att = xforms_component.getBind().getAttribute(FormManagerUtil.relevant_att);
-		return FormManagerUtil.extractPhaseFromRelevantAttribute(relevant_att);
-	}
-	
 	public void updateP3pType() {
 		
-		IComponentProperties props = component.getProperties();
+		PropertiesComponent props = component.getProperties();
 		String p3ptype = props.getP3ptype();
 		
 		if(p3ptype == null)
 			xforms_component.getBind().removeAttribute(FormManagerUtil.p3ptype_att);
 		else
 			xforms_component.getBind().setAttribute(FormManagerUtil.p3ptype_att, p3ptype);
+	}
+	
+	public LocalizedStringBean getLocalizedStrings() {
+		
+		return FormManagerUtil.getLabelLocalizedStrings(xforms_component.getElement(), component_parent.getXformsDocument());
+	}
+	
+	public LocalizedStringBean getErrorLabelLocalizedStrings() {
+		return FormManagerUtil.getErrorLabelLocalizedStrings(xforms_component.getElement(), component_parent.getXformsDocument());
+	}
+	public Element getComponentElement() {
+		return xforms_component.getElement();
+	}
+	public Element getComponentNodeset() {
+		return xforms_component.getNodeset();
+	}
+	public Element getComponentBind() {
+		return xforms_component.getBind();
 	}
 }

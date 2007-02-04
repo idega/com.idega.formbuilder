@@ -1,8 +1,5 @@
 package com.idega.formbuilder.business.form.manager.generators;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.chiba.xml.xforms.exception.XFormsException;
 import org.w3c.dom.Document;
 
 /**
@@ -30,7 +27,7 @@ public interface IComponentsGenerator {
 	 */
 	public abstract void setDocument(Document doc);
 	
-	public abstract void setFormComponentsBaseUri(String base_uri);
+//	public abstract void setFormComponentsBaseUri(String base_uri);
 	
-	public abstract Document generateFormHtmlDocument() throws NullPointerException, ParserConfigurationException, XFormsException, Exception;
+//	public abstract Document generateFormHtmlDocument() throws NullPointerException, ParserConfigurationException, XFormsException, Exception;
 }

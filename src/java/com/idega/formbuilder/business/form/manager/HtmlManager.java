@@ -10,7 +10,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.idega.formbuilder.business.form.beans.IFormComponent;
-import com.idega.formbuilder.business.form.beans.IFormComponentParent;
+import com.idega.formbuilder.business.form.beans.IFormComponentContainer;
 import com.idega.formbuilder.business.form.manager.generators.FormComponentsGenerator;
 import com.idega.formbuilder.business.form.manager.generators.IComponentsGenerator;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
@@ -27,9 +27,9 @@ public class HtmlManager {
 	protected IFormComponent component;
 	
 	protected CacheManager cache_manager;
-	protected IFormComponentParent form_document;
+	protected IFormComponentContainer component_parent;
 	
-	public Element getHtmlRepresentationByLocale(Locale locale) throws Exception {
+	public Element getHtmlRepresentation(Locale locale) throws Exception {
 		
 		Map<Locale, Element> localized_html_components = getLocalizedHtmlComponents();
 		Element localized_element = localized_html_components.get(locale);
@@ -71,7 +71,7 @@ public class HtmlManager {
 	protected Element getFormHtmlComponentLocalization(String loc_str) {
 		
 		Element loc_model = FormManagerUtil.getElementByIdFromDocument(
-				form_document.getXformsDocument(), FormManagerUtil.head_tag, FormManagerUtil.data_mod
+				component_parent.getXformsDocument(), FormManagerUtil.head_tag, FormManagerUtil.data_mod
 		);
 		Element loc_strings = (Element)loc_model.getElementsByTagName(FormManagerUtil.loc_tag).item(0);
 		Element localized_component = (Element)unlocalized_html_component.cloneNode(true);
@@ -126,24 +126,24 @@ public class HtmlManager {
 		this.cache_manager = cache_manager;
 	}
 	
-	public void setFormDocument(IFormComponentParent form_document) {
+	public void setComponentParent(IFormComponentContainer component_parent) {
 		
-		this.form_document = form_document;
+		this.component_parent = component_parent;
 	}
 	
 	protected Document getXFormsDocumentHtmlRepresentation() throws Exception {
 		
-		Document components_xml = form_document.getComponentsXml();
+		Document components_xml = component_parent.getComponentsXml();
 
-		if(components_xml == null || form_document.isFormDocumentModified()) {
+		if(components_xml == null || component_parent.isFormDocumentModified()) {
 			
 			IComponentsGenerator components_generator = FormComponentsGenerator.getInstance();
-			components_generator.setDocument((Document)form_document.getXformsDocument().cloneNode(true));
+			components_generator.setDocument((Document)component_parent.getXformsDocument().cloneNode(true));
 //			components_xml = components_generator.generateFormHtmlDocument();
 			components_xml = components_generator.generateBaseComponentsDocument();
 			
-			form_document.setComponentsXml(components_xml);
-			form_document.setFormDocumentModified(false);
+			component_parent.setComponentsXml(components_xml);
+			component_parent.setFormDocumentModified(false);
 		}
 		
 		return components_xml;

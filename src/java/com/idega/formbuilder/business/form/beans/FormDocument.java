@@ -1,10 +1,6 @@
 package com.idega.formbuilder.business.form.beans;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Timer;
@@ -32,50 +28,54 @@ import com.idega.idegaweb.IWMainApplication;
  * @version 1.0
  * 
  */
-public class FormDocument implements IFormDocument, IFormComponentParent {
+public class FormDocument implements IFormDocument {
 	
-	static Log logger = LogFactory.getLog(FormDocument.class);
+	protected static Log logger = LogFactory.getLog(FormDocument.class);
 	
-	Document form_xforms;
-	private Document components_xml;
-	private List<String> form_components_id_sequence;
-	
-	private int last_component_id = 0;
-	String form_id;
-	private String submit_button_id;
-	private Element wizard_instance_element;
-
-	private boolean document_changed = true;
-
+	protected Document form_xforms;
+	protected String form_id;
 	protected FormsService formsService;
-	boolean saving = false;
-	private Timer saveTimer;
+	protected FormComponentDocument pages_container;
 	
 	private Locale default_document_locale;
-	
 	private Map<String, IFormComponent> form_components;
+	private Document components_xml;
+	private int last_component_id = 0;
+	private Element wizard_instance_element;
+	private boolean document_changed = true;
+	private Timer saveTimer;
+	private boolean saving = false;
 	
 	public FormDocument() {
-		saveTimer = new Timer("FormDocument save");		
+		saveTimer = new Timer("FormDocument save");
+		
+		pages_container = new FormComponentDocument();
+		pages_container.setFormDocument(this);
 	}
 	
-	public void createDocument(String form_id, LocalizedStringBean form_name) throws NullPointerException {
-		
+	public static FormDocument createDocument(String form_id, LocalizedStringBean form_name) throws NullPointerException, Exception {
+
 		if(form_id == null)
-			throw new NullPointerException("Form_id is not provided");
+			throw new NullPointerException("Form id is not provided");
 		
-		clear();
+		FormDocument form_doc = new FormDocument();
 		
-		this.form_id = form_id;
+		form_doc.form_xforms = CacheManager.getInstance().getFormXformsTemplateCopy();
 		
-		form_xforms = CacheManager.getInstance().getFormXformsTemplateCopy();
-		
-		putIdValues();
+		form_doc.pages_container.setLoad(true);
 		
 		if(form_name != null)
-			setFormTitle(form_name);
+			form_doc.setFormTitle(form_name);
 		
-		loadSubmitButton();
+		form_doc.loadDocument(form_doc.getXformsDocument(), form_id);
+		form_doc.putIdValues();
+
+		return form_doc;
+	}
+	
+	public com.idega.formbuilder.business.form.Document getDocument() {
+		
+		return pages_container;
 	}
 	
 	protected void putIdValues() {
@@ -84,91 +84,22 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		
 		Element form_id_element = (Element)model.getElementsByTagName(FormManagerUtil.form_id_tag).item(0);
 		FormManagerUtil.setElementsTextNodeValue(form_id_element, form_id);
-		
-		Element submission_element = (Element)model.getElementsByTagName(FormManagerUtil.submission_tag).item(0);
-		String action_att_val = submission_element.getAttribute(FormManagerUtil.action_att);
-		submission_element.setAttribute(FormManagerUtil.action_att, action_att_val+form_id);
-	}
 	
-	public String addComponent(String component_type, String component_after_this_id) throws NullPointerException {
-		
-		IFormComponent component = FormComponentFactory.getInstance().getFormComponentByType(component_type);
-
-		if(component_after_this_id != null) {
-			
-			IFormComponent comp_after_new = getFormComponent(component_after_this_id);
-			
-			if(comp_after_new == null)
-				throw new NullPointerException("Component after not found");
-			
-			component.setComponentAfterThis(comp_after_new);
-		}
-		
-		String component_id = FormManagerUtil.CTID+generateNewComponentId();
-		
-		component.setId(component_id);
-		component.setFormDocument(this);
-		
-		component.render();
-		
-		getFormComponents().put(component_id, component);
-		
-		return component_id;
 	}
-	
-	protected void loadSubmitButton() {
+	public String generateNewComponentId() {
 		
-		FormComponentSubmitButton component = new FormComponentSubmitButton();
-		
-		component.setFormDocument(this);
-		component.render();
-		
-		submit_button_id = component.getId();
-		
-		if(submit_button_id != null)
-			getFormComponents().put(submit_button_id, component);
-	}
-	
-	public FormComponentSubmitButton getSubmitButtonComponent() {
-		
-		return (FormComponentSubmitButton)getFormComponents().get(submit_button_id);
-	}
-	
-	protected int generateNewComponentId() {
-		
-		return ++last_component_id;
+		return FormManagerUtil.CTID+(++last_component_id);
 	}
 	
 	public Document getXformsDocument() {
 		return form_xforms;
 	}
-
-	public List<String> getFormComponentsIdList() {
-		
-		if(form_components_id_sequence == null)
-			form_components_id_sequence = new LinkedList<String>();
-		
-		return form_components_id_sequence;
-	}
-
-	public IFormComponent getFormComponent(String component_id) {
-		
-//		TODO: if not found, scan xforms document and load if found
-		return getFormComponents().get(component_id);
-	}
-	
 	protected Map<String, IFormComponent> getFormComponents() {
 		
 		if(form_components == null)
 			form_components = new HashMap<String, IFormComponent>();
 		
 		return form_components;
-	}
-	
-	public void unregisterComponent(String component_id) {
-		
-		getFormComponentsIdList().remove(component_id);
-		getFormComponents().remove(component_id);
 	}
 	
 	public Exception[] getSavedExceptions() {
@@ -178,7 +109,7 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 	
 	public void persist() {
 		// if document is already scheduled for saving don't do anything
-		if (!saving) {
+		if (!saving && false) {
 			saving = true;
 			TimerTask saveTask = new FormSaveTask();
 			// will save current state of document after 5 seconds
@@ -201,47 +132,6 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 			saving = false;
 		}
 	}
-
-	public void rearrangeDocument() throws NullPointerException {
-		
-		int size = form_components_id_sequence.size();
-		
-		for (int i = size-1; i >= 0; i--) {
-			
-			String component_id = form_components_id_sequence.get(i);
-			
-			if(form_components.containsKey(component_id)) {
-				
-				IFormComponent comp = form_components.get(component_id);
-				
-				if(i != size-1) {
-					
-					comp.setComponentAfterThisRerender(
-						form_components.get(
-								form_components_id_sequence.get(i+1)
-						)
-					);
-				} else
-					comp.setComponentAfterThisRerender(null);
-				
-			} else
-				throw new NullPointerException("Component, which id was provided in list was not found. Provided: "+component_id);
-		}
-	}
-	
-	protected void clear() {
-		
-		form_xforms = null;
-		components_xml = null;
-		getFormComponentsIdList().clear();
-		
-		last_component_id = 0;
-		form_id = null;
-		submit_button_id = null;
-		default_document_locale = null;
-		
-		getFormComponents().clear();
-	}
 	
 	public void setFormDocumentModified(boolean changed) {
 		document_changed = changed;
@@ -260,58 +150,41 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 	public String getFormId() {
 		return form_id;
 	}
-	public Document getFormXFormsDocument() {
+	public Document getFormXFormsDocumentClone() {
 		return (Document)form_xforms.cloneNode(true);
 	}
 	
-	protected void loadDocument(Document xforms_doc, String form_id) throws InitializationException, Exception {
+	protected void loadDocument(Document xforms_doc, String form_id) throws Exception {
 		
-		clear();
 		this.form_xforms = xforms_doc;
 		this.form_id = form_id;
 		
-		List<String[]> components_tag_names_and_ids = FormManagerUtil.getComponentsTagNamesAndIds(xforms_doc);
-		
-		FormComponentFactory components_factory = FormComponentFactory.getInstance();
-		
-		List<String> components_id_list = getFormComponentsIdList();
-		
-		for (Iterator<String[]> iter = components_tag_names_and_ids.iterator(); iter.hasNext();) {
-			
-			String[] ctnaid = iter.next();
-			IFormComponent component = components_factory.recognizeFormComponent(ctnaid[0]);
-			String component_id = ctnaid[1];
-			
-			component.setId(component_id);
-			component.setFormDocument(this);
-			component.setLoad(true);
-			
-			if(component instanceof FormComponentSubmitButton) {
-				submit_button_id = component_id;
-			} else {
-				
-				components_id_list.add(component_id);
-			}
-			
-			getFormComponents().put(component_id, component);
-			
-			component.render();
-		}
-		
-		last_component_id = FormManagerUtil.getLastId(getFormComponentsIdList());
+		pages_container.setContainerElement(FormManagerUtil.getComponentsContainerElement(xforms_doc));
+		pages_container.loadContainerComponents();
 	}
 	
-	public void loadDocument(String form_id) throws InitializationException, Exception {
+	public static FormDocument loadDocument(String form_id) throws InitializationException, Exception {
 		
 		if(form_id == null)
-			throw new NullPointerException("Form document id was not provided");
+			throw new NullPointerException("Form id was not provided");
+		
+		FormDocument form_doc = new FormDocument();
+		form_doc.pages_container.setLoad(true);
+		
+		Document xforms_doc = form_doc.loadXFormsDocument(form_id);
+		form_doc.loadDocument(xforms_doc, form_id);
+		
+		return form_doc;
+	}
+	
+	protected Document loadXFormsDocument(String form_id) throws Exception {
 		
 		Document xforms_doc = getFormsService().loadForm(form_id);
 		
 		if(xforms_doc == null)
 			throw new NullPointerException("Form document was not found by provided id");
 		
-		loadDocument(xforms_doc, form_id);
+		return xforms_doc;
 	}
 	
 	public String getXFormsDocumentSourceCode() throws Exception {
@@ -374,34 +247,6 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		wizard_instance_element = wizard_element;
 	}
 	
-	public Map<Integer, List<String>> getComponentsInPhases() {
-		
-		Map<String, IFormComponent> form_components = getFormComponents();
-		Map<Integer, List<String>> components_in_phases = new HashMap<Integer, List<String>>();
-		
-		for (Iterator<String> iter = form_components.keySet().iterator(); iter.hasNext();) {
-			
-			String comp_id = iter.next();
-			IComponentProperties props = form_components.get(comp_id).getProperties();
-			
-			Integer phase_nr = props.getPhaseNumber();
-			if(phase_nr == null)
-				phase_nr = 0;
-			
-			List<String> components_ids = components_in_phases.get(phase_nr);
-				
-			if(components_ids == null) {
-				
-				components_ids = new ArrayList<String>();
-				components_in_phases.put(phase_nr, components_ids);
-			}
-			
-			components_ids.add(comp_id);
-		}
-		
-		return components_in_phases;
-	}
-
 	FormsService getFormsService() {
 		
 		if (this.formsService == null) {
@@ -416,4 +261,11 @@ public class FormDocument implements IFormDocument, IFormComponentParent {
 		return this.formsService;
 	}
 	
+	public void tellComponentId(String component_id) {
+		
+		int id_number = FormManagerUtil.parseIdNumber(component_id);
+		
+		if(id_number > last_component_id)
+			last_component_id = id_number;
+	}
 }
