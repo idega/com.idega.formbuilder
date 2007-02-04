@@ -85,8 +85,8 @@ public class SandboxFormManagerTest {
 			String x1 = page2.getContainedComponentsIdList().get(1);
 			page2.getContainedComponentsIdList().set(1, x0);
 			page2.getContainedComponentsIdList().set(0, x1);
-			page2.rearrangeComponents();
-			System.out.println("page2 id list again: "+page2.getContainedComponentsIdList());
+			
+			System.out.println("page2 id list: "+page2.getContainedComponentsIdList());
 			
 			System.out.println("source code___________");
 			System.out.println(fm.getCurrentDocument().getFormSourceCode());

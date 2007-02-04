@@ -190,4 +190,8 @@ public class FormComponentDocument extends FormComponentContainer implements com
 		super.loadContainerComponents();
 		componentsOrderChanged();
 	}
+	
+	public void save() {
+		document.persist();
+	}
 }

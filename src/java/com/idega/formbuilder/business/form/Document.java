@@ -53,4 +53,6 @@ public interface Document extends Container {
 	public abstract Page getPage(String page_id);
 	
 	public abstract List<String> getContainedPagesIdList();
+	
+	public abstract void save();
 }

@@ -5,14 +5,11 @@ import java.util.Locale;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.idega.formbuilder.business.form.manager.util.InitializationException;
-
 public interface IFormDocument {
 
 	public abstract Exception[] getSavedExceptions();
 
-	public abstract void persist() throws NullPointerException,
-			InitializationException, Exception;
+	public abstract void persist();
 	
 	public abstract String getXFormsDocumentSourceCode() throws Exception;
 	
