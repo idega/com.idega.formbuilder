@@ -20,6 +20,7 @@ import com.idega.data.StringInputStream;
 import com.idega.formbuilder.business.form.manager.CacheManager;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 import com.idega.formbuilder.business.form.manager.util.InitializationException;
+import com.idega.idegaweb.DefaultIWBundle;
 import com.idega.idegaweb.IWApplicationContext;
 import com.idega.idegaweb.IWMainApplication;
 
@@ -109,7 +110,7 @@ public class FormDocument implements IFormDocument {
 	
 	public void persist() {
 		// if document is already scheduled for saving don't do anything
-		if (!saving && false) {
+		if (!saving && System.getProperty(DefaultIWBundle.SYSTEM_BUNDLES_RESOURCE_DIR) == null) {
 			saving = true;
 			TimerTask saveTask = new FormSaveTask();
 			// will save current state of document after 5 seconds

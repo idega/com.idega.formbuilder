@@ -44,8 +44,8 @@ public interface Document extends Container {
 	public abstract void setFormTitle(LocalizedStringBean form_name) throws FBPostponedException, Exception;
 	
 	/**
-	 * use getFormComponentsIdsList(), use this list to change the order of components,
-	 * then call this method
+	 * using getContainedPagesIdList method get components id list, then use this list to change the order of components,
+	 * and then call this method for changes to take an effect
 	 *
 	 */
 	public abstract void rearrangeDocument() throws FBPostponedException, Exception;
