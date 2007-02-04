@@ -27,7 +27,7 @@ public class FBPaletteTag extends UIComponentTagBase {
 	}
 
 	public String getRendererType() {
-		return FBPalette.RENDERER_TYPE;
+		return null;
 	}
 
 	public void setProperties(UIComponent component) {

@@ -6,7 +6,7 @@ import javax.faces.event.ActionListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.idega.formbuilder.business.form.manager.IFormManager;
+import com.idega.formbuilder.business.form.DocumentManager;
 import com.idega.formbuilder.view.ActionManager;
 
 /**
@@ -26,8 +26,8 @@ public class FormSourceCodeManager implements ActionListener {
 		
 		try {
 			
-			IFormManager form_manager = ActionManager.getFormManagerInstance();
-			form_manager.setFormSourceCode(source_code);
+			DocumentManager form_manager = ActionManager.getDocumentManagerInstance();
+//			form_manager.setFormSourceCode(source_code);
 			
 		} catch (Exception e) {
 			logger.error("Error when setting form source code", e);
@@ -37,18 +37,18 @@ public class FormSourceCodeManager implements ActionListener {
 	
 	public String getSourceCode() {
 		
-		try {
-			
-			IFormManager form_manager = ActionManager.getFormManagerInstance();
-			
-			if(form_manager != null) {
-				
-				return form_manager.getFormSourceCode();
-			}
-			
-		} catch (Exception e) {
-			logger.error("Error when getting form source code", e);
-		}
+//		try {
+//			
+//			DocumentManager form_manager = ActionManager.getDocumentManagerInstance();
+//			
+//			if(form_manager != null) {
+//				
+//				return form_manager.getFormSourceCode();
+//			}
+//			
+//		} catch (Exception e) {
+//			logger.error("Error when getting form source code", e);
+//		}
 		
 		return "";
 	}

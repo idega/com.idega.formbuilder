@@ -19,7 +19,6 @@ public class FBWorkspace extends FBComponentBase {
 	
 	private static final String WORKSPACE_MENU_FACET = "menu";
 	private static final String WORKSPACE_VIEW_FACET = "view";
-	private static final String WORKSPACE_PAGES_PANEL_FACET = "pages";
 	private static final String WORKSPACE_ACTIONS_PROXY_FACET = "proxy";
 	
 	private String id;
@@ -40,6 +39,10 @@ public class FBWorkspace extends FBComponentBase {
 			view = (String) vb.getValue(context);
 		}
 		
+//		HtmlAjaxRegion menuPanelRegion = new HtmlAjaxRegion();
+//		menuPanelRegion.setSelfRendered(true);
+////		menuPanelRegion
+		
 		HtmlAjaxOutputPanel menuPanel = new HtmlAjaxOutputPanel();
 		menuPanel.setId("ajaxMenuPanel");
 		
@@ -48,7 +51,9 @@ public class FBWorkspace extends FBComponentBase {
 		menu.setStyleClass("optionsContainer");
 		menu.setValueBinding("selectedMenu", application.createValueBinding("#{workspace.selectedMenu}"));
 		menu.setValueBinding("show", application.createValueBinding("#{workspace.renderedMenu}"));
-		menuPanel.getChildren().add(menu);
+		addChild(menu, menuPanel);
+//		menuPanel.getChildren().add(menu);
+//		menuPanelRegion.getChildren().add(menuPanel);
 		
 		HtmlAjaxOutputPanel viewPanel = new HtmlAjaxOutputPanel();
 		viewPanel.setId("ajaxViewPanel");
@@ -57,22 +62,14 @@ public class FBWorkspace extends FBComponentBase {
 		views.setValueBinding("view", vb);
 		views.setId("viewPanel");
 		views.setStyleClass("formContainer");
-		viewPanel.getChildren().add(views);
-		
-		HtmlAjaxOutputPanel pagesPanel = new HtmlAjaxOutputPanel();
-		pagesPanel.setId("ajaxPagesPanel");
-		
-		FBPagesPanel pages = (FBPagesPanel) application.createComponent(FBPagesPanel.COMPONENT_TYPE);
-		pages.setId("pagesPanel");
-		pages.setValueBinding("pages", application.createValueBinding("#{formDocument.pages}"));
-		pagesPanel.getChildren().add(pages);
+		addChild(views, viewPanel);
+//		viewPanel.getChildren().add(views);
 		
 		
 		FBActionsProxy actionsProxy = (FBActionsProxy) application.createComponent(FBActionsProxy.COMPONENT_TYPE);
 		
 		addFacet(WORKSPACE_MENU_FACET, menuPanel);
 		addFacet(WORKSPACE_VIEW_FACET, viewPanel);
-		addFacet(WORKSPACE_PAGES_PANEL_FACET, pagesPanel);
 		addFacet(WORKSPACE_ACTIONS_PROXY_FACET, actionsProxy);
 	}
 	
@@ -81,8 +78,8 @@ public class FBWorkspace extends FBComponentBase {
 		super.encodeBegin(context);
 		
 		writer.startElement("DIV", this);
-		writer.writeAttribute("id", getId(), "id");
-		writer.writeAttribute("class", getStyleClass(), "styleClass");
+		writer.writeAttribute("id", id, "id");
+		writer.writeAttribute("class", styleClass, "styleClass");
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {
@@ -103,12 +100,6 @@ public class FBWorkspace extends FBComponentBase {
 		if(view != null) {
 			renderChild(context, view);
 		}
-		/*if(((Workspace)WFUtil.getBeanInstance("workspace")).isPagesPanelVisible()) {
-			UIComponent pagesPanel = getFacet(WORKSPACE_PAGES_PANEL_FACET);
-			if(pagesPanel != null) {f
-				renderChild(context, pagesPanel);
-			}
-		}*/
 		UIComponent proxy = getFacet(WORKSPACE_ACTIONS_PROXY_FACET);
 		if(proxy != null) {
 			renderChild(context, proxy);

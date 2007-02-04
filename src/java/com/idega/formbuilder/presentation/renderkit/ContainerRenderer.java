@@ -9,8 +9,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
-import com.idega.formbuilder.business.form.manager.FormManagerFactory;
-import com.idega.formbuilder.business.form.manager.IFormManager;
 import com.idega.webface.WFContainer;
 
 /**
@@ -32,7 +30,7 @@ public class ContainerRenderer extends com.idega.webface.renderkit.ContainerRend
 			System.out.println("__________________encode begin___________");
 			
 			long start = System.currentTimeMillis();
-			IFormManager fb = FormManagerFactory.newFormManager(ctx);
+//			IFormManager fb = FormManagerFactory.newFormManager(ctx);
 			long end = System.currentTimeMillis();
 			System.out.println("inited in: "+(end-start));
 	//		System.out.println("<sugeneruoti komponentai > ");
@@ -44,7 +42,7 @@ public class ContainerRenderer extends com.idega.webface.renderkit.ContainerRend
 			title.setString(new Locale("is"), "isl title");
 			
 			start = System.currentTimeMillis();
-			fb.createFormDocument("1", title);
+//			fb.createFormDocument("1", title);
 			end = System.currentTimeMillis();
 			System.out.println("document created in: "+(end-start));
 			
@@ -54,7 +52,7 @@ public class ContainerRenderer extends com.idega.webface.renderkit.ContainerRend
 //			System.out.println("text component created in: "+(end-start));
 	////		
 			start = System.currentTimeMillis();
-			fb.createFormComponent("fbcomp_email", null);
+//			fb.createFormComponent("fbcomp_email", null);
 			end = System.currentTimeMillis();
 			System.out.println("email component created in: "+(end-start));
 			

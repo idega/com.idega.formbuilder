@@ -20,19 +20,11 @@ public class FBPagesPanel extends FBComponentBase {
 	private String id;
 	private String styleClass;
 	private List<String> pages = new ArrayList<String>();
+	private String componentStyleClass;
 
 	public FBPagesPanel() {
 		super();
 		this.setRendererType(null);
-	}
-	
-	protected void initializeComponent(FacesContext context) {
-		Application application = context.getApplication();
-		this.getChildren().clear();
-		
-		/*FBDivision switcher = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
-		switcher.setId("pagesPanel");
-		switcher.setStyleClass("pagesPanel");*/
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
@@ -41,9 +33,8 @@ public class FBPagesPanel extends FBComponentBase {
 		super.encodeBegin(context);
 		
 		writer.startElement("DIV", this);
-		writer.writeAttribute("id", getId(), "id");
-		writer.writeAttribute("class", getStyleClass(), "styleClass");
-		writer.writeAttribute("style", "float: right", null);
+		writer.writeAttribute("id", id, "id");
+		writer.writeAttribute("class", styleClass, "styleClass");
 		
 		ValueBinding vb = this.getValueBinding("pages");
 		if(vb != null) {
@@ -55,34 +46,64 @@ public class FBPagesPanel extends FBComponentBase {
 			FBFormPage formPage = (FBFormPage) application.createComponent(FBFormPage.COMPONENT_TYPE);
 			formPage.setId(nextId);
 			formPage.setLabel(nextId);
+			formPage.setStyleClass(componentStyleClass);
 			add(formPage);
 		}
-		
+		this.getChildren().remove(0);
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {
-		super.encodeEnd(context);
-		
+		String temp = componentStyleClass;
 		ResponseWriter writer = context.getResponseWriter();
 		writer.endElement("DIV");
+		super.encodeEnd(context);
+		
+		Object values[] = new Object[2];
+		values[0] = id;
+		values[1] = componentStyleClass;
+		writer.write(getEmbededJavascript(values));
 	}
 	
 	public void encodeChildren(FacesContext context) throws IOException {
 		if (!isRendered()) {
 			return;
 		}
-		Iterator it = this.getChildren().iterator();
+		Iterator it = getChildren().iterator();
 		while(it.hasNext()) {
 			renderChild(context, (UIComponent) it.next());
 		}
 	}
 	
+	private String getEmbededJavascript(Object values[]) {
+		return 	"<script language=\"JavaScript\">\n"
+		
+				+ "function setupPagesDragAndDrop() {\n"
+				+ "Position.includeScrollOffsets = true;\n"
+				+ "Sortable.create(\"" + values[0] + "\",{dropOnEmpty:true,tag:\"div\",only:\"" + values[1] + "\",onUpdate:rearrangePages,scroll:\"" + values[0] + "\",constraint:false});\n"
+				+ "}\n"
+				
+				+ "function rearrangePages() {\n"
+//				+ "var componentIDs = Sortable.serialize(\"" + values[2] + "\",{tag:\"div\",name:\"id\"});\n"
+//				+ "var delimiter = '&id[]=';\n"
+//				+ "var idPrefix = 'fbcomp_';\n"
+//				+ "dwrmanager.updateComponentList(updateOrder,componentIDs,idPrefix,delimiter);\n"
+//				+ "pressedDelete = true;\n"
+				+ "}\n"
+				
+//				+ "function updateOrder() {}\n"
+				
+				+ "setupPagesDragAndDrop();\n"
+				
+				+ "</script>\n";
+	}
+	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[4];
+		Object values[] = new Object[5];
 		values[0] = super.saveState(context); 
 		values[1] = id;
 		values[2] = styleClass;
 		values[3] = pages;
+		values[4] = componentStyleClass;
 		return values;
 	}
 	
@@ -92,6 +113,7 @@ public class FBPagesPanel extends FBComponentBase {
 		id = (String) values[1];
 		styleClass = (String) values[2];
 		pages = (ArrayList<String>) values[3];
+		componentStyleClass = (String) values[4];
 	}
 	
 	public String getStyleClass() {
@@ -116,6 +138,14 @@ public class FBPagesPanel extends FBComponentBase {
 
 	public void setPages(List<String> pages) {
 		this.pages = pages;
+	}
+
+	public String getComponentStyleClass() {
+		return componentStyleClass;
+	}
+
+	public void setComponentStyleClass(String componentStyleClass) {
+		this.componentStyleClass = componentStyleClass;
 	}
 
 }

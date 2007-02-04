@@ -11,19 +11,19 @@ import javax.faces.context.ResponseWriter;
 import org.apache.myfaces.component.html.ext.HtmlGraphicImage;
 import org.w3c.dom.Element;
 
-import com.idega.formbuilder.business.form.manager.IFormManager;
-import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
+import com.idega.formbuilder.business.form.Page;
 import com.idega.formbuilder.dom.DOMTransformer;
 import com.idega.formbuilder.presentation.FBComponentBase;
-import com.idega.formbuilder.view.ActionManager;
+import com.idega.formbuilder.presentation.beans.FormPage;
+import com.idega.webface.WFUtil;
 
 public class FBFormComponent extends FBComponentBase {
 	
 	public static final String COMPONENT_TYPE = "FormComponent";
-//	public static final String COMPONENT_FAMILY = "formbuilder";
 	
 	private static final String DELETE_BUTTON_FACET = "DELETE_BUTTON_FACET";
 	
+	private String id;
 	private String styleClass;
 	private Element element;
 	private boolean submit;
@@ -76,30 +76,22 @@ public class FBFormComponent extends FBComponentBase {
 		this.setRendererType(null);
 	}
 	
-	/*public String getRendererType() {
-		return null;
-	}
-	
-	public String getFamily() {
-		return COMPONENT_FAMILY;
-	}*/
-	
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
-		this.getChildren().clear();
-		IFormManager formManagerInstance = ActionManager.getFormManagerInstance();
+		getChildren().clear();
+		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
 		String currentLocale = "en";
 		if(currentLocale != null) {
 			Locale current = new Locale(currentLocale);
 			if(current != null) {
 				try {
 					if(submit) {
-						Element element = formManagerInstance.getLocalizedSubmitComponent(current);
+						/*Element element = formManagerInstance.getLocalizedSubmitComponent(current);
 						Element button = (Element) element.getFirstChild();
 						button.setAttribute("disabled", "true");
-						this.setElement(element);
+						this.setElement(element);*/
 					} else {
-						Element element = formManagerInstance.getLocalizedFormHtmlComponent(this.getId(), current);
+						Element element = page.getComponent(id).getHtmlRepresentation(current);
 						element.setAttribute("id", this.getId() + "_i");
 						this.setElement(element);
 						this.setOnclick("editProperties(this.id)");
@@ -109,18 +101,14 @@ public class FBFormComponent extends FBComponentBase {
 						deleteButton.setOnclick("deleteComponentJSF(this)");
 						deleteButton.setStyleClass("speedButton");
 						
-						this.getFacets().put(DELETE_BUTTON_FACET, deleteButton);
+						addFacet(DELETE_BUTTON_FACET, deleteButton);
 					}
-				} catch(FBPostponedException e) {
+				} catch(Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}
 	}
-	
-	/*public boolean getRendersChildren() {
-		return true;
-	}*/
 	
 	public void encodeBegin(FacesContext context) throws IOException {
 		boolean selected;
@@ -159,26 +147,28 @@ public class FBFormComponent extends FBComponentBase {
 	}
 	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[7];
+		Object values[] = new Object[8];
 		values[0] = super.saveState(context);
-		values[1] = styleClass;
-		values[2] = element;
-		values[3] = submit;
-		values[4] = onclick;
-		values[5] = selected;
-		values[6] = selectedStyleClass;
+		values[1] = id;
+		values[2] = styleClass;
+		values[3] = element;
+		values[4] = submit;
+		values[5] = onclick;
+		values[6] = selected;
+		values[7] = selectedStyleClass;
 		return values;
 	}
 	
 	public void restoreState(FacesContext context, Object state) {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);
-		styleClass = (String) values[1];
-		element = (Element) values[2];
-		submit = (Boolean) values[3];
-		onclick = (String) values[4];
-		selected = (Boolean) values[5];
-		selectedStyleClass = (String) values[6];
+		id = (String) values[1];
+		styleClass = (String) values[2];
+		element = (Element) values[3];
+		submit = (Boolean) values[4];
+		onclick = (String) values[5];
+		selected = (Boolean) values[6];
+		selectedStyleClass = (String) values[7];
 	}
 
 	public Element getElement() {
@@ -187,6 +177,14 @@ public class FBFormComponent extends FBComponentBase {
 
 	public void setElement(Element element) {
 		this.element = element;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }

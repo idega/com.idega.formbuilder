@@ -127,7 +127,7 @@ public class FBViewPanel extends FBComponentBase {
 		
 		HtmlGraphicImage showPagesButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
 		showPagesButton.setId("showPagesButton");
-		showPagesButton.setStyle("display: inline;");
+		showPagesButton.setStyleClass("showPagesButton");
 		showPagesButton.setValue(SHOW_PAGES_BUTTON_IMG);
 		
 		UIAjaxSupport showPagesButtonS = (UIAjaxSupport) application.createComponent("org.ajax4jsf.ajax.Support");
@@ -136,6 +136,14 @@ public class FBViewPanel extends FBComponentBase {
 		showPagesButtonS.setReRender("mainApplication");
 		showPagesButtonS.setActionListener(application.createMethodBinding("#{workspace.togglePagesPanel}", new Class[]{ActionEvent.class}));
 		showPagesButton.getChildren().add(showPagesButtonS);
+		
+		FBPagesPanel pages = (FBPagesPanel) application.createComponent(FBPagesPanel.COMPONENT_TYPE);
+		pages.setId("pagesPanel");
+		pages.setValueBinding("pages", application.createValueBinding("#{formDocument.pages}"));
+		pages.setStyleClass("pagesPanel");
+		pages.setComponentStyleClass("formPageIcon");
+		
+		addFacet(PAGES_PANEL, pages);
 		
 		addFacet(SHOW_PAGES_BUTTON, showPagesButton);
 	}
@@ -157,6 +165,7 @@ public class FBViewPanel extends FBComponentBase {
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
+		boolean temp = ((Workspace)WFUtil.getBeanInstance("workspace")).isPagesPanelVisible();
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeBegin(context);
 		
@@ -183,14 +192,14 @@ public class FBViewPanel extends FBComponentBase {
 					((FBDivision) viewSwitch.getChildren().get(1)).setStyleClass("unselectedTab");
 					((FBDivision) viewSwitch.getChildren().get(2)).setStyleClass("unselectedTab");
 					renderChild(context, viewSwitch);
-//					renderChild(context, pagesButton);
+					renderChild(context, pagesButton);
 					if(((Workspace)WFUtil.getBeanInstance("workspace")).isPagesPanelVisible()) {
 						UIComponent pagesPanel = getFacet(PAGES_PANEL);
 						if(pagesPanel != null) {
 							renderChild(context, pagesPanel);
 						}
 					}
-//					renderChild(context, status);
+					renderChild(context, status);
 					renderChild(context, designView);
 				}
 			} else if(view.equals(PREVIEW_VIEW)) {
@@ -200,8 +209,7 @@ public class FBViewPanel extends FBComponentBase {
 					((FBDivision) viewSwitch.getChildren().get(0)).setStyleClass("unselectedTab");
 					((FBDivision) viewSwitch.getChildren().get(2)).setStyleClass("unselectedTab");
 					renderChild(context, viewSwitch);
-//					renderChild(context, pagesButton);
-//					renderChild(context, status);
+					renderChild(context, status);
 					renderChild(context, previewView);
 				}
 			} else if(view.equals(SOURCE_VIEW)) {
@@ -211,8 +219,7 @@ public class FBViewPanel extends FBComponentBase {
 					((FBDivision) viewSwitch.getChildren().get(1)).setStyleClass("unselectedTab");
 					((FBDivision) viewSwitch.getChildren().get(0)).setStyleClass("unselectedTab");
 					renderChild(context, viewSwitch);
-//					renderChild(context, pagesButton);
-//					renderChild(context, status);
+					renderChild(context, status);
 					renderChild(context, sourceView);
 				}
 			}
@@ -220,10 +227,9 @@ public class FBViewPanel extends FBComponentBase {
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {
-		super.encodeEnd(context);
-		
 		ResponseWriter writer = context.getResponseWriter();
 		writer.endElement("DIV");
+		super.encodeEnd(context);
 	}
 	
 	public Object saveState(FacesContext context) {

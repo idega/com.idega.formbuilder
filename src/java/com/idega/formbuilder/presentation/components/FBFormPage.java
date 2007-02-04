@@ -17,7 +17,7 @@ public class FBFormPage extends FBComponentBase {
 	
 	private static final String CONTENT_DIV_FACET = "CONTENT_DIV_FACET";
 	
-	private static final String PAGE_ICON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-redo.png";
+	private static final String PAGE_ICON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/document-new.png";
 	
 	private String id;
 	private String styleClass;
@@ -38,9 +38,12 @@ public class FBFormPage extends FBComponentBase {
 		
 		HtmlGraphicImage pageIconImg = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
 		pageIconImg.setValue(PAGE_ICON_IMG);
+		pageIconImg.setStyle("display: block");
 		
 		HtmlOutputText pageIconLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		pageIconLabel.setValue("Page Icon");
+		pageIconLabel.setValue(label);
+		pageIconLabel.setStyle("display: block");
+		
 		
 		switcher.getChildren().add(pageIconImg);
 		switcher.getChildren().add(pageIconLabel);

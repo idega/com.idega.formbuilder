@@ -23,6 +23,10 @@ public class FBComponentBase extends IWBaseComponent {
 		getFacets().put(name, component);
 	}
 	
+	public void addChild(UIComponent child, UIComponent parent) {
+		parent.getChildren().add(child);
+	}
+	
 	public String getFamily() {
 		return COMPONENT_FAMILY;
 	}

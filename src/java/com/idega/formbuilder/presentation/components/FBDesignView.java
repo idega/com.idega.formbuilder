@@ -16,7 +16,9 @@ import org.ajax4jsf.ajax.UIAjaxSupport;
 import org.apache.myfaces.custom.htmlTag.HtmlTag;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.formbuilder.presentation.beans.FormPage;
 import com.idega.formbuilder.view.ActionManager;
+import com.idega.webface.WFUtil;
 
 public class FBDesignView extends FBComponentBase {
 	
@@ -68,7 +70,7 @@ public class FBDesignView extends FBComponentBase {
 		noFormNoticeBody.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['labels_noform_body']}"));
 		noFormNotice.getChildren().add(noFormNoticeBody);
 		
-		this.getFacets().put(DESIGN_VIEW_NOFORM_FACET, noFormNotice);
+		addFacet(DESIGN_VIEW_NOFORM_FACET, noFormNotice);
 		
 		FBDivision formHeading = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
 		formHeading.setId("formHeading");
@@ -91,7 +93,7 @@ public class FBDesignView extends FBComponentBase {
 		hr.setValue("hr");
 		formHeading.getChildren().add(hr);
 		
-		this.getFacets().put(DESIGN_VIEW_HEADER_FACET, formHeading);
+		addFacet(DESIGN_VIEW_HEADER_FACET, formHeading);
 		
 		FBDivision emptyForm = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
 		emptyForm.setId("emptyForm");
@@ -108,23 +110,25 @@ public class FBDesignView extends FBComponentBase {
 		emptyFormBody.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['labels_empty_form_body']}"));
 		emptyForm.getChildren().add(emptyFormBody);
 		
-		this.getFacets().put(DESIGN_VIEW_EMPTY_FACET, emptyForm);
+		addFacet(DESIGN_VIEW_EMPTY_FACET, emptyForm);
 		
 		
 		FBFormComponent submitButton = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
 		submitButton.setStyleClass(this.getComponentStyleClass());
 		submitButton.setSubmit(true);
-		this.getFacets().put(SUBMIT_BUTTON_FACET, submitButton);
+		addFacet(SUBMIT_BUTTON_FACET, submitButton);
 		
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
 		Application application = context.getApplication();
-		ResponseWriter writer = context.getResponseWriter();
-		super.encodeBegin(context);
 		this.getChildren().clear();
 		
-		List<String> ids = ActionManager.getFormManagerInstance().getFormComponentsIdsList();
+		ResponseWriter writer = context.getResponseWriter();
+		super.encodeBegin(context);
+		
+		FormPage page = (FormPage) WFUtil.getBeanInstance("formPage");
+		List<String> ids = page.getPage().getContainedComponentsIdList();
 		Iterator it = ids.iterator();
 		ValueBinding vb = this.getValueBinding("selectedComponent");
 		if(vb != null) {
@@ -141,7 +145,7 @@ public class FBDesignView extends FBComponentBase {
 				formComponent.setSelected(false);
 			}
 			formComponent.setSelectedStyleClass(this.getComponentStyleClass() + "Sel");
-		    this.getChildren().add(formComponent);
+		    getChildren().add(formComponent);
 		}
 		
 		writer.startElement("DIV", this);
@@ -197,7 +201,7 @@ public class FBDesignView extends FBComponentBase {
 		writer.endElement("DIV");
 		Object values[] = new Object[3];
 		values[0] = getId();
-		values[1] = getComponentStyleClass();
+		values[1] = componentStyleClass;
 		values[2] = getId() + "inner";
 		writer.write(getEmbededJavascript(values));
 	}
@@ -206,7 +210,7 @@ public class FBDesignView extends FBComponentBase {
 		if (!isRendered()) {
 			return;
 		}
-		Iterator it = this.getChildren().iterator();
+		Iterator it = getChildren().iterator();
 		while(it.hasNext()) {
 			renderChild(context, (UIComponent) it.next());
 		}

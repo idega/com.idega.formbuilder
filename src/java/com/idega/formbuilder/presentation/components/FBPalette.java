@@ -1,20 +1,22 @@
 package com.idega.formbuilder.presentation.components;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.application.Application;
-import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
 
+import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.PaletteComponent;
 
-public class FBPalette extends UIComponentBase {
+public class FBPalette extends FBComponentBase {
 	
-	public static final String RENDERER_TYPE = "fb_palette";
-	public static final String COMPONENT_FAMILY = "formbuilder";
+//	public static final String RENDERER_TYPE = "fb_palette";
+//	public static final String COMPONENT_FAMILY = "formbuilder";
 	public static final String COMPONENT_TYPE = "Palette";
 	
 	private String styleClass;
@@ -24,24 +26,25 @@ public class FBPalette extends UIComponentBase {
 
 	public FBPalette() {
 		super();
-		this.setRendererType(FBPalette.RENDERER_TYPE);
+		this.setRendererType(null);
 	}
 	
-	public String getFamily() {
+	/*public String getFamily() {
 		return FBPalette.COMPONENT_FAMILY;
 	}
 	
 	public String getRendererType() {
-		return FBPalette.RENDERER_TYPE;
+		return null;
 	}
 	
 	public boolean getRendersChildren() {
 		return true;
-	}
+	}*/
 	
-	public void initializeComponent(FacesContext context) {
+	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
 		this.getChildren().clear();
+		
 		ValueBinding vb = this.getValueBinding("items");
 		if(vb != null) {
 			List items = (List) vb.getValue(context);
@@ -49,13 +52,61 @@ public class FBPalette extends UIComponentBase {
 			while(it.hasNext()) {
 				PaletteComponent current = (PaletteComponent) it.next();
 				FBPaletteComponent formComponent = (FBPaletteComponent) application.createComponent(FBPaletteComponent.COMPONENT_TYPE);
-				formComponent.setStyleClass(this.getItemStyleClass());
+				formComponent.setStyleClass(itemStyleClass);
 				formComponent.setName(current.getName());
 				formComponent.setType(current.getType());
 				formComponent.setIcon(current.getIconPath());
-				this.getChildren().add(formComponent);
+				add(formComponent);
 			}
 		}
+	}
+	
+	public void encodeBegin(FacesContext context) throws IOException {
+		super.encodeBegin(context);
+		
+		ResponseWriter writer = context.getResponseWriter();
+		writer.startElement("DIV", this);
+		writer.writeAttribute("id", getId(), "id");
+		writer.writeAttribute("class", styleClass, "styleClass");
+		writer.startElement("TABLE", null);
+	}
+	
+	public void encodeChildren(FacesContext context) throws IOException {
+		ResponseWriter writer = context.getResponseWriter();
+		
+		int count = 1;
+		boolean inRow = false;
+		
+		Iterator it = getChildren().iterator();
+		while(it.hasNext()) {
+			if((count % columns) == 1 || columns == 1) {
+				writer.startElement("TR", null);
+				inRow = true;
+			}
+			FBPaletteComponent current = (FBPaletteComponent) it.next();
+			if(current != null) {
+				writer.startElement("TD", null);
+				current.encodeEnd(context);
+				writer.endElement("TD");
+			}
+			if((count % columns) == 0 || columns == 1) {
+				writer.endElement("TR");
+				inRow = false;
+			}
+			count++;
+		}
+		if(inRow) {
+			writer.endElement("TR");
+		}
+	}
+	
+	public void encodeEnd(FacesContext context) throws IOException {
+		ResponseWriter writer = context.getResponseWriter();
+		
+		writer.endElement("TABLE");
+		writer.endElement("DIV");
+		
+		super.encodeEnd(context);
 	}
 
 	public int getColumns() {

@@ -6,6 +6,11 @@
 
 <faces-config>
 	<managed-bean>
+		<managed-bean-name>formPage</managed-bean-name>
+		<managed-bean-class>com.idega.formbuilder.presentation.beans.FormPage</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
 		<managed-bean-name>formComponent</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.presentation.beans.FormComponent</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
@@ -20,13 +25,6 @@
 		<managed-bean-class>com.idega.formbuilder.presentation.beans.FormDocument</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
-	<!--
-	<managed-bean>
-		<managed-bean-name>openFormAction</managed-bean-name>
-		<managed-bean-class>com.idega.formbuilder.presentation.actions.FormChangeAction</managed-bean-class>
-		<managed-bean-scope>session</managed-bean-scope>
-	</managed-bean>
-	-->
 	<managed-bean>
 		<managed-bean-name>viewChangeAction</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.presentation.actions.ViewChangeAction</managed-bean-class>

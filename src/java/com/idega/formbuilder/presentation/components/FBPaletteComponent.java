@@ -6,11 +6,10 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
 
-import com.idega.presentation.IWBaseComponent;
+import com.idega.formbuilder.presentation.FBComponentBase;
 
-public class FBPaletteComponent extends IWBaseComponent {
+public class FBPaletteComponent extends FBComponentBase {
 	
-	public static final String COMPONENT_FAMILY = "formbuilder";
 	public static final String COMPONENT_TYPE = "PaletteComponent";
 	
 	private static final String INLINE_DIV_STYLE = "display: inline;";
@@ -32,14 +31,6 @@ public class FBPaletteComponent extends IWBaseComponent {
 	public FBPaletteComponent() {
 		super();
 		this.setRendererType(null);
-	}
-	
-	public String getFamily() {
-		return FBPaletteComponent.COMPONENT_FAMILY;
-	}
-
-	public String getRendererType() {
-		return null;
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {

@@ -10,7 +10,7 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.ActionEvent;
 
-import org.ajax4jsf.ajax.UIAjaxSupport;
+import org.ajax4jsf.ajax.html.HtmlAjaxSupport;
 import org.apache.myfaces.component.html.ext.HtmlCommandButton;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
 import org.apache.myfaces.component.html.ext.HtmlSelectOneMenu;
@@ -23,8 +23,9 @@ public class FBMenu extends FBComponentBase {
 	public static final String COMPONENT_TYPE = "Menu";
 	
 	private static final String NO_MENU_FACET = "NO_MENU_FACET";
-	private static final String NEW_FORM_BUTTON_FACET = "NEW_FORM_BUTTON_FACET";
-	private static final String FORM_LIST_FACET = "FORM_LIST_FACET";
+	private static final String MENU_TOOLBAR_FACET = "MENU_TOOLBAR_FACET";
+	private static final String NEW_BUTTON_FACET = "NEW_BUTTON_FACET";
+	private static final String FORM_LIST_FACET = "NEW_BUTTON_FACET";
 	
 	private static final String MENU_TAB_1 = "tab1";
 	private static final String MENU_TAB_2 = "tab2";
@@ -61,6 +62,9 @@ public class FBMenu extends FBComponentBase {
 		Application application = context.getApplication();
 		this.getChildren().clear();
 		
+//		FBDivision menuHeaderPanel = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
+//		menuHeaderPanel.setId("menuPanelToolbar");
+		
 		HtmlCommandButton newFormButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
 		newFormButton.setId("newFormButton");
 		newFormButton.setOnclick("displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/new-dialog.inc');return false");
@@ -71,22 +75,27 @@ public class FBMenu extends FBComponentBase {
 		selectFormMenu.setValueBinding("value", application.createValueBinding("#{formDocument.formId}"));
 		UISelectItems forms = (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
 		forms.setValueBinding("value", application.createValueBinding("#{formSelector.forms}"));
-		selectFormMenu.getChildren().add(forms);
+		addChild(forms, selectFormMenu);
+//		selectFormMenu.getChildren().add(forms);
 		
-		UIAjaxSupport selectSupport = (UIAjaxSupport) application.createComponent("org.ajax4jsf.ajax.Support");
+//		HtmlAjaxSupport selectSupport = (UIAjaxSupport) application.createComponent("org.ajax4jsf.ajax.Support");
+		HtmlAjaxSupport selectSupport = new HtmlAjaxSupport();
 		selectSupport.setEvent("onchange");
 		selectSupport.setOnsubmit("showLoadingMessage('Opening')");
 		selectSupport.setOncomplete("closeLoadingMessage()");
 		selectSupport.setAjaxSingle(false);
 		selectSupport.setReRender("mainApplication");
 		selectSupport.setActionListener(application.createMethodBinding("#{workspace.changeForm}", new Class[]{ActionEvent.class}));
-		selectFormMenu.getChildren().add(selectSupport);
+//		selectFormMenu.getChildren().add(selectSupport);
+		addChild(selectSupport, selectFormMenu);
+		
+//		menuHeaderPanel.add(newFormButton);
+//		menuHeaderPanel.add(selectFormMenu);
 		
 		
 		FBMenuPanel tab1 = (FBMenuPanel) application.createComponent(FBMenuPanel.COMPONENT_TYPE);
 		tab1.setExpanded(false);
 		tab1.setValueBinding("title", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['component_palette_panel']}"));
-//		tab1.setReRender(getId());
 		tab1.setId(MENU_TAB_1);
 		
 		FBPalette palette = (FBPalette) application.createComponent(FBPalette.COMPONENT_TYPE);
@@ -96,63 +105,56 @@ public class FBMenu extends FBComponentBase {
 		palette.setStyleClass("componentsList");
 		palette.setValueBinding("items", application.createValueBinding("#{palette.components}"));
 		
-		tab1.getChildren().add(palette);
+		tab1.add(palette);
 		
 		
 		
 		FBMenuPanel tab2 = (FBMenuPanel) application.createComponent(FBMenuPanel.COMPONENT_TYPE);
 		tab2.setExpanded(false);
 		tab2.setValueBinding("title", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['field_properties_panel']}"));
-//		tab2.setReRender(getId());
 		tab2.setId(MENU_TAB_2);
 		
 		FBBasicProperties simpleProperties = (FBBasicProperties) application.createComponent(FBBasicProperties.COMPONENT_TYPE);
 		
 		FBAdvancedProperties advancedProperties = (FBAdvancedProperties) application.createComponent(FBAdvancedProperties.COMPONENT_TYPE);
 		
-		tab2.getChildren().add(simpleProperties);
-		tab2.getChildren().add(advancedProperties);
+		tab2.add(simpleProperties);
+		tab2.add(advancedProperties);
 		
 		
 		
 		FBMenuPanel tab3 = (FBMenuPanel) application.createComponent(FBMenuPanel.COMPONENT_TYPE);
 		tab3.setExpanded(false);
 		tab3.setValueBinding("title", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['form_properties_panel']}"));
-//		tab3.setReRender(getId());
 		tab3.setId(MENU_TAB_3);
 		
 		FBFormProperties formProperties = (FBFormProperties) application.createComponent(FBFormProperties.COMPONENT_TYPE);
 		
-		tab3.getChildren().add(formProperties);
+		tab3.add(formProperties);
 		
 		
 		
 		FBMenuPanel tab4 = (FBMenuPanel) application.createComponent(FBMenuPanel.COMPONENT_TYPE);
 		tab4.setExpanded(false);
 		tab4.setValueBinding("title", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['form_steps_panel']}"));
-//		tab4.setReRender(getId());
 		tab4.setId(MENU_TAB_4);
-		
-		FBFormStepsViewer stepsViewer = (FBFormStepsViewer) application.createComponent(FBFormStepsViewer.COMPONENT_TYPE);
-		stepsViewer.setSteps(14);
-		
-		tab4.getChildren().add(stepsViewer);
 		
 		
 		HtmlOutputText noMenuLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		noMenuLabel.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['no_menu_label']}"));
 		noMenuLabel.setStyleClass("noMenuLabel");
 		
+//		HtmlAjaxFunction changeMenuFunction = new HtmlAjaxFunction();
 		
+		
+		addFacet(NEW_BUTTON_FACET, newFormButton);
 		addFacet(FORM_LIST_FACET, selectFormMenu);
-		addFacet(NEW_FORM_BUTTON_FACET, newFormButton);
+		addFacet(NO_MENU_FACET, noMenuLabel);
 		
 		addFacet(MENU_TAB_1, tab1);
 		addFacet(MENU_TAB_2, tab2);
 		addFacet(MENU_TAB_3, tab3);
 		addFacet(MENU_TAB_4, tab4);
-		
-		addFacet(NO_MENU_FACET, noMenuLabel);
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
@@ -162,21 +164,18 @@ public class FBMenu extends FBComponentBase {
 		writer.writeAttribute("id", getId(), "id");
 		writer.writeAttribute("style", "width: 300px;", null);
 		
-		UIComponent newFormB = getFacet(NEW_FORM_BUTTON_FACET);
-		if(newFormB != null) {
-			renderChild(context, newFormB);
+		UIComponent facet = getFacet(NEW_BUTTON_FACET);
+		if(facet != null) {
+			renderChild(context, facet);
 		}
-		
-		UIComponent formList = getFacet(FORM_LIST_FACET);
-		if(formList != null) {
-			renderChild(context, formList);
+		facet = getFacet(FORM_LIST_FACET);
+		if(facet != null) {
+			renderChild(context, facet);
 		}
 		
 		ValueBinding showVB = getValueBinding("show");
 		if(showVB != null) {
 			show = (Boolean) showVB.getValue(context);
-		} else {
-			show = getShow();
 		}
 		
 		if(show) {
@@ -190,27 +189,27 @@ public class FBMenu extends FBComponentBase {
 				FBMenuPanel tab1 = (FBMenuPanel) getFacet(MENU_TAB_1);
 				FBMenuPanel tab2 = (FBMenuPanel) getFacet(MENU_TAB_2);
 				FBMenuPanel tab3 = (FBMenuPanel) getFacet(MENU_TAB_3);
-//				FBMenuPanel tab4 = (FBMenuPanel) getFacet(MENU_TAB_4);
+				FBMenuPanel tab4 = (FBMenuPanel) getFacet(MENU_TAB_4);
 				if(selectedMenu.equals("0")) {
 					tab1.setExpanded(true);
 					tab2.setExpanded(false);
 					tab3.setExpanded(false);
-//					tab4.setExpanded(false);
+					tab4.setExpanded(false);
 				} else if(selectedMenu.equals("1")) {
 					tab1.setExpanded(false);
 					tab2.setExpanded(true);
 					tab3.setExpanded(false);
-//					tab4.setExpanded(false);
+					tab4.setExpanded(false);
 				} else if(selectedMenu.equals("2")) {
 					tab1.setExpanded(false);
 					tab2.setExpanded(false);
 					tab3.setExpanded(true);
-//					tab4.setExpanded(false);
+					tab4.setExpanded(false);
 				} else if(selectedMenu.equals("3")) {
 					tab1.setExpanded(false);
 					tab2.setExpanded(false);
 					tab3.setExpanded(false);
-//					tab4.setExpanded(true);
+					tab4.setExpanded(true);
 				}
 			}
 		} else {
@@ -252,10 +251,10 @@ public class FBMenu extends FBComponentBase {
 			if(tab3 != null) {
 				renderChild(context, tab3);
 			}
-			/*FBMenuPanel tab4 = (FBMenuPanel) getFacet(MENU_TAB_4);
+			FBMenuPanel tab4 = (FBMenuPanel) getFacet(MENU_TAB_4);
 			if(tab4 != null) {
 				renderChild(context, tab4);
-			}*/
+			}
 		}
 	}
 	

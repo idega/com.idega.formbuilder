@@ -8,19 +8,25 @@ import java.util.Locale;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
-import com.idega.formbuilder.business.form.beans.IComponentProperties;
-import com.idega.formbuilder.business.form.beans.IComponentPropertiesSelect;
+import com.idega.formbuilder.business.form.Component;
+import com.idega.formbuilder.business.form.ComponentSelect;
+import com.idega.formbuilder.business.form.Document;
+import com.idega.formbuilder.business.form.PropertiesComponent;
+import com.idega.formbuilder.business.form.PropertiesSelect;
 import com.idega.formbuilder.business.form.beans.ILocalizedItemset;
 import com.idega.formbuilder.business.form.beans.ItemBean;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
-import com.idega.formbuilder.view.ActionManager;
+import com.idega.webface.WFUtil;
 
 public class FormComponent implements Serializable {
 	
 	private static final long serialVersionUID = -1462694198346788168L;
 	
-	private IComponentProperties properties;
-	
+	private Document formDocument;
+	private PropertiesComponent properties;
+	private PropertiesSelect propertiesSelect;
+	private Component component;
+	private ComponentSelect selectComponent;
 	private String id;
 	
 	private Boolean required;
@@ -40,20 +46,27 @@ public class FormComponent implements Serializable {
 	private String dataSrc;
 	
 	public String getDataSrc() {
-		if(properties instanceof IComponentPropertiesSelect) {
-			IComponentPropertiesSelect icps = (IComponentPropertiesSelect) properties;
-			if(icps.getDataSrcUsed() != null) {
-				this.dataSrc = icps.getDataSrcUsed().toString();
+		if(propertiesSelect != null) {
+			if(propertiesSelect.getDataSrcUsed() != null) {
+				this.dataSrc = propertiesSelect.getDataSrcUsed().toString();
 			} else {
-				this.setDataSrc(DataSourceList.localDataSrc);
+				this.dataSrc = DataSourceList.localDataSrc;
 			}
 		}
 		return dataSrc;
 	}
+	
+	public boolean isSimple() {
+		if(component != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	public void setDataSrc(String dataSrc) {
 		this.dataSrc = dataSrc;
-		((IComponentPropertiesSelect) properties).setDataSrcUsed(Integer.parseInt(dataSrc));
+		propertiesSelect.setDataSrcUsed(Integer.parseInt(dataSrc));
 	
 	}
 
@@ -87,43 +100,72 @@ public class FormComponent implements Serializable {
 		this.itemset = null;
 		
 		this.dataSrc = DataSourceList.localDataSrc;
+		
+		this.component = null;
+		this.selectComponent = null;
+		this.properties = null;
+		this.propertiesSelect = null;
 	}
 	
 	public void clearFormComponentInfo() {
 		this.id = "";
+		
 		this.label = "";
 		this.labelStringBean = null;
+		
 		this.errorMessage = "";
 		this.errorStringBean = null;
+		
 		this.required = false;
+		
 		this.emptyLabel = "";
 		this.emptyLabelBean = null;
+		
 		this.itemset = null;
 		
 		this.properties = null;
+		this.propertiesSelect = null;
+		
+		this.component = null;
+		this.selectComponent = null;
 	}
 	
+	public Document getFormDocument() {
+		return formDocument;
+	}
+
+	public void setFormDocument(Document formDocument) {
+		this.formDocument = formDocument;
+	}
+
 	public void loadProperties(String id) {
+		formDocument = ((FormDocument) WFUtil.getBeanInstance("formDocument")).getDocument();
 		this.id = id;
-		properties = ActionManager.getFormManagerInstance().getComponentProperties(id);
-		
-		required = properties.isRequired();
-		
-		labelStringBean = properties.getLabel();
-		label = labelStringBean.getString(new Locale("en"));
-		
-		errorStringBean = properties.getErrorMsg();
-		errorMessage = errorStringBean.getString(new Locale("en"));
-		
-		if(properties instanceof IComponentPropertiesSelect) {
-			IComponentPropertiesSelect selectProperties = (IComponentPropertiesSelect) properties;
+		component = formDocument.getComponent(id);
+		if(component instanceof ComponentSelect) {
+			selectComponent = (ComponentSelect) component;
+			propertiesSelect = selectComponent.getProperties();
 			
-			emptyLabelBean = selectProperties.getEmptyElementLabel();
+			component = null;
+			properties = null;
+			
+			required = propertiesSelect.isRequired();
+			
+			labelStringBean = propertiesSelect.getLabel();
+			label = labelStringBean.getString(new Locale("en"));
+			
+			errorStringBean = propertiesSelect.getErrorMsg();
+			errorMessage = errorStringBean.getString(new Locale("en"));
+			
+			selectComponent = (ComponentSelect) component;
+			propertiesSelect = selectComponent.getProperties();
+			
+			emptyLabelBean = propertiesSelect.getEmptyElementLabel();
 			emptyLabel = emptyLabelBean.getString(new Locale("en"));
 			
-			externalSrc = ((IComponentPropertiesSelect) properties).getExternalDataSrc();
+			externalSrc = propertiesSelect.getExternalDataSrc();
 			
-			itemset = ((IComponentPropertiesSelect) properties).getItemset();
+			itemset = propertiesSelect.getItemset();
 			items = itemset.getItems(new Locale("en"));
 			
 			if(items.size() == 0) {
@@ -131,14 +173,25 @@ public class FormComponent implements Serializable {
 				items.add(new ItemBean("", ""));
 				items.add(new ItemBean("", ""));
 			}
+		} else {
+			properties = component.getProperties();
+			
+			required = propertiesSelect.isRequired();
+			
+			labelStringBean = propertiesSelect.getLabel();
+			label = labelStringBean.getString(new Locale("en"));
+			
+			errorStringBean = propertiesSelect.getErrorMsg();
+			errorMessage = errorStringBean.getString(new Locale("en"));
 		}
+		
+		
 	}
 	
 	public void saveComponentLabel(ActionEvent ae) throws Exception {
 		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("propertyTitle");
 		if(value != null) {
 			setLabel(value);
-			ActionManager.getFormManagerInstance().updateFormComponent(id);
 		}
 	}
 	
@@ -149,14 +202,12 @@ public class FormComponent implements Serializable {
 		} else {
 			setRequired(false);
 		}
-		ActionManager.getFormManagerInstance().updateFormComponent(id);
 	}
 	
 	public void saveComponentErrorMessage(ActionEvent ae) throws Exception {
 		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("propertyErrorMessage");
 		if(value != null) {
 			setErrorMessage(value);
-			ActionManager.getFormManagerInstance().updateFormComponent(id);
 		}
 	}
 	
@@ -164,15 +215,13 @@ public class FormComponent implements Serializable {
 		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("propertyEmptyLabel");
 		if(value != null) {
 			setEmptyLabel(value);
-			ActionManager.getFormManagerInstance().updateFormComponent(id);
 		}
 	}
 	
 	public void saveComponentExternalSource(ActionEvent ae) throws Exception {
 		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("propertyExternal");
 		if(value != null) {
-			this.setExternalSrc(value);
-			ActionManager.getFormManagerInstance().updateFormComponent(id);
+			setExternalSrc(value);
 		}
 	}
 	
@@ -198,8 +247,12 @@ public class FormComponent implements Serializable {
 
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
-		this.errorStringBean.setString(new Locale("en"), errorMessage);
-		this.properties.setErrorMsg(errorStringBean);
+		errorStringBean.setString(new Locale("en"), errorMessage);
+		if(properties != null) {
+			properties.setErrorMsg(errorStringBean);
+		} else if(propertiesSelect != null) {
+			propertiesSelect.setErrorMsg(errorStringBean);
+		}
 	}
 
 	public String getLabel() {
@@ -208,8 +261,12 @@ public class FormComponent implements Serializable {
 
 	public void setLabel(String label) {
 		this.label = label;
-		this.labelStringBean.setString(new Locale("en"), label);
-		this.properties.setLabel(labelStringBean);
+		labelStringBean.setString(new Locale("en"), label);
+		if(properties != null) {
+			properties.setLabel(labelStringBean);
+		} else if(propertiesSelect != null) {
+			propertiesSelect.setLabel(labelStringBean);
+		}
 	}
 
 	public Boolean getRequired() {
@@ -218,22 +275,15 @@ public class FormComponent implements Serializable {
 
 	public void setRequired(Boolean required) {
 		this.required = required;
-		this.properties.setRequired(required);
-	}
-
-	public IComponentProperties getProperties() {
-		return properties;
-	}
-
-	public void setProperties(IComponentProperties properties) {
-		this.properties = properties;
-	}
-
-	public boolean isSimple() {
-		if(properties instanceof IComponentPropertiesSelect) {
-			return false;
+		if(properties != null) {
+			properties.setRequired(required);
+		} else if(propertiesSelect != null) {
+			propertiesSelect.setRequired(required);
 		}
-		return true;
+	}
+
+	public PropertiesComponent getProperties() {
+		return properties;
 	}
 
 	public String getEmptyLabel() {
@@ -242,8 +292,10 @@ public class FormComponent implements Serializable {
 
 	public void setEmptyLabel(String emptyLabel) {
 		this.emptyLabel = emptyLabel;
-		this.emptyLabelBean.setString(new Locale("en"), emptyLabel);
-		((IComponentPropertiesSelect) this.properties).setEmptyElementLabel(emptyLabelBean);
+		emptyLabelBean.setString(new Locale("en"), emptyLabel);
+		if(propertiesSelect != null) {
+			propertiesSelect.setEmptyElementLabel(emptyLabelBean);
+		}
 	}
 
 	public LocalizedStringBean getEmptyLabelBean() {
@@ -260,7 +312,9 @@ public class FormComponent implements Serializable {
 
 	public void setExternalSrc(String externalSrc) {
 		this.externalSrc = externalSrc;
-		((IComponentPropertiesSelect) this.properties).setExternalDataSrc(externalSrc);
+		if(propertiesSelect != null) {
+			propertiesSelect.setExternalDataSrc(externalSrc);
+		}
 	}
 
 	public List<ItemBean> getItems() {
@@ -269,12 +323,7 @@ public class FormComponent implements Serializable {
 
 	public void setItems(List<ItemBean> items) {
 		this.items = items;
-		this.itemset.setItems(new Locale("en"), items);
-		try {
-			ActionManager.getFormManagerInstance().updateFormComponent(id);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		itemset.setItems(new Locale("en"), items);
 	}
 
 	public ILocalizedItemset getItemset() {
@@ -283,6 +332,34 @@ public class FormComponent implements Serializable {
 
 	public void setItemset(ILocalizedItemset itemset) {
 		this.itemset = itemset;
+	}
+
+	public Component getComponent() {
+		return component;
+	}
+
+	public void setComponent(Component component) {
+		this.component = component;
+	}
+
+	public void setProperties(PropertiesComponent properties) {
+		this.properties = properties;
+	}
+
+	public PropertiesSelect getPropertiesSelect() {
+		return propertiesSelect;
+	}
+
+	public void setPropertiesSelect(PropertiesSelect propertiesSelect) {
+		this.propertiesSelect = propertiesSelect;
+	}
+
+	public ComponentSelect getSelectComponent() {
+		return selectComponent;
+	}
+
+	public void setSelectComponent(ComponentSelect selectComponent) {
+		this.selectComponent = selectComponent;
 	}
 
 }

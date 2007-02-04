@@ -13,26 +13,14 @@ import com.idega.formbuilder.presentation.FBComponentBase;
 
 public class FBMenuPanel extends FBComponentBase {
 
-//	public static final String COMPONENT_FAMILY = "formbuilder";
 	public static final String COMPONENT_TYPE = "MenuPanel";
 	
-//	private static final String COMPONENT_EMPTY_BODY_FACET = "COMPONENT_EMPTY_BODY_FACET";
 	private static final String COMPONENT_HEADER_FACET = "COMPONENT_HEADER_FACET";
-//	private static final String COMPONENT_BODY_FACET = "COMPONENT_BODY_FACET";
 	
 	private String id;
 	private String styleClass;
 	private boolean expanded;
 	private String title;
-	/*private String reRender;
-	
-	public String getReRender() {
-		return reRender;
-	}
-
-	public void setReRender(String reRender) {
-		this.reRender = reRender;
-	}*/
 
 	public String getTitle() {
 		return title;
@@ -55,48 +43,42 @@ public class FBMenuPanel extends FBComponentBase {
 		this.setRendererType(null);
 	}
 	
-	/*public boolean getRendersChildren() {
-		return true;
-	}
-	
-	public String getFamily() {
-		return FBMenuPanel.COMPONENT_FAMILY;
-	}
-	
-	public String getRendererType() {
-		return null;
-	}*/
-	
 	protected void initializeComponent(FacesContext context) {		
 		Application application = context.getApplication();
-		
+
 		HtmlAjaxCommandLink header = new HtmlAjaxCommandLink();
-//		UIAjaxCommandLink header = (UIAjaxCommandLink) application.createComponent(UIAjaxCommandLink.COMPONENT_TYPE);
 		header.setId(getId() + "Title");
 		header.setOnclick("changeMenu(this.id)");
-//		header.setActionListener(application.createMethodBinding("#{workspace.processAction}", new Class[]{ActionEvent.class}));
-//		header.setAction(application.createMethodBinding("#{workspace.processAction}", new Class[]{ActionEvent.class}));
 		header.setAjaxSingle(true);
 		header.setReRender("workspaceform1:ajaxMenuPanel");
 		header.setValueBinding("value", this.getValueBinding("title"));
 		
+//		HtmlOutputText header = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+//		header.setId(id + "Title");
+//		header.setValueBinding("value", getValueBinding("title"));
+//		header.setStyleClass("menuPanelTitle");
+//		
+//		HtmlAjaxSupport headerS = new HtmlAjaxSupport();
+//		header.setId(id + "TitleS");
+//		headerS.setEvent("onclick");
+//		headerS.setAjaxSingle(false);
+//		headerS.setReRender("mainApplication");
+//		headerS.setActionListener(application.createMethodBinding("#{workspace.changeMenu}", new Class[]{ActionEvent.class}));
+//		header.getChildren().add(headerS);
+//		addChild(headerS, header);
+		
 		FBDivision headerPanel = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
 		headerPanel.setStyleClass("menuPanelTitle");
 		headerPanel.setId(getId() + "HP");
-		headerPanel.getChildren().add(header);
+//		headerPanel.getChildren().add(header);
+		addChild(header, headerPanel);
 		
-		
-//		FBDivision bodyPanel = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
-		
-		this.getFacets().put(COMPONENT_HEADER_FACET, headerPanel);
-//		this.getFacets().put(COMPONENT_EMPTY_BODY_FACET, emptyPanel);
-//		this.getFacets().put(COMPONENT_BODY_FACET, bodyPanel);
+		addFacet(COMPONENT_HEADER_FACET, headerPanel);
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
 		super.encodeBegin(context);
 		UIComponent header = getFacet(COMPONENT_HEADER_FACET);
-		((HtmlAjaxCommandLink) header.getChildren().get(0)).getReRender().toString();
 		if(header != null) {
 			renderChild(context, header);
 		}

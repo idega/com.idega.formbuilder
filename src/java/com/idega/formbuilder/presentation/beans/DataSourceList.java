@@ -6,14 +6,14 @@ import java.util.List;
 
 import javax.faces.model.SelectItem;
 
-import com.idega.formbuilder.business.form.beans.IComponentPropertiesSelect;
+import com.idega.formbuilder.business.form.PropertiesSelect;
 
 public class DataSourceList implements Serializable {
 	
 	private static final long serialVersionUID = -1462694112346788168L;
 	
-	public static String localDataSrc = new Integer(IComponentPropertiesSelect.LOCAL_DATA_SRC).toString();
-	public static String externalDataSrc = new Integer(IComponentPropertiesSelect.EXTERNAL_DATA_SRC).toString();
+	public static String localDataSrc = new Integer(PropertiesSelect.LOCAL_DATA_SRC).toString();
+	public static String externalDataSrc = new Integer(PropertiesSelect.EXTERNAL_DATA_SRC).toString();
 	
 	private List<SelectItem> sources = new ArrayList<SelectItem>();
 

@@ -2,17 +2,15 @@ package com.idega.formbuilder.presentation.beans;
 
 import java.io.Serializable;
 import java.util.Locale;
-import java.util.Set;
 
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.faces.event.ActionListener;
 
-import com.idega.formbuilder.business.form.manager.IFormManager;
+import com.idega.formbuilder.business.form.Document;
+import com.idega.formbuilder.business.form.DocumentManager;
 import com.idega.formbuilder.view.ActionManager;
 import com.idega.webface.WFUtil;
 
-public class Workspace implements Serializable, ActionListener {
+public class Workspace implements Serializable {
 	
 	private static final long serialVersionUID = -7539955904708793992L;
 	
@@ -42,14 +40,16 @@ public class Workspace implements Serializable, ActionListener {
 	}
 	
 	public void changeForm(ActionEvent ae) {
-		IFormManager formManagerInstance = ActionManager.getFormManagerInstance();
+		DocumentManager formManagerInstance = ActionManager.getDocumentManagerInstance();
 		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 		String formId = formDocument.getFormId();
 		if(formId != null && !formId.equals("") && !formId.equals("INACTIVE")) {
 			try {
-				formManagerInstance.openFormDocument(formId);
-				if(formManagerInstance.getFormComponentsIdsList().size() > 0) {
+				Document currentDocument = formManagerInstance.openForm(formId);
+				formDocument.setDocument(currentDocument);
+				String firstPage = currentDocument.getContainedPagesIdList().get(0);
+				if(currentDocument.getPage(firstPage).getContainedComponentsIdList().size() > 0) {
 					workspace.setDesignViewStatus("active");
 				} else {
 					workspace.setDesignViewStatus("empty");
@@ -57,11 +57,11 @@ public class Workspace implements Serializable, ActionListener {
 				workspace.setView("design");
 				workspace.setRenderedMenu(true);
 				workspace.setSelectedMenu("0");
-				String title = formManagerInstance.getFormTitle().getString(locale);
-				String submit = formManagerInstance.getSubmitButtonProperties().getLabel().getString(locale);
+				String title = formDocument.getDocument().getFormTitle().getString(locale);
+//				String submit = formManagerInstance.getSubmitButtonProperties().getLabel().getString(locale);
 				formDocument.clearFormDocumentInfo();
 				formDocument.setFormTitle(title);
-				formDocument.setSubmitLabel(submit);
+//				formDocument.setSubmitLabel(submit);
 				
 				FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
 				if(formComponent != null) {
@@ -81,7 +81,7 @@ public class Workspace implements Serializable, ActionListener {
 		}
 	}
 	
-	public void switchMenu() {
+	/*public void switchMenu() {
 		Set keys = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().keySet();
 		if(keys != null) {
 			if(keys.contains("workspaceform1:tab1Title")) {
@@ -92,10 +92,11 @@ public class Workspace implements Serializable, ActionListener {
 				setSelectedMenu("2");
 			}
 		}
-	}
+	}*/
 	
 	public void changeMenu(ActionEvent ae) {
 		String senderId = ae.getComponent().getId();
+//		String id = ae.getComponent().toString();
 		String menuPanelId = senderId.substring(0, 4);
 		if(menuPanelId.equals("tab1")) {
 			setSelectedMenu("0");
@@ -108,7 +109,7 @@ public class Workspace implements Serializable, ActionListener {
 		}
 	}
 	
-	public void processAction(ActionEvent ae) {
+	/*public void processAction(ActionEvent ae) {
 		String senderId = ae.getComponent().getId();
 		String menuPanelId = senderId.substring(0, 4);
 		if(menuPanelId.equals("tab1")) {
@@ -120,7 +121,7 @@ public class Workspace implements Serializable, ActionListener {
 		} else if(menuPanelId.equals("tab4")) {
 			setSelectedMenu("3");
 		}
-	}
+	}*/
 
 	public boolean isRenderedMenu() {
 		return renderedMenu;

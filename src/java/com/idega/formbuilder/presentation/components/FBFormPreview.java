@@ -2,16 +2,15 @@ package com.idega.formbuilder.presentation.components;
 
 import java.io.IOException;
 
-import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.w3c.dom.Document;
 
 import com.idega.block.formreader.business.FormReader;
-import com.idega.formbuilder.business.form.manager.IFormManager;
+import com.idega.formbuilder.business.form.Document;
+import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.formbuilder.view.ActionManager;
 
@@ -20,18 +19,13 @@ import com.idega.formbuilder.view.ActionManager;
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
  * @version 1.0
  */
-public class FBFormPreview extends UIComponentBase {
+public class FBFormPreview extends FBComponentBase {
 	
 	private static Log logger = LogFactory.getLog(FBFormPreview.class);
 	
-	public static final String COMPONENT_FAMILY = "formbuilder";
 	public static final String COMPONENT_TYPE = "FBFormPreview";
 	
 	private static final String container_tag = "div";
-	
-	public String getFamily() {
-		return COMPONENT_FAMILY;
-	}
 	
 	public void encodeBegin(FacesContext ctx) throws IOException {
 		ResponseWriter writer = ctx.getResponseWriter();
@@ -45,11 +39,11 @@ public class FBFormPreview extends UIComponentBase {
 		
 		try {
 			
-			IFormManager form_manager = ActionManager.getFormManagerInstance();
+			Document document = ActionManager.getDocumentManagerInstance().getCurrentDocument();
 			
-			if(form_manager != null) {
+			if(document != null) {
 				
-				Document x = form_manager.getFormXFormsDocument();
+				org.w3c.dom.Document x = document.getXformsDocument();
 				
 				FormReader form_reader = new FormReader();
 				

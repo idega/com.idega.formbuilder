@@ -23,7 +23,7 @@ public class PaletteRenderer extends Renderer {
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		FBPalette palette = (FBPalette) component;
-		palette.initializeComponent(context);
+//		palette.initializeComponent(context);
 		writer.startElement("DIV", palette);
 		writer.writeAttribute("id", palette.getId(), "id");
 		writer.writeAttribute("class", palette.getStyleClass(), "styleClass");

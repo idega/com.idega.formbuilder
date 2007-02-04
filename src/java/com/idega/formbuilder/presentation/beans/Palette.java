@@ -14,7 +14,7 @@ public class Palette implements Serializable {
 	private List<PaletteComponent> components = new ArrayList<PaletteComponent>();
 	
 	public Palette() throws Exception {
-		Iterator it = ActionManager.getFormManagerInstance().getAvailableFormComponentsTypesList().iterator();
+		Iterator it = ActionManager.getDocumentManagerInstance().getAvailableFormComponentsTypesList().iterator();
 		while(it.hasNext()) {
 			components.add(new PaletteComponent((String) it.next()));
 		}
