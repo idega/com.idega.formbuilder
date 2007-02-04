@@ -1,6 +1,7 @@
-package com.idega.formbuilder.business.form.beans;
+package com.idega.formbuilder.business.form;
 
-import com.idega.formbuilder.business.form.PropertiesComponent;
+import com.idega.formbuilder.business.form.beans.ILocalizedItemset;
+import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
@@ -8,7 +9,7 @@ import com.idega.formbuilder.business.form.PropertiesComponent;
  * 
  * <i><b>WARNING: </b></i>for changes to take effect, u need to use setter methods for every property change
  */
-public interface IComponentPropertiesSelect extends PropertiesComponent {
+public interface PropertiesSelect extends PropertiesComponent {
 	
 	public static final int LOCAL_DATA_SRC = 1;
 	public static final int EXTERNAL_DATA_SRC = 2;

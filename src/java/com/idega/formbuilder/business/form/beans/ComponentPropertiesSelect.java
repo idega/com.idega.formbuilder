@@ -1,11 +1,13 @@
 package com.idega.formbuilder.business.form.beans;
 
+import com.idega.formbuilder.business.form.PropertiesSelect;
+
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
  * @version 1.0
  * 
  */
-public class ComponentPropertiesSelect extends ComponentProperties implements IComponentPropertiesSelect {
+public class ComponentPropertiesSelect extends ComponentProperties implements PropertiesSelect {
 	
 	private LocalizedStringBean empty_element_label;
 	private String external_data_src;

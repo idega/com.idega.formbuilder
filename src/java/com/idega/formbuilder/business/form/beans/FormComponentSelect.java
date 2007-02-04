@@ -1,6 +1,7 @@
 package com.idega.formbuilder.business.form.beans;
 
-import com.idega.formbuilder.business.form.PropertiesComponent;
+import com.idega.formbuilder.business.form.ComponentSelect;
+import com.idega.formbuilder.business.form.PropertiesSelect;
 import com.idega.formbuilder.business.form.manager.CacheManager;
 import com.idega.formbuilder.business.form.manager.IXFormsManager;
 import com.idega.formbuilder.business.form.manager.XFormsManagerSelect;
@@ -10,7 +11,7 @@ import com.idega.formbuilder.business.form.manager.XFormsManagerSelect;
  * @version 1.0
  * 
  */
-public class FormComponentSelect extends FormComponent implements IComponentPropertiesSelectParent {
+public class FormComponentSelect extends FormComponent implements IComponentPropertiesSelectParent, ComponentSelect {
 	
 	protected IXFormsManager getXFormsManager() {
 		
@@ -25,7 +26,7 @@ public class FormComponentSelect extends FormComponent implements IComponentProp
 		return xforms_manager;
 	}
 	
-	public PropertiesComponent getProperties() {
+	public PropertiesSelect getProperties() {
 		
 		if(properties == null) {
 			ComponentPropertiesSelect properties = new ComponentPropertiesSelect();
@@ -33,7 +34,7 @@ public class FormComponentSelect extends FormComponent implements IComponentProp
 			this.properties = properties;
 		}
 		
-		return properties;
+		return (PropertiesSelect)properties;
 	}
 	
 	protected void setProperties() {

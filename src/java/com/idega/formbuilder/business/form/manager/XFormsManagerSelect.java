@@ -6,7 +6,7 @@ import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.idega.formbuilder.business.form.beans.IComponentPropertiesSelect;
+import com.idega.formbuilder.business.form.PropertiesSelect;
 import com.idega.formbuilder.business.form.beans.IComponentPropertiesSelectParent;
 import com.idega.formbuilder.business.form.beans.ILocalizedItemset;
 import com.idega.formbuilder.business.form.beans.LocalizedItemsetBean;
@@ -139,9 +139,9 @@ public class XFormsManagerSelect extends XFormsManager {
 		String data_src_instance_id = nodeset_att_value.substring("instance('".length(), nodeset_att_value.indexOf("')"));
 		
 		if(data_src_instance_id.endsWith("_eds"))
-			return IComponentPropertiesSelect.EXTERNAL_DATA_SRC;
+			return PropertiesSelect.EXTERNAL_DATA_SRC;
 		else if(data_src_instance_id.endsWith("_lds"))
-			return IComponentPropertiesSelect.LOCAL_DATA_SRC;
+			return PropertiesSelect.LOCAL_DATA_SRC;
 		
 		return null;
 	}
@@ -189,7 +189,7 @@ public class XFormsManagerSelect extends XFormsManager {
 	
 	public void updateDataSrcUsed() {
 		
-		IComponentPropertiesSelect properties = (IComponentPropertiesSelect)component.getProperties();
+		PropertiesSelect properties = (PropertiesSelect)component.getProperties();
 		Integer data_src_used = properties.getDataSrcUsed();
 		
 		Element component_element = xforms_component.getElement();
@@ -205,12 +205,12 @@ public class XFormsManagerSelect extends XFormsManager {
 			
 			String itemset_instance_str = null; 
 			
-			if(data_src_used == IComponentPropertiesSelect.EXTERNAL_DATA_SRC) {
+			if(data_src_used == PropertiesSelect.EXTERNAL_DATA_SRC) {
 				
-				itemset_instance_str = constructItemsetInstance(IComponentPropertiesSelect.EXTERNAL_DATA_SRC);
+				itemset_instance_str = constructItemsetInstance(PropertiesSelect.EXTERNAL_DATA_SRC);
 				
-			} else if(data_src_used == IComponentPropertiesSelect.LOCAL_DATA_SRC) {
-				itemset_instance_str = constructItemsetInstance(IComponentPropertiesSelect.LOCAL_DATA_SRC);
+			} else if(data_src_used == PropertiesSelect.LOCAL_DATA_SRC) {
+				itemset_instance_str = constructItemsetInstance(PropertiesSelect.LOCAL_DATA_SRC);
 			}
 			
 			if(itemset_instance_str == null)
@@ -236,7 +236,7 @@ public class XFormsManagerSelect extends XFormsManager {
 		buf.append("instance('")
 		.append(component.getId());
 		
-		if(data_source == IComponentPropertiesSelect.LOCAL_DATA_SRC)
+		if(data_source == PropertiesSelect.LOCAL_DATA_SRC)
 			buf.append("_lds");
 		else
 			buf.append("_eds");
@@ -248,7 +248,7 @@ public class XFormsManagerSelect extends XFormsManager {
 
 	public void updateEmptyElementLabel() {
 		
-		LocalizedStringBean loc_str = ((IComponentPropertiesSelect)component.getProperties()).getEmptyElementLabel();
+		LocalizedStringBean loc_str = ((PropertiesSelect)component.getProperties()).getEmptyElementLabel();
 		
 		Element item = DOMUtil.getChildElement(xforms_component.getElement(), FormManagerUtil.item_tag);
 		
@@ -271,7 +271,7 @@ public class XFormsManagerSelect extends XFormsManager {
 		if(external_instance == null)
 			return;
 		
-		String external_data_src = ((IComponentPropertiesSelect)component.getProperties()).getExternalDataSrc();
+		String external_data_src = ((PropertiesSelect)component.getProperties()).getExternalDataSrc();
 		
 		if(external_data_src == null)
 			return;
