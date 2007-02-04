@@ -79,7 +79,14 @@ public class SandboxFormManagerTest {
 //			Page page5 = fm.getCurrentDocument().addPage("fbcomp_4");
 			ButtonArea ba = page2.createButtonArea(null);
 			ba.addButton(new ConstButtonType(ConstButtonType.previous_page_button), null);
+			System.out.println("page2 id list: "+page2.getContainedComponentsIdList());
 			
+			String x0 = page2.getContainedComponentsIdList().get(0);
+			String x1 = page2.getContainedComponentsIdList().get(1);
+			page2.getContainedComponentsIdList().set(1, x0);
+			page2.getContainedComponentsIdList().set(0, x1);
+			page2.rearrangeComponents();
+			System.out.println("page2 id list again: "+page2.getContainedComponentsIdList());
 			
 			System.out.println("source code___________");
 			System.out.println(fm.getCurrentDocument().getFormSourceCode());

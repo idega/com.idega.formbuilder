@@ -15,4 +15,6 @@ public interface Container extends Component {
 	public abstract List<String> getContainedComponentsIdList();
 	
 	public abstract Component addComponent(String component_type, String component_after_this_id) throws NullPointerException;
+	
+	public abstract void rearrangeComponents();
 }
