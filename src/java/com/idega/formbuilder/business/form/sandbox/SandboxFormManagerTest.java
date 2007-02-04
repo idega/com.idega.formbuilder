@@ -18,7 +18,11 @@ import com.idega.formbuilder.business.form.PropertiesPage;
 public class SandboxFormManagerTest {
 
 	/**
-	 * @param args
+	 * @param args 
+	 * when launching:
+	 * VM argument
+	 * -Didegaweb.bundles.resource.dir=<your workspace dir>
+	 * should be provided
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
