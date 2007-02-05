@@ -73,11 +73,12 @@ public class FBFormComponent extends FBComponentBase {
 
 	public FBFormComponent() {
 		super();
-		this.setRendererType(null);
+		setRendererType(null);
 	}
 	
 	protected void initializeComponent(FacesContext context) {
-		Element element;
+//		Element element;
+		
 		Application application = context.getApplication();
 		getChildren().clear();
 		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
@@ -86,24 +87,24 @@ public class FBFormComponent extends FBComponentBase {
 			Locale current = new Locale(currentLocale);
 			if(current != null) {
 				try {
-					if(submit) {
-						/*Element element = formManagerInstance.getLocalizedSubmitComponent(current);
+					/*if(!submit) {
+						Element element = formManagerInstance.getLocalizedSubmitComponent(current);
 						Element button = (Element) element.getFirstChild();
 						button.setAttribute("disabled", "true");
-						this.setElement(element);*/
+						this.setElement(element);
 					} else {
-						element = page.getComponent(id).getHtmlRepresentation(current);
-						element.setAttribute("id", id + "_i");
-						setElement(element);
-						setOnclick("editProperties(this.id)");
-						HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
-						deleteButton.setId("db" + id);
-						deleteButton.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png");
-						deleteButton.setOnclick("deleteComponentJSF(this)");
-						deleteButton.setStyleClass("speedButton");
 						
-						addFacet(DELETE_BUTTON_FACET, deleteButton);
-					}
+					}*/
+					Element element = page.getComponent(id).getHtmlRepresentation(current);
+					element.setAttribute("id", id + "_i");
+					setElement(element);
+					setOnclick("editProperties(this.id)");
+					HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+					deleteButton.setId("db" + id);
+					deleteButton.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png");
+					deleteButton.setOnclick("deleteComponentJSF(this)");
+					deleteButton.setStyleClass("speedButton");
+					addFacet(DELETE_BUTTON_FACET, deleteButton);
 				} catch(Exception e) {
 					e.printStackTrace();
 				}

@@ -15,6 +15,9 @@ import javax.faces.event.ActionEvent;
 import org.ajax4jsf.ajax.UIAjaxSupport;
 import org.apache.myfaces.custom.htmlTag.HtmlTag;
 
+import com.idega.formbuilder.business.form.ButtonArea;
+import com.idega.formbuilder.business.form.Component;
+import com.idega.formbuilder.business.form.Container;
 import com.idega.formbuilder.business.form.Page;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormPage;
@@ -31,7 +34,8 @@ public class FBDesignView extends FBComponentBase {
 	public static final String DESIGN_VIEW_NOFORM_FACET = "noFormNoticeFacet";
 	public static final String DESIGN_VIEW_EMPTY_FACET = "emptyFormFacet";
 	public static final String DESIGN_VIEW_HEADER_FACET = "formHeaderFacet";
-	public static final String SUBMIT_BUTTON_FACET = "submit";
+	
+	public static final String BUTTON_AREA_FACET = "BUTTON_AREA_FACET";
 	
 	private String styleClass;
 	private String componentStyleClass;
@@ -48,27 +52,27 @@ public class FBDesignView extends FBComponentBase {
 
 	public FBDesignView() {
 		super();
-		this.setRendererType(null);
+		setRendererType(null);
 	}
 	
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
-		this.getChildren().clear();
+		getChildren().clear();
 		
 		FBDivision noFormNotice = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
 		noFormNotice.setId("noFormNotice");
 		
 		HtmlOutputText noFormNoticeHeader = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		noFormNoticeHeader.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['labels_noform_header']}"));
-		noFormNotice.getChildren().add(noFormNoticeHeader);
+		addChild(noFormNoticeHeader, noFormNotice);
 		
 		HtmlTag br = (HtmlTag) application.createComponent(HtmlTag.COMPONENT_TYPE);
 		br.setValue("br");
-		noFormNotice.getChildren().add(br);
+		addChild(br, noFormNotice);
 		
 		HtmlOutputText noFormNoticeBody = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		noFormNoticeBody.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['labels_noform_body']}"));
-		noFormNotice.getChildren().add(noFormNoticeBody);
+		addChild(noFormNoticeBody, noFormNotice);
 		
 		addFacet(DESIGN_VIEW_NOFORM_FACET, noFormNotice);
 		
@@ -79,7 +83,7 @@ public class FBDesignView extends FBComponentBase {
 		HtmlOutputText formHeadingHeader = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		formHeadingHeader.setValueBinding("value", application.createValueBinding("#{formDocument.formTitle}"));
 		formHeadingHeader.setId("formHeadingHeader");
-		formHeading.getChildren().add(formHeadingHeader);
+		addChild(formHeadingHeader, formHeading);
 		
 		UIAjaxSupport formHeadingS = (UIAjaxSupport) application.createComponent("org.ajax4jsf.ajax.Support");
 		formHeadingS.setId("formHeadingHeaderS");
@@ -87,11 +91,11 @@ public class FBDesignView extends FBComponentBase {
 		formHeadingS.setReRender("workspaceform1:ajaxMenuPanel");
 		formHeadingS.setActionListener(application.createMethodBinding("#{formDocument.loadFormProperties}", new Class[]{ActionEvent.class}));
 		formHeadingS.setAjaxSingle(true);
-		formHeadingHeader.getChildren().add(formHeadingS); 
+		addChild(formHeadingS, formHeadingHeader);
 		
 		HtmlTag hr = (HtmlTag) application.createComponent(HtmlTag.COMPONENT_TYPE);
 		hr.setValue("hr");
-		formHeading.getChildren().add(hr);
+		addChild(hr, formHeading);
 		
 		addFacet(DESIGN_VIEW_HEADER_FACET, formHeading);
 		
@@ -100,28 +104,22 @@ public class FBDesignView extends FBComponentBase {
 		
 		HtmlOutputText emptyFormHeader = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		emptyFormHeader.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['labels_empty_form_header']}"));
-		emptyForm.getChildren().add(emptyFormHeader);
+		addChild(emptyFormHeader, emptyForm);
 		
 		HtmlTag br2 = (HtmlTag) application.createComponent(HtmlTag.COMPONENT_TYPE);
 		br2.setValue("br");
-		emptyForm.getChildren().add(br2);
+		addChild(br2, emptyForm);
 		
 		HtmlOutputText emptyFormBody = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		emptyFormBody.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['labels_empty_form_body']}"));
-		emptyForm.getChildren().add(emptyFormBody);
+		addChild(emptyFormBody, emptyForm);
 		
 		addFacet(DESIGN_VIEW_EMPTY_FACET, emptyForm);
-		
-		
-		FBFormComponent submitButton = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
-		submitButton.setStyleClass(componentStyleClass);
-		submitButton.setSubmit(true);
-		addFacet(SUBMIT_BUTTON_FACET, submitButton);
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
 		Application application = context.getApplication();
-		this.getChildren().clear();
+		getChildren().clear();
 		
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeBegin(context);
@@ -129,9 +127,7 @@ public class FBDesignView extends FBComponentBase {
 		ValueBinding vb;
 		
 		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
-		
 		if(page != null) {
-			String temp = page.getId();
 			List<String> ids = page.getContainedComponentsIdList();
 			Iterator it = ids.iterator();
 			vb = getValueBinding("selectedComponent");
@@ -140,16 +136,25 @@ public class FBDesignView extends FBComponentBase {
 			}
 			while(it.hasNext()) {
 				String nextId = (String) it.next();
-				FBFormComponent formComponent = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
-				formComponent.setId(nextId);
-				formComponent.setStyleClass(getComponentStyleClass());
-				if(nextId.equals(selectedComponent)) {
-					formComponent.setSelected(true);
+				Component comp = page.getComponent(nextId);
+				if(comp instanceof Container) {
+					ButtonArea buttonArea = page.getButtonArea();
+					FBButtonArea area = (FBButtonArea) application.createComponent(FBButtonArea.COMPONENT_TYPE);
+					area.setId(buttonArea.getId());
+					area.setStyleClass(componentStyleClass);
+					addFacet(BUTTON_AREA_FACET, area);
 				} else {
-					formComponent.setSelected(false);
+					FBFormComponent formComponent = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
+					formComponent.setId(nextId);
+					formComponent.setStyleClass(getComponentStyleClass());
+					if(nextId.equals(selectedComponent)) {
+						formComponent.setSelected(true);
+					} else {
+						formComponent.setSelected(false);
+					}
+					formComponent.setSelectedStyleClass(getComponentStyleClass() + "Sel");
+				    add(formComponent);
 				}
-				formComponent.setSelectedStyleClass(getComponentStyleClass() + "Sel");
-			    add(formComponent);
 			}
 		}
 
@@ -192,16 +197,14 @@ public class FBDesignView extends FBComponentBase {
 	public void encodeEnd(FacesContext context) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeEnd(context);
-		
 		writer.endElement("DIV");
-//		if(status != null && !status.equals(DESIGN_VIEW_STATUS_NOFORM)) {
-//			FBFormComponent submit = (FBFormComponent) getFacet(SUBMIT_BUTTON_FACET);
-//			if (submit != null) {
-//				submit.setSubmit(true);
-//				submit.setId("submitB");
-//				renderChild(context, submit);
-//			}
-//		}
+		
+		if(!status.equals(DESIGN_VIEW_STATUS_NOFORM)) {
+			UIComponent buttonArea = getFacet(BUTTON_AREA_FACET);
+			if (buttonArea != null) {
+				renderChild(context, buttonArea);
+			}
+		}
 		
 		writer.endElement("DIV");
 		Object values[] = new Object[3];

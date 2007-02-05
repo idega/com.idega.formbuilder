@@ -55,11 +55,6 @@
 		<managed-bean-class>com.idega.formbuilder.presentation.beans.LocaleList</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
-	<managed-bean>
-		<managed-bean-name>formSourceCodeManager</managed-bean-name>
-		<managed-bean-class>com.idega.formbuilder.presentation.beans.FormSourceCodeManager</managed-bean-class>
-		<managed-bean-scope>session</managed-bean-scope>
-	</managed-bean>
 	<render-kit>
 	     <renderer>
 	          <component-family>webface</component-family>
@@ -79,13 +74,6 @@
 	          <component-family>formbuilder</component-family>
 	          <renderer-type>fb_container</renderer-type>
 	          <renderer-class>com.idega.formbuilder.presentation.renderkit.ContainerRenderer</renderer-class>
-	     </renderer>
-	</render-kit>
-	<render-kit>
-	     <renderer>
-	          <component-family>formbuilder</component-family>
-	          <renderer-type>fb_field</renderer-type>
-	          <renderer-class>com.idega.formbuilder.presentation.renderkit.FieldRenderer</renderer-class>
 	     </renderer>
 	</render-kit>
 	<render-kit>
@@ -137,6 +125,14 @@
 	          <renderer-class>com.idega.formbuilder.presentation.renderkit.SelectValuesListRenderer</renderer-class>
 	     </renderer>
 	</render-kit>
+	<component>
+		<component-type>Button</component-type>
+		<component-class>com.idega.formbuilder.presentation.components.FBButton</component-class>
+	</component>
+	<component>
+		<component-type>ButtonArea</component-type>
+		<component-class>com.idega.formbuilder.presentation.components.FBButtonArea</component-class>
+	</component>
 	<component>
 		<component-type>FormPage</component-type>
 		<component-class>com.idega.formbuilder.presentation.components.FBFormPage</component-class>
@@ -218,10 +214,6 @@
 		<component-class>com.idega.formbuilder.presentation.components.FBFormComponent</component-class>
 	</component>
 	<component>
-		<component-type>FBFormField</component-type>
-		<component-class>com.idega.formbuilder.presentation.components.FBFormField</component-class>
-	</component>
-	<component>
 		<component-type>FBToolbar</component-type>
 		<component-class>com.idega.formbuilder.presentation.components.FBToolbar</component-class>
 	</component>
@@ -238,15 +230,7 @@
 		<component-class>com.idega.formbuilder.presentation.components.FBToolbarButton</component-class>
 	</component>
 	<component>
-		<component-type>FBFormPreview</component-type>
+		<component-type>FormPreview</component-type>
 		<component-class>com.idega.formbuilder.presentation.components.FBFormPreview</component-class>
-	</component>
-	<component>
-		<component-type>FBFormSourceEdit</component-type>
-		<component-class>com.idega.formbuilder.presentation.components.FBFormSourceEdit</component-class>
-	</component>
-	<component>
-		<component-type>FormStepsViewer</component-type>
-		<component-class>com.idega.formbuilder.presentation.components.FBFormStepsViewer</component-class>
 	</component>
 </faces-config>

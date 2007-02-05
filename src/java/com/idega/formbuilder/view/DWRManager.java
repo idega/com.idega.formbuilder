@@ -136,10 +136,6 @@ public class DWRManager implements Serializable {
 	}
 	
 	public Element createNewForm(String name) throws Exception {
-		/*Locale current = (Locale) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE);
-		if(current == null) {
-			current = FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
-		}*/
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 		if(workspace != null) {
 			Locale locale = workspace.getLocale();
@@ -172,16 +168,7 @@ public class DWRManager implements Serializable {
 			if(formComponent != null) {
 				formComponent.clearFormComponentInfo();
 			}
-			
-			/*Element element = formManagerInstance.getLocalizedSubmitComponent(locale);
-			if(element != null) {
-				Element button = (Element) element.getFirstChild();
-				if(button != null) {
-					button.setAttribute("disabled", "true");
-					
-					
-				}
-			}*/
+			formManagerInstance.getCurrentDocument().save();
 			return null;
 		}
 		return null;

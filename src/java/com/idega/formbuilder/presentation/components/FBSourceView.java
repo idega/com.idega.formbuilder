@@ -6,7 +6,7 @@ import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
-import org.apache.myfaces.component.html.ext.HtmlCommandButton;
+import org.ajax4jsf.ajax.html.HtmlAjaxCommandButton;
 import org.apache.myfaces.component.html.ext.HtmlInputTextarea;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
@@ -36,20 +36,17 @@ public class FBSourceView extends FBComponentBase {
 		
 		HtmlInputTextarea textarea = new HtmlInputTextarea();
 		textarea.setRendered(true);
-		textarea.setValueBinding("value", application.createValueBinding("#{formSourceCodeManager.sourceCode}"));
+		textarea.setValueBinding("value", application.createValueBinding("#{formDocument.sourceCode}"));
 		textarea.setWrap("false");
 		textarea.setId("sourceTextarea");
 		
-		HtmlCommandButton srcSubmit = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
+		HtmlAjaxCommandButton srcSubmit = (HtmlAjaxCommandButton) application.createComponent(HtmlAjaxCommandButton.COMPONENT_TYPE);
 		srcSubmit.setId("saveSrcBtn");
 		srcSubmit.setOnclick("$('workspaceform1:saveCode').click();");
-//		srcSubmit.setAjaxSingle(false);
-//		srcSubmit.setReRender("mainApplication");
-//		srcSubmit.setActionListener(application.createMethodBinding("#{formSourceCodeManager.processAction}", new Class[]{ActionEvent.class}));
 		srcSubmit.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['change_source_code']}"));
 		
-		content.getChildren().add(textarea);
-		content.getChildren().add(srcSubmit);
+		addChild(textarea, content);
+		addChild(srcSubmit, content);
 		
 		addFacet(CONTENT_DIV_FACET, content);
 		

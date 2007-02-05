@@ -23,7 +23,7 @@ public class FBFormPreview extends FBComponentBase {
 	
 	private static Log logger = LogFactory.getLog(FBFormPreview.class);
 	
-	public static final String COMPONENT_TYPE = "FBFormPreview";
+	public static final String COMPONENT_TYPE = "FormPreview";
 	
 	private static final String container_tag = "div";
 	

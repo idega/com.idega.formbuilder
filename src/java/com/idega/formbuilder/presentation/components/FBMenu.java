@@ -24,8 +24,6 @@ public class FBMenu extends FBComponentBase {
 	
 	private static final String NO_MENU_FACET = "NO_MENU_FACET";
 	private static final String MENU_TOOLBAR_FACET = "MENU_TOOLBAR_FACET";
-//	private static final String NEW_BUTTON_FACET = "NEW_BUTTON_FACET";
-//	private static final String FORM_LIST_FACET = "FORM_LIST_FACET";
 	
 	private static final String MENU_TAB_1 = "tab1";
 	private static final String MENU_TAB_2 = "tab2";
@@ -149,11 +147,6 @@ public class FBMenu extends FBComponentBase {
 		noMenuLabel.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['no_menu_label']}"));
 		noMenuLabel.setStyleClass("noMenuLabel");
 		
-//		HtmlAjaxFunction changeMenuFunction = new HtmlAjaxFunction();
-		
-		
-//		addFacet(NEW_BUTTON_FACET, newFormButton);
-//		addFacet(FORM_LIST_FACET, selectFormMenu);
 		addFacet(MENU_TOOLBAR_FACET, menuHeaderPanel);
 		addFacet(NO_MENU_FACET, noMenuLabel);
 		
@@ -174,11 +167,6 @@ public class FBMenu extends FBComponentBase {
 		if(facet != null) {
 			renderChild(context, facet);
 		}
-		/*facet = getFacet(FORM_LIST_FACET);
-		if(facet != null) {
-			renderChild(context, facet);
-		}*/
-		
 		ValueBinding showVB = getValueBinding("show");
 		if(showVB != null) {
 			show = (Boolean) showVB.getValue(context);

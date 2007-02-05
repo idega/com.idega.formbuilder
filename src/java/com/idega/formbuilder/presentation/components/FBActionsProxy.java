@@ -113,7 +113,7 @@ public class FBActionsProxy extends FBComponentBase {
 		UIAjaxCommandButton saveCode = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
 		saveCode.setId("saveCode");
 		saveCode.setAjaxSingle(false);
-		saveCode.setActionListener(application.createMethodBinding("#{formSourceCodeManager.processAction}", new Class[]{ActionEvent.class}));
+		saveCode.setActionListener(application.createMethodBinding("#{formDocument.saveSourceCode}", new Class[]{ActionEvent.class}));
 		saveCode.setReRender("mainApplication");
 		
 		add(createForm);
