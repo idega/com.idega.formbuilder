@@ -129,7 +129,9 @@ public class FBDesignView extends FBComponentBase {
 		ValueBinding vb;
 		
 		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
+		
 		if(page != null) {
+			String temp = page.getId();
 			List<String> ids = page.getContainedComponentsIdList();
 			Iterator it = ids.iterator();
 			vb = getValueBinding("selectedComponent");

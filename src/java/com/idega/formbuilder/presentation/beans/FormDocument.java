@@ -116,7 +116,6 @@ public class FormDocument implements Serializable {
 	}
 	
 	public void createNewForm(String name) throws Exception {
-		String temp = name;
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 		if(workspace != null) {
 			Locale locale = workspace.getLocale();

@@ -10,7 +10,6 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.ActionEvent;
 
-import org.ajax4jsf.ajax.html.HtmlAjaxFunction;
 import org.ajax4jsf.ajax.html.HtmlAjaxSupport;
 import org.apache.myfaces.component.html.ext.HtmlCommandButton;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;

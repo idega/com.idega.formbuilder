@@ -160,6 +160,13 @@ public class DWRManager implements Serializable {
 				formDocument.clearFormDocumentInfo();
 				formDocument.setFormTitle(name);
 				formDocument.setFormId(id);
+				formDocument.setDocument(formManagerInstance.getCurrentDocument());
+			}
+			List<String> pagesIds = formManagerInstance.getCurrentDocument().getContainedPagesIdList();
+			Page page = formManagerInstance.getCurrentDocument().getPage(pagesIds.get(0));
+			FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+			if(formPage != null) {
+				formPage.setPage(page);
 			}
 			FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
 			if(formComponent != null) {
