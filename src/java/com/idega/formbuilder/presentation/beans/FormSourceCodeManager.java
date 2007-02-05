@@ -6,7 +6,6 @@ import javax.faces.event.ActionListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.idega.formbuilder.business.form.DocumentManager;
 import com.idega.formbuilder.view.ActionManager;
 
 /**
@@ -26,7 +25,7 @@ public class FormSourceCodeManager implements ActionListener {
 		
 		try {
 			
-			DocumentManager form_manager = ActionManager.getDocumentManagerInstance();
+			/*DocumentManager form_manager =*/ ActionManager.getDocumentManagerInstance();
 //			form_manager.setFormSourceCode(source_code);
 			
 		} catch (Exception e) {

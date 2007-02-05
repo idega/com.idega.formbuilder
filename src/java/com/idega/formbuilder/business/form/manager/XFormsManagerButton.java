@@ -1,6 +1,5 @@
 package com.idega.formbuilder.business.form.manager;
 
-import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 

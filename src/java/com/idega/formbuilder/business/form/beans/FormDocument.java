@@ -45,7 +45,7 @@ public class FormDocument implements IFormDocument {
 	private Element wizard_instance_element;
 	private boolean document_changed = true;
 	private Timer saveTimer;
-	private boolean saving = false;
+	protected boolean saving = false;
 	
 	public FormDocument() {
 		saveTimer = new Timer("FormDocument save");

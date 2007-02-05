@@ -37,8 +37,6 @@ public class FBDivision extends Div {
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
-		String temp = id;
-		String temp2 = styleClass;
 		super.encodeBegin(context);
 		ResponseWriter writer = context.getResponseWriter();
 		if(id != null && !id.equals("")) {

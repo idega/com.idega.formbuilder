@@ -53,7 +53,6 @@ public class FBPagesPanel extends FBComponentBase {
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {
-		String temp = componentStyleClass;
 		ResponseWriter writer = context.getResponseWriter();
 		writer.endElement("DIV");
 		super.encodeEnd(context);

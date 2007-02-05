@@ -165,7 +165,7 @@ public class FBViewPanel extends FBComponentBase {
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
-		boolean temp = ((Workspace)WFUtil.getBeanInstance("workspace")).isPagesPanelVisible();
+		((Workspace)WFUtil.getBeanInstance("workspace")).isPagesPanelVisible();
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeBegin(context);
 		
