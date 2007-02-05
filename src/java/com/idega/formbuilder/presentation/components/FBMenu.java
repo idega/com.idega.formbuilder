@@ -10,6 +10,7 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.ActionEvent;
 
+import org.ajax4jsf.ajax.html.HtmlAjaxFunction;
 import org.ajax4jsf.ajax.html.HtmlAjaxSupport;
 import org.apache.myfaces.component.html.ext.HtmlCommandButton;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
@@ -23,9 +24,9 @@ public class FBMenu extends FBComponentBase {
 	public static final String COMPONENT_TYPE = "Menu";
 	
 	private static final String NO_MENU_FACET = "NO_MENU_FACET";
-//	private static final String MENU_TOOLBAR_FACET = "MENU_TOOLBAR_FACET";
-	private static final String NEW_BUTTON_FACET = "NEW_BUTTON_FACET";
-	private static final String FORM_LIST_FACET = "FORM_LIST_FACET";
+	private static final String MENU_TOOLBAR_FACET = "MENU_TOOLBAR_FACET";
+//	private static final String NEW_BUTTON_FACET = "NEW_BUTTON_FACET";
+//	private static final String FORM_LIST_FACET = "FORM_LIST_FACET";
 	
 	private static final String MENU_TAB_1 = "tab1";
 	private static final String MENU_TAB_2 = "tab2";
@@ -55,15 +56,22 @@ public class FBMenu extends FBComponentBase {
 
 	public FBMenu() {
 		super();
-		this.setRendererType(null);
+		setRendererType(null);
 	}
 	
 	protected void initializeComponent(FacesContext context) {		
 		Application application = context.getApplication();
-		this.getChildren().clear();
+		getChildren().clear();
 		
-//		FBDivision menuHeaderPanel = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
-//		menuHeaderPanel.setId("menuPanelToolbar");
+		FBDivision menuHeaderPanel = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
+		menuHeaderPanel.setId("menuPanelToolbar");
+		
+//		HtmlAjaxFunction newFormFunction = new HtmlAjaxFunction();
+//		newFormFunction.setName("createNewForm2");
+//		newFormFunction.setReRender("mainApplication");
+////		newFormFunction.setData(application.createValueBinding("#{formDocument.selectedComponent}"));
+//		newFormFunction.setAction(application.createMethodBinding("#{formDocument.createNewForm}", new Class[]{String.class}));
+////		newFormFunction.setActionListener(application.createMethodBinding("#{formDocument.createNewForm}", new Class[]{ActionEvent.class}));
 		
 		HtmlCommandButton newFormButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
 		newFormButton.setId("newFormButton");
@@ -76,9 +84,7 @@ public class FBMenu extends FBComponentBase {
 		UISelectItems forms = (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
 		forms.setValueBinding("value", application.createValueBinding("#{formSelector.forms}"));
 		addChild(forms, selectFormMenu);
-//		selectFormMenu.getChildren().add(forms);
 		
-//		HtmlAjaxSupport selectSupport = (UIAjaxSupport) application.createComponent("org.ajax4jsf.ajax.Support");
 		HtmlAjaxSupport selectSupport = new HtmlAjaxSupport();
 		selectSupport.setEvent("onchange");
 		selectSupport.setOnsubmit("showLoadingMessage('Opening')");
@@ -86,11 +92,11 @@ public class FBMenu extends FBComponentBase {
 		selectSupport.setAjaxSingle(false);
 		selectSupport.setReRender("mainApplication");
 		selectSupport.setActionListener(application.createMethodBinding("#{workspace.changeForm}", new Class[]{ActionEvent.class}));
-//		selectFormMenu.getChildren().add(selectSupport);
 		addChild(selectSupport, selectFormMenu);
 		
-//		menuHeaderPanel.add(newFormButton);
-//		menuHeaderPanel.add(selectFormMenu);
+//		addChild(newFormFunction, menuHeaderPanel);
+		addChild(newFormButton, menuHeaderPanel);
+		addChild(selectFormMenu, menuHeaderPanel);
 		
 		
 		FBMenuPanel tab1 = (FBMenuPanel) application.createComponent(FBMenuPanel.COMPONENT_TYPE);
@@ -147,8 +153,9 @@ public class FBMenu extends FBComponentBase {
 //		HtmlAjaxFunction changeMenuFunction = new HtmlAjaxFunction();
 		
 		
-		addFacet(NEW_BUTTON_FACET, newFormButton);
-		addFacet(FORM_LIST_FACET, selectFormMenu);
+//		addFacet(NEW_BUTTON_FACET, newFormButton);
+//		addFacet(FORM_LIST_FACET, selectFormMenu);
+		addFacet(MENU_TOOLBAR_FACET, menuHeaderPanel);
 		addFacet(NO_MENU_FACET, noMenuLabel);
 		
 		addFacet(MENU_TAB_1, tab1);
@@ -164,14 +171,14 @@ public class FBMenu extends FBComponentBase {
 		writer.writeAttribute("id", getId(), "id");
 		writer.writeAttribute("style", "width: 300px;", null);
 		
-		UIComponent facet = getFacet(NEW_BUTTON_FACET);
+		UIComponent facet = getFacet(MENU_TOOLBAR_FACET);
 		if(facet != null) {
 			renderChild(context, facet);
 		}
-		facet = getFacet(FORM_LIST_FACET);
+		/*facet = getFacet(FORM_LIST_FACET);
 		if(facet != null) {
 			renderChild(context, facet);
-		}
+		}*/
 		
 		ValueBinding showVB = getValueBinding("show");
 		if(showVB != null) {

@@ -77,6 +77,7 @@ public class FBFormComponent extends FBComponentBase {
 	}
 	
 	protected void initializeComponent(FacesContext context) {
+		Element element;
 		Application application = context.getApplication();
 		getChildren().clear();
 		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
@@ -91,12 +92,12 @@ public class FBFormComponent extends FBComponentBase {
 						button.setAttribute("disabled", "true");
 						this.setElement(element);*/
 					} else {
-						Element element = page.getComponent(id).getHtmlRepresentation(current);
-						element.setAttribute("id", this.getId() + "_i");
-						this.setElement(element);
-						this.setOnclick("editProperties(this.id)");
+						element = page.getComponent(id).getHtmlRepresentation(current);
+						element.setAttribute("id", id + "_i");
+						setElement(element);
+						setOnclick("editProperties(this.id)");
 						HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
-						deleteButton.setId("db" + this.getId());
+						deleteButton.setId("db" + id);
 						deleteButton.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png");
 						deleteButton.setOnclick("deleteComponentJSF(this)");
 						deleteButton.setStyleClass("speedButton");
@@ -111,23 +112,21 @@ public class FBFormComponent extends FBComponentBase {
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
-		boolean selected;
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeBegin(context);
 		writer.startElement("DIV", this);
-		selected = isSelected();
-		if(!selected) {
-			writer.writeAttribute("class", getStyleClass(), "styleClass");
+		if(!isSelected()) {
+			writer.writeAttribute("class", styleClass, "styleClass");
 		} else {
-			writer.writeAttribute("class", getSelectedStyleClass(), "styleClass");
+			writer.writeAttribute("class", selectedStyleClass, "styleClass");
 		}
-		writer.writeAttribute("id", getId(), "id");
+		writer.writeAttribute("id", id, "id");
 		if(submit) {
 			writer.writeAttribute("onclick", "A4J.AJAX.Submit('_viewRoot','workspaceform1',event,{'parameters':{'workspaceform1:formHeadingHeaderS':'workspaceform1:formHeadingHeaderS'},'actionUrl':'/workspace/formbuilder/','single':true})", "onclick");
 		} else {
-			writer.writeAttribute("onclick", getOnclick(), "onclick");
+			writer.writeAttribute("onclick", onclick, "onclick");
 		}
-		DOMTransformer.renderNode(getElement(), this, writer);
+		DOMTransformer.renderNode(element, this, writer);
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {

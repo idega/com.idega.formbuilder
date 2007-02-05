@@ -114,7 +114,7 @@ public class FBDesignView extends FBComponentBase {
 		
 		
 		FBFormComponent submitButton = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
-		submitButton.setStyleClass(this.getComponentStyleClass());
+		submitButton.setStyleClass(componentStyleClass);
 		submitButton.setSubmit(true);
 		addFacet(SUBMIT_BUTTON_FACET, submitButton);
 	}
@@ -140,13 +140,13 @@ public class FBDesignView extends FBComponentBase {
 				String nextId = (String) it.next();
 				FBFormComponent formComponent = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
 				formComponent.setId(nextId);
-				formComponent.setStyleClass(this.getComponentStyleClass());
+				formComponent.setStyleClass(getComponentStyleClass());
 				if(nextId.equals(selectedComponent)) {
 					formComponent.setSelected(true);
 				} else {
 					formComponent.setSelected(false);
 				}
-				formComponent.setSelectedStyleClass(this.getComponentStyleClass() + "Sel");
+				formComponent.setSelectedStyleClass(getComponentStyleClass() + "Sel");
 			    add(formComponent);
 			}
 		}
@@ -192,14 +192,14 @@ public class FBDesignView extends FBComponentBase {
 		super.encodeEnd(context);
 		
 		writer.endElement("DIV");
-		if(status != null && !status.equals(DESIGN_VIEW_STATUS_NOFORM)) {
-			FBFormComponent submit = (FBFormComponent) getFacet(SUBMIT_BUTTON_FACET);
-			if (submit != null) {
-				submit.setSubmit(true);
-				submit.setId("submitB");
-				renderChild(context, submit);
-			}
-		}
+//		if(status != null && !status.equals(DESIGN_VIEW_STATUS_NOFORM)) {
+//			FBFormComponent submit = (FBFormComponent) getFacet(SUBMIT_BUTTON_FACET);
+//			if (submit != null) {
+//				submit.setSubmit(true);
+//				submit.setId("submitB");
+//				renderChild(context, submit);
+//			}
+//		}
 		
 		writer.endElement("DIV");
 		Object values[] = new Object[3];
@@ -257,8 +257,6 @@ public class FBDesignView extends FBComponentBase {
 				+ "}\n"
 				+ "}\n"
 				+ "if(currentElement != null) {\n"
-//				+ "var length = $(\"" + values[0] + "\").childNodes.length;\n"
-//				+ "var submit = $(\"" + values[0] + "\").childNodes[length-1];\n"
 				+ "$(\"" + values[2] + "\").appendChild(currentElement);\n"
 				+ "}\n"
 				+ "currentElement = null;\n"

@@ -32,9 +32,9 @@ public class FBWorkspace extends FBComponentBase {
 	
 	protected void initializeComponent(FacesContext context) {		
 		Application application = context.getApplication();
-		this.getChildren().clear();
+		getChildren().clear();
 		
-		ValueBinding vb = this.getValueBinding("view");
+		ValueBinding vb = getValueBinding("view");
 		if(vb != null) {
 			view = (String) vb.getValue(context);
 		}
@@ -81,7 +81,7 @@ public class FBWorkspace extends FBComponentBase {
 	}
 	
 	public void encodeChildren(FacesContext context) throws IOException {
-		if (!this.isRendered()) {
+		if (!isRendered()) {
 			return;
 		}
 		UIComponent menu = getFacet(WORKSPACE_MENU_FACET);
