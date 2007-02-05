@@ -21,7 +21,6 @@
 												/dwr/interface/dwrmanager.js,
 												/dwr/engine.js">
 			<h:form id="workspaceform1">
-				<a4j:log level="ALL" popup="false" width="400" height="200" hotkey="Q" rendered="false" />
 				<t:div id="mainApplication" forceId="true">
 					<fb:workspace id="mainWorkspace" view="#{workspace.view}"/>
 				</t:div>
