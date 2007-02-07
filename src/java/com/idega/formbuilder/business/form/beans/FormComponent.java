@@ -30,7 +30,6 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 	protected PropertiesComponent properties;
 	protected boolean created = false;
 	protected boolean load = false;
-	protected boolean first = false;
 	
 	protected IXFormsManager xforms_manager;
 	protected HtmlManager html_manager;
@@ -239,8 +238,5 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 	}
 	public IFormComponent getComponentAfterThis() {
 		return component_after_me;
-	}
-	public void setFirst(boolean first) {
-		this.first = first;
 	}
 }

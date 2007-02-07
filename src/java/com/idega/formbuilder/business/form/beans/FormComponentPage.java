@@ -44,13 +44,12 @@ public class FormComponentPage extends FormComponentContainer implements Page, I
 		return xforms_manager;
 	}
 	
-	public void setFirst(boolean first) {
-		super.setFirst(first);
-		((XFormsManagerPage)getXFormsManager()).changePageRelevance(first);
-	}
-	
 	@Override
 	public void remove() {
+		
+		if(getType().equals(FormComponentFactory.page_type_thx))
+			throw new IllegalArgumentException("No thx. I'm mr. thx page.");
+		
 		super.remove();
 		parent.componentsOrderChanged();
 	}
@@ -86,5 +85,13 @@ public class FormComponentPage extends FormComponentContainer implements Page, I
 	}
 	public IFormComponentPage getNextPage() {
 		return next_page;
+	}
+	public void announceLastPage(String last_page_id) {
+		IFormComponentButtonArea button_area = (IFormComponentButtonArea)getButtonArea();
+		
+		if(button_area == null)
+			return;
+		
+		button_area.announceLastPage(last_page_id);
 	}
 }

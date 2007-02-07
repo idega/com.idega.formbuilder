@@ -57,4 +57,8 @@ public interface Document extends Container {
 	public abstract void save();
 	
 	public abstract org.w3c.dom.Document getXformsDocument();
+	
+	public abstract Page getConfirmationPage();
+	
+	public abstract Page getThxPage();
 }

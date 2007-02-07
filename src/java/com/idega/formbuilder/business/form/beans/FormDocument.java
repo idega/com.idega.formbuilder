@@ -20,7 +20,6 @@ import com.idega.data.StringInputStream;
 import com.idega.formbuilder.business.form.manager.CacheManager;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 import com.idega.formbuilder.business.form.manager.util.InitializationException;
-import com.idega.idegaweb.DefaultIWBundle;
 import com.idega.idegaweb.IWApplicationContext;
 import com.idega.idegaweb.IWMainApplication;
 
@@ -42,10 +41,9 @@ public class FormDocument implements IFormDocument {
 	private Map<String, IFormComponent> form_components;
 	private Document components_xml;
 	private int last_component_id = 0;
-	private Element wizard_instance_element;
 	private boolean document_changed = true;
 	private Timer saveTimer;
-	protected boolean saving = false;
+	private boolean saving = false;
 	
 	public FormDocument() {
 		saveTimer = new Timer("FormDocument save");
@@ -110,7 +108,7 @@ public class FormDocument implements IFormDocument {
 	
 	public void persist() {
 		// if document is already scheduled for saving don't do anything
-		if (!saving && System.getProperty(DefaultIWBundle.SYSTEM_BUNDLES_RESOURCE_DIR) == null) {
+		if (!saving && false) {
 			saving = true;
 			TimerTask saveTask = new FormSaveTask();
 			// will save current state of document after 5 seconds
@@ -231,21 +229,6 @@ public class FormDocument implements IFormDocument {
 			default_document_locale = FormManagerUtil.getDefaultFormLocale(form_xforms);
 		
 		return default_document_locale;
-	}
-	
-	public Element getWizardElement() {
-		
-		if(wizard_instance_element == null)
-			wizard_instance_element = FormManagerUtil.getElementByIdFromDocument(form_xforms, FormManagerUtil.head_tag, FormManagerUtil.wizard_id_att_val);
-		
-//		if wizard_instance_element not found - leave creation of it to xformsmanager,
-		
-		return wizard_instance_element;
-	}
-	
-	public void setWizardElement(Element wizard_element) {
-		
-		wizard_instance_element = wizard_element;
 	}
 	
 	FormsService getFormsService() {

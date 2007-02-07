@@ -3,7 +3,6 @@ package com.idega.formbuilder.business.form.beans;
 import java.util.Locale;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 public interface IFormDocument {
 
@@ -34,10 +33,6 @@ public interface IFormDocument {
 	public abstract void setComponentsXml(Document xml);
 	
 	public abstract Locale getDefaultLocale();
-	
-	public abstract Element getWizardElement();
-	
-	public abstract void setWizardElement(Element wizard_element);
 	
 	public abstract void tellComponentId(String component_id);
 	

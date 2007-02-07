@@ -96,7 +96,6 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
         gen.setOutput(temp_xml_doc);
     	gen.generate();
     	
-    	
     	/*
     	 * generate final components xml
     	 */
@@ -110,51 +109,6 @@ public class FormComponentsGenerator implements Singleton, IComponentsGenerator 
     	
     	return temp_xml_doc;
 	}
-/*	
-	public Document generateFormHtmlDocument() throws NullPointerException, ParserConfigurationException, XFormsException, Exception {
-		
-		if(!isInitiated()) {
-			
-			String err_msg = new StringBuffer("Either is not provided:")
-			.append("\nstylesheet uri: ")
-			.append(final_xml_stylesheet_uri)
-			.append("\nxforms doc: ")
-			.append(xforms_doc)
-			.toString();
-			
-			throw new NullPointerException(err_msg);
-		}
-		
-		
-//      generate temporal xml document from components xforms document
-         
-        FormReader form_reader = getFormReader();
-        form_reader.setBaseFormURI(base_form_uri);
-        
-        FormManagerUtil.clearLocalizedMessagesFromDocument(xforms_doc);
-    	copyLocalizationKeysToElements(xforms_doc);
-    	
-    	form_reader.setFormDocument(xforms_doc);
-    	
-    	DocumentBuilder document_builder = FormManagerUtil.getDocumentBuilder();
-        Document temp_xml_doc = document_builder.newDocument();
-
-        form_reader.setOutput(temp_xml_doc);
-        
-        form_reader.generate();
-        
-//    	generate final components xml
-    	UIGenerator gen = getFinalXmlComponentsGenerator();
-    	gen.setInput(temp_xml_doc);
-    	
-    	temp_xml_doc = document_builder.newDocument();
-    	gen.setOutput(temp_xml_doc);
-    	
-    	gen.generate();
-    	
-    	return temp_xml_doc;
-	}
-*/
 	
 	private static void copyLocalizationKeysToElements(Document managed_doc) {
 		

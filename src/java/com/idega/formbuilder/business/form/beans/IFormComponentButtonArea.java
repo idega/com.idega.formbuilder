@@ -16,4 +16,6 @@ public interface IFormComponentButtonArea extends IFormComponentContainer {
 	public abstract IFormComponentPage getNextPage();
 	
 	public abstract IFormComponentPage getCurrentPage();
+	
+	public abstract void announceLastPage(String last_page_id);
 }

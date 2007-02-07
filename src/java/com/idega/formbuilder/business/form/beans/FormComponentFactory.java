@@ -23,11 +23,13 @@ public class FormComponentFactory implements Singleton {
 	private static final String type_simple = "type_simple";
 	private static final String type_select = "type_select";
 	private static final String type_non_display = "type_non_display";
-	public static final String page_type_tag = FormManagerUtil.group_tag;
+	public static final String page_type_tag = FormManagerUtil.case_tag;
 	public static final String page_type = "fbcomp_page";
 	public static final String button_type = FormManagerUtil.trigger_tag;
 	public static final String button_area_type = "button_area";
 	public static final String fbcomp_button_area = "fbcomp_button_area";
+	public static final String page_type_confirmation = "confirmation_page";
+	public static final String page_type_thx = "thx_page";
 	
 	private FormComponentFactory() { 
 		

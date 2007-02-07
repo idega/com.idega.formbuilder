@@ -52,8 +52,6 @@ public class XFormsManager implements IXFormsManager {
 		
 		if(xforms_component != null) {
 			this.xforms_component = (XFormsComponentDataBean)xforms_component.clone();
-
-			DOMUtil.prettyPrintDOM(this.xforms_component.getElement());
 			return;
 		}
 		
@@ -73,7 +71,6 @@ public class XFormsManager implements IXFormsManager {
 
 			if(xforms_component != null) {
 				this.xforms_component = (XFormsComponentDataBean)xforms_component.clone();
-				DOMUtil.prettyPrintDOM(this.xforms_component.getElement());
 				return;
 			}
 			
@@ -109,7 +106,7 @@ public class XFormsManager implements IXFormsManager {
 			String component_id = component.getId();
 			Document xforms_doc = component_parent.getXformsDocument();
 			
-			String bind_id = component_id+FormManagerUtil.bind_att;
+			String bind_id = FormManagerUtil.bind_att+'.'+component_id;
 			xforms_component.getElement().setAttribute(FormManagerUtil.bind_att, bind_id);
 			
 			Element element = (Element)xforms_doc.importNode(xforms_component.getBind(), true);
@@ -177,9 +174,6 @@ public class XFormsManager implements IXFormsManager {
 	}
 	
 	public void addComponentToDocument() {
-		
-		if(component_parent == null)
-			throw new NullPointerException("Parent form document not provided");
 		
 		Document xforms_doc = component_parent.getXformsDocument();
 		Element component_element = xforms_component.getElement();
@@ -387,9 +381,8 @@ public class XFormsManager implements IXFormsManager {
 			throw new NullPointerException("Parent form document not provided");
 		
 		Document xforms_doc = component_parent.getXformsDocument();
-		String component_id = component.getId();
 		
-		Element element_to_move = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_tag, component_id);
+		Element element_to_move = xforms_component.getElement();
 		Element element_to_insert_before = null;
 
 		if(before_component_id != null) {
@@ -408,9 +401,6 @@ public class XFormsManager implements IXFormsManager {
 	
 	public void removeComponentFromXFormsDocument() {
 		
-		if(component_parent == null)
-			throw new NullPointerException("Parent form document not provided");
-
 		removeComponentLocalization();
 		removeComponentBindings();
 		

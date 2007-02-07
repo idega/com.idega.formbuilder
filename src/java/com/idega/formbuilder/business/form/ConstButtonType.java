@@ -7,7 +7,7 @@ public final class ConstButtonType {
 
 	public static final String previous_page_button = "fbcomp_button_previous";
 	public static final String next_page_button = "fbcomp_button_next";
-//	public static final String reset_form_button = "fbcomp_button_reset";
+	public static final String reset_form_button = "fbcomp_button_reset";
 	public static final String submit_form_button = "fbcomp_button_submit";
 	private static List<String> button_types = new ArrayList<String>();
 	

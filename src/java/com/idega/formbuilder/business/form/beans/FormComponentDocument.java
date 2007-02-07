@@ -1,5 +1,6 @@
 package com.idega.formbuilder.business.form.beans;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -22,6 +23,10 @@ import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
 public class FormComponentDocument extends FormComponentContainer implements com.idega.formbuilder.business.form.Document {
 	
 	protected IFormDocument document;
+	protected String confirmation_page_id;
+	protected String thx_page_id;
+	
+	protected List<String> registered_for_last_page_id_pages;
 	
 	public void setContainerElement(Element container_element) {
 		((XFormsManagerDocument)getXFormsManager()).setComponentsContainer(container_element);
@@ -38,7 +43,7 @@ public class FormComponentDocument extends FormComponentContainer implements com
 			xforms_manager.setFormComponent(this);
 		}
 		
-		return xforms_manager;
+		return (XFormsManagerDocument)xforms_manager;
 	}
 	
 	@Override
@@ -68,14 +73,6 @@ public class FormComponentDocument extends FormComponentContainer implements com
 	@Override
 	public Locale getDefaultLocale() {
 		return document.getDefaultLocale();
-	}
-	@Override
-	public Element getWizardElement() {
-		return document.getWizardElement();
-	}
-	@Override
-	public void setWizardElement(Element wizard_element) {
-		document.setWizardElement(wizard_element);
 	}
 	public void setFormDocument(IFormDocument document) {
 		this.document = document;
@@ -129,10 +126,12 @@ public class FormComponentDocument extends FormComponentContainer implements com
 	}
 	@Override
 	public void componentsOrderChanged() {
-//		TODO: look at this and rearrangeComponents methods, they look similar
+
 		Map<String, IFormComponent> contained_components = getContainedComponents();
 		int components_amount = getContainedComponents().size();
 		int i = 0;
+		confirmation_page_id = null;
+		thx_page_id = null;
 		
 		for (String comp_id : getContainedComponentsIdList()) {
 			
@@ -144,10 +143,23 @@ public class FormComponentDocument extends FormComponentContainer implements com
 					i == 0 ? null : (IFormComponentPage)contained_components.get(getContainedComponentsIdList().get(i - 1)),
 					(i+1) == components_amount ? null : (IFormComponentPage)contained_components.get(getContainedComponentsIdList().get(i + 1))
 			);
+			
 			page.pagesSiblingsChanged();
-			page.setFirst(i++ == 0);
+			
+			if(page.getType().equals(FormComponentFactory.page_type_confirmation))
+				confirmation_page_id = page.getId();
+			else if(page.getType().equals(FormComponentFactory.page_type_thx))
+				thx_page_id = page.getId();
+			i++;
 		}
+		announceRegisteredForLastPage();
 	}
+	protected void announceRegisteredForLastPage() {
+		
+		for (String registered_id : getRegisteredForLastPageIdPages())
+			((IFormComponentPage)getComponent(registered_id)).announceLastPage(thx_page_id);
+	}
+	
 	@Override
 	public void rearrangeComponents() {
 		
@@ -178,7 +190,6 @@ public class FormComponentDocument extends FormComponentContainer implements com
 						(i+1) == components_amount ? null : (IFormComponentPage)contained_components.get(getContainedComponentsIdList().get(i + 1))
 				);
 				page.pagesSiblingsChanged();
-				page.setFirst(i == 0);
 				
 			} else
 				throw new NullPointerException("Component, which id was provided in list was not found. Provided: "+component_id);
@@ -193,5 +204,29 @@ public class FormComponentDocument extends FormComponentContainer implements com
 	
 	public void save() {
 		document.persist();
+	}
+	public Page getConfirmationPage() {
+	
+		return confirmation_page_id == null ? null : (Page)getContainedComponent(confirmation_page_id);
+	}
+	public Page getThxPage() {
+		
+		return thx_page_id == null ? null : (Page)getContainedComponent(thx_page_id);
+	}
+	
+	protected List<String> getRegisteredForLastPageIdPages() {
+		
+		if(registered_for_last_page_id_pages == null)
+			registered_for_last_page_id_pages = new ArrayList<String>();
+		
+		return registered_for_last_page_id_pages;
+	}
+	public void registerForLastPage(String register_page_id) {
+		
+		if(!getContainedComponents().containsKey(register_page_id))
+			throw new IllegalArgumentException("I don't contain provided page id: "+register_page_id);
+		
+		if(!getRegisteredForLastPageIdPages().contains(register_page_id))
+			getRegisteredForLastPageIdPages().add(register_page_id);
 	}
 }

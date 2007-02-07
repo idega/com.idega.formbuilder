@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Locale;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import com.idega.formbuilder.business.form.Component;
+import com.idega.formbuilder.business.form.Page;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
@@ -31,10 +31,6 @@ public interface IFormComponentContainer extends IFormComponent {
 	
 	public abstract Locale getDefaultLocale();
 	
-	public abstract Element getWizardElement();
-	
-	public abstract void setWizardElement(Element wizard_element);
-	
 	public abstract Component addComponent(String component_type, String component_after_this_id) throws NullPointerException;
 
 	public abstract Component getComponent(String component_id);
@@ -50,4 +46,10 @@ public interface IFormComponentContainer extends IFormComponent {
 	public abstract void componentsOrderChanged();
 	
 	public abstract void unregisterComponent(String component_id);
+	
+	public abstract Page getConfirmationPage();
+	
+	public abstract Page getThxPage();
+	
+	public abstract void registerForLastPage(String register_page_id);
 }

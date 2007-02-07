@@ -36,11 +36,4 @@ public interface IFormComponent {
 	public abstract void setParent(IFormComponentContainer parent);
 	
 	public abstract IXFormsManager getComponentXFormsManager();
-	
-	/**
-	 * method for doing some additional tasks if component is first in container
-	 * shouldn't do rendering, as it's done elsewhere
-	 * @param first
-	 */
-	public abstract void setFirst(boolean first);
 }

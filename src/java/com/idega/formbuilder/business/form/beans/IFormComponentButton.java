@@ -7,5 +7,7 @@ package com.idega.formbuilder.business.form.beans;
  */
 public interface IFormComponentButton extends IFormComponent {
 
-	public abstract void setSiblingsAndParentPages(IFormComponentPage previous, IFormComponentPage next, IFormComponentPage current);
+	public abstract void setSiblingsAndParentPages(IFormComponentPage previous, IFormComponentPage next);
+	
+	public abstract void setLastPageId(String last_page_id);
 }

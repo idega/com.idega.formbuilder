@@ -29,13 +29,15 @@ public class FormComponentButton extends FormComponent implements Button, IFormC
 	public void render() {
 		super.render();
 		IFormComponentButtonArea my_button_area = (IFormComponentButtonArea)parent;
-		setSiblingsAndParentPages(
-				my_button_area.getPreviousPage(), my_button_area.getNextPage(), my_button_area.getCurrentPage()
-		);
+		setSiblingsAndParentPages(my_button_area.getPreviousPage(), my_button_area.getNextPage());
 		((IFormComponentButtonArea)parent).setButtonMapping(getType(), getId());
 	}
 	
-	public void setSiblingsAndParentPages(IFormComponentPage previous, IFormComponentPage next, IFormComponentPage current) {
-		((XFormsManagerButton)getXFormsManager()).renewButtonRelevantPages(previous, next, current);
+	public void setSiblingsAndParentPages(IFormComponentPage previous, IFormComponentPage next) {
+		((XFormsManagerButton)getXFormsManager()).renewButtonPageContextPages(previous, next);
+	}
+	
+	public void setLastPageId(String last_page_id) {
+		((XFormsManagerButton)getXFormsManager()).setLastPageToSubmitButton(last_page_id);
 	}
 }

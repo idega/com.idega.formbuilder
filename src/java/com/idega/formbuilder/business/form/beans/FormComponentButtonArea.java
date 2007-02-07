@@ -64,12 +64,12 @@ public class FormComponentButtonArea extends FormComponentContainer implements B
 		IFormComponentButton button = (IFormComponentButton)getButton(new ConstButtonType(ConstButtonType.previous_page_button));
 		
 		if(button != null)
-			button.setSiblingsAndParentPages(previous, next, (IFormComponentPage)parent);
+			button.setSiblingsAndParentPages(previous, next);
 		
 		button = (IFormComponentButton)getButton(new ConstButtonType(ConstButtonType.next_page_button));
 		
 		if(button != null)
-			button.setSiblingsAndParentPages(previous, next, (IFormComponentPage)parent);
+			button.setSiblingsAndParentPages(previous, next);
 	}
 	public IFormComponentPage getPreviousPage() {
 		return ((IFormComponentPage)parent).getPreviousPage();
@@ -79,5 +79,15 @@ public class FormComponentButtonArea extends FormComponentContainer implements B
 	}
 	public IFormComponentPage getCurrentPage() {
 		return (IFormComponentPage)parent;
+	}
+	
+	public void announceLastPage(String last_page_id) {
+		
+		IFormComponentButton submit_button = (IFormComponentButton)getButton(new ConstButtonType(ConstButtonType.submit_form_button));
+		
+		if(submit_button == null)
+			return;
+		
+		submit_button.setLastPageId(last_page_id);
 	}
 }

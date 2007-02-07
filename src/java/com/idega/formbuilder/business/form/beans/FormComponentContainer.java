@@ -11,6 +11,7 @@ import org.w3c.dom.Element;
 
 import com.idega.formbuilder.business.form.Component;
 import com.idega.formbuilder.business.form.Container;
+import com.idega.formbuilder.business.form.Page;
 import com.idega.formbuilder.business.form.PropertiesComponent;
 import com.idega.formbuilder.business.form.manager.CacheManager;
 import com.idega.formbuilder.business.form.manager.IXFormsManager;
@@ -105,12 +106,6 @@ public class FormComponentContainer extends FormComponent implements IFormCompon
 	public Locale getDefaultLocale() {
 		return parent.getDefaultLocale();
 	}
-	public Element getWizardElement() {
-		return parent.getWizardElement();
-	}
-	public void setWizardElement(Element wizard_element) {
-		parent.setWizardElement(wizard_element);
-	}
 	public Component addComponent(String component_type, String component_after_this_id) throws NullPointerException {
 		
 		IFormComponent component = FormComponentFactory.getInstance().getFormComponentByType(component_type);
@@ -175,27 +170,12 @@ public class FormComponentContainer extends FormComponent implements IFormCompon
 				} else
 					comp.setComponentAfterThisRerender(null);
 				
-				comp.setFirst(i == 0);
-				
 			} else
 				throw new NullPointerException("Component, which id was provided in list was not found. Provided: "+component_id);
 		}
 	}
 	
-	public void componentsOrderChanged() {
-		
-		Map<String, IFormComponent> contained_components = getContainedComponents();
-		int i = 0;
-		
-		for (String comp_id : getContainedComponentsIdList()) {
-			
-			IFormComponent comp = contained_components.get(comp_id);
-			if(comp == null)
-				throw new NullPointerException("Component, which id was provided in list was not found. Provided: "+component_id);
-			
-			comp.setFirst(i++ == 0);
-		}
-	}
+	public void componentsOrderChanged() { 	}
 	
 	protected void changeBindNames() { }
 	
@@ -222,5 +202,18 @@ public class FormComponentContainer extends FormComponent implements IFormCompon
 		
 		getContainedComponents().remove(component_id);
 		getContainedComponentsIdList().remove(component_id);
+	}
+	
+	public Page getConfirmationPage() {
+		
+		return parent.getConfirmationPage();
+	}
+	public Page getThxPage() {
+		
+		return parent.getThxPage();
+	}
+	
+	public void registerForLastPage(String register_page_id) {
+		parent.registerForLastPage(register_page_id);
 	}
 }

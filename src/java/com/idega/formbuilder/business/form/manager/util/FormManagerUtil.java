@@ -63,7 +63,9 @@ public class FormManagerUtil {
 	public static final String form_id = "form_id";
 	public static final String title_tag = "title";
 	public static final String nodeset_att = "nodeset";
+	public static final String switch_tag = "xf:switch";
 	public static final String group_tag = "xf:group";
+	public static final String case_tag = "xf:case";
 	public static final String submit_tag = "xf:submit";
 	public static final String itemset_tag = "xf:itemset";
 	public static final String item_tag = "xf:item";
@@ -75,24 +77,14 @@ public class FormManagerUtil {
 	public static final String default_language_tag = "default_language";
 	public static final String form_id_tag = "form_id";
 	public static final String submission_tag = "xf:submission";
-	public static final String action_att = "action";
-	public static final String action_tag = "xf:action";
-	public static final String setvalue_tag = "xf:setvalue";
-	public static final String wizard_id_att_val = "wizard-controller";
-	public static final String wizard_comp_template_id = "wizard-controller-instance";
 	public static final String page_tag = "page";
+	public static final String toggle_tag = "xf:toggle";
 	public static final String number_att = "number";
-	public static final String wizard_page_template_id = "wizard-page";
-	public static final String relevant_att = "relevant";
+	public static final String case_att = "case";
 	public static final String p3ptype_att = "p3ptype";
 	public static final String instance_tag = "xf:instance";
 	public static final String div_tag = "div";
 	public static final String trigger_tag = "xf:trigger";
-	public static final String relevant_yes = "@relevant='yes'";
-	public static final String relevant = "@relevant";
-	public static final String yes = "yes";
-	public static final String no = "no";
-	public static final String value_att = "value";
 	
 	private static final String line_sep = "line.separator";
 	private static final String xml_mediatype = "text/html";
@@ -560,9 +552,9 @@ public class FormManagerUtil {
 	public static List<String[]> getComponentsTagNamesAndIds(Document xforms_doc) {
 		
 		Element body_element = (Element)xforms_doc.getElementsByTagName(body_tag).item(0);
-		Element group_element = (Element)body_element.getElementsByTagName(group_tag).item(0);
+		Element switch_element = (Element)body_element.getElementsByTagName(switch_tag).item(0);
 		
-		List<Element> components_elements = DOMUtil.getChildElements(group_element);
+		List<Element> components_elements = DOMUtil.getChildElements(switch_element);
 		List<String[]> components_tag_names_and_ids = new ArrayList<String[]>();
 		
 		for (Iterator<Element> iter = components_elements.iterator(); iter.hasNext();) {
@@ -646,19 +638,9 @@ public class FormManagerUtil {
 	public static Element getComponentsContainerElement(Document xforms_doc) {
 
 		Element body_element = (Element)xforms_doc.getElementsByTagName(body_tag).item(0);
-		return (Element)body_element.getElementsByTagName(group_tag).item(0);
+		return (Element)body_element.getElementsByTagName(switch_tag).item(0);
 	}
 	
-	public static void insertPageNodeset(Document xforms_doc, Element nodeset, Element new_nodeset_element) {
-		
-		copyChildren(nodeset, new_nodeset_element);
-		
-		Element container = 
-			(Element)DOMUtil.getChildElements(
-					getElementByIdFromDocument(xforms_doc, head_tag, wizard_id_att_val)).get(0);
-		
-		container.appendChild(new_nodeset_element);
-	}
 	public static boolean isEmpty(String str) {
 		return str == null || str.equals("");
 	}

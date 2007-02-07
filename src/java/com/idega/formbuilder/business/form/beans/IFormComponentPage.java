@@ -12,6 +12,10 @@ public interface IFormComponentPage extends IFormComponentContainer {
 	public abstract void setPageSiblings(IFormComponentPage previous, IFormComponentPage next);
 	
 	public abstract void pagesSiblingsChanged();
+	
 	public abstract IFormComponentPage getPreviousPage();
+	
 	public abstract IFormComponentPage getNextPage();
+	
+	public abstract void announceLastPage(String last_page_id);
 }
