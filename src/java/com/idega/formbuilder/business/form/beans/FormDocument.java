@@ -108,7 +108,7 @@ public class FormDocument implements IFormDocument {
 	
 	public void persist() {
 		// if document is already scheduled for saving don't do anything
-		if (!saving && false) {
+		if (!saving) {
 			saving = true;
 			TimerTask saveTask = new FormSaveTask();
 			// will save current state of document after 5 seconds
