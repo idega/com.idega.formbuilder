@@ -645,4 +645,22 @@ public class FormManagerUtil {
 	public static boolean isEmpty(String str) {
 		return str == null || str.equals("");
 	}
+	
+	
+	public static void modifyXFormsDocumentForViewing(Document xforms_doc) {
+		
+		NodeList tags = xforms_doc.getElementsByTagName(case_tag);
+		Element switch_element = (Element)xforms_doc.getElementsByTagName(switch_tag).item(0);
+		Element switch_parent = (Element)switch_element.getParentNode();
+		
+		for (int i = 0; i < tags.getLength(); i++) {
+			
+			List<Element> case_children = DOMUtil.getChildElements(tags.item(i));
+			for (Element case_child : case_children) {
+				switch_parent.appendChild(case_child);
+			}
+		}
+		
+		switch_element.getParentNode().removeChild(switch_element);
+	}
 }
