@@ -40,12 +40,12 @@ public class FBViewPanel extends FBComponentBase {
 
 	public FBViewPanel() {
 		super();
-		this.setRendererType(null);
+		setRendererType(null);
 	}
 	
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
-		this.getChildren().clear();
+		getChildren().clear();
 		
 		FBDivision switcher = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
 		switcher.setId("switcher");
@@ -63,9 +63,8 @@ public class FBViewPanel extends FBComponentBase {
 		FBDivision view1Box = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
 		view1Box.setId("view1Box");
 		view1Box.setStyleClass("unselectedTab");
-		view1Box.getChildren().add(view1);
-		
-		switcher.getChildren().add(view1Box);
+		addChild(view1, view1Box);
+		addChild(view1Box, switcher);
 		
 		HtmlAjaxCommandLink view2 = (HtmlAjaxCommandLink) application.createComponent(HtmlAjaxCommandLink.COMPONENT_TYPE);
 		view2.setOnclick("showLoadingMessage('Switching')");
@@ -79,9 +78,8 @@ public class FBViewPanel extends FBComponentBase {
 		FBDivision view2Box = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
 		view2Box.setId("view2Box");
 		view2Box.setStyleClass("unselectedTab");
-		view2Box.getChildren().add(view2);
-		
-		switcher.getChildren().add(view2Box);
+		addChild(view2, view2Box);
+		addChild(view2Box, switcher);
 		
 		HtmlAjaxCommandLink view3 = (HtmlAjaxCommandLink) application.createComponent(HtmlAjaxCommandLink.COMPONENT_TYPE);
 		view3.setOnclick("showLoadingMessage('Switching')");
@@ -95,9 +93,8 @@ public class FBViewPanel extends FBComponentBase {
 		FBDivision view3Box = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
 		view3Box.setId("view3Box");
 		view3Box.setStyleClass("unselectedTab");
-		view3Box.getChildren().add(view3);
-		
-		switcher.getChildren().add(view3Box);
+		addChild(view3, view3Box);
+		addChild(view3Box, switcher);
 		
 		FBDesignView designView = (FBDesignView) application.createComponent(FBDesignView.COMPONENT_TYPE);
 		designView.setId("dropBox");
@@ -135,11 +132,10 @@ public class FBViewPanel extends FBComponentBase {
 		showPagesButtonS.setAjaxSingle(true);
 		showPagesButtonS.setReRender("mainApplication");
 		showPagesButtonS.setActionListener(application.createMethodBinding("#{workspace.togglePagesPanel}", new Class[]{ActionEvent.class}));
-		showPagesButton.getChildren().add(showPagesButtonS);
+		addChild(showPagesButtonS, showPagesButton);
 		
 		FBPagesPanel pages = (FBPagesPanel) application.createComponent(FBPagesPanel.COMPONENT_TYPE);
 		pages.setId("pagesPanel");
-		pages.setValueBinding("pages", application.createValueBinding("#{formDocument.pages}"));
 		pages.setStyleClass("pagesPanel");
 		pages.setComponentStyleClass("formPageIcon");
 		
@@ -166,6 +162,7 @@ public class FBViewPanel extends FBComponentBase {
 	
 	public void encodeBegin(FacesContext context) throws IOException {
 		((Workspace)WFUtil.getBeanInstance("workspace")).isPagesPanelVisible();
+		
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeBegin(context);
 		

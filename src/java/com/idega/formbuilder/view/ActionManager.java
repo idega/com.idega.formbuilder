@@ -16,26 +16,12 @@ public class ActionManager implements Serializable {
 	private static DocumentManager formManagerInstance = null;
 	
 	public static DocumentManager getDocumentManagerInstance() {
-//		FormManager fm;
 		if(formManagerInstance == null) {
-			/*try {
-				formManagerInstance = FormManagerFactory.newFormManager(FacesContext.getCurrentInstance());
-			} catch(InitializationException ie) {
-				ie.printStackTrace();
-			}
-			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORM_MANAGER_INSTANCE, formManagerInstance);
-			return formManagerInstance;*/
 			return createNewInstance();
 		} else {
 			return formManagerInstance;
-			/*fm = (FormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
-			return fm;*/
 		}
 	}
-
-	/*public void setFormManagerInstance(DocumentManager formManagerInstance) {
-		ActionManager.formManagerInstance = formManagerInstance;
-	}*/
 	
 	private static DocumentManager createNewInstance() {
 		try {

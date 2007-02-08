@@ -93,9 +93,8 @@ public class DWRManager implements Serializable {
 	public Element createComponent(String type) throws Exception {
 		Element rootDivImported = null;
 		FormPage page = (FormPage) WFUtil.getBeanInstance("formPage");
+		Page p = page.getPage();
 		Component component = page.getPage().addComponent(type, null);
-//		String elementId = component.getId();
-//		String elementId = ActionManager.getDocumentManagerInstance().getCurrentDocument().a.createFormComponent(type, null);
 		Element element = (Element) component.getHtmlRepresentation(new Locale("en")).cloneNode(true);
 		String id = element.getAttribute("id");
 		element.removeAttribute("id");
@@ -177,11 +176,6 @@ public class DWRManager implements Serializable {
 	public String removeComponent(String id) {
 		FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
 		formComponent.getComponent().remove();
-//		try {
-//			ActionManager.getDocumentManagerInstance().removeFormComponent(id);
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//		}
 		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
 		if(page.getContainedComponentsIdList().isEmpty()) {
 			((Workspace) WFUtil.getBeanInstance("workspace")).setDesignViewStatus(FBDesignView.DESIGN_VIEW_STATUS_EMPTY);

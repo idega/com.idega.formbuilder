@@ -5,11 +5,6 @@ import java.util.Locale;
 
 import javax.faces.event.ActionEvent;
 
-import com.idega.formbuilder.business.form.Document;
-import com.idega.formbuilder.business.form.DocumentManager;
-import com.idega.formbuilder.view.ActionManager;
-import com.idega.webface.WFUtil;
-
 public class Workspace implements Serializable {
 	
 	private static final long serialVersionUID = -7539955904708793992L;
@@ -37,40 +32,6 @@ public class Workspace implements Serializable {
 		this.designViewStatus = "noform";
 		this.pagesPanelVisible = false;
 		this.locale = new Locale("en");
-	}
-	
-	public void changeForm(ActionEvent ae) {
-		DocumentManager formManagerInstance = ActionManager.getDocumentManagerInstance();
-		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
-		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
-		String formId = formDocument.getFormId();
-		if(formId != null && !formId.equals("") && !formId.equals("INACTIVE")) {
-			try {
-				Document currentDocument = formManagerInstance.openForm(formId);
-				formDocument.setDocument(currentDocument);
-				String firstPage = currentDocument.getContainedPagesIdList().get(0);
-				if(currentDocument.getPage(firstPage).getContainedComponentsIdList().size() > 0) {
-					workspace.setDesignViewStatus("active");
-				} else {
-					workspace.setDesignViewStatus("empty");
-				}
-				workspace.setView("design");
-				workspace.setRenderedMenu(true);
-				workspace.setSelectedMenu("0");
-				String title = formDocument.getDocument().getFormTitle().getString(locale);
-//				String submit = formManagerInstance.getSubmitButtonProperties().getLabel().getString(locale);
-				formDocument.clearFormDocumentInfo();
-				formDocument.setFormTitle(title);
-//				formDocument.setSubmitLabel(submit);
-				
-				FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
-				if(formComponent != null) {
-					formComponent.clearFormComponentInfo();
-				}
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
 	}
 	
 	public void togglePagesPanel(ActionEvent ae) {

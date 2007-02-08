@@ -30,7 +30,7 @@ public class FBAdvancedProperties extends FBComponentBase {
 	
 	public FBAdvancedProperties() {
 		super();
-		this.setRendererType(null);
+		setRendererType(null);
 	}
 	
 	protected void initializeComponent(FacesContext context) {		

@@ -49,12 +49,6 @@ public class FBBasicProperties extends FBComponentBase {
 		required.setId("propertyRequired");
 		required.setValueBinding("value", application.createValueBinding("#{formComponent.required}"));
 		required.setOnclick("$('workspaceform1:saveCompReq').click();");
-		/*UIAjaxSupport requiredS = (UIAjaxSupport) application.createComponent("org.ajax4jsf.ajax.Support");
-		requiredS.setEvent("onclick");
-		requiredS.setReRender("mainApplication");
-		requiredS.setActionListener(application.createMethodBinding("#{savePropertiesAction.processAction}", new Class[]{ActionEvent.class}));
-		requiredS.setAjaxSingle(true);
-		required.getChildren().add(requiredS);*/
 		
 		cell = row.createCell();
 		cell.add(required);
@@ -70,12 +64,6 @@ public class FBBasicProperties extends FBComponentBase {
 		title.setId("propertyTitle");
 		title.setValueBinding("value", application.createValueBinding("#{formComponent.label}"));
 		title.setOnblur("$('workspaceform1:saveCompLabel').click();");
-		/*UIAjaxSupport titleS = (UIAjaxSupport) application.createComponent("org.ajax4jsf.ajax.Support");
-		titleS.setEvent("onblur");
-		titleS.setReRender("mainApplication");
-		titleS.setActionListener(application.createMethodBinding("#{formComponent.saveComponentLabel}", new Class[]{ActionEvent.class}));
-		titleS.setAjaxSingle(true);
-		title.getChildren().add(titleS);*/
 		
 		cell = row.createCell();
 		cell.add(title);
@@ -91,18 +79,24 @@ public class FBBasicProperties extends FBComponentBase {
 		errorMsg.setId("propertyErrorMessage");
 		errorMsg.setValueBinding("value", application.createValueBinding("#{formComponent.errorMessage}"));
 		errorMsg.setOnblur("$('workspaceform1:saveCompErr').click();");
-		/*UIAjaxSupport errorMsgS = (UIAjaxSupport) application.createComponent("org.ajax4jsf.ajax.Support");
-		errorMsgS.setEvent("onblur");
-		errorMsgS.setReRender("mainApplication");
-		errorMsgS.setActionListener(application.createMethodBinding("#{savePropertiesAction.processAction}", new Class[]{ActionEvent.class}));
-		errorMsgS.setAction(application.createMethodBinding("#{savePropertiesAction.saveProperties}", null));
-		errorMsgS.setAjaxSingle(false);
-		errorMsgS.setOnsubmit("alert('SH')");
-		errorMsgS.setOncomplete("alert('SH error done')");
-		errorMsg.getChildren().add(errorMsgS);*/
 		
 		cell = row.createCell();
 		cell.add(errorMsg);
+		
+		HtmlOutputText helpMsgLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		helpMsgLabel.setValue("Help text");
+		
+		row = group.createRow();
+		cell = row.createCell();
+		cell.add(helpMsgLabel);
+		
+		HtmlInputText helpMsg = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+		helpMsg.setId("propertyHelpText");
+		helpMsg.setValueBinding("value", application.createValueBinding("#{formComponent.helpMessage}"));
+//		helpMsg.setOnblur("$('workspaceform1:saveCompErr').click();");
+		
+		cell = row.createCell();
+		cell.add(helpMsg);
 		
 		addFacet(CONTENT_FACET, table);
 	}

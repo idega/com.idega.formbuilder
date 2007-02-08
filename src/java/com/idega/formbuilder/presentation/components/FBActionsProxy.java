@@ -25,6 +25,8 @@ public class FBActionsProxy extends FBComponentBase {
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
 		
+		
+		
 		UIAjaxCommandButton createForm = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
 		createForm.setId("createFormProxy");
 		createForm.setOncomplete("closeLoadingMessage()");
@@ -116,6 +118,7 @@ public class FBActionsProxy extends FBComponentBase {
 		saveCode.setActionListener(application.createMethodBinding("#{formDocument.saveSourceCode}", new Class[]{ActionEvent.class}));
 		saveCode.setReRender("mainApplication");
 		
+//		add(newPageFunction);
 		add(createForm);
 		add(deleteComponent);
 		add(getProperties);

@@ -44,14 +44,14 @@ function removeOption() {
 function createNewForm() {
 	var name = document.forms['newFormDialogForm'].elements['formName'].value;
 	if(name != '') {
-		showLoadingMessage("Creating");
-		dwrmanager.createNewForm(createdNewForm,name);
 		closeMessage();
+		showLoadingMessage("Creating");
+		createFormDocument(name);
 	}
 }
-function createdNewForm(element) {
+/*function createdNewForm(element) {
 	$('workspaceform1:createFormProxy').click();
-}
+}*/
 //--------------------------------
 
 
@@ -191,4 +191,10 @@ var pressedDelete = false;
 /*Setup modal message windows functionality*/
 messageObj = new DHTML_modalMessage();
 messageObj.setShadowOffset(5);
+/*A4J.AJAX.onError = customFunction(req,status,message) {
+	alert(message);
+};
+A4J.AJAX.onExpired = func2(loc,expiredMsg){
+	alert(expiredMsg);
+};*/
 		

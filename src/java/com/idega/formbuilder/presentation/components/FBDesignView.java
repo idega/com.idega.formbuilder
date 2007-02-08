@@ -139,6 +139,7 @@ public class FBDesignView extends FBComponentBase {
 				Component comp = page.getComponent(nextId);
 				if(comp instanceof Container) {
 					ButtonArea buttonArea = page.getButtonArea();
+					System.out.println("BUttonArea ID: " + buttonArea.getId());
 					FBButtonArea area = (FBButtonArea) application.createComponent(FBButtonArea.COMPONENT_TYPE);
 					area.setId(buttonArea.getId());
 					area.setStyleClass(componentStyleClass);

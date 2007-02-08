@@ -1,34 +1,70 @@
 package com.idega.formbuilder.presentation.components;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.el.ValueBinding;
 
+import org.ajax4jsf.ajax.html.HtmlActionParameter;
+import org.ajax4jsf.ajax.html.HtmlAjaxFunction;
+
+import com.idega.formbuilder.business.form.Document;
+import com.idega.formbuilder.business.form.Page;
+import com.idega.formbuilder.business.form.PropertiesPage;
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.formbuilder.presentation.beans.FormDocument;
+import com.idega.formbuilder.presentation.beans.Workspace;
+import com.idega.webface.WFUtil;
 
 public class FBPagesPanel extends FBComponentBase {
 	
 	public static final String COMPONENT_TYPE = "PagesPanel";
 	
+	private static final String DELETE_PAGE_FUNCTION = "DELETE_PAGE_FUNCTION";
+	private static final String CONFIRMATION_PAGE = "CONFIRMATION_PAGE";
+	private static final String THANKYOU_PAGE = "THANKYOU_PAGE";
+	
 	private String id;
 	private String styleClass;
-	private List<String> pages = new ArrayList<String>();
 	private String componentStyleClass;
+	private String thanksPageId;
+	private String confirmationPageId;
 
 	public FBPagesPanel() {
 		super();
-		this.setRendererType(null);
+		setRendererType(null);
+	}
+	
+	protected void initializeComponent(FacesContext context) {
+		Application application = context.getApplication();
+		getChildren().clear();
+		
+		HtmlAjaxFunction deletePageFunction = new HtmlAjaxFunction();
+		deletePageFunction.setName("deletePageFunction");
+		deletePageFunction.setReRender("mainApplication");
+//		deletePageFunction.setOncomplete("closeLoadingMessage()");
+		deletePageFunction.setValueBinding("data", application.createValueBinding("#{formPage.deletePage}"));
+		
+		HtmlActionParameter deletePageFunctionP = new HtmlActionParameter();
+		deletePageFunctionP.setName("pageId");
+		deletePageFunctionP.setAssignToBinding(application.createValueBinding("#{formPage.id}"));
+		addChild(deletePageFunctionP, deletePageFunction);
+		
+//		Document document = ((FormDocument) WFUtil.getBeanInstance("formDocument")).getDocument();
+//		Page confirmationPage
+		
+		addFacet(DELETE_PAGE_FUNCTION, deletePageFunction);
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
 		Application application = context.getApplication();
+		getChildren().clear();
+		
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeBegin(context);
 		
@@ -36,20 +72,41 @@ public class FBPagesPanel extends FBComponentBase {
 		writer.writeAttribute("id", id, "id");
 		writer.writeAttribute("class", styleClass, "styleClass");
 		
-		ValueBinding vb = this.getValueBinding("pages");
-		if(vb != null) {
-			pages = (ArrayList<String>) vb.getValue(context);
+		UIComponent facet = getFacet(DELETE_PAGE_FUNCTION);
+		if(facet != null) {
+			renderChild(context, facet);
 		}
-		Iterator it = pages.iterator();
-		while(it.hasNext()) {
-			String nextId = (String) it.next();
-			FBFormPage formPage = (FBFormPage) application.createComponent(FBFormPage.COMPONENT_TYPE);
-			formPage.setId(nextId);
-			formPage.setLabel(nextId);
-			formPage.setStyleClass(componentStyleClass);
-			add(formPage);
+		
+		Locale locale = ((Workspace) WFUtil.getBeanInstance("workspace")).getLocale();
+		FormDocument formDocument = ((FormDocument) WFUtil.getBeanInstance("formDocument"));
+		Document document = formDocument.getDocument();
+		if(document != null) {
+			
+//			Page confirmation
+//			
+//			FBFormPage formPage = (FBFormPage) application.createComponent(FBFormPage.COMPONENT_TYPE);
+//			formPage.setId(nextId + "_P");
+//			formPage.setStyleClass(componentStyleClass);
+//			formPage.setOnDelete("deletePageFunction()");
+//			String label = ((PropertiesPage)currentPage.getProperties()).getLabel().getString(locale);
+//			formPage.setLabel(label);
+			
+			List<String> ids = document.getContainedPagesIdList();
+			Iterator it = ids.iterator();
+			while(it.hasNext()) {
+				String nextId = (String) it.next();
+				Page currentPage = document.getPage(nextId);
+				if(currentPage != null) {
+					FBFormPage formPage = (FBFormPage) application.createComponent(FBFormPage.COMPONENT_TYPE);
+					formPage.setId(nextId + "_P");
+					formPage.setStyleClass(componentStyleClass);
+					formPage.setOnDelete("deletePageFunction()");
+					String label = ((PropertiesPage)currentPage.getProperties()).getLabel().getString(locale);
+					formPage.setLabel(label);
+					add(formPage);
+				}
+			}
 		}
-		this.getChildren().remove(0);
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {
@@ -97,12 +154,11 @@ public class FBPagesPanel extends FBComponentBase {
 	}
 	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[5];
+		Object values[] = new Object[4];
 		values[0] = super.saveState(context); 
 		values[1] = id;
 		values[2] = styleClass;
-		values[3] = pages;
-		values[4] = componentStyleClass;
+		values[3] = componentStyleClass;
 		return values;
 	}
 	
@@ -111,8 +167,7 @@ public class FBPagesPanel extends FBComponentBase {
 		super.restoreState(context, values[0]);
 		id = (String) values[1];
 		styleClass = (String) values[2];
-		pages = (ArrayList<String>) values[3];
-		componentStyleClass = (String) values[4];
+		componentStyleClass = (String) values[3];
 	}
 	
 	public String getStyleClass() {
@@ -129,14 +184,6 @@ public class FBPagesPanel extends FBComponentBase {
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public List<String> getPages() {
-		return pages;
-	}
-
-	public void setPages(List<String> pages) {
-		this.pages = pages;
 	}
 
 	public String getComponentStyleClass() {

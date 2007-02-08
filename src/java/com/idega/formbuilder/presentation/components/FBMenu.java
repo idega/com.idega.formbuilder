@@ -10,6 +10,8 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.ActionEvent;
 
+import org.ajax4jsf.ajax.html.HtmlActionParameter;
+import org.ajax4jsf.ajax.html.HtmlAjaxFunction;
 import org.ajax4jsf.ajax.html.HtmlAjaxSupport;
 import org.apache.myfaces.component.html.ext.HtmlCommandButton;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
@@ -63,13 +65,22 @@ public class FBMenu extends FBComponentBase {
 		FBDivision menuHeaderPanel = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
 		menuHeaderPanel.setId("menuPanelToolbar");
 		
-//		HtmlAjaxFunction newFormFunction = new HtmlAjaxFunction();
-//		newFormFunction.setName("createNewForm2");
-//		newFormFunction.setReRender("mainApplication");
-////		newFormFunction.setData(application.createValueBinding("#{formDocument.selectedComponent}"));
-//		newFormFunction.setAction(application.createMethodBinding("#{formDocument.createNewForm}", new Class[]{String.class}));
-////		newFormFunction.setActionListener(application.createMethodBinding("#{formDocument.createNewForm}", new Class[]{ActionEvent.class}));
+		HtmlAjaxFunction newPageFunction = new HtmlAjaxFunction();
+		newPageFunction.setName("createNewPage");
+		newPageFunction.setReRender("mainApplication");
+		newPageFunction.setValueBinding("data", application.createValueBinding("#{formPage.newPage}"));
 		
+		HtmlAjaxFunction newFormFunction = new HtmlAjaxFunction();
+		newFormFunction.setName("createFormDocument");
+		newFormFunction.setReRender("mainApplication");
+		newFormFunction.setOncomplete("closeLoadingMessage()");
+		newFormFunction.setValueBinding("data", application.createValueBinding("#{formDocument.newFormDocument}"));
+		
+		HtmlActionParameter newFormTitleP = new HtmlActionParameter();
+		newFormTitleP.setName("newFormT");
+		newFormTitleP.setAssignToBinding(application.createValueBinding("#{formDocument.formTitle}"));
+		addChild(newFormTitleP, newFormFunction);
+
 		HtmlCommandButton newFormButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
 		newFormButton.setId("newFormButton");
 		newFormButton.setOnclick("displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/new-dialog.inc');return false");
@@ -88,10 +99,11 @@ public class FBMenu extends FBComponentBase {
 		selectSupport.setOncomplete("closeLoadingMessage()");
 		selectSupport.setAjaxSingle(false);
 		selectSupport.setReRender("mainApplication");
-		selectSupport.setActionListener(application.createMethodBinding("#{workspace.changeForm}", new Class[]{ActionEvent.class}));
+		selectSupport.setActionListener(application.createMethodBinding("#{formDocument.changeForm}", new Class[]{ActionEvent.class}));
 		addChild(selectSupport, selectFormMenu);
 		
-//		addChild(newFormFunction, menuHeaderPanel);
+		addChild(newPageFunction, menuHeaderPanel);
+		addChild(newFormFunction, menuHeaderPanel);
 		addChild(newFormButton, menuHeaderPanel);
 		addChild(selectFormMenu, menuHeaderPanel);
 		
@@ -141,6 +153,10 @@ public class FBMenu extends FBComponentBase {
 		tab4.setExpanded(false);
 		tab4.setValueBinding("title", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['form_steps_panel']}"));
 		tab4.setId(MENU_TAB_4);
+		
+		FBPageProperties pageProperties = (FBPageProperties) application.createComponent(FBPageProperties.COMPONENT_TYPE);
+		
+		tab4.add(pageProperties);
 		
 		
 		HtmlOutputText noMenuLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);

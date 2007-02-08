@@ -8,6 +8,7 @@ import javax.faces.context.ResponseWriter;
 
 import org.w3c.dom.Element;
 
+import com.idega.formbuilder.business.form.Button;
 import com.idega.formbuilder.business.form.ButtonArea;
 import com.idega.formbuilder.business.form.Page;
 import com.idega.formbuilder.dom.DOMTransformer;
@@ -23,7 +24,34 @@ public class FBButton extends FBComponentBase {
 	public String id;
 	public String styleClass;
 	public Element element;
+	public String selectedStyleClass;
+	public boolean selected;
+	public String onSelect;
 	
+	public String getOnSelect() {
+		return onSelect;
+	}
+
+	public void setOnSelect(String onSelect) {
+		this.onSelect = onSelect;
+	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+
+	public String getSelectedStyleClass() {
+		return selectedStyleClass;
+	}
+
+	public void setSelectedStyleClass(String selectedStyleClass) {
+		this.selectedStyleClass = selectedStyleClass;
+	}
+
 	public Element getElement() {
 		return element;
 	}
@@ -38,18 +66,21 @@ public class FBButton extends FBComponentBase {
 	}
 	
 	protected void initializeComponent(FacesContext context) {
-//		Application application = context.getApplication();
-		getChildren().clear();
 		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
-		Locale current = ((Workspace) WFUtil.getBeanInstance("workspace")).getLocale();
 		ButtonArea buttonArea = page.getButtonArea();
 		if(buttonArea != null) {
-			try {
-				Element element = buttonArea.getComponent(id).getHtmlRepresentation(current);
-				element.setAttribute("id", id + "_bt");
-				setElement(element);
-			} catch(Exception e) {
-				e.printStackTrace();
+			Button button = (Button) buttonArea.getComponent(id);
+			if(button != null) {
+				try {
+					Locale current = ((Workspace) WFUtil.getBeanInstance("workspace")).getLocale();
+					Element element = button.getHtmlRepresentation(current);
+					if(element != null) {
+						element.setAttribute("id", id + "_bt");
+						setElement(element);
+					}
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

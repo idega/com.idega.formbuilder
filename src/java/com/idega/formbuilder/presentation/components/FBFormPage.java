@@ -3,7 +3,6 @@ package com.idega.formbuilder.presentation.components;
 import java.io.IOException;
 
 import javax.faces.application.Application;
-import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlGraphicImage;
 import javax.faces.context.FacesContext;
 
@@ -18,23 +17,51 @@ public class FBFormPage extends FBComponentBase {
 	private static final String CONTENT_DIV_FACET = "CONTENT_DIV_FACET";
 	
 	private static final String PAGE_ICON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/document-new.png";
+	private static final String DELETE_ICON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png";
 	
 	private String id;
 	private String styleClass;
 	private String label;
+	private boolean active;
+	private String activeStyleClass;
+	private String onDelete;
 	
+	public String getOnDelete() {
+		return onDelete;
+	}
+
+	public void setOnDelete(String onDelete) {
+		this.onDelete = onDelete;
+	}
+
+	public String getActiveStyleClass() {
+		return activeStyleClass;
+	}
+
+	public void setActiveStyleClass(String activeStyleClass) {
+		this.activeStyleClass = activeStyleClass;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
 	public FBFormPage() {
 		super();
-		this.setRendererType(null);
+		setRendererType(null);
 	}
 	
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
-		this.getChildren().clear();
+		getChildren().clear();
 		
 		FBDivision switcher = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
 		switcher.setId("page" + id);
-		switcher.setStyleClass("formPageIcon");
+		switcher.setStyleClass(styleClass);
 		
 		HtmlGraphicImage pageIconImg = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
 		pageIconImg.setValue(PAGE_ICON_IMG);
@@ -44,9 +71,15 @@ public class FBFormPage extends FBComponentBase {
 		pageIconLabel.setValue(label);
 		pageIconLabel.setStyle("display: block");
 		
+		HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+		deleteButton.setId("db" + id);
+		deleteButton.setValue(DELETE_ICON_IMG);
+		deleteButton.setOnclick(onDelete);
+		deleteButton.setStyleClass("speedButton");
 		
-		switcher.getChildren().add(pageIconImg);
-		switcher.getChildren().add(pageIconLabel);
+		addChild(pageIconImg, switcher);
+		addChild(pageIconLabel, switcher);
+		addChild(deleteButton, switcher);
 		
 		addFacet(CONTENT_DIV_FACET, switcher);
 	}
@@ -55,8 +88,11 @@ public class FBFormPage extends FBComponentBase {
 		if(!isRendered()) {
 			return;
 		}
-		UIComponent content = getFacet(CONTENT_DIV_FACET);
+		FBDivision content = (FBDivision) getFacet(CONTENT_DIV_FACET);
 		if(content != null) {
+			if(isActive()) {
+				content.setStyleClass(activeStyleClass);
+			}
 			renderChild(context, content);
 		}
 	}

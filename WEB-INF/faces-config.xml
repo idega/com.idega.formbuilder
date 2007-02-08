@@ -162,16 +162,8 @@
 		<component-class>com.idega.formbuilder.presentation.components.FBWorkspace</component-class>
 	</component>
 	<component>
-		<component-type>FormPropertiesPanel</component-type>
-		<component-class>com.idega.formbuilder.presentation.components.FBFormPropertiesPanel</component-class>
-	</component>
-	<component>
 		<component-type>AdvancedProperties</component-type>
 		<component-class>com.idega.formbuilder.presentation.components.FBAdvancedProperties</component-class>
-	</component>
-	<component>
-		<component-type>SubmitProperties</component-type>
-		<component-class>com.idega.formbuilder.presentation.components.FBSubmitProperties</component-class>
 	</component>
 	<component>
 		<component-type>FormProperties</component-type>
@@ -180,6 +172,10 @@
 	<component>
 		<component-type>BasicProperties</component-type>
 		<component-class>com.idega.formbuilder.presentation.components.FBBasicProperties</component-class>
+	</component>
+	<component>
+		<component-type>PageProperties</component-type>
+		<component-class>com.idega.formbuilder.presentation.components.FBPageProperties</component-class>
 	</component>
 	<component>
 		<component-type>Division</component-type>

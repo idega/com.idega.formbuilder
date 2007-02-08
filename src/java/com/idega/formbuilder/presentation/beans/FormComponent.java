@@ -32,6 +32,7 @@ public class FormComponent implements Serializable {
 	private Boolean required;
 	private String label;
 	private String errorMessage;
+	private String helpMessage;
 	
 	private String emptyLabel;
 	private String externalSrc;
@@ -39,6 +40,7 @@ public class FormComponent implements Serializable {
 	
 	private LocalizedStringBean labelStringBean;
 	private LocalizedStringBean errorStringBean;
+	private LocalizedStringBean helpStringBean;
 	
 	private LocalizedStringBean emptyLabelBean;
 	private ILocalizedItemset itemset;
@@ -93,9 +95,11 @@ public class FormComponent implements Serializable {
 		this.errorMessage = "";
 		this.required = false;
 		this.emptyLabel = "";
+		this.helpMessage = "";
 		
 		this.labelStringBean = null;
 		this.errorStringBean = null;
+		this.helpStringBean = null;
 		this.emptyLabelBean = null;
 		this.itemset = null;
 		
@@ -115,6 +119,9 @@ public class FormComponent implements Serializable {
 		
 		this.errorMessage = "";
 		this.errorStringBean = null;
+		
+		this.helpMessage = "";
+		this.helpStringBean = null;
 		
 		this.required = false;
 		
@@ -156,6 +163,8 @@ public class FormComponent implements Serializable {
 			
 			errorStringBean = propertiesSelect.getErrorMsg();
 			errorMessage = errorStringBean.getString(new Locale("en"));
+			
+//			helpStringBean = propertiesSelect.get
 			
 			selectComponent = (ComponentSelect) component;
 			propertiesSelect = selectComponent.getProperties();
@@ -360,6 +369,22 @@ public class FormComponent implements Serializable {
 
 	public void setSelectComponent(ComponentSelect selectComponent) {
 		this.selectComponent = selectComponent;
+	}
+
+	public String getHelpMessage() {
+		return helpMessage;
+	}
+
+	public void setHelpMessage(String helpMessage) {
+		this.helpMessage = helpMessage;
+	}
+
+	public LocalizedStringBean getHelpStringBean() {
+		return helpStringBean;
+	}
+
+	public void setHelpStringBean(LocalizedStringBean helpStringBean) {
+		this.helpStringBean = helpStringBean;
 	}
 
 }

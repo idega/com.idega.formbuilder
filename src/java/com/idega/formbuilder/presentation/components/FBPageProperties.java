@@ -9,7 +9,6 @@ import javax.faces.context.FacesContext;
 
 import org.ajax4jsf.ajax.html.HtmlAjaxCommandButton;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
-import org.apache.myfaces.component.html.ext.HtmlSelectBooleanCheckbox;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.presentation.Table2;
@@ -17,13 +16,13 @@ import com.idega.presentation.TableCell2;
 import com.idega.presentation.TableRow;
 import com.idega.presentation.TableRowGroup;
 
-public class FBFormProperties extends FBComponentBase {
+public class FBPageProperties extends FBComponentBase {
 	
-	public static final String COMPONENT_TYPE = "FormProperties";
+public static final String COMPONENT_TYPE = "PageProperties";
 	
 	private static final String CONTENT_FACET = "CONTENT_FACET";
 	
-	public FBFormProperties() {
+	public FBPageProperties() {
 		super();
 		setRendererType(null);
 	}
@@ -39,7 +38,7 @@ public class FBFormProperties extends FBComponentBase {
 		TableCell2 cell = null;
 		
 		HtmlOutputText titleLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		titleLabel.setValue("Form title");
+		titleLabel.setValue("Page title");
 		
 		row = group.createRow();
 		cell = row.createCell();
@@ -47,30 +46,16 @@ public class FBFormProperties extends FBComponentBase {
 		cell.add(titleLabel);
 		
 		HtmlInputText title = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
-		title.setId("formTitle");
-		title.setValueBinding("value", application.createValueBinding("#{formDocument.formTitle}"));
-		title.setOnblur("$('workspaceform1:saveFormTitle').click();");
+		title.setId("pageTitle");
+		title.setValueBinding("value", application.createValueBinding("#{formPage.title}"));
+//		title.setOnblur("$('workspaceform1:saveFormTitle').click();");
 		
 		cell = row.createCell();
 		cell.add(title);
 		
-		HtmlOutputText previewLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		previewLabel.setValue("Form contains preview");
-		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.add(previewLabel);
-		
-		HtmlSelectBooleanCheckbox preview = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
-		preview.setId("previewScreen");
-		preview.setValueBinding("value", application.createValueBinding("#{formDocument.hasPreview}"));
-		
-		cell = row.createCell();
-		cell.add(preview);
-		
 		HtmlAjaxCommandButton newPageButton = (HtmlAjaxCommandButton) application.createComponent(HtmlAjaxCommandButton.COMPONENT_TYPE);
 		newPageButton.setValue("New page");
-		newPageButton.setId("newPB_FP");
+		newPageButton.setId("newPB_PP");
 		newPageButton.setOnclick("createNewPage()");
 		
 		row = group.createRow();
@@ -89,5 +74,5 @@ public class FBFormProperties extends FBComponentBase {
 			renderChild(context, body);
 		}
 	}
-	
+
 }

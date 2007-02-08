@@ -11,10 +11,12 @@ import javax.faces.context.ResponseWriter;
 import org.apache.myfaces.component.html.ext.HtmlGraphicImage;
 import org.w3c.dom.Element;
 
+import com.idega.formbuilder.business.form.Component;
 import com.idega.formbuilder.business.form.Page;
 import com.idega.formbuilder.dom.DOMTransformer;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormPage;
+import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.webface.WFUtil;
 
 public class FBFormComponent extends FBComponentBase {
@@ -26,7 +28,6 @@ public class FBFormComponent extends FBComponentBase {
 	private String id;
 	private String styleClass;
 	private Element element;
-	private boolean submit;
 	private String onclick;
 	private boolean selected;
 	private String selectedStyleClass;
@@ -55,14 +56,6 @@ public class FBFormComponent extends FBComponentBase {
 		this.onclick = onclick;
 	}
 
-	public boolean isSubmit() {
-		return submit;
-	}
-
-	public void setSubmit(boolean submit) {
-		this.submit = submit;
-	}
-
 	public String getStyleClass() {
 		return styleClass;
 	}
@@ -77,34 +70,27 @@ public class FBFormComponent extends FBComponentBase {
 	}
 	
 	protected void initializeComponent(FacesContext context) {
-//		Element element;
-		
 		Application application = context.getApplication();
-		getChildren().clear();
 		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
-		String currentLocale = "en";
-		if(currentLocale != null) {
-			Locale current = new Locale(currentLocale);
-			if(current != null) {
+		if(page != null) {
+			Component component = page.getComponent(id);
+			if(component != null) {
 				try {
-					/*if(!submit) {
-						Element element = formManagerInstance.getLocalizedSubmitComponent(current);
-						Element button = (Element) element.getFirstChild();
-						button.setAttribute("disabled", "true");
-						this.setElement(element);
-					} else {
+					Locale current = ((Workspace) WFUtil.getBeanInstance("workspace")).getLocale();
+					Element element = component.getHtmlRepresentation(current);
+					if(element != null) {
+						element.setAttribute("id", id + "_i");
+						setElement(element);
+						setOnclick("editProperties(this.id)");
 						
-					}*/
-					Element element = page.getComponent(id).getHtmlRepresentation(current);
-					element.setAttribute("id", id + "_i");
-					setElement(element);
-					setOnclick("editProperties(this.id)");
-					HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
-					deleteButton.setId("db" + id);
-					deleteButton.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png");
-					deleteButton.setOnclick("deleteComponentJSF(this)");
-					deleteButton.setStyleClass("speedButton");
-					addFacet(DELETE_BUTTON_FACET, deleteButton);
+						HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+						deleteButton.setId("db" + id);
+						deleteButton.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png");
+						deleteButton.setOnclick("deleteComponentJSF(this)");
+						deleteButton.setStyleClass("speedButton");
+						
+						addFacet(DELETE_BUTTON_FACET, deleteButton);
+					}
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
@@ -122,11 +108,7 @@ public class FBFormComponent extends FBComponentBase {
 			writer.writeAttribute("class", selectedStyleClass, "styleClass");
 		}
 		writer.writeAttribute("id", id, "id");
-		if(submit) {
-			writer.writeAttribute("onclick", "A4J.AJAX.Submit('_viewRoot','workspaceform1',event,{'parameters':{'workspaceform1:formHeadingHeaderS':'workspaceform1:formHeadingHeaderS'},'actionUrl':'/workspace/formbuilder/','single':true})", "onclick");
-		} else {
-			writer.writeAttribute("onclick", onclick, "onclick");
-		}
+		writer.writeAttribute("onclick", onclick, "onclick");
 		DOMTransformer.renderNode(element, this, writer);
 	}
 	
@@ -147,15 +129,14 @@ public class FBFormComponent extends FBComponentBase {
 	}
 	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[8];
+		Object values[] = new Object[7];
 		values[0] = super.saveState(context);
 		values[1] = id;
 		values[2] = styleClass;
 		values[3] = element;
-		values[4] = submit;
-		values[5] = onclick;
-		values[6] = selected;
-		values[7] = selectedStyleClass;
+		values[4] = onclick;
+		values[5] = selected;
+		values[6] = selectedStyleClass;
 		return values;
 	}
 	
@@ -165,10 +146,9 @@ public class FBFormComponent extends FBComponentBase {
 		id = (String) values[1];
 		styleClass = (String) values[2];
 		element = (Element) values[3];
-		submit = (Boolean) values[4];
-		onclick = (String) values[5];
-		selected = (Boolean) values[6];
-		selectedStyleClass = (String) values[7];
+		onclick = (String) values[4];
+		selected = (Boolean) values[5];
+		selectedStyleClass = (String) values[6];
 	}
 
 	public Element getElement() {

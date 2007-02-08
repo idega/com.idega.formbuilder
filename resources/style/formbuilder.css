@@ -21,22 +21,25 @@
 	border: 0px solid Black;
 }
 .formPageIcon {
-	padding: 10px;
-	height: 80px;
-	width: 60px;
+	margin-top: 10px;
+	margin-right: 10px;
+	margin-left: 10px;
+	border: 2px dotted LightGrey;
+	padding-top: 10px;
+	padding-left: 10px;
 }
 .formPageIcon:hover {
-	margin-top: 2px;
-	margin-bottom: 2px;
-	align: center;
-	border: 2px dotted Black;
+	border-color: Black;
+}
+.formPageIcon:hover .speedButton {
+	display: inline;
+	cursor: pointer;
 }
 .pagesPanel {
-	padding: 10px;
 	top: 5px;
 	float: right;
 	background-color: LightGrey;
-	width: 100px;
+	width: 110px;
 	height: 500px;
 	border: 2px solid Black;
 	overflow: auto;
@@ -72,7 +75,6 @@
 	padding-left: 30px;
 	padding-top: 10px;
 	padding-bottom: 10px;
-	
 }
 .formElementSel {
 	background-color: Silver;
