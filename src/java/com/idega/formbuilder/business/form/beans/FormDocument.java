@@ -177,6 +177,16 @@ public class FormDocument implements IFormDocument {
 		return form_doc;
 	}
 	
+	public static FormDocument loadDocument(Document xforms_doc) throws InitializationException, Exception {
+		
+		FormDocument form_doc = new FormDocument();
+		form_doc.pages_container.setLoad(true);
+		
+		form_doc.loadDocument(xforms_doc, "test1");
+		
+		return form_doc;
+	}
+	
 	protected Document loadXFormsDocument(String form_id) throws Exception {
 		
 		Document xforms_doc = getFormsService().loadForm(form_id);

@@ -63,6 +63,13 @@ public class FormManager implements DocumentManager {
 		return form_document.getDocument();
 	}
 	
+	public com.idega.formbuilder.business.form.Document openForm(Document xforms_doc) throws NullPointerException, Exception {
+		
+		FormDocument form_document = FormDocument.loadDocument(xforms_doc);
+		this.form_document = form_document;
+		return form_document.getDocument();
+	}
+	
 	protected FormManager() {	}
 	
 	public List<String> getAvailableFormComponentsTypesList() throws FBPostponedException {
