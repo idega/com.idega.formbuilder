@@ -11,7 +11,10 @@ import org.w3c.dom.NodeList;
 
 import com.idega.formbuilder.business.form.PropertiesComponent;
 import com.idega.formbuilder.business.form.beans.IFormComponent;
+import com.idega.formbuilder.business.form.beans.IFormComponentButtonArea;
 import com.idega.formbuilder.business.form.beans.IFormComponentContainer;
+import com.idega.formbuilder.business.form.beans.IFormComponentDocument;
+import com.idega.formbuilder.business.form.beans.IFormComponentPage;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.beans.XFormsComponentDataBean;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
@@ -29,6 +32,7 @@ public class XFormsManager implements IXFormsManager {
 	protected IFormComponentContainer component_parent;
 	protected IFormComponent component;
 	protected XFormsComponentDataBean xforms_component;
+	protected IFormComponentDocument form_document;
 	
 	private static final String simple_type = "xs:simpleType";
 	private static final String complex_type = "xs:complexType";
@@ -81,7 +85,7 @@ public class XFormsManager implements IXFormsManager {
 	
 	public void loadXFormsComponentFromDocument(String component_id) {
 		
-		Document xforms_doc = component_parent.getXformsDocument();
+		Document xforms_doc = form_document.getXformsDocument();
 		Element my_element = FormManagerUtil.getElementByIdFromDocument(xforms_doc, FormManagerUtil.body_tag, component_id);
 		
 		loadXFormsComponent(xforms_doc, my_element);
@@ -104,7 +108,7 @@ public class XFormsManager implements IXFormsManager {
 			
 //			insert bind element
 			String component_id = component.getId();
-			Document xforms_doc = component_parent.getXformsDocument();
+			Document xforms_doc = form_document.getXformsDocument();
 			
 			String bind_id = FormManagerUtil.bind_att+'.'+component_id;
 			xforms_component.getElement().setAttribute(FormManagerUtil.bind_att, bind_id);
@@ -175,7 +179,7 @@ public class XFormsManager implements IXFormsManager {
 	
 	public void addComponentToDocument() {
 		
-		Document xforms_doc = component_parent.getXformsDocument();
+		Document xforms_doc = form_document.getXformsDocument();
 		Element component_element = xforms_component.getElement();
 		
 		component_element = (Element)xforms_doc.importNode(component_element, true);
@@ -332,7 +336,7 @@ public class XFormsManager implements IXFormsManager {
 		
 		FormManagerUtil.putLocalizedText(null, null, 
 				label,
-				component_parent.getXformsDocument(),
+				form_document.getXformsDocument(),
 				loc_str
 		);
 	}
@@ -348,7 +352,7 @@ public class XFormsManager implements IXFormsManager {
 			
 			Element alert = FormManagerUtil.getItemElementById(cache_manager.getComponentsXforms(), "alert");
 			
-			Document xforms_doc = component_parent.getXformsDocument();
+			Document xforms_doc = form_document.getXformsDocument();
 			
 			alert = (Element)xforms_doc.importNode(alert, true);
 			element.appendChild(alert);
@@ -367,7 +371,7 @@ public class XFormsManager implements IXFormsManager {
 			Element output = (Element)alert.getElementsByTagName(FormManagerUtil.output_tag).item(0);
 			
 			FormManagerUtil.putLocalizedText(
-					null, null, output, component_parent.getXformsDocument(), props.getErrorMsg());
+					null, null, output, form_document.getXformsDocument(), props.getErrorMsg());
 		}
 	}
 	
@@ -380,7 +384,7 @@ public class XFormsManager implements IXFormsManager {
 		if(component_parent == null)
 			throw new NullPointerException("Parent form document not provided");
 		
-		Document xforms_doc = component_parent.getXformsDocument();
+		Document xforms_doc = form_document.getXformsDocument();
 		
 		Element element_to_move = xforms_component.getElement();
 		Element element_to_insert_before = null;
@@ -397,6 +401,42 @@ public class XFormsManager implements IXFormsManager {
 		xforms_component.setElement(
 				(Element)((Element)element_to_move.getParentNode()).insertBefore(element_to_move, element_to_insert_before)
 		);
+		
+		changePreviewElementOrder();
+	}
+	
+	protected void changePreviewElementOrder() {
+		
+		Element preview_element = xforms_component.getPreviewElement();
+		
+		if(preview_element == null)
+			return;
+		
+		IFormComponent comp_after_this = component.getComponentAfterThis();
+		
+		if(comp_after_this != null) {
+			
+			Element comp_after_preview = comp_after_this.getComponentXFormsManager().getComponentPreview();
+			
+			if(comp_after_preview == null)
+				return;
+			
+			xforms_component.setPreviewElement(
+					(Element)comp_after_preview.getParentNode().insertBefore(preview_element, comp_after_preview)
+			);
+			
+		} else {
+			IFormComponentPage confirmation_page = (IFormComponentPage)form_document.getConfirmationPage();
+			
+			if(confirmation_page == null)
+				throw new NullPointerException("Confirmation page not found, but preview element exists.");
+			
+			IFormComponentButtonArea button_area = (IFormComponentButtonArea)confirmation_page.getButtonArea();
+			
+			appendPreviewElement(confirmation_page.getComponentXFormsManager().getComponentElement(), 
+					button_area == null ? null : button_area.getComponentXFormsManager().getComponentElement()
+			);
+		}
 	}
 	
 	public void removeComponentFromXFormsDocument() {
@@ -404,13 +444,18 @@ public class XFormsManager implements IXFormsManager {
 		removeComponentLocalization();
 		removeComponentBindings();
 		
+		Element preview_element = xforms_component.getPreviewElement();
+		
+		if(preview_element != null)
+			preview_element.getParentNode().removeChild(preview_element);
+		
 		Element element_to_remove = xforms_component.getElement();
 		element_to_remove.getParentNode().removeChild(element_to_remove);
 	}
 	
 	protected void removeComponentBindings() {
 		
-		Document xforms_doc = component_parent.getXformsDocument();
+		Document xforms_doc = form_document.getXformsDocument();
 		
 		Element bind_element = xforms_component.getBind();
 		
@@ -440,7 +485,7 @@ public class XFormsManager implements IXFormsManager {
 		NodeList children = xforms_component.getElement().getElementsByTagName("*");
 		
 		Element loc_model = FormManagerUtil.getElementByIdFromDocument(
-				component_parent.getXformsDocument(), FormManagerUtil.head_tag, FormManagerUtil.data_mod);
+				form_document.getXformsDocument(), FormManagerUtil.head_tag, FormManagerUtil.data_mod);
 		
 		Element loc_strings = (Element)loc_model.getElementsByTagName(FormManagerUtil.loc_tag).item(0);
 		
@@ -472,11 +517,11 @@ public class XFormsManager implements IXFormsManager {
 
 	public String insertBindElement(Element new_bind_element, String bind_id) {
 		
-		Document form_xforms = component_parent.getXformsDocument();
+		Document form_xforms = form_document.getXformsDocument();
 		
 		new_bind_element.setAttribute(FormManagerUtil.id_att, bind_id);
 	
-		Element model = FormManagerUtil.getElementByIdFromDocument(form_xforms, FormManagerUtil.head_tag, component_parent.getFormId());
+		Element model = FormManagerUtil.getElementByIdFromDocument(form_xforms, FormManagerUtil.head_tag, form_document.getFormId());
 		model.appendChild(new_bind_element);
 		
 		String type_att = new_bind_element.getAttribute(FormManagerUtil.type_att);
@@ -493,7 +538,7 @@ public class XFormsManager implements IXFormsManager {
 		
 		if(xforms_component.getNodeset() != null) {
 			
-			Document xforms_doc = component_parent.getXformsDocument();
+			Document xforms_doc = form_document.getXformsDocument();
 //			insert nodeset element
 			Element nodeset_element = xforms_doc.createElement(bind_id);
 			
@@ -516,6 +561,11 @@ public class XFormsManager implements IXFormsManager {
 		bind_element.setAttribute(FormManagerUtil.nodeset_att, new_bind_name);
 		nodeset_element = (Element)nodeset_element.getOwnerDocument().renameNode(nodeset_element, nodeset_element.getNamespaceURI(), new_bind_name);
 		xforms_component.setNodeset(nodeset_element);
+		
+		if(xforms_component.getPreviewElement() != null)
+			xforms_component.getPreviewElement().setAttribute(
+					FormManagerUtil.ref_s_att, bind_element.getAttribute(FormManagerUtil.nodeset_att)
+			);
 	}
 	
 	public void updateP3pType() {
@@ -531,11 +581,11 @@ public class XFormsManager implements IXFormsManager {
 	
 	public LocalizedStringBean getLocalizedStrings() {
 		
-		return FormManagerUtil.getLabelLocalizedStrings(xforms_component.getElement(), component_parent.getXformsDocument());
+		return FormManagerUtil.getLabelLocalizedStrings(xforms_component.getElement(), form_document.getXformsDocument());
 	}
 	
 	public LocalizedStringBean getErrorLabelLocalizedStrings() {
-		return FormManagerUtil.getErrorLabelLocalizedStrings(xforms_component.getElement(), component_parent.getXformsDocument());
+		return FormManagerUtil.getErrorLabelLocalizedStrings(xforms_component.getElement(), form_document.getXformsDocument());
 	}
 	public Element getComponentElement() {
 		return xforms_component.getElement();
@@ -545,5 +595,93 @@ public class XFormsManager implements IXFormsManager {
 	}
 	public Element getComponentBind() {
 		return xforms_component.getBind();
+	}
+	public void setFormDocument(IFormComponentDocument form_document) {
+		this.form_document = form_document;
+	}
+	public void loadConfirmationElement(IFormComponentPage confirmation_page) {
+		
+		Element preview_element = FormManagerUtil.getElementByIdFromDocument(
+				form_document.getXformsDocument(), FormManagerUtil.body_tag, FormManagerUtil.preview+'.'+component.getId());
+		
+		if(preview_element != null) {
+			xforms_component.setPreviewElement(preview_element);
+			return;
+		}
+		
+		if(confirmation_page == null)
+			throw new NullPointerException("component preview element not found, when expected for component: "+component.getId());
+		
+		Element bind_element = xforms_component.getBind();
+		
+		if(bind_element == null)
+			return;
+
+//		creating new preview element
+		IFormComponent component_after_this = component.getComponentAfterThis();
+		Element page_element = confirmation_page.getComponentXFormsManager().getComponentElement();
+		
+		if(component_after_this != null) {
+			
+			Element preview_after = null;
+
+//			if preview_after == null, that could mean 2 things:
+//			- errornous form xforms document (ignore)
+//			- form component is not "normal" component (default), taking next if exists
+			while (component_after_this != null &&
+					(preview_after = component_after_this.getComponentXFormsManager().getComponentPreview()) == null
+			)
+				component_after_this = component_after_this.getComponentAfterThis();
+			
+			if(preview_after == null)
+				appendPreviewElement(page_element, 
+						confirmation_page.getButtonArea() == null ? null : 
+							((IFormComponent)confirmation_page.getButtonArea()).getComponentXFormsManager().getComponentElement()
+				);
+			else {
+				
+				Element output_element = createPreviewElement();
+				output_element = (Element)output_element.getParentNode().insertBefore(output_element, preview_after);
+				xforms_component.setPreviewElement(output_element);
+			}
+			
+		} else
+			appendPreviewElement(page_element, 
+					confirmation_page.getButtonArea() == null ? null : 
+						((IFormComponent)confirmation_page.getButtonArea()).getComponentXFormsManager().getComponentElement()
+			);
+	}
+	
+	protected Element createPreviewElement() {
+		
+		Element output_element = form_document.getXformsDocument().createElement(FormManagerUtil.output_tag);
+		
+		output_element.setAttribute(FormManagerUtil.id_att, FormManagerUtil.preview+'.'+component.getId());
+		output_element.setAttribute(FormManagerUtil.ref_s_att, xforms_component.getBind().getAttribute(FormManagerUtil.nodeset_att));
+		
+		Element component_element = xforms_component.getElement();
+		Element component_label = DOMUtil.getChildElement(component_element, FormManagerUtil.label_tag);
+		
+		if(component_label != null) {
+			
+			Element cloned_label = (Element)component_label.cloneNode(true);
+			output_element.appendChild(cloned_label);
+		}
+		return output_element;
+	}
+	
+	protected void appendPreviewElement(Element page_element, Element button_area) {
+		Element output_element = createPreviewElement();
+		
+		if(button_area == null)
+			output_element = (Element)page_element.appendChild(output_element);
+		else
+			output_element = (Element)button_area.getParentNode().insertBefore(output_element, button_area);
+		
+		xforms_component.setPreviewElement(output_element);
+	}
+	
+	public Element getComponentPreview() {
+		return xforms_component.getPreviewElement();
 	}
 }

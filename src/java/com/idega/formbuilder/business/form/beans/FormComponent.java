@@ -33,10 +33,11 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 	
 	protected IXFormsManager xforms_manager;
 	protected HtmlManager html_manager;
+	protected IFormComponentDocument form_document;
 	
 	public void render() {
 		
-		Document xforms_doc = parent.getXformsDocument();
+		Document xforms_doc = form_document.getXformsDocument();
 		
 		if(xforms_doc == null)
 			throw new NullPointerException("Form Xforms document was not provided");
@@ -59,8 +60,24 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 			if(!load)
 				changeBindNames();
 			
-			parent.setFormDocumentModified(true);
+			form_document.setFormDocumentModified(true);
 			tellAboutMe();
+			
+			if(FormComponentFactory.getInstance().isNormalFormElement(this)) {
+
+				if(load) {
+					
+					getXFormsManager().loadConfirmationElement(null);
+					
+				} else {
+					
+					IFormComponentPage confirmation_page = (IFormComponentPage)form_document.getConfirmationPage();
+					
+					if(confirmation_page != null) {
+						getXFormsManager().loadConfirmationElement(confirmation_page);
+					}
+				}
+			}
 			
 			created = true;
 			load = false;
@@ -82,7 +99,7 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 	protected void changeBindNames() {
 		
 		LocalizedStringBean localized_label = getProperties().getLabel();
-		String default_locale_label = localized_label.getString(parent.getDefaultLocale());
+		String default_locale_label = localized_label.getString(form_document.getDefaultLocale());
 		
 		getXFormsManager().changeBindName(
 				new StringBuffer(getId())
@@ -117,19 +134,21 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 		
 		IXFormsManager xforms_manager = getXFormsManager();
 		
-		if(component != null && component_after_me != null && !component_after_me.getId().equals(component.getId())) {
+		IFormComponent previous_component_after_me = component_after_me;
+		component_after_me = component;
+		
+		if(component != null && previous_component_after_me != null && !previous_component_after_me.getId().equals(component.getId())) {
 
 			xforms_manager.moveComponent(component.getId());
 			
-		} else if(component_after_me == null && component != null) {
+		} else if(previous_component_after_me == null && component != null) {
 			
 			xforms_manager.moveComponent(component.getId());
 			
-		} else if(component == null && component_after_me != null) {
+		} else if(component == null && previous_component_after_me != null) {
 			
 			xforms_manager.moveComponent(null);
 		}
-		component_after_me = component;
 	}
 	
 	public String getId() {
@@ -175,6 +194,7 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 			xforms_manager.setCacheManager(CacheManager.getInstance());
 			xforms_manager.setComponentParent(parent);
 			xforms_manager.setFormComponent(this);
+			xforms_manager.setFormDocument(form_document);
 		}
 		
 		return xforms_manager;
@@ -188,6 +208,7 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 			html_manager.setCacheManager(CacheManager.getInstance());
 			html_manager.setComponentParent(parent);
 			html_manager.setFormComponent(this);
+			html_manager.setFormDocument(form_document);
 		}
 		
 		return html_manager;
@@ -199,7 +220,7 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 	public void updateErrorMsg() {
 		getXFormsManager().updateErrorMsg();
 		getHtmlManager().clearHtmlComponents();
-		parent.setFormDocumentModified(true);
+		form_document.setFormDocumentModified(true);
 	}
 	public void updateLabel() {
 		getXFormsManager().updateLabel();
@@ -214,13 +235,13 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 	}
 	public void updateConstraintRequired() {
 		getXFormsManager().updateConstraintRequired();
-		parent.setFormDocumentModified(true);
+		form_document.setFormDocumentModified(true);
 	}
 	
 	public void remove() {
 		
 		getXFormsManager().removeComponentFromXFormsDocument();
-		parent.setFormDocumentModified(true);
+		form_document.setFormDocumentModified(true);
 		parent.unregisterComponent(getId());
 	}
 	
@@ -238,5 +259,8 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 	}
 	public IFormComponent getComponentAfterThis() {
 		return component_after_me;
+	}
+	public void setFormDocument(IFormComponentDocument form_document) {
+		this.form_document = form_document;
 	}
 }

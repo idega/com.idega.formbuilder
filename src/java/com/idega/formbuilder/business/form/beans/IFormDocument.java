@@ -4,6 +4,8 @@ import java.util.Locale;
 
 import org.w3c.dom.Document;
 
+import com.idega.formbuilder.business.form.Page;
+
 public interface IFormDocument {
 
 	public abstract Exception[] getSavedExceptions();

@@ -85,6 +85,7 @@ public class FormManagerUtil {
 	public static final String instance_tag = "xf:instance";
 	public static final String div_tag = "div";
 	public static final String trigger_tag = "xf:trigger";
+	public static final String preview = "preview";
 	
 	private static final String line_sep = "line.separator";
 	private static final String xml_mediatype = "text/html";

@@ -36,4 +36,6 @@ public interface IFormComponent {
 	public abstract void setParent(IFormComponentContainer parent);
 	
 	public abstract IXFormsManager getComponentXFormsManager();
+	
+	public abstract void setFormDocument(IFormComponentDocument form_document);
 }

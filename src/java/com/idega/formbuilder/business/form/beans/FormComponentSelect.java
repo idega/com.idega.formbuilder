@@ -21,6 +21,7 @@ public class FormComponentSelect extends FormComponent implements IComponentProp
 			xforms_manager.setCacheManager(CacheManager.getInstance());
 			xforms_manager.setComponentParent(parent);
 			xforms_manager.setFormComponent(this);
+			xforms_manager.setFormDocument(form_document);
 		}
 		
 		return xforms_manager;
@@ -54,24 +55,24 @@ public class FormComponentSelect extends FormComponent implements IComponentProp
 		
 		((XFormsManagerSelect)getXFormsManager()).updateDataSrcUsed();
 		getHtmlManager().clearHtmlComponents();
-		parent.setFormDocumentModified(true);
+		form_document.setFormDocumentModified(true);
 	}
 	
 	public void updateItemset() {
 		getHtmlManager().clearHtmlComponents();
-		parent.setFormDocumentModified(true);
+		form_document.setFormDocumentModified(true);
 	}
 	
 	public void updateEmptyElementLabel() {
 		((XFormsManagerSelect)getXFormsManager()).updateEmptyElementLabel();
 		getHtmlManager().clearHtmlComponents();
-		parent.setFormDocumentModified(true);
+		form_document.setFormDocumentModified(true);
 	}
 	
 	public void updateExternalDataSrc() {
 		((XFormsManagerSelect)getXFormsManager()).updateExternalDataSrc();
 		getHtmlManager().clearHtmlComponents();
-		parent.setFormDocumentModified(true);
+		form_document.setFormDocumentModified(true);
 	}
 	
 	public void remove() {

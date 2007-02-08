@@ -47,6 +47,8 @@ public class SandboxFormManagerTest {
 			System.out.println("new page added: "+np);
 			ba = np.createButtonArea(null);
 			
+			np.addComponent(fm.getAvailableFormComponentsTypesList().get(0), null);
+			
 			System.out.println("source code___________");
 			System.out.println(fm.getCurrentDocument().getFormSourceCode());
 			

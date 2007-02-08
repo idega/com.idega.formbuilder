@@ -12,7 +12,14 @@ public class XFormsComponentDataBean implements Cloneable {
 	private Element element;
 	private Element bind;
 	private Element nodeset;
+	private Element preview_element;
 	
+	public Element getPreviewElement() {
+		return preview_element;
+	}
+	public void setPreviewElement(Element preview_element) {
+		this.preview_element = preview_element;
+	}
 	public Element getBind() {
 		return bind;
 	}

@@ -45,7 +45,7 @@ public class FormComponentFactory implements Singleton {
 		
 		List<String> non_display_types = new ArrayList<String>();
 		non_display_types.add(fbcomp_button_area);
-		non_display_types.add("fbcomp_page");
+		non_display_types.add(page_type);
 		components_tags_classified.put(type_non_display, non_display_types);
 		
 		types = new ArrayList<String>();
@@ -97,6 +97,16 @@ public class FormComponentFactory implements Singleton {
 			return new FormComponentButton();
 		
 		return new FormComponent();
+	}
+	
+	public boolean isNormalFormElement(IFormComponent form_component) {
+		
+		String type = form_component.getType();
+		System.out.println("isnormal for type: "+type);
+		
+		return 
+			components_tags_classified.get(type_select).contains(type) ||
+			components_tags_classified.get(type_simple).contains(type);
 	}
 	
 	public void filterNonDisplayComponents(List<String> all_components_types) {

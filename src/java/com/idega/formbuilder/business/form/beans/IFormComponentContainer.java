@@ -1,12 +1,8 @@
 package com.idega.formbuilder.business.form.beans;
 
 import java.util.List;
-import java.util.Locale;
-
-import org.w3c.dom.Document;
 
 import com.idega.formbuilder.business.form.Component;
-import com.idega.formbuilder.business.form.Page;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
@@ -15,29 +11,13 @@ import com.idega.formbuilder.business.form.Page;
  */
 public interface IFormComponentContainer extends IFormComponent {
 
-	public abstract Document getXformsDocument();
-	
 	public abstract IFormComponent getContainedComponent(String component_id);
-	
-	public abstract void setFormDocumentModified(boolean changed);
-	
-	public abstract boolean isFormDocumentModified();
-	
-	public abstract Document getComponentsXml();
-	
-	public abstract void setComponentsXml(Document xml);
-	
-	public abstract String getFormId();
-	
-	public abstract Locale getDefaultLocale();
 	
 	public abstract Component addComponent(String component_type, String component_after_this_id) throws NullPointerException;
 
 	public abstract Component getComponent(String component_id);
 	
 	public abstract void tellComponentId(String component_id);
-	
-	public abstract String generateNewComponentId();
 	
 	public abstract void rearrangeComponents();
 	
@@ -46,10 +26,4 @@ public interface IFormComponentContainer extends IFormComponent {
 	public abstract void componentsOrderChanged();
 	
 	public abstract void unregisterComponent(String component_id);
-	
-	public abstract Page getConfirmationPage();
-	
-	public abstract Page getThxPage();
-	
-	public abstract void registerForLastPage(String register_page_id);
 }

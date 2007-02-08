@@ -4,6 +4,8 @@ import org.w3c.dom.Element;
 
 import com.idega.formbuilder.business.form.beans.IFormComponent;
 import com.idega.formbuilder.business.form.beans.IFormComponentContainer;
+import com.idega.formbuilder.business.form.beans.IFormComponentDocument;
+import com.idega.formbuilder.business.form.beans.IFormComponentPage;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 
 public interface IXFormsManager {
@@ -54,4 +56,10 @@ public interface IXFormsManager {
 	public abstract Element getComponentNodeset();
 	
 	public abstract Element getComponentBind();
+	
+	public abstract Element getComponentPreview();
+	
+	public abstract void setFormDocument(IFormComponentDocument form_document);
+	
+	public abstract void loadConfirmationElement(IFormComponentPage confirmation_page);
 }

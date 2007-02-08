@@ -20,6 +20,7 @@ public class FormComponentButton extends FormComponent implements Button, IFormC
 			xforms_manager.setCacheManager(CacheManager.getInstance());
 			xforms_manager.setComponentParent(parent);
 			xforms_manager.setFormComponent(this);
+			xforms_manager.setFormDocument(form_document);
 		}
 		
 		return xforms_manager;

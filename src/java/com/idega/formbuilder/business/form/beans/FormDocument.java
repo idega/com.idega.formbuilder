@@ -43,13 +43,14 @@ public class FormDocument implements IFormDocument {
 	private int last_component_id = 0;
 	private boolean document_changed = true;
 	private Timer saveTimer;
-	protected boolean saving = false;
+	private boolean saving = false;
 	
 	public FormDocument() {
 		saveTimer = new Timer("FormDocument save");
 		
 		pages_container = new FormComponentDocument();
 		pages_container.setFormDocument(this);
+		pages_container.setFormDocument(pages_container);
 	}
 	
 	public static FormDocument createDocument(String form_id, LocalizedStringBean form_name) throws NullPointerException, Exception {
@@ -108,7 +109,7 @@ public class FormDocument implements IFormDocument {
 	
 	public void persist() {
 		// if document is already scheduled for saving don't do anything
-		if (!saving) {
+		if (!saving && false) {
 			saving = true;
 			TimerTask saveTask = new FormSaveTask();
 			// will save current state of document after 5 seconds

@@ -71,7 +71,7 @@ public class XFormsManagerButton extends XFormsManager {
 			
 		} else if(component.getType().equals(ConstButtonType.submit_form_button)) {
 
-			component_parent.registerForLastPage(((IFormComponentButtonArea)component_parent).getCurrentPage().getId());
+			form_document.registerForLastPage(((IFormComponentButtonArea)component_parent).getCurrentPage().getId());
 		}
 	}
 	@Override

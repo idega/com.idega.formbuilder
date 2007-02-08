@@ -54,7 +54,6 @@ public class XFormsManagerPage extends XFormsManagerContainer {
 	public void loadXFormsComponentFromDocument(String component_id) {
 		super.loadXFormsComponentFromDocument(component_id);
 		checkForSpecialTypes();
-		
 		Element case_element = xforms_component.getElement();
 		xforms_component.setElement((Element)case_element.getElementsByTagName(FormManagerUtil.group_tag).item(0));
 	}
@@ -98,7 +97,7 @@ public class XFormsManagerPage extends XFormsManagerContainer {
 		if(component_parent == null)
 			throw new NullPointerException("Parent form document not provided");
 		
-		Document xforms_doc = component_parent.getXformsDocument();
+		Document xforms_doc = form_document.getXformsDocument();
 		
 		Element element_to_move = (Element)xforms_component.getElement().getParentNode();
 		Element element_to_insert_before = null;
@@ -113,7 +112,8 @@ public class XFormsManagerPage extends XFormsManagerContainer {
 		}
 		
 		xforms_component.setElement(
-				(Element)((Element)element_to_move.getParentNode()).insertBefore(element_to_move, element_to_insert_before)
+				(Element)((Element)((Element)element_to_move.getParentNode()).insertBefore(element_to_move, element_to_insert_before))
+				.getElementsByTagName(FormManagerUtil.group_tag).item(0)
 		);
 	}
 }

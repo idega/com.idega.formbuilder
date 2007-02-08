@@ -1,5 +1,7 @@
 package com.idega.formbuilder.business.form.beans;
 
+import com.idega.formbuilder.business.form.ButtonArea;
+
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
  * @version 1.0
@@ -18,4 +20,6 @@ public interface IFormComponentPage extends IFormComponentContainer {
 	public abstract IFormComponentPage getNextPage();
 	
 	public abstract void announceLastPage(String last_page_id);
+	
+	public abstract ButtonArea getButtonArea();
 }

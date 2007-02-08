@@ -96,7 +96,7 @@ public class XFormsManagerSelect extends XFormsManager {
 		
 		super.addComponentToDocument();
 		
-		Document xforms_doc = component_parent.getXformsDocument();
+		Document xforms_doc = form_document.getXformsDocument();
 		XFormsComponentSelectDataBean xforms_component = (XFormsComponentSelectDataBean)this.xforms_component;
 		
 		Element new_xforms_element = xforms_component.getLocalItemsetInstance();
@@ -161,7 +161,7 @@ public class XFormsManagerSelect extends XFormsManager {
 		
 		String key = FormManagerUtil.getKeyFromRef(ref);
 		
-		return FormManagerUtil.getLocalizedStrings(key, component_parent.getXformsDocument());
+		return FormManagerUtil.getLocalizedStrings(key, form_document.getXformsDocument());
 	}
 	public String getExternalDataSrc() {
 		
@@ -259,7 +259,7 @@ public class XFormsManagerSelect extends XFormsManager {
 		
 		FormManagerUtil.putLocalizedText(null, null, 
 				label,
-				component_parent.getXformsDocument(),
+				form_document.getXformsDocument(),
 				loc_str
 		);
 		

@@ -6,12 +6,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.idega.formbuilder.business.form.Component;
 import com.idega.formbuilder.business.form.Container;
-import com.idega.formbuilder.business.form.Page;
 import com.idega.formbuilder.business.form.PropertiesComponent;
 import com.idega.formbuilder.business.form.manager.CacheManager;
 import com.idega.formbuilder.business.form.manager.IXFormsManager;
@@ -38,6 +36,7 @@ public class FormComponentContainer extends FormComponent implements IFormCompon
 		for (String[] ctnaid : components_tag_names_and_ids) {
 			
 			IFormComponent component = components_factory.getFormComponentByType(ctnaid[0]);
+			component.setFormDocument(form_document);
 			String component_id = ctnaid[1];
 			
 			component.setId(component_id);
@@ -59,6 +58,7 @@ public class FormComponentContainer extends FormComponent implements IFormCompon
 			xforms_manager.setCacheManager(CacheManager.getInstance());
 			xforms_manager.setComponentParent(parent);
 			xforms_manager.setFormComponent(this);
+			xforms_manager.setFormDocument(form_document);
 		}
 		
 		return xforms_manager;
@@ -84,31 +84,11 @@ public class FormComponentContainer extends FormComponent implements IFormCompon
 		
 		return contained_components;
 	}
-	
-	public Document getXformsDocument() {
-		return parent.getXformsDocument();
-	}
-	public void setFormDocumentModified(boolean changed) {
-		parent.setFormDocumentModified(changed);
-	}
-	public boolean isFormDocumentModified() {
-		return parent.isFormDocumentModified();
-	}
-	public Document getComponentsXml() {
-		return parent.getComponentsXml();
-	}
-	public void setComponentsXml(Document xml) {
-		parent.setComponentsXml(xml);
-	}
-	public String getFormId() {
-		return parent.getFormId();
-	}
-	public Locale getDefaultLocale() {
-		return parent.getDefaultLocale();
-	}
+
 	public Component addComponent(String component_type, String component_after_this_id) throws NullPointerException {
 		
 		IFormComponent component = FormComponentFactory.getInstance().getFormComponentByType(component_type);
+		component.setFormDocument(form_document);
 
 		if(component_after_this_id != null) {
 			
@@ -120,7 +100,7 @@ public class FormComponentContainer extends FormComponent implements IFormCompon
 			component.setComponentAfterThis(comp_after_new);
 		}
 		
-		String component_id = generateNewComponentId();
+		String component_id = form_document.generateNewComponentId();
 		component.setId(component_id);
 		component.setParent(this);
 		component.setLoad(false);
@@ -141,9 +121,6 @@ public class FormComponentContainer extends FormComponent implements IFormCompon
 	
 	public void tellComponentId(String component_id) {
 		parent.tellComponentId(component_id);
-	}
-	public String generateNewComponentId() {
-		return parent.generateNewComponentId();
 	}
 	
 	public void rearrangeComponents() {
@@ -202,18 +179,5 @@ public class FormComponentContainer extends FormComponent implements IFormCompon
 		
 		getContainedComponents().remove(component_id);
 		getContainedComponentsIdList().remove(component_id);
-	}
-	
-	public Page getConfirmationPage() {
-		
-		return parent.getConfirmationPage();
-	}
-	public Page getThxPage() {
-		
-		return parent.getThxPage();
-	}
-	
-	public void registerForLastPage(String register_page_id) {
-		parent.registerForLastPage(register_page_id);
 	}
 }

@@ -15,7 +15,7 @@ public class HtmlManagerButton extends HtmlManager {
 	protected Element getFormHtmlComponentLocalization(String loc_str) {
 		
 		Element loc_model = FormManagerUtil.getElementByIdFromDocument(
-				component_parent.getXformsDocument(), FormManagerUtil.head_tag, FormManagerUtil.data_mod
+				form_document.getXformsDocument(), FormManagerUtil.head_tag, FormManagerUtil.data_mod
 		);
 		Element loc_strings = (Element)loc_model.getElementsByTagName(FormManagerUtil.loc_tag).item(0);
 		Element localized_component = (Element)unlocalized_html_component.cloneNode(true);

@@ -20,7 +20,7 @@ import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
  * @version 1.0
  * 
  */
-public class FormComponentDocument extends FormComponentContainer implements com.idega.formbuilder.business.form.Document {
+public class FormComponentDocument extends FormComponentContainer implements com.idega.formbuilder.business.form.Document, IFormComponentDocument {
 	
 	protected IFormDocument document;
 	protected String confirmation_page_id;
@@ -41,36 +41,36 @@ public class FormComponentDocument extends FormComponentContainer implements com
 			xforms_manager.setCacheManager(CacheManager.getInstance());
 			xforms_manager.setComponentParent(parent);
 			xforms_manager.setFormComponent(this);
+			xforms_manager.setFormDocument(form_document);
 		}
 		
 		return xforms_manager;
 	}
 	
-	@Override
 	public Document getXformsDocument() {
 		return document.getXformsDocument();
 	}
-	@Override
+	
 	public void setFormDocumentModified(boolean changed) {
 		document.setFormDocumentModified(changed);
 	}
-	@Override
+	
 	public boolean isFormDocumentModified() {
 		return document.isFormDocumentModified();
 	}
-	@Override
+	
 	public Document getComponentsXml() {
 		return document.getComponentsXml();
 	}
-	@Override
+	
 	public void setComponentsXml(Document xml) {
 		document.setComponentsXml(xml);
 	}
-	@Override
+	
 	public String getFormId() {
 		return document.getFormId();
 	}
-	@Override
+	
 	public Locale getDefaultLocale() {
 		return document.getDefaultLocale();
 	}
@@ -96,7 +96,7 @@ public class FormComponentDocument extends FormComponentContainer implements com
 	public List<String> getContainedPagesIdList() {
 		return getContainedComponentsIdList();
 	}
-	@Override
+	
 	public String generateNewComponentId() {
 		return document.generateNewComponentId();
 	}
@@ -197,7 +197,6 @@ public class FormComponentDocument extends FormComponentContainer implements com
 	}
 	@Override
 	public void loadContainerComponents() {
-		
 		super.loadContainerComponents();
 		componentsOrderChanged();
 	}
@@ -221,6 +220,7 @@ public class FormComponentDocument extends FormComponentContainer implements com
 		
 		return registered_for_last_page_id_pages;
 	}
+	
 	public void registerForLastPage(String register_page_id) {
 		
 		if(!getContainedComponents().containsKey(register_page_id))
