@@ -19,4 +19,6 @@ public interface Component {
 	public abstract PropertiesComponent getProperties();
 	
 	public abstract void remove();
+	
+	public abstract String getType();
 }
