@@ -43,7 +43,7 @@ public class FormComponentDocument extends FormComponentContainer implements com
 			xforms_manager.setFormComponent(this);
 		}
 		
-		return (XFormsManagerDocument)xforms_manager;
+		return xforms_manager;
 	}
 	
 	@Override
