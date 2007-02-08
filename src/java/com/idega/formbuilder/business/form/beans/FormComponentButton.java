@@ -2,6 +2,8 @@ package com.idega.formbuilder.business.form.beans;
 
 import com.idega.formbuilder.business.form.Button;
 import com.idega.formbuilder.business.form.manager.CacheManager;
+import com.idega.formbuilder.business.form.manager.HtmlManager;
+import com.idega.formbuilder.business.form.manager.HtmlManagerButton;
 import com.idega.formbuilder.business.form.manager.IXFormsManager;
 import com.idega.formbuilder.business.form.manager.XFormsManagerButton;
 
@@ -40,5 +42,20 @@ public class FormComponentButton extends FormComponent implements Button, IFormC
 	
 	public void setLastPageId(String last_page_id) {
 		((XFormsManagerButton)getXFormsManager()).setLastPageToSubmitButton(last_page_id);
+	}
+	
+	@Override
+	protected HtmlManager getHtmlManager() {
+		
+		if(html_manager == null) {
+			
+			html_manager = new HtmlManagerButton();
+			html_manager.setCacheManager(CacheManager.getInstance());
+			html_manager.setComponentParent(parent);
+			html_manager.setFormComponent(this);
+			html_manager.setFormDocument(form_document);
+		}
+		
+		return html_manager;
 	}
 }
