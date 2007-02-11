@@ -84,6 +84,17 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 		}
 	}
 	
+	public void addToConfirmationPage() {
+		
+		if(FormComponentFactory.getInstance().isNormalFormElement(this)) {
+			IFormComponentPage confirmation_page = (IFormComponentPage)form_document.getConfirmationPage();
+			
+			if(confirmation_page != null) {
+				getXFormsManager().loadConfirmationElement(confirmation_page);
+			}
+		}
+	}
+	
 	protected void setProperties() {
 		
 		ComponentProperties properties = (ComponentProperties)getProperties();

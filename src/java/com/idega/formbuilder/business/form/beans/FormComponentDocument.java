@@ -229,4 +229,17 @@ public class FormComponentDocument extends FormComponentContainer implements com
 		if(!getRegisteredForLastPageIdPages().contains(register_page_id))
 			getRegisteredForLastPageIdPages().add(register_page_id);
 	}
+	
+	public Page addConfirmationPage(String page_after_this_id) {
+
+		if(getConfirmationPage() != null)
+			throw new IllegalArgumentException("Confirmation page already exists in the form");
+		
+		Page page = (Page)super.addComponent(FormComponentFactory.confirmation_page_type, page_after_this_id);
+		componentsOrderChanged();
+		
+		addToConfirmationPage();
+		
+		return page;
+	}
 }

@@ -180,4 +180,12 @@ public class FormComponentContainer extends FormComponent implements IFormCompon
 		getContainedComponents().remove(component_id);
 		getContainedComponentsIdList().remove(component_id);
 	}
+
+	@Override
+	public void addToConfirmationPage() {
+		super.addToConfirmationPage();
+		
+		for (String components_id_list : getContainedComponentsIdList())
+			getContainedComponents().get(components_id_list).addToConfirmationPage();
+	}
 }

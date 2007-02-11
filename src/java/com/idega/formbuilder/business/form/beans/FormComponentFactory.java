@@ -25,6 +25,7 @@ public class FormComponentFactory implements Singleton {
 	private static final String type_non_display = "type_non_display";
 	public static final String page_type_tag = FormManagerUtil.case_tag;
 	public static final String page_type = "fbcomp_page";
+	public static final String confirmation_page_type = "fbcomp_confirmation_page";
 	public static final String button_type = FormManagerUtil.trigger_tag;
 	public static final String button_area_type = "button_area";
 	public static final String fbcomp_button_area = "fbcomp_button_area";
@@ -46,6 +47,7 @@ public class FormComponentFactory implements Singleton {
 		List<String> non_display_types = new ArrayList<String>();
 		non_display_types.add(fbcomp_button_area);
 		non_display_types.add(page_type);
+		non_display_types.add(confirmation_page_type);
 		components_tags_classified.put(type_non_display, non_display_types);
 		
 		types = new ArrayList<String>();
@@ -89,7 +91,7 @@ public class FormComponentFactory implements Singleton {
 		
 		if(types.contains(component_type))
 			return new FormComponentSelect();
-		if(component_type.equals(page_type_tag) || component_type.equals(page_type))
+		if(component_type.equals(page_type_tag) || component_type.equals(page_type) || component_type.equals(confirmation_page_type))
 			return new FormComponentPage();
 		if(component_type.equals(button_area_type) || component_type.equals(fbcomp_button_area))
 			return new FormComponentButtonArea();

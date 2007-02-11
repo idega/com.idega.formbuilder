@@ -38,4 +38,6 @@ public interface IFormComponent {
 	public abstract IXFormsManager getComponentXFormsManager();
 	
 	public abstract void setFormDocument(IFormComponentDocument form_document);
+	
+	public abstract void addToConfirmationPage();
 }

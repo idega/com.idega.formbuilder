@@ -55,6 +55,7 @@
 			lang="en">--Empty--</lockey_select.empty> <lockey_select.empty
 			lang="is">--Empty icelandic--</lockey_select.empty> <lockey_page.label
 			lang="en">Page</lockey_page.label>
+			<lockey_confirmation_page.label lang="en">Confirmation Page</lockey_confirmation_page.label>
 			<lockey_button_next.label lang="en">Next page</lockey_button_next.label>
 			<lockey_button_previous.label lang="en">Previous page</lockey_button_previous.label>
 			<lockey_button_submit.label lang="en">Submit form</lockey_button_submit.label>
@@ -194,6 +195,11 @@
 		<xf:group id="fbcomp_page" appearance="full">
 			<xf:label 
 				ref="instance('localized_strings')/lockey_page.label[@lang=instance('localized_strings')/current_language]"
+				model="data_model" />
+		</xf:group>
+		<xf:group id="fbcomp_confirmation_page" appearance="full" name="confirmation_page">
+			<xf:label 
+				ref="instance('localized_strings')/lockey_confirmation_page.label[@lang=instance('localized_strings')/current_language]"
 				model="data_model" />
 		</xf:group>
 		<xf:trigger id="fbcomp_button_next" name="fbcomp_button_next">
