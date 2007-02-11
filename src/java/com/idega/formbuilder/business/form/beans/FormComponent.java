@@ -228,26 +228,6 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 	public String getType() {
 		return type;
 	}
-	public void updateErrorMsg() {
-		getXFormsManager().updateErrorMsg();
-		getHtmlManager().clearHtmlComponents();
-		form_document.setFormDocumentModified(true);
-	}
-	public void updateLabel() {
-		getXFormsManager().updateLabel();
-		getHtmlManager().clearHtmlComponents();
-		
-		changeBindNames();
-	}
-	
-	public void updateP3pType() {
-		
-		getXFormsManager().updateP3pType();
-	}
-	public void updateConstraintRequired() {
-		getXFormsManager().updateConstraintRequired();
-		form_document.setFormDocumentModified(true);
-	}
 	
 	public void remove() {
 		
@@ -273,5 +253,34 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 	}
 	public void setFormDocument(IFormComponentDocument form_document) {
 		this.form_document = form_document;
+	}
+	
+	public void update(ConstUpdateType what) {
+		
+		getXFormsManager().update(what);
+		
+		int update = what.getUpdateType();
+		
+		switch (update) {
+		case ConstUpdateType.label:
+			getHtmlManager().clearHtmlComponents();
+			changeBindNames();
+			break;
+			
+		case ConstUpdateType.error_msg:
+			getHtmlManager().clearHtmlComponents();
+			form_document.setFormDocumentModified(true);
+			break;
+			
+		case ConstUpdateType.constraint_required:
+			form_document.setFormDocumentModified(true);
+			break;
+			
+		case ConstUpdateType.p3p_type:
+			break;
+
+		default:
+			break;
+		}
 	}
 }

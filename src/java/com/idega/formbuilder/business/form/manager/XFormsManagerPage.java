@@ -44,6 +44,12 @@ public class XFormsManagerPage extends XFormsManagerContainer {
 				
 				if(name_val.equals(FormComponentFactory.button_area_type))
 					tag_name_and_id[0] = FormComponentFactory.button_area_type;
+			} else if(tag_name_and_id[0].equals(FormManagerUtil.case_tag)) {
+				
+				String name_val = component_element.getAttribute(FormManagerUtil.name_att);
+				
+				if(name_val != null && name_val.equals(FormComponentFactory.page_type_thx))
+					tag_name_and_id[0] = FormComponentFactory.page_type_thx;
 			}
 			components_tag_names_and_ids.add(tag_name_and_id);
 		}

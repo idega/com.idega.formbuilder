@@ -7,7 +7,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.idega.formbuilder.business.form.PropertiesSelect;
-import com.idega.formbuilder.business.form.beans.IComponentPropertiesSelectParent;
+import com.idega.formbuilder.business.form.beans.ConstUpdateType;
+import com.idega.formbuilder.business.form.beans.IComponentPropertiesParent;
 import com.idega.formbuilder.business.form.beans.ILocalizedItemset;
 import com.idega.formbuilder.business.form.beans.LocalizedItemsetBean;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
@@ -182,12 +183,36 @@ public class XFormsManagerSelect extends XFormsManager {
 		LocalizedItemsetBean itemset_bean = new LocalizedItemsetBean();
 		itemset_bean.setLocalDataSrcElement(local_instance);
 		itemset_bean.setComponentsXFormsDocument(cache_manager.getComponentsXforms());
-		itemset_bean.setParentComponent((IComponentPropertiesSelectParent)component);
+		itemset_bean.setParentComponent((IComponentPropertiesParent)component);
 		
 		return itemset_bean;
-	}	
+	}
 	
-	public void updateDataSrcUsed() {
+	@Override
+	public void update(ConstUpdateType what) {
+		super.update(what);
+		
+		int update = what.getUpdateType();
+		
+		switch (update) {
+		case ConstUpdateType.data_src_used:
+			updateDataSrcUsed();
+			break;
+			
+		case ConstUpdateType.empty_element_label:
+			updateEmptyElementLabel();
+			break;
+			
+		case ConstUpdateType.external_data_src:
+			updateExternalDataSrc();
+			break;
+			
+		default:
+			break;
+		}
+	}
+	
+	protected void updateDataSrcUsed() {
 		
 		PropertiesSelect properties = (PropertiesSelect)component.getProperties();
 		Integer data_src_used = properties.getDataSrcUsed();
@@ -246,7 +271,7 @@ public class XFormsManagerSelect extends XFormsManager {
 		return buf.toString();
 	}
 
-	public void updateEmptyElementLabel() {
+	protected void updateEmptyElementLabel() {
 		
 		LocalizedStringBean loc_str = ((PropertiesSelect)component.getProperties()).getEmptyElementLabel();
 		
@@ -264,7 +289,7 @@ public class XFormsManagerSelect extends XFormsManager {
 		);
 		
 	}
-	public void updateExternalDataSrc() {
+	protected void updateExternalDataSrc() {
 		
 		Element external_instance = ((XFormsComponentSelectDataBean)xforms_component).getExternalItemsetInstance();
 		

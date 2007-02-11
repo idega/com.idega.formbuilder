@@ -21,21 +21,21 @@ public class ComponentProperties implements PropertiesComponent {
 	}
 	public void setErrorMsg(LocalizedStringBean error_msg) {
 		this.error_msg = error_msg;
-		parent_component.updateErrorMsg();
+		parent_component.update(new ConstUpdateType(ConstUpdateType.error_msg));
 	}
 	public LocalizedStringBean getLabel() {
 		return label;
 	}
 	public void setLabel(LocalizedStringBean label) {
 		this.label = label;
-		parent_component.updateLabel();
+		parent_component.update(new ConstUpdateType(ConstUpdateType.label));
 	}
 	public boolean isRequired() {
 		return required;
 	}
 	public void setRequired(boolean required) {
 		this.required = required;
-		parent_component.updateConstraintRequired();
+		parent_component.update(new ConstUpdateType(ConstUpdateType.constraint_required));
 	}
 	public void setPlainLabel(LocalizedStringBean label) {
 		this.label = label;
@@ -66,7 +66,7 @@ public class ComponentProperties implements PropertiesComponent {
 	}
 	public void setP3ptype(String p3ptype) {
 		this.p3ptype = p3ptype;
-		parent_component.updateP3pType();
+		parent_component.update(new ConstUpdateType(ConstUpdateType.p3p_type));
 	}
 	public void setPlainP3ptype(String p3ptype) {
 		this.p3ptype = p3ptype;

@@ -60,7 +60,7 @@ public interface Document extends Container {
 	
 	public abstract Page getConfirmationPage();
 	
-	public abstract Page getThxPage();
+	public abstract PageThankYou getThxPage();
 	
 	public abstract Page addConfirmationPage(String page_after_this_id);
 }

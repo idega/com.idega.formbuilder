@@ -25,7 +25,7 @@ public class ComponentPropertiesSelect extends ComponentProperties implements Pr
 	}
 	public void setEmptyElementLabel(LocalizedStringBean empty_element_label) {
 		this.empty_element_label = empty_element_label;
-		((IComponentPropertiesSelectParent)parent_component).updateEmptyElementLabel();
+		parent_component.update(new ConstUpdateType(ConstUpdateType.empty_element_label));
 	}
 	public void setEmptyElementLabelPlain(LocalizedStringBean empty_element_label) {
 		this.empty_element_label = empty_element_label;
@@ -42,8 +42,7 @@ public class ComponentPropertiesSelect extends ComponentProperties implements Pr
 	 */
 	public void setExternalDataSrc(String external_data_src) {
 		this.external_data_src = external_data_src;
-		((IComponentPropertiesSelectParent)parent_component).updateExternalDataSrc();
-		
+		parent_component.update(new ConstUpdateType(ConstUpdateType.external_data_src));
 	}
 	public void setExternalDataSrcPlain(String external_data_src) {
 		this.external_data_src = external_data_src;
@@ -57,7 +56,7 @@ public class ComponentPropertiesSelect extends ComponentProperties implements Pr
 			throw new IllegalArgumentException("Neither LOCAL_DATA_SRC, nor EXTERNAL_DATA_SRC provided.");
 		
 		this.data_src_used = data_src_used;
-		((IComponentPropertiesSelectParent)parent_component).updateDataSrcUsed();
+		parent_component.update(new ConstUpdateType(ConstUpdateType.data_src_used));
 	}
 	public void setDataSrcUsedPlain(Integer data_src_used) {
 		

@@ -91,6 +91,8 @@ public class FormComponentFactory implements Singleton {
 		
 		if(types.contains(component_type))
 			return new FormComponentSelect();
+		if(component_type.equals(page_type_thx))
+			return new FormComponentThankYouPage();
 		if(component_type.equals(page_type_tag) || component_type.equals(page_type) || component_type.equals(confirmation_page_type))
 			return new FormComponentPage();
 		if(component_type.equals(button_area_type) || component_type.equals(fbcomp_button_area))

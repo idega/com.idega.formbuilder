@@ -3,6 +3,11 @@ package com.idega.formbuilder.business.form;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @version 1.0
+ * 
+ */
 public final class ConstButtonType {
 
 	public static final String previous_page_button = "fbcomp_button_previous";

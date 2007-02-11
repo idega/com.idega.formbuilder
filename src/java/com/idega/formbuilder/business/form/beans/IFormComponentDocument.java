@@ -5,6 +5,7 @@ import java.util.Locale;
 import org.w3c.dom.Document;
 
 import com.idega.formbuilder.business.form.Page;
+import com.idega.formbuilder.business.form.PageThankYou;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
@@ -29,7 +30,7 @@ public interface IFormComponentDocument extends IFormComponentContainer {
 	
 	public abstract Page getConfirmationPage();
 	
-	public abstract Page getThxPage();
+	public abstract PageThankYou getThxPage();
 	
 	public abstract void registerForLastPage(String register_page_id);
 	

@@ -11,7 +11,7 @@ import com.idega.formbuilder.business.form.manager.XFormsManagerSelect;
  * @version 1.0
  * 
  */
-public class FormComponentSelect extends FormComponent implements IComponentPropertiesSelectParent, ComponentSelect {
+public class FormComponentSelect extends FormComponent implements ComponentSelect {
 	
 	protected IXFormsManager getXFormsManager() {
 		
@@ -51,28 +51,36 @@ public class FormComponentSelect extends FormComponent implements IComponentProp
 		properties.setItemsetPlain(xforms_manager.getItemset());
 	}
 	
-	public void updateDataSrcUsed() {
+	@Override
+	public void update(ConstUpdateType what) {
+		super.update(what);
 		
-		((XFormsManagerSelect)getXFormsManager()).updateDataSrcUsed();
-		getHtmlManager().clearHtmlComponents();
-		form_document.setFormDocumentModified(true);
-	}
-	
-	public void updateItemset() {
-		getHtmlManager().clearHtmlComponents();
-		form_document.setFormDocumentModified(true);
-	}
-	
-	public void updateEmptyElementLabel() {
-		((XFormsManagerSelect)getXFormsManager()).updateEmptyElementLabel();
-		getHtmlManager().clearHtmlComponents();
-		form_document.setFormDocumentModified(true);
-	}
-	
-	public void updateExternalDataSrc() {
-		((XFormsManagerSelect)getXFormsManager()).updateExternalDataSrc();
-		getHtmlManager().clearHtmlComponents();
-		form_document.setFormDocumentModified(true);
+		int update = what.getUpdateType();
+		
+		switch (update) {
+		case ConstUpdateType.data_src_used:
+			getHtmlManager().clearHtmlComponents();
+			form_document.setFormDocumentModified(true);
+			break;
+			
+		case ConstUpdateType.itemset:
+			getHtmlManager().clearHtmlComponents();
+			form_document.setFormDocumentModified(true);
+			break;
+			
+		case ConstUpdateType.empty_element_label:
+			getHtmlManager().clearHtmlComponents();
+			form_document.setFormDocumentModified(true);
+			break;
+			
+		case ConstUpdateType.external_data_src:
+			getHtmlManager().clearHtmlComponents();
+			form_document.setFormDocumentModified(true);
+			break;
+
+		default:
+			break;
+		}
 	}
 	
 	public void remove() {

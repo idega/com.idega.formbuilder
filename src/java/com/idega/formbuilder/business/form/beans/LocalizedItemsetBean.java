@@ -25,13 +25,13 @@ public class LocalizedItemsetBean implements ILocalizedItemset {
 	private Map<Locale, Element> localized_entries;
 	private Element local_data_src_element;
 	private Document components_xforms;
-	private IComponentPropertiesSelectParent parent_component;
+	private IComponentPropertiesParent parent_component;
 	
 	public LocalizedItemsetBean() {
 		itemsets = new HashMap<Locale, List<ItemBean>>();
 		localized_entries = new HashMap<Locale, Element>();
 	}
-	public void setParentComponent(IComponentPropertiesSelectParent parent_component) {
+	public void setParentComponent(IComponentPropertiesParent parent_component) {
 		this.parent_component = parent_component;
 	}
 	public void setLocalDataSrcElement(Element local_data_src_element_main) {
@@ -164,8 +164,7 @@ public class LocalizedItemsetBean implements ILocalizedItemset {
 			itemsets.put(locale, items);
 		}
 		
-		
-		parent_component.updateItemset();
+		parent_component.update(new ConstUpdateType(ConstUpdateType.itemset));
 	}
 	
 	public void setComponentsXFormsDocument(Document components_xforms) {

@@ -2,12 +2,18 @@ package com.idega.formbuilder.business.form.manager;
 
 import org.w3c.dom.Element;
 
+import com.idega.formbuilder.business.form.beans.ConstUpdateType;
 import com.idega.formbuilder.business.form.beans.IFormComponent;
 import com.idega.formbuilder.business.form.beans.IFormComponentContainer;
 import com.idega.formbuilder.business.form.beans.IFormComponentDocument;
 import com.idega.formbuilder.business.form.beans.IFormComponentPage;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 
+/**
+ * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @version 1.0
+ * 
+ */
 public interface IXFormsManager {
 
 	public abstract void setCacheManager(CacheManager cache_manager);
@@ -15,7 +21,7 @@ public interface IXFormsManager {
 	public abstract void setComponentParent(IFormComponentContainer component_parent);
 
 	/**
-	 * Gets full component bycomponent type. 
+	 * Gets full component by component type. 
 	 * 
 	 * @param component_type - used to find correct xforms component implementation
 	 * @return element node.
@@ -28,12 +34,8 @@ public interface IXFormsManager {
 
 	public abstract void addComponentToDocument();
 
-	public abstract void updateConstraintRequired() throws NullPointerException;
-
-	public abstract void updateLabel();
+	public abstract void update(ConstUpdateType what);
 	
-	public abstract void updateErrorMsg();
-
 	public abstract void setFormComponent(IFormComponent component);
 
 	public abstract void moveComponent(String before_component_id);
@@ -44,8 +46,6 @@ public interface IXFormsManager {
 			String bind_id);
 
 	public abstract void changeBindName(String new_bind_name);
-	
-	public abstract void updateP3pType();
 	
 	public abstract LocalizedStringBean getLocalizedStrings();
 	

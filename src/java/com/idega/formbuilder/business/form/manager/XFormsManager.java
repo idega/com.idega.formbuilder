@@ -10,6 +10,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.idega.formbuilder.business.form.PropertiesComponent;
+import com.idega.formbuilder.business.form.beans.ConstUpdateType;
 import com.idega.formbuilder.business.form.beans.IFormComponent;
 import com.idega.formbuilder.business.form.beans.IFormComponentButtonArea;
 import com.idega.formbuilder.business.form.beans.IFormComponentContainer;
@@ -303,7 +304,7 @@ public class XFormsManager implements IXFormsManager {
 		return null;
 	}
 	
-	public void updateConstraintRequired() throws NullPointerException {
+	protected void updateConstraintRequired() {
 		
 		PropertiesComponent props = component.getProperties();
 		
@@ -322,7 +323,33 @@ public class XFormsManager implements IXFormsManager {
 			bind.removeAttribute(required_att);
 	}
 	
-	public void updateLabel() {
+	public void update(ConstUpdateType what) {
+		
+		int update = what.getUpdateType();
+		
+		switch (update) {
+		case ConstUpdateType.label:
+			updateLabel();
+			break;
+			
+		case ConstUpdateType.error_msg:
+			updateErrorMsg();
+			break;
+			
+		case ConstUpdateType.constraint_required:
+			updateConstraintRequired();
+			break;
+			
+		case ConstUpdateType.p3p_type:
+			updateP3pType();
+			break;
+
+		default:
+			break;
+		}
+	}
+	
+	protected void updateLabel() {
 		
 		PropertiesComponent props = component.getProperties();
 		LocalizedStringBean loc_str = props.getLabel();
@@ -341,7 +368,7 @@ public class XFormsManager implements IXFormsManager {
 		);
 	}
 	
-	public void updateErrorMsg() {
+	protected void updateErrorMsg() {
 		
 		PropertiesComponent props = component.getProperties();
 		
@@ -568,7 +595,7 @@ public class XFormsManager implements IXFormsManager {
 			);
 	}
 	
-	public void updateP3pType() {
+	protected void updateP3pType() {
 		
 		PropertiesComponent props = component.getProperties();
 		String p3ptype = props.getP3ptype();

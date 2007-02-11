@@ -13,6 +13,7 @@ import com.idega.formbuilder.business.form.DocumentManager;
 import com.idega.formbuilder.business.form.FormManagerFactory;
 import com.idega.formbuilder.business.form.Page;
 import com.idega.formbuilder.business.form.PropertiesPage;
+import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.manager.FormManager;
 
 public class SandboxFormManagerTest {
@@ -59,6 +60,11 @@ public class SandboxFormManagerTest {
 			
 			np.addComponent(fm.getAvailableFormComponentsTypesList().get(0), null);
 			Page confirmation_page_added = xx.addConfirmationPage(null);
+			
+			System.out.println("thx txt: "+xx.getThxPage().getProperties().getText());
+			LocalizedStringBean zz = xx.getThxPage().getProperties().getText();
+			zz.setString(new Locale("en"), "and here it goes");
+			xx.getThxPage().getProperties().setText(zz);
 			
 			System.out.println("added conf page: "+confirmation_page_added);
 			

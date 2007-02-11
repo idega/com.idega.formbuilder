@@ -10,6 +10,7 @@ import org.w3c.dom.Element;
 
 import com.idega.formbuilder.business.form.Component;
 import com.idega.formbuilder.business.form.Page;
+import com.idega.formbuilder.business.form.PageThankYou;
 import com.idega.formbuilder.business.form.manager.CacheManager;
 import com.idega.formbuilder.business.form.manager.IXFormsManager;
 import com.idega.formbuilder.business.form.manager.XFormsManagerDocument;
@@ -208,9 +209,9 @@ public class FormComponentDocument extends FormComponentContainer implements com
 	
 		return confirmation_page_id == null ? null : (Page)getContainedComponent(confirmation_page_id);
 	}
-	public Page getThxPage() {
+	public PageThankYou getThxPage() {
 		
-		return thx_page_id == null ? null : (Page)getContainedComponent(thx_page_id);
+		return thx_page_id == null ? null : (PageThankYou)getContainedComponent(thx_page_id);
 	}
 	
 	protected List<String> getRegisteredForLastPageIdPages() {
