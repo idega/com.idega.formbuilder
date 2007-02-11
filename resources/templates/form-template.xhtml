@@ -22,12 +22,9 @@
 	         		<current_language>en</current_language>
 	         		<lockey_form.title lang="en">Form name english</lockey_form.title>
 	         		<lockey_page-1.label lang="en">First page</lockey_page-1.label>
-	         		<lockey_page-2.label lang="en">Form confirmation</lockey_page-2.label>
-	         		<lockey_page-3.label lang="en">Submitted</lockey_page-3.label>
-	         		<lockey_page-1-next.label lang="en">Next page</lockey_page-1-next.label>
-	         		<lockey_page-2-previous.label lang="en">Previous page</lockey_page-2-previous.label>
-	         		<lockey_page-2-submit.label lang="en">Confirm</lockey_page-2-submit.label>
-	         		<lockey_page-3.info lang="en">Form submitted, thank You!</lockey_page-3.info>
+	         		<lockey_page-2.label lang="en">Submitted</lockey_page-2.label>
+	         		<lockey_page-1-submit.label lang="en">Confirm</lockey_page-1-submit.label>
+	         		<lockey_page-2.info lang="en">Form submitted, thank You!</lockey_page-2.info>
 	         	</localized_strings>
 	        </xf:instance>
 	      </xf:model>
@@ -43,39 +40,19 @@
 			   	  	<xf:label ref="instance('localized_strings')/lockey_page-1.label[@lang=instance('localized_strings')/current_language]" model="data_model" />
 			   	  	
 			   	  	<div id="fbcomp_2" name="button_area">
-				   	  	<xf:trigger id="fbcomp_3" name="fbcomp_button_next">
-		                    <xf:label ref="instance('localized_strings')/lockey_page-1-next.label[@lang=instance('localized_strings')/current_language]" model="data_model" />
+				   	  	<xf:trigger id="fbcomp_3" name="fbcomp_button_submit">
+					   	  	<xf:label ref="instance('localized_strings')/lockey_page-1-submit.label[@lang=instance('localized_strings')/current_language]" model="data_model" />
+					   	  	<xf:send submission="submit_data_submission" />
                             <xf:toggle ev:event="DOMActivate" case="fbcomp_4" />
-                            <xf:refresh />
                         </xf:trigger>
 			   	  	</div>
 			   	  	
 			   	  </xf:group>
 		   	  </xf:case>
-		   	  
-    	      <xf:case id="fbcomp_4" name="confirmation_page">
+		   	  <xf:case id="fbcomp_4" name="thx_page">
 			   	  <xf:group appearance="full">
 			   	  	<xf:label ref="instance('localized_strings')/lockey_page-2.label[@lang=instance('localized_strings')/current_language]" model="data_model" />
-			   	  	
-			   	  	<div id="fbcomp_5" name="button_area">
-				   	  	<xf:trigger id="fbcomp_6" name="fbcomp_button_previous">
-					   	  	<xf:label ref="instance('localized_strings')/lockey_page-2-previous.label[@lang=instance('localized_strings')/current_language]" model="data_model" />
-                            <xf:toggle ev:event="DOMActivate" case="fbcomp_1" />
-                            <xf:refresh />
-                        </xf:trigger>
-				   	  	<xf:trigger id="fbcomp_7" name="fbcomp_button_submit">
-					   	  	<xf:label ref="instance('localized_strings')/lockey_page-2-submit.label[@lang=instance('localized_strings')/current_language]" model="data_model" />
-					   	  	<xf:send submission="submit_data_submission" />
-                            <xf:toggle ev:event="DOMActivate" case="fbcomp_8" />
-                        </xf:trigger>
-			   	  	</div>
-			   	  </xf:group>
-		   	  </xf:case>
-		   	  
-		   	  <xf:case id="fbcomp_8" name="thx_page">
-			   	  <xf:group appearance="full">
-			   	  	<xf:label ref="instance('localized_strings')/lockey_page-3.label[@lang=instance('localized_strings')/current_language]" model="data_model" />
-			   	  	<xf:output ref="instance('localized_strings')/lockey_page-3.info[@lang=instance('localized_strings')/current_language]" model="data_model" />
+			   	  	<xf:output ref="instance('localized_strings')/lockey_page-2.info[@lang=instance('localized_strings')/current_language]" model="data_model" />
 			   	  </xf:group>
 		   	  </xf:case>
 	   	  </xf:switch>
