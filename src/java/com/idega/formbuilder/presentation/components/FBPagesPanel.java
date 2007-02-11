@@ -167,6 +167,7 @@ public class FBPagesPanel extends FBComponentBase {
 		return 	"<script language=\"JavaScript\">\n"
 		
 				+ "function setupPagesDragAndDrop() {\n"
+//				+ "alert('KWA1');\n"
 				+ "Position.includeScrollOffsets = true;\n"
 				+ "Sortable.create(\"" + values[0] + "\",{dropOnEmpty:true,tag:\"div\",only:\"" + values[1] + "\",onUpdate:rearrangePages,scroll:\"" + values[0] + "\",constraint:false});\n"
 				+ "}\n"
@@ -175,8 +176,9 @@ public class FBPagesPanel extends FBComponentBase {
 				+ "var componentIDs = Sortable.serialize(\"" + values[0] + "\",{tag:\"div\",name:\"id\"});\n"
 				+ "var delimiter = '&id[]=';\n"
 				+ "var idPrefix = 'fbcomp_';\n"
-				+ "alert('KWA');\n"
+//				+ "alert('KWA2');\n"
 				+ "dwrmanager.updatePagesList(updatedPagesList,componentIDs,idPrefix,delimiter);\n"
+//				+ "alert('KWA3');\n"
 //				+ "pressedDelete = true;\n"
 				+ "}\n"
 				

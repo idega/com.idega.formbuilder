@@ -74,17 +74,10 @@ public class FBAdvancedProperties extends FBComponentBase {
 
 		UISelectItems dataSrcs = (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
 		dataSrcs.setValueBinding("value", application.createValueBinding("#{dataSources.sources}"));
-		dataSrcSwitch.getChildren().add(dataSrcs);
+		addChild(dataSrcs, dataSrcSwitch);
 		
 		cell = row.createCell();
 		cell.add(dataSrcSwitch);
-		
-		/*UIAjaxSupport dataSrcsS = (UIAjaxSupport) application.createComponent("org.ajax4jsf.ajax.Support");
-		dataSrcsS.setEvent("onchange");
-		dataSrcsS.setReRender("workspaceform1:ajaxMenuPanel");
-		dataSrcsS.setActionListener(application.createMethodBinding("#{dataSources.switchDataSource}", new Class[]{ActionEvent.class}));
-		dataSrcsS.setAjaxSingle(true);
-		dataSrcSwitch.getChildren().add(dataSrcsS);*/
 		
 		Table2 table2 = new Table2();
 		table2.setStyleAttribute("width: 300px;");
@@ -115,7 +108,7 @@ public class FBAdvancedProperties extends FBComponentBase {
 		FBSelectValuesList selectValues = (FBSelectValuesList) application.createComponent(FBSelectValuesList.COMPONENT_TYPE);
 		selectValues.setValueBinding("itemSet", application.createValueBinding("#{formComponent.items}"));
 		selectValues.setId("selectOpts");
-		localSrcDiv.getChildren().add(selectValues);
+		addChild(selectValues, localSrcDiv);
 		
 		addFacet(CONTENT_FACET, table);
 		addFacet(LOCAL_SRC_FACET, localSrcDiv);
@@ -134,7 +127,7 @@ public class FBAdvancedProperties extends FBComponentBase {
 				renderChild(context, body);
 			}
 			
-			current = ((FormComponent) WFUtil.getBeanInstance("formComponent")).getPropertiesSelect().getDataSrcUsed();
+			current = Integer.parseInt(((FormComponent) WFUtil.getBeanInstance("formComponent")).getDataSrc());
 			if(current == PropertiesSelect.LOCAL_DATA_SRC) {
 				UIComponent local = getFacet(LOCAL_SRC_FACET);
 				if(local != null) {
