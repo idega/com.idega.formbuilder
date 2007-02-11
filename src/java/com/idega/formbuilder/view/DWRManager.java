@@ -164,7 +164,6 @@ public class DWRManager implements Serializable {
 		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
 		Document document = formDocument.getDocument();
 		if(document != null) {
-//			String id = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("deletePageId");
 			String temp = id.substring(id.indexOf(":") + 1);
 			int k = temp.indexOf("_", temp.indexOf("_") + 1);
 			String temp2 = temp.substring(0, k);
@@ -202,7 +201,6 @@ public class DWRManager implements Serializable {
 		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
 		Document document = formDocument.getDocument();
 		if(document != null) {
-//			String id = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("loadPageId");
 			String temp = id.substring(id.indexOf(":") + 1);
 			int k = temp.indexOf("_", temp.indexOf("_") + 1);
 			String temp2 = temp.substring(0, k);
@@ -218,50 +216,7 @@ public class DWRManager implements Serializable {
 		}
 	}
 	
-	/*public Element createNewForm(String name) throws Exception {
-		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
-		if(workspace != null) {
-			Locale locale = workspace.getLocale();
-			DocumentManager formManagerInstance = ActionManager.getDocumentManagerInstance();
-			
-			String id = FBUtil.generateFormId(name);
-			LocalizedStringBean formName = new LocalizedStringBean();
-			formName.setString(locale, name);
-			formManagerInstance.createForm(id, formName);
-			
-			workspace.setView("design");
-			workspace.setDesignViewStatus("empty");
-			workspace.setSelectedMenu("0");
-			workspace.setRenderedMenu(true);
-			
-			FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
-			if(formDocument != null) {
-				formDocument.clearFormDocumentInfo();
-				formDocument.setFormTitle(name);
-				formDocument.setFormId(id);
-				formDocument.setDocument(formManagerInstance.getCurrentDocument());
-			}
-			List<String> pagesIds = formManagerInstance.getCurrentDocument().getContainedPagesIdList();
-			Page page = formManagerInstance.getCurrentDocument().getPage(pagesIds.get(0));
-			FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
-			if(formPage != null) {
-				formPage.setPage(page);
-			}
-			FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
-			if(formComponent != null) {
-				formComponent.clearFormComponentInfo();
-			}
-			formManagerInstance.getCurrentDocument().save();
-			return null;
-		}
-		return null;
-	}*/
-	
 	public void createNewFormDocument(String title) {
-		/*String name = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("newFormT");
-		if(name == null || name.equals("")) {
-			name = "UNTITLED FORM";
-		}*/
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 		if(workspace != null) {
 			Locale locale = workspace.getLocale();
@@ -302,18 +257,27 @@ public class DWRManager implements Serializable {
 	}
 	
 	public String removeComponent(String id) {
-		FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
-		formComponent.getComponent().remove();
-		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
-		if(page.getContainedComponentsIdList().isEmpty()) {
-			((Workspace) WFUtil.getBeanInstance("workspace")).setDesignViewStatus(FBDesignView.DESIGN_VIEW_STATUS_EMPTY);
+		Component component = ((FormComponent) WFUtil.getBeanInstance("formComponent")).getComponent();
+		if(component != null) {
+			component.remove();
+			Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
+			if(page != null) {
+				if(page.getContainedComponentsIdList().isEmpty()) {
+					((Workspace) WFUtil.getBeanInstance("workspace")).setDesignViewStatus(FBDesignView.DESIGN_VIEW_STATUS_EMPTY);
+				}
+				Document document = ((FormDocument) WFUtil.getBeanInstance("formDocument")).getDocument();
+				if(document != null) {
+					document.save();
+				}
+			}
+			
 		}
 		return id;
 	}
 	
 	public String getComponentProperties(String id) {
 		((Workspace) WFUtil.getBeanInstance("workspace")).setSelectedMenu("1");
-		((com.idega.formbuilder.presentation.beans.FormComponent) WFUtil.getBeanInstance("formComponent")).loadProperties(id);
+		((FormComponent) WFUtil.getBeanInstance("formComponent")).loadProperties(id);
 		return id;
 	}
 	

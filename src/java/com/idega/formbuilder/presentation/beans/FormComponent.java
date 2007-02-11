@@ -10,7 +10,7 @@ import javax.faces.event.ActionEvent;
 
 import com.idega.formbuilder.business.form.Component;
 import com.idega.formbuilder.business.form.ComponentSelect;
-import com.idega.formbuilder.business.form.Document;
+import com.idega.formbuilder.business.form.Page;
 import com.idega.formbuilder.business.form.PropertiesComponent;
 import com.idega.formbuilder.business.form.PropertiesSelect;
 import com.idega.formbuilder.business.form.beans.ILocalizedItemset;
@@ -22,11 +22,11 @@ public class FormComponent implements Serializable {
 	
 	private static final long serialVersionUID = -1462694198346788168L;
 	
-	private Document formDocument;
 	private PropertiesComponent properties;
 	private PropertiesSelect propertiesSelect;
 	private Component component;
 	private ComponentSelect selectComponent;
+	
 	private String id;
 	
 	private Boolean required;
@@ -136,19 +136,11 @@ public class FormComponent implements Serializable {
 		this.component = null;
 		this.selectComponent = null;
 	}
-	
-	public Document getFormDocument() {
-		return formDocument;
-	}
-
-	public void setFormDocument(Document formDocument) {
-		this.formDocument = formDocument;
-	}
 
 	public void loadProperties(String id) {
-		formDocument = ((FormDocument) WFUtil.getBeanInstance("formDocument")).getDocument();
+		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
 		this.id = id;
-		component = formDocument.getComponent(id);
+		component = page.getComponent(id);
 		if(component instanceof ComponentSelect) {
 			selectComponent = (ComponentSelect) component;
 			propertiesSelect = selectComponent.getProperties();
@@ -166,9 +158,6 @@ public class FormComponent implements Serializable {
 			
 //			helpStringBean = propertiesSelect.get
 			
-			selectComponent = (ComponentSelect) component;
-			propertiesSelect = selectComponent.getProperties();
-			
 			emptyLabelBean = propertiesSelect.getEmptyElementLabel();
 			emptyLabel = emptyLabelBean.getString(new Locale("en"));
 			
@@ -185,12 +174,12 @@ public class FormComponent implements Serializable {
 		} else {
 			properties = component.getProperties();
 			
-			required = propertiesSelect.isRequired();
+			required = properties.isRequired();
 			
-			labelStringBean = propertiesSelect.getLabel();
+			labelStringBean = properties.getLabel();
 			label = labelStringBean.getString(new Locale("en"));
 			
-			errorStringBean = propertiesSelect.getErrorMsg();
+			errorStringBean = properties.getErrorMsg();
 			errorMessage = errorStringBean.getString(new Locale("en"));
 		}
 		

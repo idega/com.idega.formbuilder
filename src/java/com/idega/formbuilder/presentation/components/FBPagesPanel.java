@@ -175,6 +175,7 @@ public class FBPagesPanel extends FBComponentBase {
 				+ "var componentIDs = Sortable.serialize(\"" + values[0] + "\",{tag:\"div\",name:\"id\"});\n"
 				+ "var delimiter = '&id[]=';\n"
 				+ "var idPrefix = 'fbcomp_';\n"
+				+ "alert('KWA');\n"
 				+ "dwrmanager.updatePagesList(updatedPagesList,componentIDs,idPrefix,delimiter);\n"
 //				+ "pressedDelete = true;\n"
 				+ "}\n"
