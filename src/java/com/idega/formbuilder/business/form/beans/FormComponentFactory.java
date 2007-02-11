@@ -102,7 +102,6 @@ public class FormComponentFactory implements Singleton {
 	public boolean isNormalFormElement(IFormComponent form_component) {
 		
 		String type = form_component.getType();
-		System.out.println("isnormal for type: "+type);
 		
 		return 
 			components_tags_classified.get(type_select).contains(type) ||
