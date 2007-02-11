@@ -29,6 +29,8 @@ public class FormDocument implements Serializable {
 	private String formId;
 	private String sourceCode;
 	private boolean hasPreview;
+	private String thankYouTitle;
+	private String thankYouText;
 	
 	private LocalizedStringBean formTitleBean;
 	
@@ -237,6 +239,22 @@ public class FormDocument implements Serializable {
 
 	public void setHasPreview(boolean hasPreview) {
 		this.hasPreview = hasPreview;
+	}
+
+	public String getThankYouText() {
+		return thankYouText;
+	}
+
+	public void setThankYouText(String thankYouText) {
+		this.thankYouText = thankYouText;
+	}
+
+	public String getThankYouTitle() {
+		return thankYouTitle;
+	}
+
+	public void setThankYouTitle(String thankYouTitle) {
+		this.thankYouTitle = thankYouTitle;
 	}
 
 }

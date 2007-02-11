@@ -92,33 +92,41 @@ public class DWRManager implements Serializable {
 	
 	public Element createComponent(String type) throws Exception {
 		Element rootDivImported = null;
-		FormPage page = (FormPage) WFUtil.getBeanInstance("formPage");
-//		Page p = page.getPage();
-		Component component = page.getPage().addComponent(type, null);
-		Element element = (Element) component.getHtmlRepresentation(new Locale("en")).cloneNode(true);
-		String id = element.getAttribute("id");
-		element.removeAttribute("id");
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		org.w3c.dom.Document document = null;
-        try {
-          DocumentBuilder builder = factory.newDocumentBuilder();
-          document = builder.newDocument();
-          Element delete = document.createElement("IMG");
-          delete.setAttribute("src", "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png");
-          delete.setAttribute("class", "speedButton");
-          delete.setAttribute("onclick", "deleteComponentJS(this)");
-          Element deleteIcon = (Element) element.getOwnerDocument().importNode(delete, true);
-          Element rootDiv = document.createElement("DIV");
-          rootDiv.setAttribute("id", id);
-          rootDiv.setAttribute("class", "formElement");
-          rootDiv.setAttribute("onclick", "editProperties(this.id)");
-          rootDivImported = (Element) element.getOwnerDocument().importNode(rootDiv, true);
-          rootDivImported.appendChild(element);
-          rootDivImported.appendChild(deleteIcon);
-          ((Workspace) WFUtil.getBeanInstance("workspace")).setDesignViewStatus(FBDesignView.DESIGN_VIEW_STATUS_ACTIVE);
-        } catch (ParserConfigurationException pce) {
-            pce.printStackTrace();
-        }
+		FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+		Page page = formPage.getPage();
+		if(page != null) {
+			Component component = page.addComponent(type, null);
+			if(component != null) {
+				Element element = (Element) component.getHtmlRepresentation(new Locale("en")).cloneNode(true);
+				String id = element.getAttribute("id");
+				element.removeAttribute("id");
+				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+				org.w3c.dom.Document domDocument = null;
+		        try {
+		          DocumentBuilder builder = factory.newDocumentBuilder();
+		          domDocument = builder.newDocument();
+		          Element delete = domDocument.createElement("IMG");
+		          delete.setAttribute("src", "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png");
+		          delete.setAttribute("class", "speedButton");
+		          delete.setAttribute("onclick", "deleteComponentJS(this)");
+		          Element deleteIcon = (Element) element.getOwnerDocument().importNode(delete, true);
+		          Element rootDiv = domDocument.createElement("DIV");
+		          rootDiv.setAttribute("id", id);
+		          rootDiv.setAttribute("class", "formElement");
+		          rootDiv.setAttribute("onclick", "editProperties(this.id)");
+		          rootDivImported = (Element) element.getOwnerDocument().importNode(rootDiv, true);
+		          rootDivImported.appendChild(element);
+		          rootDivImported.appendChild(deleteIcon);
+		          ((Workspace) WFUtil.getBeanInstance("workspace")).setDesignViewStatus(FBDesignView.DESIGN_VIEW_STATUS_ACTIVE);
+		        } catch (ParserConfigurationException pce) {
+		            pce.printStackTrace();
+		        }
+			}
+			Document document = ((FormDocument) WFUtil.getBeanInstance("formDocument")).getDocument();
+			if(document != null) {
+				document.save();
+			}
+		}
 		return rootDivImported;
 	}
 	
@@ -132,6 +140,11 @@ public class DWRManager implements Serializable {
 			ids.add(idPrefix + tokenizer.nextToken());
 		}
 		page.rearrangeComponents();
+		System.out.println(ids.toString());
+		Document document = ((FormDocument) WFUtil.getBeanInstance("formDocument")).getDocument();
+		if(document != null) {
+			document.save();
+		}
 	}
 	
 	public void updatePagesList(String idSequence, String idPrefix, String delimiter) throws Exception {
@@ -157,6 +170,9 @@ public class DWRManager implements Serializable {
 		ids.add(confirmId);
 		ids.add(thxId);
 		document.rearrangeDocument();
+		if(document != null) {
+			document.save();
+		}
 		System.out.println(ids.toString());
 	}
 	

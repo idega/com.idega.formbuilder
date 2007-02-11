@@ -126,7 +126,6 @@ public class FBAdvancedProperties extends FBComponentBase {
 			if(body != null) {
 				renderChild(context, body);
 			}
-			
 			current = Integer.parseInt(((FormComponent) WFUtil.getBeanInstance("formComponent")).getDataSrc());
 			if(current == PropertiesSelect.LOCAL_DATA_SRC) {
 				UIComponent local = getFacet(LOCAL_SRC_FACET);

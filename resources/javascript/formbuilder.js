@@ -1,11 +1,3 @@
-/*function selectFormField(selectedField) {
-	document.forms['workspaceform1'].elements['selected_field_id'].value=selectedField.parentNode.id;
-	document.getElementById('select_field_button').onclick();
-}
-function selectFormHeader() {
-	document.getElementById('select_form_header_button').onclick();
-}*/
-
 //Handles the display of a modal dialog window
 function displayMessage(url) {
 	messageObj.setSource(url);
@@ -31,14 +23,6 @@ function closeLoadingMessage() {
  	}
 }
 //--------------------------------------------
-/*function addEmptyOption() {
-	$('workspaceform1:addNewOption').click();
-}
-function removeOption() {
-	alert('Removing option');
-	$('workspaceform1:removeOption').click();
-}
-*/
 
 //Handles the creation of a new form
 function createNewForm() {
@@ -56,25 +40,12 @@ function refreshMainApplicationW() {
 function refreshMainApplication() {
 	$('workspaceform1:loadPageFunction').click();
 }
-/*function createdNewForm(element) {
-	$('workspaceform1:createFormProxy').click();
-}*/
 //--------------------------------
 
-
-/*function saveProperties() {
-	showLoadingMessage("Saving");
-	dwrmanager.saveChanges(deletedComponent);
+function deletePage(id) {
+	pressedDeletePage = true;
+	dwrmanager.deletePage(refreshMainApplication, id);
 }
-function savedProperties() {
-	closeLoadingMessage();
-}
-function switchDataSrc() {
-	document.forms['workspaceform1'].elements['workspaceform1:switchSrcProxy'].click();
-}
-function applyChanges() {
-	$('workspaceform1:applyChangesProxy').click();
-}*/
 
 //Handles the deletion of a form component created with JSF
 function deleteComponentJSF(element) {
@@ -117,6 +88,14 @@ function deletedComponentJS(id) {
 }
 //----------------------------------------
 
+function loadPage(id) {
+	var temp2 = pressedDeletePage;
+	if(!temp2) {
+		dwrmanager.loadPage(refreshMainApplicationW, id)
+	}
+	pressedDeletePage = false;
+}
+
 //Handles the retrieval of component properties on mouse click
 function editProperties(id) {
 	var temp = pressedDelete;
@@ -139,44 +118,6 @@ function switchDataSource() {
 function switchedDataSrc() {
 	$('workspaceform1:srcSwitcher').click();
 }
-
-/*function clearDesignSpace() {
-	var dropBox = $('dropBox');
-	var child = null;
-	for(var i=dropBox.childNodes.length-1;i>-1;i--) {
-		child = dropBox.childNodes[i];
-		if(child.getAttribute('class') == 'formElement') {
-			dropBox.removeChild(child);
-		}
-	}
-}
-function getDecoyNode() {
-	var node = document.createNode('div');
-	return node;
-}
-function switchFacets(noForm,heading,empty) {
-	switchVisibility('noFormNotice',noForm);
-	switchVisibility('formHeading',heading);
-	switchVisibility('emptyForm',empty);
-}
-function switchVisibility(id,makeVisible) {
-	var component = $(id);
-	if(component) {
-		if(component.style) {
-			if(makeVisible == true) {
-				component.style.display = 'block';
-			} else {
-				component.style.display = 'none';
-			}
-		} else {
-			if(makeVisible == true) {
-				component.display = 'block';
-			} else {
-				component.display = 'none';
-			}
-		}
-	}
-}*/
 function decoy() {
 	closeLoadingMessage();
 }
@@ -195,13 +136,8 @@ function formSwitched() {
 	closeLoadingMessage();
 }
 var pressedDelete = false;
+var pressedDeletePage = false;
 /*Setup modal message windows functionality*/
 messageObj = new DHTML_modalMessage();
 messageObj.setShadowOffset(5);
-/*A4J.AJAX.onError = customFunction(req,status,message) {
-	alert(message);
-};
-A4J.AJAX.onExpired = func2(loc,expiredMsg){
-	alert(expiredMsg);
-};*/
 		

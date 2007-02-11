@@ -24,6 +24,7 @@ public class FormComponent implements Serializable {
 	
 	private PropertiesComponent properties;
 	private PropertiesSelect propertiesSelect;
+	
 	private Component component;
 	private ComponentSelect selectComponent;
 	

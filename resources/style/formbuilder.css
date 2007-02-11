@@ -1,26 +1,46 @@
 /*---Page layout styles---*/
+#mainApplication {
+	width: 100%;
+	height: 600px;
+}
 #optionsPanel {
 	position: relative;
+	display: block;
 	top: 5px;
 	left: 10px;
-	width: 300px;
+	width: 320px;
 	bottom: 5px;
 	float: left;
-	height: 700px;
-	padding: 5px;
+	height: 600px;
+	z-index: 1;
 	background: LightGrey;
 }
 #viewPanel {
 	position: relative;
-	top: 10px;
-	left: -14px;
+	display: block;
+	top: 9px;
+	right: 0px;
 	bottom: 5px;
-	height: 500px;
+	height: 600px;
 	float: right;
-	width: 73%;
+	width: 930px;
 	border: 0px solid Black;
 }
+.formPageIconSpecial {
+	cursor: pointer;
+	margin-top: 10px;
+	margin-right: 10px;
+	margin-left: 10px;
+	border: 2px dotted LightGrey;
+	padding-top: 10px;
+	padding-left: 10px;
+	margin-bottom: 10px;
+}
+.formPageIconSpecial:hover {
+	border-color: Black;
+}
 .formPageIcon {
+	cursor: pointer;
 	margin-top: 10px;
 	margin-right: 10px;
 	margin-left: 10px;
@@ -40,7 +60,7 @@
 	float: right;
 	background-color: LightGrey;
 	width: 110px;
-	height: 500px;
+	min-height: 500px;
 	border: 2px solid Black;
 }
 .pagesPanelBottom {
@@ -265,7 +285,7 @@
 	padding: 10px;
 	border: 1px solid Black;
 	height: 15px;
-	width: 100%;
+	width: auto;
 	cursor: pointer;
 }
 .propertiesBox {
@@ -319,9 +339,6 @@
 }
 .float_right {
 	float: right;
-}
-.float_center {
-	float: center;
 }
 .bottom_tab_button {
 	text-decoration: none;

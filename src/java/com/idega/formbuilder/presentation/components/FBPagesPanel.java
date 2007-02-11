@@ -35,11 +35,6 @@ public class FBPagesPanel extends FBComponentBase {
 		setRendererType(null);
 	}
 	
-//	protected void initializeComponent(FacesContext context) {
-//		Application application = context.getApplication();
-//		getChildren().clear();
-//	}
-	
 	public void encodeBegin(FacesContext context) throws IOException {
 		Application application = context.getApplication();
 		getChildren().clear();
@@ -52,7 +47,7 @@ public class FBPagesPanel extends FBComponentBase {
 		
 		writer.startElement("DIV", null);
 		writer.writeAttribute("id", id, "id");
-		writer.writeAttribute("style", "display: block; height: 400px; overflow: auto;", null);
+		writer.writeAttribute("style", "display: block; min-height: 400px; overflow: auto;", null);
 		
 		Locale locale = ((Workspace) WFUtil.getBeanInstance("workspace")).getLocale();
 		FormDocument formDocument = ((FormDocument) WFUtil.getBeanInstance("formDocument"));
@@ -63,7 +58,7 @@ public class FBPagesPanel extends FBComponentBase {
 				if(confirmation != null) {
 					FBFormPage formPage = (FBFormPage) application.createComponent(FBFormPage.COMPONENT_TYPE);
 					formPage.setId(confirmation.getId() + "_P");
-					formPage.setStyleClass(componentStyleClass);
+					formPage.setStyleClass(componentStyleClass + "Special");
 					String label = ((PropertiesPage)confirmation.getProperties()).getLabel().getString(locale);
 					formPage.setLabel(label);
 					formPage.setActive(false);
@@ -74,7 +69,7 @@ public class FBPagesPanel extends FBComponentBase {
 			if(thanks != null) {
 				FBFormPage formPage = (FBFormPage) application.createComponent(FBFormPage.COMPONENT_TYPE);
 				formPage.setId(thanks.getId() + "_P");
-				formPage.setStyleClass(componentStyleClass);
+				formPage.setStyleClass(componentStyleClass + "Special");
 				String label = ((PropertiesPage)thanks.getProperties()).getLabel().getString(locale);
 				formPage.setLabel(label);
 				formPage.setActive(false);
@@ -92,8 +87,8 @@ public class FBPagesPanel extends FBComponentBase {
 //					formPage.setOnDelete("displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/confirm-delete-page.inc');return false");
 //					formPage.setOnDelete("deletePageFunction(this.id)");
 //					formPage.setOnLoad("loadPageFunction(this.id)");
-					formPage.setOnDelete("dwrmanager.deletePage(refreshMainApplication, this.id)");
-					formPage.setOnLoad("dwrmanager.loadPage(refreshMainApplication, this.id)");
+					formPage.setOnDelete("deletePage(this.id)");
+					formPage.setOnLoad("loadPage(this.id)");
 					String label = ((PropertiesPage)currentPage.getProperties()).getLabel().getString(locale);
 					formPage.setLabel(label);
 					formPage.setActive(false);
@@ -167,7 +162,7 @@ public class FBPagesPanel extends FBComponentBase {
 		return 	"<script language=\"JavaScript\">\n"
 		
 				+ "function setupPagesDragAndDrop() {\n"
-//				+ "alert('KWA1');\n"
+//				+ "alert('Setting up DD');\n"
 				+ "Position.includeScrollOffsets = true;\n"
 				+ "Sortable.create(\"" + values[0] + "\",{dropOnEmpty:true,tag:\"div\",only:\"" + values[1] + "\",onUpdate:rearrangePages,scroll:\"" + values[0] + "\",constraint:false});\n"
 				+ "}\n"
@@ -176,10 +171,10 @@ public class FBPagesPanel extends FBComponentBase {
 				+ "var componentIDs = Sortable.serialize(\"" + values[0] + "\",{tag:\"div\",name:\"id\"});\n"
 				+ "var delimiter = '&id[]=';\n"
 				+ "var idPrefix = 'fbcomp_';\n"
-//				+ "alert('KWA2');\n"
+//				+ "alert('before back-end');\n"
 				+ "dwrmanager.updatePagesList(updatedPagesList,componentIDs,idPrefix,delimiter);\n"
-//				+ "alert('KWA3');\n"
-//				+ "pressedDelete = true;\n"
+//				+ "alert('after back-end');\n"
+				+ "pressedDeletePage = true;\n"
 				+ "}\n"
 				
 				+ "function updatedPagesList() {}\n"

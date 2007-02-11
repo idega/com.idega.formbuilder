@@ -64,11 +64,42 @@ public class FBFormProperties extends FBComponentBase {
 		HtmlSelectBooleanCheckbox preview = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
 		preview.setId("previewScreen");
 		preview.setValueBinding("value", application.createValueBinding("#{formDocument.hasPreview}"));
-//		preview.setOnclick("togglePreviewPage()");
 		preview.setOnclick("$('workspaceform1:togglePreviewPage').click();");
 		
 		cell = row.createCell();
 		cell.add(preview);
+		
+		HtmlOutputText thankYouTitleLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		thankYouTitleLabel.setValue("Thank you title");
+		
+		row = group.createRow();
+		cell = row.createCell();
+		cell.setWidth("100");
+		cell.add(thankYouTitleLabel);
+		
+		HtmlInputText thankYouTitle = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+		thankYouTitle.setId("thankYouTitle");
+		thankYouTitle.setValueBinding("value", application.createValueBinding("#{formDocument.thankYouTitle}"));
+//		thankYouTitle.setOnblur("$('workspaceform1:saveFormTitle').click();");
+		
+		cell = row.createCell();
+		cell.add(thankYouTitle);
+		
+		HtmlOutputText thankYouTextLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		thankYouTextLabel.setValue("Thank You Text");
+		
+		row = group.createRow();
+		cell = row.createCell();
+		cell.setWidth("100");
+		cell.add(thankYouTextLabel);
+		
+		HtmlInputText thankYouText = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+		thankYouText.setId("thankYouText");
+		thankYouText.setValueBinding("value", application.createValueBinding("#{formDocument.thankYouText}"));
+//		thankYouText.setOnblur("$('workspaceform1:saveFormTitle').click();");
+		
+		cell = row.createCell();
+		cell.add(thankYouText);
 		
 		HtmlAjaxCommandButton newPageButton = (HtmlAjaxCommandButton) application.createComponent(HtmlAjaxCommandButton.COMPONENT_TYPE);
 		newPageButton.setValue("New page");
