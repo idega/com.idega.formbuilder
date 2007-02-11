@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
-import javax.faces.context.FacesContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -94,7 +93,7 @@ public class DWRManager implements Serializable {
 	public Element createComponent(String type) throws Exception {
 		Element rootDivImported = null;
 		FormPage page = (FormPage) WFUtil.getBeanInstance("formPage");
-		Page p = page.getPage();
+//		Page p = page.getPage();
 		Component component = page.getPage().addComponent(type, null);
 		Element element = (Element) component.getHtmlRepresentation(new Locale("en")).cloneNode(true);
 		String id = element.getAttribute("id");
@@ -132,7 +131,33 @@ public class DWRManager implements Serializable {
 		while(tokenizer.hasMoreTokens()) {
 			ids.add(idPrefix + tokenizer.nextToken());
 		}
-		((FormDocument) WFUtil.getBeanInstance("formDocument")).getDocument().rearrangeDocument();
+		page.rearrangeComponents();
+	}
+	
+	public void updatePagesList(String idSequence, String idPrefix, String delimiter) throws Exception {
+		Document document = ((FormDocument) WFUtil.getBeanInstance("formDocument")).getDocument();
+//		List<String> idsList = ((FormPage) WFUtil.getBeanInstance("formPage")).getCommonPagesIdList(document);
+		String confirmId = "";
+		String thxId = "";
+		Page temp = document.getConfirmationPage();
+		if(temp != null) {
+			confirmId = temp.getId();
+		}
+		temp = document.getThxPage();
+		if(temp != null) {
+			thxId = temp.getId();
+		}
+		List<String> ids = document.getContainedPagesIdList();
+		ids.clear();
+		String test = "&" + idSequence;
+		StringTokenizer tokenizer = new StringTokenizer(test, delimiter);
+		while(tokenizer.hasMoreTokens()) {
+			ids.add(idPrefix + tokenizer.nextToken());
+		}
+		ids.add(confirmId);
+		ids.add(thxId);
+		document.rearrangeDocument();
+		System.out.println(ids.toString());
 	}
 	
 	public void deletePage(String id) {
@@ -233,18 +258,18 @@ public class DWRManager implements Serializable {
 	}*/
 	
 	public void createNewFormDocument(String title) {
-		String name = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("newFormT");
+		/*String name = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("newFormT");
 		if(name == null || name.equals("")) {
 			name = "UNTITLED FORM";
-		}
+		}*/
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 		if(workspace != null) {
 			Locale locale = workspace.getLocale();
 			DocumentManager formManagerInstance = ActionManager.getDocumentManagerInstance();
 			Document document = null;
-			String id = FBUtil.generateFormId(name);
+			String id = FBUtil.generateFormId(title);
 			LocalizedStringBean formName = new LocalizedStringBean();
-			formName.setString(locale, name);
+			formName.setString(locale, title);
 			
 			try {
 				document = formManagerInstance.createForm(id, formName);
@@ -259,7 +284,7 @@ public class DWRManager implements Serializable {
 			
 			FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
 			formDocument.clearFormDocumentInfo();
-			formDocument.setFormTitle(name);
+			formDocument.setFormTitle(title);
 			formDocument.setFormId(id);
 			formDocument.setDocument(document);
 			

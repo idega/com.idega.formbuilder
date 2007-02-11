@@ -172,14 +172,14 @@ public class FBPagesPanel extends FBComponentBase {
 				+ "}\n"
 				
 				+ "function rearrangePages() {\n"
-//				+ "var componentIDs = Sortable.serialize(\"" + values[2] + "\",{tag:\"div\",name:\"id\"});\n"
-//				+ "var delimiter = '&id[]=';\n"
-//				+ "var idPrefix = 'fbcomp_';\n"
-//				+ "dwrmanager.updateComponentList(updateOrder,componentIDs,idPrefix,delimiter);\n"
+				+ "var componentIDs = Sortable.serialize(\"" + values[0] + "\",{tag:\"div\",name:\"id\"});\n"
+				+ "var delimiter = '&id[]=';\n"
+				+ "var idPrefix = 'fbcomp_';\n"
+				+ "dwrmanager.updatePagesList(updatedPagesList,componentIDs,idPrefix,delimiter);\n"
 //				+ "pressedDelete = true;\n"
 				+ "}\n"
 				
-//				+ "function updateOrder() {}\n"
+				+ "function updatedPagesList() {}\n"
 				
 				+ "setupPagesDragAndDrop();\n"
 				

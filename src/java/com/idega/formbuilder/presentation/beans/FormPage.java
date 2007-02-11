@@ -35,7 +35,7 @@ public class FormPage implements Serializable {
 	}
 	
 	public void savePageTitle(ActionEvent ae) {
-		String title = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:pageTitle");
+		String title = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("pageTitle");
 		if(title != null) {
 			setTitle(title);
 		}
