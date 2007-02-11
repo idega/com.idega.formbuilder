@@ -63,21 +63,16 @@ public class FBMenu extends FBComponentBase {
 		FBDivision menuHeaderPanel = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
 		menuHeaderPanel.setId("menuPanelToolbar");
 		
-//		HtmlAjaxFunction newPageFunction = new HtmlAjaxFunction();
-//		newPageFunction.setName("createNewPage");
-//		newPageFunction.setReRender("mainApplication");
-//		newPageFunction.setValueBinding("data", application.createValueBinding("#{formPage.newPage}"));
+		/*HtmlAjaxFunction newFormFunction = new HtmlAjaxFunction();
+		newFormFunction.setName("createFormDocument");
+		newFormFunction.setReRender("mainApplication");
+		newFormFunction.setOncomplete("closeLoadingMessage()");
+		newFormFunction.setValueBinding("data", application.createValueBinding("#{formDocument.newFormDocument}"));
 		
-//		HtmlAjaxFunction newFormFunction = new HtmlAjaxFunction();
-//		newFormFunction.setName("createFormDocument");
-//		newFormFunction.setReRender("mainApplication");
-//		newFormFunction.setOncomplete("closeLoadingMessage()");
-//		newFormFunction.setValueBinding("data", application.createValueBinding("#{formDocument.newFormDocument}"));
-		
-//		HtmlActionParameter newFormTitleP = new HtmlActionParameter();
-//		newFormTitleP.setName("newFormT");
-//		newFormTitleP.setAssignToBinding(application.createValueBinding("#{formDocument.formTitle}"));
-//		addChild(newFormTitleP, newFormFunction);
+		HtmlActionParameter newFormTitleP = new HtmlActionParameter();
+		newFormTitleP.setName("newFormT");
+		newFormTitleP.setAssignToBinding(application.createValueBinding("#{formDocument.formTitle}"));
+		addChild(newFormTitleP, newFormFunction);*/
 
 		HtmlCommandButton newFormButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
 		newFormButton.setId("newFormButton");
@@ -100,7 +95,6 @@ public class FBMenu extends FBComponentBase {
 		selectSupport.setActionListener(application.createMethodBinding("#{formDocument.changeForm}", new Class[]{ActionEvent.class}));
 		addChild(selectSupport, selectFormMenu);
 		
-//		addChild(newPageFunction, menuHeaderPanel);
 //		addChild(newFormFunction, menuHeaderPanel);
 		addChild(newFormButton, menuHeaderPanel);
 		addChild(selectFormMenu, menuHeaderPanel);

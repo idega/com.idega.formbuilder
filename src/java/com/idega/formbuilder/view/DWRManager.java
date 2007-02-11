@@ -5,14 +5,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import javax.faces.context.FacesContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.idega.formbuilder.business.form.Component;
+import com.idega.formbuilder.business.form.Document;
 import com.idega.formbuilder.business.form.DocumentManager;
 import com.idega.formbuilder.business.form.Page;
 import com.idega.formbuilder.business.form.beans.ItemBean;
@@ -99,7 +100,7 @@ public class DWRManager implements Serializable {
 		String id = element.getAttribute("id");
 		element.removeAttribute("id");
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		Document document = null;
+		org.w3c.dom.Document document = null;
         try {
           DocumentBuilder builder = factory.newDocumentBuilder();
           document = builder.newDocument();
@@ -134,7 +135,65 @@ public class DWRManager implements Serializable {
 		((FormDocument) WFUtil.getBeanInstance("formDocument")).getDocument().rearrangeDocument();
 	}
 	
-	public Element createNewForm(String name) throws Exception {
+	public void deletePage(String id) {
+		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
+		Document document = formDocument.getDocument();
+		if(document != null) {
+//			String id = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("deletePageId");
+			String temp = id.substring(id.indexOf(":") + 1);
+			int k = temp.indexOf("_", temp.indexOf("_") + 1);
+			String temp2 = temp.substring(0, k);
+			Page page = document.getPage(temp2);
+			if(page != null) {
+				FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+				List<String> ids = formPage.getCommonPagesIdList(document);
+				int index = ids.indexOf(temp2);
+				String newPageId = "";
+				if(index < 1) {
+					if(ids.size() > 1) {
+						newPageId = ids.get(1);
+						page.remove();
+						page = document.getPage(newPageId);
+						formPage.loadPageInfo(page);
+					}
+				} else {
+					newPageId = ids.get(index - 1);
+					page.remove();
+					page = document.getPage(newPageId);
+					formPage.loadPageInfo(page);
+				}
+				Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
+				if(workspace != null) {
+					workspace.setView("design");
+					workspace.setSelectedMenu("3");
+					workspace.setRenderedMenu(true);
+				}
+				document.save();
+			}
+		}
+	}
+	
+	public void loadPage(String id) {
+		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
+		Document document = formDocument.getDocument();
+		if(document != null) {
+//			String id = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("loadPageId");
+			String temp = id.substring(id.indexOf(":") + 1);
+			int k = temp.indexOf("_", temp.indexOf("_") + 1);
+			String temp2 = temp.substring(0, k);
+			Page page = document.getPage(temp2);
+			FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+			formPage.loadPageInfo(page);
+			Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
+			if(workspace != null) {
+				workspace.setView("design");
+				workspace.setSelectedMenu("3");
+				workspace.setRenderedMenu(true);
+			}
+		}
+	}
+	
+	/*public Element createNewForm(String name) throws Exception {
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 		if(workspace != null) {
 			Locale locale = workspace.getLocale();
@@ -171,6 +230,50 @@ public class DWRManager implements Serializable {
 			return null;
 		}
 		return null;
+	}*/
+	
+	public void createNewFormDocument(String title) {
+		String name = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("newFormT");
+		if(name == null || name.equals("")) {
+			name = "UNTITLED FORM";
+		}
+		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
+		if(workspace != null) {
+			Locale locale = workspace.getLocale();
+			DocumentManager formManagerInstance = ActionManager.getDocumentManagerInstance();
+			Document document = null;
+			String id = FBUtil.generateFormId(name);
+			LocalizedStringBean formName = new LocalizedStringBean();
+			formName.setString(locale, name);
+			
+			try {
+				document = formManagerInstance.createForm(id, formName);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+			
+			workspace.setView("design");
+			workspace.setDesignViewStatus("empty");
+			workspace.setSelectedMenu("0");
+			workspace.setRenderedMenu(true);
+			
+			FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
+			formDocument.clearFormDocumentInfo();
+			formDocument.setFormTitle(name);
+			formDocument.setFormId(id);
+			formDocument.setDocument(document);
+			
+			Page page = document.getPage(document.getContainedPagesIdList().get(0));
+			FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+			if(formPage != null) {
+				formPage.setPage(page);
+			}
+			FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
+			if(formComponent != null) {
+				formComponent.clearFormComponentInfo();
+			}
+			document.save();
+		}
 	}
 	
 	public String removeComponent(String id) {

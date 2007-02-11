@@ -2,6 +2,7 @@ package com.idega.formbuilder.presentation.components;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -22,7 +23,6 @@ public class FBPagesPanel extends FBComponentBase {
 	
 	public static final String COMPONENT_TYPE = "PagesPanel";
 	
-	private static final String DELETE_PAGE_FUNCTION = "DELETE_PAGE_FUNCTION";
 	private static final String CONFIRMATION_PAGE = "CONFIRMATION_PAGE";
 	private static final String THANKYOU_PAGE = "THANKYOU_PAGE";
 	
@@ -35,23 +35,10 @@ public class FBPagesPanel extends FBComponentBase {
 		setRendererType(null);
 	}
 	
-	protected void initializeComponent(FacesContext context) {
-		Application application = context.getApplication();
-		getChildren().clear();
-		
-//		HtmlAjaxFunction deletePageFunction = new HtmlAjaxFunction();
-//		deletePageFunction.setName("deletePageFunction");
-//		deletePageFunction.setReRender("mainApplication");
-////		deletePageFunction.setOncomplete("closeLoadingMessage()");
-//		deletePageFunction.setValueBinding("data", application.createValueBinding("#{formPage.deletePage}"));
-		
-//		HtmlActionParameter deletePageFunctionP = new HtmlActionParameter();
-//		deletePageFunctionP.setName("pageId");
-//		deletePageFunctionP.setAssignToBinding(application.createValueBinding("#{formPage.id}"));
-//		addChild(deletePageFunctionP, deletePageFunction);
-//		
-//		addFacet(DELETE_PAGE_FUNCTION, deletePageFunction);
-	}
+//	protected void initializeComponent(FacesContext context) {
+//		Application application = context.getApplication();
+//		getChildren().clear();
+//	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
 		Application application = context.getApplication();
@@ -61,16 +48,11 @@ public class FBPagesPanel extends FBComponentBase {
 		super.encodeBegin(context);
 		
 		writer.startElement("DIV", this);
-		writer.writeAttribute("id", id, "id");
 		writer.writeAttribute("class", styleClass, "styleClass");
 		
 		writer.startElement("DIV", null);
-		writer.writeAttribute("style", "display: block; background-color: Red;", null);
-		
-		UIComponent facet = getFacet(DELETE_PAGE_FUNCTION);
-		if(facet != null) {
-			renderChild(context, facet);
-		}
+		writer.writeAttribute("id", id, "id");
+		writer.writeAttribute("style", "display: block; height: 400px; overflow: auto;", null);
 		
 		Locale locale = ((Workspace) WFUtil.getBeanInstance("workspace")).getLocale();
 		FormDocument formDocument = ((FormDocument) WFUtil.getBeanInstance("formDocument"));
@@ -84,7 +66,7 @@ public class FBPagesPanel extends FBComponentBase {
 					formPage.setStyleClass(componentStyleClass);
 					String label = ((PropertiesPage)confirmation.getProperties()).getLabel().getString(locale);
 					formPage.setLabel(label);
-					
+					formPage.setActive(false);
 					addFacet(CONFIRMATION_PAGE, formPage);
 				}
 			}
@@ -95,10 +77,9 @@ public class FBPagesPanel extends FBComponentBase {
 				formPage.setStyleClass(componentStyleClass);
 				String label = ((PropertiesPage)thanks.getProperties()).getLabel().getString(locale);
 				formPage.setLabel(label);
-				
+				formPage.setActive(false);
 				addFacet(THANKYOU_PAGE, formPage);
 			}
-//			List<String> ids = document.getContainedPagesIdList();
 			List<String> ids = getCommonPagesIdList(document);
 			Iterator it = ids.iterator();
 			while(it.hasNext()) {
@@ -108,9 +89,14 @@ public class FBPagesPanel extends FBComponentBase {
 					FBFormPage formPage = (FBFormPage) application.createComponent(FBFormPage.COMPONENT_TYPE);
 					formPage.setId(nextId + "_P");
 					formPage.setStyleClass(componentStyleClass);
-					formPage.setOnDelete("deletePageFunction()");
+//					formPage.setOnDelete("displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/confirm-delete-page.inc');return false");
+//					formPage.setOnDelete("deletePageFunction(this.id)");
+//					formPage.setOnLoad("loadPageFunction(this.id)");
+					formPage.setOnDelete("dwrmanager.deletePage(refreshMainApplication, this.id)");
+					formPage.setOnLoad("dwrmanager.loadPage(refreshMainApplication, this.id)");
 					String label = ((PropertiesPage)currentPage.getProperties()).getLabel().getString(locale);
 					formPage.setLabel(label);
+					formPage.setActive(false);
 					add(formPage);
 				}
 			}
@@ -118,6 +104,7 @@ public class FBPagesPanel extends FBComponentBase {
 	}
 	
 	private List<String> getCommonPagesIdList(Document document) {
+		List<String> result = new LinkedList<String>();
 		List<String> ids = document.getContainedPagesIdList();
 		String confId = "";
 		String tksId = "";
@@ -133,10 +120,11 @@ public class FBPagesPanel extends FBComponentBase {
 		while(it.hasNext()) {
 			String nextId = (String) it.next();
 			if(nextId.equals(confId) || nextId.equals(tksId)) {
-				it.remove();
+				continue;
 			}
+			result.add(nextId);
 		}
-		return ids;
+		return result;
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {
@@ -145,8 +133,7 @@ public class FBPagesPanel extends FBComponentBase {
 		writer.endElement("DIV");
 		
 		writer.startElement("DIV", null);
-//		writer.writeAttribute("class", styleClass, "styleClass");
-		writer.writeAttribute("style", "display: block; border-width: 2px; background-color: Red", null);
+		writer.writeAttribute("style", "display: block;", null);
 		
 		UIComponent component = getFacet(CONFIRMATION_PAGE);
 		if(component != null) {

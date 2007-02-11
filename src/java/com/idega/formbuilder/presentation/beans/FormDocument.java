@@ -1,8 +1,6 @@
 package com.idega.formbuilder.presentation.beans;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import javax.faces.context.FacesContext;
@@ -32,8 +30,6 @@ public class FormDocument implements Serializable {
 	private String sourceCode;
 	private boolean hasPreview;
 	
-	private List<String> pages;
-	
 	private LocalizedStringBean formTitleBean;
 	
 	public Document getDocument() {
@@ -51,13 +47,6 @@ public class FormDocument implements Serializable {
 		formTitle = "";
 		formTitleBean = null;
 		hasPreview = false;
-		
-		pages = new ArrayList<String>();
-		pages.add("Page1");
-		pages.add("Page2");
-		pages.add("Page3");
-		pages.add("Page4");
-		pages.add("Page5");
 	}
 	
 	public void clearFormDocumentInfo() {
@@ -110,6 +99,23 @@ public class FormDocument implements Serializable {
 			return null;
 		}
 		return null;
+	}
+	
+	public String getViewPreview() {
+		if(hasPreview) {
+			hasPreview = false;
+		} else {
+			hasPreview = true;
+		}
+		return "";
+	}
+	
+	public void togglePreviewPage(ActionEvent ae) {
+		if(hasPreview) {
+			hasPreview = false;
+		} else {
+			hasPreview = true;
+		}
 	}
 	
 	public void changeForm(ActionEvent ae) {
@@ -205,14 +211,6 @@ public class FormDocument implements Serializable {
 
 	public void setFormTitleBean(LocalizedStringBean formTitleBean) {
 		this.formTitleBean = formTitleBean;
-	}
-
-	public List<String> getPages() {
-		return pages;
-	}
-
-	public void setPages(List<String> pages) {
-		this.pages = pages;
 	}
 
 	public String getSourceCode() {

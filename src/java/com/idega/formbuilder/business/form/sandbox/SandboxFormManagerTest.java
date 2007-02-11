@@ -13,7 +13,6 @@ import com.idega.formbuilder.business.form.DocumentManager;
 import com.idega.formbuilder.business.form.FormManagerFactory;
 import com.idega.formbuilder.business.form.Page;
 import com.idega.formbuilder.business.form.PropertiesPage;
-import com.idega.formbuilder.business.form.beans.IFormComponent;
 import com.idega.formbuilder.business.form.manager.FormManager;
 
 public class SandboxFormManagerTest {
@@ -61,7 +60,7 @@ public class SandboxFormManagerTest {
 			np.addComponent(fm.getAvailableFormComponentsTypesList().get(0), null);
 			
 			System.out.println("opening ____________________");
-			((FormManager)fm).openForm(xx.getXformsDocument());
+//			((FormManager)fm).openForm(xx.getXformsDocument());
 			
 			System.out.println("source code___________");
 			System.out.println(fm.getCurrentDocument().getFormSourceCode());

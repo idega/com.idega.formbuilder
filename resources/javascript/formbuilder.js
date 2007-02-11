@@ -46,8 +46,15 @@ function createNewForm() {
 	if(name != '') {
 		closeMessage();
 		showLoadingMessage("Creating");
-		createFormDocument(name);
+		/*createFormDocument(name);*/
+		dwrmanager.createNewFormDocument(refreshMainApplicationW, name);
 	}
+}
+function refreshMainApplicationW() {
+	$('workspaceform1:createFormProxy').click();
+}
+function refreshMainApplication() {
+	$('workspaceform1:loadPageFunction').click();
 }
 /*function createdNewForm(element) {
 	$('workspaceform1:createFormProxy').click();

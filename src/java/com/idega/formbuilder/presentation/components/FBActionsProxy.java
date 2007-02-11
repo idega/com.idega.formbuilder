@@ -10,6 +10,7 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.event.ActionEvent;
 
 import org.ajax4jsf.ajax.UIAjaxCommandButton;
+import org.ajax4jsf.ajax.html.HtmlAjaxCommandButton;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
 
@@ -19,19 +20,70 @@ public class FBActionsProxy extends FBComponentBase {
 	
 	public FBActionsProxy() {
 		super();
-		this.setRendererType(null);
+		setRendererType(null);
 	}
 	
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
 		
+		HtmlAjaxCommandButton savePageTitleFunction = new HtmlAjaxCommandButton();
+//		savePageTitleFunction.setName("savePageTitle");
+		savePageTitleFunction.setId("savePageTitle");
+		savePageTitleFunction.setReRender("mainApplication");
+		savePageTitleFunction.setActionListener(application.createMethodBinding("#{formPage.savePageTitle}", new Class[]{ActionEvent.class}));
 		
+//		HtmlAjaxFunction newPageFunction = new HtmlAjaxFunction();
+//		newPageFunction.setName("createNewPage");
+//		newPageFunction.setReRender("mainApplication");
+//		newPageFunction.setValueBinding("data", application.createValueBinding("#{formPage.newPage}"));
+		
+		HtmlAjaxCommandButton newPageFunction = new HtmlAjaxCommandButton();
+		newPageFunction.setId("createNewPage");
+		newPageFunction.setReRender("mainApplication");
+		newPageFunction.setActionListener(application.createMethodBinding("#{formPage.createNewPage}", new Class[]{ActionEvent.class}));
+		
+		/*HtmlAjaxFunction loadPageFunction = new HtmlAjaxFunction();
+		loadPageFunction.setName("loadPageFunction");
+		loadPageFunction.setReRender("mainApplication");
+		loadPageFunction.setValueBinding("data", application.createValueBinding("#{formPage.loadPage}"));*/
+		
+		/*HtmlActionParameter loadPageFunctionP = new HtmlActionParameter();
+		loadPageFunctionP.setName("loadPageId");
+		loadPageFunctionP.setAssignToBinding(application.createValueBinding("#{formPage.id}"));
+		addChild(loadPageFunctionP, loadPageFunction);*/
+		
+		HtmlAjaxCommandButton loadPageFunction = new HtmlAjaxCommandButton();
+		loadPageFunction.setId("loadPageFunction");
+		loadPageFunction.setReRender("mainApplication");
+		
+		HtmlAjaxCommandButton deletePageFunction = new HtmlAjaxCommandButton();
+		deletePageFunction.setId("deletePageFunction");
+		deletePageFunction.setReRender("mainApplication");
+		
+		/*HtmlAjaxFunction deletePageFunction = new HtmlAjaxFunction();
+		deletePageFunction.setName("deletePageFunction");
+		deletePageFunction.setReRender("mainApplication");
+		deletePageFunction.setValueBinding("data", application.createValueBinding("#{formPage.deletePage}"));
+		
+		HtmlActionParameter deletePageFunctionP = new HtmlActionParameter();
+		deletePageFunctionP.setName("deletePageId");
+		deletePageFunctionP.setAssignToBinding(application.createValueBinding("#{formPage.id}"));
+		addChild(deletePageFunctionP, deletePageFunction);*/
+		
+		/*HtmlAjaxFunction togglePreviewPage = new HtmlAjaxFunction();
+		togglePreviewPage.setName("togglePreviewPage");
+		togglePreviewPage.setReRender("mainApplication");
+		togglePreviewPage.setValueBinding("data", application.createValueBinding("#{formDocument.viewPreview}"));*/
+		
+		HtmlAjaxCommandButton togglePreviewPage = new HtmlAjaxCommandButton();
+		togglePreviewPage.setId("togglePreviewPage");
+		togglePreviewPage.setReRender("mainApplication");
+		togglePreviewPage.setActionListener(application.createMethodBinding("#{formDocument.togglePreviewPage}", new Class[]{ActionEvent.class}));
 		
 		UIAjaxCommandButton createForm = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
 		createForm.setId("createFormProxy");
 		createForm.setOncomplete("closeLoadingMessage()");
 		createForm.setAjaxSingle(true);
-//		createForm.setActionListener(application.createMethodBinding("#{createFormAction.processAction}", new Class[]{ActionEvent.class}));
 		createForm.setReRender("mainApplication");
 		
 		UIAjaxCommandButton changeMenu = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
@@ -118,7 +170,12 @@ public class FBActionsProxy extends FBComponentBase {
 		saveCode.setActionListener(application.createMethodBinding("#{formDocument.saveSourceCode}", new Class[]{ActionEvent.class}));
 		saveCode.setReRender("mainApplication");
 		
-//		add(newPageFunction);
+		add(savePageTitleFunction);
+		add(newPageFunction);
+		add(loadPageFunction);
+		add(deletePageFunction);
+		add(togglePreviewPage);
+		
 		add(createForm);
 		add(deleteComponent);
 		add(getProperties);

@@ -25,7 +25,16 @@ public class FBFormPage extends FBComponentBase {
 	private boolean active;
 	private String activeStyleClass;
 	private String onDelete;
+	private String onLoad;
 	
+	public String getOnLoad() {
+		return onLoad;
+	}
+
+	public void setOnLoad(String onLoad) {
+		this.onLoad = onLoad;
+	}
+
 	public String getOnDelete() {
 		return onDelete;
 	}
@@ -60,11 +69,13 @@ public class FBFormPage extends FBComponentBase {
 		getChildren().clear();
 		
 		FBDivision switcher = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
-		switcher.setId("page" + id);
+		switcher.setId(id + "_page");
 		switcher.setStyleClass(styleClass);
 		
 		HtmlGraphicImage pageIconImg = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+		pageIconImg.setId(id + "_pi");
 		pageIconImg.setValue(PAGE_ICON_IMG);
+		pageIconImg.setOnclick(onLoad);
 		pageIconImg.setStyle("display: block");
 		
 		HtmlOutputText pageIconLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
@@ -72,7 +83,7 @@ public class FBFormPage extends FBComponentBase {
 		pageIconLabel.setStyle("display: block");
 		
 		HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
-		deleteButton.setId("db" + id);
+		deleteButton.setId(id + "_db");
 		deleteButton.setValue(DELETE_ICON_IMG);
 		deleteButton.setOnclick(onDelete);
 		deleteButton.setStyleClass("speedButton");
@@ -92,6 +103,7 @@ public class FBFormPage extends FBComponentBase {
 		if(content != null) {
 			if(isActive()) {
 				content.setStyleClass(activeStyleClass);
+				content.getChildren().remove(2);
 			}
 			renderChild(context, content);
 		}

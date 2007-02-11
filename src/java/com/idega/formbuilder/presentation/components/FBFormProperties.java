@@ -64,6 +64,8 @@ public class FBFormProperties extends FBComponentBase {
 		HtmlSelectBooleanCheckbox preview = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
 		preview.setId("previewScreen");
 		preview.setValueBinding("value", application.createValueBinding("#{formDocument.hasPreview}"));
+//		preview.setOnclick("togglePreviewPage()");
+		preview.setOnclick("$('workspaceform1:togglePreviewPage').click();");
 		
 		cell = row.createCell();
 		cell.add(preview);
@@ -71,7 +73,7 @@ public class FBFormProperties extends FBComponentBase {
 		HtmlAjaxCommandButton newPageButton = (HtmlAjaxCommandButton) application.createComponent(HtmlAjaxCommandButton.COMPONENT_TYPE);
 		newPageButton.setValue("New page");
 		newPageButton.setId("newPB_FP");
-		newPageButton.setOnclick("createNewPage()");
+		newPageButton.setOnclick("$('workspaceform1:createNewPage').click();");
 		
 		row = group.createRow();
 		cell = row.createCell();

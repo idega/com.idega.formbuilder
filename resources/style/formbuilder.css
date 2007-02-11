@@ -42,7 +42,9 @@
 	width: 110px;
 	height: 500px;
 	border: 2px solid Black;
-	overflow: auto;
+}
+.pagesPanelBottom {
+	
 }
 
 #selectOpts {
