@@ -15,6 +15,7 @@ import org.w3c.dom.Document;
 
 import com.idega.block.form.business.BundleResourceResolver;
 import com.idega.formbuilder.IWBundleStarter;
+import com.idega.formbuilder.business.form.ConstComponentCategory;
 import com.idega.formbuilder.business.form.DocumentManager;
 import com.idega.formbuilder.business.form.beans.FormDocument;
 import com.idega.formbuilder.business.form.beans.IFormDocument;
@@ -36,7 +37,7 @@ public class FormManager implements DocumentManager {
 	
 	private static Log logger = LogFactory.getLog(FormManager.class);
 	
-	public static final String COMPONENTS_XFORMS_CONTEXT_PATH = "resources/templates/myComponents.xhtml";
+	public static final String COMPONENTS_XFORMS_CONTEXT_PATH = "resources/templates/form-components.xhtml";
 	public static final String COMPONENTS_XSD_CONTEXT_PATH = "resources/templates/default-components.xsd";
 	public static final String FORM_XFORMS_TEMPLATE_RESOURCES_PATH = "resources/templates/form-template.xhtml";
 
@@ -72,9 +73,10 @@ public class FormManager implements DocumentManager {
 	
 	protected FormManager() {	}
 	
-	public List<String> getAvailableFormComponentsTypesList() throws FBPostponedException {
+	public List<String> getAvailableFormComponentsTypesList(ConstComponentCategory category) {
 		
-		return CacheManager.getInstance().getAvailableFormComponentsTypesList();
+		return category == null ? CacheManager.getInstance().getAvailableFormComponentsTypesList()
+				: CacheManager.getInstance().getComponentTypesByCategory(category.getComponentsCategory());
 	}
 	
 	public com.idega.formbuilder.business.form.Document getCurrentDocument() {
@@ -140,6 +142,7 @@ public class FormManager implements DocumentManager {
 			
 			cache_manager.setFormXformsTemplate(form_xforms_template);
 			cache_manager.setAllComponentsTypes(components_types);
+			cache_manager.setCategorizedComponentTypes(FormManagerUtil.getCategorizedComponentsTypes(components_xforms));
 			cache_manager.setComponentsXforms(components_xforms);
 			cache_manager.setComponentsXml(components_xml);
 			cache_manager.setComponentsXsd(components_xsd);

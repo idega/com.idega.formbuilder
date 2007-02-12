@@ -29,6 +29,7 @@ public class CacheManager implements Singleton {
 	private List<String> all_components_types;
 	private List<String> components_types_to_list;
 	private Map<String, XFormsComponentDataBean> cached_xforms_components;
+	private Map<String, List<String>> categorized_types;
 	
 	private static CacheManager me;
 	
@@ -69,6 +70,16 @@ public class CacheManager implements Singleton {
 	public void setAllComponentsTypes(List<String> components_types) {
 		this.all_components_types = components_types;
 		setComponentsTypes(components_types);
+	}
+	
+	public void setCategorizedComponentTypes(Map<String, List<String>> categorized) {
+		
+		categorized_types = categorized;
+	}
+	
+	public List<String> getComponentTypesByCategory(String category) {
+		return categorized_types == null || category == null ? null :
+			categorized_types.get(category);
 	}
 	
 	protected void setComponentsTypes(List<String> components_types) {

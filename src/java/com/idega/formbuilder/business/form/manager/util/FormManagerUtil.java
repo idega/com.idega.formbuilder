@@ -6,9 +6,11 @@ import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -86,6 +88,8 @@ public class FormManagerUtil {
 	public static final String div_tag = "div";
 	public static final String trigger_tag = "xf:trigger";
 	public static final String preview = "preview";
+	public static final String component_tag = "component";
+	public static final String component_id_att = "component_id";
 	
 	private static final String line_sep = "line.separator";
 	private static final String xml_mediatype = "text/html";
@@ -119,7 +123,7 @@ public class FormManagerUtil {
 	 */
 	public static Element getElementByIdFromDocument(Document doc, String start_tag, String id_value) {
 		
-		return getElementByAttributeFromDocument(doc, start_tag, "id", id_value);
+		return getElementByAttributeFromDocument(doc, start_tag, id_att, id_value);
 	}
 	
 	/**
@@ -662,5 +666,30 @@ public class FormManagerUtil {
 		}
 		
 		switch_element.getParentNode().removeChild(switch_element);
+	}
+	
+	public static Map<String, List<String>> getCategorizedComponentsTypes(Document form_components_doc) {
+		
+		Element instance_element = getElementByIdFromDocument(form_components_doc, head_tag, "component_categories");
+		NodeList categories = instance_element.getElementsByTagName("category");
+		Map<String, List<String>> categorized_types = new HashMap<String, List<String>>();
+		
+		for (int i = 0; i < categories.getLength(); i++) {
+			
+			Element category = (Element)categories.item(i);
+			NodeList components = category.getElementsByTagName(component_tag);
+			List<String> component_types = new ArrayList<String>();
+
+			for (int j = 0; j < components.getLength(); j++) {
+				
+				Element component = (Element)components.item(j);
+				component_types.add(component.getAttribute(component_id_att));
+			}
+			
+			String category_name = category.getAttribute(name_att);
+			categorized_types.put(category_name, component_types);
+		}
+		
+		return categorized_types;
 	}
 }

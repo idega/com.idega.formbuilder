@@ -29,9 +29,9 @@ public interface DocumentManager {
 
 	/**
 	 * 
-	 * @return List of available form components types
+	 * @return List of available form components types by category
 	 */
-	public abstract List<String> getAvailableFormComponentsTypesList() throws FBPostponedException;
+	public List<String> getAvailableFormComponentsTypesList(ConstComponentCategory category);
 
 	/**
 	 * Open and load document by form id

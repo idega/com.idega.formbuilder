@@ -58,7 +58,7 @@ public class SandboxFormManagerTest {
 			System.out.println("new page added: "+np);
 			ba = np.createButtonArea(null);
 			
-			np.addComponent(fm.getAvailableFormComponentsTypesList().get(0), null);
+			np.addComponent(fm.getAvailableFormComponentsTypesList(null).get(0), null);
 			Page confirmation_page_added = xx.addConfirmationPage(null);
 			
 			System.out.println("thx txt: "+xx.getThxPage().getProperties().getText());
@@ -68,7 +68,7 @@ public class SandboxFormManagerTest {
 			
 			System.out.println("added conf page: "+confirmation_page_added);
 			
-			np.addComponent(fm.getAvailableFormComponentsTypesList().get(0), null);
+			np.addComponent(fm.getAvailableFormComponentsTypesList(null).get(0), null);
 			
 			xx0 = np.getContainedComponentsIdList().get(0);
 			xx1 = np.getContainedComponentsIdList().get(2);

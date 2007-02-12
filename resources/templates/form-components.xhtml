@@ -8,7 +8,7 @@
 
 <xf:model id="components_model" schema="default-components.xsd">
 	<xf:instance id="components_instance" xmlns="">
-		<data> <text>Some text field text</text> <email /> <textarea />
+		<data> <text /> <email /> <textarea />
 		<secret /> <multiple_select_minimal /> <single_select_minimal /> <multiple_select />
 		<single_select /> <upload_file> <attachment filename=""
 			content-type="" /> </upload_file> <page /> </data>
@@ -104,6 +104,30 @@
 	</xf:instance>
 	<xf:instance id="fbcomp_single_select_eds" xmlns="">
 		<ext_src> </ext_src>
+	</xf:instance>
+	
+	<xf:instance id="component_categories" xmlns="">
+		<category name="basic">
+			<component component_id="fbcomp_text" />
+			<component component_id="fbcomp_textarea" />
+			<component component_id="fbcomp_secret" />
+			<component component_id="fbcomp_multiple_select_minimal" />
+			<component component_id="fbcomp_single_select_minimal" />
+			<component component_id="fbcomp_multiple_select" />
+			<component component_id="fbcomp_single_select" />
+			<component component_id="fbcomp_email" />
+			<component component_id="fbcomp_upload_file" />
+		</category>
+		<category name="buttons">
+			<component component_id="fbcomp_button_next" />
+			<component component_id="fbcomp_button_previous" />
+			<component component_id="fbcomp_button_submit" />
+		</category>
+		<category name="non-display">
+			<component component_id="fbcomp_button_area" />
+			<component component_id="fbcomp_page" />
+			<component component_id="fbcomp_confirmation_page" />
+		</category>
 	</xf:instance>
 </xf:model>
 </head>
