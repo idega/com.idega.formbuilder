@@ -88,7 +88,11 @@ public class FormPage implements Serializable {
 					workspace.setSelectedMenu("3");
 					workspace.setRenderedMenu(true);
 				}
-				document.save();
+				try {
+					document.save();
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
 			}
 		}
 		return "";
@@ -153,7 +157,11 @@ public class FormPage implements Serializable {
 				workspace.setSelectedMenu("3");
 				workspace.setRenderedMenu(true);
 			}
-			document.save();
+			try {
+				document.save();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
 	}
 	
@@ -175,7 +183,11 @@ public class FormPage implements Serializable {
 				workspace.setSelectedMenu("3");
 				workspace.setRenderedMenu(true);
 			}
-			document.save();
+			try {
+				document.save();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
 		return "";
 	}

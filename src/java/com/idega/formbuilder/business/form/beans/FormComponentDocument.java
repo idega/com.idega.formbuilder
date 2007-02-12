@@ -202,7 +202,7 @@ public class FormComponentDocument extends FormComponentContainer implements com
 		componentsOrderChanged();
 	}
 	
-	public void save() {
+	public void save() throws Exception {
 		document.persist();
 	}
 	public Page getConfirmationPage() {

@@ -208,7 +208,11 @@ public class DWRManager implements Serializable {
 					workspace.setSelectedMenu("3");
 					workspace.setRenderedMenu(true);
 				}
-				document.save();
+				try {
+					document.save();
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
 			}
 		}
 	}
@@ -268,7 +272,11 @@ public class DWRManager implements Serializable {
 			if(formComponent != null) {
 				formComponent.clearFormComponentInfo();
 			}
-			document.save();
+			try {
+				document.save();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
 	}
 	
@@ -283,7 +291,11 @@ public class DWRManager implements Serializable {
 				}
 				Document document = ((FormDocument) WFUtil.getBeanInstance("formDocument")).getDocument();
 				if(document != null) {
-					document.save();
+					try {
+						document.save();
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
 				}
 			}
 			

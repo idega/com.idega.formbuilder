@@ -3,8 +3,6 @@ package com.idega.formbuilder.business.form.beans;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.xml.parsers.DocumentBuilder;
 
@@ -42,11 +40,8 @@ public class FormDocument implements IFormDocument {
 	private Document components_xml;
 	private int last_component_id = 0;
 	private boolean document_changed = true;
-	private Timer saveTimer;
-	private boolean saving = false;
 	
 	public FormDocument() {
-		saveTimer = new Timer("FormDocument save");
 		
 		pages_container = new FormComponentDocument();
 		pages_container.setFormDocument(this);
@@ -107,30 +102,9 @@ public class FormDocument implements IFormDocument {
 		return new Exception[0]; 
 	}
 	
-	public void persist() {
-		// if document is already scheduled for saving don't do anything
-		if (!saving) {
-			saving = true;
-			TimerTask saveTask = new FormSaveTask();
-			// will save current state of document after 5 seconds
-			saveTimer.schedule(saveTask, 5000);
-		}
-	}
-	
-	/**
-	 * Saves a document
-	 */
-	protected class FormSaveTask extends TimerTask {
-
-		public void run() {
-			try {
-				getFormsService().saveForm(form_id, form_xforms);
-			}
-			catch (Exception e) {
-				logger.error("Error saving form document", e);
-			}
-			saving = false;
-		}
+	public void persist() throws Exception {
+		
+		getFormsService().saveForm(form_id, form_xforms);
 	}
 	
 	public void setFormDocumentModified(boolean changed) {

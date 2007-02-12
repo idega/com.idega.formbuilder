@@ -97,7 +97,12 @@ public class FormDocument implements Serializable {
 			if(formComponent != null) {
 				formComponent.clearFormComponentInfo();
 			}
-			document.save();
+			try {
+				document.save();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			
 			return null;
 		}
 		return null;
