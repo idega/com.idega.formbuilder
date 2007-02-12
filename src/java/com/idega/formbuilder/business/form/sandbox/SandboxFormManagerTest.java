@@ -10,7 +10,7 @@ import com.idega.formbuilder.business.form.Component;
 import com.idega.formbuilder.business.form.ConstButtonType;
 import com.idega.formbuilder.business.form.Document;
 import com.idega.formbuilder.business.form.DocumentManager;
-import com.idega.formbuilder.business.form.FormManagerFactory;
+import com.idega.formbuilder.business.form.DocumentManagerFactory;
 import com.idega.formbuilder.business.form.Page;
 import com.idega.formbuilder.business.form.PropertiesPage;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
@@ -30,7 +30,7 @@ public class SandboxFormManagerTest {
 		
 		try {
 			
-			DocumentManager fm = FormManagerFactory.newFormManager(null);
+			DocumentManager fm = DocumentManagerFactory.newFormManager(null);
 			Document xx = fm.createForm("xx", null);
 			xx = fm.getCurrentDocument();
 			

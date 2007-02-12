@@ -13,9 +13,9 @@ import com.idega.formbuilder.business.form.manager.util.InitializationException;
  * @version 1.0
  *
  */
-public class FormManagerFactory {
+public class DocumentManagerFactory {
 	
-	protected FormManagerFactory() { }
+	protected DocumentManagerFactory() { }
 	
 	/**
 	 * initiates FormManager if needed
@@ -27,7 +27,7 @@ public class FormManagerFactory {
 		
 		if(!FormManager.isInited()) {
 			
-			synchronized(FormManagerFactory.class) {
+			synchronized(DocumentManagerFactory.class) {
 					
 				if(!FormManager.isInited()) {
 						

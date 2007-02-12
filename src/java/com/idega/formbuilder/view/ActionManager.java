@@ -6,7 +6,7 @@ import javax.faces.context.FacesContext;
 
 import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.formbuilder.business.form.DocumentManager;
-import com.idega.formbuilder.business.form.FormManagerFactory;
+import com.idega.formbuilder.business.form.DocumentManagerFactory;
 import com.idega.formbuilder.business.form.manager.util.InitializationException;
 
 public class ActionManager implements Serializable {
@@ -25,7 +25,7 @@ public class ActionManager implements Serializable {
 	
 	private static DocumentManager createNewInstance() {
 		try {
-			formManagerInstance = FormManagerFactory.newFormManager(FacesContext.getCurrentInstance());
+			formManagerInstance = DocumentManagerFactory.newFormManager(FacesContext.getCurrentInstance());
 		} catch(InitializationException ie) {
 			ie.printStackTrace();
 		}
