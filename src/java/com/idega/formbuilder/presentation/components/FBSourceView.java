@@ -10,6 +10,7 @@ import org.ajax4jsf.ajax.html.HtmlAjaxCommandButton;
 import org.apache.myfaces.component.html.ext.HtmlInputTextarea;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.webface.WFDivision;
 
 public class FBSourceView extends FBComponentBase {
 	
@@ -30,7 +31,7 @@ public class FBSourceView extends FBComponentBase {
 		Application application = context.getApplication();
 		this.getChildren().clear();
 		
-		FBDivision content = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
+		WFDivision content = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		content.setStyleClass(styleClass);
 		content.setId(id + "Div");
 		

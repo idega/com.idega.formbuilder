@@ -4,7 +4,7 @@ import javax.faces.component.UIComponent;
 
 import org.apache.myfaces.shared_impl.taglib.UIComponentTagBase;
 
-import com.idega.formbuilder.presentation.components.FBDivision;
+import com.idega.webface.WFDivision;
 
 public class FBDivisionTag extends UIComponentTagBase {
 
@@ -18,7 +18,7 @@ public class FBDivisionTag extends UIComponentTagBase {
 	}
 
 	public String getComponentType() {
-		return FBDivision.COMPONENT_TYPE;
+		return WFDivision.COMPONENT_TYPE;
 	}
 
 	public String getRendererType() {
@@ -34,7 +34,7 @@ public class FBDivisionTag extends UIComponentTagBase {
 	public void setProperties(UIComponent component) {
 		super.setProperties(component);
 		if(component != null) {
-			FBDivision workspace = (FBDivision) component;
+			WFDivision workspace = (WFDivision) component;
 			if(this.styleClass != null) {
 				workspace.setStyleClass(this.styleClass);
 			}

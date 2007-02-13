@@ -16,6 +16,7 @@ import org.ajax4jsf.ajax.html.HtmlAjaxStatus;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.Workspace;
+import com.idega.webface.WFDivision;
 import com.idega.webface.WFUtil;
 
 public class FBViewPanel extends FBComponentBase {
@@ -47,7 +48,7 @@ public class FBViewPanel extends FBComponentBase {
 		Application application = context.getApplication();
 		getChildren().clear();
 		
-		FBDivision switcher = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
+		WFDivision switcher = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		switcher.setId("switcher");
 		switcher.setStyleClass("viewTabs");
 		
@@ -60,7 +61,7 @@ public class FBViewPanel extends FBComponentBase {
 		view1.setReRender("mainApplication");
 		view1.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['view_design']}"));
 		
-		FBDivision view1Box = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
+		WFDivision view1Box = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		view1Box.setId("view1Box");
 		view1Box.setStyleClass("unselectedTab");
 		addChild(view1, view1Box);
@@ -75,7 +76,7 @@ public class FBViewPanel extends FBComponentBase {
 		view2.setReRender("mainApplication");
 		view2.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['view_preview']}"));
 		
-		FBDivision view2Box = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
+		WFDivision view2Box = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		view2Box.setId("view2Box");
 		view2Box.setStyleClass("unselectedTab");
 		addChild(view2, view2Box);
@@ -90,7 +91,7 @@ public class FBViewPanel extends FBComponentBase {
 		view3.setReRender("mainApplication");
 		view3.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['view_source']}"));
 		
-		FBDivision view3Box = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
+		WFDivision view3Box = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		view3Box.setId("view3Box");
 		view3Box.setStyleClass("unselectedTab");
 		addChild(view3, view3Box);
@@ -185,9 +186,9 @@ public class FBViewPanel extends FBComponentBase {
 			if(view.equals(DESIGN_VIEW)) {
 				UIComponent designView = getFacet(view);
 				if(designView != null) {
-					((FBDivision) viewSwitch.getChildren().get(0)).setStyleClass("selectedTab");
-					((FBDivision) viewSwitch.getChildren().get(1)).setStyleClass("unselectedTab");
-					((FBDivision) viewSwitch.getChildren().get(2)).setStyleClass("unselectedTab");
+					((WFDivision) viewSwitch.getChildren().get(0)).setStyleClass("selectedTab");
+					((WFDivision) viewSwitch.getChildren().get(1)).setStyleClass("unselectedTab");
+					((WFDivision) viewSwitch.getChildren().get(2)).setStyleClass("unselectedTab");
 					renderChild(context, viewSwitch);
 					renderChild(context, pagesButton);
 					if(((Workspace)WFUtil.getBeanInstance("workspace")).isPagesPanelVisible()) {
@@ -202,9 +203,9 @@ public class FBViewPanel extends FBComponentBase {
 			} else if(view.equals(PREVIEW_VIEW)) {
 				UIComponent previewView = getFacet(view);
 				if (previewView != null) {
-					((FBDivision) viewSwitch.getChildren().get(1)).setStyleClass("selectedTab");
-					((FBDivision) viewSwitch.getChildren().get(0)).setStyleClass("unselectedTab");
-					((FBDivision) viewSwitch.getChildren().get(2)).setStyleClass("unselectedTab");
+					((WFDivision) viewSwitch.getChildren().get(1)).setStyleClass("selectedTab");
+					((WFDivision) viewSwitch.getChildren().get(0)).setStyleClass("unselectedTab");
+					((WFDivision) viewSwitch.getChildren().get(2)).setStyleClass("unselectedTab");
 					renderChild(context, viewSwitch);
 					renderChild(context, status);
 					renderChild(context, previewView);
@@ -212,9 +213,9 @@ public class FBViewPanel extends FBComponentBase {
 			} else if(view.equals(SOURCE_VIEW)) {
 				UIComponent sourceView = getFacet(view);
 				if (sourceView != null) {
-					((FBDivision) viewSwitch.getChildren().get(2)).setStyleClass("selectedTab");
-					((FBDivision) viewSwitch.getChildren().get(1)).setStyleClass("unselectedTab");
-					((FBDivision) viewSwitch.getChildren().get(0)).setStyleClass("unselectedTab");
+					((WFDivision) viewSwitch.getChildren().get(2)).setStyleClass("selectedTab");
+					((WFDivision) viewSwitch.getChildren().get(1)).setStyleClass("unselectedTab");
+					((WFDivision) viewSwitch.getChildren().get(0)).setStyleClass("unselectedTab");
 					renderChild(context, viewSwitch);
 					renderChild(context, status);
 					renderChild(context, sourceView);

@@ -15,6 +15,7 @@ import org.apache.myfaces.component.html.ext.HtmlInputText;
 
 import com.idega.formbuilder.business.form.beans.ItemBean;
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.webface.WFDivision;
 
 public class FBSelectValuesList extends FBComponentBase {
 	
@@ -84,7 +85,7 @@ public class FBSelectValuesList extends FBComponentBase {
 	private UIComponent getNextSelectRow(String field, String value, int index, FacesContext context) {
 		Application application = context.getApplication();
 		
-		FBDivision row = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
+		WFDivision row = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		row.setId(DIV_PREFIX + index);
 		
 		HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);

@@ -18,6 +18,7 @@ import com.idega.presentation.Table2;
 import com.idega.presentation.TableCell2;
 import com.idega.presentation.TableRow;
 import com.idega.presentation.TableRowGroup;
+import com.idega.webface.WFDivision;
 import com.idega.webface.WFUtil;
 
 public class FBAdvancedProperties extends FBComponentBase {
@@ -102,7 +103,7 @@ public class FBAdvancedProperties extends FBComponentBase {
 		cell2 = row2.createCell();
 		cell2.add(external);
 		
-		FBDivision localSrcDiv = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
+		WFDivision localSrcDiv = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		localSrcDiv.setId("localSrcDiv");
 		
 		FBSelectValuesList selectValues = (FBSelectValuesList) application.createComponent(FBSelectValuesList.COMPONENT_TYPE);

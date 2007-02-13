@@ -9,6 +9,7 @@ import javax.faces.context.FacesContext;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.webface.WFDivision;
 
 public class FBFormPage extends FBComponentBase {
 	
@@ -68,7 +69,7 @@ public class FBFormPage extends FBComponentBase {
 		Application application = context.getApplication();
 		getChildren().clear();
 		
-		FBDivision switcher = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
+		WFDivision switcher = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		switcher.setId(id + "_page");
 		switcher.setStyleClass(styleClass);
 		
@@ -99,7 +100,7 @@ public class FBFormPage extends FBComponentBase {
 		if(!isRendered()) {
 			return;
 		}
-		FBDivision content = (FBDivision) getFacet(CONTENT_DIV_FACET);
+		WFDivision content = (WFDivision) getFacet(CONTENT_DIV_FACET);
 		if(content != null) {
 			if(isActive()) {
 				content.setStyleClass(activeStyleClass);

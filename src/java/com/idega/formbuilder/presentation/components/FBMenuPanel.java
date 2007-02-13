@@ -10,6 +10,7 @@ import javax.faces.context.FacesContext;
 import org.ajax4jsf.ajax.html.HtmlAjaxCommandLink;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.webface.WFDivision;
 
 public class FBMenuPanel extends FBComponentBase {
 
@@ -67,7 +68,7 @@ public class FBMenuPanel extends FBComponentBase {
 //		header.getChildren().add(headerS);
 //		addChild(headerS, header);
 		
-		FBDivision headerPanel = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
+		WFDivision headerPanel = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		headerPanel.setStyleClass("menuPanelTitle");
 		headerPanel.setId(getId() + "HP");
 //		headerPanel.getChildren().add(header);

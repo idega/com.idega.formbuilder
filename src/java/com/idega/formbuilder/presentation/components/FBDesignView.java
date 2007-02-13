@@ -21,6 +21,7 @@ import com.idega.formbuilder.business.form.Container;
 import com.idega.formbuilder.business.form.Page;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormPage;
+import com.idega.webface.WFDivision;
 import com.idega.webface.WFUtil;
 
 public class FBDesignView extends FBComponentBase {
@@ -59,7 +60,7 @@ public class FBDesignView extends FBComponentBase {
 		Application application = context.getApplication();
 		getChildren().clear();
 		
-		FBDivision noFormNotice = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
+		WFDivision noFormNotice = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		noFormNotice.setId("noFormNotice");
 		
 		HtmlOutputText noFormNoticeHeader = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
@@ -76,7 +77,7 @@ public class FBDesignView extends FBComponentBase {
 		
 		addFacet(DESIGN_VIEW_NOFORM_FACET, noFormNotice);
 		
-		FBDivision formHeading = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
+		WFDivision formHeading = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		formHeading.setId("formHeading");
 		formHeading.setStyleClass("formHeading");
 		
@@ -99,7 +100,7 @@ public class FBDesignView extends FBComponentBase {
 		
 		addFacet(DESIGN_VIEW_HEADER_FACET, formHeading);
 		
-		FBDivision emptyForm = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
+		WFDivision emptyForm = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		emptyForm.setId("emptyForm");
 		
 		HtmlOutputText emptyFormHeader = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);

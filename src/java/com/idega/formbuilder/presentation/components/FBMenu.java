@@ -16,6 +16,7 @@ import org.apache.myfaces.component.html.ext.HtmlOutputText;
 import org.apache.myfaces.component.html.ext.HtmlSelectOneMenu;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.webface.WFDivision;
 
 
 public class FBMenu extends FBComponentBase {
@@ -60,7 +61,7 @@ public class FBMenu extends FBComponentBase {
 		Application application = context.getApplication();
 		getChildren().clear();
 		
-		FBDivision menuHeaderPanel = (FBDivision) application.createComponent(FBDivision.COMPONENT_TYPE);
+		WFDivision menuHeaderPanel = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		menuHeaderPanel.setId("menuPanelToolbar");
 		
 		/*HtmlAjaxFunction newFormFunction = new HtmlAjaxFunction();
