@@ -11,7 +11,7 @@ import java.util.List;
 public final class ConstComponentCategory {
 
 	public static final String BASIC = "basic";
-	public static final String BUTTONS = "button";
+	public static final String BUTTONS = "buttons";
 	public static final String NON_DISPLAY = "non-display";
 	private static List<String> components_categories = new ArrayList<String>();
 	
