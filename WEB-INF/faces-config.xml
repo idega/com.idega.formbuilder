@@ -178,10 +178,6 @@
 		<component-class>com.idega.formbuilder.presentation.components.FBPageProperties</component-class>
 	</component>
 	<component>
-		<component-type>Division</component-type>
-		<component-class>com.idega.formbuilder.presentation.components.FBDivision</component-class>
-	</component>
-	<component>
 		<component-type>SelectValuesList</component-type>
 		<component-class>com.idega.formbuilder.presentation.components.FBSelectValuesList</component-class>
 	</component>
