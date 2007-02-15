@@ -12,6 +12,8 @@ import org.apache.commons.logging.LogFactory;
 import com.idega.formbuilder.business.form.Document;
 import com.idega.formbuilder.business.form.DocumentManager;
 import com.idega.formbuilder.business.form.Page;
+import com.idega.formbuilder.business.form.PageThankYou;
+import com.idega.formbuilder.business.form.PropertiesThankYouPage;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.formbuilder.view.ActionManager;
@@ -24,6 +26,7 @@ public class FormDocument implements Serializable {
 	private static Log logger = LogFactory.getLog(FormDocument.class);
 	
 	private Document document;
+	private PropertiesThankYouPage properties;
 	
 	private String formTitle;
 	private String formId;
@@ -33,6 +36,8 @@ public class FormDocument implements Serializable {
 	private String thankYouText;
 	
 	private LocalizedStringBean formTitleBean;
+	private LocalizedStringBean thankYouTitleBean;
+	private LocalizedStringBean thankYouTextBean;
 	
 	public Document getDocument() {
 		return document;
@@ -84,9 +89,10 @@ public class FormDocument implements Serializable {
 			workspace.setRenderedMenu(true);
 			
 			clearFormDocumentInfo();
-			setFormTitle(name);
 			setFormId(id);
 			setDocument(document);
+			
+			loadFormInfo();
 			
 			Page page = document.getPage(document.getContainedPagesIdList().get(0));
 			FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
@@ -102,7 +108,6 @@ public class FormDocument implements Serializable {
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
-			
 			return null;
 		}
 		return null;
@@ -119,8 +124,23 @@ public class FormDocument implements Serializable {
 	
 	public void togglePreviewPage(ActionEvent ae) {
 		if(hasPreview) {
-			hasPreview = false;
+			Page page = document.getConfirmationPage();
+			if(page != null) {
+				page.remove();
+				try {
+					document.save();
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				hasPreview = false;
+			}
 		} else {
+			document.addConfirmationPage(null);
+			try {
+				document.save();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 			hasPreview = true;
 		}
 	}
@@ -128,13 +148,11 @@ public class FormDocument implements Serializable {
 	public void changeForm(ActionEvent ae) {
 		DocumentManager formManagerInstance = ActionManager.getDocumentManagerInstance();
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
-		Locale locale = workspace.getLocale();
 		if(formId != null && !formId.equals("") && !formId.equals("INACTIVE")) {
 			try {
-				Document currentDocument = formManagerInstance.openForm(formId);
-				document = currentDocument;
-				String firstPage = currentDocument.getContainedPagesIdList().get(0);
-				Page firstP = currentDocument.getPage(firstPage);
+				document = formManagerInstance.openForm(formId);;
+				String firstPage = document.getContainedPagesIdList().get(0);
+				Page firstP = document.getPage(firstPage);
 				if(firstP.getContainedComponentsIdList().size() > 0) {
 					workspace.setDesignViewStatus("active");
 				} else {
@@ -148,7 +166,7 @@ public class FormDocument implements Serializable {
 				workspace.setView("design");
 				workspace.setRenderedMenu(true);
 				workspace.setSelectedMenu("0");
-				formTitle = currentDocument.getFormTitle().getString(locale);
+				loadFormInfo();
 				FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
 				if(formComponent != null) {
 					formComponent.clearFormComponentInfo();
@@ -172,17 +190,25 @@ public class FormDocument implements Serializable {
 	}
 	
 	public void loadFormInfo() {
-		document = ActionManager.getDocumentManagerInstance().getCurrentDocument();
 		formTitleBean = document.getFormTitle();
 		formTitle = formTitleBean.getString(new Locale("en"));
-	}
-	
-	public void loadFormProperties(ActionEvent ae) {
-		document = ActionManager.getDocumentManagerInstance().getCurrentDocument();
-		formTitleBean = document.getFormTitle();
-		formTitle = formTitleBean.getString(new Locale("en"));
-		
-		((Workspace) WFUtil.getBeanInstance("workspace")).setSelectedMenu("2");
+		if(document.getConfirmationPage() != null) {
+			hasPreview = true;
+		} else {
+			hasPreview = false;
+		}
+		PageThankYou thxPage = document.getThxPage();
+		if(thxPage != null) {
+			properties = thxPage.getProperties();
+			if(properties != null) {
+				Locale locale = new Locale("en");
+				thankYouTitleBean = properties.getLabel();
+				thankYouTitle = thankYouTitleBean.getString(locale);
+				
+				thankYouTextBean = properties.getText();
+				thankYouText = thankYouTextBean.getString(locale);
+			}
+		}
 	}
 	
 	public void saveFormTitle(ActionEvent ae) throws Exception {
@@ -190,6 +216,20 @@ public class FormDocument implements Serializable {
 		if(value != null) {
 			setFormTitle(value);
 			document.setFormTitle(formTitleBean);
+		}
+	}
+	
+	public void saveThankYouLabel(ActionEvent ae) {
+		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("thankYouTitle");
+		if(value != null) {
+			setThankYouTitle(value);
+		}
+	}
+	
+	public void saveThankYouText(ActionEvent ae) {
+		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("thankYouText");
+		if(value != null) {
+			setThankYouText(value);
 		}
 	}
 	
@@ -252,6 +292,10 @@ public class FormDocument implements Serializable {
 
 	public void setThankYouText(String thankYouText) {
 		this.thankYouText = thankYouText;
+		thankYouTextBean.setString(new Locale("en"), thankYouText);
+		if(properties != null) {
+			properties.setText(thankYouTextBean);
+		}
 	}
 
 	public String getThankYouTitle() {
@@ -260,6 +304,34 @@ public class FormDocument implements Serializable {
 
 	public void setThankYouTitle(String thankYouTitle) {
 		this.thankYouTitle = thankYouTitle;
+		thankYouTitleBean.setString(new Locale("en"), thankYouTitle);
+		if(properties != null) {
+			properties.setLabel(thankYouTitleBean);
+		}
+	}
+
+	public PropertiesThankYouPage getProperties() {
+		return properties;
+	}
+
+	public void setProperties(PropertiesThankYouPage properties) {
+		this.properties = properties;
+	}
+
+	public LocalizedStringBean getThankYouTextBean() {
+		return thankYouTextBean;
+	}
+
+	public void setThankYouTextBean(LocalizedStringBean thankYouTextBean) {
+		this.thankYouTextBean = thankYouTextBean;
+	}
+
+	public LocalizedStringBean getThankYouTitleBean() {
+		return thankYouTitleBean;
+	}
+
+	public void setThankYouTitleBean(LocalizedStringBean thankYouTitleBean) {
+		this.thankYouTitleBean = thankYouTitleBean;
 	}
 
 }

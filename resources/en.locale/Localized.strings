@@ -10,16 +10,22 @@ fbcomp_multiple_select=Checkbox
 fbcomp_single_select=Radiobutton
 fbcomp_upload_file=File Upload
 fbcomp_email=Email
+fbcomp_button_next=Next
+fbcomp_button_previous=Previous
+fbcomp_button_submit=Submit
 
-fbcomp_text_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
+fbcomp_text_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield.png
 fbcomp_textarea_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
-fbcomp_secret_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
+fbcomp_secret_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield_key.png
 fbcomp_multiple_select_minimal_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
 fbcomp_single_select_minimal_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
 fbcomp_multiple_select_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
 fbcomp_single_select_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
 fbcomp_upload_file_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
-fbcomp_email_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
+fbcomp_email_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/email.png
+fbcomp_button_next_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/resultset_next.png
+fbcomp_button_previous_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/resultset_previous.png
+fbcomp_button_submit_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield.png
 
 input.title=Title of input
 

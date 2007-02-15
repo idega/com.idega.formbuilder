@@ -11,6 +11,25 @@ public class FBComponentBase extends IWBaseComponent {
 	
 	public static final String COMPONENT_FAMILY = "formbuilder";
 	
+	private String id;
+	private String styleClass;
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getStyleClass() {
+		return styleClass;
+	}
+
+	public void setStyleClass(String styleClass) {
+		this.styleClass = styleClass;
+	}
+
 	public void renderChild(FacesContext context, UIComponent component) throws IOException {
 		if(component.isRendered()) {
 			component.encodeBegin(context);

@@ -24,3 +24,4 @@ function createTreeNode(element) {
 		return result;
 	}
 }
+	
