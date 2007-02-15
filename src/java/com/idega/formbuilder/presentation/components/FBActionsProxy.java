@@ -42,6 +42,16 @@ public class FBActionsProxy extends FBComponentBase {
 		newPageFunction.setReRender("mainApplication");
 		newPageFunction.setActionListener(application.createMethodBinding("#{formPage.createNewPage}", new Class[]{ActionEvent.class}));
 		
+		HtmlAjaxCommandButton saveThankYouLabel = new HtmlAjaxCommandButton();
+		saveThankYouLabel.setId("saveThankYouTitle");
+		saveThankYouLabel.setReRender("mainApplication");
+		saveThankYouLabel.setActionListener(application.createMethodBinding("#{formDocument.saveThankYouLabel}", new Class[]{ActionEvent.class}));
+		
+		HtmlAjaxCommandButton saveThankYouText = new HtmlAjaxCommandButton();
+		saveThankYouText.setId("saveThankYouText");
+		saveThankYouText.setReRender("mainApplication");
+		saveThankYouText.setActionListener(application.createMethodBinding("#{formDocument.saveThankYouText}", new Class[]{ActionEvent.class}));
+		
 		/*HtmlAjaxFunction loadPageFunction = new HtmlAjaxFunction();
 		loadPageFunction.setName("loadPageFunction");
 		loadPageFunction.setReRender("mainApplication");
@@ -175,6 +185,9 @@ public class FBActionsProxy extends FBComponentBase {
 		add(loadPageFunction);
 		add(deletePageFunction);
 		add(togglePreviewPage);
+		
+		add(saveThankYouLabel);
+		add(saveThankYouText);
 		
 		add(createForm);
 		add(deleteComponent);

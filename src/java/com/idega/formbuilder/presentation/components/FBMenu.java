@@ -111,7 +111,6 @@ public class FBMenu extends FBComponentBase {
 		palette.setId("firstlist");
 		palette.setItemStyleClass("paletteComponent");
 		palette.setStyleClass("componentsList");
-		palette.setValueBinding("items", application.createValueBinding("#{palette.components}"));
 		
 		tab1.add(palette);
 		

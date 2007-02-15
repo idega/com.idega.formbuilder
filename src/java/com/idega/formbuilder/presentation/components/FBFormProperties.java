@@ -80,7 +80,7 @@ public class FBFormProperties extends FBComponentBase {
 		HtmlInputText thankYouTitle = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		thankYouTitle.setId("thankYouTitle");
 		thankYouTitle.setValueBinding("value", application.createValueBinding("#{formDocument.thankYouTitle}"));
-//		thankYouTitle.setOnblur("$('workspaceform1:saveFormTitle').click();");
+		thankYouTitle.setOnblur("$('workspaceform1:saveThankYouTitle').click();");
 		
 		cell = row.createCell();
 		cell.add(thankYouTitle);
@@ -96,7 +96,7 @@ public class FBFormProperties extends FBComponentBase {
 		HtmlInputText thankYouText = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		thankYouText.setId("thankYouText");
 		thankYouText.setValueBinding("value", application.createValueBinding("#{formDocument.thankYouText}"));
-//		thankYouText.setOnblur("$('workspaceform1:saveFormTitle').click();");
+		thankYouText.setOnblur("$('workspaceform1:saveThankYouText').click();");
 		
 		cell = row.createCell();
 		cell.add(thankYouText);

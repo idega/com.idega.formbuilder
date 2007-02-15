@@ -90,7 +90,7 @@ public class FBDesignView extends FBComponentBase {
 		formHeadingS.setId("formHeadingHeaderS");
 		formHeadingS.setEvent("onclick");
 		formHeadingS.setReRender("workspaceform1:ajaxMenuPanel");
-		formHeadingS.setActionListener(application.createMethodBinding("#{formDocument.loadFormProperties}", new Class[]{ActionEvent.class}));
+		formHeadingS.setActionListener(application.createMethodBinding("#{formDocument.loadFormInfo}", new Class[]{ActionEvent.class}));
 		formHeadingS.setAjaxSingle(true);
 		addChild(formHeadingS, formHeadingHeader);
 		
@@ -221,7 +221,8 @@ public class FBDesignView extends FBComponentBase {
 		}
 		Iterator it = getChildren().iterator();
 		while(it.hasNext()) {
-			renderChild(context, (UIComponent) it.next());
+			UIComponent current = (UIComponent) it.next();
+			renderChild(context, current);
 		}
 	}
 	
