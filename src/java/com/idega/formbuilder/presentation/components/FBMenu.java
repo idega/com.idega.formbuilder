@@ -1,6 +1,7 @@
 package com.idega.formbuilder.presentation.components;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
@@ -15,7 +16,9 @@ import org.apache.myfaces.component.html.ext.HtmlCommandButton;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
 import org.apache.myfaces.component.html.ext.HtmlSelectOneMenu;
 
+import com.idega.block.web2.presentation.Accordion;
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.presentation.text.Text;
 import com.idega.webface.WFDivision;
 
 
@@ -26,13 +29,6 @@ public class FBMenu extends FBComponentBase {
 	private static final String NO_MENU_FACET = "NO_MENU_FACET";
 	private static final String MENU_TOOLBAR_FACET = "MENU_TOOLBAR_FACET";
 	
-	private static final String MENU_TAB_1 = "tab1";
-	private static final String MENU_TAB_2 = "tab2";
-	private static final String MENU_TAB_3 = "tab3";
-	private static final String MENU_TAB_4 = "tab4";
-	
-	private String id;
-	private String styleClass;
 	private String selectedMenu;
 	private boolean show;
 	
@@ -63,17 +59,6 @@ public class FBMenu extends FBComponentBase {
 		
 		WFDivision menuHeaderPanel = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		menuHeaderPanel.setId("menuPanelToolbar");
-		
-		/*HtmlAjaxFunction newFormFunction = new HtmlAjaxFunction();
-		newFormFunction.setName("createFormDocument");
-		newFormFunction.setReRender("mainApplication");
-		newFormFunction.setOncomplete("closeLoadingMessage()");
-		newFormFunction.setValueBinding("data", application.createValueBinding("#{formDocument.newFormDocument}"));
-		
-		HtmlActionParameter newFormTitleP = new HtmlActionParameter();
-		newFormTitleP.setName("newFormT");
-		newFormTitleP.setAssignToBinding(application.createValueBinding("#{formDocument.formTitle}"));
-		addChild(newFormTitleP, newFormFunction);*/
 
 		HtmlCommandButton newFormButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
 		newFormButton.setId("newFormButton");
@@ -96,15 +81,12 @@ public class FBMenu extends FBComponentBase {
 		selectSupport.setActionListener(application.createMethodBinding("#{formDocument.changeForm}", new Class[]{ActionEvent.class}));
 		addChild(selectSupport, selectFormMenu);
 		
-//		addChild(newFormFunction, menuHeaderPanel);
 		addChild(newFormButton, menuHeaderPanel);
 		addChild(selectFormMenu, menuHeaderPanel);
 		
-		
-		FBMenuPanel tab1 = (FBMenuPanel) application.createComponent(FBMenuPanel.COMPONENT_TYPE);
-		tab1.setExpanded(false);
-		tab1.setValueBinding("title", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['component_palette_panel']}"));
-		tab1.setId(MENU_TAB_1);
+		Accordion acc = new Accordion("fbMenu");
+		acc.setId("fbMenuAccordion");
+		acc.setHeight("400");
 		
 		FBPalette palette = (FBPalette) application.createComponent(FBPalette.COMPONENT_TYPE);
 		palette.setColumns(2);
@@ -112,44 +94,38 @@ public class FBMenu extends FBComponentBase {
 		palette.setItemStyleClass("paletteComponent");
 		palette.setStyleClass("componentsList");
 		
-		tab1.add(palette);
+		Text tab1 = new Text();
+		tab1.setText("Component palette");
+		tab1.setStyleClass("fbMenuTabBar");
 		
-		
-		
-		FBMenuPanel tab2 = (FBMenuPanel) application.createComponent(FBMenuPanel.COMPONENT_TYPE);
-		tab2.setExpanded(false);
-		tab2.setValueBinding("title", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['field_properties_panel']}"));
-		tab2.setId(MENU_TAB_2);
+		acc.addPanel(tab1, palette);
 		
 		FBBasicProperties simpleProperties = (FBBasicProperties) application.createComponent(FBBasicProperties.COMPONENT_TYPE);
 		
-		FBAdvancedProperties advancedProperties = (FBAdvancedProperties) application.createComponent(FBAdvancedProperties.COMPONENT_TYPE);
+//		FBAdvancedProperties advancedProperties = (FBAdvancedProperties) application.createComponent(FBAdvancedProperties.COMPONENT_TYPE);
 		
-		tab2.add(simpleProperties);
-		tab2.add(advancedProperties);
+		Text tab2 = new Text();
+		tab2.setText("Component properties");
+		tab2.setStyleClass("fbMenuTabBar");
 		
-		
-		
-		FBMenuPanel tab3 = (FBMenuPanel) application.createComponent(FBMenuPanel.COMPONENT_TYPE);
-		tab3.setExpanded(false);
-		tab3.setValueBinding("title", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['form_properties_panel']}"));
-		tab3.setId(MENU_TAB_3);
+		acc.addPanel(tab2, simpleProperties);
 		
 		FBFormProperties formProperties = (FBFormProperties) application.createComponent(FBFormProperties.COMPONENT_TYPE);
 		
-		tab3.add(formProperties);
+		Text tab3 = new Text();
+		tab3.setText("Form properties");
+		tab3.setStyleClass("fbMenuTabBar");
 		
-		
-		
-		FBMenuPanel tab4 = (FBMenuPanel) application.createComponent(FBMenuPanel.COMPONENT_TYPE);
-		tab4.setExpanded(false);
-		tab4.setValueBinding("title", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['form_steps_panel']}"));
-		tab4.setId(MENU_TAB_4);
+		acc.addPanel(tab3, formProperties);
 		
 		FBPageProperties pageProperties = (FBPageProperties) application.createComponent(FBPageProperties.COMPONENT_TYPE);
 		
-		tab4.add(pageProperties);
+		Text tab4 = new Text();
+		tab4.setText("Page properties");
+		tab4.setStyleClass("fbMenuTabBar");
 		
+		acc.addPanel(tab4, pageProperties);
+		add(acc);
 		
 		HtmlOutputText noMenuLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		noMenuLabel.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['no_menu_label']}"));
@@ -157,11 +133,6 @@ public class FBMenu extends FBComponentBase {
 		
 		addFacet(MENU_TOOLBAR_FACET, menuHeaderPanel);
 		addFacet(NO_MENU_FACET, noMenuLabel);
-		
-		addFacet(MENU_TAB_1, tab1);
-		addFacet(MENU_TAB_2, tab2);
-		addFacet(MENU_TAB_3, tab3);
-		addFacet(MENU_TAB_4, tab4);
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
@@ -179,47 +150,6 @@ public class FBMenu extends FBComponentBase {
 		if(showVB != null) {
 			show = (Boolean) showVB.getValue(context);
 		}
-		
-		if(show) {
-			ValueBinding selectedMenuVB = this.getValueBinding("selectedMenu");
-			if(selectedMenuVB != null) {
-				selectedMenu = (String) selectedMenuVB.getValue(context);
-			} else {
-				selectedMenu = getSelectedMenu();
-			}
-			if(selectedMenu != null) {
-				FBMenuPanel tab1 = (FBMenuPanel) getFacet(MENU_TAB_1);
-				FBMenuPanel tab2 = (FBMenuPanel) getFacet(MENU_TAB_2);
-				FBMenuPanel tab3 = (FBMenuPanel) getFacet(MENU_TAB_3);
-				FBMenuPanel tab4 = (FBMenuPanel) getFacet(MENU_TAB_4);
-				if(selectedMenu.equals("0")) {
-					tab1.setExpanded(true);
-					tab2.setExpanded(false);
-					tab3.setExpanded(false);
-					tab4.setExpanded(false);
-				} else if(selectedMenu.equals("1")) {
-					tab1.setExpanded(false);
-					tab2.setExpanded(true);
-					tab3.setExpanded(false);
-					tab4.setExpanded(false);
-				} else if(selectedMenu.equals("2")) {
-					tab1.setExpanded(false);
-					tab2.setExpanded(false);
-					tab3.setExpanded(true);
-					tab4.setExpanded(false);
-				} else if(selectedMenu.equals("3")) {
-					tab1.setExpanded(false);
-					tab2.setExpanded(false);
-					tab3.setExpanded(false);
-					tab4.setExpanded(true);
-				}
-			}
-		} else {
-			UIComponent comp = getFacet(NO_MENU_FACET);
-			if(comp != null) {
-				renderChild(context, comp);
-			}
-		}
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {
@@ -229,70 +159,33 @@ public class FBMenu extends FBComponentBase {
 	}
 	
 	public void encodeChildren(FacesContext context) throws IOException {
-		boolean show;
 		ValueBinding showVB = getValueBinding("show");
 		if(showVB != null) {
 			show = (Boolean) showVB.getValue(context);
-		} else {
-			show = getShow();
 		}
 		if (!isRendered()) {
 			return;
 		}
-		
-		if(show) {
-			FBMenuPanel tab1 = (FBMenuPanel) getFacet(MENU_TAB_1);
-			if(tab1 != null) {
-				renderChild(context, tab1);
-			}
-			FBMenuPanel tab2 = (FBMenuPanel) getFacet(MENU_TAB_2);
-			if(tab2 != null) {
-				renderChild(context, tab2);
-			}
-			FBMenuPanel tab3 = (FBMenuPanel) getFacet(MENU_TAB_3);
-			if(tab3 != null) {
-				renderChild(context, tab3);
-			}
-			FBMenuPanel tab4 = (FBMenuPanel) getFacet(MENU_TAB_4);
-			if(tab4 != null) {
-				renderChild(context, tab4);
-			}
+		Iterator it = getChildren().iterator();
+		while(it.hasNext()) {
+			UIComponent current = (UIComponent) it.next();
+			renderChild(context, current);
 		}
 	}
 	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[5];
+		Object values[] = new Object[3];
 		values[0] = super.saveState(context);
-		values[1] = id;
-		values[2] = styleClass;
-		values[3] = selectedMenu;
-		values[4] = show;
+		values[1] = selectedMenu;
+		values[2] = show;
 		return values;
 	}
 	
 	public void restoreState(FacesContext context, Object state) {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);
-		id = (String) values[1];
-		styleClass = (String) values[2];
-		selectedMenu = (String) values[3];
-		show = (Boolean) values[4];
-	}
-
-	public String getStyleClass() {
-		return styleClass;
-	}
-
-	public void setStyleClass(String styleClass) {
-		this.styleClass = styleClass;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
+		selectedMenu = (String) values[1];
+		show = (Boolean) values[2];
 	}
 	
 }

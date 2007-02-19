@@ -1,6 +1,5 @@
 package com.idega.formbuilder.presentation.beans;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.faces.model.SelectItem;
@@ -15,9 +14,9 @@ import com.idega.webface.WFUtil;
 public class FormList {
 	
 	public List<SelectItem> getForms() {
-		List<SelectItem> forms = new LinkedList<SelectItem>();
-		forms.add(new SelectItem("INACTIVE", "--Please select a form--"));
-		forms.addAll(((com.idega.block.form.bean.FormList) WFUtil.getBeanInstance("formList")).getForms());
-		return forms;
+//		List<SelectItem> forms = new LinkedList<SelectItem>();
+//		forms.add(new SelectItem("INACTIVE", "--Please select a form--"));
+//		forms.addAll(((com.idega.block.form.bean.FormList) WFUtil.getBeanInstance("formList")).getForms());
+		return ((com.idega.block.form.bean.FormList) WFUtil.getBeanInstance("formList")).getForms();
 	}
 }

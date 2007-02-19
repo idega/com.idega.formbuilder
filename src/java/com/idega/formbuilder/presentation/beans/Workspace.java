@@ -9,6 +9,10 @@ public class Workspace implements Serializable {
 	
 	private static final long serialVersionUID = -7539955904708793992L;
 	
+	public static final String CODE_VIEW = "source";
+	public static final String DESIGN_VIEW = "design";
+	public static final String PREVIEW_VIEW = "preview";
+	
 	private String selectedMenu;
 	private boolean renderedMenu;
 	private String view;

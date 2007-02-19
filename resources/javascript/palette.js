@@ -1,7 +1,7 @@
 var currentElement = null;
 function handleComponentDrag(element) {
 	var type = element.id;
-	dwrmanager.createComponent(receiveComponent,type);
+	dwrmanager.createComponent(type, receiveComponent);
 }
 function receiveComponent(element) {
 	currentElement = createTreeNode(element.documentElement);

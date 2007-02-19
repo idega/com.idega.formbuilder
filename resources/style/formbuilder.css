@@ -1,3 +1,137 @@
+/*---Home page styles-----*/
+#fbHomePage {
+	margin: 15px;
+	background-color: White;
+	border: 1px solid LightGrey;
+	padding: 25px;
+}
+#fbHomePageHeaderBlock {
+	height: 50px;
+	border-bottom: 2px solid Grey;
+	margin-bottom: 25px;
+}
+#fbHPLeft {
+	position: relative;
+	left: 0px;
+}
+#fbHPLeft span {
+	display: block;
+}
+#fbHPRight {
+	position: absolute;
+	right: 0px;
+	top: 100px;
+	width: 150px;
+}
+#fbHPRight * {
+	display: inline;
+}
+#fbHomePageWelcomeBlock {
+	padding-top: 20px;
+	padding-left: 80px;
+	padding-right: 80px;
+	font-size: 18px;
+	font-weight: bold;
+	align: center;
+	background-color: LightBlue;
+	height: 40px;
+	border: 1px solid Blue;
+	margin-bottom: 25px;
+}
+#headerName {
+	font-size: 20px;
+	font-weight: bold;
+}
+#headerSlogan {
+	font-size: 14px;
+}
+.formListItem {
+	height: 60px;
+	margin-bottom: 20px;
+	border: 1px groove LightGrey;
+	cursor: pointer;
+}
+.newFormButton {
+	background-color: Red;
+}
+.formListItem:hover {
+	border: 1px groove LightBlue;
+}
+.formListItem:hover .formListItemTop {
+	background-color: Blue;
+	border-left: 1px solid White;
+	border-top: 1px solid White;
+}
+.formListItem:hover .formListItemBottom {
+	border-top: 1px groove Blue;
+}
+.formListItemTop {
+	padding-top: 0px;
+	height: 50%;
+	background-color: LightGrey;
+	border-left: 1px solid White;
+	border-top: 1px solid White;
+}
+.formListItemTopLeft {
+	margin-left: 10px;
+	display: inline;
+	top: 7px;
+	position: relative;
+}
+.formListItemTopRight {
+	right: 50px;
+	position: absolute;
+	display: inline;
+}
+.formListItemBottom {
+	height: 50%;
+	border-top: 1px groove LightGrey;
+}
+.bottomButton {
+	display: inline;
+	margin-left: 15px;
+	margin-top: 5px;
+	height: 18px;
+	margin-bottom: 5px;
+}
+.formTitle {
+	font-size: 16px;
+	height: 100%;
+	font-weight: bold;
+	align: left;
+}
+.createdDate {
+	font-size: 13px;
+	height: 100%;
+	width: 300px;
+}
+/*---Form scroller--------*/
+	#formListContainer {			
+		height: 300px;
+		border:1px solid #000;	/* Black border */		
+		padding:1px;	/* A little space between the black border and the content inside */	
+	}
+	.arrowUpImg {	/* Arrow down image */
+		height:35px;
+		margin-left: 45%;
+	}
+	.arrowDownImg {
+		height:35px;	/* Arrow up image */
+		margin-left: 45%;
+	}
+	#forms {
+		position:relative;
+		overflow:hidden;
+		height:230px;	/* Height of boxes for the images */
+	}
+	#forms .noname {	/* DIV where the images are located */
+		position:relative;
+		height:600px;	/* Height of boxes for the images */
+	}
+	#forms .formListItem {
+		position:relative;	/* Don't change this */
+		height:60px;	/* Higher than total height of thumbnails */
+	}
 /*---Page layout styles---*/
 #mainApplication {
 	width: 100%;
@@ -65,6 +199,15 @@
 }
 .pagesPanelBottom {
 	
+}
+.accordionTabTitleBar {
+	padding-top: 5px;
+	height: 25px;
+}
+.fbMenuTabBar {
+	font-size: 14px;
+	font-weight: bold;
+	margin-left: 10px;
 }
 	#mainPalette{
 		background-color: #FFF;	/* Background color of main menu */

@@ -9,7 +9,7 @@
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax">
 	<jsp:directive.page contentType="text/html" />
 	<f:view>
-		<ws:page id="formbuilder" 
+		<ws:page id="formbuilder"
 				 showFunctionMenu="false"
 				 javascripturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax.js,
 												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/modal-message.js,
@@ -17,14 +17,9 @@
 												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/scriptaculous/prototype.js,
 												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/scriptaculous/scriptaculous.js,
 												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js,
-												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/palette.js,
-												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/categories-tabs.js,
-												/dwr/interface/dwrmanager.js,
-												/dwr/engine.js">
+												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/forms-scroller.js">
 			<h:form id="workspaceform1">
-				<t:div id="mainApplication" forceId="true">
-					<fb:workspace id="mainWorkspace" view="#{workspace.view}"/>
-				</t:div>
+				<fb:homePage id="fbHomePage" />
 			</h:form>
 		</ws:page>
 	</f:view>

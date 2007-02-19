@@ -1,7 +1,7 @@
 	var initializedTabsMenu = false;
 	var menuAlignment = 'left';	// Align menu to the left or right?		
 	var topMenuSpacer = 30; // Horizontal space(pixels) between the main menu items	
-	var activateSubOnClick = false; // if true-> Show sub menu items on click, if false, show submenu items onmouseover
+	var activateSubOnClick = true; // if true-> Show sub menu items on click, if false, show submenu items onmouseover
 	var leftAlignSubItems = false; 	// left align sub items t
 	
 	var activeMenuItem = false;	// Don't change this option. It should initially be false

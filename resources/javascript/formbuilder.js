@@ -31,7 +31,7 @@ function createNewForm() {
 		closeMessage();
 		showLoadingMessage("Creating");
 		/*createFormDocument(name);*/
-		dwrmanager.createNewFormDocument(refreshMainApplicationW, name);
+		dwrmanager.createNewFormDocument(name, refreshMainApplicationW);
 	}
 }
 function refreshMainApplicationW() {
@@ -44,7 +44,7 @@ function refreshMainApplication() {
 
 function deletePage(id) {
 	pressedDeletePage = true;
-	dwrmanager.deletePage(refreshMainApplication, id);
+	dwrmanager.deletePage(id, refreshMainApplication);
 }
 
 //Handles the deletion of a form component created with JSF
@@ -52,7 +52,7 @@ function deleteComponentJSF(element) {
 	pressedDelete = true;
 	showLoadingMessage('Removing');
 	var id = element.parentNode.id;
-	dwrmanager.removeComponent(deletedComponentJSF,id);
+	dwrmanager.removeComponent(id, deletedComponentJSF);
 }
 function deletedComponentJSF() {
 	$('workspaceform1:removeCompProxy').click();
@@ -62,7 +62,7 @@ function deletedComponentJSF() {
 //Handles the deletion of a form component created with Javascript
 function deleteComponentJS(element) {
 	showLoadingMessage('Removing');
-	dwrmanager.removeComponent(deletedComponentJS,element.parentNode.id);
+	dwrmanager.removeComponent(element.parentNode.id, deletedComponentJS);
 }
 function deletedComponentJS(id) {
 	if(id != '') {
@@ -91,7 +91,7 @@ function deletedComponentJS(id) {
 function loadPage(id) {
 	var temp2 = pressedDeletePage;
 	if(!temp2) {
-		dwrmanager.loadPage(refreshMainApplicationW, id)
+		dwrmanager.loadPage(id, refreshMainApplicationW)
 	}
 	pressedDeletePage = false;
 }
@@ -102,7 +102,7 @@ function editProperties(id) {
 	if(!temp) {
 		showLoadingMessage('Fetching');
 		//var id = element.id;
-		dwrmanager.getComponentProperties(gotComponentProperties,id);
+		dwrmanager.getComponentProperties(id, gotComponentProperties);
 	}
 	pressedDelete = false;
 }

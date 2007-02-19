@@ -6,7 +6,7 @@
 	xmlns:fa="http://xmlns.idega.com/com.idega.block.formadmin">
 	<jsp:directive.page contentType="text/html" />
 	<f:view>
-		<ws:page id="formbuilder">
+		<ws:page id="formbuilder" showFunctionMenu="false">
 			<h:form id="workspaceform1">
 				<fa:FormAdmin rendered="true" />
 			</h:form>

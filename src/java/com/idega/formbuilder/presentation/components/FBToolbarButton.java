@@ -1,11 +1,10 @@
 package com.idega.formbuilder.presentation.components;
+
 import java.io.IOException;
 
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-import com.idega.formbuilder.util.FBUtil;
-import com.idega.idegaweb.IWBundle;
 import com.idega.webface.WFToolbarButton;
 
 /**
@@ -19,28 +18,16 @@ public class FBToolbarButton extends WFToolbarButton {
 
 	private String toolTip;
 	private String styleClass;
-	private IOException io_exception_throwed_at_encodeBegin_state;
 	
-	public FBToolbarButton() {
-		// Default contstructor, for JSF
+	public String getToolTip() {
+		return toolTip;
 	}
 
-	public FBToolbarButton(String defaultImageURI, IWBundle bundle) {
-		String uri = bundle.getResourcesVirtualPath()+"/"+defaultImageURI;
-		this.setDefaultImageURI(uri);
+	public void setToolTip(String toolTip) {
+		this.toolTip = toolTip;
 	}
-	
-	/**
-	 * 
-	 * @param defaultImageURI - should be context relative image path
-	 */
-	public FBToolbarButton(String defaultImageURI) {
-		String uriWithBundle = FBUtil.getBundle().getResourcesVirtualPath()+"/"+defaultImageURI;
-		this.setDefaultImageURI(uriWithBundle);
-	}
-	
+
 	public void encodeBegin(FacesContext context) {
-		
 		try {
 			ResponseWriter out = context.getResponseWriter();
 			
@@ -55,6 +42,8 @@ public class FBToolbarButton extends WFToolbarButton {
 			out.writeAttribute("style", "display:none;", null);
 			out.endElement("input");
 
+			out.startElement("div", null);
+			out.writeAttribute("class", this.styleClass, null);
 			String formName = determineFormName(this);
 			if (getDefaultImageURI() != null) {
 				out.startElement("img", null);
@@ -67,27 +56,18 @@ public class FBToolbarButton extends WFToolbarButton {
 					out.writeAttribute("alt", this.toolTip, null);
 					out.writeAttribute("title", this.toolTip, null);
 				}
-				if (getPressedImageURI() != null) {
-					String onmousedown = "this.src='" + getPressedImageURI() +"'";
-					out.writeAttribute("onmousedown", onmousedown, null);
-				}
-				
-				if(getHoverImageURI() != null) {
-					out.writeAttribute("onmouseover", "this.src='" + getHoverImageURI() +"'", null);
-				}
-				
 				String onmouseup = "document.forms['" + formName + "'].elements['" + buttonId + 
 				"'].value='true';document.forms['" + formName + "'].submit();";
 				out.writeAttribute("onmouseup", onmouseup, null);
 				String onmouseout = "document.forms['" + formName + "'].elements['" + buttonId + "'].value='';this.src='" + 
 						getDefaultImageURI() + "'";
 				out.writeAttribute("onmouseout", onmouseout, null);
+				out.endElement("img");
 				
-			} else {
 				out.startElement("a", null);
-				String onmouseup = "document.forms['" + formName + "'].elements['" + buttonId + 
+				String onmouseup2 = "document.forms['" + formName + "'].elements['" + buttonId + 
 				"'].value='true';document.forms['" + formName + "'].submit();";
-				out.writeAttribute("onmouseup", onmouseup, null);
+				out.writeAttribute("onmouseup", onmouseup2, null);
 				
 				if (this.styleClass != null) {
 					out.writeAttribute("class", this.styleClass, null);
@@ -103,39 +83,42 @@ public class FBToolbarButton extends WFToolbarButton {
 				if(text != null){
 					out.write(text);
 				}
+				out.endElement("a");
+				
 			}
+			out.endElement("div");
 			
 		} catch (IOException e) {
-			
-			/* cannot throw exception due to lsp principle
-			 * we can do this in encodeEnd method
-			 * */
-			io_exception_throwed_at_encodeBegin_state = e;
+			e.printStackTrace();
 		}
 	}
 	
-	/**
-	 * @see javax.faces.component.UIComponent#encodeChildren(javax.faces.context.FacesContext)
-	 */
 	public void encodeChildren(FacesContext context) {
 	}
 	
-	/**
-	 * @see javax.faces.component.UIComponent#encodeEnd(javax.faces.context.FacesContext)
-	 */
 	public void encodeEnd(FacesContext context) throws IOException {
-		
-		/*
-		 * look at encodeBegin method
-		 * */
-		if(io_exception_throwed_at_encodeBegin_state != null)
-			throw io_exception_throwed_at_encodeBegin_state;
-		
-		ResponseWriter out = context.getResponseWriter();
-		
-		if (getDefaultImageURI() != null)
-			out.endElement("img");
-		else
-			out.endElement("a");
+	}
+
+	public String getStyleClass() {
+		return styleClass;
+	}
+
+	public void setStyleClass(String styleClass) {
+		this.styleClass = styleClass;
+	}
+	
+	public Object saveState(FacesContext context) {
+		Object values[] = new Object[3];
+		values[0] = super.saveState(context);
+		values[1] = styleClass;
+		values[2] = toolTip;
+		return values;
+	}
+	
+	public void restoreState(FacesContext context, Object state) {
+		Object values[] = (Object[]) state;
+		super.restoreState(context, values[0]);
+		styleClass = (String) values[1];
+		toolTip = (String) values[2];
 	}
 }

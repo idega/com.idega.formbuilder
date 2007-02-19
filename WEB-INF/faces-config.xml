@@ -5,6 +5,17 @@
   "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
 
 <faces-config>
+	<navigation-rule>
+		<from-view-id>/workspace/forms/</from-view-id>
+		<navigation-case>
+			<from-outcome>loadFormSuccess</from-outcome>
+			<to-view-id>/workspace/forms/formbuilder/</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>loadCodeSuccess</from-outcome>
+			<to-view-id>/workspace/forms/formbuilder/</to-view-id>
+		</navigation-case>
+	</navigation-rule>
 	<managed-bean>
 		<managed-bean-name>formPage</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.presentation.beans.FormPage</managed-bean-class>
@@ -23,11 +34,6 @@
 	<managed-bean>
 		<managed-bean-name>formDocument</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.presentation.beans.FormDocument</managed-bean-class>
-		<managed-bean-scope>session</managed-bean-scope>
-	</managed-bean>
-	<managed-bean>
-		<managed-bean-name>viewChangeAction</managed-bean-name>
-		<managed-bean-class>com.idega.formbuilder.presentation.actions.ViewChangeAction</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
@@ -125,6 +131,14 @@
 	          <renderer-class>com.idega.formbuilder.presentation.renderkit.SelectValuesListRenderer</renderer-class>
 	     </renderer>
 	</render-kit>
+	<component>
+		<component-type>FormListItem</component-type>
+		<component-class>com.idega.formbuilder.presentation.components.FBFormListItem</component-class>
+	</component>
+	<component>
+		<component-type>HomePage</component-type>
+		<component-class>com.idega.formbuilder.presentation.components.FBHomePage</component-class>
+	</component>
 	<component>
 		<component-type>Button</component-type>
 		<component-class>com.idega.formbuilder.presentation.components.FBButton</component-class>

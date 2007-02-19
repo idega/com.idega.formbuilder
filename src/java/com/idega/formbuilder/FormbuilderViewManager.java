@@ -16,7 +16,7 @@ import com.idega.repository.data.Singleton;
 public class FormbuilderViewManager implements Singleton  {
 
 	private static final String IW_FORMBUILDER_VIEW_MANAGER_KEY = "iw_formbuilderviewmanager";
-	private static final String FORMBUILDER_ID = "formbuilder";
+	private static final String FORMBUILDER_ID = "forms";
 	
 	public static final String FORM_MANAGER_INSTANCE = "FORM_MANAGER_INSTANCE";
 	public static final String FORMBUILDER_DESIGNVIEW_STATUS = "FORMBUILDER_DESIGNVIEW_STATUS";
@@ -31,19 +31,11 @@ public class FormbuilderViewManager implements Singleton  {
 		this.iwma = iwma;
 	}
 
-	public static synchronized FormbuilderViewManager getInstance(IWMainApplication iwma){
-		  
-		  FormbuilderViewManager formbuilder_view_manager = (FormbuilderViewManager) iwma.getAttribute(IW_FORMBUILDER_VIEW_MANAGER_KEY);
-	    if(formbuilder_view_manager==null){
-	    	//iwma.getIWApplicationContext().
-	      formbuilder_view_manager = new FormbuilderViewManager(iwma);
-	      //String formId = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORMBUILDER_CURRENT_FORM_ID);
-	      //if(formId == null) {
-	    	  //FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_DESIGNVIEW_STATUS, "NO_FORM");
-	      //}
-	      //FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_LOCALE, FacesContext.getCurrentInstance().getExternalContext().getRequestLocale());
-	      //FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORMBUILDER_CURRENT_FORM_ID, null);
-	      iwma.setAttribute(IW_FORMBUILDER_VIEW_MANAGER_KEY,formbuilder_view_manager);
+	public static synchronized FormbuilderViewManager getInstance(IWMainApplication iwma) {
+		FormbuilderViewManager formbuilder_view_manager = (FormbuilderViewManager) iwma.getAttribute(IW_FORMBUILDER_VIEW_MANAGER_KEY);
+		if (formbuilder_view_manager==null) {
+			formbuilder_view_manager = new FormbuilderViewManager(iwma);
+			iwma.setAttribute(IW_FORMBUILDER_VIEW_MANAGER_KEY,formbuilder_view_manager);
 	    }
 	    return formbuilder_view_manager;
 	}	
@@ -76,7 +68,7 @@ public class FormbuilderViewManager implements Singleton  {
 		roles.add(StandardRoles.ROLE_KEY_BUILDER);
 		node.setAuthorizedRoles(roles);
 		
-		node.setJspUri(contentBundle.getJSPURI("formbuilder.jsp"));
+		node.setJspUri(contentBundle.getJSPURI("homepage.jsp"));
 		node.setKeyboardShortcut(new KeyboardShortcut("4"));
 		
 		this.rootNode = node;
@@ -85,14 +77,17 @@ public class FormbuilderViewManager implements Singleton  {
 	
 	
 	public void initializeStandardNodes(IWBundle bundle){
+		initalizeContentNode(bundle);
 		ViewNode contentNode = initalizeContentNode(bundle);
 		
 		DefaultViewNode formbuilderNode = new DefaultViewNode("formbuilder",contentNode);
 		formbuilderNode.setJspUri(bundle.getJSPURI("formbuilder.jsp"));
 		formbuilderNode.setName("Formbuilder");
+		formbuilderNode.setVisibleInMenus(false);
 		
 		DefaultViewNode adminNode = new DefaultViewNode("formadmin",contentNode);
 		adminNode.setJspUri(bundle.getJSPURI("formadmin.jsp"));
 		adminNode.setName("Form admin");
+		adminNode.setVisibleInMenus(false);
 	}
 }

@@ -275,7 +275,7 @@ public class FBDesignView extends FBComponentBase {
 				+ "var componentIDs = Sortable.serialize(\"" + values[2] + "\",{tag:\"div\",name:\"id\"});\n"
 				+ "var delimiter = '&id[]=';\n"
 				+ "var idPrefix = 'fbcomp_';\n"
-				+ "dwrmanager.updateComponentList(updateOrder,componentIDs,idPrefix,delimiter);\n"
+				+ "dwrmanager.updateComponentList(componentIDs,idPrefix,delimiter,updateOrder);\n"
 				+ "pressedDelete = true;\n"
 				+ "}\n"
 				

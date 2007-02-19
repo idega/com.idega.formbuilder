@@ -1,7 +1,10 @@
 package com.idega.formbuilder.presentation.beans;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -38,6 +41,136 @@ public class FormDocument implements Serializable {
 	private LocalizedStringBean formTitleBean;
 	private LocalizedStringBean thankYouTitleBean;
 	private LocalizedStringBean thankYouTextBean;
+	
+	private String getCurrentFormId(FacesContext context) {
+		String result = "";
+		Map map = context.getExternalContext().getRequestParameterMap();
+		Set keys = map.keySet();
+		Iterator it = keys.iterator();
+		while(it.hasNext()) {
+			String key = (String) it.next();
+			String value = (String) map.get(key);
+			if(value.equals("true")) {
+				return key;
+			}
+		}
+		return result;
+	}
+	
+	public String createNewForm() {
+		String name = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("newFormT");
+		if(name == null || name.equals("")) {
+			name = "UNTITLED FORM";
+		}
+		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
+		if(workspace != null) {
+			Locale locale = workspace.getLocale();
+			DocumentManager formManagerInstance = ActionManager.getDocumentManagerInstance();
+			Document document = null;
+			String id = FBUtil.generateFormId(name);
+			LocalizedStringBean formName = new LocalizedStringBean();
+			formName.setString(locale, name);
+			
+			try {
+				document = formManagerInstance.createForm(id, formName);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+			
+			workspace.setView("design");
+			workspace.setDesignViewStatus("empty");
+			workspace.setSelectedMenu("0");
+			workspace.setRenderedMenu(true);
+			
+			clearFormDocumentInfo();
+			setFormId(id);
+			setDocument(document);
+			
+			loadFormInfo();
+			
+			Page page = document.getPage(document.getContainedPagesIdList().get(0));
+			FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+			if(formPage != null) {
+				formPage.setPage(page);
+			}
+			FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
+			if(formComponent != null) {
+				formComponent.clearFormComponentInfo();
+			}
+			try {
+				document.save();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			return null;
+		}
+		return "newFormSuccess";
+		
+	}
+	
+	public String loadFormDocument() {
+		try {
+			String buttonId = getCurrentFormId(FacesContext.getCurrentInstance());
+			String formId = buttonId.substring(15, buttonId.indexOf("_edit"));
+			if(formId != "") {
+				DocumentManager formManagerInstance = ActionManager.getDocumentManagerInstance();
+				document = formManagerInstance.openForm(formId);
+				String firstPage = document.getContainedPagesIdList().get(0);
+				Page firstP = document.getPage(firstPage);
+				Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
+				if(firstP.getContainedComponentsIdList().size() > 0) {
+					workspace.setDesignViewStatus("active");
+				} else {
+					workspace.setDesignViewStatus("empty");
+				}
+				FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+				if(formPage != null) {
+					formPage.clearPageInfo();
+					formPage.setPage(firstP);
+				}
+				workspace.setView("design");
+				workspace.setRenderedMenu(true);
+				workspace.setSelectedMenu("0");
+				loadFormInfo();
+				FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
+				if(formComponent != null) {
+					formComponent.clearFormComponentInfo();
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return "loadFormSuccess";
+	}
+	
+	public String loadFormDocumentCode() {
+		try {
+			String buttonId = getCurrentFormId(FacesContext.getCurrentInstance());
+			String formId = buttonId.substring(15, buttonId.indexOf("_code"));
+			if(formId != "") {
+				DocumentManager formManagerInstance = ActionManager.getDocumentManagerInstance();
+				document = formManagerInstance.openForm(formId);
+				Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
+				workspace.setView(Workspace.CODE_VIEW);
+				workspace.setRenderedMenu(false);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return "loadCodeSuccess";
+	}
+	
+	public void deleteFormDocument() {
+		
+	}
+	
+	public String loadFormDocumentEntries() {
+		return "loadFormEntriesSuccess";
+	}
+	
+	public void duplicateFormDocument() {
+		
+	}
 	
 	public Document getDocument() {
 		return document;
@@ -150,7 +283,7 @@ public class FormDocument implements Serializable {
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 		if(formId != null && !formId.equals("") && !formId.equals("INACTIVE")) {
 			try {
-				document = formManagerInstance.openForm(formId);;
+				document = formManagerInstance.openForm(formId);
 				String firstPage = document.getContainedPagesIdList().get(0);
 				Page firstP = document.getPage(firstPage);
 				if(firstP.getContainedComponentsIdList().size() > 0) {
