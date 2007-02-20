@@ -59,6 +59,21 @@ public class Workspace implements Serializable {
 			setSelectedMenu("3");
 		}
 	}
+	
+	public void changeView(ActionEvent ae) {
+		String buttonId = ae.getComponent().getId();
+		if(buttonId.equals("designViewTab")) {
+			this.view = "design";
+			this.renderedMenu = true;
+		} else if(buttonId.equals("previewViewTab")) {
+			this.view = "preview";
+			this.renderedMenu = false;
+		} else if(buttonId.equals("sourceViewTab")) {
+			this.view = "source";
+			this.renderedMenu = false;
+		}
+		
+	}
 
 	public boolean isRenderedMenu() {
 		return renderedMenu;

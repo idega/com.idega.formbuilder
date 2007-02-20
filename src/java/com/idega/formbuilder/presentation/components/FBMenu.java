@@ -13,6 +13,7 @@ import javax.faces.event.ActionEvent;
 
 import org.ajax4jsf.ajax.html.HtmlAjaxSupport;
 import org.apache.myfaces.component.html.ext.HtmlCommandButton;
+import org.apache.myfaces.component.html.ext.HtmlOutputLabel;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
 import org.apache.myfaces.component.html.ext.HtmlSelectOneMenu;
 
@@ -28,6 +29,7 @@ public class FBMenu extends FBComponentBase {
 	
 	private static final String NO_MENU_FACET = "NO_MENU_FACET";
 	private static final String MENU_TOOLBAR_FACET = "MENU_TOOLBAR_FACET";
+	private static final String NEW_FORM_PANEL_FACET = "NEW_FORM_PANEL_FACET";
 	
 	private String selectedMenu;
 	private boolean show;
@@ -77,12 +79,41 @@ public class FBMenu extends FBComponentBase {
 		selectSupport.setOnsubmit("showLoadingMessage('Opening')");
 		selectSupport.setOncomplete("closeLoadingMessage()");
 		selectSupport.setAjaxSingle(false);
-		selectSupport.setReRender("mainApplication");
+		selectSupport.setReRender("ajaxViewPanel");
 		selectSupport.setActionListener(application.createMethodBinding("#{formDocument.changeForm}", new Class[]{ActionEvent.class}));
 		addChild(selectSupport, selectFormMenu);
 		
 		addChild(newFormButton, menuHeaderPanel);
 		addChild(selectFormMenu, menuHeaderPanel);
+		
+		WFDivision newFormPanel = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		newFormPanel.setId("newFormPanel");
+		
+		HtmlOutputLabel newFormLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+		newFormLabel.setFor("newFormInput");
+		newFormLabel.setStyleClass("fbStandardLabel");
+		
+		HtmlOutputLabel newFormInput = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+		newFormInput.setValueBinding("value", application.createValueBinding("#{formDocument.tempValue}"));
+		newFormInput.setStyleClass("fbStandardInput");
+		newFormInput.setId("newFormInput");
+		
+		HtmlCommandButton createNewFormButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
+		createNewFormButton.setId("createNewFormButton");
+		createNewFormButton.setOnclick("createNewForm();return false");
+		createNewFormButton.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['toolbar_create']}"));
+		createNewFormButton.setStyleClass("fbStdImgButton");
+		
+		HtmlCommandButton cancelNewFormButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
+		cancelNewFormButton.setId("cancelNewFormButton");
+		cancelNewFormButton.setOnclick("closeNewFormPanel();return false");
+		cancelNewFormButton.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['toolbar_cancel']}"));
+		cancelNewFormButton.setStyleClass("fbStdImgButton");
+		
+		addChild(newFormLabel, newFormPanel);
+		addChild(newFormInput, newFormPanel);
+		addChild(createNewFormButton, newFormPanel);
+		addChild(cancelNewFormButton, newFormPanel);
 		
 		Accordion acc = new Accordion("fbMenu");
 		acc.setId("fbMenuAccordion");
@@ -132,6 +163,7 @@ public class FBMenu extends FBComponentBase {
 		noMenuLabel.setStyleClass("noMenuLabel");
 		
 		addFacet(MENU_TOOLBAR_FACET, menuHeaderPanel);
+		addFacet(NEW_FORM_PANEL_FACET, newFormPanel);
 		addFacet(NO_MENU_FACET, noMenuLabel);
 	}
 	
@@ -146,6 +178,10 @@ public class FBMenu extends FBComponentBase {
 		if(facet != null) {
 			renderChild(context, facet);
 		}
+//		facet = getFacet(NEW_FORM_PANEL_FACET);
+//		if(facet != null) {
+//			renderChild(context, facet);
+//		}
 		ValueBinding showVB = getValueBinding("show");
 		if(showVB != null) {
 			show = (Boolean) showVB.getValue(context);

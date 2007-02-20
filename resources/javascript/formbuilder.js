@@ -31,11 +31,11 @@ function createNewForm() {
 		closeMessage();
 		showLoadingMessage("Creating");
 		/*createFormDocument(name);*/
-		dwrmanager.createNewFormDocument(name, refreshMainApplicationW);
+		dwrmanager.createNewFormDocument(name, refreshViewPanel);
 	}
 }
-function refreshMainApplicationW() {
-	$('workspaceform1:createFormProxy').click();
+function refreshViewPanel(parameter) {
+	$('workspaceform1:refreshViewPanel').click();
 }
 function refreshMainApplication() {
 	$('workspaceform1:loadPageFunction').click();
@@ -50,12 +50,17 @@ function deletePage(id) {
 //Handles the deletion of a form component created with JSF
 function deleteComponentJSF(element) {
 	pressedDelete = true;
-	showLoadingMessage('Removing');
-	var id = element.parentNode.id;
-	dwrmanager.removeComponent(id, deletedComponentJSF);
+	var node = element.parentNode;
+	if(node) {
+		dwrmanager.removeComponent(node.id, doNothing);
+	}
 }
-function deletedComponentJSF() {
-	$('workspaceform1:removeCompProxy').click();
+function doNothing(parameter) {
+	var node = $(parameter);
+	if(node) {
+		node.parentNode.removeChild(node);
+	}
+	//$('workspaceform1:removeCompProxy').click();
 }
 //----------------------------------------
 
@@ -140,4 +145,7 @@ var pressedDeletePage = false;
 /*Setup modal message windows functionality*/
 messageObj = new DHTML_modalMessage();
 messageObj.setShadowOffset(5);
+//$('panel1Content').style.overflow = 'none';
+//$('panel2Content').style.overflow = 'none';
+//$('panel3Content').style.overflow = 'none';
 		

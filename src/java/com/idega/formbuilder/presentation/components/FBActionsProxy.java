@@ -90,11 +90,11 @@ public class FBActionsProxy extends FBComponentBase {
 		togglePreviewPage.setReRender("mainApplication");
 		togglePreviewPage.setActionListener(application.createMethodBinding("#{formDocument.togglePreviewPage}", new Class[]{ActionEvent.class}));
 		
-		UIAjaxCommandButton createForm = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
-		createForm.setId("createFormProxy");
+		HtmlAjaxCommandButton createForm = (HtmlAjaxCommandButton) application.createComponent(HtmlAjaxCommandButton.COMPONENT_TYPE);
+		createForm.setId("refreshViewPanel");
 		createForm.setOncomplete("closeLoadingMessage()");
 		createForm.setAjaxSingle(true);
-		createForm.setReRender("mainApplication");
+		createForm.setReRender("ajaxViewPanel");
 		
 		UIAjaxCommandButton changeMenu = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
 		changeMenu.setId("changeMenuProxy");

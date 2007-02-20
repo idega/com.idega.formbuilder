@@ -9,6 +9,7 @@ import java.util.Locale;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
+import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.formbuilder.business.form.Document;
 import com.idega.formbuilder.business.form.Page;
 import com.idega.formbuilder.business.form.PropertiesPage;

@@ -16,6 +16,7 @@
 												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax-dynamic-content.js,
 												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/scriptaculous/prototype.js,
 												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/scriptaculous/scriptaculous.js,
+												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/rico/rico.js,
 												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js,
 												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/forms-scroller.js">
 			<h:form id="workspaceform1">

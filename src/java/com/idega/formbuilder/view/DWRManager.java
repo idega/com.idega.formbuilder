@@ -64,9 +64,9 @@ public class DWRManager implements Serializable {
 		((FormComponent) WFUtil.getBeanInstance("formComponent")).setItems(items);
 	}
 	
-	private void setSelectedMenu(String selectedMenu) {
-		((Workspace) WFUtil.getBeanInstance("workspace")).setSelectedMenu(selectedMenu);
-	}
+//	private void setSelectedMenu(String selectedMenu) {
+//		((Workspace) WFUtil.getBeanInstance("workspace")).setSelectedMenu(selectedMenu);
+//	}
 	
 	public void switchDataSource() {
 		FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
@@ -78,17 +78,17 @@ public class DWRManager implements Serializable {
 		}
 	}
 	
-	public void changeMenu(String id) {
-		if(id.equals("workspaceform1:tab1Title")) {
-			setSelectedMenu("0");
-		} else if(id.equals("workspaceform1:tab2Title")) {
-			setSelectedMenu("1");
-		} else if(id.equals("workspaceform1:tab3Title")) {
-			setSelectedMenu("2");
-		} else if(id.equals("workspaceform1:tab4Title")) {
-			setSelectedMenu("3");
-		}
-	}
+//	public void changeMenu(String id) {
+//		if(id.equals("workspaceform1:tab1Title")) {
+//			setSelectedMenu("0");
+//		} else if(id.equals("workspaceform1:tab2Title")) {
+//			setSelectedMenu("1");
+//		} else if(id.equals("workspaceform1:tab3Title")) {
+//			setSelectedMenu("2");
+//		} else if(id.equals("workspaceform1:tab4Title")) {
+//			setSelectedMenu("3");
+//		}
+//	}
 	
 	public Element createComponent(String type) throws Exception {
 		Element rootDivImported = null;
@@ -173,7 +173,6 @@ public class DWRManager implements Serializable {
 		if(document != null) {
 			document.save();
 		}
-		System.out.println(ids.toString());
 	}
 	
 	public void deletePage(String id) {
@@ -281,24 +280,15 @@ public class DWRManager implements Serializable {
 	}
 	
 	public String removeComponent(String id) {
-		Component component = ((FormComponent) WFUtil.getBeanInstance("formComponent")).getComponent();
-		if(component != null) {
-			component.remove();
+		Document document = ((FormDocument) WFUtil.getBeanInstance("formDocument")).getDocument();
+		if(document != null) {
 			Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
 			if(page != null) {
-				if(page.getContainedComponentsIdList().isEmpty()) {
-					((Workspace) WFUtil.getBeanInstance("workspace")).setDesignViewStatus(FBDesignView.DESIGN_VIEW_STATUS_EMPTY);
-				}
-				Document document = ((FormDocument) WFUtil.getBeanInstance("formDocument")).getDocument();
-				if(document != null) {
-					try {
-						document.save();
-					} catch (Exception e) {
-						// TODO: handle exception
-					}
+				Component component = page.getComponent(id);
+				if(component != null) {
+					component.remove();
 				}
 			}
-			
 		}
 		return id;
 	}

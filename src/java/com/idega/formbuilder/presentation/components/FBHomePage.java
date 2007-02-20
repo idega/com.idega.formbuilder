@@ -10,7 +10,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.model.SelectItem;
 
-import org.apache.myfaces.component.html.ext.HtmlCommandButton;
 import org.apache.myfaces.component.html.ext.HtmlGraphicImage;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
 
@@ -56,18 +55,21 @@ public class FBHomePage extends FBComponentBase {
 		WFDivision headerPartRight = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		headerPartRight.setId("fbHPRight");
 		
-		HtmlGraphicImage newIcon = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
-		newIcon.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield.png");
-		newIcon.setId("newIcon");
-		HtmlCommandButton newLabel = new HtmlCommandButton();
-//		newLabel.setText("New Form");
-		newLabel.setStyleClass("newFormButton");
-		newLabel.setAction(application.createMethodBinding("#{formDocument.createNewForm}", null));
-		newLabel.setValue("New Form");
-		newLabel.setId("newLabel");
+		FBNewFormComponent newFormComponent = (FBNewFormComponent) application.createComponent(FBNewFormComponent.COMPONENT_TYPE);
+		newFormComponent.setStyleClass("newFormComponentIdle");
 		
-		addChild(newIcon, headerPartRight);
-		addChild(newLabel, headerPartRight);
+//		HtmlGraphicImage newIcon = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+//		newIcon.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield.png");
+//		newIcon.setId("newIcon");
+//		HtmlCommandButton newLabel = new HtmlCommandButton();
+////		newLabel.setText("New Form");
+//		newLabel.setStyleClass("newFormButton");
+//		newLabel.setAction(application.createMethodBinding("#{formDocument.createNewForm}", null));
+//		newLabel.setValue("New Form");
+//		newLabel.setId("newLabel");
+		
+//		addChild(newIcon, headerPartRight);
+		addChild(newFormComponent, headerPartRight);
 		addChild(headerPartLeft, header);
 		addChild(headerPartRight, header);
 		

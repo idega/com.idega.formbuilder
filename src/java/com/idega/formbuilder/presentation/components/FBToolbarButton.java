@@ -43,7 +43,8 @@ public class FBToolbarButton extends WFToolbarButton {
 			out.endElement("input");
 
 			out.startElement("div", null);
-			out.writeAttribute("class", this.styleClass, null);
+			out.writeAttribute("class", styleClass, null);
+//			out.writeAttribute("id", buttonId + "_C", null);
 			String formName = determineFormName(this);
 			if (getDefaultImageURI() != null) {
 				out.startElement("img", null);
@@ -69,9 +70,6 @@ public class FBToolbarButton extends WFToolbarButton {
 				"'].value='true';document.forms['" + formName + "'].submit();";
 				out.writeAttribute("onmouseup", onmouseup2, null);
 				
-				if (this.styleClass != null) {
-					out.writeAttribute("class", this.styleClass, null);
-				}
 				if (this.toolTip != null) {
 					out.writeAttribute("alt", this.toolTip, null);
 					out.writeAttribute("title", this.toolTip, null);

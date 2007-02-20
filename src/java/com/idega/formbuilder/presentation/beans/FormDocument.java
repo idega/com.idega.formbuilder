@@ -12,6 +12,7 @@ import javax.faces.event.ActionEvent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.idega.block.formadmin.presentation.actions.GetAvailableFormsAction;
 import com.idega.formbuilder.business.form.Document;
 import com.idega.formbuilder.business.form.DocumentManager;
 import com.idega.formbuilder.business.form.Page;
@@ -37,6 +38,7 @@ public class FormDocument implements Serializable {
 	private boolean hasPreview;
 	private String thankYouTitle;
 	private String thankYouText;
+	private String tempValue;
 	
 	private LocalizedStringBean formTitleBean;
 	private LocalizedStringBean thankYouTitleBean;
@@ -58,7 +60,7 @@ public class FormDocument implements Serializable {
 	}
 	
 	public String createNewForm() {
-		String name = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("newFormT");
+		String name = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:newTxt");
 		if(name == null || name.equals("")) {
 			name = "UNTITLED FORM";
 		}
@@ -102,9 +104,9 @@ public class FormDocument implements Serializable {
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
-			return null;
+			return "newFormSuccess";
 		}
-		return "newFormSuccess";
+		return "";
 		
 	}
 	
@@ -165,7 +167,13 @@ public class FormDocument implements Serializable {
 	}
 	
 	public String loadFormDocumentEntries() {
-		return "loadFormEntriesSuccess";
+		String buttonId = getCurrentFormId(FacesContext.getCurrentInstance());
+		String formId = buttonId.substring(15, buttonId.indexOf("_entries"));
+		if(formId != "") {
+			GetAvailableFormsAction admin = (GetAvailableFormsAction) WFUtil.getBeanInstance("availableFormsAction");
+			admin.setSelectedRow(formId);
+		}
+		return "loadEntriesSuccess";
 	}
 	
 	public void duplicateFormDocument() {
@@ -322,6 +330,10 @@ public class FormDocument implements Serializable {
 		}
 	}
 	
+	public void loadFormProperties(ActionEvent ae) {
+		loadFormInfo();
+	}
+	
 	public void loadFormInfo() {
 		formTitleBean = document.getFormTitle();
 		formTitle = formTitleBean.getString(new Locale("en"));
@@ -465,6 +477,14 @@ public class FormDocument implements Serializable {
 
 	public void setThankYouTitleBean(LocalizedStringBean thankYouTitleBean) {
 		this.thankYouTitleBean = thankYouTitleBean;
+	}
+
+	public String getTempValue() {
+		return tempValue;
+	}
+
+	public void setTempValue(String tempValue) {
+		this.tempValue = tempValue;
 	}
 
 }

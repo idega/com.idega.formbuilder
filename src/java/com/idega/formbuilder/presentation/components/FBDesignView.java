@@ -89,8 +89,8 @@ public class FBDesignView extends FBComponentBase {
 		UIAjaxSupport formHeadingS = (UIAjaxSupport) application.createComponent("org.ajax4jsf.ajax.Support");
 		formHeadingS.setId("formHeadingHeaderS");
 		formHeadingS.setEvent("onclick");
-		formHeadingS.setReRender("workspaceform1:ajaxMenuPanel");
-		formHeadingS.setActionListener(application.createMethodBinding("#{formDocument.loadFormInfo}", new Class[]{ActionEvent.class}));
+		formHeadingS.setReRender("ajaxMenuPanel");
+		formHeadingS.setActionListener(application.createMethodBinding("#{formDocument.loadFormProperties}", new Class[]{ActionEvent.class}));
 		formHeadingS.setAjaxSingle(true);
 		addChild(formHeadingS, formHeadingHeader);
 		
