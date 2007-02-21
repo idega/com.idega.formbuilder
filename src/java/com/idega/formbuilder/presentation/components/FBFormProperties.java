@@ -49,7 +49,8 @@ public class FBFormProperties extends FBComponentBase {
 		HtmlInputText title = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		title.setId("formTitle");
 		title.setValueBinding("value", application.createValueBinding("#{formDocument.formTitle}"));
-		title.setOnblur("$('workspaceform1:saveFormTitle').click();");
+//		title.setOnblur("$('workspaceform1:saveFormTitle').click();");
+		title.setOnblur("saveFormTitle(this.value)");
 		
 		cell = row.createCell();
 		cell.add(title);
@@ -64,7 +65,8 @@ public class FBFormProperties extends FBComponentBase {
 		HtmlSelectBooleanCheckbox preview = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
 		preview.setId("previewScreen");
 		preview.setValueBinding("value", application.createValueBinding("#{formDocument.hasPreview}"));
-		preview.setOnclick("$('workspaceform1:togglePreviewPage').click();");
+//		preview.setOnclick("$('workspaceform1:togglePreviewPage').click();");
+		preview.setOnclick("saveHasPreview(this.value)");
 		
 		cell = row.createCell();
 		cell.add(preview);
@@ -80,7 +82,8 @@ public class FBFormProperties extends FBComponentBase {
 		HtmlInputText thankYouTitle = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		thankYouTitle.setId("thankYouTitle");
 		thankYouTitle.setValueBinding("value", application.createValueBinding("#{formDocument.thankYouTitle}"));
-		thankYouTitle.setOnblur("$('workspaceform1:saveThankYouTitle').click();");
+//		thankYouTitle.setOnblur("$('workspaceform1:saveThankYouTitle').click();");
+		thankYouTitle.setOnblur("saveThankYouTitle(this.value)");
 		
 		cell = row.createCell();
 		cell.add(thankYouTitle);
@@ -96,7 +99,8 @@ public class FBFormProperties extends FBComponentBase {
 		HtmlInputText thankYouText = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		thankYouText.setId("thankYouText");
 		thankYouText.setValueBinding("value", application.createValueBinding("#{formDocument.thankYouText}"));
-		thankYouText.setOnblur("$('workspaceform1:saveThankYouText').click();");
+//		thankYouText.setOnblur("$('workspaceform1:saveThankYouText').click();");
+		thankYouText.setOnblur("saveThankYouText(this.value)");
 		
 		cell = row.createCell();
 		cell.add(thankYouText);

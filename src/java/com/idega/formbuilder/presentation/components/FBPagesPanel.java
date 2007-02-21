@@ -26,8 +26,6 @@ public class FBPagesPanel extends FBComponentBase {
 	private static final String CONFIRMATION_PAGE = "CONFIRMATION_PAGE";
 	private static final String THANKYOU_PAGE = "THANKYOU_PAGE";
 	
-	private String id;
-	private String styleClass;
 	private String componentStyleClass;
 
 	public FBPagesPanel() {
@@ -43,10 +41,10 @@ public class FBPagesPanel extends FBComponentBase {
 		super.encodeBegin(context);
 		
 		writer.startElement("DIV", this);
-		writer.writeAttribute("class", styleClass, "styleClass");
+		writer.writeAttribute("class", getStyleClass(), "styleClass");
 		
 		writer.startElement("DIV", null);
-		writer.writeAttribute("id", id, "id");
+		writer.writeAttribute("id", getId(), "id");
 		writer.writeAttribute("style", "display: block; min-height: 400px; overflow: auto;", null);
 		
 		Locale locale = ((Workspace) WFUtil.getBeanInstance("workspace")).getLocale();
@@ -143,7 +141,7 @@ public class FBPagesPanel extends FBComponentBase {
 		super.encodeEnd(context);
 		
 		Object values[] = new Object[2];
-		values[0] = id;
+		values[0] = getId();
 		values[1] = componentStyleClass;
 		writer.write(getEmbededJavascript(values));
 	}
@@ -185,36 +183,16 @@ public class FBPagesPanel extends FBComponentBase {
 	}
 	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[4];
+		Object values[] = new Object[2];
 		values[0] = super.saveState(context); 
-		values[1] = id;
-		values[2] = styleClass;
-		values[3] = componentStyleClass;
+		values[1] = componentStyleClass;
 		return values;
 	}
 	
 	public void restoreState(FacesContext context, Object state) {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);
-		id = (String) values[1];
-		styleClass = (String) values[2];
-		componentStyleClass = (String) values[3];
-	}
-	
-	public String getStyleClass() {
-		return styleClass;
-	}
-
-	public void setStyleClass(String styleClass) {
-		this.styleClass = styleClass;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
+		componentStyleClass = (String) values[1];
 	}
 
 	public String getComponentStyleClass() {

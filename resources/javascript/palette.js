@@ -1,10 +1,10 @@
 var currentElement = null;
 function handleComponentDrag(element) {
 	var type = element.id;
-	dwrmanager.createComponent(type, receiveComponent);
+	FormComponent.createComponent(type, receiveComponent);
 }
-function receiveComponent(element) {
-	currentElement = createTreeNode(element.documentElement);
+function receiveComponent(parameter) {
+	currentElement = createTreeNode(parameter.documentElement);
 }
 function createTreeNode(element) {
 	if(element.nodeName == '#text') {

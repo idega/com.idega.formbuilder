@@ -9,11 +9,11 @@ import java.util.Locale;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
-import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.formbuilder.business.form.Document;
 import com.idega.formbuilder.business.form.Page;
 import com.idega.formbuilder.business.form.PropertiesPage;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
+import com.idega.formbuilder.presentation.converters.FormPageInfo;
 import com.idega.webface.WFUtil;
 
 public class FormPage implements Serializable {
@@ -138,6 +138,12 @@ public class FormPage implements Serializable {
 		id = page.getId();
 		titleBean = pp.getLabel();
 		title = titleBean.getString(new Locale("en"));
+	}
+	
+	public FormPageInfo getFormPageInfo() {
+		FormPageInfo info = new FormPageInfo();
+		info.setPageTitle(title);
+		return info;
 	}
 	
 	public void createNewPage(ActionEvent ae) {

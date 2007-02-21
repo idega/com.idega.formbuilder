@@ -48,7 +48,8 @@ public class FBBasicProperties extends FBComponentBase {
 		HtmlSelectBooleanCheckbox required = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
 		required.setId("propertyRequired");
 		required.setValueBinding("value", application.createValueBinding("#{formComponent.required}"));
-		required.setOnclick("$('workspaceform1:saveCompReq').click();");
+//		required.setOnclick("$('workspaceform1:saveCompReq').click();");
+		required.setOnclick("saveRequired(this.value)");
 		
 		cell = row.createCell();
 		cell.add(required);
@@ -63,7 +64,8 @@ public class FBBasicProperties extends FBComponentBase {
 		HtmlInputText title = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		title.setId("propertyTitle");
 		title.setValueBinding("value", application.createValueBinding("#{formComponent.label}"));
-		title.setOnblur("$('workspaceform1:saveCompLabel').click();");
+//		title.setOnblur("$('workspaceform1:saveCompLabel').click();");
+		title.setOnblur("saveLabel(this.value)");
 		
 		cell = row.createCell();
 		cell.add(title);
@@ -78,7 +80,8 @@ public class FBBasicProperties extends FBComponentBase {
 		HtmlInputText errorMsg = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		errorMsg.setId("propertyErrorMessage");
 		errorMsg.setValueBinding("value", application.createValueBinding("#{formComponent.errorMessage}"));
-		errorMsg.setOnblur("$('workspaceform1:saveCompErr').click();");
+//		errorMsg.setOnblur("$('workspaceform1:saveCompErr').click();");
+		errorMsg.setOnblur("saveErrorMessage(this.value)");
 		
 		cell = row.createCell();
 		cell.add(errorMsg);
@@ -94,6 +97,7 @@ public class FBBasicProperties extends FBComponentBase {
 		helpMsg.setId("propertyHelpText");
 		helpMsg.setValueBinding("value", application.createValueBinding("#{formComponent.helpMessage}"));
 //		helpMsg.setOnblur("$('workspaceform1:saveCompErr').click();");
+		helpMsg.setOnblur("saveHelpMessage(this.value)");
 		
 		cell = row.createCell();
 		cell.add(helpMsg);

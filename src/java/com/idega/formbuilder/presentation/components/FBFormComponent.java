@@ -25,8 +25,6 @@ public class FBFormComponent extends FBComponentBase {
 	
 	private static final String DELETE_BUTTON_FACET = "DELETE_BUTTON_FACET";
 	
-	private String id;
-	private String styleClass;
 	private Element element;
 	private String onclick;
 	private boolean selected;
@@ -56,14 +54,6 @@ public class FBFormComponent extends FBComponentBase {
 		this.onclick = onclick;
 	}
 
-	public String getStyleClass() {
-		return styleClass;
-	}
-
-	public void setStyleClass(String styleClass) {
-		this.styleClass = styleClass;
-	}
-
 	public FBFormComponent() {
 		super();
 		setRendererType(null);
@@ -73,6 +63,7 @@ public class FBFormComponent extends FBComponentBase {
 		Application application = context.getApplication();
 		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
 		if(page != null) {
+			String id = getId();
 			Component component = page.getComponent(id);
 			if(component != null) {
 				try {
@@ -81,12 +72,12 @@ public class FBFormComponent extends FBComponentBase {
 					if(element != null) {
 						element.setAttribute("id", id + "_i");
 						setElement(element);
-						setOnclick("editProperties(this.id)");
+						setOnclick("loadComponentInfo(this.id)");
 						
 						HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
 						deleteButton.setId("db" + id);
 						deleteButton.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png");
-						deleteButton.setOnclick("deleteComponentJSF(this)");
+						deleteButton.setOnclick("removeComponent(this)");
 						deleteButton.setStyleClass("speedButton");
 						
 						addFacet(DELETE_BUTTON_FACET, deleteButton);
@@ -103,11 +94,11 @@ public class FBFormComponent extends FBComponentBase {
 		super.encodeBegin(context);
 		writer.startElement("DIV", this);
 		if(!isSelected()) {
-			writer.writeAttribute("class", styleClass, "styleClass");
+			writer.writeAttribute("class", getStyleClass(), "styleClass");
 		} else {
 			writer.writeAttribute("class", selectedStyleClass, "styleClass");
 		}
-		writer.writeAttribute("id", id, "id");
+		writer.writeAttribute("id", getId(), "id");
 		writer.writeAttribute("onclick", onclick, "onclick");
 		DOMTransformer.renderNode(element, this, writer);
 	}
@@ -129,26 +120,22 @@ public class FBFormComponent extends FBComponentBase {
 	}
 	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[7];
+		Object values[] = new Object[5];
 		values[0] = super.saveState(context);
-		values[1] = id;
-		values[2] = styleClass;
-		values[3] = element;
-		values[4] = onclick;
-		values[5] = selected;
-		values[6] = selectedStyleClass;
+		values[1] = element;
+		values[2] = onclick;
+		values[3] = selected;
+		values[4] = selectedStyleClass;
 		return values;
 	}
 	
 	public void restoreState(FacesContext context, Object state) {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);
-		id = (String) values[1];
-		styleClass = (String) values[2];
-		element = (Element) values[3];
-		onclick = (String) values[4];
-		selected = (Boolean) values[5];
-		selectedStyleClass = (String) values[6];
+		element = (Element) values[1];
+		onclick = (String) values[2];
+		selected = (Boolean) values[3];
+		selectedStyleClass = (String) values[4];
 	}
 
 	public Element getElement() {
@@ -157,14 +144,6 @@ public class FBFormComponent extends FBComponentBase {
 
 	public void setElement(Element element) {
 		this.element = element;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 }

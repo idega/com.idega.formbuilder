@@ -19,6 +19,9 @@
 												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js,
 												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/palette.js,
 												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/categories-tabs.js,
+												/dwr/interface/FormComponent.js,
+												/dwr/interface/FormDocument.js,
+												/dwr/interface/FormPage.js,
 												/dwr/interface/dwrmanager.js,
 												/dwr/engine.js">
 			<h:form id="workspaceform1">

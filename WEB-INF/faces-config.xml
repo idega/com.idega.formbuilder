@@ -128,13 +128,6 @@
 	<render-kit>
 	     <renderer>
 	          <component-family>formbuilder</component-family>
-	          <renderer-type>fb_componentPropertiesPanel</renderer-type>
-	          <renderer-class>com.idega.formbuilder.presentation.renderkit.ComponentPropertiesPanelRenderer</renderer-class>
-	     </renderer>
-	</render-kit>
-	<render-kit>
-	     <renderer>
-	          <component-family>formbuilder</component-family>
 	          <renderer-type>fb_selectvalueslist</renderer-type>
 	          <renderer-class>com.idega.formbuilder.presentation.renderkit.SelectValuesListRenderer</renderer-class>
 	     </renderer>

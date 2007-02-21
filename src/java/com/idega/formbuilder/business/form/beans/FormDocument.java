@@ -103,6 +103,7 @@ public class FormDocument implements IFormDocument {
 	}
 	
 	public void persist() throws Exception {
+		
 		getFormsService().saveForm(getFormId(), getXformsDocument());
 	}
 	

@@ -10,7 +10,139 @@ function closeMessage() {
 	messageObj.close();
 }
 //---------------------------------------------
-
+function loadFormInfo() {
+	FormDocument.getFormDocumentInfo(placeFormInfo);
+}
+function placeFormInfo(parameter) {
+	if(parameter != null) {
+		var formTitleTxt = $('formTitle');
+		if(formTitleTxt != null) {
+			formTitleTxt.value = parameter.title;
+		}
+		var hasPreviewChk = $('previewScreen');
+		if(hasPreviewChk != null) {
+			hasPreviewChk.value = parameter.hasPreview;
+		}
+		var thankYouTitleTxt = $('thankYouTitle');
+		if(thankYouTitleTxt != null) {
+			thankYouTitleTxt.value = parameter.thankYouTitle;
+		}
+		var thankYouTextTxt = $('thankYouText');
+		if(thankYouTextTxt != null) {
+			thankYouTextTxt.value = parameter.thankYouText;
+		}
+		STATIC_ACCORDEON.showTabByIndex(2, true);
+	}
+}
+function saveFormTitle(parameter) {
+	if(parameter != null) {
+		FormDocument.setFormTitle(parameter, refreshViewPanel);
+	}
+}
+function saveThankYouTitle(parameter) {
+	if(parameter != null) {
+		FormDocument.setThankYouTitle(parameter, refreshViewPanel);
+	}
+}
+function saveThankYouText(parameter) {
+	if(parameter != null) {
+		FormDocument.setThankYouText(parameter, refreshViewPanel);
+	}
+}
+function saveHasPreview(parameter) {
+	if(parameter != null) {
+		FormDocument.setHasPreview(parameter, refreshViewPanel);
+	}
+}
+function loadPageInfo(parameter) {
+	FormPage.getFormPageInfo(parameter, placePageInfo);
+}
+function placePageInfo(parameter) {
+	if(parameter != null) {
+		var pageTitleTxt = $('pageTitle');
+		if(pageTitleTxt != null) {
+			pageTitleTxt.value = parameter.pageTitle;
+		}
+		STATIC_ACCORDEON.showTabByIndex(3, true);
+	}
+}
+function loadComponentInfo(parameter) {
+	FormComponent.getFormComponentInfo(parameter, placeComponentInfo);
+}
+function placeComponentInfo(parameter) {
+	if(parameter != null) {
+		var labelTxt = $('propertyTitle');
+		if(labelTxt != null) {
+			labelTxt.value = parameter.label;
+		}
+		var requiredChk = $('propertyRequired');
+		if(requiredChk != null) {
+			requiredChk.value = parameter.required;
+		}
+		var errorTxt = $('propertyErrorMessage');
+		if(errorTxt != null) {
+			errorTxt.value = parameter.errorMessage;
+		}
+		var helpTxt = $('propertyHelpText');
+		if(helpTxt != null) {
+			helpTxt.value = parameter.helpMessage;
+		}
+		if(parameter.complex == true) {
+			$('advPropsPanel1').setAttribute('style', 'visibility: visible');
+			if(parameter.local == true) {
+				$('localSrcDiv').setAttribute('style', 'visibility: visible');
+			} else {
+				$('advPropsPanel2').setAttribute('style', 'visibility: visible');
+				$('localSrcDiv').setAttribute('style', 'display: none');
+			}
+		} else {
+			$('advPropsPanel1').setAttribute('style', 'display: none');
+			$('advPropsPanel2').setAttribute('style', 'display: none');
+			$('localSrcDiv').setAttribute('style', 'display: none');
+		}
+		STATIC_ACCORDEON.showTabByIndex(1, true);
+	}
+}
+function saveLabel(parameter) {
+	if(parameter != null) {
+		FormComponent.setLabel(parameter, refreshViewPanel);
+	}
+}
+function saveRequired(parameter) {
+	if(parameter != null) {
+		FormComponent.setRequired(parameter, refreshViewPanel);
+	}
+}
+function saveErrorMessage(parameter) {
+	if(parameter != null) {
+		FormComponent.setErrorMessage(parameter, refreshViewPanel);
+	}
+}
+function saveHelpMessage(parameter) {
+	alert('Not implemented');
+	/*if(parameter != null) {
+		FormComponent.setHelpMessage(parameter, refreshViewPanel);
+	}*/
+}
+function saveFormDocument() {
+	showLoadingMessage('Saving');
+	FormDocument.save(doNothing);
+}
+function doNothing(parameter) {
+	closeLoadingMessage();
+}
+function switchDataSource() {
+	FormComponent.switchDataSource(placeDataSource);
+}
+function placeDataSource(parameter) {
+	if(parameter == true) {
+		$('localSrcDiv').setAttribute('style', 'visibility: visible');
+		$('advPropsPanel2').setAttribute('style', 'display: none');
+	} else {
+		$('localSrcDiv').setAttribute('style', 'display: none');
+		$('advPropsPanel2').setAttribute('style', 'visibility: visible');
+	}
+}
 //Handles the closing of the loading indicator
 function closeLoadingMessage() {
  	var elem = document.getElementById('busybuddy');
@@ -30,7 +162,6 @@ function createNewForm() {
 	if(name != '') {
 		closeMessage();
 		showLoadingMessage("Creating");
-		/*createFormDocument(name);*/
 		dwrmanager.createNewFormDocument(name, refreshViewPanel);
 	}
 }
@@ -48,19 +179,26 @@ function deletePage(id) {
 }
 
 //Handles the deletion of a form component created with JSF
-function deleteComponentJSF(element) {
+function removeComponent(parameter) {
+	alert(parameter);
+	/*pressedDelete = true;
+	var node = element.parentNode;
+	if(node != null) {
+		FormComponent.removeComponent(node.id, removeComponentNode);
+	}*/
+}
+/*function deleteComponentJSF(element) {
 	pressedDelete = true;
 	var node = element.parentNode;
 	if(node) {
-		dwrmanager.removeComponent(node.id, doNothing);
+		dwrmanager.removeComponent(node.id, removeComponent);
 	}
-}
-function doNothing(parameter) {
+}*/
+function removeComponentNode(parameter) {
 	var node = $(parameter);
 	if(node) {
 		node.parentNode.removeChild(node);
 	}
-	//$('workspaceform1:removeCompProxy').click();
 }
 //----------------------------------------
 
@@ -117,12 +255,12 @@ function gotComponentProperties() {
 //-------------------------------------------
 
 
-function switchDataSource() {
+/*function switchDataSource() {
 	dwrmanager.switchDataSource(switchedDataSrc);
 }
 function switchedDataSrc() {
 	$('workspaceform1:srcSwitcher').click();
-}
+}*/
 function decoy() {
 	closeLoadingMessage();
 }

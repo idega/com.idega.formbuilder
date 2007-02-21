@@ -67,24 +67,37 @@ public class FBMenu extends FBComponentBase {
 		newFormButton.setOnclick("displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/new-dialog.inc');return false");
 		newFormButton.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['toolbar_new']}"));
 		
-		HtmlSelectOneMenu selectFormMenu = (HtmlSelectOneMenu) application.createComponent(HtmlSelectOneMenu.COMPONENT_TYPE);
-		selectFormMenu.setId("selectFormMenu");
-		selectFormMenu.setValueBinding("value", application.createValueBinding("#{formDocument.formId}"));
-		UISelectItems forms = (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
-		forms.setValueBinding("value", application.createValueBinding("#{formSelector.forms}"));
-		addChild(forms, selectFormMenu);
+		HtmlCommandButton saveFormButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
+		saveFormButton.setId("saveFormButton");
+		saveFormButton.setOnclick("saveFormDocument();return false");
+		saveFormButton.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"));
 		
-		HtmlAjaxSupport selectSupport = new HtmlAjaxSupport();
-		selectSupport.setEvent("onchange");
-		selectSupport.setOnsubmit("showLoadingMessage('Opening')");
-		selectSupport.setOncomplete("closeLoadingMessage()");
-		selectSupport.setAjaxSingle(false);
-		selectSupport.setReRender("ajaxViewPanel");
-		selectSupport.setActionListener(application.createMethodBinding("#{formDocument.changeForm}", new Class[]{ActionEvent.class}));
-		addChild(selectSupport, selectFormMenu);
+		HtmlCommandButton homeButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
+		homeButton.setId("homeButton");
+//		homeButton.set
+//		homeButton.setOnclick("saveFormDocument();return false");
+		homeButton.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['toolbar_home']}"));
+		
+//		HtmlSelectOneMenu selectFormMenu = (HtmlSelectOneMenu) application.createComponent(HtmlSelectOneMenu.COMPONENT_TYPE);
+//		selectFormMenu.setId("selectFormMenu");
+//		selectFormMenu.setValueBinding("value", application.createValueBinding("#{formDocument.formId}"));
+//		UISelectItems forms = (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
+//		forms.setValueBinding("value", application.createValueBinding("#{formSelector.forms}"));
+//		addChild(forms, selectFormMenu);
+//		
+//		HtmlAjaxSupport selectSupport = new HtmlAjaxSupport();
+//		selectSupport.setEvent("onchange");
+//		selectSupport.setOnsubmit("showLoadingMessage('Opening')");
+//		selectSupport.setOncomplete("closeLoadingMessage()");
+//		selectSupport.setAjaxSingle(false);
+//		selectSupport.setReRender("ajaxViewPanel");
+//		selectSupport.setActionListener(application.createMethodBinding("#{formDocument.changeForm}", new Class[]{ActionEvent.class}));
+//		addChild(selectSupport, selectFormMenu);
 		
 		addChild(newFormButton, menuHeaderPanel);
-		addChild(selectFormMenu, menuHeaderPanel);
+		addChild(saveFormButton, menuHeaderPanel);
+		addChild(homeButton, menuHeaderPanel);
+//		addChild(selectFormMenu, menuHeaderPanel);
 		
 		WFDivision newFormPanel = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		newFormPanel.setId("newFormPanel");
@@ -131,7 +144,10 @@ public class FBMenu extends FBComponentBase {
 		
 		acc.addPanel(tab1, palette);
 		
-		FBBasicProperties simpleProperties = (FBBasicProperties) application.createComponent(FBBasicProperties.COMPONENT_TYPE);
+		FBComponentPropertiesPanel simpleProperties = (FBComponentPropertiesPanel) application.createComponent(FBComponentPropertiesPanel.COMPONENT_TYPE);
+//		simpleProperties.setId("propsBox");
+		
+//		FBBasicProperties simpleProperties = (FBBasicProperties) application.createComponent(FBBasicProperties.COMPONENT_TYPE);
 		
 //		FBAdvancedProperties advancedProperties = (FBAdvancedProperties) application.createComponent(FBAdvancedProperties.COMPONENT_TYPE);
 		

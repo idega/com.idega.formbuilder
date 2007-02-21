@@ -19,15 +19,14 @@ public class FBWorkspace extends FBComponentBase {
 	
 	private static final String WORKSPACE_MENU_FACET = "menu";
 	private static final String WORKSPACE_VIEW_FACET = "view";
+	private static final String WORKSPACE_PAGES_FACET = "pages";
 	private static final String WORKSPACE_ACTIONS_PROXY_FACET = "proxy";
 	
-	private String id;
-	private String styleClass;
 	private String view;
 
 	public FBWorkspace() {
 		super();
-		this.setRendererType(null);
+		setRendererType(null);
 	}
 	
 	protected void initializeComponent(FacesContext context) {		
@@ -58,10 +57,20 @@ public class FBWorkspace extends FBComponentBase {
 		views.setStyleClass("formContainer");
 		addChild(views, viewPanel);
 		
+		HtmlAjaxOutputPanel pagesPanel = new HtmlAjaxOutputPanel();
+		pagesPanel.setId("ajaxPagesPanel");
+		
+		FBPagesPanel pages = (FBPagesPanel) application.createComponent(FBPagesPanel.COMPONENT_TYPE);
+		pages.setId("pagesPanel");
+		pages.setStyleClass("pagesPanel");
+		pages.setComponentStyleClass("formPageIcon");
+		addChild(pages, pagesPanel);
+		
 		FBActionsProxy actionsProxy = (FBActionsProxy) application.createComponent(FBActionsProxy.COMPONENT_TYPE);
 		
 		addFacet(WORKSPACE_MENU_FACET, menuPanel);
 		addFacet(WORKSPACE_VIEW_FACET, viewPanel);
+		addFacet(WORKSPACE_PAGES_FACET, pagesPanel);
 		addFacet(WORKSPACE_ACTIONS_PROXY_FACET, actionsProxy);
 	}
 	
@@ -70,8 +79,8 @@ public class FBWorkspace extends FBComponentBase {
 		super.encodeBegin(context);
 		
 		writer.startElement("DIV", this);
-		writer.writeAttribute("id", id, "id");
-		writer.writeAttribute("class", styleClass, "styleClass");
+		writer.writeAttribute("id", getId(), "id");
+		writer.writeAttribute("class", getStyleClass(), "styleClass");
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {
@@ -92,6 +101,10 @@ public class FBWorkspace extends FBComponentBase {
 		if(view != null) {
 			renderChild(context, view);
 		}
+		UIComponent pages = getFacet(WORKSPACE_PAGES_FACET);
+		if(pages != null) {
+//			renderChild(context, pages);
+		}
 		UIComponent proxy = getFacet(WORKSPACE_ACTIONS_PROXY_FACET);
 		if(proxy != null) {
 			renderChild(context, proxy);
@@ -99,36 +112,16 @@ public class FBWorkspace extends FBComponentBase {
 	}
 	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[4];
+		Object values[] = new Object[2];
 		values[0] = super.saveState(context);
-		values[1] = id;
-		values[2] = styleClass;
-		values[3] = view;
+		values[1] = view;
 		return values;
 	}
 	
 	public void restoreState(FacesContext context, Object state) {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);
-		id = (String) values[1];
-		styleClass = (String) values[2];
-		view = (String) values[3];
-	}
-
-	public String getStyleClass() {
-		return styleClass;
-	}
-
-	public void setStyleClass(String styleClass) {
-		this.styleClass = styleClass;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
+		view = (String) values[1];
 	}
 
 	public String getView() {

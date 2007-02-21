@@ -1,4 +1,10 @@
 /*---Home page styles-----*/
+.hide {
+	visibility: hidden;
+}
+.show {
+	visibility: visible;
+}
 #fbHomePage {
 	margin: 15px;
 	background-color: White;

@@ -13,6 +13,7 @@ import javax.faces.el.ValueBinding;
 import javax.faces.event.ActionEvent;
 
 import org.ajax4jsf.ajax.UIAjaxSupport;
+import org.apache.myfaces.component.html.ext.HtmlOutputLabel;
 import org.apache.myfaces.custom.htmlTag.HtmlTag;
 
 import com.idega.formbuilder.business.form.ButtonArea;
@@ -81,22 +82,19 @@ public class FBDesignView extends FBComponentBase {
 		formHeading.setId("formHeading");
 		formHeading.setStyleClass("formHeading");
 		
-		HtmlOutputText formHeadingHeader = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		HtmlOutputLabel formHeadingHeader = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 		formHeadingHeader.setValueBinding("value", application.createValueBinding("#{formDocument.formTitle}"));
 		formHeadingHeader.setId("formHeadingHeader");
+		formHeadingHeader.setOnclick("loadFormInfo()");
 		addChild(formHeadingHeader, formHeading);
 		
-		UIAjaxSupport formHeadingS = (UIAjaxSupport) application.createComponent("org.ajax4jsf.ajax.Support");
-		formHeadingS.setId("formHeadingHeaderS");
-		formHeadingS.setEvent("onclick");
-		formHeadingS.setReRender("ajaxMenuPanel");
-		formHeadingS.setActionListener(application.createMethodBinding("#{formDocument.loadFormProperties}", new Class[]{ActionEvent.class}));
-		formHeadingS.setAjaxSingle(true);
-		addChild(formHeadingS, formHeadingHeader);
-		
-		HtmlTag hr = (HtmlTag) application.createComponent(HtmlTag.COMPONENT_TYPE);
-		hr.setValue("hr");
-		addChild(hr, formHeading);
+//		UIAjaxSupport formHeadingS = (UIAjaxSupport) application.createComponent("org.ajax4jsf.ajax.Support");
+//		formHeadingS.setId("formHeadingHeaderS");
+//		formHeadingS.setEvent("onclick");
+//		formHeadingS.setReRender("ajaxMenuPanel");
+//		formHeadingS.setActionListener(application.createMethodBinding("#{formDocument.loadFormProperties}", new Class[]{ActionEvent.class}));
+//		formHeadingS.setAjaxSingle(true);
+//		addChild(formHeadingS, formHeadingHeader);
 		
 		addFacet(DESIGN_VIEW_HEADER_FACET, formHeading);
 		

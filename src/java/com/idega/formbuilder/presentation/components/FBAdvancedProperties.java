@@ -3,7 +3,6 @@ package com.idega.formbuilder.presentation.components;
 import java.io.IOException;
 
 import javax.faces.application.Application;
-import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectItems;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
@@ -38,6 +37,8 @@ public class FBAdvancedProperties extends FBComponentBase {
 		Application application = context.getApplication();
 		
 		Table2 table = new Table2();
+		table.setId("advPropsPanel1");
+//		table.setStyleClass(getStyleClass());
 		table.setStyleAttribute("width: 300px;");
 		table.setCellpadding(0);
 		TableRowGroup group = table.createBodyRowGroup();
@@ -70,7 +71,7 @@ public class FBAdvancedProperties extends FBComponentBase {
 		HtmlSelectOneRadio dataSrcSwitch = (HtmlSelectOneRadio) application.createComponent(HtmlSelectOneRadio.COMPONENT_TYPE);
 		dataSrcSwitch.setStyleClass("inlineRadioButton");
 		dataSrcSwitch.setId("dataSrcSwitch");
-		dataSrcSwitch.setOnchange("$('workspaceform1:srcSwitcher').click();");
+		dataSrcSwitch.setOnchange("switchDataSource(this);");
 		dataSrcSwitch.setValueBinding("value", application.createValueBinding("#{formComponent.dataSrc}"));
 
 		UISelectItems dataSrcs = (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
@@ -81,6 +82,8 @@ public class FBAdvancedProperties extends FBComponentBase {
 		cell.add(dataSrcSwitch);
 		
 		Table2 table2 = new Table2();
+		table2.setId("advPropsPanel2");
+//		table2.setStyleClass(getStyleClass());
 		table2.setStyleAttribute("width: 300px;");
 		table2.setCellpadding(0);
 		TableRowGroup group2 = table2.createBodyRowGroup();
@@ -105,6 +108,7 @@ public class FBAdvancedProperties extends FBComponentBase {
 		
 		WFDivision localSrcDiv = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		localSrcDiv.setId("localSrcDiv");
+//		localSrcDiv.setStyleClass(getStyleClass());
 		
 		FBSelectValuesList selectValues = (FBSelectValuesList) application.createComponent(FBSelectValuesList.COMPONENT_TYPE);
 		selectValues.setValueBinding("itemSet", application.createValueBinding("#{formComponent.items}"));
@@ -118,27 +122,35 @@ public class FBAdvancedProperties extends FBComponentBase {
 	}
 	
 	public void encodeChildren(FacesContext context) throws IOException {
-		Integer current;
-		if (!isRendered()) {
-			return;
-		}
-		if(!((FormComponent) WFUtil.getBeanInstance("formComponent")).isSimple()) {
-			UIComponent body = getFacet(CONTENT_FACET);
+		FormComponent component = (FormComponent) WFUtil.getBeanInstance("formComponent");
+		boolean simple = component.isSimple();
+		Integer dataSrc = Integer.parseInt(component.getDataSrc());
+		WFDivision local = (WFDivision) getFacet(LOCAL_SRC_FACET);
+		Table2 body = (Table2) getFacet(CONTENT_FACET);
+		Table2 ext = (Table2) getFacet(EXTERNAL_SRC_FACET);
+		if(!simple) {
 			if(body != null) {
+				body.setStyleAttribute("visibility: visible");
 				renderChild(context, body);
 			}
-			current = Integer.parseInt(((FormComponent) WFUtil.getBeanInstance("formComponent")).getDataSrc());
-			if(current == PropertiesSelect.LOCAL_DATA_SRC) {
-				UIComponent local = getFacet(LOCAL_SRC_FACET);
-				if(local != null) {
-					renderChild(context, local);
-				}
+			if(dataSrc == PropertiesSelect.LOCAL_DATA_SRC) {
+				local.setStyle("visibility: visible");
+				renderChild(context, local);
+				ext.setStyleAttribute("visibility: hidden");
+				renderChild(context, ext);
 			} else {
-				UIComponent ext = getFacet(EXTERNAL_SRC_FACET);
-				if(ext != null) {
-					renderChild(context, ext);
-				}
+				local.setStyle("visibility: hidden");
+				renderChild(context, local);
+				ext.setStyleAttribute("visibility: visible");
+				renderChild(context, ext);
 			}
+		} else {
+			body.setStyleAttribute("visibility: hidden");
+			local.setStyle("visibility: hidden");
+			ext.setStyleAttribute("visibility: hidden");
+			renderChild(context, body);
+			renderChild(context, local);
+			renderChild(context, ext);
 		}
 	}
 	

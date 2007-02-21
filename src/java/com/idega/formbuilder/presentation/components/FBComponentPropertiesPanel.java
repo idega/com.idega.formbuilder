@@ -1,190 +1,50 @@
 package com.idega.formbuilder.presentation.components;
 
+import java.io.IOException;
+
 import javax.faces.application.Application;
-import javax.faces.component.UIComponentBase;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
-public class FBComponentPropertiesPanel extends UIComponentBase {
+import com.idega.formbuilder.presentation.FBComponentBase;
 
-	public static final String RENDERER_TYPE = "fb_componentPropertiesPanel";
-	public static final String COMPONENT_FAMILY = "formbuilder";
+public class FBComponentPropertiesPanel extends FBComponentBase {
+
 	public static final String COMPONENT_TYPE = "ComponentPropertiesPanel";
 	
-	private String styleClass;
-	private String component;
+	private static final String BASIC_CONTENT_FACET = "BASIC_CONTENT_FACET";
+	private static final String ADV_CONTENT_FACET = "ADV_CONTENT_FACET";
 	
 	public FBComponentPropertiesPanel() {
 		super();
-		this.setRendererType(FBComponentPropertiesPanel.RENDERER_TYPE);
+		setRendererType(null);
 	}
 	
-	public void initializeComponent(FacesContext context) {
-		//System.out.println("INITIAZILING COMPONENT PROPERTIES PANEL");
-		
+	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
-		this.getChildren().clear();
+		getChildren().clear();
 		
 		FBBasicProperties simpleProperties = (FBBasicProperties) application.createComponent(FBBasicProperties.COMPONENT_TYPE);
-		this.getChildren().add(simpleProperties);
+		simpleProperties.setId("simplePropertiesPanel");
 		
 		FBAdvancedProperties advancedProperties = (FBAdvancedProperties) application.createComponent(FBAdvancedProperties.COMPONENT_TYPE);
-		this.getChildren().add(advancedProperties);
+		advancedProperties.setId("advancedPropertiesPanel");
+		advancedProperties.setStyleClass("advancedPropsPanelHidden");
 		
-		/*boolean isSelect = false;
-		IFormManager formManagerInstance = (IFormManager) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(FormbuilderViewManager.FORM_MANAGER_INSTANCE);
-		String currentDataSrc = null;
-		this.getChildren().clear();
-		ValueBinding vb = this.getValueBinding("component");
-		String componentId = null;
-		if(vb != null) {
-			componentId = (String) vb.getValue(context);
-		} else {
-			componentId = this.getComponent();
+		addFacet(BASIC_CONTENT_FACET, simpleProperties);
+		addFacet(ADV_CONTENT_FACET, advancedProperties);
+	}
+	
+	public void encodeBegin(FacesContext context) throws IOException {
+		super.encodeBegin(context);
+		UIComponent component = getFacet(BASIC_CONTENT_FACET);
+		if(component != null) {
+			renderChild(context, component);
 		}
-		if(componentId != null && !componentId.equals("")){
-			FormComponent comp = (FormComponent) WFUtil.getBeanInstance("component");
-			comp.loadProperties(componentId, formManagerInstance);
-			IComponentProperties properties = comp.getProperties();
-			if(properties != null) {
-				
-				if(properties instanceof ComponentPropertiesSelect) {
-					isSelect = true;
-				}
-				if(properties instanceof ComponentProperties) {
-					
-					
-					HtmlOutputLabel requiredLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-					requiredLabel.setValue("Required field");
-					requiredLabel.setFor("propertyRequired");
-					this.getChildren().add(requiredLabel);
-					
-					HtmlSelectBooleanCheckbox required = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
-					required.setId("propertyRequired");
-					required.setValueBinding("value", application.createValueBinding("#{component.required}"));
-					required.setOnchange("applyChanges()");
-					this.getChildren().add(required);
-					
-					
-					HtmlOutputLabel titleLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-					titleLabel.setValue("Field name");
-					titleLabel.setFor("propertyTitle");
-					this.getChildren().add(titleLabel);
-					
-					HtmlInputText title = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
-					title.setId("propertyTitle");
-					title.setOnblur("applyChanges()");
-					title.setValueBinding("value", application.createValueBinding("#{component.label}"));
-					this.getChildren().add(title);
-					
-					
-					HtmlOutputLabel errorMsgLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-					errorMsgLabel.setValue("Error message");
-					errorMsgLabel.setFor("propertyErrorMessage");
-					this.getChildren().add(errorMsgLabel);
-					
-					HtmlInputText errorMsg = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
-					errorMsg.setId("propertyErrorMessage");
-					errorMsg.setOnblur("applyChanges()");
-					errorMsg.setValueBinding("value", application.createValueBinding("#{component.errorMsg}"));
-					this.getChildren().add(errorMsg);
-					
-					
-				}
-				if(isSelect) {
-					HtmlOutputLabel emptyLabelLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-					emptyLabelLabel.setValue("Empty element label");
-					emptyLabelLabel.setFor("propertyEmptyLabel");
-					this.getChildren().add(emptyLabelLabel);
-					
-					HtmlInputText emptyLabel = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
-					emptyLabel.setId("propertyEmptyLabel");
-					emptyLabel.setOnblur("applyChanges()");
-					emptyLabel.setValueBinding("value", application.createValueBinding("#{component.emptyLabel}"));
-					this.getChildren().add(emptyLabel);
-					
-					
-					
-					
-					HtmlOutputLabel advancedL = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-					advancedL.setValue("Select options properties");
-					this.getChildren().add(advancedL);
-					
-					HtmlSelectOneRadio dataSrcSwitch = (HtmlSelectOneRadio) application.createComponent(HtmlSelectOneRadio.COMPONENT_TYPE);
-					dataSrcSwitch.setStyleClass("inlineRadioButton");
-					dataSrcSwitch.setOnchange("switchDataSrc()");
-					dataSrcSwitch.setValueBinding("value", application.createValueBinding("#{dataSources.selectedDataSource}"));
-					UISelectItems dataSrcs = (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
-					dataSrcs.setValueBinding("value", application.createValueBinding("#{dataSources.sources}"));
-					dataSrcSwitch.getChildren().add(dataSrcs);
-					this.getChildren().add(dataSrcSwitch);
-					
-					currentDataSrc = ((DataSourceList) WFUtil.getBeanInstance("dataSources")).getSelectedDataSource();
-					if(currentDataSrc != null && !currentDataSrc.equals("")) {
-						if(currentDataSrc.equals("1")) {
-							
-							FBSelectValuesList selectValues = (FBSelectValuesList) application.createComponent(FBSelectValuesList.COMPONENT_TYPE);
-							selectValues.setValueBinding("itemSet", application.createValueBinding("#{component.items}"));
-							selectValues.setId("selectOpts");
-							this.getChildren().add(selectValues);
-							
-						} else if(currentDataSrc.equals("2")) {
-							
-							HtmlOutputLabel externalSrcLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-							externalSrcLabel.setValue("External data source");
-							externalSrcLabel.setFor("propertyExternal");
-							this.getChildren().add(externalSrcLabel);
-							
-							HtmlInputText external = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
-							external.setId("propertyExternal");
-							external.setOnblur("applyChanges()");
-							external.setValueBinding("value", application.createValueBinding("#{component.externalSrc}"));
-							this.getChildren().add(external);
-							
-						}
-					}
-				}
-			}
+		component = getFacet(ADV_CONTENT_FACET);
+		if(component != null) {
+			renderChild(context, component);
 		}
-		*/
 	}
 	
-	public boolean getRendersChildren() {
-		return true;
-	}
-	
-	public String getComponent() {
-		return component;
-	}
-
-	public void setComponent(String component) {
-		this.component = component;
-	}
-
-	public String getStyleClass() {
-		return styleClass;
-	}
-
-	public void setStyleClass(String styleClass) {
-		this.styleClass = styleClass;
-	}
-
-	public String getFamily() {
-		return FBComponentPropertiesPanel.COMPONENT_FAMILY;
-	}
-	
-	public Object saveState(FacesContext context) {
-		Object values[] = new Object[3];
-		values[0] = super.saveState(context);
-		values[1] = styleClass;
-		values[2] = component;
-		return values;
-	}
-	
-	public void restoreState(FacesContext context, Object state) {
-		Object values[] = (Object[]) state;
-		super.restoreState(context, values[0]);
-		styleClass = (String) values[1];
-		component = (String) values[2];
-	}
-
 }

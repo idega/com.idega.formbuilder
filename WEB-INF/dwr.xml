@@ -1,9 +1,39 @@
 <!DOCTYPE dwr PUBLIC "-//GetAhead Limited//DTD Direct Web Remoting 2.0//EN" "http://www.getahead.ltd.uk/dwr//dwr20.dtd">
 
 <dwr>
-  <allow>
-    <create creator="new" javascript="dwrmanager">
-      <param name="class" value="com.idega.formbuilder.view.DWRManager"/>
-    </create>
-  </allow>
+  	<allow>
+    	<create creator="new" javascript="dwrmanager">
+      		<param name="class" value="com.idega.formbuilder.view.DWRManager"/>
+    	</create>
+    	<create creator="jsf" javascript="FormDocument" scope="session">
+	    	<param name="managedBeanName" value="formDocument"/>
+	    	<param name="class" value="com.idega.formbuilder.presentation.beans.FormDocument"/>
+    	</create>
+    	<convert converter="bean" match="com.idega.formbuilder.presentation.converters.FormDocumentInfo" />
+    	<create creator="jsf" javascript="FormPage" scope="session">
+	    	<param name="managedBeanName" value="formPage"/>
+	    	<param name="class" value="com.idega.formbuilder.presentation.beans.FormPage"/>
+    	</create>
+    	<convert converter="bean" match="com.idega.formbuilder.presentation.converters.FormPageInfo" />
+    	<create creator="jsf" javascript="FormComponent" scope="session">
+	    	<param name="managedBeanName" value="formComponent"/>
+	    	<param name="class" value="com.idega.formbuilder.presentation.beans.FormComponent"/>
+    	</create>
+    	<convert converter="bean" match="com.idega.formbuilder.presentation.converters.FormComponentInfo" />
+  	</allow>
+  
+  	<signatures>
+		<![CDATA[
+  			import com.idega.formbuilder.presentation.converters.FormDocumentInfo;
+  			import com.idega.formbuilder.presentation.beans.FormDocument;
+  			import com.idega.formbuilder.presentation.converters.FormPageInfo;
+  			import com.idega.formbuilder.presentation.beans.FormPage;
+  			import com.idega.formbuilder.presentation.converters.FormComponentInfo;
+  			import com.idega.formbuilder.presentation.beans.FormComponent;
+			
+			FormDocument.getFormDocumentInfo();
+			FormPage.getFormPageInfo();
+			FormComponent.getFormComponentInfo();
+  		]]>
+	</signatures>
 </dwr>

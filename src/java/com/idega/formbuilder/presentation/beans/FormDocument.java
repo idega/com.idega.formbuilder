@@ -19,6 +19,7 @@ import com.idega.formbuilder.business.form.Page;
 import com.idega.formbuilder.business.form.PageThankYou;
 import com.idega.formbuilder.business.form.PropertiesThankYouPage;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
+import com.idega.formbuilder.presentation.converters.FormDocumentInfo;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.formbuilder.view.ActionManager;
 import com.idega.webface.WFUtil;
@@ -110,6 +111,14 @@ public class FormDocument implements Serializable {
 		
 	}
 	
+	public void save() {
+		try {
+			document.save();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public String loadFormDocument() {
 		try {
 			String buttonId = getCurrentFormId(FacesContext.getCurrentInstance());
@@ -170,6 +179,7 @@ public class FormDocument implements Serializable {
 		String buttonId = getCurrentFormId(FacesContext.getCurrentInstance());
 		String formId = buttonId.substring(15, buttonId.indexOf("_entries"));
 		if(formId != "") {
+			
 			GetAvailableFormsAction admin = (GetAvailableFormsAction) WFUtil.getBeanInstance("availableFormsAction");
 			admin.setSelectedRow(formId);
 		}
@@ -195,13 +205,23 @@ public class FormDocument implements Serializable {
 		formTitle = "";
 		formTitleBean = null;
 		hasPreview = false;
+		
+		thankYouTitle = "";
+		thankYouTextBean = null;
+		thankYouText = "";
+		thankYouTextBean = null;
 	}
 	
 	public void clearFormDocumentInfo() {
-		this.formId = "";
-		this.formTitle = "";
-		this.formTitleBean = null;
-		this.hasPreview = false;
+		formId = "";
+		formTitle = "";
+		formTitleBean = null;
+		hasPreview = false;
+		
+		thankYouTitle = "";
+		thankYouTextBean = null;
+		thankYouText = "";
+		thankYouTextBean = null;
 	}
 	
 	public String getNewFormDocument() {
@@ -332,6 +352,15 @@ public class FormDocument implements Serializable {
 	
 	public void loadFormProperties(ActionEvent ae) {
 		loadFormInfo();
+	}
+	
+	public FormDocumentInfo getFormDocumentInfo() {
+		FormDocumentInfo info = new FormDocumentInfo();
+		info.setTitle(formTitle);
+		info.setHasPreview(hasPreview);
+		info.setThankYouTitle(thankYouTitle);
+		info.setThankYouText(thankYouText);
+		return info;
 	}
 	
 	public void loadFormInfo() {

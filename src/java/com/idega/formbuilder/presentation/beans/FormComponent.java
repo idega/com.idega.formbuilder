@@ -7,15 +7,23 @@ import java.util.Locale;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Element;
 
 import com.idega.formbuilder.business.form.Component;
 import com.idega.formbuilder.business.form.ComponentSelect;
+import com.idega.formbuilder.business.form.Document;
 import com.idega.formbuilder.business.form.Page;
 import com.idega.formbuilder.business.form.PropertiesComponent;
 import com.idega.formbuilder.business.form.PropertiesSelect;
 import com.idega.formbuilder.business.form.beans.ILocalizedItemset;
 import com.idega.formbuilder.business.form.beans.ItemBean;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
+import com.idega.formbuilder.presentation.components.FBDesignView;
+import com.idega.formbuilder.presentation.converters.FormComponentInfo;
 import com.idega.webface.WFUtil;
 
 public class FormComponent implements Serializable {
@@ -60,10 +68,10 @@ public class FormComponent implements Serializable {
 	}
 	
 	public boolean isSimple() {
-		if(component != null) {
-			return true;
-		} else {
+		if(propertiesSelect != null) {
 			return false;
+		} else {
+			return true;
 		}
 	}
 
@@ -137,6 +145,86 @@ public class FormComponent implements Serializable {
 		this.component = null;
 		this.selectComponent = null;
 	}
+	
+	public FormComponentInfo getFormComponentInfo(String id) {
+		loadProperties(id);
+		FormComponentInfo info = new FormComponentInfo();
+		
+		info.setLabel(label);
+		info.setRequired(required);
+		info.setErrorMessage(errorMessage);
+		info.setHelpMessage(helpMessage);
+		
+		if(propertiesSelect != null) {
+			info.setEmptyLabel(emptyLabel);
+			if(dataSrc.equals(DataSourceList.externalDataSrc)) {
+				info.setExternalSrc(externalSrc);
+				info.setLocal(false);
+			} else {
+				info.setLocal(true);
+			}
+			info.setComplex(true);
+		} else {
+			info.setComplex(false);
+		}
+		return info;
+	}
+	
+	public boolean switchDataSource() {
+		if(dataSrc.equals(DataSourceList.externalDataSrc)) {
+			setDataSrc(DataSourceList.localDataSrc);
+			return true;
+		} else {
+			setDataSrc(DataSourceList.externalDataSrc);
+			return false;
+		}
+	}
+	
+	public Element createComponent(String type) throws Exception {
+		Element rootDivImported = null;
+		FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+		Page page = formPage.getPage();
+		if(page != null) {
+			Component component = page.addComponent(type, null);
+			if(component != null) {
+				Element element = (Element) component.getHtmlRepresentation(new Locale("en")).cloneNode(true);
+				String id = element.getAttribute("id");
+				element.removeAttribute("id");
+				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+				org.w3c.dom.Document domDocument = null;
+		        try {
+		          DocumentBuilder builder = factory.newDocumentBuilder();
+		          domDocument = builder.newDocument();
+		          Element delete = domDocument.createElement("IMG");
+		          delete.setAttribute("src", "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png");
+		          delete.setAttribute("class", "speedButton");
+		          delete.setAttribute("onclick", "removeComponent(this)");
+		          Element deleteIcon = (Element) element.getOwnerDocument().importNode(delete, true);
+		          Element rootDiv = domDocument.createElement("DIV");
+		          rootDiv.setAttribute("id", id);
+		          rootDiv.setAttribute("class", "formElement");
+		          rootDiv.setAttribute("onclick", "loadComponentInfo(this.id)");
+		          rootDivImported = (Element) element.getOwnerDocument().importNode(rootDiv, true);
+		          rootDivImported.appendChild(element);
+		          rootDivImported.appendChild(deleteIcon);
+		          ((Workspace) WFUtil.getBeanInstance("workspace")).setDesignViewStatus(FBDesignView.DESIGN_VIEW_STATUS_ACTIVE);
+		        } catch (ParserConfigurationException pce) {
+		            pce.printStackTrace();
+		        }
+			}
+		}
+		return rootDivImported;
+	}
+	
+	public void removeComponent(String id) {
+		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
+		if(page != null) {
+			Component component = page.getComponent(id);
+			if(component != null) {
+				component.remove();
+			}
+		}
+	}
 
 	public void loadProperties(String id) {
 		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
@@ -173,6 +261,8 @@ public class FormComponent implements Serializable {
 				items.add(new ItemBean("", ""));
 			}
 		} else {
+			selectComponent = null;
+			propertiesSelect = null;
 			properties = component.getProperties();
 			
 			required = properties.isRequired();
