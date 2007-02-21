@@ -17,4 +17,29 @@ public class XFormsComponentButtonDataBean extends XFormsComponentDataBean {
 	public void setToggleElement(Element toggle_element) {
 		this.toggle_element = toggle_element;
 	}
+	
+	@Override
+	public Object clone() {
+		
+		XFormsComponentButtonDataBean clone = (XFormsComponentButtonDataBean)super.clone();
+		
+		try {
+			clone = (XFormsComponentButtonDataBean)super.clone();
+			
+		} catch (Exception e) {
+			
+			clone = new XFormsComponentButtonDataBean();
+		}
+		
+		if(toggle_element != null)
+			clone.setToggleElement((Element)toggle_element.cloneNode(true));
+		
+		return clone;
+	}
+	
+	@Override
+	protected XFormsComponentDataBean getDataBeanInstance() {
+		
+		return new XFormsComponentButtonDataBean();
+	}
 }

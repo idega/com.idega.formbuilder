@@ -243,4 +243,14 @@ public class FormComponentDocument extends FormComponentContainer implements com
 		
 		return page;
 	}
+	
+	public Element getAutofillModelElement() {
+		
+		return ((XFormsManagerDocument)getXFormsManager()).getAutofillAction();
+	}
+	
+	public Element getFormDataModelElement() {
+		
+		return ((XFormsManagerDocument)getXFormsManager()).getFormDataModelElement();
+	}
 }

@@ -13,6 +13,8 @@ public class XFormsComponentDataBean implements Cloneable {
 	private Element bind;
 	private Element nodeset;
 	private Element preview_element;
+	private Element key_ext_instance;
+	private Element key_setvalue;
 	
 	public Element getPreviewElement() {
 		return preview_element;
@@ -52,11 +54,32 @@ public class XFormsComponentDataBean implements Cloneable {
 		if(nodeset != null)
 			clone.setNodeset((Element)nodeset.cloneNode(true));
 		
+		if(preview_element != null)
+			clone.setNodeset((Element)preview_element.cloneNode(true));
+		
+		if(key_ext_instance != null)
+			clone.setNodeset((Element)key_ext_instance.cloneNode(true));
+		
+		if(key_setvalue != null)
+			clone.setNodeset((Element)key_setvalue.cloneNode(true));
+		
 		return clone;
 	}
 	
 	protected XFormsComponentDataBean getDataBeanInstance() {
 		
 		return new XFormsComponentDataBean();
+	}
+	public Element getKeyExtInstance() {
+		return key_ext_instance;
+	}
+	public void setKeyExtInstance(Element key_ext_instance) {
+		this.key_ext_instance = key_ext_instance;
+	}
+	public Element getKeySetvalue() {
+		return key_setvalue;
+	}
+	public void setKeySetvalue(Element key_setvalue) {
+		this.key_setvalue = key_setvalue;
 	}
 }

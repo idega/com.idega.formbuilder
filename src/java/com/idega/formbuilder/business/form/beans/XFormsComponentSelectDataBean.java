@@ -12,6 +12,7 @@ public class XFormsComponentSelectDataBean extends XFormsComponentDataBean {
 	private Element local_itemset_instance;
 	private Element external_itemset_instance;
 	
+	@Override
 	public Object clone() {
 		
 		XFormsComponentSelectDataBean clone = (XFormsComponentSelectDataBean)super.clone();

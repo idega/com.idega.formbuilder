@@ -64,12 +64,15 @@
 
 	<xf:instance id="datasets_examples" xmlns="">
 		<examples> 
-			<item id="empty_item"> <xf:item>
-				<xf:label
-					ref="instance('localized_strings')/localizedEntries[@lang=instance('localized_strings')/current_language]"
-					model="data_model" />
-				<xf:value />
-			</xf:item> </item> <item id="itemset"> <xf:itemset model="data_model">
+			<item id="empty_item">
+				<xf:item>
+					<xf:label
+						ref="instance('localized_strings')/localizedEntries[@lang=instance('localized_strings')/current_language]"
+						model="data_model" />
+					<xf:value />
+				</xf:item> 
+			</item> 
+			<item id="itemset"> <xf:itemset model="data_model">
 				<xf:label ref="item_label" />
 				<xf:value ref="item_value" />
 			</xf:itemset> </item> <item id="alert"> <xf:alert>
@@ -78,6 +81,11 @@
 					model="data_model" />
 			</xf:alert> </item> <item id="item_src"> <item> <item_label></item_label>
 			<item_value></item_value> </item> </item> 
+			<item id="autofill-model">
+				<xf:model id="x-autofill-model">
+					<xf:action ev:event="xforms-ready" />
+		        </xf:model>
+    	    </item>
 		</examples>
 	</xf:instance>
 

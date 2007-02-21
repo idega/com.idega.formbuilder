@@ -13,6 +13,7 @@ public class ComponentProperties implements PropertiesComponent {
 	private LocalizedStringBean label;
 	private LocalizedStringBean error_msg;
 	private String p3ptype;
+	private String autofill_key;
 	
 	protected IComponentPropertiesParent parent_component;
 	
@@ -57,6 +58,10 @@ public class ComponentProperties implements PropertiesComponent {
 		.append(label)
 		.append("\nerror_msg: ")
 		.append(error_msg)
+		.append("\np3ptype: ")
+		.append(p3ptype)
+		.append("\nautofill key: ")
+		.append(autofill_key)
 		
 		.toString();
 	}
@@ -70,5 +75,16 @@ public class ComponentProperties implements PropertiesComponent {
 	}
 	public void setPlainP3ptype(String p3ptype) {
 		this.p3ptype = p3ptype;
+	}
+	public String getAutofillKey() {
+		return autofill_key;
+	}
+	public void setAutofillKey(String autofill_key) {
+		
+		this.autofill_key = autofill_key;
+		parent_component.update(new ConstUpdateType(ConstUpdateType.autofill_key));
+	}
+	public void setPlainAutofillKey(String autofill_key) {
+		this.autofill_key = autofill_key;
 	}
 }

@@ -105,6 +105,7 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 		properties.setPlainLabel(getXFormsManager().getLocalizedStrings());
 		properties.setPlainRequired(false);
 		properties.setPlainErrorMsg(getXFormsManager().getErrorLabelLocalizedStrings());
+		properties.setPlainAutofillKey(getXFormsManager().getAutofillKey());
 	}
 	
 	protected void changeBindNames() {
@@ -277,6 +278,9 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 			break;
 			
 		case ConstUpdateType.p3p_type:
+			break;
+			
+		case ConstUpdateType.autofill_key:
 			break;
 
 		default:

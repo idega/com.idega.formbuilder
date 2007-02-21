@@ -9,6 +9,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.idega.block.form.xml.xforms.connector.context.KeyContextResolver;
 import com.idega.formbuilder.business.form.PropertiesComponent;
 import com.idega.formbuilder.business.form.beans.ConstUpdateType;
 import com.idega.formbuilder.business.form.beans.IFormComponent;
@@ -101,6 +102,13 @@ public class XFormsManager implements IXFormsManager {
 		xforms_component = newXFormsComponentDataBeanInstance();
 		xforms_component.setElement(xforms_element);
 		getBindingsAndNodesets(components_xforms);
+		getExtKeyElements(components_xforms);
+	}
+	
+	protected void getExtKeyElements(Document components_xforms) {
+		
+		xforms_component.setKeyExtInstance(FormManagerUtil.getElementByIdFromDocument(components_xforms, FormManagerUtil.head_tag, component.getId()+FormManagerUtil.autofill_instance_ending));
+		xforms_component.setKeySetvalue(FormManagerUtil.getElementByIdFromDocument(components_xforms, FormManagerUtil.head_tag, component.getId()+FormManagerUtil.autofill_setvalue_ending));
 	}
 	
 	protected void setBindingsAndNodesets() {
@@ -257,7 +265,7 @@ public class XFormsManager implements IXFormsManager {
 		if(src == null || dest == null || src_type_name == null) {
 			
 			String err_msg = 
-			new StringBuffer("\nEither parameter is not provided:")
+			new StringBuilder("\nEither parameter is not provided:")
 			.append("\nsrc: ")
 			.append(String.valueOf(src))
 			.append("\ndest: ")
@@ -343,6 +351,10 @@ public class XFormsManager implements IXFormsManager {
 		case ConstUpdateType.p3p_type:
 			updateP3pType();
 			break;
+			
+		case ConstUpdateType.autofill_key:
+			updateAutofillKey();
+			break;
 
 		default:
 			break;
@@ -385,7 +397,7 @@ public class XFormsManager implements IXFormsManager {
 			element.appendChild(alert);
 			Element output = (Element)alert.getElementsByTagName(FormManagerUtil.output_tag).item(0);
 			
-			String new_err_id = new StringBuffer(FormManagerUtil.loc_key_identifier)
+			String new_err_id = new StringBuilder(FormManagerUtil.loc_key_identifier)
 			.append(component.getId())
 			.append("error")
 			.toString();
@@ -544,11 +556,9 @@ public class XFormsManager implements IXFormsManager {
 
 	public String insertBindElement(Element new_bind_element, String bind_id) {
 		
-		Document form_xforms = form_document.getXformsDocument();
-		
 		new_bind_element.setAttribute(FormManagerUtil.id_att, bind_id);
 	
-		Element model = FormManagerUtil.getElementByIdFromDocument(form_xforms, FormManagerUtil.head_tag, form_document.getFormId());
+		Element model = form_document.getFormDataModelElement();
 		model.appendChild(new_bind_element);
 		
 		String type_att = new_bind_element.getAttribute(FormManagerUtil.type_att);
@@ -606,6 +616,66 @@ public class XFormsManager implements IXFormsManager {
 			xforms_component.getBind().setAttribute(FormManagerUtil.p3ptype_att, p3ptype);
 	}
 	
+	protected void updateAutofillKey() {
+		
+		PropertiesComponent props = component.getProperties();
+		String autofill_key = props.getAutofillKey();
+		
+		if(autofill_key == null && (xforms_component.getKeyExtInstance() != null || xforms_component.getKeySetvalue() != null)) {
+			
+			Element rem_el = xforms_component.getKeyExtInstance();
+			if(rem_el != null)
+				rem_el.getParentNode().removeChild(rem_el);
+			xforms_component.setKeyExtInstance(null);
+			
+			rem_el = xforms_component.getKeySetvalue();
+			if(rem_el != null)
+				rem_el.getParentNode().removeChild(rem_el);
+			xforms_component.setKeySetvalue(null);
+			
+		} else if(autofill_key != null) {
+			
+			autofill_key = KeyContextResolver.autofill_key_prefix+autofill_key;
+			
+			String src = FormManagerUtil.context_att_pref+autofill_key;
+			
+			if(xforms_component.getKeyExtInstance() != null) {
+				
+				xforms_component.getKeyExtInstance().setAttribute(FormManagerUtil.src_att, src);
+				
+			} else {
+
+				Element inst_el = FormManagerUtil.createAutofillInstance(form_document.getXformsDocument());
+				inst_el = (Element)form_document.getFormDataModelElement().appendChild(inst_el);
+				inst_el.setAttribute(FormManagerUtil.src_att, src);
+				inst_el.setAttribute(FormManagerUtil.id_att, component.getId()+FormManagerUtil.autofill_instance_ending);
+				xforms_component.setKeyExtInstance(inst_el);
+			}
+			
+			String value = 
+				new StringBuilder(FormManagerUtil.inst_start)
+				.append(xforms_component.getKeyExtInstance().getAttribute(FormManagerUtil.id_att))
+				.append(FormManagerUtil.inst_end)
+				.append(FormManagerUtil.slash)
+				.append(autofill_key)
+				.toString();
+			
+			if(xforms_component.getKeySetvalue() != null) {
+				
+				xforms_component.getKeySetvalue().setAttribute(FormManagerUtil.value_att, value);
+				
+			} else {
+				
+				Element setval_el = form_document.getXformsDocument().createElement(FormManagerUtil.setvalue_tag);
+				setval_el = (Element)form_document.getAutofillModelElement().appendChild(setval_el);
+				setval_el.setAttribute(FormManagerUtil.bind_att, xforms_component.getBind().getAttribute(FormManagerUtil.id_att));
+				setval_el.setAttribute(FormManagerUtil.value_att, value);
+				setval_el.setAttribute(FormManagerUtil.model_att, form_document.getFormDataModelElement().getAttribute(FormManagerUtil.id_att));
+				setval_el.setAttribute(FormManagerUtil.id_att, component.getId()+FormManagerUtil.autofill_setvalue_ending);
+				xforms_component.setKeySetvalue(setval_el);
+			}
+		}
+	}	
 	public LocalizedStringBean getLocalizedStrings() {
 		
 		return FormManagerUtil.getLabelLocalizedStrings(xforms_component.getElement(), form_document.getXformsDocument());
@@ -637,7 +707,7 @@ public class XFormsManager implements IXFormsManager {
 		}
 		
 		if(confirmation_page == null)
-			throw new NullPointerException("component preview element not found, when expected for component: "+component.getId());
+			return;
 		
 		Element bind_element = xforms_component.getBind();
 		
@@ -710,5 +780,19 @@ public class XFormsManager implements IXFormsManager {
 	
 	public Element getComponentPreview() {
 		return xforms_component.getPreviewElement();
+	}
+	
+	public String getAutofillKey() {
+		
+		Element inst = xforms_component.getKeyExtInstance();
+		
+		if(inst == null)
+			return null;
+		String src = inst.getAttribute(FormManagerUtil.src_att);
+		String key = src.substring(FormManagerUtil.context_att_pref.length());
+		
+		return key.startsWith(KeyContextResolver.autofill_key_prefix) ? 
+			key.substring(KeyContextResolver.autofill_key_prefix.length()) :
+			key;
 	}
 }

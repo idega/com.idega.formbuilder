@@ -31,7 +31,7 @@ import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
  * @version 1.0
  *
- * FormManager helper class (yep, that means some methods can be tightly coupled)
+ * FormManager helper class
  *
  * Tightly coupled with FormManager class
  * 
@@ -73,6 +73,7 @@ public class FormManagerUtil {
 	public static final String item_tag = "xf:item";
 	public static final String model_att = "model";
 	public static final String src_att = "src";
+	public static final String context_att_pref = "context:";
 	public static final String item_label_tag = "item_label";
 	public static final String item_value_tag = "item_value";
 	public static final String localized_entries_tag = "localizedEntries";
@@ -85,11 +86,19 @@ public class FormManagerUtil {
 	public static final String case_att = "case";
 	public static final String p3ptype_att = "p3ptype";
 	public static final String instance_tag = "xf:instance";
+	public static final String setvalue_tag = "xf:setvalue";
 	public static final String div_tag = "div";
 	public static final String trigger_tag = "xf:trigger";
 	public static final String preview = "preview";
 	public static final String component_tag = "component";
 	public static final String component_id_att = "component_id";
+	public static final String autofill_model_id = "x-autofill-model";
+	public static final String xmlns_att = "xmlns";
+	public static final String relevant_att = "relevant";
+	public static final String xpath_false = "false()";
+	public static final String autofill_instance_ending = "_autofill-instance";
+	public static final String autofill_setvalue_ending = "-autofill-setvalue";
+	public static final String value_att = "value";
 	
 	private static final String line_sep = "line.separator";
 	private static final String xml_mediatype = "text/html";
@@ -691,5 +700,14 @@ public class FormManagerUtil {
 		}
 		
 		return categorized_types;
+	}
+	
+	public static Element createAutofillInstance(Document xforms_doc) {
+		
+		Element inst_el = xforms_doc.createElement(instance_tag);
+		inst_el.setAttribute(xmlns_att, "");
+		inst_el.setAttribute(relevant_att, xpath_false);
+		
+		return inst_el;
 	}
 }

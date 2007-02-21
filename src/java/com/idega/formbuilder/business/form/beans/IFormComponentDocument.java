@@ -3,6 +3,7 @@ package com.idega.formbuilder.business.form.beans;
 import java.util.Locale;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import com.idega.formbuilder.business.form.Page;
 import com.idega.formbuilder.business.form.PageThankYou;
@@ -35,4 +36,8 @@ public interface IFormComponentDocument extends IFormComponentContainer {
 	public abstract void registerForLastPage(String register_page_id);
 	
 	public abstract String generateNewComponentId();
+	
+	public abstract Element getAutofillModelElement();
+	
+	public abstract Element getFormDataModelElement();
 }

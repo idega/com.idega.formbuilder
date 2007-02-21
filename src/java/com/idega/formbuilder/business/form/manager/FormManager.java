@@ -51,7 +51,6 @@ public class FormManager implements DocumentManager {
 	public com.idega.formbuilder.business.form.Document createForm(String form_id, LocalizedStringBean form_name) throws NullPointerException, Exception {
 		
 		FormDocument form_document = FormDocument.createDocument(form_id, form_name);
-		form_document.persist();
 		this.form_document = form_document;
 		
 		return form_document.getDocument();

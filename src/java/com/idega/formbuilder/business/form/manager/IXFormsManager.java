@@ -62,4 +62,6 @@ public interface IXFormsManager {
 	public abstract void setFormDocument(IFormComponentDocument form_document);
 	
 	public abstract void loadConfirmationElement(IFormComponentPage confirmation_page);
+	
+	public abstract String getAutofillKey();
 }

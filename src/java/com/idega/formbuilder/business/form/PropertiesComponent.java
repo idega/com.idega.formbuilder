@@ -25,4 +25,8 @@ public interface PropertiesComponent {
 	public abstract String getP3ptype();
 	
 	public abstract void setP3ptype(String p3ptype);
+	
+	public abstract String getAutofillKey();
+		
+	public abstract void setAutofillKey(String autofill_key);
 }
