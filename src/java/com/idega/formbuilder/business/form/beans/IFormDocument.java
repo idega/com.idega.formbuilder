@@ -6,8 +6,6 @@ import org.w3c.dom.Document;
 
 public interface IFormDocument {
 
-	public abstract Exception[] getSavedExceptions();
-
 	public abstract void persist() throws Exception;
 	
 	public abstract String getXFormsDocumentSourceCode() throws Exception;

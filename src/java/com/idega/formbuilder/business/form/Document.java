@@ -3,7 +3,6 @@ package com.idega.formbuilder.business.form;
 import java.util.List;
 
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
-import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
 
 /**
  * 
@@ -27,7 +26,6 @@ public interface Document extends Container {
 	 * If provided, new component will be inserted <b>before</b> component with component_after_this_id id.
 	 * Provide <i>null</i> if component needs to be appended to the end of all the components.
 	 * @return newly created form page id
-	 * @throws FBPostponedException - see exception description at createFormDocument(..) javadoc
 	 * @throws NullPointerException - form document was not created/imported before, 
 	 * component_after_new_id was provided, but such component was not found in document
 	 * @throws Exception - something else is wrong
@@ -41,14 +39,14 @@ public interface Document extends Container {
 	
 	public abstract LocalizedStringBean getFormTitle();
 	
-	public abstract void setFormTitle(LocalizedStringBean form_name) throws FBPostponedException, Exception;
+	public abstract void setFormTitle(LocalizedStringBean form_name) throws Exception;
 	
 	/**
 	 * using getContainedPagesIdList method get components id list, then use this list to change the order of components,
 	 * and then call this method for changes to take an effect
 	 *
 	 */
-	public abstract void rearrangeDocument() throws FBPostponedException, Exception;
+	public abstract void rearrangeDocument() throws Exception;
 	
 	public abstract Page getPage(String page_id);
 	

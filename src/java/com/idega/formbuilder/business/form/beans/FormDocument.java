@@ -97,11 +97,6 @@ public class FormDocument implements IFormDocument {
 		return form_components;
 	}
 	
-	public Exception[] getSavedExceptions() {
-
-		return new Exception[0]; 
-	}
-	
 	public void persist() throws Exception {
 		
 		getFormsService().saveForm(getFormId(), getXformsDocument());
@@ -216,18 +211,18 @@ public class FormDocument implements IFormDocument {
 		return default_document_locale;
 	}
 	
-	FormsService getFormsService() {
+	protected FormsService getFormsService() {
 		
-		if (this.formsService == null) {
-		try {
-			IWApplicationContext iwc = IWMainApplication.getDefaultIWApplicationContext();
-			this.formsService = (FormsService) IBOLookup.getServiceInstance(iwc, FormsService.class);
+		if (formsService == null) {
+			try {
+				IWApplicationContext iwc = IWMainApplication.getDefaultIWApplicationContext();
+				formsService = (FormsService) IBOLookup.getServiceInstance(iwc, FormsService.class);
+			}
+			catch (IBOLookupException e) {
+				logger.error("Could not find FormsService");
+			}
 		}
-		catch (IBOLookupException e) {
-			logger.error("Could not find FormsService");
-		}
-		}
-		return this.formsService;
+		return formsService;
 	}
 	
 	public void tellComponentId(String component_id) {

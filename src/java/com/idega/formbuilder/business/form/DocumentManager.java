@@ -2,7 +2,6 @@ package com.idega.formbuilder.business.form;
 
 import java.util.List;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
-import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
 
 /**
  * 
@@ -18,7 +17,6 @@ public interface DocumentManager {
 	 * @param form_id - cannot be null
 	 * @param name - form name. Can be null, then default is used.
 	 *  
-	 * @throws FBPostponedException - if some kind of exception happened during previous request.
 	 * @throws NullPointerException - form_id was not provided
 	 * @throws Exception - some kind of other error occured
 	 * 

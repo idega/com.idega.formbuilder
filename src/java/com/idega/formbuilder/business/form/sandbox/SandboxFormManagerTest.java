@@ -15,6 +15,7 @@ import com.idega.formbuilder.business.form.ButtonArea;
 import com.idega.formbuilder.business.form.Component;
 import com.idega.formbuilder.business.form.ConstButtonType;
 import com.idega.formbuilder.business.form.ConstComponentCategory;
+import com.idega.formbuilder.business.form.Container;
 import com.idega.formbuilder.business.form.Document;
 import com.idega.formbuilder.business.form.DocumentManager;
 import com.idega.formbuilder.business.form.DocumentManagerFactory;
@@ -65,8 +66,11 @@ public class SandboxFormManagerTest {
 			Page np = xx.addPage(null);
 			System.out.println("new page added: "+np);
 			ba = np.createButtonArea(null);
-			
-			np.addComponent(fm.getAvailableFormComponentsTypesList(null).get(0), null);
+			System.out.println("av ______: "+fm.getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.BASIC)));
+			Component some_component = np.addComponent(fm.getAvailableFormComponentsTypesList(null).get(0), null);
+			System.out.println("ir ka: "+some_component.getProperties().getLabel());
+			some_component = np.addComponent(fm.getAvailableFormComponentsTypesList(null).get(3), null);
+			System.out.println("ir ka selectas: "+some_component.getProperties().getLabel());
 //			Page confirmation_page_added = xx.addConfirmationPage(null);
 			
 			System.out.println("thx txt: "+xx.getThxPage().getProperties().getText());
@@ -94,10 +98,45 @@ public class SandboxFormManagerTest {
 			c = opened.getPage(xxx).getComponent(xxx1);
 			System.out.println("autofill key: "+c.getProperties().getAutofillKey());
 			
+			System.out.println("opening ________badform____________");
 			InputStream stream = new FileInputStream(new File("/Users/civilis/tmp/badform.xml"));
 	        org.w3c.dom.Document doc = FormManagerUtil.getDocumentBuilder().parse(stream);
 	        stream.close();
 	        opened = ((FormManager)fm).openForm(doc);
+	        
+	        System.out.println("opening ________badform2____________");
+	        Page some_super_cool_page = opened.getPage(opened.getContainedPagesIdList().get(0));
+	        Component some_c = some_super_cool_page.getComponent(some_super_cool_page.getContainedComponentsIdList().get(1));
+	        System.out.println("some c lab: "+some_c.getProperties().getLabel());
+	        DOMUtil.prettyPrintDOM(some_c.getHtmlRepresentation(new Locale("en")));
+	        
+	        stream = new FileInputStream(new File("/Users/civilis/tmp/badform.xml"));
+	        doc = FormManagerUtil.getDocumentBuilder().parse(stream);
+	        stream.close();
+	        opened = ((FormManager)fm).openForm(doc);
+	        
+	        for (String pid : opened.getContainedPagesIdList()) {
+				Page p = opened.getPage(pid);
+				
+				for (String cid : p.getContainedComponentsIdList()) {
+					
+					Component pc = p.getComponent(cid);
+					
+					if(pc instanceof Container) {
+		        		
+		        		for (String cc : ((Container)pc).getContainedComponentsIdList()) {
+		        			System.out.println("c component: "+((Container)pc).getComponent(cc).getProperties().getLabel());
+		        			DOMUtil.prettyPrintDOM(((Container)pc).getComponent(cc).getHtmlRepresentation(new Locale("en")));
+						}
+		        		
+		        	} else {
+		        		System.out.println("component: "+pc.getProperties().getLabel());
+		        		DOMUtil.prettyPrintDOM(pc.getHtmlRepresentation(new Locale("en")));
+		        	}
+				}
+	        	
+	        	
+			}
 			
 			System.out.println("source code___________");
 			System.out.println(fm.getCurrentDocument().getFormSourceCode());

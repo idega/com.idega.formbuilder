@@ -21,7 +21,6 @@ import com.idega.formbuilder.business.form.beans.FormDocument;
 import com.idega.formbuilder.business.form.beans.IFormDocument;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.form.manager.generators.FormComponentsGenerator;
-import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 import com.idega.formbuilder.business.form.manager.util.InitializationException;
 import com.idega.idegaweb.DefaultIWBundle;
@@ -185,17 +184,6 @@ public class FormManager implements DocumentManager {
 		return doc;
 	}
 	
-	/**
-	 * Check for exceptions thrown during previous requests
-	 * @throws FBPostponedException - if some kind of exception happened during previous request. 
-	 */
-	protected void checkForPendingErrors() throws FBPostponedException {
-		
-		Exception[] saved_exceptions = form_document.getSavedExceptions();
-		
-		if(saved_exceptions != null && saved_exceptions.length != 0)
-			throw new FBPostponedException(saved_exceptions[0]);
-	}
 	public static boolean isInited() {
 		return inited;
 	}

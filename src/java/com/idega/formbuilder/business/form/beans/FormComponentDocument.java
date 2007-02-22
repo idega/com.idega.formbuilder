@@ -14,7 +14,6 @@ import com.idega.formbuilder.business.form.PageThankYou;
 import com.idega.formbuilder.business.form.manager.CacheManager;
 import com.idega.formbuilder.business.form.manager.IXFormsManager;
 import com.idega.formbuilder.business.form.manager.XFormsManagerDocument;
-import com.idega.formbuilder.business.form.manager.util.FBPostponedException;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
@@ -114,7 +113,7 @@ public class FormComponentDocument extends FormComponentContainer implements com
 		return document.getFormTitle();
 	}
 	
-	public void setFormTitle(LocalizedStringBean form_name) throws FBPostponedException, Exception {
+	public void setFormTitle(LocalizedStringBean form_name) throws Exception {
 		document.setFormTitle(form_name);
 	}
 	
