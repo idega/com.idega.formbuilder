@@ -195,11 +195,6 @@ public class DWRManager implements Serializable {
 			if(formComponent != null) {
 				formComponent.clearFormComponentInfo();
 			}
-			try {
-				document.save();
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
 		}
 	}
 	
