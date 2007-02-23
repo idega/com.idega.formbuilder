@@ -13,6 +13,8 @@ import com.idega.webface.WFDivision;
 public class FBFormListItem extends FBComponentBase {
 	
 	public static final String COMPONENT_TYPE = "FormListItem";
+	public static final String delete_button_postfix = "_delete";
+	public static final String entries_button_postfix = "_entries";
 	
 	private static final String CONTENT_DIV_FACET = "CONTENT_DIV_FACET";
 	
@@ -69,7 +71,7 @@ public class FBFormListItem extends FBComponentBase {
 		
 		FBToolbarButton entriesButton = new FBToolbarButton();
 		entriesButton.setStyleClass("bottomButton");
-		entriesButton.setId(getId() + "_entries");
+		entriesButton.setId(getId() + entries_button_postfix);
 		entriesButton.setDisplayText("Entries");
 		entriesButton.setDefaultImageURI("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/application_view_list.png");
 		entriesButton.setAction(application.createMethodBinding("#{formDocument.loadFormDocumentEntries}", null));
@@ -93,8 +95,9 @@ public class FBFormListItem extends FBComponentBase {
 		FBToolbarButton deleteButton = new FBToolbarButton();
 		deleteButton.setStyleClass("bottomButton");
 		deleteButton.setDisplayText("Delete");
-		deleteButton.setId(getId() + "_delete");
+		deleteButton.setId(getId() + delete_button_postfix);
 		deleteButton.setDefaultImageURI("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/bin_closed.png");
+		deleteButton.setAction(application.createMethodBinding("#{formDocument.deleteFormDocument}", null));
 		
 		addChild(name, bodyTopLeft);
 		addChild(bodyTopLeft, bodyTop);

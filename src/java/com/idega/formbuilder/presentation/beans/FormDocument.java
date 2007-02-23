@@ -14,7 +14,10 @@ import javax.faces.event.ActionEvent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.idega.block.form.business.FormsService;
 import com.idega.block.formadmin.presentation.actions.GetAvailableFormsAction;
+import com.idega.business.IBOLookup;
+import com.idega.business.IBOLookupException;
 import com.idega.formbuilder.business.form.Button;
 import com.idega.formbuilder.business.form.ButtonArea;
 import com.idega.formbuilder.business.form.Component;
@@ -24,9 +27,12 @@ import com.idega.formbuilder.business.form.Page;
 import com.idega.formbuilder.business.form.PageThankYou;
 import com.idega.formbuilder.business.form.PropertiesThankYouPage;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
+import com.idega.formbuilder.presentation.components.FBFormListItem;
 import com.idega.formbuilder.presentation.converters.FormDocumentInfo;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.formbuilder.view.ActionManager;
+import com.idega.idegaweb.IWApplicationContext;
+import com.idega.idegaweb.IWMainApplication;
 import com.idega.webface.WFUtil;
 
 public class FormDocument implements Serializable {
@@ -49,6 +55,8 @@ public class FormDocument implements Serializable {
 	private LocalizedStringBean formTitleBean;
 	private LocalizedStringBean thankYouTitleBean;
 	private LocalizedStringBean thankYouTextBean;
+	
+	protected FormsService forms_service;
 	
 	public List<String> getCommonPagesIdList() {
 		List<String> result = new LinkedList<String>();
@@ -241,13 +249,41 @@ public class FormDocument implements Serializable {
 		return "loadCodeSuccess";
 	}
 	
-	public void deleteFormDocument() {
+	protected String retrieveFormIdFormButtonId(String button_id, String button_postfix) {
 		
+		try {
+			String form_id = button_id.substring(button_id.lastIndexOf(':')+1, button_id.indexOf(button_postfix));
+			return form_id == null || form_id.equals("") ? null : form_id;
+		} catch (Exception e) {
+			logger.error("Form id couldn't be parsed from button id: "+button_id, e);
+			return null;
+		}
+	}
+	
+	public String deleteFormDocument() {
+		
+		String form_id = retrieveFormIdFormButtonId(getCurrentFormId(FacesContext.getCurrentInstance()), FBFormListItem.delete_button_postfix);
+		
+//		TODO: (alex) display confirmation tab with checkbox to delete submitted data together with form
+		boolean delete_submitted_data = true;
+		
+		if(form_id == null)
+//			TODO: (alex) tell user about error			
+			throw new NullPointerException("Form id not found");
+		
+		try {
+			getFormsService().removeForm(form_id, delete_submitted_data);
+			
+		} catch (Exception e) {
+//			TODO: (alex) tell user about error
+		}
+		
+		return "redirectHome";
 	}
 	
 	public String loadFormDocumentEntries() {
-		String buttonId = getCurrentFormId(FacesContext.getCurrentInstance());
-		String formId = buttonId.substring(15, buttonId.indexOf("_entries"));
+		String formId = retrieveFormIdFormButtonId(getCurrentFormId(FacesContext.getCurrentInstance()), FBFormListItem.entries_button_postfix);
+		
 		if(formId != "") {
 			
 			GetAvailableFormsAction admin = (GetAvailableFormsAction) WFUtil.getBeanInstance("availableFormsAction");
@@ -586,4 +622,17 @@ public class FormDocument implements Serializable {
 		this.tempValue = tempValue;
 	}
 
+	protected FormsService getFormsService() {
+		
+		if (forms_service == null) {
+			try {
+				IWApplicationContext iwc = IWMainApplication.getDefaultIWApplicationContext();
+				forms_service = (FormsService) IBOLookup.getServiceInstance(iwc, FormsService.class);
+			}
+			catch (IBOLookupException e) {
+				logger.error("Could not find FormsService");
+			}
+		}
+		return forms_service;
+	}
 }
