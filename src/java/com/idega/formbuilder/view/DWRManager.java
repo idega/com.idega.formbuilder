@@ -99,66 +99,6 @@ public class DWRManager implements Serializable {
 		}
 	}
 	
-	public void deletePage(String id) {
-		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
-		Document document = formDocument.getDocument();
-		if(document != null) {
-			String temp = id.substring(id.indexOf(":") + 1);
-			int k = temp.indexOf("_", temp.indexOf("_") + 1);
-			String temp2 = temp.substring(0, k);
-			Page page = document.getPage(temp2);
-			if(page != null) {
-				FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
-				List<String> ids = formPage.getCommonPagesIdList(document);
-				int index = ids.indexOf(temp2);
-				String newPageId = "";
-				if(index < 1) {
-					if(ids.size() > 1) {
-						newPageId = ids.get(1);
-						page.remove();
-						page = document.getPage(newPageId);
-						formPage.loadPageInfo(page);
-					}
-				} else {
-					newPageId = ids.get(index - 1);
-					page.remove();
-					page = document.getPage(newPageId);
-					formPage.loadPageInfo(page);
-				}
-				Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
-				if(workspace != null) {
-					workspace.setView("design");
-					workspace.setSelectedMenu("3");
-					workspace.setRenderedMenu(true);
-				}
-				try {
-					document.save();
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
-			}
-		}
-	}
-	
-	public void loadPage(String id) {
-		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
-		Document document = formDocument.getDocument();
-		if(document != null) {
-			String temp = id.substring(id.indexOf(":") + 1);
-			int k = temp.indexOf("_", temp.indexOf("_") + 1);
-			String temp2 = temp.substring(0, k);
-			Page page = document.getPage(temp2);
-			FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
-			formPage.loadPageInfo(page);
-			Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
-			if(workspace != null) {
-				workspace.setView("design");
-				workspace.setSelectedMenu("3");
-				workspace.setRenderedMenu(true);
-			}
-		}
-	}
-	
 	public void createNewFormDocument(String title) {
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 		if(workspace != null) {
