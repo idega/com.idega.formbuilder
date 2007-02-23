@@ -15,6 +15,7 @@ public class FBFormListItem extends FBComponentBase {
 	public static final String COMPONENT_TYPE = "FormListItem";
 	public static final String delete_button_postfix = "_delete";
 	public static final String entries_button_postfix = "_entries";
+	public static final String duplicate_button_postfix = "_duplicate";
 	
 	private static final String CONTENT_DIV_FACET = "CONTENT_DIV_FACET";
 	
@@ -90,8 +91,9 @@ public class FBFormListItem extends FBComponentBase {
 		FBToolbarButton duplicateButton = new FBToolbarButton();
 		duplicateButton.setStyleClass("bottomButton");
 		duplicateButton.setDisplayText("Duplicate");
-		duplicateButton.setId(getId() + "_duplicate");
+		duplicateButton.setId(getId() + duplicate_button_postfix);
 		duplicateButton.setDefaultImageURI("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/page_copy.png");
+		duplicateButton.setAction(application.createMethodBinding("#{formDocument.duplicateFormDocument}", null));
 		FBToolbarButton deleteButton = new FBToolbarButton();
 		deleteButton.setStyleClass("bottomButton");
 		deleteButton.setDisplayText("Delete");

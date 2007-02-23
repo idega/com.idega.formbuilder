@@ -185,13 +185,6 @@ public class FormManagerUtil {
 		}
 	}
 	
-	public static Element insertWizardElement(Document xforms_document, Element wizard_element) {
-		
-		Element first_model_element = DOMUtil.getChildElement(xforms_document.getElementsByTagName(head_tag).item(0), model_tag);
-		wizard_element = (Element)xforms_document.importNode(wizard_element, true);
-		return (Element)first_model_element.appendChild(wizard_element);
-	}
-	
 	/**
 	 * Puts localized text on element. Localization is saved on the xforms document.
 	 * 

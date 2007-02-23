@@ -44,6 +44,12 @@ public class FBUtil {
         return iwb.getRealPathWithFileNameString(url);
 	}
 	
+	/**
+	 *
+	 * @deprecated - use generateFormId from FormsService 
+	 * 
+	 */
+	@Deprecated
 	public static String generateFormId(String name) {
 		
 		String result = name+"-"+ new Date();

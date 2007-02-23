@@ -29,7 +29,6 @@ import com.idega.formbuilder.business.form.PropertiesThankYouPage;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.presentation.components.FBFormListItem;
 import com.idega.formbuilder.presentation.converters.FormDocumentInfo;
-import com.idega.formbuilder.util.FBUtil;
 import com.idega.formbuilder.view.ActionManager;
 import com.idega.idegaweb.IWApplicationContext;
 import com.idega.idegaweb.IWMainApplication;
@@ -154,7 +153,7 @@ public class FormDocument implements Serializable {
 			Locale locale = workspace.getLocale();
 			DocumentManager formManagerInstance = ActionManager.getDocumentManagerInstance();
 			Document document = null;
-			String id = FBUtil.generateFormId(name);
+			String id = getFormsService().generateFormId(name);
 			LocalizedStringBean formName = new LocalizedStringBean();
 			formName.setString(locale, name);
 			
@@ -275,6 +274,7 @@ public class FormDocument implements Serializable {
 			getFormsService().removeForm(form_id, delete_submitted_data);
 			
 		} catch (Exception e) {
+			logger.error("Exception while removing form", e);
 //			TODO: (alex) tell user about error
 		}
 		
@@ -292,8 +292,25 @@ public class FormDocument implements Serializable {
 		return "loadEntriesSuccess";
 	}
 	
-	public void duplicateFormDocument() {
+	public String duplicateFormDocument() {
 		
+		String form_id = retrieveFormIdFormButtonId(getCurrentFormId(FacesContext.getCurrentInstance()), FBFormListItem.duplicate_button_postfix);
+		
+//		TODO: (alex) display tab with new form name
+		
+		if(form_id == null)
+//			TODO: (alex) tell user about error			
+			throw new NullPointerException("Form id not found");
+		
+		try {
+			getFormsService().duplicateForm(form_id, null);
+			
+		} catch (Exception e) {
+			logger.error("Exception while duplicating form", e);
+//			TODO: (alex) tell user about error
+		}
+		
+		return "redirectHome";
 	}
 	
 	public Document getDocument() {
@@ -340,7 +357,7 @@ public class FormDocument implements Serializable {
 			Locale locale = workspace.getLocale();
 			DocumentManager formManagerInstance = ActionManager.getDocumentManagerInstance();
 			Document document = null;
-			String id = FBUtil.generateFormId(name);
+			String id = getFormsService().generateFormId(name);
 			LocalizedStringBean formName = new LocalizedStringBean();
 			formName.setString(locale, name);
 			
