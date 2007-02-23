@@ -20,8 +20,6 @@ public class FBFormPage extends FBComponentBase {
 	private static final String PAGE_ICON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/document-new.png";
 	private static final String DELETE_ICON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png";
 	
-	private String id;
-	private String styleClass;
 	private String label;
 	private boolean active;
 	private String activeStyleClass;
@@ -70,11 +68,11 @@ public class FBFormPage extends FBComponentBase {
 		getChildren().clear();
 		
 		WFDivision switcher = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
-		switcher.setId(id + "_page");
-		switcher.setStyleClass(styleClass);
+		switcher.setId(getId() + "_page");
+		switcher.setStyleClass(getStyleClass());
 		
 		HtmlGraphicImage pageIconImg = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
-		pageIconImg.setId(id + "_pi");
+		pageIconImg.setId(getId() + "_pi");
 		pageIconImg.setValue(PAGE_ICON_IMG);
 		pageIconImg.setOnclick(onLoad);
 		pageIconImg.setStyle("display: block");
@@ -84,7 +82,7 @@ public class FBFormPage extends FBComponentBase {
 		pageIconLabel.setStyle("display: block");
 		
 		HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
-		deleteButton.setId(id + "_db");
+		deleteButton.setId(getId() + "_db");
 		deleteButton.setValue(DELETE_ICON_IMG);
 		deleteButton.setOnclick(onDelete);
 		deleteButton.setStyleClass("speedButton");
@@ -110,28 +108,12 @@ public class FBFormPage extends FBComponentBase {
 		}
 	}
 	
-	public String getId() {
-		return id;
-	}
-	
-	public void setId(String id) {
-		this.id = id;
-	}
-	
 	public String getLabel() {
 		return label;
 	}
 	
 	public void setLabel(String label) {
 		this.label = label;
-	}
-	
-	public String getStyleClass() {
-		return styleClass;
-	}
-	
-	public void setStyleClass(String styleClass) {
-		this.styleClass = styleClass;
 	}
 
 }

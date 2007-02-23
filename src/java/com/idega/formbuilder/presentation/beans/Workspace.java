@@ -46,18 +46,8 @@ public class Workspace implements Serializable {
 		}
 	}
 	
-	public void changeMenu(ActionEvent ae) {
-		String senderId = ae.getComponent().getId();
-		String menuPanelId = senderId.substring(0, 4);
-		if(menuPanelId.equals("tab1")) {
-			setSelectedMenu("0");
-		} else if(menuPanelId.equals("tab2")) {
-			setSelectedMenu("1");
-		} else if(menuPanelId.equals("tab3")) {
-			setSelectedMenu("2");
-		} else if(menuPanelId.equals("tab4")) {
-			setSelectedMenu("3");
-		}
+	public String redirectHome() {
+		return "redirectHome";
 	}
 	
 	public void changeView(ActionEvent ae) {

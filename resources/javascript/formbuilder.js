@@ -55,6 +55,7 @@ function saveHasPreview(parameter) {
 	}
 }
 function loadPageInfo(parameter) {
+	alert('Loading');
 	FormPage.getFormPageInfo(parameter, placePageInfo);
 }
 function placePageInfo(parameter) {
@@ -64,6 +65,24 @@ function placePageInfo(parameter) {
 			pageTitleTxt.value = parameter.pageTitle;
 		}
 		STATIC_ACCORDEON.showTabByIndex(3, true);
+		$('workspaceform1:refreshViewPanel').click();
+	}
+}
+function setupPagesDragAndDrop(value1, value2) {
+	Position.includeScrollOffsets = true;
+	Sortable.create(value1,{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangePages,scroll:value1,constraint:false});
+}
+function rearrangePages() {
+	alert('Dragging');
+	var componentIDs = Sortable.serialize('pagesPanel',{tag:'div',name:'id'});
+	var delimiter = '&id[]=';
+	var idPrefix = 'fbcomp_';
+	dwrmanager.updatePagesList(updatedPagesList,componentIDs,idPrefix,delimiter);
+}
+function updatedPagesList() {}
+function savePageTitle(parameter) {
+	if(parameter != null) {
+		FormPage.setTitle(parameter, refreshPagesPanel);
 	}
 }
 function loadComponentInfo(parameter) {
@@ -131,6 +150,7 @@ function saveFormDocument() {
 function doNothing(parameter) {
 	closeLoadingMessage();
 }
+function nothing(parameter) {}
 function switchDataSource() {
 	FormComponent.switchDataSource(placeDataSource);
 }
@@ -143,6 +163,64 @@ function placeDataSource(parameter) {
 		$('advPropsPanel2').setAttribute('style', 'visibility: visible');
 	}
 }
+function createNewPage() {
+	FormPage.createNewPage(placeNewPage);
+}
+function placeNewPage(parameter) {
+	var container = $('pagesPanel');
+	if(container != null) {
+		var page = document.createElement('div');
+		page.setAttribute('id', parameter + '_page');
+		page.setAttribute('class', 'formPageIcon');
+		page.setAttribute('styleClass', 'formPageIcon');
+		page.setAttribute('style', 'position: relative');
+		
+		var icon = document.createElement('img');
+		icon.setAttribute('id', parameter + '_pi');
+		icon.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/document-new.png';
+		icon.setAttribute('onclick', 'loadPageInfo(this.id)');
+		icon.style.display = 'block';
+		
+		var label = document.createElement('span');
+		label.style.display = 'block';
+		
+		var text = document.createTextNode('Page');
+		
+		label.appendChild(text);
+		
+		var db = document.createElement('img');
+		db.id = parameter + '_db';
+		db.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png';
+		db.setAttribute('onclick', 'deletePage(this.id)');
+		db.setAttribute('class', 'speedButton');
+		
+		page.appendChild(icon);
+		page.appendChild(label);
+		page.appendChild(db);
+		
+		container.appendChild(page);
+		$('workspaceform1:refreshViewPanel').click();
+	}
+}
+function deletePage(parameter) {
+	//pressedDeletePage = true;
+	FormPage.removePage(parameter,handleDeletedForm);
+}
+function handleDeletedForm(parameter) {
+	alert('WOW');
+	$('workspaceform1:refreshViewPanel').click();
+	$('workspaceform1:refreshPagesPanel').click();
+}
+/*function loadPage(parameter,placeLoadedPage) {
+	if(parameter != null) {
+		FormPage.
+	}
+	var temp2 = pressedDeletePage;
+	if(!temp2) {
+		dwrmanager.loadPage(id, refreshMainApplicationW)
+	}
+	pressedDeletePage = false;
+}*/
 //Handles the closing of the loading indicator
 function closeLoadingMessage() {
  	var elem = document.getElementById('busybuddy');
@@ -168,15 +246,15 @@ function createNewForm() {
 function refreshViewPanel(parameter) {
 	$('workspaceform1:refreshViewPanel').click();
 }
+function refreshPagesPanel(parameter) {
+	$('workspaceform1:refreshPagesPanel').click();
+}
 function refreshMainApplication() {
 	$('workspaceform1:loadPageFunction').click();
 }
 //--------------------------------
 
-function deletePage(id) {
-	pressedDeletePage = true;
-	dwrmanager.deletePage(id, refreshMainApplication);
-}
+
 
 //Handles the deletion of a form component created with JSF
 function removeComponent(parameter) {
@@ -231,13 +309,7 @@ function deletedComponentJS(id) {
 }
 //----------------------------------------
 
-function loadPage(id) {
-	var temp2 = pressedDeletePage;
-	if(!temp2) {
-		dwrmanager.loadPage(id, refreshMainApplicationW)
-	}
-	pressedDeletePage = false;
-}
+
 
 //Handles the retrieval of component properties on mouse click
 function editProperties(id) {

@@ -7,7 +7,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 
-import org.ajax4jsf.ajax.html.HtmlAjaxCommandButton;
+import org.apache.myfaces.component.html.ext.HtmlCommandButton;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
 import org.apache.myfaces.component.html.ext.HtmlSelectBooleanCheckbox;
 
@@ -32,7 +32,7 @@ public class FBFormProperties extends FBComponentBase {
 		Application application = context.getApplication();
 		
 		Table2 table = new Table2();
-		table.setStyleAttribute("width: 300px;");
+		table.setStyleAttribute("width: 280px;");
 		table.setCellpadding(0);
 		TableRowGroup group = table.createBodyRowGroup();
 		TableRow row = null;
@@ -105,14 +105,14 @@ public class FBFormProperties extends FBComponentBase {
 		cell = row.createCell();
 		cell.add(thankYouText);
 		
-		HtmlAjaxCommandButton newPageButton = (HtmlAjaxCommandButton) application.createComponent(HtmlAjaxCommandButton.COMPONENT_TYPE);
-		newPageButton.setValue("New page");
-		newPageButton.setId("newPB_FP");
-		newPageButton.setOnclick("$('workspaceform1:createNewPage').click();");
-		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.add(newPageButton);
+//		HtmlCommandButton newPageButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
+//		newPageButton.setValue("New page");
+//		newPageButton.setId("newPB_FP");
+//		newPageButton.setOnclick("createNewPage();return false");
+//		
+//		row = group.createRow();
+//		cell = row.createCell();
+//		cell.add(newPageButton);
 		
 		addFacet(CONTENT_FACET, table);
 	}

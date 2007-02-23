@@ -10,9 +10,7 @@ import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
-import javax.faces.event.ActionEvent;
 
-import org.ajax4jsf.ajax.UIAjaxSupport;
 import org.apache.myfaces.component.html.ext.HtmlOutputLabel;
 import org.apache.myfaces.custom.htmlTag.HtmlTag;
 

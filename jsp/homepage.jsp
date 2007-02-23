@@ -12,13 +12,10 @@
 		<ws:page id="formbuilder"
 				 showFunctionMenu="false"
 				 javascripturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax.js,
-												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/modal-message.js,
-												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax-dynamic-content.js,
-												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/scriptaculous/prototype.js,
-												/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/scriptaculous/scriptaculous.js,
-												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/rico.js,
-												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js,
-												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/forms-scroller.js">
+								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/modal-message.js,
+								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax-dynamic-content.js,
+								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js,
+								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/forms-scroller.js">
 			<h:form id="workspaceform1">
 				<fb:homePage id="fbHomePage" />
 			</h:form>

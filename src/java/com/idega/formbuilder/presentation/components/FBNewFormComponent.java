@@ -91,10 +91,10 @@ public class FBNewFormComponent extends FBComponentBase {
 		
 		result.append("function showInputField() {\n");
 //		result.append("var container = $('newFormComp');\n");
-		result.append("var input = $('workspaceform1:newTxt');\n");
-		result.append("var newBt = $('workspaceform1:newBt');\n");
-		result.append("var okBt = $('workspaceform1:okBt');\n");
-		result.append("var cancelBt = $('workspaceform1:cancelBt');\n");
+		result.append("var input = document.getElementById('workspaceform1:newTxt');\n");
+		result.append("var newBt = document.getElementById('workspaceform1:newBt');\n");
+		result.append("var okBt = document.getElementById('workspaceform1:okBt');\n");
+		result.append("var cancelBt = document.getElementById('workspaceform1:cancelBt');\n");
 		result.append("input.style.display = 'inline';\n");
 		result.append("newBt.style.display = 'none';\n");
 		result.append("okBt.style.display = 'inline';\n");
@@ -103,17 +103,17 @@ public class FBNewFormComponent extends FBComponentBase {
 		
 		result.append("function hideInputField() {\n");
 //		result.append("var container = $('newFormComp');\n");
-		result.append("var input = $('workspaceform1:newTxt');\n");
-		result.append("var newBt = $('workspaceform1:newBt');\n");
-		result.append("var okBt = $('workspaceform1:okBt');\n");
-		result.append("var cancelBt = $('workspaceform1:cancelBt');\n");
+		result.append("var input = document.getElementById('workspaceform1:newTxt');\n");
+		result.append("var newBt = document.getElementById('workspaceform1:newBt');\n");
+		result.append("var okBt = document.getElementById('workspaceform1:okBt');\n");
+		result.append("var cancelBt = document.getElementById('workspaceform1:cancelBt');\n");
 		result.append("input.style.display = 'none';\n");
 		result.append("newBt.style.display = 'inline';\n");
 		result.append("okBt.style.display = 'none';\n");
 		result.append("cancelBt.style.display = 'none';\n");
 		result.append("}\n");
 		
-		result.append("var container = $('newFormComp');\n");
+		result.append("var container = document.getElementById('newFormComp');\n");
 		result.append("Rico.Corner.round(container);\n");
 		
 		result.append("</script>\n");

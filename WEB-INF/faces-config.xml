@@ -24,6 +24,12 @@
 			<to-view-id>/workspace/forms/formbuilder/</to-view-id>
 		</navigation-case>
 	</navigation-rule>
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>redirectHome</from-outcome>
+			<to-view-id>/workspace/forms/</to-view-id>
+		</navigation-case>
+	</navigation-rule>
 	<managed-bean>
 		<managed-bean-name>formPage</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.presentation.beans.FormPage</managed-bean-class>

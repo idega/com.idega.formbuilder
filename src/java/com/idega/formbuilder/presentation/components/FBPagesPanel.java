@@ -2,7 +2,6 @@ package com.idega.formbuilder.presentation.components;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -60,6 +59,7 @@ public class FBPagesPanel extends FBComponentBase {
 					String label = ((PropertiesPage)confirmation.getProperties()).getLabel().getString(locale);
 					formPage.setLabel(label);
 					formPage.setActive(false);
+					//TODO previewPage handling
 					addFacet(CONFIRMATION_PAGE, formPage);
 				}
 			}
@@ -71,9 +71,10 @@ public class FBPagesPanel extends FBComponentBase {
 				String label = ((PropertiesPage)thanks.getProperties()).getLabel().getString(locale);
 				formPage.setLabel(label);
 				formPage.setActive(false);
+				//TODO thankYouPage handling
 				addFacet(THANKYOU_PAGE, formPage);
 			}
-			List<String> ids = getCommonPagesIdList(document);
+			List<String> ids = formDocument.getCommonPagesIdList();
 			Iterator it = ids.iterator();
 			while(it.hasNext()) {
 				String nextId = (String) it.next();
@@ -82,11 +83,8 @@ public class FBPagesPanel extends FBComponentBase {
 					FBFormPage formPage = (FBFormPage) application.createComponent(FBFormPage.COMPONENT_TYPE);
 					formPage.setId(nextId + "_P");
 					formPage.setStyleClass(componentStyleClass);
-//					formPage.setOnDelete("displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/confirm-delete-page.inc');return false");
-//					formPage.setOnDelete("deletePageFunction(this.id)");
-//					formPage.setOnLoad("loadPageFunction(this.id)");
 					formPage.setOnDelete("deletePage(this.id)");
-					formPage.setOnLoad("loadPage(this.id)");
+					formPage.setOnLoad("loadPageInfo(this.id)");
 					String label = ((PropertiesPage)currentPage.getProperties()).getLabel().getString(locale);
 					formPage.setLabel(label);
 					formPage.setActive(false);
@@ -94,30 +92,6 @@ public class FBPagesPanel extends FBComponentBase {
 				}
 			}
 		}
-	}
-	
-	private List<String> getCommonPagesIdList(Document document) {
-		List<String> result = new LinkedList<String>();
-		List<String> ids = document.getContainedPagesIdList();
-		String confId = "";
-		String tksId = "";
-		Page temp = document.getConfirmationPage();
-		if(temp != null) {
-			confId = temp.getId();
-		}
-		temp = document.getThxPage();
-		if(temp != null) {
-			tksId = temp.getId();
-		}
-		Iterator it = ids.iterator();
-		while(it.hasNext()) {
-			String nextId = (String) it.next();
-			if(nextId.equals(confId) || nextId.equals(tksId)) {
-				continue;
-			}
-			result.add(nextId);
-		}
-		return result;
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {
@@ -157,29 +131,11 @@ public class FBPagesPanel extends FBComponentBase {
 	}
 	
 	private String getEmbededJavascript(Object values[]) {
-		return 	"<script language=\"JavaScript\">\n"
-		
-				+ "function setupPagesDragAndDrop() {\n"
-//				+ "alert('Setting up DD');\n"
-				+ "Position.includeScrollOffsets = true;\n"
-				+ "Sortable.create(\"" + values[0] + "\",{dropOnEmpty:true,tag:\"div\",only:\"" + values[1] + "\",onUpdate:rearrangePages,scroll:\"" + values[0] + "\",constraint:false});\n"
-				+ "}\n"
-				
-				+ "function rearrangePages() {\n"
-				+ "var componentIDs = Sortable.serialize(\"" + values[0] + "\",{tag:\"div\",name:\"id\"});\n"
-				+ "var delimiter = '&id[]=';\n"
-				+ "var idPrefix = 'fbcomp_';\n"
-//				+ "alert('before back-end');\n"
-				+ "dwrmanager.updatePagesList(updatedPagesList,componentIDs,idPrefix,delimiter);\n"
-//				+ "alert('after back-end');\n"
-				+ "pressedDeletePage = true;\n"
-				+ "}\n"
-				
-				+ "function updatedPagesList() {}\n"
-				
-				+ "setupPagesDragAndDrop();\n"
-				
-				+ "</script>\n";
+		StringBuilder result = new StringBuilder();
+		result.append("<script language=\"JavaScript\">\n");
+		result.append("setupPagesDragAndDrop(" + values[0] + "," + values[1] + ");\n");
+		result.append("</script>\n");
+		return 	result.toString();
 	}
 	
 	public Object saveState(FacesContext context) {

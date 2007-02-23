@@ -2,6 +2,8 @@ package com.idega.formbuilder.presentation.beans;
 
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -13,6 +15,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.idega.block.formadmin.presentation.actions.GetAvailableFormsAction;
+import com.idega.formbuilder.business.form.Button;
+import com.idega.formbuilder.business.form.ButtonArea;
+import com.idega.formbuilder.business.form.Component;
 import com.idega.formbuilder.business.form.Document;
 import com.idega.formbuilder.business.form.DocumentManager;
 import com.idega.formbuilder.business.form.Page;
@@ -44,6 +49,77 @@ public class FormDocument implements Serializable {
 	private LocalizedStringBean formTitleBean;
 	private LocalizedStringBean thankYouTitleBean;
 	private LocalizedStringBean thankYouTextBean;
+	
+	public List<String> getCommonPagesIdList() {
+		List<String> result = new LinkedList<String>();
+		List<String> ids = document.getContainedPagesIdList();
+		String confId = "";
+		String tksId = "";
+		Page temp = document.getConfirmationPage();
+		if(temp != null) {
+			confId = temp.getId();
+		}
+		temp = document.getThxPage();
+		if(temp != null) {
+			tksId = temp.getId();
+		}
+		Iterator it = ids.iterator();
+		while(it.hasNext()) {
+			String nextId = (String) it.next();
+			if(nextId.equals(confId) || nextId.equals(tksId)) {
+				continue;
+			}
+			result.add(nextId);
+		}
+		return result;
+	}
+	
+	public void logFormDocument() {
+		Locale locale = new Locale("en");
+		System.out.println("Document ID: " + formId);
+		System.out.println("Document title: " + formTitle);
+		
+		List<String> pages = document.getContainedPagesIdList();
+		Iterator it = pages.iterator();
+		while(it.hasNext()) {
+			String pageId = (String) it.next();
+			Page page = document.getPage(pageId);
+			if(page != null) {
+				System.out.println("Page ID: " + page.getId());
+				System.out.println("Page Type: " + page.getType());
+				System.out.println("Page title: " + page.getProperties().getLabel().getString(locale));
+				
+				List<String> components = page.getContainedComponentsIdList();
+				Iterator itr = components.iterator();
+				while(itr.hasNext()) {
+					String componentId = (String) itr.next();
+					Component component = page.getComponent(componentId);
+					if(component != null) {
+						System.out.println("Component ID: " + component.getId());
+						System.out.println("Component Type: " + component.getType());
+					}
+				}
+				
+				ButtonArea area = page.getButtonArea();
+				if(area != null) {
+					System.out.println("ButtonArea ID: " + area.getId());
+					System.out.println("ButtonArea Type: " + area.getType());
+					
+					List<String> ids = area.getContainedComponentsIdList();
+					Iterator its = ids.iterator();
+					while(its.hasNext()) {
+						String buttonId = (String) its.next();
+						Button button = (Button) area.getComponent(buttonId);
+						
+						if(button != null) {
+							System.out.println("Button ID: " + button.getId());
+							System.out.println("Button Type: " + button.getType());
+						}
+					}
+				}
+			}
+		}
+	}
 	
 	private String getCurrentFormId(FacesContext context) {
 		String result = "";
@@ -100,15 +176,9 @@ public class FormDocument implements Serializable {
 			if(formComponent != null) {
 				formComponent.clearFormComponentInfo();
 			}
-			try {
-				document.save();
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
 			return "newFormSuccess";
 		}
 		return "";
-		
 	}
 	
 	public void save() {

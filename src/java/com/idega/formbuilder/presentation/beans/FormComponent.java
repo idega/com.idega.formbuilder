@@ -15,7 +15,6 @@ import org.w3c.dom.Element;
 
 import com.idega.formbuilder.business.form.Component;
 import com.idega.formbuilder.business.form.ComponentSelect;
-import com.idega.formbuilder.business.form.Document;
 import com.idega.formbuilder.business.form.Page;
 import com.idega.formbuilder.business.form.PropertiesComponent;
 import com.idega.formbuilder.business.form.PropertiesSelect;

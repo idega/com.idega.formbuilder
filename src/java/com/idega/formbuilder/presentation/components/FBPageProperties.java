@@ -31,7 +31,7 @@ public static final String COMPONENT_TYPE = "PageProperties";
 		Application application = context.getApplication();
 		
 		Table2 table = new Table2();
-		table.setStyleAttribute("width: 300px;");
+		table.setStyleAttribute("width: 280px;");
 		table.setCellpadding(0);
 		TableRowGroup group = table.createBodyRowGroup();
 		TableRow row = null;
@@ -48,8 +48,7 @@ public static final String COMPONENT_TYPE = "PageProperties";
 		HtmlInputText title = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		title.setId("pageTitle");
 		title.setValueBinding("value", application.createValueBinding("#{formPage.title}"));
-//		title.setOnblur("savePageTitle();");
-		title.setOnblur("$('workspaceform1:savePageTitle').click();");
+		title.setOnblur("savePageTitle(this.value)");
 		
 		cell = row.createCell();
 		cell.add(title);
@@ -57,7 +56,7 @@ public static final String COMPONENT_TYPE = "PageProperties";
 		HtmlAjaxCommandButton newPageButton = (HtmlAjaxCommandButton) application.createComponent(HtmlAjaxCommandButton.COMPONENT_TYPE);
 		newPageButton.setValue("New page");
 		newPageButton.setId("newPB_PP");
-		newPageButton.setOnclick("$('workspaceform1:createNewPage').click();");
+		newPageButton.setOnclick("createNewPage();return false");
 		
 		row = group.createRow();
 		cell = row.createCell();

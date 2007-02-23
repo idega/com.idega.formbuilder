@@ -5,17 +5,13 @@ import java.util.Iterator;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UISelectItems;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
-import javax.faces.event.ActionEvent;
 
-import org.ajax4jsf.ajax.html.HtmlAjaxSupport;
 import org.apache.myfaces.component.html.ext.HtmlCommandButton;
 import org.apache.myfaces.component.html.ext.HtmlOutputLabel;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
-import org.apache.myfaces.component.html.ext.HtmlSelectOneMenu;
 
 import com.idega.block.web2.presentation.Accordion;
 import com.idega.formbuilder.presentation.FBComponentBase;
@@ -74,8 +70,8 @@ public class FBMenu extends FBComponentBase {
 		
 		HtmlCommandButton homeButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
 		homeButton.setId("homeButton");
-//		homeButton.set
-//		homeButton.setOnclick("saveFormDocument();return false");
+//		homeButton.setOnclick("FormDocument.logFormDocument(nothing);return false");
+		homeButton.setAction(application.createMethodBinding("#{workspace.redirectHome}", null));
 		homeButton.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['toolbar_home']}"));
 		
 //		HtmlSelectOneMenu selectFormMenu = (HtmlSelectOneMenu) application.createComponent(HtmlSelectOneMenu.COMPONENT_TYPE);
@@ -145,11 +141,6 @@ public class FBMenu extends FBComponentBase {
 		acc.addPanel(tab1, palette);
 		
 		FBComponentPropertiesPanel simpleProperties = (FBComponentPropertiesPanel) application.createComponent(FBComponentPropertiesPanel.COMPONENT_TYPE);
-//		simpleProperties.setId("propsBox");
-		
-//		FBBasicProperties simpleProperties = (FBBasicProperties) application.createComponent(FBBasicProperties.COMPONENT_TYPE);
-		
-//		FBAdvancedProperties advancedProperties = (FBAdvancedProperties) application.createComponent(FBAdvancedProperties.COMPONENT_TYPE);
 		
 		Text tab2 = new Text();
 		tab2.setText("Component properties");

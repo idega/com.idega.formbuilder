@@ -103,7 +103,7 @@ public class FBWorkspace extends FBComponentBase {
 		}
 		UIComponent pages = getFacet(WORKSPACE_PAGES_FACET);
 		if(pages != null) {
-//			renderChild(context, pages);
+			renderChild(context, pages);
 		}
 		UIComponent proxy = getFacet(WORKSPACE_ACTIONS_PROXY_FACET);
 		if(proxy != null) {

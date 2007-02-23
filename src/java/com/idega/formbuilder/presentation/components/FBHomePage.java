@@ -13,8 +13,14 @@ import javax.faces.model.SelectItem;
 import org.apache.myfaces.component.html.ext.HtmlGraphicImage;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
 
+import com.idega.block.web2.business.Web2Business;
+import com.idega.business.IBOLookup;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormList;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.Page;
+import com.idega.presentation.PresentationObjectUtil;
+import com.idega.presentation.Script;
 import com.idega.presentation.text.Text;
 import com.idega.webface.WFDivision;
 import com.idega.webface.WFUtil;
@@ -26,6 +32,7 @@ public class FBHomePage extends FBComponentBase {
 	private static final String HEADER_BLOCK_FACET = "HEADER_BLOCK_FACET";
 	private static final String GREETING_BLOCK_FACET = "GREETING_BLOCK_FACET";
 	private static final String FORM_LIST_FACET = "FORM_LIST_FACET";
+//	private static final String SCRIPT_FACET = "SCRIPT_FACET";
 	
 	public FBHomePage() {
 		super();
@@ -35,6 +42,32 @@ public class FBHomePage extends FBComponentBase {
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
 		getChildren().clear();
+		
+		Page parentPage = PresentationObjectUtil.getParentPage(this);
+		if (parentPage != null) {
+			try {
+				Web2Business business = (Web2Business) IBOLookup.getServiceInstance(IWContext.getInstance(), Web2Business.class);
+				String prototypeURI = business.getBundleURIToPrototypeLib();
+				String scriptaculousURI = business.getBundleURIToScriptaculousLib();
+				String ricoURI = business.getBundleURIToRico();
+	
+				Script s = parentPage.getAssociatedScript();
+				s.addScriptSource(prototypeURI);
+				s.addScriptSource(scriptaculousURI);
+				s.addScriptSource(ricoURI);
+
+				parentPage.addScriptSource(prototypeURI);
+				parentPage.addScriptSource(scriptaculousURI);
+				parentPage.addScriptSource(ricoURI);
+				
+				// THIS HAS TO BE ADDED TO THE <BODY> in the html, if not it does not work in Safari
+				parentPage.setOnLoad("javascript:bodyOnLoad()");
+				
+				add(s);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		
 		WFDivision header = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		header.setId("fbHomePageHeaderBlock");
@@ -58,17 +91,6 @@ public class FBHomePage extends FBComponentBase {
 		FBNewFormComponent newFormComponent = (FBNewFormComponent) application.createComponent(FBNewFormComponent.COMPONENT_TYPE);
 		newFormComponent.setStyleClass("newFormComponentIdle");
 		
-//		HtmlGraphicImage newIcon = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
-//		newIcon.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield.png");
-//		newIcon.setId("newIcon");
-//		HtmlCommandButton newLabel = new HtmlCommandButton();
-////		newLabel.setText("New Form");
-//		newLabel.setStyleClass("newFormButton");
-//		newLabel.setAction(application.createMethodBinding("#{formDocument.createNewForm}", null));
-//		newLabel.setValue("New Form");
-//		newLabel.setId("newLabel");
-		
-//		addChild(newIcon, headerPartRight);
 		addChild(newFormComponent, headerPartRight);
 		addChild(headerPartLeft, header);
 		addChild(headerPartRight, header);
@@ -170,6 +192,10 @@ public class FBHomePage extends FBComponentBase {
 		if(!isRendered()) {
 			return;
 		}
+		Iterator it = getChildren().iterator();
+		while(it.hasNext()) {
+			renderChild(context, (UIComponent) it.next());
+		}
 		UIComponent header = getFacet(HEADER_BLOCK_FACET);
 		if(header != null) {
 			renderChild(context, header);
@@ -182,10 +208,6 @@ public class FBHomePage extends FBComponentBase {
 		if(list != null) {
 			renderChild(context, list);
 		}
-//		Iterator it = getChildren().iterator();
-//		while(it.hasNext()) {
-//			renderChild(context, (UIComponent) it.next());
-//		}
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {

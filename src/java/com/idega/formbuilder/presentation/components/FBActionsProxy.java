@@ -32,11 +32,6 @@ public class FBActionsProxy extends FBComponentBase {
 		savePageTitleFunction.setReRender("mainApplication");
 		savePageTitleFunction.setActionListener(application.createMethodBinding("#{formPage.savePageTitle}", new Class[]{ActionEvent.class}));
 		
-//		HtmlAjaxFunction newPageFunction = new HtmlAjaxFunction();
-//		newPageFunction.setName("createNewPage");
-//		newPageFunction.setReRender("mainApplication");
-//		newPageFunction.setValueBinding("data", application.createValueBinding("#{formPage.newPage}"));
-		
 		HtmlAjaxCommandButton newPageFunction = new HtmlAjaxCommandButton();
 		newPageFunction.setId("createNewPage");
 		newPageFunction.setReRender("mainApplication");
@@ -52,16 +47,6 @@ public class FBActionsProxy extends FBComponentBase {
 		saveThankYouText.setReRender("mainApplication");
 		saveThankYouText.setActionListener(application.createMethodBinding("#{formDocument.saveThankYouText}", new Class[]{ActionEvent.class}));
 		
-		/*HtmlAjaxFunction loadPageFunction = new HtmlAjaxFunction();
-		loadPageFunction.setName("loadPageFunction");
-		loadPageFunction.setReRender("mainApplication");
-		loadPageFunction.setValueBinding("data", application.createValueBinding("#{formPage.loadPage}"));*/
-		
-		/*HtmlActionParameter loadPageFunctionP = new HtmlActionParameter();
-		loadPageFunctionP.setName("loadPageId");
-		loadPageFunctionP.setAssignToBinding(application.createValueBinding("#{formPage.id}"));
-		addChild(loadPageFunctionP, loadPageFunction);*/
-		
 		HtmlAjaxCommandButton loadPageFunction = new HtmlAjaxCommandButton();
 		loadPageFunction.setId("loadPageFunction");
 		loadPageFunction.setReRender("mainApplication");
@@ -69,21 +54,6 @@ public class FBActionsProxy extends FBComponentBase {
 		HtmlAjaxCommandButton deletePageFunction = new HtmlAjaxCommandButton();
 		deletePageFunction.setId("deletePageFunction");
 		deletePageFunction.setReRender("mainApplication");
-		
-		/*HtmlAjaxFunction deletePageFunction = new HtmlAjaxFunction();
-		deletePageFunction.setName("deletePageFunction");
-		deletePageFunction.setReRender("mainApplication");
-		deletePageFunction.setValueBinding("data", application.createValueBinding("#{formPage.deletePage}"));
-		
-		HtmlActionParameter deletePageFunctionP = new HtmlActionParameter();
-		deletePageFunctionP.setName("deletePageId");
-		deletePageFunctionP.setAssignToBinding(application.createValueBinding("#{formPage.id}"));
-		addChild(deletePageFunctionP, deletePageFunction);*/
-		
-		/*HtmlAjaxFunction togglePreviewPage = new HtmlAjaxFunction();
-		togglePreviewPage.setName("togglePreviewPage");
-		togglePreviewPage.setReRender("mainApplication");
-		togglePreviewPage.setValueBinding("data", application.createValueBinding("#{formDocument.viewPreview}"));*/
 		
 		HtmlAjaxCommandButton togglePreviewPage = new HtmlAjaxCommandButton();
 		togglePreviewPage.setId("togglePreviewPage");
@@ -96,12 +66,10 @@ public class FBActionsProxy extends FBComponentBase {
 		createForm.setAjaxSingle(true);
 		createForm.setReRender("ajaxViewPanel");
 		
-		UIAjaxCommandButton changeMenu = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
-		changeMenu.setId("changeMenuProxy");
-//		changeMenu.setOncomplete("closeLoadingMessage()");
+		HtmlAjaxCommandButton changeMenu = (HtmlAjaxCommandButton) application.createComponent(HtmlAjaxCommandButton.COMPONENT_TYPE);
+		changeMenu.setId("refreshPagesPanel");
 		changeMenu.setAjaxSingle(true);
-//		changeMenu.setActionListener(application.createMethodBinding("#{workspace.processAction}", new Class[]{ActionEvent.class}));
-		changeMenu.setReRender("workspaceform1:ajaxMenuPanel");
+		changeMenu.setReRender("ajaxPagesPanel");
 		
 		UIAjaxCommandButton deleteComponent = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
 		deleteComponent.setId("removeCompProxy");
