@@ -251,7 +251,7 @@ public class FormDocument implements Serializable {
 	protected String retrieveFormIdFormButtonId(String button_id, String button_postfix) {
 		
 		try {
-			String form_id = button_id.substring(button_id.lastIndexOf(':')+1, button_id.indexOf(button_postfix));
+			String form_id = button_id.substring(button_id.lastIndexOf(":")+1, button_id.indexOf(button_postfix));
 			return form_id == null || form_id.equals("") ? null : form_id;
 		} catch (Exception e) {
 			logger.error("Form id couldn't be parsed from button id: "+button_id, e);
