@@ -157,32 +157,11 @@ public class FormManagerUtil {
 	
 	public static void insertNodesetElement(Document form_xforms, Element nodeset, Element new_nodeset_element) {
 		
-		copyChildren(nodeset, new_nodeset_element);	
-		
 		Element container = 
 			(Element)((Element)form_xforms
 					.getElementsByTagName(instance_tag).item(0))
 					.getElementsByTagName("data").item(0);
 		container.appendChild(new_nodeset_element);
-	}
-	
-	private static void copyChildren(Element from, Element to) {
-		
-		if(from.hasChildNodes()) {
-			
-			NodeList children = from.getChildNodes();
-			
-			for (int i = 0; i < children.getLength(); i++) {
-				
-				Node child = children.item(i);
-				
-				if(child.getNodeType() == Node.ELEMENT_NODE) {
-
-					child = to.getOwnerDocument().importNode(child, true);
-					to.appendChild(child);
-				}
-			}
-		}
 	}
 	
 	/**

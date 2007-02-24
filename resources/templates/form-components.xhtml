@@ -8,10 +8,18 @@
 
 <xf:model id="components_model" schema="default-components.xsd">
 	<xf:instance id="components_instance" xmlns="">
-		<data> <text /> <email /> <textarea />
-		<secret /> <multiple_select_minimal /> <single_select_minimal /> <multiple_select />
-		<single_select /> <upload_file> <attachment filename=""
-			content-type="" /> </upload_file> <page /> </data>
+		<data> 
+			<text /> 
+			<email /> 
+			<textarea />
+			<secret />
+			<multiple_select_minimal />
+			<single_select_minimal />
+			<multiple_select />
+			<single_select /> 
+			<upload_file><attachment filename="" content-type="" /></upload_file> 
+			<page /> 
+		</data>
 	</xf:instance>
 	<xf:bind id="text" nodeset="text" type="string" />
 	<xf:bind id="textarea" nodeset="textarea" type="string" />
@@ -22,7 +30,7 @@
 		type="string" />
 	<xf:bind id="multiple_select" nodeset="multiple_select" type="string" />
 	<xf:bind id="single_select" nodeset="single_select" type="string" />
-	<xf:bind id="upload_file" nodeset="upload_file/attachment"
+	<xf:bind id="upload_file" nodeset="upload_file"
 		type="xs:base64Binary" />
 
 	<xf:bind id="email" nodeset="email" type="fb_email" />

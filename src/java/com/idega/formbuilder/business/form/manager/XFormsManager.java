@@ -131,7 +131,6 @@ public class XFormsManager implements IXFormsManager {
 
 				copySchemaType(cache_manager.getComponentsXsd(), xforms_doc, new_form_schema_type, component_id+new_form_schema_type);
 			}
-			
 			insertNodesetElement(bind_id);
 		}
 	}
@@ -172,9 +171,9 @@ public class XFormsManager implements IXFormsManager {
 			);
 		}
 		
-		if(nodeset_to.contains(FormManagerUtil.slash)) {
-			nodeset_to = nodeset_to.substring(nodeset_to.indexOf(FormManagerUtil.slash)+1);
-		}
+		if(nodeset_to.contains(FormManagerUtil.slash))
+			nodeset_to = nodeset_to.substring(0, nodeset_to.indexOf(FormManagerUtil.slash));
+		
 		Element nodeset = null;
 		
 		if(instance_id != null) {
@@ -577,7 +576,8 @@ public class XFormsManager implements IXFormsManager {
 			
 			Document xforms_doc = form_document.getXformsDocument();
 //			insert nodeset element
-			Element nodeset_element = xforms_doc.createElement(bind_id);
+			Element nodeset_element = (Element)xforms_doc.importNode(xforms_component.getNodeset(), true);
+			nodeset_element = (Element)xforms_doc.renameNode(nodeset_element, nodeset_element.getNamespaceURI(), bind_id);
 			
 			FormManagerUtil.insertNodesetElement(
 					xforms_doc, xforms_component.getNodeset(), nodeset_element
@@ -595,7 +595,14 @@ public class XFormsManager implements IXFormsManager {
 			return;
 		new_bind_name = FormManagerUtil.escapeNonXmlTagSymbols(new_bind_name.replace(' ', '_'));
 		Element nodeset_element = xforms_component.getNodeset();
-		bind_element.setAttribute(FormManagerUtil.nodeset_att, new_bind_name);
+		String prev_nodeset = bind_element.getAttribute(FormManagerUtil.nodeset_att);
+		
+		if(prev_nodeset.contains(FormManagerUtil.slash))
+			prev_nodeset = prev_nodeset.substring(prev_nodeset.indexOf(FormManagerUtil.slash));
+		else
+			prev_nodeset = null;
+		
+		bind_element.setAttribute(FormManagerUtil.nodeset_att, prev_nodeset == null ? new_bind_name : new_bind_name+prev_nodeset);
 		nodeset_element = (Element)nodeset_element.getOwnerDocument().renameNode(nodeset_element, nodeset_element.getNamespaceURI(), new_bind_name);
 		xforms_component.setNodeset(nodeset_element);
 		
