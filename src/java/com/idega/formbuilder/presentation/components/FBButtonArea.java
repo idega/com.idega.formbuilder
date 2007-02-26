@@ -18,8 +18,7 @@ public class FBButtonArea extends FBComponentBase {
 
 	public static final String COMPONENT_TYPE = "ButtonArea";
 	
-	public String id;
-	public String styleClass;
+	public String componentStyleClass;
 	
 	public FBButtonArea() {
 		super();
@@ -37,6 +36,7 @@ public class FBButtonArea extends FBComponentBase {
 				String nextId = (String) it.next();
 				FBButton button = (FBButton) application.createComponent(FBButton.COMPONENT_TYPE);
 				button.setId(nextId);
+				button.setStyleClass(componentStyleClass);
 				add(button);
 			}
 		}
@@ -46,8 +46,8 @@ public class FBButtonArea extends FBComponentBase {
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeBegin(context);
 		writer.startElement("DIV", this);
-		writer.writeAttribute("id", id, "id");
-		writer.writeAttribute("class", styleClass, "styleClass");
+		writer.writeAttribute("id", getId(), "id");
+		writer.writeAttribute("class", getStyleClass(), "styleClass");
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {
@@ -67,31 +67,24 @@ public class FBButtonArea extends FBComponentBase {
 	}
 	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[3];
+		Object values[] = new Object[2];
 		values[0] = super.saveState(context);
-		values[1] = id;
-		values[2] = styleClass;
+		values[1] = componentStyleClass;
 		return values;
 	}
 	
 	public void restoreState(FacesContext context, Object state) {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);
-		id = (String) values[1];
-		styleClass = (String) values[2];
+		componentStyleClass = (String) values[1];
 	}
-	
-	public String getId() {
-		return id;
+
+	public String getComponentStyleClass() {
+		return componentStyleClass;
 	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getStyleClass() {
-		return styleClass;
-	}
-	public void setStyleClass(String styleClass) {
-		this.styleClass = styleClass;
+
+	public void setComponentStyleClass(String componentStyleClass) {
+		this.componentStyleClass = componentStyleClass;
 	}
 	
 }

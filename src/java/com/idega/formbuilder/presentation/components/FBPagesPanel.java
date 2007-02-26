@@ -133,7 +133,7 @@ public class FBPagesPanel extends FBComponentBase {
 	private String getEmbededJavascript(Object values[]) {
 		StringBuilder result = new StringBuilder();
 		result.append("<script language=\"JavaScript\">\n");
-		result.append("setupPagesDragAndDrop(" + values[0] + "," + values[1] + ");\n");
+		result.append("setupPagesDragAndDrop('" + values[0] + "','" + values[1] + "');\n");
 		result.append("</script>\n");
 		return 	result.toString();
 	}

@@ -34,10 +34,10 @@ public class FBDesignView extends FBComponentBase {
 	public static final String DESIGN_VIEW_NOFORM_FACET = "noFormNoticeFacet";
 	public static final String DESIGN_VIEW_EMPTY_FACET = "emptyFormFacet";
 	public static final String DESIGN_VIEW_HEADER_FACET = "formHeaderFacet";
+	public static final String DESIGN_VIEW_PAGE_FACET = "pageTitleFacet";
 	
 	public static final String BUTTON_AREA_FACET = "BUTTON_AREA_FACET";
 	
-	private String styleClass;
 	private String componentStyleClass;
 	private String status;
 	private String selectedComponent;
@@ -86,15 +86,18 @@ public class FBDesignView extends FBComponentBase {
 		formHeadingHeader.setOnclick("loadFormInfo()");
 		addChild(formHeadingHeader, formHeading);
 		
-//		UIAjaxSupport formHeadingS = (UIAjaxSupport) application.createComponent("org.ajax4jsf.ajax.Support");
-//		formHeadingS.setId("formHeadingHeaderS");
-//		formHeadingS.setEvent("onclick");
-//		formHeadingS.setReRender("ajaxMenuPanel");
-//		formHeadingS.setActionListener(application.createMethodBinding("#{formDocument.loadFormProperties}", new Class[]{ActionEvent.class}));
-//		formHeadingS.setAjaxSingle(true);
-//		addChild(formHeadingS, formHeadingHeader);
-		
 		addFacet(DESIGN_VIEW_HEADER_FACET, formHeading);
+		
+		WFDivision pageNotice = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		pageNotice.setId("pageNotice");
+		pageNotice.setStyleClass("formHeading");
+		
+		HtmlOutputLabel currentPageTitle = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+		currentPageTitle.setValueBinding("value", application.createValueBinding("#{formPage.title}"));
+		currentPageTitle.setId("currentPageTitle");
+		addChild(currentPageTitle, pageNotice);
+		
+		addFacet(DESIGN_VIEW_PAGE_FACET, pageNotice);
 		
 		WFDivision emptyForm = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		emptyForm.setId("emptyForm");
@@ -181,6 +184,10 @@ public class FBDesignView extends FBComponentBase {
 					renderChild(context, emptyNotice);
 				}
 			} else if(status.equals(DESIGN_VIEW_STATUS_ACTIVE)) {
+				UIComponent pageHeader = getFacet(DESIGN_VIEW_PAGE_FACET);
+				if (pageHeader != null) {
+					renderChild(context, pageHeader);
+				}
 				UIComponent formHeader = getFacet(DESIGN_VIEW_HEADER_FACET);
 				if (formHeader != null) {
 					renderChild(context, formHeader);
@@ -223,71 +230,28 @@ public class FBDesignView extends FBComponentBase {
 	}
 	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[5];
+		Object values[] = new Object[4];
 		values[0] = super.saveState(context);
-		values[1] = styleClass;
-		values[2] = componentStyleClass;
-		values[3] = status;
-		values[4] = selectedComponent;
+		values[1] = componentStyleClass;
+		values[2] = status;
+		values[3] = selectedComponent;
 		return values;
 	}
 	
 	public void restoreState(FacesContext context, Object state) {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);
-		styleClass = (String) values[1];
-		componentStyleClass = (String) values[2];
-		status = (String) values[3];
-		selectedComponent = (String) values[4];
+		componentStyleClass = (String) values[1];
+		status = (String) values[2];
+		selectedComponent = (String) values[3];
 	}
 	
 	private String getEmbededJavascript(Object values[]) {
-		return 	"<script language=\"JavaScript\">\n"
-		
-				+ "function setupDragAndDrop() {\n"
-				+ "Position.includeScrollOffsets = true;\n"
-				+ "Sortable.create(\"" + values[2] + "\",{dropOnEmpty:true,tag:\"div\",only:\"" + values[1] + "\",onUpdate:rearrange,scroll:\"" + values[0] + "\",constraint:false});\n"
-				+ "Droppables.add(\"" + values[0] + "\",{onDrop:handleComponentDrop});\n"
-				+ "}\n"
-				
-				+ "function handleComponentDrop(element,container) {\n"
-				+ "var empty = $('workspaceform1:emptyForm');\n"
-				+ "if(empty) {\n"
-				+ "if(empty.style) {\n"
-				+ "empty.style.display = 'none';\n"
-				+ "} else {\n"
-				+ "empty.display = 'none';\n"
-				+ "}\n"
-				+ "}\n"
-				+ "if(currentElement != null) {\n"
-				+ "$(\"" + values[2] + "\").appendChild(currentElement);\n"
-				+ "}\n"
-				+ "currentElement = null;\n"
-				+ "Sortable.create(\"" + values[2] + "\",{dropOnEmpty:true,tag:\"div\",only:\"" + values[1] + "\",onUpdate:rearrange,scroll:\"" + values[0] + "\",constraint:false});\n"
-				+ "Droppables.add(\"" + values[0] + "\",{onDrop:handleComponentDrop});\n"
-				+ "}\n"
-				
-				+ "function rearrange() {\n"
-				+ "var componentIDs = Sortable.serialize(\"" + values[2] + "\",{tag:\"div\",name:\"id\"});\n"
-				+ "var delimiter = '&id[]=';\n"
-				+ "var idPrefix = 'fbcomp_';\n"
-				+ "dwrmanager.updateComponentList(componentIDs,idPrefix,delimiter,updateOrder);\n"
-				+ "pressedDelete = true;\n"
-				+ "}\n"
-				
-				+ "function updateOrder() {}\n"
-				
-				+ "setupDragAndDrop();\n"
-				
-				+ "</script>\n";
-	}
-	
-	public String getStyleClass() {
-		return styleClass;
-	}
-
-	public void setStyleClass(String styleClass) {
-		this.styleClass = styleClass;
+		StringBuilder result = new StringBuilder();
+		result.append("<script language=\"JavaScript\">\n");
+		result.append("setupComponentDragAndDrop('" + values[0] + "','" + values[1] + "');\n");
+		result.append("</script>\n");
+		return 	result.toString();
 	}
 	
 	public String getStatus() {

@@ -15,6 +15,15 @@ public class FBPaletteComponent extends FBComponentBase {
 	private String name;
 	private String type;
 	private String icon;
+	private String onDrag;
+
+	public String getOnDrag() {
+		return onDrag;
+	}
+
+	public void setOnDrag(String onDrag) {
+		this.onDrag = onDrag;
+	}
 
 	public String getIcon() {
 		return icon;
@@ -54,24 +63,26 @@ public class FBPaletteComponent extends FBComponentBase {
 		writer.writeText(name, null);
 		writer.endElement("SPAN");
 		writer.endElement("DIV");
-		writer.write(getEmbededJavascript(type));
+		writer.write(getEmbededJavascript());
 	}
 	
-	public static String getEmbededJavascript(String id) {
+	public String getEmbededJavascript() {
 		StringBuilder result = new StringBuilder();
 		result.append("<script language=\"JavaScript\">\n");
-		result.append("new Draggable(\"" + id + "\", {tag:\"div\",starteffect:handleComponentDrag,revert:true});\n");
+//		result.append("dndMgr.registerDraggable(new Rico.Draggable('test-rico-dnd','" + type + "'));\n");
+		result.append("new Draggable(\"" + type + "\", {tag:\"div\",starteffect:" + onDrag + ",revert:true});\n");
 		result.append("</script>\n");
 		return result.toString();
 		
 	}
 	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[4];
+		Object values[] = new Object[5];
 		values[0] = super.saveState(context);
 		values[1] = name;
 		values[2] = type;
 		values[3] = icon;
+		values[4] = onDrag;
 		return values;
 	}
 	
@@ -81,6 +92,7 @@ public class FBPaletteComponent extends FBComponentBase {
 		name = (String) values[1];
 		type = (String) values[2];
 		icon = (String) values[3];
+		onDrag = (String) values[4];
 	}
 
 	public String getName() {

@@ -9,6 +9,41 @@ function displayMessage(url) {
 function closeMessage() {
 	messageObj.close();
 }
+var currentElement = null;
+function handleComponentDrag(element) {
+	var type = element.id;
+	FormComponent.createComponent(type, receiveComponent);
+}
+function handleButtonDrag(element) {
+	if(element != null) {
+		var type = element.id;
+		FormComponent.addButton(type, placeNewButton);
+	}
+}
+function placeNewButton(parameter) {
+	
+}
+function receiveComponent(parameter) {
+	currentElement = createTreeNode(parameter.documentElement);
+}
+function createTreeNode(element) {
+	if(element.nodeName == '#text') {
+		var textNode = document.createTextNode(element.nodeValue);
+		return textNode;
+	} else {
+		var result = document.createElement(element.nodeName);
+		if(element.nodeName == 'input' || element.nodeName == 'textarea' || element.nodeName == 'select') {
+			result.setAttribute('disabled','true');
+		}
+		for(var i=0;i<element.attributes.length;i++) {
+			result.setAttribute(element.attributes[i].nodeName,element.attributes[i].nodeValue);
+		}
+		for(var j=0;j<element.childNodes.length;j++) {
+			result.appendChild(createTreeNode(element.childNodes[j]));
+		}
+		return result;
+	}
+}
 //---------------------------------------------
 function loadFormInfo() {
 	FormDocument.getFormDocumentInfo(placeFormInfo);
@@ -55,7 +90,6 @@ function saveHasPreview(parameter) {
 	}
 }
 function loadPageInfo(parameter) {
-	alert('Loading');
 	FormPage.getFormPageInfo(parameter, placePageInfo);
 }
 function placePageInfo(parameter) {
@@ -64,26 +98,55 @@ function placePageInfo(parameter) {
 		if(pageTitleTxt != null) {
 			pageTitleTxt.value = parameter.pageTitle;
 		}
-		STATIC_ACCORDEON.showTabByIndex(3, true);
+		STATIC_ACCORDEON.showTabByIndex(3, false);
 		$('workspaceform1:refreshViewPanel').click();
 	}
 }
 function setupPagesDragAndDrop(value1, value2) {
 	Position.includeScrollOffsets = true;
-	Sortable.create(value1,{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangePages,scroll:value1,constraint:false});
+	Sortable.create(value1,{dropOnEmpty:true,tag:'div',only:value2,ghosting:false,onUpdate:rearrangePages,scroll:value1,constraint:false});
 }
 function rearrangePages() {
 	alert('Dragging');
 	var componentIDs = Sortable.serialize('pagesPanel',{tag:'div',name:'id'});
 	var delimiter = '&id[]=';
 	var idPrefix = 'fbcomp_';
-	dwrmanager.updatePagesList(updatedPagesList,componentIDs,idPrefix,delimiter);
+	FormDocument.updatePagesList(nothing,componentIDs,idPrefix,delimiter);
 }
-function updatedPagesList() {}
 function savePageTitle(parameter) {
 	if(parameter != null) {
 		FormPage.setTitle(parameter, refreshPagesPanel);
 	}
+}
+function refreshPageTitle() {
+}
+function setupComponentDragAndDrop(value1,value2) {
+	Position.includeScrollOffsets = true;
+	Sortable.create(value1 + 'inner',{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangeComponents,scroll:value1,constraint:false});
+	Droppables.add(value1,{onDrop:handleComponentDrop});
+}
+function handleComponentDrop(element,container) {
+	var empty = $('emptyForm');
+	if(empty != null) {
+		if(empty.style) {
+			empty.style.display = 'none';
+		} else {
+			empty.display = 'none';
+		}
+	}
+	if(currentElement != null) {
+		$(value1 + 'inner').appendChild(currentElement);
+		currentElement = null;
+		Sortable.create(value1 + 'inner',{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangeComponents,scroll:value1,constraint:false});
+		Droppables.add(value1,{onDrop:handleComponentDrop});
+	}
+}
+function rearrangeComponents() {
+	var componentIDs = Sortable.serialize('dropBoxinner',{tag:'div',name:'id'});
+	var delimiter = '&id[]=';
+	var idPrefix = 'fbcomp_';
+	FormPage.updateComponentList(componentIDs,idPrefix,delimiter,nothing);
+	pressedDelete = true;
 }
 function loadComponentInfo(parameter) {
 	FormComponent.getFormComponentInfo(parameter, placeComponentInfo);
@@ -122,7 +185,7 @@ function placeComponentInfo(parameter) {
 		STATIC_ACCORDEON.showTabByIndex(1, true);
 	}
 }
-function saveLabel(parameter) {
+function saveComponentLabel(parameter) {
 	if(parameter != null) {
 		FormComponent.setLabel(parameter, refreshViewPanel);
 	}
@@ -207,20 +270,15 @@ function deletePage(parameter) {
 	FormPage.removePage(parameter,handleDeletedForm);
 }
 function handleDeletedForm(parameter) {
-	alert('WOW');
+	var container = $('pagesPanel');
+	if(container != null) {
+		var element = $(parameter);
+		if(element != null) {
+			container.removeChild(element.parentNode);
+		}
+	}
 	$('workspaceform1:refreshViewPanel').click();
-	$('workspaceform1:refreshPagesPanel').click();
 }
-/*function loadPage(parameter,placeLoadedPage) {
-	if(parameter != null) {
-		FormPage.
-	}
-	var temp2 = pressedDeletePage;
-	if(!temp2) {
-		dwrmanager.loadPage(id, refreshMainApplicationW)
-	}
-	pressedDeletePage = false;
-}*/
 //Handles the closing of the loading indicator
 function closeLoadingMessage() {
  	var elem = document.getElementById('busybuddy');

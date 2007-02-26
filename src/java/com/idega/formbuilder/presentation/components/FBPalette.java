@@ -43,6 +43,7 @@ public class FBPalette extends FBComponentBase {
 			formComponent.setName(current.getName());
 			formComponent.setType(current.getType());
 			formComponent.setIcon(current.getIconPath());
+			formComponent.setOnDrag("handleComponentDrag");
 			basic.add(formComponent);
 		}
 		
@@ -54,6 +55,7 @@ public class FBPalette extends FBComponentBase {
 			formComponent.setName(current.getName());
 			formComponent.setType(current.getType());
 			formComponent.setIcon(current.getIconPath());
+			formComponent.setOnDrag("handleButtonDrag");
 			buttons.add(formComponent);
 		}
 	}
@@ -195,6 +197,16 @@ public class FBPalette extends FBComponentBase {
 		
 		writer.write(getEmbededJavascript());
 	}
+	
+//	public String getEmbededJavascript() {
+//		StringBuilder result = new StringBuilder();
+//		result.append("<script language=\"JavaScript\">\n");
+//		result.append("dndMgr.registerDraggable(new Rico.Draggable('test-rico-dnd','" + type + "'));\n");
+////		result.append("new Draggable(\"" + type + "\", {tag:\"div\",starteffect:" + onDrag + ",revert:true});\n");
+//		result.append("</script>\n");
+//		return result.toString();
+//		
+//	}
 	
 	private String getEmbededJavascript() {
 		StringBuilder result = new StringBuilder();
