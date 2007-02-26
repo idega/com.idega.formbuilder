@@ -64,7 +64,7 @@ public class FBFormProperties extends FBComponentBase {
 		HtmlSelectBooleanCheckbox preview = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
 		preview.setId("previewScreen");
 		preview.setValueBinding("value", application.createValueBinding("#{formDocument.hasPreview}"));
-		preview.setOnclick("saveHasPreview(this.value)");
+		preview.setOnchange("saveHasPreview(this);");
 		
 		cell = row.createCell();
 		cell.add(preview);

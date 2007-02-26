@@ -100,6 +100,7 @@ public class FBPagesPanel extends FBComponentBase {
 		writer.endElement("DIV");
 		
 		writer.startElement("DIV", null);
+		writer.writeAttribute("id", getId() + "Special", null);
 		writer.writeAttribute("style", "display: block;", null);
 		
 		UIComponent component = getFacet(CONFIRMATION_PAGE);

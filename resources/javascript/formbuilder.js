@@ -76,17 +76,73 @@ function saveFormTitle(parameter) {
 }
 function saveThankYouTitle(parameter) {
 	if(parameter != null) {
-		FormDocument.setThankYouTitle(parameter, refreshViewPanel);
+		FormDocument.setThankYouTitle(parameter, placeThankYouTitle);
+	}
+}
+function placeThankYouTitle(parameter) {
+	var container = $('pagesPanelSpecial');
+	if(container != null) {
+		var node = $(parameter.pageId + '_P_page');
+		if(node != null) {
+			var parent = node.childNodes[1];
+			var textNode = parent.childNodes[0];
+			var newTextNode = document.createTextNode(parameter.pageTitle);
+			parent.replaceChild(newTextNode, textNode);
+		}
 	}
 }
 function saveThankYouText(parameter) {
 	if(parameter != null) {
-		FormDocument.setThankYouText(parameter, refreshViewPanel);
+		FormDocument.setThankYouText(parameter, nothing);
 	}
 }
 function saveHasPreview(parameter) {
 	if(parameter != null) {
-		FormDocument.setHasPreview(parameter, refreshViewPanel);
+		FormDocument.togglePreviewPage(parameter.checked, placePreviewPage);
+	}
+}
+function placePreviewPage(parameter) {
+	var container = $('pagesPanelSpecial');
+	if(container != null) {
+		if(parameter.pageTitle != null) {
+		
+			var page = document.createElement('div');
+			page.setAttribute('id', parameter.pageId + '_page');
+			page.setAttribute('class', 'formPageIcon');
+			page.setAttribute('styleClass', 'formPageIcon');
+			page.setAttribute('style', 'position: relative');
+			
+			var icon = document.createElement('img');
+			icon.setAttribute('id', parameter.pageId + '_pi');
+			icon.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/document-new.png';
+			icon.setAttribute('onclick', 'loadPageInfo(this.id)');
+			icon.style.display = 'block';
+			
+			var label = document.createElement('span');
+			label.style.display = 'block';
+			
+			var text = document.createTextNode(parameter.pageTitle);
+			
+			label.appendChild(text);
+			
+			var db = document.createElement('img');
+			db.id = parameter.pageId + '_db';
+			db.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png';
+			db.setAttribute('onclick', 'deletePage(this.id)');
+			db.setAttribute('class', 'speedButton');
+			
+			page.appendChild(icon);
+			page.appendChild(label);
+			page.appendChild(db);
+			
+			var child = container.childNodes[0];
+			//container.appendChild(page);
+			container.insertBefore(page, child);
+		} else {
+			var node = $(parameter.pageId + '_page');
+			container.removeChild(node);
+		}
+		//$('workspaceform1:refreshViewPanel').click();
 	}
 }
 function loadPageInfo(parameter) {
@@ -115,10 +171,11 @@ function rearrangePages() {
 }
 function savePageTitle(parameter) {
 	if(parameter != null) {
-		FormPage.setTitle(parameter, refreshPagesPanel);
+		FormPage.setTitle(parameter, refreshPageTitle);
 	}
 }
 function refreshPageTitle() {
+	alert('Not implemented');
 }
 function setupComponentDragAndDrop(value1,value2) {
 	Position.includeScrollOffsets = true;
@@ -135,10 +192,10 @@ function handleComponentDrop(element,container) {
 		}
 	}
 	if(currentElement != null) {
-		$(value1 + 'inner').appendChild(currentElement);
+		$(container.id + 'inner').appendChild(currentElement);
 		currentElement = null;
-		Sortable.create(value1 + 'inner',{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangeComponents,scroll:value1,constraint:false});
-		Droppables.add(value1,{onDrop:handleComponentDrop});
+		Sortable.create(container.id + 'inner',{dropOnEmpty:true,tag:'div',only:'formElement',onUpdate:rearrangeComponents,scroll:container.id,constraint:false});
+		Droppables.add(container.id,{onDrop:handleComponentDrop});
 	}
 }
 function rearrangeComponents() {
@@ -383,14 +440,6 @@ function gotComponentProperties() {
 	$('workspaceform1:getCompProperties').click();
 }
 //-------------------------------------------
-
-
-/*function switchDataSource() {
-	dwrmanager.switchDataSource(switchedDataSrc);
-}
-function switchedDataSrc() {
-	$('workspaceform1:srcSwitcher').click();
-}*/
 function decoy() {
 	closeLoadingMessage();
 }
@@ -413,7 +462,4 @@ var pressedDeletePage = false;
 /*Setup modal message windows functionality*/
 messageObj = new DHTML_modalMessage();
 messageObj.setShadowOffset(5);
-//$('panel1Content').style.overflow = 'none';
-//$('panel2Content').style.overflow = 'none';
-//$('panel3Content').style.overflow = 'none';
 		

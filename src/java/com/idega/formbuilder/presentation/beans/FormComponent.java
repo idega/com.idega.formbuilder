@@ -13,8 +13,10 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Element;
 
+import com.idega.formbuilder.business.form.ButtonArea;
 import com.idega.formbuilder.business.form.Component;
 import com.idega.formbuilder.business.form.ComponentSelect;
+import com.idega.formbuilder.business.form.ConstButtonType;
 import com.idega.formbuilder.business.form.Page;
 import com.idega.formbuilder.business.form.PropertiesComponent;
 import com.idega.formbuilder.business.form.PropertiesSelect;
@@ -145,6 +147,37 @@ public class FormComponent implements Serializable {
 		this.selectComponent = null;
 	}
 	
+	public void removeItem(int index) {
+		if(index < items.size()) {
+			items.remove(index);
+			setItems(items);
+		}
+	}
+	
+	public void saveLabel(int index, String value) {
+		if(index >= items.size()) {
+			ItemBean newItem = new ItemBean();
+			newItem.setLabel(value);
+			newItem.setValue(value);
+			items.add(newItem);
+		} else {
+			items.get(index).setLabel(value);
+			items.get(index).setValue(value);
+		}
+		setItems(items);
+	}
+	
+	public void saveValue(int index, String value) {
+		if(index >= items.size()) {
+			ItemBean newItem = new ItemBean();
+			newItem.setValue(value);
+			items.add(newItem);
+		} else {
+			items.get(index).setValue(value);
+		}
+		setItems(items);
+	}
+	
 	public FormComponentInfo getFormComponentInfo(String id) {
 		loadProperties(id);
 		FormComponentInfo info = new FormComponentInfo();
@@ -213,6 +246,17 @@ public class FormComponent implements Serializable {
 			}
 		}
 		return rootDivImported;
+	}
+	
+	public void addButton(String type) {
+		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
+		ButtonArea area = page.getButtonArea();
+		if(area != null) {
+			area.addButton(new ConstButtonType(type), null);
+		} else {
+			area = page.createButtonArea(null);
+			area.addButton(new ConstButtonType(type), null);
+		}
 	}
 	
 	public void removeComponent(String id) {

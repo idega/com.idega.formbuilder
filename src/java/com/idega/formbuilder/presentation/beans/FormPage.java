@@ -3,6 +3,7 @@ package com.idega.formbuilder.presentation.beans;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
+import java.util.StringTokenizer;
 
 import com.idega.formbuilder.business.form.Document;
 import com.idega.formbuilder.business.form.Page;
@@ -30,7 +31,18 @@ public class FormPage implements Serializable {
 		titleBean = null;
 	}
 	
-	public void removePage(String id) {
+	public void updateComponentList(String idSequence, String idPrefix, String delimiter) throws Exception {
+		List<String> ids = page.getContainedComponentsIdList();
+		ids.clear();
+		String test = "&" + idSequence;
+		StringTokenizer tokenizer = new StringTokenizer(test, delimiter);
+		while(tokenizer.hasMoreTokens()) {
+			ids.add(idPrefix + tokenizer.nextToken());
+		}
+		page.rearrangeComponents();
+	}
+	
+	public String removePage(String id) {
 		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
 		Document document = formDocument.getDocument();
 		if(document != null) {
@@ -39,7 +51,6 @@ public class FormPage implements Serializable {
 			String temp2 = temp.substring(0, k);
 			Page page = document.getPage(temp2);
 			if(page != null) {
-				FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
 				List<String> ids = formDocument.getCommonPagesIdList();
 				int index = ids.indexOf(temp2);
 				String newPageId = "";
@@ -48,21 +59,23 @@ public class FormPage implements Serializable {
 						newPageId = ids.get(1);
 						page.remove();
 						page = document.getPage(newPageId);
-						formPage.loadPageInfo(page);
+						loadPageInfo(page);
 					}
 				} else {
 					newPageId = ids.get(index - 1);
 					page.remove();
 					page = document.getPage(newPageId);
-					formPage.loadPageInfo(page);
+					loadPageInfo(page);
 				}
 				Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 				if(workspace != null) {
 					workspace.setView("design");
 					workspace.setRenderedMenu(true);
 				}
+				return id;
 			}
 		}
+		return "";
 	}
 	
 	public FormPageInfo getFormPageInfo(String id) {
@@ -84,43 +97,6 @@ public class FormPage implements Serializable {
 		}
 		return result;
 	}
-	
-//	public String getDeletePage() {
-//		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
-//		Document document = formDocument.getDocument();
-//		if(document != null) {
-//			String id = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("deletePageId");
-//			String temp = id.substring(id.indexOf(":") + 1);
-//			int k = temp.indexOf("_", temp.indexOf("_") + 1);
-//			String temp2 = temp.substring(0, k);
-//			Page page = document.getPage(temp2);
-//			if(page != null) {
-//				List<String> ids = getCommonPagesIdList(document);
-//				int index = ids.indexOf(temp2);
-//				String newPageId = "";
-//				if(index < 1) {
-//					newPageId = ids.get(1);
-//				} else {
-//					newPageId = ids.get(index - 1);
-//				}
-//				page.remove();
-//				page = document.getPage(newPageId);
-//				loadPageInfo(page);
-//				Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
-//				if(workspace != null) {
-//					workspace.setView("design");
-//					workspace.setSelectedMenu("3");
-//					workspace.setRenderedMenu(true);
-//				}
-//				try {
-//					document.save();
-//				} catch (Exception e) {
-//					// TODO: handle exception
-//				}
-//			}
-//		}
-//		return "";
-//	}
 	
 	public void clearPageInfo() {
 		properties = null;
@@ -144,12 +120,6 @@ public class FormPage implements Serializable {
 		return result;
 	}
 	
-//	public FormPageInfo getFormPageInfo() {
-//		FormPageInfo info = new FormPageInfo();
-//		info.setPageTitle(title);
-//		return info;
-//	}
-	
 	public String createNewPage() {
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 		if(workspace != null) {
@@ -157,8 +127,7 @@ public class FormPage implements Serializable {
 			if(document != null) {
 				Page page = document.addPage(null);
 				if(page != null) {
-					FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
-					formPage.setPage(page);
+					setPage(page);
 					FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
 					formComponent.clearFormComponentInfo();
 					workspace.setView("design");
@@ -196,6 +165,11 @@ public class FormPage implements Serializable {
 		if(properties != null) {
 			properties.setLabel(titleBean);
 		}
+	}
+	
+	public String saveTitle(String title) {
+		setTitle(title);
+		return title;
 	}
 
 	public LocalizedStringBean getTitleBean() {
