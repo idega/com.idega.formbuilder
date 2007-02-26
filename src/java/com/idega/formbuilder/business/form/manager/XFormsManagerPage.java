@@ -1,9 +1,5 @@
 package com.idega.formbuilder.business.form.manager;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,44 +15,6 @@ import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 public class XFormsManagerPage extends XFormsManagerContainer {
 
 	@Override
-	public List<String[]> getContainedComponentsTagNamesAndIds() {
-
-		if(xforms_component.getElement() == null)
-			throw new NullPointerException("Document container element not set");
-		
-		List<Element> components_elements = DOMUtil.getChildElements(xforms_component.getElement());
-		List<String[]> components_tag_names_and_ids = new ArrayList<String[]>();
-		
-		for (Iterator<Element> iter = components_elements.iterator(); iter.hasNext();) {
-			
-			Element component_element = iter.next();
-			String[] tag_name_and_id = new String[2];
-			tag_name_and_id[1] = component_element.getAttribute(FormManagerUtil.id_att);
-			
-			if(tag_name_and_id[1] == null || !tag_name_and_id[1].startsWith(FormManagerUtil.CTID))
-				continue;
-			
-			tag_name_and_id[0] = component_element.getTagName();
-			
-			if(tag_name_and_id[0].equals(FormManagerUtil.div_tag)) {
-				
-				String name_val = component_element.getAttribute(FormManagerUtil.name_att);
-				
-				if(name_val.equals(FormComponentFactory.button_area_type))
-					tag_name_and_id[0] = FormComponentFactory.button_area_type;
-			} else if(tag_name_and_id[0].equals(FormManagerUtil.case_tag)) {
-				
-				String name_val = component_element.getAttribute(FormManagerUtil.name_att);
-				
-				if(name_val != null && name_val.equals(FormComponentFactory.page_type_thx))
-					tag_name_and_id[0] = FormComponentFactory.page_type_thx;
-			}
-			components_tag_names_and_ids.add(tag_name_and_id);
-		}
-		return components_tag_names_and_ids;
-	}
-
-	@Override
 	public void loadXFormsComponentFromDocument(String component_id) {
 		super.loadXFormsComponentFromDocument(component_id);
 		checkForSpecialTypes();
@@ -69,8 +27,15 @@ public class XFormsManagerPage extends XFormsManagerContainer {
 		
 		super.addComponentToDocument();
 		Element group_element = xforms_component.getElement();
+		
 		String component_id = group_element.getAttribute(FormManagerUtil.id_att);
 		Element case_element = group_element.getOwnerDocument().createElement(FormManagerUtil.case_tag);
+		String name = group_element.getAttribute(FormManagerUtil.name_att);
+		if(name != null && !name.equals("")) {
+			
+			group_element.removeAttribute(FormManagerUtil.name_att);
+			case_element.setAttribute(FormManagerUtil.name_att, name);
+		}
 		group_element.getParentNode().replaceChild(case_element, group_element);
 		group_element.removeAttribute(FormManagerUtil.id_att);
 		case_element.setAttribute(FormManagerUtil.id_att, component_id);
@@ -82,7 +47,7 @@ public class XFormsManagerPage extends XFormsManagerContainer {
 	protected void checkForSpecialTypes() {
 		String component_name = xforms_component.getElement().getAttribute(FormManagerUtil.name_att);
 		if(component_name != null && 
-				component_name.equals(FormComponentFactory.page_type_confirmation) ||
+				component_name.equals(FormComponentFactory.confirmation_page_type) ||
 				component_name.equals(FormComponentFactory.page_type_thx))
 			component.setType(component_name);
 	}

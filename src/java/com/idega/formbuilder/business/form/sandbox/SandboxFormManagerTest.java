@@ -143,6 +143,12 @@ public class SandboxFormManagerTest {
 	        Component upload = p.addComponent(fm.getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.BASIC)).get(8), null);
 	        
 	        fm.getCurrentDocument().setFormSourceCode(fm.getCurrentDocument().getFormSourceCode());
+	        
+	        xx = fm.createForm("xx", null);
+	        Page cp = xx.addConfirmationPage(null);
+	        System.out.println("cp dzdz: "+xx.getConfirmationPage());
+	        xx = ((FormManager)fm).openForm(xx.getXformsDocument());
+	        System.out.println("cp dzdz2x: "+xx.getConfirmationPage());
 			
 			System.out.println("source code___________");
 			System.out.println(fm.getCurrentDocument().getFormSourceCode());

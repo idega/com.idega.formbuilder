@@ -46,8 +46,15 @@ public class XFormsManagerContainer extends XFormsManager {
 				
 				String name_val = component_element.getAttribute(FormManagerUtil.name_att);
 				
-				if(name_val != null && name_val.equals(FormComponentFactory.page_type_thx))
-					tag_name_and_id[0] = FormComponentFactory.page_type_thx;
+				if(name_val != null) {
+					
+					if(name_val.equals(FormComponentFactory.page_type_thx)) {
+						tag_name_and_id[0] = FormComponentFactory.page_type_thx;
+						
+					} else if(name_val.equals(FormComponentFactory.confirmation_page_type)) {
+						tag_name_and_id[0] = FormComponentFactory.confirmation_page_type;
+					}
+				}
 			}
 			components_tag_names_and_ids.add(tag_name_and_id);
 		}

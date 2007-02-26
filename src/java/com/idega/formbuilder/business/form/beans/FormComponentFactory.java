@@ -29,7 +29,6 @@ public class FormComponentFactory implements Singleton {
 	public static final String button_type = FormManagerUtil.trigger_tag;
 	public static final String button_area_type = "button_area";
 	public static final String fbcomp_button_area = "fbcomp_button_area";
-	public static final String page_type_confirmation = "confirmation_page";
 	public static final String page_type_thx = "thx_page";
 	
 	private FormComponentFactory() { 

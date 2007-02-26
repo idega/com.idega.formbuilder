@@ -146,7 +146,7 @@ public class FormComponentDocument extends FormComponentContainer implements com
 			
 			page.pagesSiblingsChanged();
 			
-			if(page.getType().equals(FormComponentFactory.page_type_confirmation))
+			if(page.getType().equals(FormComponentFactory.confirmation_page_type))
 				confirmation_page_id = page.getId();
 			else if(page.getType().equals(FormComponentFactory.page_type_thx))
 				thx_page_id = page.getId();
