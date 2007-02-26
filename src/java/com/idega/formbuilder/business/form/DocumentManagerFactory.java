@@ -9,7 +9,7 @@ import com.idega.formbuilder.business.form.manager.util.InitializationException;
 /**
  * This class is just to convenience getting new instance of FormManager.
  * 
- * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @author <a href="mailto:civilis@idega.com">Vytautas ÄŒivilis</a>
  * @version 1.0
  *
  */

@@ -16,7 +16,7 @@ import com.idega.slide.business.IWSlideServiceBean;
  * This is a class with various utility methods when working with JSF.
  * </p>
  *
- * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @author <a href="mailto:civilis@idega.com">Vytautas ÄŒivilis</a>
  * @version 1.0
  */
 public class FBUtil {

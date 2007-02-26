@@ -14,7 +14,7 @@ import com.idega.formbuilder.business.form.manager.generators.FormComponentsGene
 import com.idega.formbuilder.business.form.manager.generators.IComponentsGenerator;
 
 /**
- * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @author <a href="mailto:civilis@idega.com">Vytautas ÄŒivilis</a>
  * @version 1.0
  * 
  * TODO: implement this test, now we get different implementations, so he cannot understand

@@ -267,6 +267,12 @@ function saveFormDocument() {
 	showLoadingMessage('Saving');
 	FormDocument.save(doNothing);
 }
+function saveSourceCode(source_code) {
+	if(source_code != null) {
+		showLoadingMessage('Saving');
+		FormDocument.saveSrc(source_code, refreshViewPanel);
+	}
+}
 function doNothing(parameter) {
 	closeLoadingMessage();
 }
@@ -360,6 +366,7 @@ function createNewForm() {
 }
 function refreshViewPanel(parameter) {
 	$('workspaceform1:refreshViewPanel').click();
+	closeLoadingMessage();
 }
 function refreshPagesPanel(parameter) {
 	$('workspaceform1:refreshPagesPanel').click();

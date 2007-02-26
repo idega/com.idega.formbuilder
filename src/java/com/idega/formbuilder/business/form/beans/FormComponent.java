@@ -15,7 +15,7 @@ import com.idega.formbuilder.business.form.manager.XFormsManager;
 import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 
 /**
- * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @author <a href="mailto:civilis@idega.com">Vytautas ÄŒivilis</a>
  * @version 1.0
  * 
  */
@@ -286,5 +286,16 @@ public class FormComponent implements IFormComponent, IComponentPropertiesParent
 		default:
 			break;
 		}
+	}
+	
+	public void clear() {
+		component_after_me = null;
+		component_id = null;
+		type = null;
+		parent = null;
+		properties = null;
+		created = false;
+		load = false;
+		form_document = null;
 	}
 }

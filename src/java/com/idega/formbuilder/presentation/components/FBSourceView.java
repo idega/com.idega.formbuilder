@@ -5,8 +5,7 @@ import java.io.IOException;
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-
-import org.ajax4jsf.ajax.html.HtmlAjaxCommandButton;
+import org.apache.myfaces.component.html.ext.HtmlCommandButton;
 import org.apache.myfaces.component.html.ext.HtmlInputTextarea;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
@@ -41,9 +40,9 @@ public class FBSourceView extends FBComponentBase {
 		textarea.setWrap("false");
 		textarea.setId("sourceTextarea");
 		
-		HtmlAjaxCommandButton srcSubmit = (HtmlAjaxCommandButton) application.createComponent(HtmlAjaxCommandButton.COMPONENT_TYPE);
+		HtmlCommandButton srcSubmit = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
 		srcSubmit.setId("saveSrcBtn");
-		srcSubmit.setOnclick("$('workspaceform1:saveCode').click();");
+		srcSubmit.setOnclick("saveSourceCode($('"+textarea.getClientId(context)+"').value); return false;");
 		srcSubmit.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['change_source_code']}"));
 		
 		addChild(textarea, content);

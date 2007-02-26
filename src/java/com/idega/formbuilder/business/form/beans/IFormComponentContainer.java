@@ -5,7 +5,7 @@ import java.util.List;
 import com.idega.formbuilder.business.form.Component;
 
 /**
- * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @author <a href="mailto:civilis@idega.com">Vytautas ÄŒivilis</a>
  * @version 1.0
  * 
  */

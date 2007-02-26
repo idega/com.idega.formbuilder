@@ -145,12 +145,18 @@ public class FBAdvancedProperties extends FBComponentBase {
 				renderChild(context, ext);
 			}
 		} else {
-			body.setStyleAttribute("visibility: hidden");
+			
 			local.setStyle("visibility: hidden");
-			ext.setStyleAttribute("visibility: hidden");
-			renderChild(context, body);
+			
+			if(body != null) {
+				body.setStyleAttribute("visibility: hidden");
+				renderChild(context, body);
+			}
 			renderChild(context, local);
-			renderChild(context, ext);
+			if(ext != null) {
+				ext.setStyleAttribute("visibility: hidden");
+				renderChild(context, ext);
+			}
 		}
 	}
 	

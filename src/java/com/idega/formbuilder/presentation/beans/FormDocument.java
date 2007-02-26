@@ -45,7 +45,6 @@ public class FormDocument implements Serializable {
 	
 	private String formTitle;
 	private String formId;
-	private String sourceCode;
 	private boolean hasPreview;
 	private String thankYouTitle;
 	private String thankYouText;
@@ -461,12 +460,28 @@ public class FormDocument implements Serializable {
 		}
 	}
 	
-	public void saveSourceCode(ActionEvent ae) {
-		if(sourceCode == null)
+	public void saveSrc(String source_code) {
+		
+		if(source_code == null)
 			return;
 		try {
 			if(document != null) {
-				document.setFormSourceCode(sourceCode);
+				
+				document.setFormSourceCode(source_code);
+				
+				FormPage current_page = (FormPage) WFUtil.getBeanInstance("formPage");
+				
+				if(current_page != null) {
+					
+					current_page.clearPageInfo();
+					
+					if(!document.getContainedPagesIdList().isEmpty()) {
+					
+						current_page.loadPageInfo(document.getPage(document.getContainedPagesIdList().get(0)));
+						
+					} else
+						current_page.setPage(null);
+				}
 			}
 		} catch (Exception e) {
 			logger.error("Error when setting form source code", e);
@@ -548,7 +563,7 @@ public class FormDocument implements Serializable {
 			formTitleBean.setString(new Locale("en"), formTitle);
 		}
 	}
-
+	
 	public LocalizedStringBean getFormTitleBean() {
 		return formTitleBean;
 	}
@@ -569,10 +584,6 @@ public class FormDocument implements Serializable {
 			logger.error("Error when getting form source code", e);
 		}
 		return "";
-	}
-
-	public void setSourceCode(String sourceCode) {
-		this.sourceCode = sourceCode;
 	}
 
 	public boolean isHasPreview() {

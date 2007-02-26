@@ -4,6 +4,12 @@ import java.util.Locale;
 
 import org.w3c.dom.Document;
 
+/**
+ * 
+ * @author <a href="mailto:civilis@idega.com">Vytautas Čivilis</a>
+ * @version 1.0
+ *
+ */
 public interface IFormDocument {
 
 	public abstract void persist() throws Exception;

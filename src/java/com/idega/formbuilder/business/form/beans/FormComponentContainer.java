@@ -16,7 +16,7 @@ import com.idega.formbuilder.business.form.manager.IXFormsManager;
 import com.idega.formbuilder.business.form.manager.XFormsManagerContainer;
 
 /**
- * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @author <a href="mailto:civilis@idega.com">Vytautas ÄŒivilis</a>
  * @version 1.0
  * 
  */
@@ -187,5 +187,11 @@ public class FormComponentContainer extends FormComponent implements IFormCompon
 		
 		for (String components_id_list : getContainedComponentsIdList())
 			getContainedComponents().get(components_id_list).addToConfirmationPage();
+	}
+	
+	public void clear() {
+		contained_components_id_sequence.clear();
+		contained_components.clear();
+		super.clear();
 	}
 }

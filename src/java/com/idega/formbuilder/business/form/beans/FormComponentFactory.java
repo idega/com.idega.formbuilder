@@ -11,7 +11,7 @@ import com.idega.formbuilder.business.form.manager.util.FormManagerUtil;
 import com.idega.repository.data.Singleton;
 
 /**
- * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @author <a href="mailto:civilis@idega.com">Vytautas ÄŒivilis</a>
  * @version 1.0
  * 
  */

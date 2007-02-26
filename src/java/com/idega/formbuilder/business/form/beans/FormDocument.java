@@ -22,7 +22,7 @@ import com.idega.idegaweb.IWApplicationContext;
 import com.idega.idegaweb.IWMainApplication;
 
 /**
- * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @author <a href="mailto:civilis@idega.com">Vytautas ÄŒivilis</a>
  * @version 1.0
  * 
  */
@@ -174,11 +174,10 @@ public class FormDocument implements IFormDocument {
 		
 		DocumentBuilder builder = FormManagerUtil.getDocumentBuilder();
 		Document new_xforms_document = builder.parse(new StringInputStream(src_code));
-		
-		Element new_document_root = (Element)form_xforms.importNode(new_xforms_document.getDocumentElement(), true);
-		form_xforms.replaceChild(new_document_root, form_xforms.getDocumentElement());
-		
-		loadDocument(form_xforms, form_id);
+		String form_id = getFormId();
+		clear();
+		pages_container.setLoad(true);
+		loadDocument(new_xforms_document, form_id);
 	}
 	
 	public void setFormTitle(LocalizedStringBean form_name) {
@@ -231,5 +230,19 @@ public class FormDocument implements IFormDocument {
 		
 		if(id_number > last_component_id)
 			last_component_id = id_number;
+	}
+	
+	public void clear() {
+		
+		form_xforms = null;
+		form_id = null;
+		default_document_locale = null;
+		form_components = null;
+		components_xml = null;
+		last_component_id = 0;
+		document_changed = true;
+		pages_container.clear();
+		pages_container.setFormDocument(this);
+		pages_container.setFormDocument(pages_container);
 	}
 }

@@ -141,6 +141,8 @@ public class SandboxFormManagerTest {
 	        Page p = xx.getPage(xx.getContainedPagesIdList().get(0));
 	        System.out.println("____________________________ av " +fm.getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.BASIC)));
 	        Component upload = p.addComponent(fm.getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.BASIC)).get(8), null);
+	        
+	        fm.getCurrentDocument().setFormSourceCode(fm.getCurrentDocument().getFormSourceCode());
 			
 			System.out.println("source code___________");
 			System.out.println(fm.getCurrentDocument().getFormSourceCode());

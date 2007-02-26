@@ -16,7 +16,7 @@ import com.idega.formbuilder.business.form.manager.IXFormsManager;
 import com.idega.formbuilder.business.form.manager.XFormsManagerDocument;
 
 /**
- * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @author <a href="mailto:civilis@idega.com">Vytautas ÄŒivilis</a>
  * @version 1.0
  * 
  */
@@ -251,5 +251,13 @@ public class FormComponentDocument extends FormComponentContainer implements com
 	public Element getFormDataModelElement() {
 		
 		return ((XFormsManagerDocument)getXFormsManager()).getFormDataModelElement();
+	}
+	
+	public void clear() {
+		
+		confirmation_page_id = null;
+		thx_page_id = null;
+		registered_for_last_page_id_pages = null;
+		super.clear();
 	}
 }
