@@ -159,12 +159,16 @@ public class FormPage implements Serializable {
 		return title;
 	}
 
-	public void setTitle(String title) {
+	public FormPageInfo setTitle(String title) {
 		this.title = title;
 		titleBean.setString(new Locale("en"), title);
 		if(properties != null) {
 			properties.setLabel(titleBean);
 		}
+		FormPageInfo result = new FormPageInfo();
+		result.setPageTitle(title);
+		result.setPageId(id);
+		return result;
 	}
 	
 	public String saveTitle(String title) {

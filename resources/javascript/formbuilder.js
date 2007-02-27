@@ -171,11 +171,22 @@ function rearrangePages() {
 }
 function savePageTitle(parameter) {
 	if(parameter != null) {
-		FormPage.setTitle(parameter, refreshPageTitle);
+		FormPage.setTitle(parameter, placePageTitle);
 	}
 }
-function refreshPageTitle() {
-	alert('Not implemented');
+function placePageTitle(parameter) {
+	//alert('Not implemented');
+	var container = $('pagesPanel');
+	if(container != null) {
+		var node = $(parameter.pageId + '_P_page');
+		if(node != null) {
+			var parent = node.childNodes[1];
+			var textNode = parent.childNodes[0];
+			var newTextNode = document.createTextNode(parameter.pageTitle);
+			parent.replaceChild(newTextNode, textNode);
+			$('workspaceform1:refreshViewPanel').click();
+		}
+	}
 }
 function setupComponentDragAndDrop(value1,value2) {
 	Position.includeScrollOffsets = true;
@@ -330,7 +341,9 @@ function placeNewPage(parameter) {
 }
 function deletePage(parameter) {
 	//pressedDeletePage = true;
-	FormPage.removePage(parameter,handleDeletedForm);
+	if(parameter != null) {
+		FormPage.removePage(parameter,handleDeletedForm);
+	}
 }
 function handleDeletedForm(parameter) {
 	var container = $('pagesPanel');
@@ -361,12 +374,11 @@ function createNewForm() {
 	if(name != '') {
 		closeMessage();
 		showLoadingMessage("Creating");
-		dwrmanager.createNewFormDocument(name, refreshViewPanel);
+		FormDocument.createNewForm(refreshViewPanel);
 	}
 }
 function refreshViewPanel(parameter) {
 	$('workspaceform1:refreshViewPanel').click();
-	closeLoadingMessage();
 }
 function refreshPagesPanel(parameter) {
 	$('workspaceform1:refreshPagesPanel').click();
@@ -381,19 +393,12 @@ function refreshMainApplication() {
 //Handles the deletion of a form component created with JSF
 function removeComponent(parameter) {
 	alert(parameter);
-	/*pressedDelete = true;
-	var node = element.parentNode;
+	pressedDelete = true;
+	var node = parameter.parentNode;
 	if(node != null) {
 		FormComponent.removeComponent(node.id, removeComponentNode);
-	}*/
-}
-/*function deleteComponentJSF(element) {
-	pressedDelete = true;
-	var node = element.parentNode;
-	if(node) {
-		dwrmanager.removeComponent(node.id, removeComponent);
 	}
-}*/
+}
 function removeComponentNode(parameter) {
 	var node = $(parameter);
 	if(node) {
@@ -401,52 +406,6 @@ function removeComponentNode(parameter) {
 	}
 }
 //----------------------------------------
-
-//Handles the deletion of a form component created with Javascript
-function deleteComponentJS(element) {
-	showLoadingMessage('Removing');
-	dwrmanager.removeComponent(element.parentNode.id, deletedComponentJS);
-}
-function deletedComponentJS(id) {
-	if(id != '') {
-		var dropBox = $('dropBoxinner');
-		if(dropBox) {
-			var element = document.getElementById(id);
-			if(element) {
-				dropBox.removeChild(element);
-				if(dropBox.childNodes.length == 0) {
-					var empty = $('workspaceform1:emptyForm');
-					if(empty) {
-						if(empty.style) {
-							empty.style.display = 'block';
-						} else {
-							empty.display = 'block';
-						}
-					}
-				}
-			}
-		}
-	}
-	closeLoadingMessage();
-}
-//----------------------------------------
-
-
-
-//Handles the retrieval of component properties on mouse click
-function editProperties(id) {
-	var temp = pressedDelete;
-	if(!temp) {
-		showLoadingMessage('Fetching');
-		//var id = element.id;
-		dwrmanager.getComponentProperties(id, gotComponentProperties);
-	}
-	pressedDelete = false;
-}
-function gotComponentProperties() {
-	$('workspaceform1:getCompProperties').click();
-}
-//-------------------------------------------
 function decoy() {
 	closeLoadingMessage();
 }

@@ -259,7 +259,7 @@ public class FormComponent implements Serializable {
 		}
 	}
 	
-	public void removeComponent(String id) {
+	public String removeComponent(String id) {
 		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
 		if(page != null) {
 			Component component = page.getComponent(id);
@@ -267,6 +267,7 @@ public class FormComponent implements Serializable {
 				component.remove();
 			}
 		}
+		return id;
 	}
 
 	public void loadProperties(String id) {

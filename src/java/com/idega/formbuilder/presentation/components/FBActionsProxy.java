@@ -10,7 +10,6 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.event.ActionEvent;
 
 import org.ajax4jsf.ajax.UIAjaxCommandButton;
-import org.ajax4jsf.ajax.html.HtmlAjaxCommandButton;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
 
@@ -25,79 +24,6 @@ public class FBActionsProxy extends FBComponentBase {
 	
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
-		
-		HtmlAjaxCommandButton savePageTitleFunction = new HtmlAjaxCommandButton();
-//		savePageTitleFunction.setName("savePageTitle");
-		savePageTitleFunction.setId("savePageTitle");
-		savePageTitleFunction.setReRender("mainApplication");
-		savePageTitleFunction.setActionListener(application.createMethodBinding("#{formPage.savePageTitle}", new Class[]{ActionEvent.class}));
-		
-		HtmlAjaxCommandButton newPageFunction = new HtmlAjaxCommandButton();
-		newPageFunction.setId("createNewPage");
-		newPageFunction.setReRender("mainApplication");
-		newPageFunction.setActionListener(application.createMethodBinding("#{formPage.createNewPage}", new Class[]{ActionEvent.class}));
-		
-		HtmlAjaxCommandButton saveThankYouLabel = new HtmlAjaxCommandButton();
-		saveThankYouLabel.setId("saveThankYouTitle");
-		saveThankYouLabel.setReRender("mainApplication");
-		saveThankYouLabel.setActionListener(application.createMethodBinding("#{formDocument.saveThankYouLabel}", new Class[]{ActionEvent.class}));
-		
-		HtmlAjaxCommandButton saveThankYouText = new HtmlAjaxCommandButton();
-		saveThankYouText.setId("saveThankYouText");
-		saveThankYouText.setReRender("mainApplication");
-		saveThankYouText.setActionListener(application.createMethodBinding("#{formDocument.saveThankYouText}", new Class[]{ActionEvent.class}));
-		
-		HtmlAjaxCommandButton loadPageFunction = new HtmlAjaxCommandButton();
-		loadPageFunction.setId("loadPageFunction");
-		loadPageFunction.setReRender("mainApplication");
-		
-		HtmlAjaxCommandButton deletePageFunction = new HtmlAjaxCommandButton();
-		deletePageFunction.setId("deletePageFunction");
-		deletePageFunction.setReRender("mainApplication");
-		
-		HtmlAjaxCommandButton togglePreviewPage = new HtmlAjaxCommandButton();
-		togglePreviewPage.setId("togglePreviewPage");
-		togglePreviewPage.setReRender("mainApplication");
-		togglePreviewPage.setActionListener(application.createMethodBinding("#{formDocument.togglePreviewPage}", new Class[]{ActionEvent.class}));
-		
-		HtmlAjaxCommandButton createForm = (HtmlAjaxCommandButton) application.createComponent(HtmlAjaxCommandButton.COMPONENT_TYPE);
-		createForm.setId("refreshViewPanel");
-		createForm.setOncomplete("closeLoadingMessage()");
-		createForm.setAjaxSingle(true);
-		createForm.setReRender("ajaxViewPanel");
-		
-		HtmlAjaxCommandButton changeMenu = (HtmlAjaxCommandButton) application.createComponent(HtmlAjaxCommandButton.COMPONENT_TYPE);
-		changeMenu.setId("refreshPagesPanel");
-		changeMenu.setAjaxSingle(true);
-		changeMenu.setReRender("ajaxPagesPanel");
-		
-		UIAjaxCommandButton deleteComponent = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
-		deleteComponent.setId("removeCompProxy");
-		deleteComponent.setOncomplete("closeLoadingMessage()");
-		deleteComponent.setAjaxSingle(true);
-//		deleteComponent.setActionListener(application.createMethodBinding("#{createFormAction.processAction}", new Class[]{ActionEvent.class}));
-		deleteComponent.setReRender("mainApplication");
-		
-		UIAjaxCommandButton getProperties = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
-		getProperties.setId("getCompProperties");
-		getProperties.setOncomplete("closeLoadingMessage()");
-		getProperties.setAjaxSingle(true);
-//		deleteComponent.setActionListener(application.createMethodBinding("#{createFormAction.processAction}", new Class[]{ActionEvent.class}));
-		getProperties.setReRender("mainApplication");
-		
-		UIAjaxCommandButton saveFormTitle = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
-		saveFormTitle.setId("saveFormTitle");
-		saveFormTitle.setAjaxSingle(false);
-		saveFormTitle.setActionListener(application.createMethodBinding("#{formDocument.saveFormTitle}", new Class[]{ActionEvent.class}));
-		saveFormTitle.setReRender("mainApplication");
-		
-		UIAjaxCommandButton saveSubmitLabel = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
-		saveSubmitLabel.setId("saveSubmitLabel");
-		saveSubmitLabel.setAjaxSingle(false);
-		saveSubmitLabel.setActionListener(application.createMethodBinding("#{formDocument.saveSubmitLabel}", new Class[]{ActionEvent.class}));
-		saveSubmitLabel.setReRender("mainApplication");
-		
-		//Save basic component properties
 		
 		UIAjaxCommandButton saveCompLabel = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
 		saveCompLabel.setId("saveCompLabel");
@@ -116,8 +42,6 @@ public class FBActionsProxy extends FBComponentBase {
 		saveCompErr.setAjaxSingle(false);
 		saveCompErr.setActionListener(application.createMethodBinding("#{formComponent.saveComponentErrorMessage}", new Class[]{ActionEvent.class}));
 		saveCompErr.setReRender("mainApplication");
-		
-		//Save advanced component properties
 		
 		UIAjaxCommandButton saveEmptyLabel = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
 		saveEmptyLabel.setId("saveEmptyLabel");
@@ -142,27 +66,6 @@ public class FBActionsProxy extends FBComponentBase {
 		refreshView.setAjaxSingle(true);
 		refreshView.setReRender("workspaceform1:ajaxViewPanel");
 		
-//		UIAjaxCommandButton saveCode = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
-//		saveCode.setId("saveCode");
-//		saveCode.setAjaxSingle(false);
-//		saveCode.setActionListener(application.createMethodBinding("#{formDocument.saveSourceCode}", new Class[]{ActionEvent.class}));
-//		saveCode.setReRender("mainApplication");
-		
-		add(savePageTitleFunction);
-		add(newPageFunction);
-		add(loadPageFunction);
-		add(deletePageFunction);
-		add(togglePreviewPage);
-		
-		add(saveThankYouLabel);
-		add(saveThankYouText);
-		
-		add(createForm);
-		add(deleteComponent);
-		add(getProperties);
-		add(changeMenu);
-		add(saveFormTitle);
-		add(saveSubmitLabel);
 		add(saveCompLabel);
 		add(saveCompReq);
 		add(saveCompErr);
@@ -170,7 +73,6 @@ public class FBActionsProxy extends FBComponentBase {
 		add(saveExtSrc);
 		add(switcher);
 		add(refreshView);
-//		add(saveCode);
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
