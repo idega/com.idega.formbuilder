@@ -21,7 +21,6 @@
 												/dwr/interface/FormComponent.js,
 												/dwr/interface/FormDocument.js,
 												/dwr/interface/FormPage.js,
-												/dwr/interface/dwrmanager.js,
 												/dwr/engine.js">
 			<h:form id="workspaceform1">
 				<t:div id="mainApplication" forceId="true">
