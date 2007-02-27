@@ -1,10 +1,4 @@
 /*---Home page styles-----*/
-.hide {
-	visibility: hidden;
-}
-.show {
-	visibility: visible;
-}
 #fbHomePage {
 	margin: 15px;
 	background-color: White;
@@ -25,65 +19,12 @@
 }
 #fbHPRight {
 	position: absolute;
-	right: 50px;
+	right: 0px;
 	top: 100px;
-	
+	width: 150px;
 }
-#fbHPRight {
+#fbHPRight * {
 	display: inline;
-}
-.newFormComponentIdle {
-	width: 270px;
-	height: 34px;
-	background-color: LightGrey;
-	padding-top: 5px;
-}
-.visible {
-	display: inline;
-}
-.hidden {
-	display: none;
-}
-.newIcon {
-	margin-top: 5px;
-	margin-left: 15px;
-	margin-right: 20px;
-}
-.newBt {
-	margin-left: 20px;
-	position: relative;
-	bottom: 4px;
-	color: Black;
-	font-weight: Bold;
-	font-size: 12px;
-	cursor: pointer;
-}
-.newBt:hover {
-	color: Blue;
-}
-.cancelBt, .okBt {
-	margin-right: 5px;
-	margin-left: 5px;
-	position: relative;
-	bottom: 4px;
-	color: Black;
-	font-weight: Bold;
-	font-size: 12px;
-	cursor: pointer;
-}
-.cancelBt:hover {
-	color: Blue;
-}
-a.okBt:hover {
-	margin-right: 4px;
-	text-decoration: none;
-	font-weight: Bold;
-	color: Blue;
-}
-.formNameInput {
-	
-	position: relative;
-	bottom: 1px;
 }
 #fbHomePageWelcomeBlock {
 	padding-top: 20px;
@@ -117,12 +58,12 @@ a.okBt:hover {
 	border: 1px groove LightBlue;
 }
 .formListItem:hover .formListItemTop {
-	background-color: LightBlue;
+	background-color: Blue;
 	border-left: 1px solid White;
 	border-top: 1px solid White;
 }
 .formListItem:hover .formListItemBottom {
-	border-top: 1px groove LightBlue;
+	border-top: 1px groove Blue;
 }
 .formListItemTop {
 	padding-top: 0px;
@@ -139,36 +80,19 @@ a.okBt:hover {
 }
 .formListItemTopRight {
 	right: 50px;
-	height: 100%;
 	position: absolute;
-	padding-top: 7px;
 	display: inline;
 }
 .formListItemBottom {
 	height: 50%;
 	border-top: 1px groove LightGrey;
-	padding-top: 5px;
-	padding-bottom: 5px;
 }
 .bottomButton {
 	display: inline;
 	margin-left: 15px;
-	height: 20px;
-	padding-bottom: 5px;
-}
-.bottomButton img {
-	align: left;
-	margin-right: 5px;
-}
-.bottomButton a {
-	color: Blue;
-	font-weight: Bold;
-	position: relative;
-	bottom: 4px;
-}
-.bottomButton:hover a {
-	text-decoration: none;
-	color: Red;
+	margin-top: 5px;
+	height: 18px;
+	margin-bottom: 5px;
 }
 .formTitle {
 	font-size: 16px;
@@ -210,38 +134,31 @@ a.okBt:hover {
 	}
 /*---Page layout styles---*/
 #mainApplication {
-	/*width: 100%;
-	height: 100%;*/
-	margin-left: 25px;
-	margin-right: 25px;
-	margin-top: 15px;
-	margin-bottom: 20px;
-	border: 2px groove Black;
-}
-#mainWorkspace {
-	border: 2px groove Red;
+	width: 100%;
+	height: 600px;
 }
 #optionsPanel {
-	height: 100%;
-	border: 1px groove Black;
+	position: relative;
+	display: block;
+	top: 5px;
+	left: 10px;
+	width: 320px;
+	bottom: 5px;
+	float: left;
+	height: 600px;
+	z-index: 1;
+	background: LightGrey;
 }
 #viewPanel {
-	position: absolute;
-	top: 85px;
-	left: 332px;
-	right: 150px;
-	bottom: 75px;
-	border: 1px groove Blue;
-}
-.pagesPanel {
-	position: absolute;
-	top: 85px;
-	right: 29px;
-	bottom: 75px;
-	display: inline;
-	background-color: LightGrey;
-	width: 120px;
-	min-height: 500px;
+	position: relative;
+	display: block;
+	top: 9px;
+	right: 0px;
+	bottom: 5px;
+	height: 600px;
+	float: right;
+	width: 930px;
+	border: 0px solid Black;
 }
 .formPageIconSpecial {
 	cursor: pointer;
@@ -272,18 +189,18 @@ a.okBt:hover {
 	display: inline;
 	cursor: pointer;
 }
-/*#pagesPanel {
+.pagesPanel {
 	top: 5px;
 	float: right;
 	background-color: LightGrey;
 	width: 110px;
 	min-height: 500px;
 	border: 2px solid Black;
-}*/
+}
 .pagesPanelBottom {
 	
 }
-.accordionTabTitleBar {
+body#formbuilder .accordionTabTitleBar {
 	padding-top: 5px;
 	height: 25px;
 }
@@ -291,7 +208,6 @@ a.okBt:hover {
 	font-size: 14px;
 	font-weight: bold;
 	margin-left: 10px;
-	cursor: pointer;
 }
 	#mainPalette{
 		background-color: #FFF;	/* Background color of main menu */
