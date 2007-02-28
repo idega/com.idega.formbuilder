@@ -126,7 +126,11 @@ public class FormDocument implements IFormDocument {
 	protected void loadDocument(Document xforms_doc, String form_id) throws Exception {
 		
 		this.form_xforms = xforms_doc;
-		this.form_id = form_id;
+		
+		if(form_id != null)
+			this.form_id = form_id;
+		else
+			this.form_id = FormManagerUtil.getFormId(xforms_doc);
 		
 		pages_container.setContainerElement(FormManagerUtil.getComponentsContainerElement(xforms_doc));
 		pages_container.loadContainerComponents();
@@ -151,7 +155,7 @@ public class FormDocument implements IFormDocument {
 		FormDocument form_doc = new FormDocument();
 		form_doc.pages_container.setLoad(true);
 		
-		form_doc.loadDocument(xforms_doc, "test1");
+		form_doc.loadDocument(xforms_doc, null);
 		
 		return form_doc;
 	}
@@ -174,10 +178,9 @@ public class FormDocument implements IFormDocument {
 		
 		DocumentBuilder builder = FormManagerUtil.getDocumentBuilder();
 		Document new_xforms_document = builder.parse(new StringInputStream(src_code));
-		String form_id = getFormId();
 		clear();
 		pages_container.setLoad(true);
-		loadDocument(new_xforms_document, form_id);
+		loadDocument(new_xforms_document, null);
 	}
 	
 	public void setFormTitle(LocalizedStringBean form_name) {

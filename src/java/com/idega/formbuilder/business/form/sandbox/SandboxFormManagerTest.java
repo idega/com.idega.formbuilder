@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -149,7 +151,91 @@ public class SandboxFormManagerTest {
 	        System.out.println("cp dzdz: "+xx.getConfirmationPage());
 	        xx = ((FormManager)fm).openForm(xx.getXformsDocument());
 	        System.out.println("cp dzdz2x: "+xx.getConfirmationPage());
-			
+	        
+	        p = xx.getPage(xx.getContainedPagesIdList().get(0));
+	        System.out.println("____________________________ av " +fm.getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.BASIC)));
+	        Component select = p.addComponent(fm.getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.BASIC)).get(3), null);
+	        System.out.println("sel: "+select.getHtmlRepresentation(new Locale("en")));
+	        DOMUtil.prettyPrintDOM(select.getHtmlRepresentation(new Locale("en")));
+	        select = p.addComponent(fm.getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.BASIC)).get(4), null);
+	        System.out.println("sel: "+select.getHtmlRepresentation(new Locale("en")));
+	        DOMUtil.prettyPrintDOM(select.getHtmlRepresentation(new Locale("en")));
+	        select = p.addComponent(fm.getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.BASIC)).get(5), null);
+	        System.out.println("sel: "+select.getHtmlRepresentation(new Locale("en")));
+	        DOMUtil.prettyPrintDOM(select.getHtmlRepresentation(new Locale("en")));
+	        select = p.addComponent(fm.getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.BASIC)).get(6), null);
+	        System.out.println("sel: "+select.getHtmlRepresentation(new Locale("en")));
+	        DOMUtil.prettyPrintDOM(select.getHtmlRepresentation(new Locale("en")));
+	        
+	        xx = ((FormManager)fm).openForm(xx.getXformsDocument());
+	        p = xx.getPage(xx.getContainedPagesIdList().get(0));
+	        
+	        for (String contained : p.getContainedComponentsIdList()) {
+				
+	        	Component coco = p.getComponent(contained);
+	        	
+	        	if(!(coco instanceof Container)) {
+	        		System.out.println("selxsxs: "+coco.getHtmlRepresentation(new Locale("en")));
+	    	        DOMUtil.prettyPrintDOM(coco.getHtmlRepresentation(new Locale("en")));
+	    	        LocalizedStringBean lab = coco.getProperties().getLabel();
+	    	        lab.setString(new Locale("en"), "fuckinfuck");
+	    	        coco.getProperties().setLabel(lab);
+	    	        System.out.println("label: "+coco.getProperties().getLabel());
+	        	}
+			}
+	        
+	        List<String> new_order = new ArrayList<String>();
+	        List<String> old_order = p.getContainedComponentsIdList();
+	        
+	        int i = 0;
+	        
+	        for (String contained : old_order) {
+				
+	        	if(i != 0) {
+	        		new_order.add(p.getContainedComponentsIdList().get(i));
+	        	}
+	        	i++;
+			}
+	        new_order.add(p.getContainedComponentsIdList().get(0));
+	        
+	        p.rearrangeComponents();
+	        
+	        for (String contained : p.getContainedComponentsIdList()) {
+				
+	        	Component coco = p.getComponent(contained);
+	        	
+	        	if(!(coco instanceof Container)) {
+	        		System.out.println("selxsxs: "+coco.getHtmlRepresentation(new Locale("en")));
+	    	        DOMUtil.prettyPrintDOM(coco.getHtmlRepresentation(new Locale("en")));
+	    	        LocalizedStringBean lab = coco.getProperties().getLabel();
+	    	        lab.setString(new Locale("en"), "fuckinfuck");
+	    	        coco.getProperties().setLabel(lab);
+	    	        System.out.println("label: "+coco.getProperties().getLabel());
+	        	}
+			}
+	        
+	        stream = new FileInputStream(new File("/Users/civilis/tmp/badform3.xml"));
+	        doc = FormManagerUtil.getDocumentBuilder().parse(stream);
+	        stream.close();
+	        xx = ((FormManager)fm).openForm(doc);
+	        
+	        p = xx.getPage(xx.getContainedPagesIdList().get(0));
+	        
+	        for (String contained : p.getContainedComponentsIdList()) {
+				
+	        	Component coco = p.getComponent(contained);
+	        	
+	        	if(!(coco instanceof Container)) {
+	        		System.out.println("selxsxs: "+coco.getHtmlRepresentation(new Locale("en")));
+	    	        DOMUtil.prettyPrintDOM(coco.getHtmlRepresentation(new Locale("en")));
+	    	        LocalizedStringBean lab = coco.getProperties().getLabel();
+	    	        lab.setString(new Locale("en"), "fuckinfuck");
+	    	        coco.getProperties().setLabel(lab);
+	    	        System.out.println("label: "+coco.getProperties().getLabel());
+	        	}
+			}
+	        
+	        
 			System.out.println("source code___________");
 			System.out.println(fm.getCurrentDocument().getFormSourceCode());
 			

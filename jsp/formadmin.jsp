@@ -8,7 +8,7 @@
 	<f:view>
 		<ws:page id="formbuilder" showFunctionMenu="false">
 			<h:form id="workspaceform1">
-				<fa:FormAdmin rendered="true" />
+				<fa:SDataViewer rendered="true" />
 			</h:form>
 		</ws:page>
 	</f:view>

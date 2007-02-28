@@ -8,7 +8,7 @@ import com.idega.webface.WFToolbar;
  * Native method getWFRendererType changed to more generic getToolbarRendererType<br />
  * </p>
  * Copyright (C) idega software 2006
- * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @author <a href="mailto:civilis@idega.com">Vytautas ÄŒivilis</a>
  * @version 1.0
  */
 public class FBToolbar extends WFToolbar {

@@ -51,7 +51,7 @@ public class XFormsManagerSelect extends XFormsManager {
 			xforms_component = (XFormsComponentSelectDataBean)cache_manager.getCachedXformsComponent(component_type); 
 
 			if(xforms_component != null) {
-				this.xforms_component = xforms_component;
+				this.xforms_component = (XFormsComponentSelectDataBean)xforms_component.clone();
 				return;
 			}
 			

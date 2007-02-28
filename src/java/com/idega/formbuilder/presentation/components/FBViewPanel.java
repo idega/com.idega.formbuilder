@@ -94,7 +94,9 @@ public class FBViewPanel extends FBComponentBase {
 		
 		HtmlAjaxCommandLink view2 = (HtmlAjaxCommandLink) application.createComponent(HtmlAjaxCommandLink.COMPONENT_TYPE);
 		view2.setOnclick("showLoadingMessage('Switching')");
-		view2.setOncomplete("closeLoadingMessage()");
+		view2.setOncomplete("closeLoadingMessage(); window.location.replace(unescape(window.location.pathname+"+
+				"'formbuilder'" // tmp hardcode while alex fixes url prob
+				+"));");
 		view2.setId("previewViewTab");
 		view2.setActionListener(application.createMethodBinding("#{workspace.changeView}", new Class[]{ActionEvent.class}));
 		view2.setAjaxSingle(true);

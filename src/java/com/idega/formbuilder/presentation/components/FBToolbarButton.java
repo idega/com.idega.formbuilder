@@ -11,7 +11,7 @@ import com.idega.webface.WFToolbarButton;
  * Button component used in FBToolbar. 
  * 
  * Copyright (C) idega software 2006
- * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @author <a href="mailto:civilis@idega.com">Vytautas ÄŒivilis</a>
  * @version 1.0
  */
 public class FBToolbarButton extends WFToolbarButton {

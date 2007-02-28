@@ -682,4 +682,10 @@ public class FormManagerUtil {
 		
 		return inst_el;
 	}
+	
+	public static String getFormId(Document xforms_doc) {
+		
+		Element model = (Element)xforms_doc.getElementsByTagName(model_tag).item(0);
+		return model.getAttribute(id_att);
+	}
 }
