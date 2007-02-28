@@ -9,7 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.idega.block.form.presentation.FormViewer;
-import com.idega.formbuilder.business.form.Document;
+import com.idega.documentmanager.business.form.Document;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.view.ActionManager;
 

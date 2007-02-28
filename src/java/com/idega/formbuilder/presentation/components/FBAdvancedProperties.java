@@ -10,7 +10,7 @@ import javax.faces.context.FacesContext;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
 import org.apache.myfaces.component.html.ext.HtmlSelectOneRadio;
 
-import com.idega.formbuilder.business.form.PropertiesSelect;
+import com.idega.documentmanager.business.form.PropertiesSelect;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormComponent;
 import com.idega.presentation.Table2;

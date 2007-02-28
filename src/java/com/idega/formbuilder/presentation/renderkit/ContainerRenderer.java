@@ -8,7 +8,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
+import com.idega.documentmanager.business.form.beans.LocalizedStringBean;
 import com.idega.webface.WFContainer;
 
 /**
@@ -18,7 +18,7 @@ import com.idega.webface.WFContainer;
  * Processes the same stuff as ContainerRenderer from webface plus id attribute
  * </p>
  * 
- * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @author <a href="mailto:civilis@idega.com">Vytautas ÄŒivilis</a>
  * @version 1.0
  */
 public class ContainerRenderer extends com.idega.webface.renderkit.ContainerRenderer {

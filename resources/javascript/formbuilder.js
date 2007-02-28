@@ -534,6 +534,7 @@ function createNewForm() {
 	}
 }
 function refreshViewPanel(parameter) {
+	closeLoadingMessage();
 	$('workspaceform1:refreshViewPanel').click();
 }
 function refreshPagesPanel(parameter) {

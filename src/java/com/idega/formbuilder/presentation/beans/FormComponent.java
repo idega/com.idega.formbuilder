@@ -13,17 +13,17 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Element;
 
-import com.idega.formbuilder.business.form.Button;
-import com.idega.formbuilder.business.form.ButtonArea;
-import com.idega.formbuilder.business.form.Component;
-import com.idega.formbuilder.business.form.ComponentSelect;
-import com.idega.formbuilder.business.form.ConstButtonType;
-import com.idega.formbuilder.business.form.Page;
-import com.idega.formbuilder.business.form.PropertiesComponent;
-import com.idega.formbuilder.business.form.PropertiesSelect;
-import com.idega.formbuilder.business.form.beans.ILocalizedItemset;
-import com.idega.formbuilder.business.form.beans.ItemBean;
-import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
+import com.idega.documentmanager.business.form.Button;
+import com.idega.documentmanager.business.form.ButtonArea;
+import com.idega.documentmanager.business.form.Component;
+import com.idega.documentmanager.business.form.ComponentSelect;
+import com.idega.documentmanager.business.form.ConstButtonType;
+import com.idega.documentmanager.business.form.Page;
+import com.idega.documentmanager.business.form.PropertiesComponent;
+import com.idega.documentmanager.business.form.PropertiesSelect;
+import com.idega.documentmanager.business.form.beans.ILocalizedItemset;
+import com.idega.documentmanager.business.form.beans.ItemBean;
+import com.idega.documentmanager.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.presentation.components.FBDesignView;
 import com.idega.formbuilder.presentation.converters.FormButtonInfo;
 import com.idega.formbuilder.presentation.converters.FormComponentInfo;

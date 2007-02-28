@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
-import com.idega.formbuilder.business.form.Document;
-import com.idega.formbuilder.business.form.Page;
-import com.idega.formbuilder.business.form.PropertiesPage;
-import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
+import com.idega.documentmanager.business.form.Document;
+import com.idega.documentmanager.business.form.Page;
+import com.idega.documentmanager.business.form.PropertiesPage;
+import com.idega.documentmanager.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.presentation.converters.FormPageInfo;
 import com.idega.webface.WFUtil;
 

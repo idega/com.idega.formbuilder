@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.faces.model.SelectItem;
 
-import com.idega.formbuilder.business.form.PropertiesSelect;
+import com.idega.documentmanager.business.form.PropertiesSelect;
 
 public class DataSourceList implements Serializable {
 	

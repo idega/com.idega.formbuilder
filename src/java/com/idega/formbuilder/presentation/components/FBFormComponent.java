@@ -11,8 +11,8 @@ import javax.faces.context.ResponseWriter;
 import org.apache.myfaces.component.html.ext.HtmlGraphicImage;
 import org.w3c.dom.Element;
 
-import com.idega.formbuilder.business.form.Component;
-import com.idega.formbuilder.business.form.Page;
+import com.idega.documentmanager.business.form.Component;
+import com.idega.documentmanager.business.form.Page;
 import com.idega.formbuilder.dom.DOMTransformer;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormPage;

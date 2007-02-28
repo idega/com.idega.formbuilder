@@ -14,10 +14,10 @@ import javax.faces.el.ValueBinding;
 import org.apache.myfaces.component.html.ext.HtmlOutputLabel;
 import org.apache.myfaces.custom.htmlTag.HtmlTag;
 
-import com.idega.formbuilder.business.form.ButtonArea;
-import com.idega.formbuilder.business.form.Component;
-import com.idega.formbuilder.business.form.Container;
-import com.idega.formbuilder.business.form.Page;
+import com.idega.documentmanager.business.form.ButtonArea;
+import com.idega.documentmanager.business.form.Component;
+import com.idega.documentmanager.business.form.Container;
+import com.idega.documentmanager.business.form.Page;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormPage;
 import com.idega.webface.WFDivision;

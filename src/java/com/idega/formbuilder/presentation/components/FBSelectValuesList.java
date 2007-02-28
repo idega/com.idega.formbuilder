@@ -13,7 +13,7 @@ import javax.faces.el.ValueBinding;
 
 import org.apache.myfaces.component.html.ext.HtmlInputText;
 
-import com.idega.formbuilder.business.form.beans.ItemBean;
+import com.idega.documentmanager.business.form.beans.ItemBean;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.webface.WFDivision;
 

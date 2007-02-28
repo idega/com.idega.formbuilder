@@ -10,8 +10,8 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-import com.idega.formbuilder.business.form.Button;
-import com.idega.formbuilder.business.form.ButtonArea;
+import com.idega.documentmanager.business.form.Button;
+import com.idega.documentmanager.business.form.ButtonArea;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormPage;
 import com.idega.webface.WFUtil;

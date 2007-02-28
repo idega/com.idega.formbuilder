@@ -10,9 +10,9 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-import com.idega.formbuilder.business.form.Document;
-import com.idega.formbuilder.business.form.Page;
-import com.idega.formbuilder.business.form.PropertiesPage;
+import com.idega.documentmanager.business.form.Document;
+import com.idega.documentmanager.business.form.Page;
+import com.idega.documentmanager.business.form.PropertiesPage;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.presentation.beans.Workspace;

@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.idega.formbuilder.business.form.ConstComponentCategory;
-import com.idega.formbuilder.business.form.DocumentManager;
+import com.idega.documentmanager.business.form.ConstComponentCategory;
+import com.idega.documentmanager.business.form.DocumentManager;
 import com.idega.formbuilder.view.ActionManager;
 
 public class Palette implements Serializable {

@@ -19,15 +19,15 @@ import com.idega.block.form.business.FormsService;
 import com.idega.block.formadmin.presentation.actions.GetAvailableFormsAction;
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
-import com.idega.formbuilder.business.form.Button;
-import com.idega.formbuilder.business.form.ButtonArea;
-import com.idega.formbuilder.business.form.Component;
-import com.idega.formbuilder.business.form.Document;
-import com.idega.formbuilder.business.form.DocumentManager;
-import com.idega.formbuilder.business.form.Page;
-import com.idega.formbuilder.business.form.PageThankYou;
-import com.idega.formbuilder.business.form.PropertiesThankYouPage;
-import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
+import com.idega.documentmanager.business.form.Button;
+import com.idega.documentmanager.business.form.ButtonArea;
+import com.idega.documentmanager.business.form.Component;
+import com.idega.documentmanager.business.form.Document;
+import com.idega.documentmanager.business.form.DocumentManager;
+import com.idega.documentmanager.business.form.Page;
+import com.idega.documentmanager.business.form.PageThankYou;
+import com.idega.documentmanager.business.form.PropertiesThankYouPage;
+import com.idega.documentmanager.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.presentation.components.FBFormListItem;
 import com.idega.formbuilder.presentation.converters.FormDocumentInfo;
 import com.idega.formbuilder.presentation.converters.FormPageInfo;
@@ -654,5 +654,4 @@ public class FormDocument implements Serializable {
 		}
 		return forms_service;
 	}
-
 }
