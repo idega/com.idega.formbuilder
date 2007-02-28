@@ -98,6 +98,21 @@ public class FormPage implements Serializable {
 		return result;
 	}
 	
+	public FormPageInfo getConfirmationPageInfo() {
+		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
+		Document document = formDocument.getDocument();
+		if(document != null) {
+			Page page = document.getConfirmationPage();
+			if(page != null) {
+				FormPageInfo result = new FormPageInfo();
+				result.setPageTitle(page.getProperties().getLabel().getString(new Locale("en")));
+				result.setPageId(page.getId());
+				return result;
+			}
+		}
+		return null;
+	}
+	
 	public void clearPageInfo() {
 		properties = null;
 		page = null;

@@ -81,16 +81,17 @@ public class FBFormPage extends FBComponentBase {
 		pageIconLabel.setValue(label);
 		pageIconLabel.setStyle("display: block");
 		
-		HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
-		deleteButton.setId(getId() + "_db");
-		deleteButton.setValue(DELETE_ICON_IMG);
-		deleteButton.setOnclick(onDelete);
-		deleteButton.setStyleClass("speedButton");
-		
 		addChild(pageIconImg, switcher);
 		addChild(pageIconLabel, switcher);
-		addChild(deleteButton, switcher);
 		
+		if(onDelete != null && !onDelete.equals("")) {
+			HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+			deleteButton.setId(getId() + "_db");
+			deleteButton.setValue(DELETE_ICON_IMG);
+			deleteButton.setOnclick(onDelete);
+			deleteButton.setStyleClass("speedButton");
+			addChild(deleteButton, switcher);
+		}
 		addFacet(CONTENT_DIV_FACET, switcher);
 	}
 	

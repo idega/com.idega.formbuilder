@@ -48,6 +48,7 @@ public static final String COMPONENT_TYPE = "PageProperties";
 		HtmlInputText title = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		title.setId("pageTitle");
 		title.setValueBinding("value", application.createValueBinding("#{formPage.title}"));
+//		title.setOnkeypress("alert('blaaaa');");
 		title.setOnblur("savePageTitle(this.value)");
 		
 		cell = row.createCell();

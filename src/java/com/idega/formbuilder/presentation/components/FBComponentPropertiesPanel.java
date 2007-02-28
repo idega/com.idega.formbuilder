@@ -4,16 +4,30 @@ import java.io.IOException;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UISelectItems;
 import javax.faces.context.FacesContext;
 
+import org.apache.myfaces.component.html.ext.HtmlInputText;
+import org.apache.myfaces.component.html.ext.HtmlOutputText;
+import org.apache.myfaces.component.html.ext.HtmlSelectBooleanCheckbox;
+import org.apache.myfaces.component.html.ext.HtmlSelectOneRadio;
+
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.presentation.Table2;
+import com.idega.presentation.TableCell2;
+import com.idega.presentation.TableRow;
+import com.idega.presentation.TableRowGroup;
 
 public class FBComponentPropertiesPanel extends FBComponentBase {
 
 	public static final String COMPONENT_TYPE = "ComponentPropertiesPanel";
 	
-	private static final String BASIC_CONTENT_FACET = "BASIC_CONTENT_FACET";
-	private static final String ADV_CONTENT_FACET = "ADV_CONTENT_FACET";
+	private static final String BUTTON_PROPERTIES_FACET = "BUTTON_PROPERTIES_FACET";
+	private static final String BASIC_PROPERTIES_FACET = "BASIC_PROPERTIES_FACET";
+	private static final String ADVANCED_PROPERTIES_FACET = "ADVANCED_PROPERTIES_FACET";
+	private static final String EXTERNAL_PROPERTIES_FACET = "EXTERNAL_PROPERTIES_FACET";
+	private static final String AUTOFILL_PROPERTIES_FACET = "AUTOFILL_PROPERTIES_FACET";
+	private static final String LOCAL_PROPERTIES_FACET = "LOCAL_PROPERTIES_FACET";
 	
 	public FBComponentPropertiesPanel() {
 		super();
@@ -24,24 +38,247 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		Application application = context.getApplication();
 		getChildren().clear();
 		
-		FBBasicProperties simpleProperties = (FBBasicProperties) application.createComponent(FBBasicProperties.COMPONENT_TYPE);
-		simpleProperties.setId("simplePropertiesPanel");
+//		Label property for all components and buttons
 		
-		FBAdvancedProperties advancedProperties = (FBAdvancedProperties) application.createComponent(FBAdvancedProperties.COMPONENT_TYPE);
-		advancedProperties.setId("advancedPropertiesPanel");
-		advancedProperties.setStyleClass("advancedPropsPanelHidden");
+		Table2 table = new Table2();
+		table.setId("labelPropertiesPanel");
+		table.setStyleAttribute("width: 250px;");
+		table.setCellpadding(0);
+		TableRowGroup group = table.createBodyRowGroup();
+		TableRow row = null;
+		TableCell2 cell = null;
 		
-		addFacet(BASIC_CONTENT_FACET, simpleProperties);
-		addFacet(ADV_CONTENT_FACET, advancedProperties);
+		HtmlOutputText titleLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		titleLabel.setValue("Field name");
+		
+		row = group.createRow();
+		cell = row.createCell();
+		cell.setWidth("100");
+		cell.add(titleLabel);
+		
+		HtmlInputText title = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+		title.setId("propertyTitle");
+		title.setValueBinding("value", application.createValueBinding("#{formComponent.label}"));
+		title.setOnblur("saveComponentLabel(this.value);");
+		
+		cell = row.createCell();
+		cell.add(title);
+		
+		addFacet(BUTTON_PROPERTIES_FACET, table);
+		
+//		Basic propertis for all components
+		
+		table = new Table2();
+		table.setId("basicPropertiesPanel");
+		table.setStyleAttribute("width: 250px;");
+		table.setCellpadding(0);
+		group = table.createBodyRowGroup();
+		row = null;
+		cell = null;
+		
+		HtmlOutputText requiredLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		requiredLabel.setValue("Required field");
+		
+		row = group.createRow();
+		cell = row.createCell();
+		cell.setWidth("100");
+		cell.add(requiredLabel);
+		
+		HtmlSelectBooleanCheckbox required = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
+		required.setId("propertyRequired");
+		required.setValueBinding("value", application.createValueBinding("#{formComponent.required}"));
+		required.setOnclick("saveRequired(this.checked);");
+		
+		cell = row.createCell();
+		cell.add(required);
+		
+		HtmlOutputText errorMsgLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		errorMsgLabel.setValue("Error message");
+		
+		row = group.createRow();
+		cell = row.createCell();
+		cell.add(errorMsgLabel);
+		
+		HtmlInputText errorMsg = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+		errorMsg.setId("propertyErrorMessage");
+		errorMsg.setValueBinding("value", application.createValueBinding("#{formComponent.errorMessage}"));
+		errorMsg.setOnblur("saveErrorMessage(this.value)");
+		
+		cell = row.createCell();
+		cell.add(errorMsg);
+		
+		HtmlOutputText helpMsgLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		helpMsgLabel.setValue("Help text");
+		
+		row = group.createRow();
+		cell = row.createCell();
+		cell.add(helpMsgLabel);
+		
+		HtmlInputText helpMsg = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+		helpMsg.setId("propertyHelpText");
+		helpMsg.setValueBinding("value", application.createValueBinding("#{formComponent.helpMessage}"));
+		helpMsg.setOnblur("saveHelpMessage(this.value)");
+		
+		cell = row.createCell();
+		cell.add(helpMsg);
+		
+		HtmlOutputText hasAutofillLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		hasAutofillLabel.setValue("Autofill field");
+		
+		row = group.createRow();
+		cell = row.createCell();
+		cell.add(hasAutofillLabel);
+		
+		HtmlSelectBooleanCheckbox hasAutofill = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
+		hasAutofill.setId("propertyHasAutofill");
+		hasAutofill.setOnclick("toggleAutofill(this.checked);");
+		
+		cell = row.createCell();
+		cell.add(hasAutofill);
+		
+		addFacet(BASIC_PROPERTIES_FACET, table);
+		
+		table = new Table2();
+		table.setId("autoPropertiesPanel");
+		table.setStyleAttribute("width: 250px;");
+		table.setCellpadding(0);
+		group = table.createBodyRowGroup();
+		row = null;
+		cell = null;
+		
+		HtmlOutputText autofillLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		autofillLabel.setValue("");
+		
+		row = group.createRow();
+		cell = row.createCell();
+		cell.setWidth("100");
+		cell.add(autofillLabel);
+		
+		HtmlInputText autofillValue = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+		autofillValue.setId("propertyAutofill");
+		autofillValue.setValueBinding("value", application.createValueBinding("#{formComponent.autofillKey}"));
+		autofillValue.setOnblur("alert('Not implemented');");
+		
+		cell = row.createCell();
+		cell.add(autofillValue);
+		
+		addFacet(AUTOFILL_PROPERTIES_FACET, table);
+		
+		table = new Table2();
+		table.setId("advPropertiesPanel");
+		table.setStyleAttribute("width: 250px;");
+		table.setCellpadding(0);
+		group = table.createBodyRowGroup();
+		row = null;
+		cell = null;
+		
+		HtmlOutputText emptyLabelLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		emptyLabelLabel.setValue("Empty item label");
+		
+		row = group.createRow();
+		cell = row.createCell();
+		cell.setWidth("100");
+		cell.add(emptyLabelLabel);
+		
+		HtmlInputText emptyLabel = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+		emptyLabel.setId("propertyEmptyLabel");
+		emptyLabel.setValueBinding("value", application.createValueBinding("#{formComponent.emptyLabel}"));
+		emptyLabel.setOnblur("$('workspaceform1:saveEmptyLabel').click();");
+		
+		cell = row.createCell();
+		cell.add(emptyLabel);
+		
+		HtmlOutputText advancedL = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		advancedL.setValue("Select source");
+
+		row = group.createRow();
+		cell = row.createCell();
+		cell.add(advancedL);
+		
+		HtmlSelectOneRadio dataSrcSwitch = (HtmlSelectOneRadio) application.createComponent(HtmlSelectOneRadio.COMPONENT_TYPE);
+		dataSrcSwitch.setStyleClass("inlineRadioButton");
+		dataSrcSwitch.setId("dataSrcSwitch");
+		dataSrcSwitch.setOnchange("switchDataSource(this);");
+		dataSrcSwitch.setValueBinding("value", application.createValueBinding("#{formComponent.dataSrc}"));
+
+		UISelectItems dataSrcs = (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
+		dataSrcs.setValueBinding("value", application.createValueBinding("#{dataSources.sources}"));
+		addChild(dataSrcs, dataSrcSwitch);
+		
+		cell = row.createCell();
+		cell.add(dataSrcSwitch);
+		
+		addFacet(ADVANCED_PROPERTIES_FACET, table);
+		
+		table = new Table2();
+		table.setId("extPropertiesPanel");
+		table.setStyleAttribute("width: 250px;");
+		table.setCellpadding(0);
+		group = table.createBodyRowGroup();
+		row = null;
+		cell = null;
+		
+		HtmlOutputText externalSrcLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		externalSrcLabel.setValue("External data source");
+		
+		row = group.createRow();
+		cell = row.createCell();
+		cell.setWidth("100");
+		cell.add(externalSrcLabel);
+		
+		HtmlInputText external = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+		external.setId("propertyExternal");
+		external.setValueBinding("value", application.createValueBinding("#{formComponent.externalSrc}"));
+		external.setOnblur("$('workspaceform1:saveExtSrc').click();");
+		
+		cell = row.createCell();
+		cell.add(external);
+		
+		addFacet(EXTERNAL_PROPERTIES_FACET, table);
+		
+		table = new Table2();
+		table.setId("localPropertiesPanel");
+		table.setStyleAttribute("width: 250px;");
+		table.setCellpadding(0);
+		group = table.createBodyRowGroup();
+		row = null;
+		cell = null;
+		
+		FBSelectValuesList selectValues = (FBSelectValuesList) application.createComponent(FBSelectValuesList.COMPONENT_TYPE);
+		selectValues.setValueBinding("itemSet", application.createValueBinding("#{formComponent.items}"));
+		selectValues.setId("selectOpts");
+		
+		row = group.createRow();
+		cell = row.createCell();
+		cell.setWidth("240");
+		cell.add(selectValues);
+		
+		addFacet(LOCAL_PROPERTIES_FACET, table);
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
 		super.encodeBegin(context);
-		UIComponent component = getFacet(BASIC_CONTENT_FACET);
+		UIComponent component = getFacet(BUTTON_PROPERTIES_FACET);
 		if(component != null) {
 			renderChild(context, component);
 		}
-		component = getFacet(ADV_CONTENT_FACET);
+		component = getFacet(BASIC_PROPERTIES_FACET);
+		if(component != null) {
+			renderChild(context, component);
+		}
+		component = getFacet(AUTOFILL_PROPERTIES_FACET);
+		if(component != null) {
+			renderChild(context, component);
+		}
+		component = getFacet(ADVANCED_PROPERTIES_FACET);
+		if(component != null) {
+			renderChild(context, component);
+		}
+		component = getFacet(EXTERNAL_PROPERTIES_FACET);
+		if(component != null) {
+			renderChild(context, component);
+		}
+		component = getFacet(LOCAL_PROPERTIES_FACET);
 		if(component != null) {
 			renderChild(context, component);
 		}

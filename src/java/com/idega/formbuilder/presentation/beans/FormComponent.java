@@ -13,6 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Element;
 
+import com.idega.formbuilder.business.form.Button;
 import com.idega.formbuilder.business.form.ButtonArea;
 import com.idega.formbuilder.business.form.Component;
 import com.idega.formbuilder.business.form.ComponentSelect;
@@ -24,6 +25,7 @@ import com.idega.formbuilder.business.form.beans.ILocalizedItemset;
 import com.idega.formbuilder.business.form.beans.ItemBean;
 import com.idega.formbuilder.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.presentation.components.FBDesignView;
+import com.idega.formbuilder.presentation.converters.FormButtonInfo;
 import com.idega.formbuilder.presentation.converters.FormComponentInfo;
 import com.idega.webface.WFUtil;
 
@@ -43,6 +45,7 @@ public class FormComponent implements Serializable {
 	private String label;
 	private String errorMessage;
 	private String helpMessage;
+	private String autofillKey;
 	
 	private String emptyLabel;
 	private String externalSrc;
@@ -106,6 +109,7 @@ public class FormComponent implements Serializable {
 		this.required = false;
 		this.emptyLabel = "";
 		this.helpMessage = "";
+		this.autofillKey = "";
 		
 		this.labelStringBean = null;
 		this.errorStringBean = null;
@@ -134,6 +138,8 @@ public class FormComponent implements Serializable {
 		this.helpStringBean = null;
 		
 		this.required = false;
+		
+		this.autofillKey = "";
 		
 		this.emptyLabel = "";
 		this.emptyLabelBean = null;
@@ -178,6 +184,34 @@ public class FormComponent implements Serializable {
 		setItems(items);
 	}
 	
+	public void loadButton(String id) {
+		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
+		if(page != null) {
+			ButtonArea area = page.getButtonArea();
+			if(area != null) {
+				component = area.getComponent(id);
+				if(component != null) {
+					this.id = id;
+					properties = component.getProperties();
+					
+					labelStringBean = properties.getLabel();
+					label = labelStringBean.getString(new Locale("en"));
+					
+					selectComponent = null;
+					propertiesSelect = null;
+				}
+			}
+		}
+	}
+	
+	public FormButtonInfo getFormButtonInfo(String id) {
+		loadButton(id);
+		FormButtonInfo info = new FormButtonInfo();
+		info.setId(id);
+		info.setLabel(label);
+		return info;
+	}
+	
 	public FormComponentInfo getFormComponentInfo(String id) {
 		loadProperties(id);
 		FormComponentInfo info = new FormComponentInfo();
@@ -186,6 +220,7 @@ public class FormComponent implements Serializable {
 		info.setRequired(required);
 		info.setErrorMessage(errorMessage);
 		info.setHelpMessage(helpMessage);
+		info.setAutofillKey(autofillKey);
 		
 		if(propertiesSelect != null) {
 			info.setEmptyLabel(emptyLabel);
@@ -248,15 +283,25 @@ public class FormComponent implements Serializable {
 		return rootDivImported;
 	}
 	
-	public void addButton(String type) {
+	public FormButtonInfo addButton(String type) {
+		FormButtonInfo result = new FormButtonInfo();
 		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
-		ButtonArea area = page.getButtonArea();
-		if(area != null) {
-			area.addButton(new ConstButtonType(type), null);
-		} else {
-			area = page.createButtonArea(null);
-			area.addButton(new ConstButtonType(type), null);
+		if(page != null) {
+			ButtonArea area = page.getButtonArea();
+			if(area != null) {
+				Button button = null;
+				if(area != null) {
+					button = area.addButton(new ConstButtonType(type), null);
+				} else {
+					area = page.createButtonArea(null);
+					button = area.addButton(new ConstButtonType(type), null);
+				}
+				result.setType(type);
+				result.setId(button.getId());
+				result.setLabel(button.getProperties().getLabel().getString(new Locale("en")));
+			}
 		}
+		return result;
 	}
 	
 	public String removeComponent(String id) {
@@ -289,6 +334,8 @@ public class FormComponent implements Serializable {
 			errorStringBean = propertiesSelect.getErrorMsg();
 			errorMessage = errorStringBean.getString(new Locale("en"));
 			
+			autofillKey = propertiesSelect.getAutofillKey();
+			
 //			helpStringBean = propertiesSelect.get
 			
 			emptyLabelBean = propertiesSelect.getEmptyElementLabel();
@@ -316,6 +363,8 @@ public class FormComponent implements Serializable {
 			
 			errorStringBean = properties.getErrorMsg();
 			errorMessage = errorStringBean.getString(new Locale("en"));
+			
+			autofillKey = properties.getAutofillKey();
 		}
 		
 		
@@ -509,6 +558,19 @@ public class FormComponent implements Serializable {
 
 	public void setHelpStringBean(LocalizedStringBean helpStringBean) {
 		this.helpStringBean = helpStringBean;
+	}
+
+	public String getAutofillKey() {
+		return autofillKey;
+	}
+
+	public void setAutofillKey(String autofillKey) {
+		this.autofillKey = autofillKey;
+		if(properties != null) {
+			properties.setAutofillKey(autofillKey);
+		} else if(propertiesSelect != null) {
+			propertiesSelect.setAutofillKey(autofillKey);
+		}
 	}
 
 }

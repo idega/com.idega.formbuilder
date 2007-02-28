@@ -38,8 +38,7 @@ public class FBAdvancedProperties extends FBComponentBase {
 		
 		Table2 table = new Table2();
 		table.setId("advPropsPanel1");
-//		table.setStyleClass(getStyleClass());
-		table.setStyleAttribute("width: 300px;");
+		table.setStyleAttribute("width: 250px;");
 		table.setCellpadding(0);
 		TableRowGroup group = table.createBodyRowGroup();
 		TableRow row = null;

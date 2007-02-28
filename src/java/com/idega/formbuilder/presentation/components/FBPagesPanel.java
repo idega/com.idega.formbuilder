@@ -59,6 +59,7 @@ public class FBPagesPanel extends FBComponentBase {
 					String label = ((PropertiesPage)confirmation.getProperties()).getLabel().getString(locale);
 					formPage.setLabel(label);
 					formPage.setActive(false);
+					formPage.setOnLoad("loadConfirmationPage()");
 					//TODO previewPage handling
 					addFacet(CONFIRMATION_PAGE, formPage);
 				}
@@ -71,6 +72,7 @@ public class FBPagesPanel extends FBComponentBase {
 				String label = ((PropertiesPage)thanks.getProperties()).getLabel().getString(locale);
 				formPage.setLabel(label);
 				formPage.setActive(false);
+				formPage.setOnLoad("loadThxPage()");
 				//TODO thankYouPage handling
 				addFacet(THANKYOU_PAGE, formPage);
 			}

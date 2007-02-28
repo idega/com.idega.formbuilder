@@ -11,7 +11,10 @@ public class FBButton extends FBComponentBase {
 	
 	public static final String COMPONENT_TYPE = "Button";
 	
+	private static final String DELETE_BUTTON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png";
+	
 	public String selectedStyleClass;
+	public String label;
 	public boolean selected;
 	public String onSelect;
 	
@@ -54,13 +57,28 @@ public class FBButton extends FBComponentBase {
 			writer.writeAttribute("class", selectedStyleClass, "styleClass");
 		}
 		writer.writeAttribute("id", getId(), "id");
+		writer.writeAttribute("style", "display: inline;", null);
 		writer.writeAttribute("onclick", onSelect, "onclick");
 		
 		writer.startElement("input", null);
-//		writer.
+		writer.writeAttribute("type", "button", null);
+		writer.writeAttribute("value", label, null);
 		writer.endElement("input");
 		
+		writer.startElement("img", null);
+		writer.writeAttribute("class", "speedButton", null);
+		writer.writeAttribute("src", DELETE_BUTTON_IMG, null);
+		writer.endElement("img");
+		
 		writer.endElement("div");
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
 	}
 	
 }
