@@ -9,7 +9,9 @@ function displayMessage(url) {
 function closeMessage() {
 	messageObj.close();
 }
+var currentButton = null;
 var currentElement = null;
+var pressedComponentDelete = false;
 function handleComponentDrag(element) {
 	var type = element.id;
 	FormComponent.createComponent(type, receiveComponent);
@@ -21,7 +23,58 @@ function handleButtonDrag(element) {
 	}
 }
 function placeNewButton(parameter) {
+	if(parameter != null) {
+		var node = document.createElement('div');
+		node.id = parameter.id;
+		node.style.display = 'inline';
+		node.setAttribute('class', 'formButton');
+		node.setAttribute('onclick', "loadButtonInfo(this.id);");
+		var button = document.createElement('input');
+		button.setAttribute('type', 'button');
+		button.setAttribute('enabled', 'false');
+		button.id = parameter.type;
+		button.setAttribute('value', parameter.label);
+		node.appendChild(button);
+		var db = document.createElement('img');
+		db.setAttribute('class', 'speedButton');
+		db.setAttribute('src', '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png');
+		node.appendChild(db);
+		currentButton = node;
+	}
+}
+function loadButtonInfo(parameter) {
+	FormComponent.getFormButtonInfo(parameter, placeButtonInfo);
+	//alert(parameter);
 	
+}
+function placeButtonInfo(parameter) {
+	if(parameter != null) {
+		var labelTxt = $('propertyTitle');
+		if(labelTxt != null) {
+			labelTxt.value = parameter.label;
+		}
+		var compPr = $('basicPropertiesPanel');
+		if(compPr != null) {
+			compPr.setAttribute('style', 'display: none');
+		}
+		var advPr = $('advPropertiesPanel');
+		if(advPr != null) {
+			advPr.setAttribute('style', 'display: none');
+		}
+		var extPr = $('extPropertiesPanel');
+		if(extPr != null) {
+			extPr.setAttribute('style', 'display: none');
+		}
+		var autoPr = $('autoPropertiesPanel');
+		if(autoPr != null) {
+			autoPr.setAttribute('style', 'display: none');
+		}
+		var localPr = $('localPropertiesPanel');
+		if(localPr != null) {
+			localPr.setAttribute('style', 'display: none');
+		}
+		STATIC_ACCORDEON.showTabByIndex(1, true);
+	}
 }
 function receiveComponent(parameter) {
 	currentElement = createTreeNode(parameter.documentElement);
@@ -142,11 +195,16 @@ function placePreviewPage(parameter) {
 			var node = $(parameter.pageId + '_page');
 			container.removeChild(node);
 		}
-		//$('workspaceform1:refreshViewPanel').click();
 	}
 }
 function loadPageInfo(parameter) {
 	FormPage.getFormPageInfo(parameter, placePageInfo);
+}
+function loadConfirmationPage() {
+	FormPage.getConfirmationPageInfo(placePageInfo);
+}
+function loadThxPage() {
+	STATIC_ACCORDEON.showTabByIndex(2, false);
 }
 function placePageInfo(parameter) {
 	if(parameter != null) {
@@ -160,10 +218,17 @@ function placePageInfo(parameter) {
 }
 function setupPagesDragAndDrop(value1, value2) {
 	Position.includeScrollOffsets = true;
-	Sortable.create(value1,{dropOnEmpty:true,tag:'div',only:value2,ghosting:false,onUpdate:rearrangePages,scroll:value1,constraint:false});
+	Sortable.create(value1,{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangePages,scroll:value1,constraint:false});
+	Droppables.add(value1,{onDrop:lalala});
+}
+function lalala(element, container) {
+	//alert('super');
+	Position.includeScrollOffsets = true;
+	Sortable.create(value1,{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangePages,scroll:value1,constraint:false});
+	Droppables.add(value1,{onDrop:lalala});
 }
 function rearrangePages() {
-	alert('Dragging');
+	//alert('not implemented');
 	var componentIDs = Sortable.serialize('pagesPanel',{tag:'div',name:'id'});
 	var delimiter = '&id[]=';
 	var idPrefix = 'fbcomp_';
@@ -175,7 +240,6 @@ function savePageTitle(parameter) {
 	}
 }
 function placePageTitle(parameter) {
-	//alert('Not implemented');
 	var container = $('pagesPanel');
 	if(container != null) {
 		var node = $(parameter.pageId + '_P_page');
@@ -187,6 +251,27 @@ function placePageTitle(parameter) {
 			$('workspaceform1:refreshViewPanel').click();
 		}
 	}
+}
+function setupButtonsDragAndDrop(value1, value2) {
+	Position.includeScrollOffsets = true;
+	Sortable.create(value1,{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangeButtons,scroll:value1,constraint:false});
+	Droppables.add(value1,{onDrop:handleButtonDrop});
+}
+function rearrangeButtons() {
+	//alert('Dragging');
+	var componentIDs = Sortable.serialize('pagesPanel',{tag:'div',name:'id'});
+	var delimiter = '&id[]=';
+	var idPrefix = 'fbcomp_';
+	FormDocument.updatePagesList(nothing,componentIDs,idPrefix,delimiter);
+}
+function handleButtonDrop(element, container) {
+	//alert('super');
+	if(container != null) {
+		container.appendChild(currentButton);
+	}
+	Position.includeScrollOffsets = true;
+	Sortable.create(container.id,{dropOnEmpty:true,tag:'div',only:'formButton',onUpdate:rearrangeButtons,scroll:container.id,constraint:false});
+	Droppables.add(container.id,{onDrop:handleButtonDrop});
 }
 function setupComponentDragAndDrop(value1,value2) {
 	Position.includeScrollOffsets = true;
@@ -217,13 +302,19 @@ function rearrangeComponents() {
 	pressedDelete = true;
 }
 function loadComponentInfo(parameter) {
-	FormComponent.getFormComponentInfo(parameter, placeComponentInfo);
+	if(pressedComponentDelete == false) {
+		FormComponent.getFormComponentInfo(parameter, placeComponentInfo);
+	}
 }
 function placeComponentInfo(parameter) {
 	if(parameter != null) {
 		var labelTxt = $('propertyTitle');
 		if(labelTxt != null) {
 			labelTxt.value = parameter.label;
+		}
+		var compPr = $('basicPropertiesPanel');
+		if(compPr != null) {
+			compPr.setAttribute('style', 'display: block');
 		}
 		var requiredChk = $('propertyRequired');
 		if(requiredChk != null) {
@@ -237,20 +328,73 @@ function placeComponentInfo(parameter) {
 		if(helpTxt != null) {
 			helpTxt.value = parameter.helpMessage;
 		}
-		if(parameter.complex == true) {
-			$('advPropsPanel1').setAttribute('style', 'visibility: visible');
-			if(parameter.local == true) {
-				$('localSrcDiv').setAttribute('style', 'visibility: visible');
-			} else {
-				$('advPropsPanel2').setAttribute('style', 'visibility: visible');
-				$('localSrcDiv').setAttribute('style', 'display: none');
+		if(parameter.autofill == true) {
+			var compPr = $('autoPropertiesPanel');
+			if(compPr != null) {
+				compPr.setAttribute('style', 'display: block');
+			}
+			var autoTxt = $('propertyAutofill');
+			if(autoTxt != null) {
+				autoTxt.value = parameter.autofillKey;
 			}
 		} else {
-			$('advPropsPanel1').setAttribute('style', 'display: none');
-			$('advPropsPanel2').setAttribute('style', 'display: none');
-			$('localSrcDiv').setAttribute('style', 'display: none');
+			var compPr = $('autoPropertiesPanel');
+			if(compPr != null) {
+				compPr.setAttribute('style', 'display: none');
+			}
+		}
+		if(parameter.complex == true) {
+			var advPr = $('advPropertiesPanel');
+			if(advPr != null) {
+				advPr.setAttribute('style', 'display: block');
+			}
+			if(parameter.local == true) {
+				var localPr = $('localPropertiesPanel');
+				if(localPr != null) {
+					localPr.setAttribute('style', 'display: block');
+				}
+				var extPr = $('extPropertiesPanel');
+				if(extPr != null) {
+					extPr.setAttribute('style', 'display: none');
+				}
+			} else {
+				var localPr = $('localPropertiesPanel');
+				if(localPr != null) {
+					localPr.setAttribute('style', 'display: none');
+				}
+				var extPr = $('extPropertiesPanel');
+				if(extPr != null) {
+					extPr.setAttribute('style', 'display: block');
+				}
+			}
+		} else {
+			var advPr = $('advPropertiesPanel');
+			if(advPr != null) {
+				advPr.setAttribute('style', 'display: none');
+			}
+			var extPr = $('extPropertiesPanel');
+			if(extPr != null) {
+				extPr.setAttribute('style', 'display: none');
+			}
+			var localPr = $('localPropertiesPanel');
+			if(localPr != null) {
+				localPr.setAttribute('style', 'display: none');
+			}
 		}
 		STATIC_ACCORDEON.showTabByIndex(1, true);
+	}
+}
+function toggleAutofill(parameter) {
+	if(parameter == true) {
+			var compPr = $('autoPropertiesPanel');
+			if(compPr != null) {
+				compPr.setAttribute('style', 'display: block');
+			}
+	} else {
+			var compPr = $('autoPropertiesPanel');
+			if(compPr != null) {
+				compPr.setAttribute('style', 'display: none');
+			}
 	}
 }
 function saveComponentLabel(parameter) {
@@ -293,11 +437,23 @@ function switchDataSource() {
 }
 function placeDataSource(parameter) {
 	if(parameter == true) {
-		$('localSrcDiv').setAttribute('style', 'visibility: visible');
-		$('advPropsPanel2').setAttribute('style', 'display: none');
+			var extPr = $('extPropertiesPanel');
+			if(extPr != null) {
+				extPr.setAttribute('style', 'display: none');
+			}
+			var localPr = $('localPropertiesPanel');
+			if(localPr != null) {
+				localPr.setAttribute('style', 'display: block');
+			}
 	} else {
-		$('localSrcDiv').setAttribute('style', 'display: none');
-		$('advPropsPanel2').setAttribute('style', 'visibility: visible');
+			var extPr = $('extPropertiesPanel');
+			if(extPr != null) {
+				extPr.setAttribute('style', 'display: block');
+			}
+			var localPr = $('localPropertiesPanel');
+			if(localPr != null) {
+				localPr.setAttribute('style', 'display: none');
+			}
 	}
 }
 function createNewPage() {
@@ -392,12 +548,11 @@ function refreshMainApplication() {
 
 //Handles the deletion of a form component created with JSF
 function removeComponent(parameter) {
-	alert(parameter);
-	pressedDelete = true;
 	var node = parameter.parentNode;
 	if(node != null) {
 		FormComponent.removeComponent(node.id, removeComponentNode);
 	}
+	pressedComponentDelete = true;
 }
 function removeComponentNode(parameter) {
 	var node = $(parameter);
