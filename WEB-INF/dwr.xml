@@ -17,6 +17,7 @@
 	    	<param name="class" value="com.idega.formbuilder.presentation.beans.FormComponent"/>
     	</create>
     	<convert converter="bean" match="com.idega.formbuilder.presentation.converters.FormComponentInfo" />
+    	<convert converter="bean" match="com.idega.formbuilder.presentation.converters.FormButtonInfo" />
   	</allow>
   
   	<signatures>
@@ -27,7 +28,10 @@
   			import com.idega.formbuilder.presentation.beans.FormPage;
   			import com.idega.formbuilder.presentation.converters.FormComponentInfo;
   			import com.idega.formbuilder.presentation.beans.FormComponent;
+  			import com.idega.formbuilder.presentation.converters.FormButtonInfo;
 			
+			FormComponent.getFormButtonInfo();
+			FormComponent.addButton();
 			FormDocument.getFormDocumentInfo();
 			FormPage.getFormPageInfo();
 			FormComponent.getFormComponentInfo();
