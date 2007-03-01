@@ -3,7 +3,6 @@ package com.idega.formbuilder.presentation.components;
 import java.io.IOException;
 
 import javax.faces.application.Application;
-import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectItems;
 import javax.faces.context.FacesContext;
 
@@ -12,11 +11,16 @@ import org.apache.myfaces.component.html.ext.HtmlOutputText;
 import org.apache.myfaces.component.html.ext.HtmlSelectBooleanCheckbox;
 import org.apache.myfaces.component.html.ext.HtmlSelectOneRadio;
 
+import com.idega.formbuilder.business.form.Button;
+import com.idega.formbuilder.business.form.Component;
+import com.idega.formbuilder.business.form.ComponentSelect;
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.formbuilder.presentation.beans.FormComponent;
 import com.idega.presentation.Table2;
 import com.idega.presentation.TableCell2;
 import com.idega.presentation.TableRow;
 import com.idega.presentation.TableRowGroup;
+import com.idega.webface.WFUtil;
 
 public class FBComponentPropertiesPanel extends FBComponentBase {
 
@@ -157,7 +161,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		HtmlInputText autofillValue = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		autofillValue.setId("propertyAutofill");
 		autofillValue.setValueBinding("value", application.createValueBinding("#{formComponent.autofillKey}"));
-		autofillValue.setOnblur("alert('Not implemented');");
+		autofillValue.setOnblur("saveAutofill(this.value);");
 		
 		cell = row.createCell();
 		cell.add(autofillValue);
@@ -183,7 +187,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		HtmlInputText emptyLabel = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		emptyLabel.setId("propertyEmptyLabel");
 		emptyLabel.setValueBinding("value", application.createValueBinding("#{formComponent.emptyLabel}"));
-		emptyLabel.setOnblur("$('workspaceform1:saveEmptyLabel').click();");
+		emptyLabel.setOnblur("saveEmptyLabel(this.value);");
 		
 		cell = row.createCell();
 		cell.add(emptyLabel);
@@ -229,7 +233,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		HtmlInputText external = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		external.setId("propertyExternal");
 		external.setValueBinding("value", application.createValueBinding("#{formComponent.externalSrc}"));
-		external.setOnblur("$('workspaceform1:saveExtSrc').click();");
+		external.setOnblur("saveExternalSrc(this.value);");
 		
 		cell = row.createCell();
 		cell.add(external);
@@ -258,30 +262,48 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 	
 	public void encodeBegin(FacesContext context) throws IOException {
 		super.encodeBegin(context);
-		UIComponent component = getFacet(BUTTON_PROPERTIES_FACET);
-		if(component != null) {
-			renderChild(context, component);
+		Table2 label = (Table2) getFacet(BUTTON_PROPERTIES_FACET);
+		if(label != null) {
+			renderChild(context, label);
 		}
-		component = getFacet(BASIC_PROPERTIES_FACET);
-		if(component != null) {
-			renderChild(context, component);
+		Table2 basic = (Table2) getFacet(BASIC_PROPERTIES_FACET);
+		Table2 auto = (Table2) getFacet(AUTOFILL_PROPERTIES_FACET);
+		Table2 adv = (Table2) getFacet(ADVANCED_PROPERTIES_FACET);
+		Table2 ext = (Table2) getFacet(EXTERNAL_PROPERTIES_FACET);
+		Table2 local = (Table2) getFacet(LOCAL_PROPERTIES_FACET);
+		FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
+		Component component = formComponent.getComponent();
+		if(((Button) component) == null) {
+			basic.setStyleAttribute("display: block");
+			if(formComponent.getAutofillKey() != "") {
+				auto.setStyleAttribute("display: block");
+			} else {
+				auto.setStyleAttribute("display: none");
+			}
+			if(((ComponentSelect) component) != null) {
+				adv.setStyleAttribute("display: block");
+				if(formComponent.getDataSrc() != null) {
+					ext.setStyleAttribute("display: block");
+					local.setStyleAttribute("display: none");
+				} else {
+					ext.setStyleAttribute("display: none");
+					local.setStyleAttribute("display: block");
+				}
+			} else {
+				auto.setStyleAttribute("display: none");
+			}
+		} else {
+			basic.setStyleAttribute("display: none");
+			auto.setStyleAttribute("display: none");
+			adv.setStyleAttribute("display: none");
+			ext.setStyleAttribute("display: none");
+			local.setStyleAttribute("display: none");
 		}
-		component = getFacet(AUTOFILL_PROPERTIES_FACET);
-		if(component != null) {
-			renderChild(context, component);
-		}
-		component = getFacet(ADVANCED_PROPERTIES_FACET);
-		if(component != null) {
-			renderChild(context, component);
-		}
-		component = getFacet(EXTERNAL_PROPERTIES_FACET);
-		if(component != null) {
-			renderChild(context, component);
-		}
-		component = getFacet(LOCAL_PROPERTIES_FACET);
-		if(component != null) {
-			renderChild(context, component);
-		}
+		renderChild(context, basic);
+		renderChild(context, auto);
+		renderChild(context, adv);
+		renderChild(context, ext);
+		renderChild(context, local);
 	}
 	
 }
