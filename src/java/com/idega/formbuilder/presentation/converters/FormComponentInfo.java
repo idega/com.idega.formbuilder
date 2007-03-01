@@ -1,5 +1,9 @@
 package com.idega.formbuilder.presentation.converters;
 
+import java.util.List;
+
+import com.idega.documentmanager.business.form.beans.ItemBean;
+
 public class FormComponentInfo {
 	
 	private boolean required;
@@ -9,6 +13,7 @@ public class FormComponentInfo {
 	private String emptyLabel;
 	private String externalSrc;
 	private String autofillKey;
+	private List<ItemBean> items;
 	
 	private boolean complex;
 	private boolean local;
@@ -90,6 +95,14 @@ public class FormComponentInfo {
 	}
 	public void setAutofillKey(String autofillKey) {
 		this.autofillKey = autofillKey;
+	}
+
+	public List<ItemBean> getItems() {
+		return items;
+	}
+
+	public void setItems(List<ItemBean> items) {
+		this.items = items;
 	}
 
 }

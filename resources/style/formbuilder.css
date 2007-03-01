@@ -1,4 +1,7 @@
 /*---Home page styles-----*/
+.fbSelectListItem {
+	width: 95px;
+}
 #fbHomePage {
 	margin: 15px;
 	background-color: White;
@@ -338,10 +341,11 @@ a.okBt:hover {
 		cursor:pointer;	/* Cursor like a hand when the user moves the mouse over the menu item */
 	}
 #selectOpts {
-	/*background-color: Red;*/
+	width: 100%;
 	overflow: auto;
-	max-height: 200px;
+	max-height: 180px;
 	min-height: 50px;
+	margin: 0px;
 }
 .dropBox {
 	height: 100%;

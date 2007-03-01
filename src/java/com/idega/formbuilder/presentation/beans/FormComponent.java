@@ -42,6 +42,7 @@ public class FormComponent implements Serializable {
 	private String id;
 	
 	private boolean required;
+	private boolean autofill;
 	private String label;
 	private String errorMessage;
 	private String helpMessage;
@@ -161,7 +162,8 @@ public class FormComponent implements Serializable {
 	}
 	
 	public void saveLabel(int index, String value) {
-		if(index >= items.size()) {
+		int size = items.size();
+		if(index >= size) {
 			ItemBean newItem = new ItemBean();
 			newItem.setLabel(value);
 			newItem.setValue(value);
@@ -213,10 +215,10 @@ public class FormComponent implements Serializable {
 	}
 	
 	public FormComponentInfo getFormComponentInfo(String id) {
-		boolean temp = required;
+		//boolean temp = required;
 		loadProperties(id);
 		FormComponentInfo info = new FormComponentInfo();
-		temp = required;
+		//temp = required;
 		info.setLabel(label);
 		info.setRequired(required);
 		info.setErrorMessage(errorMessage);
@@ -230,6 +232,7 @@ public class FormComponent implements Serializable {
 				info.setLocal(false);
 			} else {
 				info.setLocal(true);
+				info.setItems(items);
 			}
 			info.setComplex(true);
 		} else {
@@ -241,11 +244,18 @@ public class FormComponent implements Serializable {
 	public boolean switchDataSource() {
 		if(dataSrc.equals(DataSourceList.externalDataSrc)) {
 			setDataSrc(DataSourceList.localDataSrc);
+			setExternalSrc("");
 			return true;
 		} else {
 			setDataSrc(DataSourceList.externalDataSrc);
+			clearItems();
+			setItems(items);
 			return false;
 		}
+	}
+	
+	public void clearItems() {
+		items.clear();
 	}
 	
 	public Element createComponent(String type) throws Exception {
@@ -317,7 +327,7 @@ public class FormComponent implements Serializable {
 	}
 
 	public void loadProperties(String id) {
-		boolean temp = required;
+		//boolean temp = required;
 		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
 		this.id = id;
 		component = page.getComponent(id);
@@ -329,7 +339,7 @@ public class FormComponent implements Serializable {
 			properties = null;
 			
 			required = propertiesSelect.isRequired();
-			temp = required;
+			//temp = required;
 			
 			labelStringBean = propertiesSelect.getLabel();
 			label = labelStringBean.getString(new Locale("en"));
@@ -360,7 +370,7 @@ public class FormComponent implements Serializable {
 			properties = component.getProperties();
 			
 			required = properties.isRequired();
-			temp = required;
+			//temp = required;
 			
 			labelStringBean = properties.getLabel();
 			label = labelStringBean.getString(new Locale("en"));
@@ -456,12 +466,12 @@ public class FormComponent implements Serializable {
 	}
 
 	public boolean getRequired() {
-		boolean temp = required;
+		//boolean temp = required;
 		return required;
 	}
 
 	public void setRequired(boolean required) {
-		boolean temp = required;
+		//boolean temp = required;
 		this.required = required;
 		if(properties != null) {
 			properties.setRequired(required);
@@ -577,6 +587,14 @@ public class FormComponent implements Serializable {
 		} else if(propertiesSelect != null) {
 			propertiesSelect.setAutofillKey(autofillKey);
 		}
+	}
+
+	public boolean isAutofill() {
+		return autofill;
+	}
+
+	public void setAutofill(boolean autofill) {
+		this.autofill = autofill;
 	}
 
 }

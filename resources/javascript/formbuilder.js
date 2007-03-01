@@ -363,6 +363,7 @@ function placeComponentInfo(parameter) {
 			}
 			if(parameter.local == true) {
 				var localPr = $('localPropertiesPanel');
+				loadItemset('selectOptsInner',parameter.items);
 				if(localPr != null) {
 					localPr.setAttribute('style', 'display: block');
 				}
@@ -401,8 +402,27 @@ function placeComponentInfo(parameter) {
 		STATIC_ACCORDEON.showTabByIndex(1, true);
 	}
 }
+function loadItemset(container,list) {
+	var cont = $(container);
+	if(cont != null) {
+		if(cont.childNodes.length > 0) {
+			for(var k=0;k<cont.childNodes.length;k++) {
+				cont.removeChild(cont.childNodes[k]);
+			}
+		}
+		if(list != null) {
+			for(var i=0;i<list.length;i++) {
+				var label = list[i].label;
+				var value = list[i].value;
+				var newInd = getNextRowIndex(cont);
+				cont.appendChild(getEmptySelect(newInd,label,value));
+			}
+		}
+	}
+}
 function toggleAutofill(parameter) {
 	if(parameter == true) {
+			
 			var compPr = $('autoPropertiesPanel');
 			if(compPr != null) {
 				compPr.setAttribute('style', 'display: block');
@@ -414,6 +434,7 @@ function toggleAutofill(parameter) {
 				compPr.setAttribute('style', 'display: none');
 			}
 	}
+	FormComponent.setAutofill(parameter,nothing);
 }
 function saveComponentLabel(parameter) {
 	if(parameter != null) {
@@ -474,6 +495,111 @@ function placeDataSource(parameter) {
 				localPr.setAttribute('style', 'display: none');
 			}
 	}
+}
+function expandOrCollapse(node,expand) {
+	if(expand == true) {
+		node.previousSibling.style.display = 'inline';
+		var value = node.previousSibling.value;
+		if(value.length == 0) {
+			node.previousSibling.value = node.previousSibling.previousSibling.value;
+		}
+		node.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow_left.png';
+		node.setAttribute('onclick','expandOrCollapse(this,false);');
+	} else {
+		node.previousSibling.style.display = 'none';
+		node.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow_right.png';
+		node.setAttribute('onclick','expandOrCollapse(this,true);');
+	}
+}
+function saveLabel(parameter) {
+	var index = parameter.id.split('_')[1];
+	var value = parameter.value;
+	if(value.length != 0) {
+		FormComponent.saveLabel(index,value,nothing);
+	}
+}
+function saveValue(parameter) {
+	var index = parameter.id.split('_')[1];
+	var value = parameter.value;
+	if(value.length != 0) {
+		FormComponent.saveValue(index,value,nothing);
+	}
+}
+function addNewItem(parameter) {
+	var par = $(parameter).lastChild;
+	var newInd = getNextRowIndex(par);
+	par.appendChild(getEmptySelect(newInd,'',''));
+}
+function deleteThisItem(ind) {
+	var index = ind.split('_')[1];
+	FormComponent.removeItem(index,refreshViewPanel);
+	var currRow = $(ind);
+	var node = $(ind);
+	if(node != null) {
+		var node2 = node.parentNode;
+		node2.removeChild(currRow);
+	}
+	
+}
+function getNextRowIndex(parameter) {
+	var lastC = parameter.lastChild;
+	if(lastC != null) {
+		var ind = lastC.id.split('_')[1];
+		ind++;
+		return ind;
+	} else {
+		return 0;
+	}
+}
+function expandAllItems() {
+	var container = $('selectOptsInner');
+	if(container != null) {
+		for(var i=0;i<container.childNodes.length;i++) {
+			container.childNodes[i].childNodes[2].style.display = 'inline';
+		}
+	}
+}
+function collapseAllItems() {
+	var container = $('selectOptsInner');
+	if(container != null) {
+		for(var i=0;i<container.childNodes.length;i++) {
+			container.childNodes[i].childNodes[2].style.display = 'none';
+		}
+	}
+}
+function getEmptySelect(index,lbl,vl) {
+	var result = document.createElement('div');
+	result.id = 'workspaceform1:rowDiv_' + index;
+	var remB = document.createElement('img');
+	remB.style.display = 'inline';
+	remB.setAttribute('onclick','deleteThisItem(this.parentNode.id);');
+	remB.id = 'delB_' + index;
+	remB.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png';
+	var label = document.createElement('input');
+	label.id = 'labelF_' + index;
+	label.setAttribute('type','text');
+	label.style.display = 'inline';
+	label.value = lbl;
+	label.setAttribute('onblur','saveLabel(this);');
+	label.setAttribute('class','fbSelectListItem');
+	var value = document.createElement('input');
+	value.id = 'valueF_' + index;
+	value.setAttribute('type','text');
+	value.value = vl;
+	value.style.display = 'none';
+	value.setAttribute('onblur','saveValue(this);');
+	value.setAttribute('class','fbSelectListItem');
+	var expB = document.createElement('img');
+	expB.style.display = 'inline';
+	expB.id = 'expB_' + index;
+	expB.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow_right.png';
+	expB.setAttribute('onclick','expandOrCollapse(this,true);');
+	result.appendChild(remB);
+	result.appendChild(label);
+	result.appendChild(value);
+	result.appendChild(expB);
+	return result;
+	
 }
 function saveFormDocument() {
 	showLoadingMessage('Saving');

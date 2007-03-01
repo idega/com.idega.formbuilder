@@ -11,9 +11,8 @@ import org.apache.myfaces.component.html.ext.HtmlOutputText;
 import org.apache.myfaces.component.html.ext.HtmlSelectBooleanCheckbox;
 import org.apache.myfaces.component.html.ext.HtmlSelectOneRadio;
 
-import com.idega.formbuilder.business.form.Button;
-import com.idega.formbuilder.business.form.Component;
-import com.idega.formbuilder.business.form.ComponentSelect;
+import com.idega.documentmanager.business.form.Button;
+import com.idega.documentmanager.business.form.Component;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormComponent;
 import com.idega.presentation.Table2;
@@ -136,6 +135,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		HtmlSelectBooleanCheckbox hasAutofill = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
 		hasAutofill.setId("propertyHasAutofill");
 		hasAutofill.setOnclick("toggleAutofill(this.checked);");
+		hasAutofill.setValueBinding("value", application.createValueBinding("#{formComponent.autofill}"));
 		
 		cell = row.createCell();
 		cell.add(hasAutofill);
@@ -254,7 +254,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		
 		row = group.createRow();
 		cell = row.createCell();
-		cell.setWidth("240");
+		//cell.setWidth("240");
 		cell.add(selectValues);
 		
 		addFacet(LOCAL_PROPERTIES_FACET, table);
@@ -280,7 +280,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 			} else {
 				auto.setStyleAttribute("display: none");
 			}
-			if(((ComponentSelect) component) != null) {
+			if(formComponent.getPropertiesSelect() != null) {
 				adv.setStyleAttribute("display: block");
 				if(formComponent.getDataSrc() != null) {
 					ext.setStyleAttribute("display: block");
@@ -290,7 +290,9 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 					local.setStyleAttribute("display: block");
 				}
 			} else {
-				auto.setStyleAttribute("display: none");
+				adv.setStyleAttribute("display: none");
+				ext.setStyleAttribute("display: none");
+				local.setStyleAttribute("display: none");
 			}
 		} else {
 			basic.setStyleAttribute("display: none");
