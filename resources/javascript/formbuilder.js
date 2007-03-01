@@ -308,6 +308,7 @@ function loadComponentInfo(parameter) {
 }
 function placeComponentInfo(parameter) {
 	if(parameter != null) {
+		var x = parameter.required;
 		var labelTxt = $('propertyTitle');
 		if(labelTxt != null) {
 			labelTxt.value = parameter.label;
@@ -318,7 +319,7 @@ function placeComponentInfo(parameter) {
 		}
 		var requiredChk = $('propertyRequired');
 		if(requiredChk != null) {
-			requiredChk.value = parameter.required;
+			requiredChk.checked = parameter.required;
 		}
 		var errorTxt = $('propertyErrorMessage');
 		if(errorTxt != null) {
@@ -329,6 +330,10 @@ function placeComponentInfo(parameter) {
 			helpTxt.value = parameter.helpMessage;
 		}
 		if(parameter.autofill == true) {
+			var temp = $('propertyHasAutofill');
+			if(temp != null) {
+				temp.checked = true;
+			}
 			var compPr = $('autoPropertiesPanel');
 			if(compPr != null) {
 				compPr.setAttribute('style', 'display: block');
@@ -338,12 +343,20 @@ function placeComponentInfo(parameter) {
 				autoTxt.value = parameter.autofillKey;
 			}
 		} else {
+			var temp = $('propertyHasAutofill');
+			if(temp != null) {
+				temp.checked = false;
+			}
 			var compPr = $('autoPropertiesPanel');
 			if(compPr != null) {
 				compPr.setAttribute('style', 'display: none');
 			}
 		}
 		if(parameter.complex == true) {
+			var emptyTxt = $('propertyEmptyLabel');
+			if(emptyTxt != null) {
+				emptyTxt.value = parameter.emptyLabel;
+			}
 			var advPr = $('advPropertiesPanel');
 			if(advPr != null) {
 				advPr.setAttribute('style', 'display: block');
@@ -361,6 +374,10 @@ function placeComponentInfo(parameter) {
 				var localPr = $('localPropertiesPanel');
 				if(localPr != null) {
 					localPr.setAttribute('style', 'display: none');
+				}
+				var extTxt = $('propertyExternal');
+				if(extTxt != null) {
+					extTxt.value = parameter.externalSrc;
 				}
 				var extPr = $('extPropertiesPanel');
 				if(extPr != null) {
@@ -391,6 +408,7 @@ function toggleAutofill(parameter) {
 				compPr.setAttribute('style', 'display: block');
 			}
 	} else {
+			FormComponent.setAutofillKey('',nothing);
 			var compPr = $('autoPropertiesPanel');
 			if(compPr != null) {
 				compPr.setAttribute('style', 'display: none');
@@ -412,26 +430,27 @@ function saveErrorMessage(parameter) {
 		FormComponent.setErrorMessage(parameter, refreshViewPanel);
 	}
 }
+function saveEmptyLabel(parameter) {
+	if(parameter != null) {
+		FormComponent.setEmptyLabel(parameter, refreshViewPanel);
+	}
+}
+function saveExternalSrc(parameter) {
+	if(parameter != null) {
+		FormComponent.setExternalSrc(parameter, refreshViewPanel);
+	}
+}
+function saveAutofill(parameter) {
+	if(parameter != null) {
+		FormComponent.setAutofillKey(parameter, refreshViewPanel);
+	}
+}
 function saveHelpMessage(parameter) {
 	alert('Not implemented');
 	/*if(parameter != null) {
 		FormComponent.setHelpMessage(parameter, refreshViewPanel);
 	}*/
 }
-function saveFormDocument() {
-	showLoadingMessage('Saving');
-	FormDocument.save(doNothing);
-}
-function saveSourceCode(source_code) {
-	if(source_code != null) {
-		showLoadingMessage('Saving');
-		FormDocument.saveSrc(source_code, refreshViewPanel);
-	}
-}
-function doNothing(parameter) {
-	closeLoadingMessage();
-}
-function nothing(parameter) {}
 function switchDataSource() {
 	FormComponent.switchDataSource(placeDataSource);
 }
@@ -456,6 +475,20 @@ function placeDataSource(parameter) {
 			}
 	}
 }
+function saveFormDocument() {
+	showLoadingMessage('Saving');
+	FormDocument.save(doNothing);
+}
+function saveSourceCode(source_code) {
+	if(source_code != null) {
+		showLoadingMessage('Saving');
+		FormDocument.saveSrc(source_code, refreshViewPanel);
+	}
+}
+function doNothing(parameter) {
+	closeLoadingMessage();
+}
+function nothing(parameter) {}
 function createNewPage() {
 	FormPage.createNewPage(placeNewPage);
 }
@@ -534,7 +567,6 @@ function createNewForm() {
 	}
 }
 function refreshViewPanel(parameter) {
-	closeLoadingMessage();
 	$('workspaceform1:refreshViewPanel').click();
 }
 function refreshPagesPanel(parameter) {
