@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -64,9 +62,9 @@ public class FormComponent implements Serializable {
 	public String getDataSrc() {
 		if(propertiesSelect != null) {
 			if(propertiesSelect.getDataSrcUsed() != null) {
-				this.dataSrc = propertiesSelect.getDataSrcUsed().toString();
+				dataSrc = propertiesSelect.getDataSrcUsed().toString();
 			} else {
-				this.dataSrc = DataSourceList.localDataSrc;
+				dataSrc = DataSourceList.localDataSrc;
 			}
 		}
 		return dataSrc;
@@ -215,10 +213,8 @@ public class FormComponent implements Serializable {
 	}
 	
 	public FormComponentInfo getFormComponentInfo(String id) {
-		//boolean temp = required;
 		loadProperties(id);
 		FormComponentInfo info = new FormComponentInfo();
-		//temp = required;
 		info.setLabel(label);
 		info.setRequired(required);
 		info.setErrorMessage(errorMessage);
@@ -230,9 +226,12 @@ public class FormComponent implements Serializable {
 			if(dataSrc.equals(DataSourceList.externalDataSrc)) {
 				info.setExternalSrc(externalSrc);
 				info.setLocal(false);
+				items.clear();
+				info.setItems(items);
 			} else {
 				info.setLocal(true);
 				info.setItems(items);
+				info.setExternalSrc("");
 			}
 			info.setComplex(true);
 		} else {
@@ -248,14 +247,10 @@ public class FormComponent implements Serializable {
 			return true;
 		} else {
 			setDataSrc(DataSourceList.externalDataSrc);
-			clearItems();
+			items.clear();
 			setItems(items);
 			return false;
 		}
-	}
-	
-	public void clearItems() {
-		items.clear();
 	}
 	
 	public Element createComponent(String type) throws Exception {
@@ -327,7 +322,6 @@ public class FormComponent implements Serializable {
 	}
 
 	public void loadProperties(String id) {
-		//boolean temp = required;
 		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
 		this.id = id;
 		component = page.getComponent(id);
@@ -339,7 +333,6 @@ public class FormComponent implements Serializable {
 			properties = null;
 			
 			required = propertiesSelect.isRequired();
-			//temp = required;
 			
 			labelStringBean = propertiesSelect.getLabel();
 			label = labelStringBean.getString(new Locale("en"));
@@ -350,6 +343,12 @@ public class FormComponent implements Serializable {
 			autofillKey = propertiesSelect.getAutofillKey();
 			
 //			helpStringBean = propertiesSelect.get
+			
+			if(propertiesSelect.getDataSrcUsed() != null) {
+				dataSrc = propertiesSelect.getDataSrcUsed().toString();
+			} else {
+				dataSrc = DataSourceList.localDataSrc;
+			}
 			
 			emptyLabelBean = propertiesSelect.getEmptyElementLabel();
 			emptyLabel = emptyLabelBean.getString(new Locale("en"));
@@ -370,7 +369,6 @@ public class FormComponent implements Serializable {
 			properties = component.getProperties();
 			
 			required = properties.isRequired();
-			//temp = required;
 			
 			labelStringBean = properties.getLabel();
 			label = labelStringBean.getString(new Locale("en"));
@@ -382,51 +380,6 @@ public class FormComponent implements Serializable {
 		}
 		
 		
-	}
-	
-	public void saveComponentLabel(ActionEvent ae) throws Exception {
-		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("propertyTitle");
-		if(value != null) {
-			setLabel(value);
-		}
-	}
-	
-	public void saveComponentRequired(ActionEvent ae) throws Exception {
-		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("propertyRequired");
-		if(value != null) {
-			setRequired(true);
-		} else {
-			setRequired(false);
-		}
-	}
-	
-	public void saveComponentErrorMessage(ActionEvent ae) throws Exception {
-		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("propertyErrorMessage");
-		if(value != null) {
-			setErrorMessage(value);
-		}
-	}
-	
-	public void saveComponentEmptyLabel(ActionEvent ae) throws Exception {
-		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("propertyEmptyLabel");
-		if(value != null) {
-			setEmptyLabel(value);
-		}
-	}
-	
-	public void saveComponentExternalSource(ActionEvent ae) throws Exception {
-		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("propertyExternal");
-		if(value != null) {
-			setExternalSrc(value);
-		}
-	}
-	
-	public void saveComponentDataSource(ActionEvent ae) throws Exception {
-		if(dataSrc.equals(DataSourceList.externalDataSrc)) {
-			setDataSrc(DataSourceList.localDataSrc);
-		} else {
-			setDataSrc(DataSourceList.externalDataSrc);
-		}
 	}
 	
 	public String getId() {
