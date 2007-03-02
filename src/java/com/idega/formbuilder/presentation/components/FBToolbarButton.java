@@ -41,11 +41,16 @@ public class FBToolbarButton extends WFToolbarButton {
 			out.writeAttribute("value", "false", null);
 			out.writeAttribute("style", "display:none;", null);
 			out.endElement("input");
+			
+			String formName = determineFormName(this);
+			String click = "document.forms['" + formName + "'].elements['" + buttonId + 
+			"'].value='true';document.forms['" + formName + "'].submit();";
 
 			out.startElement("div", null);
 			out.writeAttribute("class", styleClass, null);
 //			out.writeAttribute("id", buttonId + "_C", null);
-			String formName = determineFormName(this);
+			out.writeAttribute("onclick", click, null);
+			
 			if (getDefaultImageURI() != null) {
 				out.startElement("img", null);
 				out.writeAttribute("src", getDefaultImageURI(), null);
@@ -57,18 +62,18 @@ public class FBToolbarButton extends WFToolbarButton {
 					out.writeAttribute("alt", this.toolTip, null);
 					out.writeAttribute("title", this.toolTip, null);
 				}
-				String onmouseup = "document.forms['" + formName + "'].elements['" + buttonId + 
-				"'].value='true';document.forms['" + formName + "'].submit();";
-				out.writeAttribute("onmouseup", onmouseup, null);
+//				String onmouseup = "document.forms['" + formName + "'].elements['" + buttonId + 
+//				"'].value='true';document.forms['" + formName + "'].submit();";
+//				out.writeAttribute("onmouseup", onmouseup, null);
 				String onmouseout = "document.forms['" + formName + "'].elements['" + buttonId + "'].value='';this.src='" + 
 						getDefaultImageURI() + "'";
 				out.writeAttribute("onmouseout", onmouseout, null);
 				out.endElement("img");
 				
 				out.startElement("a", null);
-				String onmouseup2 = "document.forms['" + formName + "'].elements['" + buttonId + 
-				"'].value='true';document.forms['" + formName + "'].submit();";
-				out.writeAttribute("onmouseup", onmouseup2, null);
+//				String onmouseup2 = "document.forms['" + formName + "'].elements['" + buttonId + 
+//				"'].value='true';document.forms['" + formName + "'].submit();";
+//				out.writeAttribute("onmouseup", onmouseup2, null);
 				
 				if (this.toolTip != null) {
 					out.writeAttribute("alt", this.toolTip, null);

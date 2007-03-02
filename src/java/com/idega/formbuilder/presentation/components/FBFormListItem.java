@@ -13,6 +13,7 @@ import com.idega.webface.WFDivision;
 public class FBFormListItem extends FBComponentBase {
 	
 	public static final String COMPONENT_TYPE = "FormListItem";
+	
 	public static final String delete_button_postfix = "_delete";
 	public static final String entries_button_postfix = "_entries";
 	public static final String duplicate_button_postfix = "_duplicate";

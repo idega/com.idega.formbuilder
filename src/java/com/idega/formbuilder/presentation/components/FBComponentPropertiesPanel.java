@@ -254,7 +254,6 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		
 		row = group.createRow();
 		cell = row.createCell();
-		//cell.setWidth("240");
 		cell.add(selectValues);
 		
 		addFacet(LOCAL_PROPERTIES_FACET, table);
@@ -282,7 +281,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 			}
 			if(formComponent.getPropertiesSelect() != null) {
 				adv.setStyleAttribute("display: block");
-				if(formComponent.getDataSrc() != null) {
+				if(formComponent.getDataSrc().equals("2")) {
 					ext.setStyleAttribute("display: block");
 					local.setStyleAttribute("display: none");
 				} else {

@@ -357,7 +357,6 @@ public class FormComponent implements Serializable {
 			
 			itemset = propertiesSelect.getItemset();
 			items = itemset.getItems(new Locale("en"));
-			
 			if(items.size() == 0) {
 				items.add(new ItemBean("", ""));
 				items.add(new ItemBean("", ""));
@@ -378,8 +377,6 @@ public class FormComponent implements Serializable {
 			
 			autofillKey = properties.getAutofillKey();
 		}
-		
-		
 	}
 	
 	public String getId() {
@@ -419,12 +416,10 @@ public class FormComponent implements Serializable {
 	}
 
 	public boolean getRequired() {
-		//boolean temp = required;
 		return required;
 	}
 
 	public void setRequired(boolean required) {
-		//boolean temp = required;
 		this.required = required;
 		if(properties != null) {
 			properties.setRequired(required);

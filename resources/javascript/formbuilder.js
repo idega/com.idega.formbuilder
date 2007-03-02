@@ -407,9 +407,13 @@ function placeComponentInfo(parameter) {
 function loadItemset(container,list) {
 	var cont = $(container);
 	if(cont != null) {
-		if(cont.childNodes.length > 0) {
-			for(var k=0;k<cont.childNodes.length;k++) {
-				cont.removeChild(cont.childNodes[k]);
+		var size = cont.childNodes.length;
+		if(size > 0) {
+			for(var k=0;k<size;k++) {
+				var temp = cont.childNodes[0];
+				if(temp != null) {
+					cont.removeChild(temp);
+				}
 			}
 		}
 		if(list != null) {
