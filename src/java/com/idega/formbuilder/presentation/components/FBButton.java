@@ -63,10 +63,12 @@ public class FBButton extends FBComponentBase {
 		writer.startElement("input", null);
 		writer.writeAttribute("type", "button", null);
 		writer.writeAttribute("value", label, null);
+		writer.writeAttribute("style", "display: inline;", null);
 		writer.endElement("input");
 		
 		writer.startElement("img", null);
-		writer.writeAttribute("class", "speedButton", null);
+		//writer.writeAttribute("class", "speedButton", null);
+		writer.writeAttribute("style", "display: inline;", null);
 		writer.writeAttribute("src", DELETE_BUTTON_IMG, null);
 		writer.endElement("img");
 		

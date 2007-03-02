@@ -32,28 +32,30 @@ public class FBWorkspace extends FBComponentBase {
 	protected void initializeComponent(FacesContext context) {		
 		Application application = context.getApplication();
 		getChildren().clear();
-//		
+	
 //		Page parentPage = PresentationObjectUtil.getParentPage(this);
 //		if (parentPage != null) {
 //			try {
 //				Web2Business business = (Web2Business) IBOLookup.getServiceInstance(IWContext.getInstance(), Web2Business.class);
 //				String prototypeURI = business.getBundleURIToPrototypeLib();
-////				String scriptaculousURI = business.getBundleURIToScriptaculousLib();
-//				String ricoURI = business.getBundleURIToRico();
+//				String scriptaculousURI = business.getBundleURIToScriptaculousLib();
+////				String ricoURI = business.getBundleURIToRico();
 //	
 //				Script s = parentPage.getAssociatedScript();
+//				s.setId("formbuilderPageScript");
+//				//s.get
 //				s.addScriptSource(prototypeURI);
-////				s.addScriptSource(scriptaculousURI);
-//				s.addScriptSource(ricoURI);
+//				s.addScriptSource(scriptaculousURI);
+////				s.addScriptSource(ricoURI);
 //
 //				parentPage.addScriptSource(prototypeURI);
-////				parentPage.addScriptSource(scriptaculousURI);
-//				parentPage.addScriptSource(ricoURI);
+//				parentPage.addScriptSource(scriptaculousURI);
+////				parentPage.addScriptSource(ricoURI);
 //				
 //				// THIS HAS TO BE ADDED TO THE <BODY> in the html, if not it does not work in Safari
 //				parentPage.setOnLoad("javascript:bodyOnLoad()");
 //				
-//				add(s);
+//				//add(s);
 //			} catch (Exception e) {
 //				e.printStackTrace();
 //			}

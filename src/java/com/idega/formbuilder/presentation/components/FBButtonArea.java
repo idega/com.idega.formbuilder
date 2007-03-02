@@ -36,7 +36,6 @@ public class FBButtonArea extends FBComponentBase {
 			Iterator it = ids.iterator();
 			while(it.hasNext()) {
 				String nextId = (String) it.next();
-				System.out.println(nextId);
 				Button bt = (Button) buttonArea.getComponent(nextId);
 				if(bt != null) {
 					FBButton button = (FBButton) application.createComponent(FBButton.COMPONENT_TYPE);

@@ -25,7 +25,7 @@ public class FBFormPreview extends FBComponentBase {
 	public static final String COMPONENT_TYPE = "FormPreview";
 	public static final String FORM_VIEWER = "FORM_VIEWER";
 	
-	private static final String container_tag = "div";
+//	private static final String container_tag = "div";
 	
 	public void encodeBegin(FacesContext ctx) throws IOException {
 		super.encodeBegin(ctx);
@@ -75,7 +75,7 @@ public class FBFormPreview extends FBComponentBase {
 			
 		FormViewer form_viewer = new FormViewer();
 		form_viewer.setXFormsDocument((org.w3c.dom.Document)xforms_document.getXformsDocument().cloneNode(true));
-		getFacets().put(FORM_VIEWER, form_viewer);
+		addFacet(FORM_VIEWER, form_viewer);
 	}
 	
 	@Override

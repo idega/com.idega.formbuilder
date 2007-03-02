@@ -138,7 +138,6 @@ public class FBDesignView extends FBComponentBase {
 				String nextId = (String) it.next();
 				Component comp = page.getComponent(nextId);
 				if(comp instanceof Container) {
-//					ButtonArea buttonArea = page.getButtonArea();
 					FBButtonArea area = (FBButtonArea) application.createComponent(FBButtonArea.COMPONENT_TYPE);
 					area.setId("pageButtonArea");
 					area.setStyleClass(componentStyleClass);
@@ -169,7 +168,6 @@ public class FBDesignView extends FBComponentBase {
 		} else {
 			status = getStatus();
 		}
-		System.out.println("STATUS: " + status);
 		if(status != null) {
 			if(status.equals(DESIGN_VIEW_STATUS_NOFORM)) {
 				UIComponent noFormNotice = getFacet(DESIGN_VIEW_NOFORM_FACET);
