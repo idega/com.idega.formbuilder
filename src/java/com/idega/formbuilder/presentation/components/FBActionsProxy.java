@@ -23,54 +23,10 @@ public class FBActionsProxy extends FBComponentBase {
 	
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
-		
-//		UIAjaxCommandButton saveCompLabel = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
-//		saveCompLabel.setId("saveCompLabel");
-//		saveCompLabel.setAjaxSingle(false);
-//		saveCompLabel.setActionListener(application.createMethodBinding("#{formComponent.saveComponentLabel}", new Class[]{ActionEvent.class}));
-//		saveCompLabel.setReRender("mainApplication");
-//		
-//		UIAjaxCommandButton saveCompReq = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
-//		saveCompReq.setId("saveCompReq");
-//		saveCompReq.setAjaxSingle(false);
-//		saveCompReq.setActionListener(application.createMethodBinding("#{formComponent.saveComponentRequired}", new Class[]{ActionEvent.class}));
-//		saveCompReq.setReRender("mainApplication");
-		
-//		UIAjaxCommandButton saveCompErr = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
-//		saveCompErr.setId("saveCompErr");
-//		saveCompErr.setAjaxSingle(false);
-//		saveCompErr.setActionListener(application.createMethodBinding("#{formComponent.saveComponentErrorMessage}", new Class[]{ActionEvent.class}));
-//		saveCompErr.setReRender("mainApplication");
-//		
-//		UIAjaxCommandButton saveEmptyLabel = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
-//		saveEmptyLabel.setId("saveEmptyLabel");
-//		saveEmptyLabel.setAjaxSingle(false);
-//		saveEmptyLabel.setActionListener(application.createMethodBinding("#{formComponent.saveComponentEmptyLabel}", new Class[]{ActionEvent.class}));
-//		saveEmptyLabel.setReRender("mainApplication");
-//		
-//		UIAjaxCommandButton saveExtSrc = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
-//		saveExtSrc.setId("saveExtSrc");
-//		saveExtSrc.setAjaxSingle(false);
-//		saveExtSrc.setActionListener(application.createMethodBinding("#{formComponent.saveComponentExternalSource}", new Class[]{ActionEvent.class}));
-//		saveExtSrc.setReRender("mainApplication");
-//		
-//		UIAjaxCommandButton switcher = (UIAjaxCommandButton) application.createComponent(UIAjaxCommandButton.COMPONENT_TYPE);
-//		switcher.setId("srcSwitcher");
-//		switcher.setAjaxSingle(false);
-//		switcher.setActionListener(application.createMethodBinding("#{formComponent.saveComponentDataSource}", new Class[]{ActionEvent.class}));
-//		switcher.setReRender("workspaceform1:ajaxMenuPanel");
-		
 		HtmlAjaxCommandButton refreshView = (HtmlAjaxCommandButton) application.createComponent(HtmlAjaxCommandButton.COMPONENT_TYPE);
 		refreshView.setId("refreshViewPanel");
 		refreshView.setAjaxSingle(true);
 		refreshView.setReRender("workspaceform1:ajaxViewPanel");
-		
-//		add(saveCompLabel);
-//		add(saveCompReq);
-//		add(saveCompErr);
-//		add(saveEmptyLabel);
-//		add(saveExtSrc);
-//		add(switcher);
 		add(refreshView);
 	}
 	

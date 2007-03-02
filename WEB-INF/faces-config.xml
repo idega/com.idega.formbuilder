@@ -96,48 +96,6 @@
 	          <renderer-class>com.idega.formbuilder.presentation.renderkit.ContainerRenderer</renderer-class>
 	     </renderer>
 	</render-kit>
-	<render-kit>
-	     <renderer>
-	          <component-family>formbuilder</component-family>
-	          <renderer-type>fb_formComponent</renderer-type>
-	          <renderer-class>com.idega.formbuilder.presentation.renderkit.FormComponentRenderer</renderer-class>
-	     </renderer>
-	</render-kit>
-	<render-kit>
-	     <renderer>
-	          <component-family>formbuilder</component-family>
-	          <renderer-type>fb_designview</renderer-type>
-	          <renderer-class>com.idega.formbuilder.presentation.renderkit.DesignViewRenderer</renderer-class>
-	     </renderer>
-	</render-kit>
-	<render-kit>
-	     <renderer>
-	          <component-family>formbuilder</component-family>
-	          <renderer-type>fb_paletteComponent</renderer-type>
-	          <renderer-class>com.idega.formbuilder.presentation.renderkit.PaletteComponentRenderer</renderer-class>
-	     </renderer>
-	</render-kit>
-	<render-kit>
-	     <renderer>
-	          <component-family>formbuilder</component-family>
-	          <renderer-type>fb_palette</renderer-type>
-	          <renderer-class>com.idega.formbuilder.presentation.renderkit.PaletteRenderer</renderer-class>
-	     </renderer>
-	</render-kit>
-	<render-kit>
-	     <renderer>
-	          <component-family>formbuilder</component-family>
-	          <renderer-type>fb_workspace</renderer-type>
-	          <renderer-class>com.idega.formbuilder.presentation.renderkit.WorkspaceRenderer</renderer-class>
-	     </renderer>
-	</render-kit>
-	<render-kit>
-	     <renderer>
-	          <component-family>formbuilder</component-family>
-	          <renderer-type>fb_selectvalueslist</renderer-type>
-	          <renderer-class>com.idega.formbuilder.presentation.renderkit.SelectValuesListRenderer</renderer-class>
-	     </renderer>
-	</render-kit>
 	<component>
 		<component-type>NewFormComponent</component-type>
 		<component-class>com.idega.formbuilder.presentation.components.FBNewFormComponent</component-class>
@@ -187,16 +145,8 @@
 		<component-class>com.idega.formbuilder.presentation.components.FBWorkspace</component-class>
 	</component>
 	<component>
-		<component-type>AdvancedProperties</component-type>
-		<component-class>com.idega.formbuilder.presentation.components.FBAdvancedProperties</component-class>
-	</component>
-	<component>
 		<component-type>FormProperties</component-type>
 		<component-class>com.idega.formbuilder.presentation.components.FBFormProperties</component-class>
-	</component>
-	<component>
-		<component-type>BasicProperties</component-type>
-		<component-class>com.idega.formbuilder.presentation.components.FBBasicProperties</component-class>
 	</component>
 	<component>
 		<component-type>PageProperties</component-type>

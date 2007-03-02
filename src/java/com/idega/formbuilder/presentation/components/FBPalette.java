@@ -76,13 +76,7 @@ public class FBPalette extends FBComponentBase {
 		writer.startElement("A", null);
 		writer.writeText("Buttons", null);
 		writer.endElement("A");
-//		writer.startElement("A", null);
-//		writer.writeText("eGov", null);
-//		writer.endElement("A");
-		writer.endElement("DIV");
-		
-		
-		
+		writer.endElement("DIV");	
 	}
 	
 	public void encodeChildren(FacesContext context) throws IOException {
@@ -160,53 +154,8 @@ public class FBPalette extends FBComponentBase {
 		writer.endElement("DIV");
 		
 		writer.endElement("DIV");
-		
-		
-		
-//		writer.startElement("DIV", null);
-//		writer.writeAttribute("id", "paletteBody_3", null);
-//		
-//		writer.startElement("TABLE", null);
-//		
-//		count = 1;
-//		inRow = false;
-//		
-//		it = egov.iterator();
-//		while(it.hasNext()) {
-//			if((count % columns) == 1 || columns == 1) {
-//				writer.startElement("TR", null);
-//				inRow = true;
-//			}
-//			FBPaletteComponent current = (FBPaletteComponent) it.next();
-//			if(current != null) {
-//				writer.startElement("TD", null);
-//				current.encodeEnd(context);
-//				writer.endElement("TD");
-//			}
-//			if((count % columns) == 0 || columns == 1) {
-//				writer.endElement("TR");
-//				inRow = false;
-//			}
-//			count++;
-//		}
-//		if(inRow) {
-//			writer.endElement("TR");
-//		}
-//		writer.endElement("TABLE");
-//		writer.endElement("DIV");
-		
 		writer.write(getEmbededJavascript());
 	}
-	
-//	public String getEmbededJavascript() {
-//		StringBuilder result = new StringBuilder();
-//		result.append("<script language=\"JavaScript\">\n");
-//		result.append("dndMgr.registerDraggable(new Rico.Draggable('test-rico-dnd','" + type + "'));\n");
-////		result.append("new Draggable(\"" + type + "\", {tag:\"div\",starteffect:" + onDrag + ",revert:true});\n");
-//		result.append("</script>\n");
-//		return result.toString();
-//		
-//	}
 	
 	private String getEmbededJavascript() {
 		StringBuilder result = new StringBuilder();

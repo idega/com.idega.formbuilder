@@ -1,5 +1,5 @@
-	var arrowImageHeight = 35;	// Height of arrow image in pixels;
-	var displayWaitMessage=true;	// Display a please wait message while images are loading?
+	var arrowImageHeight = 35;
+	var displayWaitMessage=true;
 	var previewImage = false;
 	var previewImageParent = false;
 	var slideSpeed = 0;
@@ -7,8 +7,44 @@
 	var slideEndMarker = false;
 	var galleryContainer = false;
 	var imageGalleryCaptions = new Array();
-	
-	function getTopPos(inputObj) {
+
+function showInputField() {
+	var input = $('workspaceform1:newTxt');
+	var newBt = $('workspaceform1:newBt');
+	var okBt = $('workspaceform1:okBt');
+	var cancelBt = $('workspaceform1:cancelBt');
+	if(input != null) {
+		input.style.display = 'inline';
+	}
+	if(newBt != null) {
+		newBt.style.display = 'none';
+	}
+	if(okBt != null) {
+		okBt.style.display = 'inline';
+	}
+	if(cancelBt != null) {
+		cancelBt.style.display = 'inline';
+	}
+}
+function hideInputField() {
+	var input = $('workspaceform1:newTxt');
+	var newBt = $('workspaceform1:newBt');
+	var okBt = $('workspaceform1:okBt');
+	var cancelBt = $('workspaceform1:cancelBt');
+	if(input != null) {
+		input.style.display = 'none';
+	}
+	if(newBt != null) {
+		newBt.style.display = 'inline';
+	}
+	if(okBt != null) {
+		okBt.style.display = 'none';
+	}
+	if(cancelBt != null) {
+		cancelBt.style.display = 'none';
+	}
+}
+function getTopPos(inputObj) {
 	  var returnValue = inputObj.offsetTop;
 	  while((inputObj = inputObj.offsetParent) != null)returnValue += inputObj.offsetTop;
 	  return returnValue;
@@ -59,4 +95,5 @@
 		document.getElementById('workspaceform1:arrow_down_image').onmouseout = stopSlide;	
 		slidePreviewPane();	
 	}
-	
+var container = $('newFormComp');
+Rico.Corner.round(container);

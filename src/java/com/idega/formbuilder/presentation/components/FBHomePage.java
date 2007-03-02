@@ -32,7 +32,8 @@ public class FBHomePage extends FBComponentBase {
 	private static final String HEADER_BLOCK_FACET = "HEADER_BLOCK_FACET";
 	private static final String GREETING_BLOCK_FACET = "GREETING_BLOCK_FACET";
 	private static final String FORM_LIST_FACET = "FORM_LIST_FACET";
-//	private static final String SCRIPT_FACET = "SCRIPT_FACET";
+	
+	private static final String HOMEPAGE_JS = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/homepage.js";
 	
 	public FBHomePage() {
 		super();
@@ -55,10 +56,12 @@ public class FBHomePage extends FBComponentBase {
 				s.addScriptSource(prototypeURI);
 				s.addScriptSource(scriptaculousURI);
 				s.addScriptSource(ricoURI);
+				s.addScriptSource(HOMEPAGE_JS);
 
 				parentPage.addScriptSource(prototypeURI);
 				parentPage.addScriptSource(scriptaculousURI);
 				parentPage.addScriptSource(ricoURI);
+				parentPage.addScriptSource(HOMEPAGE_JS);
 				
 				// THIS HAS TO BE ADDED TO THE <BODY> in the html, if not it does not work in Safari
 				parentPage.setOnLoad("javascript:bodyOnLoad()");
@@ -162,7 +165,7 @@ public class FBHomePage extends FBComponentBase {
 		addFacet(FORM_LIST_FACET, listContainer);
 	}
 	
-	public static String getEmbededJavascript() {
+	public String getEmbededJavascript() {
 		StringBuilder result = new StringBuilder();
 		result.append("<script language=\"JavaScript\">\n");
 		result.append("initGalleryScript();\n");
