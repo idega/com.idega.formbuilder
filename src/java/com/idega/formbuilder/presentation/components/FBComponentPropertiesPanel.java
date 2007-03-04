@@ -272,7 +272,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		Table2 local = (Table2) getFacet(LOCAL_PROPERTIES_FACET);
 		FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
 		Component component = formComponent.getComponent();
-		if(((Button) component) == null) {
+		if((component) == null) {
 			basic.setStyleAttribute("display: block");
 			if(formComponent.getAutofillKey() != "") {
 				auto.setStyleAttribute("display: block");
