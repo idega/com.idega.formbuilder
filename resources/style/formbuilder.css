@@ -24,22 +24,13 @@
 	position: absolute;
 	right: 0px;
 	top: 100px;
-	width: 150px;
-}
-#fbHPRight * {
-	display: inline;
+	width: 300px;
 }
 .newFormComponentIdle {
 	width: 270px;
 	height: 34px;
 	background-color: LightGrey;
 	padding-top: 5px;
-}
-.visible {
-	display: inline;
-}
-.hidden {
-	display: none;
 }
 .newIcon {
 	margin-top: 5px;
@@ -213,14 +204,14 @@ a.okBt:hover {
 	margin-right: 25px;
 	margin-top: 15px;
 	margin-bottom: 20px;
-	border: 2px groove Black;
+	/*border: 2px groove Black;*/
 }
 #mainWorkspace {
-	border: 2px groove Red;
+	/*border: 2px groove Red;*/
 }
 #optionsPanel {
 	height: 100%;
-	border: 1px groove Black;
+	/*border: 1px groove Black;*/
 }
 #viewPanel {
 	position: absolute;
@@ -228,7 +219,7 @@ a.okBt:hover {
 	left: 332px;
 	right: 150px;
 	bottom: 75px;
-	border: 1px groove Blue;
+	/*border: 1px groove Blue;*/
 }
 .pagesPanel {
 	position: absolute;
@@ -269,14 +260,6 @@ a.okBt:hover {
 	display: inline;
 	cursor: pointer;
 }
-/*#pagesPanel {
-	top: 5px;
-	float: right;
-	background-color: LightGrey;
-	width: 110px;
-	min-height: 500px;
-	border: 2px solid Black;
-}*/
 .pagesPanelBottom {
 	
 }

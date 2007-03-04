@@ -39,7 +39,7 @@ public class FBNewFormComponent extends FBComponentBase {
 		
 		HtmlInputText formName = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		formName.setStyleClass("formNameInput");
-		formName.setStyle("display: hidden");
+		formName.setStyle("display: none");
 		formName.setId("newTxt");
 		
 		HtmlCommandLink newButton = (HtmlCommandLink) application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
@@ -53,14 +53,14 @@ public class FBNewFormComponent extends FBComponentBase {
 		okButton.setValue("OK");
 		okButton.setId("okBt");
 		okButton.setStyleClass("okBt");
-		okButton.setStyle("display: hidden");
+		okButton.setStyle("display: none");
 		okButton.setAction(application.createMethodBinding("#{formDocument.createNewForm}", null));
 		
 		HtmlCommandLink cancelButton = (HtmlCommandLink) application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
 		cancelButton.setValue("Cancel");
 		cancelButton.setId("cancelBt");
 		cancelButton.setStyleClass("cancelBt");
-		cancelButton.setStyle("display: hidden");
+		cancelButton.setStyle("display: none");
 		cancelButton.setOnclick("hideInputField();return false;");
 		
 		addChild(newIcon, body);
@@ -81,46 +81,4 @@ public class FBNewFormComponent extends FBComponentBase {
 			renderChild(context, component);
 		}
 	}
-	
-//	public void encodeEnd(FacesContext context) throws IOException {
-//		ResponseWriter writer = context.getResponseWriter();
-//		writer.write(getEmbededJavascript());
-//	}
-	
-//	public static String getEmbededJavascript() {
-//		StringBuilder result = new StringBuilder();
-//		result.append("<script language=\"JavaScript\">\n");
-//		
-//		result.append("function showInputField() {\n");
-////		result.append("var container = $('newFormComp');\n");
-//		result.append("var input = document.getElementById('workspaceform1:newTxt');\n");
-//		result.append("var newBt = document.getElementById('workspaceform1:newBt');\n");
-//		result.append("var okBt = document.getElementById('workspaceform1:okBt');\n");
-//		result.append("var cancelBt = document.getElementById('workspaceform1:cancelBt');\n");
-//		result.append("input.style.display = 'inline';\n");
-//		result.append("newBt.style.display = 'none';\n");
-//		result.append("okBt.style.display = 'inline';\n");
-//		result.append("cancelBt.style.display = 'inline';\n");
-//		result.append("}\n");
-//		
-//		result.append("function hideInputField() {\n");
-////		result.append("var container = $('newFormComp');\n");
-//		result.append("var input = document.getElementById('workspaceform1:newTxt');\n");
-//		result.append("var newBt = document.getElementById('workspaceform1:newBt');\n");
-//		result.append("var okBt = document.getElementById('workspaceform1:okBt');\n");
-//		result.append("var cancelBt = document.getElementById('workspaceform1:cancelBt');\n");
-//		result.append("input.style.display = 'none';\n");
-//		result.append("newBt.style.display = 'inline';\n");
-//		result.append("okBt.style.display = 'none';\n");
-//		result.append("cancelBt.style.display = 'none';\n");
-//		result.append("}\n");
-//		
-//		result.append("var container = document.getElementById('newFormComp');\n");
-//		result.append("Rico.Corner.round(container);\n");
-//		
-//		result.append("</script>\n");
-//		return result.toString();
-//		
-//	}
-
 }
