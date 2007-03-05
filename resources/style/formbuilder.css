@@ -362,9 +362,10 @@ a.okBt:hover {
 	padding-bottom: 2px;
 	padding-left: 5px;
 	padding-right: 5px;
+	margin-right: 16px;
 }
 .formButton:hover {
-	border: 1px solid #93B825;
+	margin-right: 0px;
 }
 .formElementSel {
 	background-color: Silver;
@@ -387,6 +388,13 @@ a.okBt:hover {
 }
 .formElement:active {
 	background-color: Silver;
+}
+.fbSpeedBButton {
+	display: none;
+}
+.formButton:hover .fbSpeedBButton {
+	display: inline;
+	cursor: pointer;
 }
 .speedButton {
 	display: none;

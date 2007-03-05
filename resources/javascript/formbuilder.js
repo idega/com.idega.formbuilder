@@ -9,12 +9,21 @@ function displayMessage(url) {
 function closeMessage() {
 	messageObj.close();
 }
+
 var currentButton = null;
 var currentElement = null;
 var pressedComponentDelete = false;
+var pressedButtonDelete = false;
+var pressedPageDelete = false;
+var draggingButton = false;
+var draggingComponent = false;
+var draggingPage = false;
+
 function handleComponentDrag(element) {
-	var type = element.id;
-	FormComponent.createComponent(type, receiveComponent);
+	if(element != null) {
+		var type = element.id;
+		FormComponent.createComponent(type, placeNewComponent);
+	}
 }
 function handleButtonDrag(element) {
 	if(element != null) {
@@ -34,18 +43,43 @@ function placeNewButton(parameter) {
 		button.setAttribute('enabled', 'false');
 		button.id = parameter.type;
 		button.setAttribute('value', parameter.label);
+		button.style.display = 'inline';
 		node.appendChild(button);
 		var db = document.createElement('img');
-		db.setAttribute('class', 'speedButton');
+		db.setAttribute('class', 'fbSpeedBButton');
 		db.setAttribute('src', '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png');
+		node.setAttribute('onclick', 'removeButton(this.id);');
 		node.appendChild(db);
 		currentButton = node;
+		
+		Position.includeScrollOffsets = true;
+		Sortable.create(container.id,{dropOnEmpty:true,tag:'div',only:'formButton',onUpdate:rearrangeButtons,scroll:container.id,constraint:false});
+		Droppables.add(container.id,{onDrop:handleButtonDrop});
+	}
+}
+function removeButton(parameter) {
+	if(parameter != null) {
+		pressedButtonDelete = true;
+		FormComponent.removeButton(parameter, removeButtonNode);
+	}
+}
+function removeButtonNode(parameter) {
+	if(parameter != null) {
+		var node = $(parameter);
+		if(node != null) {
+			var parentNode = node.parentNode;
+			if(parentNode != null) {
+				parentNode.removeChild(node);
+			}
+		}
 	}
 }
 function loadButtonInfo(parameter) {
-	FormComponent.getFormButtonInfo(parameter, placeButtonInfo);
-	//alert(parameter);
-	
+	if(pressedButtonDelete == false && draggingButton == false) {
+		FormComponent.getFormButtonInfo(parameter, placeButtonInfo);
+	}
+	pressedButtonDelete = false;
+	draggingButton = false;
 }
 function placeButtonInfo(parameter) {
 	if(parameter != null) {
@@ -76,8 +110,10 @@ function placeButtonInfo(parameter) {
 		STATIC_ACCORDEON.showTabByIndex(1, true);
 	}
 }
-function receiveComponent(parameter) {
-	currentElement = createTreeNode(parameter.documentElement);
+function placeNewComponent(parameter) {
+	if(parameter != null) {
+		currentElement = createTreeNode(parameter.documentElement);
+	}
 }
 function createTreeNode(element) {
 	if(element.nodeName == '#text') {
@@ -222,13 +258,12 @@ function setupPagesDragAndDrop(value1, value2) {
 	Droppables.add(value1,{onDrop:lalala});
 }
 function lalala(element, container) {
-	//alert('super');
 	Position.includeScrollOffsets = true;
 	Sortable.create(value1,{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangePages,scroll:value1,constraint:false});
 	Droppables.add(value1,{onDrop:lalala});
 }
 function rearrangePages() {
-	//alert('not implemented');
+	draggingPage = true;
 	var componentIDs = Sortable.serialize('pagesPanel',{tag:'div',name:'id'});
 	var delimiter = '&id[]=';
 	var idPrefix = 'fbcomp_';
@@ -258,14 +293,13 @@ function setupButtonsDragAndDrop(value1, value2) {
 	Droppables.add(value1,{onDrop:handleButtonDrop});
 }
 function rearrangeButtons() {
-	//alert('Dragging');
-	var componentIDs = Sortable.serialize('pagesPanel',{tag:'div',name:'id'});
+	draggingButton = true;
+	var componentIDs = Sortable.serialize('pageButtonArea',{tag:'div',name:'id'});
 	var delimiter = '&id[]=';
 	var idPrefix = 'fbcomp_';
-	FormDocument.updatePagesList(nothing,componentIDs,idPrefix,delimiter);
+	FormPage.updateButtonList(componentIDs,idPrefix,delimiter,nothing);
 }
 function handleButtonDrop(element, container) {
-	//alert('super');
 	if(container != null) {
 		container.appendChild(currentButton);
 	}
@@ -295,16 +329,18 @@ function handleComponentDrop(element,container) {
 	}
 }
 function rearrangeComponents() {
+	draggingComponent = true;
 	var componentIDs = Sortable.serialize('dropBoxinner',{tag:'div',name:'id'});
 	var delimiter = '&id[]=';
 	var idPrefix = 'fbcomp_';
 	FormPage.updateComponentList(componentIDs,idPrefix,delimiter,nothing);
-	pressedDelete = true;
 }
 function loadComponentInfo(parameter) {
-	if(pressedComponentDelete == false) {
+	if(pressedComponentDelete == false && draggingComponent == false) {
 		FormComponent.getFormComponentInfo(parameter, placeComponentInfo);
 	}
+	pressedComponentDelete = false;
+	draggingComponent = false;
 }
 function placeComponentInfo(parameter) {
 	if(parameter != null) {
@@ -648,7 +684,7 @@ function placeNewPage(parameter) {
 		
 		var db = document.createElement('img');
 		db.id = parameter + '_db';
-		db.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png';
+		db.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png';
 		db.setAttribute('onclick', 'deletePage(this.id)');
 		db.setAttribute('class', 'speedButton');
 		
@@ -661,19 +697,28 @@ function placeNewPage(parameter) {
 	}
 }
 function deletePage(parameter) {
-	//pressedDeletePage = true;
 	if(parameter != null) {
-		FormPage.removePage(parameter,handleDeletedForm);
+		pressedPageDelete = true;
+		FormPage.removePage(parameter,removePageNode);
 	}
 }
-function handleDeletedForm(parameter) {
-	var container = $('pagesPanel');
+function removePageNode(parameter) {
+	if(parameter != null) {
+		var node = $(parameter);
+		if(node != null) {
+			var parentNode = node.parentNode;
+			if(parentNode != null) {
+				parentNode.removeChild(node);
+			}
+		}
+	}
+	/*var container = $('pagesPanel');
 	if(container != null) {
 		var element = $(parameter);
 		if(element != null) {
 			container.removeChild(element.parentNode);
 		}
-	}
+	}*/
 	$('workspaceform1:refreshViewPanel').click();
 }
 //Handles the closing of the loading indicator
@@ -715,36 +760,22 @@ function refreshMainApplication() {
 function removeComponent(parameter) {
 	var node = parameter.parentNode;
 	if(node != null) {
+		pressedComponentDelete = true;
 		FormComponent.removeComponent(node.id, removeComponentNode);
 	}
-	pressedComponentDelete = true;
 }
 function removeComponentNode(parameter) {
 	var node = $(parameter);
-	if(node) {
-		node.parentNode.removeChild(node);
+	if(node != null) {
+		var parentNode = node.parentNode;
+		if(parentNode != null) {
+			parentNode.removeChild(node);
+		}
 	}
 }
 //----------------------------------------
-function decoy() {
-	closeLoadingMessage();
-}
 
-function changeMenu(id) {
-	dwrmanager.changeMenu(changedMenu,id);
-}
-function changedMenu() {
-	$('workspaceform1:changeMenuProxy').click();
-}
 
-function switchSelectedForm() {
-	showLoadingMessage("Loading");
-}
-function formSwitched() {
-	closeLoadingMessage();
-}
-var pressedDelete = false;
-var pressedDeletePage = false;
 /*Setup modal message windows functionality*/
 messageObj = new DHTML_modalMessage();
 messageObj.setShadowOffset(5);
