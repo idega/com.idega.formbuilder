@@ -42,7 +42,8 @@ public class FBButtonArea extends FBComponentBase {
 					button.setLabel(bt.getProperties().getLabel().getString(new Locale("en")));
 					button.setId(nextId);
 					button.setStyleClass(componentStyleClass);
-					button.setOnSelect("loadButtonInfo(this.id)");
+					button.setOnSelect("loadButtonInfo(this.id);");
+					button.setOnDelete("removeButton(this.parentNode.id);");
 					add(button);
 				}
 			}

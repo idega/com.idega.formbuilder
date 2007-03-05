@@ -269,14 +269,14 @@ public class FormComponent implements Serializable {
 		          DocumentBuilder builder = factory.newDocumentBuilder();
 		          domDocument = builder.newDocument();
 		          Element delete = domDocument.createElement("IMG");
-		          delete.setAttribute("src", "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png");
+		          delete.setAttribute("src", "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png");
 		          delete.setAttribute("class", "speedButton");
-		          delete.setAttribute("onclick", "removeComponent(this)");
+		          delete.setAttribute("onclick", "removeComponent(this);");
 		          Element deleteIcon = (Element) element.getOwnerDocument().importNode(delete, true);
 		          Element rootDiv = domDocument.createElement("DIV");
 		          rootDiv.setAttribute("id", id);
 		          rootDiv.setAttribute("class", "formElement");
-		          rootDiv.setAttribute("onclick", "loadComponentInfo(this.id)");
+		          rootDiv.setAttribute("onclick", "loadComponentInfo(this.id);");
 		          rootDivImported = (Element) element.getOwnerDocument().importNode(rootDiv, true);
 		          rootDivImported.appendChild(element);
 		          rootDivImported.appendChild(deleteIcon);
@@ -319,6 +319,21 @@ public class FormComponent implements Serializable {
 			}
 		}
 		return id;
+	}
+	
+	public String removeButton(String id) {
+		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
+		if(page != null) {
+			ButtonArea area = page.getButtonArea();
+			if(area != null) {
+				Button button = (Button) area.getComponent(id);
+				if(button != null) {
+					button.remove();
+					return id;
+				}
+			}
+		}
+		return null;
 	}
 
 	public void loadProperties(String id) {

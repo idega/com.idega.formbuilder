@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import com.idega.documentmanager.business.form.ButtonArea;
 import com.idega.documentmanager.business.form.Document;
 import com.idega.documentmanager.business.form.Page;
 import com.idega.documentmanager.business.form.PropertiesPage;
@@ -42,6 +43,21 @@ public class FormPage implements Serializable {
 		page.rearrangeComponents();
 	}
 	
+	public void updateButtonList(String idSequence, String idPrefix, String delimiter) throws Exception {
+		ButtonArea area = page.getButtonArea();
+		if(area != null) {
+			List<String> ids = area.getContainedComponentsIdList();
+			ids.clear();
+			String test = "&" + idSequence;
+			StringTokenizer tokenizer = new StringTokenizer(test, delimiter);
+			while(tokenizer.hasMoreTokens()) {
+				ids.add(idPrefix + tokenizer.nextToken());
+			}
+			area.rearrangeComponents();
+			System.out.println(ids);
+		}
+	}
+	
 	public String removePage(String id) {
 		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
 		Document document = formDocument.getDocument();
@@ -75,7 +91,7 @@ public class FormPage implements Serializable {
 				return id;
 			}
 		}
-		return "";
+		return null;
 	}
 	
 	public FormPageInfo getFormPageInfo(String id) {

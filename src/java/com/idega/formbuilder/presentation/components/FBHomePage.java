@@ -10,6 +10,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.model.SelectItem;
 
+import org.apache.myfaces.component.html.ext.HtmlCommandLink;
 import org.apache.myfaces.component.html.ext.HtmlGraphicImage;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
 
@@ -105,10 +106,16 @@ public class FBHomePage extends FBComponentBase {
 		greeting.setId("fbHomePageWelcomeBlock");
 		
 		HtmlOutputText greetingText = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		greetingText.setValue("Good afternoon Alex and welcome. I see you have created several forms.");
+		greetingText.setValue("Good afternoon and welcome. I see you have created several forms. You can manage them in the list below or create a new one ");
 		greetingText.setId("greetingText");
 		
+		HtmlCommandLink greetingTextL = (HtmlCommandLink) application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
+		greetingTextL.setValue("here");
+		greetingTextL.setOnclick("showInputField();return false");
+		greetingTextL.setId("greetingTextL");
+		
 		addChild(greetingText, greeting);
+		addChild(greetingTextL, greeting);
 		
 		addFacet(GREETING_BLOCK_FACET, greeting);
 		

@@ -17,6 +17,7 @@ public class FBButton extends FBComponentBase {
 	public String label;
 	public boolean selected;
 	public String onSelect;
+	public String onDelete;
 	
 	public String getOnSelect() {
 		return onSelect;
@@ -64,12 +65,14 @@ public class FBButton extends FBComponentBase {
 		writer.writeAttribute("type", "button", null);
 		writer.writeAttribute("value", label, null);
 		writer.writeAttribute("style", "display: inline;", null);
+		writer.writeAttribute("enabled", "false", null);
 		writer.endElement("input");
 		
 		writer.startElement("img", null);
-		//writer.writeAttribute("class", "speedButton", null);
-		writer.writeAttribute("style", "display: inline;", null);
+		writer.writeAttribute("class", "fbSpeedBButton", null);
+		//writer.writeAttribute("style", "display: inline;", null);
 		writer.writeAttribute("src", DELETE_BUTTON_IMG, null);
+		writer.writeAttribute("onclick", onDelete, "onclick");
 		writer.endElement("img");
 		
 		writer.endElement("div");
@@ -81,6 +84,14 @@ public class FBButton extends FBComponentBase {
 
 	public void setLabel(String label) {
 		this.label = label;
+	}
+
+	public String getOnDelete() {
+		return onDelete;
+	}
+
+	public void setOnDelete(String onDelete) {
+		this.onDelete = onDelete;
 	}
 	
 }

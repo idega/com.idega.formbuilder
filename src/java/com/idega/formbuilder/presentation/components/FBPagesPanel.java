@@ -44,7 +44,7 @@ public class FBPagesPanel extends FBComponentBase {
 		
 		writer.startElement("DIV", null);
 		writer.writeAttribute("id", getId(), "id");
-		writer.writeAttribute("style", "display: block; min-height: 400px; overflow: auto;", null);
+		writer.writeAttribute("style", "display: block; height: 400px; overflow: auto;", null);
 		
 		Locale locale = ((Workspace) WFUtil.getBeanInstance("workspace")).getLocale();
 		FormDocument formDocument = ((FormDocument) WFUtil.getBeanInstance("formDocument"));
@@ -60,7 +60,6 @@ public class FBPagesPanel extends FBComponentBase {
 					formPage.setLabel(label);
 					formPage.setActive(false);
 					formPage.setOnLoad("loadConfirmationPage()");
-					//TODO previewPage handling
 					addFacet(CONFIRMATION_PAGE, formPage);
 				}
 			}
@@ -73,7 +72,6 @@ public class FBPagesPanel extends FBComponentBase {
 				formPage.setLabel(label);
 				formPage.setActive(false);
 				formPage.setOnLoad("loadThxPage()");
-				//TODO thankYouPage handling
 				addFacet(THANKYOU_PAGE, formPage);
 			}
 			List<String> ids = formDocument.getCommonPagesIdList();
@@ -103,7 +101,7 @@ public class FBPagesPanel extends FBComponentBase {
 		
 		writer.startElement("DIV", null);
 		writer.writeAttribute("id", getId() + "Special", null);
-		writer.writeAttribute("style", "display: block;", null);
+		writer.writeAttribute("style", "display: block; height: auto;", null);
 		
 		UIComponent component = getFacet(CONFIRMATION_PAGE);
 		if(component != null) {

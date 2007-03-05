@@ -76,7 +76,7 @@ public class FBFormComponent extends FBComponentBase {
 						
 						HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
 						deleteButton.setId("db" + id);
-						deleteButton.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png");
+						deleteButton.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png");
 						deleteButton.setOnclick("removeComponent(this)");
 						deleteButton.setStyleClass("speedButton");
 						

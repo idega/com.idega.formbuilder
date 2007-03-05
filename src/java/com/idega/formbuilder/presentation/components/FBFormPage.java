@@ -18,7 +18,7 @@ public class FBFormPage extends FBComponentBase {
 	private static final String CONTENT_DIV_FACET = "CONTENT_DIV_FACET";
 	
 	private static final String PAGE_ICON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/document-new.png";
-	private static final String DELETE_ICON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png";
+	private static final String DELETE_ICON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png";
 	
 	private String label;
 	private boolean active;
