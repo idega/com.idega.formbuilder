@@ -54,7 +54,6 @@ public class FormPage implements Serializable {
 				ids.add(idPrefix + tokenizer.nextToken());
 			}
 			area.rearrangeComponents();
-			System.out.println(ids);
 		}
 	}
 	

@@ -317,22 +317,28 @@ public class FormDocument implements Serializable {
 	public void updatePagesList(String idSequence, String idPrefix, String delimiter) throws Exception {
 		String confirmId = "";
 		String thxId = "";
-		Page temp = document.getConfirmationPage();
-		if(temp != null) {
-			confirmId = temp.getId();
+		Page confPage = document.getConfirmationPage();
+		if(confPage != null) {
+			confirmId = confPage.getId();
 		}
-		temp = document.getThxPage();
-		if(temp != null) {
-			thxId = temp.getId();
+		Page thxPage = document.getThxPage();
+		if(thxPage != null) {
+			thxId = thxPage.getId();
 		}
 		List<String> ids = document.getContainedPagesIdList();
 		ids.clear();
 		String test = "&" + idSequence;
 		StringTokenizer tokenizer = new StringTokenizer(test, delimiter);
 		while(tokenizer.hasMoreTokens()) {
-			ids.add(idPrefix + tokenizer.nextToken());
+			String currentId = tokenizer.nextToken();
+			if(currentId.endsWith("_P_page")) {
+				currentId = currentId.substring(0, currentId.indexOf("_P_page"));
+			}
+			ids.add(idPrefix + currentId);
 		}
-		ids.add(confirmId);
+		if(!confirmId.equals("")) {
+			ids.add(confirmId);
+		}
 		ids.add(thxId);
 		document.rearrangeDocument();
 	}

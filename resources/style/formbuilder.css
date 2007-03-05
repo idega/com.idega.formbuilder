@@ -8,6 +8,14 @@
 	border: 1px solid LightGrey;
 	padding: 25px;
 }
+.fbBottomButtonsContainer {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+	background-color: #E1E1E1;
+	border: 1px solid #D7D7D7;
+}
 #fbHomePageHeaderBlock {
 	height: 50px;
 	border-bottom: 2px solid Grey;

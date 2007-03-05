@@ -263,7 +263,7 @@ function rearrangePages() {
 	var componentIDs = Sortable.serialize('pagesPanel',{tag:'div',name:'id'});
 	var delimiter = '&id[]=';
 	var idPrefix = 'fbcomp_';
-	FormDocument.updatePagesList(nothing,componentIDs,idPrefix,delimiter);
+	FormDocument.updatePagesList(componentIDs,idPrefix,delimiter,nothing);
 }
 function savePageTitle(parameter) {
 	if(parameter != null) {
@@ -273,6 +273,7 @@ function savePageTitle(parameter) {
 function placePageTitle(parameter) {
 	var container = $('pagesPanel');
 	if(container != null) {
+		//TODO very important to handle the renaming of pages right after they have been created
 		var node = $(parameter.pageId + '_P_page');
 		if(node != null) {
 			var parent = node.childNodes[1];
@@ -296,7 +297,15 @@ function rearrangeButtons() {
 	FormPage.updateButtonList(componentIDs,idPrefix,delimiter,nothing);
 }
 function handleButtonDrop(element, container) {
-	if(container != null) {
+	var cont = $('pageButtonArea');
+	if(cont == null) {
+		var buttonArea = document.createElement('div');
+		buttonArea.id = 'pageButtonArea';
+		buttonArea.style.position = 'relative';
+		buttonArea.styleClass = 'formElement';
+		$('dropBox').appendChild(buttonArea);
+		buttonArea.appendChild(currentButton);
+	} else {
 		container.appendChild(currentButton);
 	}
 	Position.includeScrollOffsets = true;
@@ -694,8 +703,14 @@ function placeNewPage(parameter) {
 }
 function deletePage(parameter) {
 	if(parameter != null) {
-		pressedPageDelete = true;
-		FormPage.removePage(parameter,removePageNode);
+		var node = $(parameter);
+		if(node != null) {
+			var parentNode = node.parentNode;
+			if(parentNode != null) {
+				pressedPageDelete = true;
+				FormPage.removePage($(parameter).parentNode.id,removePageNode);
+			}
+		}
 	}
 }
 function removePageNode(parameter) {
@@ -708,13 +723,6 @@ function removePageNode(parameter) {
 			}
 		}
 	}
-	/*var container = $('pagesPanel');
-	if(container != null) {
-		var element = $(parameter);
-		if(element != null) {
-			container.removeChild(element.parentNode);
-		}
-	}*/
 	$('workspaceform1:refreshViewPanel').click();
 }
 //Handles the closing of the loading indicator
@@ -742,16 +750,13 @@ function createNewForm() {
 function refreshViewPanel(parameter) {
 	$('workspaceform1:refreshViewPanel').click();
 }
-function refreshPagesPanel(parameter) {
+/*function refreshPagesPanel(parameter) {
 	$('workspaceform1:refreshPagesPanel').click();
 }
 function refreshMainApplication() {
 	$('workspaceform1:loadPageFunction').click();
-}
+}*/
 //--------------------------------
-
-
-
 //Handles the deletion of a form component created with JSF
 function removeComponent(parameter) {
 	var node = parameter.parentNode;
@@ -770,9 +775,6 @@ function removeComponentNode(parameter) {
 	}
 }
 //----------------------------------------
-
-
 /*Setup modal message windows functionality*/
 messageObj = new DHTML_modalMessage();
 messageObj.setShadowOffset(5);
-		

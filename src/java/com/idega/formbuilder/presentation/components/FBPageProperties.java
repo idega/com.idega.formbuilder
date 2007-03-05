@@ -7,7 +7,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 
-import org.ajax4jsf.ajax.html.HtmlAjaxCommandButton;
+import org.apache.myfaces.component.html.ext.HtmlCommandButton;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
@@ -48,20 +48,10 @@ public static final String COMPONENT_TYPE = "PageProperties";
 		HtmlInputText title = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		title.setId("pageTitle");
 		title.setValueBinding("value", application.createValueBinding("#{formPage.title}"));
-//		title.setOnkeypress("alert('blaaaa');");
-		title.setOnblur("savePageTitle(this.value)");
+		title.setOnblur("savePageTitle(this.value);");
 		
 		cell = row.createCell();
 		cell.add(title);
-		
-		HtmlAjaxCommandButton newPageButton = (HtmlAjaxCommandButton) application.createComponent(HtmlAjaxCommandButton.COMPONENT_TYPE);
-		newPageButton.setValue("New page");
-		newPageButton.setId("newPB_PP");
-		newPageButton.setOnclick("createNewPage();return false");
-		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.add(newPageButton);
 		
 		addFacet(CONTENT_FACET, table);
 	}

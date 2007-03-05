@@ -58,41 +58,25 @@ public class FBMenu extends FBComponentBase {
 		WFDivision menuHeaderPanel = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		menuHeaderPanel.setId("menuPanelToolbar");
 
-		HtmlCommandButton newFormButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
-		newFormButton.setId("newFormButton");
-		newFormButton.setOnclick("displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/new-dialog.inc');return false");
-		newFormButton.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['toolbar_new']}"));
-		
-		HtmlCommandButton saveFormButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
-		saveFormButton.setId("saveFormButton");
-		saveFormButton.setOnclick("saveFormDocument();return false");
-		saveFormButton.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"));
-		
-		HtmlCommandButton homeButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
-		homeButton.setId("homeButton");
-//		homeButton.setOnclick("FormDocument.logFormDocument(nothing);return false");
-		homeButton.setAction(application.createMethodBinding("#{workspace.redirectHome}", null));
-		homeButton.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['toolbar_home']}"));
-		
-//		HtmlSelectOneMenu selectFormMenu = (HtmlSelectOneMenu) application.createComponent(HtmlSelectOneMenu.COMPONENT_TYPE);
-//		selectFormMenu.setId("selectFormMenu");
-//		selectFormMenu.setValueBinding("value", application.createValueBinding("#{formDocument.formId}"));
-//		UISelectItems forms = (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
-//		forms.setValueBinding("value", application.createValueBinding("#{formSelector.forms}"));
-//		addChild(forms, selectFormMenu);
+//		HtmlCommandButton newFormButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
+//		newFormButton.setId("newFormButton");
+//		newFormButton.setOnclick("displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/new-dialog.inc');return false");
+//		newFormButton.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['toolbar_new']}"));
 //		
-//		HtmlAjaxSupport selectSupport = new HtmlAjaxSupport();
-//		selectSupport.setEvent("onchange");
-//		selectSupport.setOnsubmit("showLoadingMessage('Opening')");
-//		selectSupport.setOncomplete("closeLoadingMessage()");
-//		selectSupport.setAjaxSingle(false);
-//		selectSupport.setReRender("ajaxViewPanel");
-//		selectSupport.setActionListener(application.createMethodBinding("#{formDocument.changeForm}", new Class[]{ActionEvent.class}));
-//		addChild(selectSupport, selectFormMenu);
-		
-		addChild(newFormButton, menuHeaderPanel);
-		addChild(saveFormButton, menuHeaderPanel);
-		addChild(homeButton, menuHeaderPanel);
+//		HtmlCommandButton saveFormButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
+//		saveFormButton.setId("saveFormButton");
+//		saveFormButton.setOnclick("saveFormDocument();return false");
+//		saveFormButton.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"));
+//		
+//		HtmlCommandButton homeButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
+//		homeButton.setId("homeButton");
+////		homeButton.setOnclick("FormDocument.logFormDocument(nothing);return false");
+//		homeButton.setAction(application.createMethodBinding("#{workspace.redirectHome}", null));
+//		homeButton.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['toolbar_home']}"));
+//		
+//		addChild(newFormButton, menuHeaderPanel);
+//		addChild(saveFormButton, menuHeaderPanel);
+//		addChild(homeButton, menuHeaderPanel);
 //		addChild(selectFormMenu, menuHeaderPanel);
 		
 		WFDivision newFormPanel = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
