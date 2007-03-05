@@ -19,9 +19,6 @@ import com.idega.block.form.business.FormsService;
 import com.idega.block.formadmin.presentation.actions.GetAvailableFormsAction;
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
-import com.idega.documentmanager.business.form.Button;
-import com.idega.documentmanager.business.form.ButtonArea;
-import com.idega.documentmanager.business.form.Component;
 import com.idega.documentmanager.business.form.Document;
 import com.idega.documentmanager.business.form.DocumentManager;
 import com.idega.documentmanager.business.form.Page;
@@ -82,52 +79,52 @@ public class FormDocument implements Serializable {
 		return result;
 	}
 	
-	public void logFormDocument() {
-		Locale locale = new Locale("en");
-		System.out.println("Document ID: " + formId);
-		System.out.println("Document title: " + formTitle);
-		
-		List<String> pages = document.getContainedPagesIdList();
-		Iterator it = pages.iterator();
-		while(it.hasNext()) {
-			String pageId = (String) it.next();
-			Page page = document.getPage(pageId);
-			if(page != null) {
-				System.out.println("Page ID: " + page.getId());
-				System.out.println("Page Type: " + page.getType());
-				System.out.println("Page title: " + page.getProperties().getLabel().getString(locale));
-				
-				List<String> components = page.getContainedComponentsIdList();
-				Iterator itr = components.iterator();
-				while(itr.hasNext()) {
-					String componentId = (String) itr.next();
-					Component component = page.getComponent(componentId);
-					if(component != null) {
-						System.out.println("Component ID: " + component.getId());
-						System.out.println("Component Type: " + component.getType());
-					}
-				}
-				
-				ButtonArea area = page.getButtonArea();
-				if(area != null) {
-					System.out.println("ButtonArea ID: " + area.getId());
-					System.out.println("ButtonArea Type: " + area.getType());
-					
-					List<String> ids = area.getContainedComponentsIdList();
-					Iterator its = ids.iterator();
-					while(its.hasNext()) {
-						String buttonId = (String) its.next();
-						Button button = (Button) area.getComponent(buttonId);
-						
-						if(button != null) {
-							System.out.println("Button ID: " + button.getId());
-							System.out.println("Button Type: " + button.getType());
-						}
-					}
-				}
-			}
-		}
-	}
+//	public void logFormDocument() {
+//		Locale locale = new Locale("en");
+//		System.out.println("Document ID: " + formId);
+//		System.out.println("Document title: " + formTitle);
+//		
+//		List<String> pages = document.getContainedPagesIdList();
+//		Iterator it = pages.iterator();
+//		while(it.hasNext()) {
+//			String pageId = (String) it.next();
+//			Page page = document.getPage(pageId);
+//			if(page != null) {
+//				System.out.println("Page ID: " + page.getId());
+//				System.out.println("Page Type: " + page.getType());
+//				System.out.println("Page title: " + page.getProperties().getLabel().getString(locale));
+//				
+//				List<String> components = page.getContainedComponentsIdList();
+//				Iterator itr = components.iterator();
+//				while(itr.hasNext()) {
+//					String componentId = (String) itr.next();
+//					Component component = page.getComponent(componentId);
+//					if(component != null) {
+//						System.out.println("Component ID: " + component.getId());
+//						System.out.println("Component Type: " + component.getType());
+//					}
+//				}
+//				
+//				ButtonArea area = page.getButtonArea();
+//				if(area != null) {
+//					System.out.println("ButtonArea ID: " + area.getId());
+//					System.out.println("ButtonArea Type: " + area.getType());
+//					
+//					List<String> ids = area.getContainedComponentsIdList();
+//					Iterator its = ids.iterator();
+//					while(its.hasNext()) {
+//						String buttonId = (String) its.next();
+//						Button button = (Button) area.getComponent(buttonId);
+//						
+//						if(button != null) {
+//							System.out.println("Button ID: " + button.getId());
+//							System.out.println("Button Type: " + button.getType());
+//						}
+//					}
+//				}
+//			}
+//		}
+//	}
 	
 	private String getCurrentFormId(FacesContext context) {
 		String result = "";
@@ -242,6 +239,19 @@ public class FormDocument implements Serializable {
 				Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 				workspace.setView(Workspace.CODE_VIEW);
 				workspace.setRenderedMenu(false);
+				
+				String firstPage = getCommonPagesIdList().get(0);
+				Page firstP = document.getPage(firstPage);
+				FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+				if(formPage != null) {
+					formPage.clearPageInfo();
+					formPage.setPage(firstP);
+				}
+				loadFormInfo();
+				FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
+				if(formComponent != null) {
+					formComponent.clearFormComponentInfo();
+				}
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
