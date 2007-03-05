@@ -48,13 +48,9 @@ function placeNewButton(parameter) {
 		var db = document.createElement('img');
 		db.setAttribute('class', 'fbSpeedBButton');
 		db.setAttribute('src', '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png');
-		node.setAttribute('onclick', 'removeButton(this.id);');
+		db.setAttribute('onclick', 'removeButton(this.id);');
 		node.appendChild(db);
 		currentButton = node;
-		
-		Position.includeScrollOffsets = true;
-		Sortable.create(container.id,{dropOnEmpty:true,tag:'div',only:'formButton',onUpdate:rearrangeButtons,scroll:container.id,constraint:false});
-		Droppables.add(container.id,{onDrop:handleButtonDrop});
 	}
 }
 function removeButton(parameter) {
@@ -248,7 +244,7 @@ function placePageInfo(parameter) {
 		if(pageTitleTxt != null) {
 			pageTitleTxt.value = parameter.pageTitle;
 		}
-		STATIC_ACCORDEON.showTabByIndex(3, false);
+		STATIC_ACCORDEON.showTabByIndex(3, true);
 		$('workspaceform1:refreshViewPanel').click();
 	}
 }

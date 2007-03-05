@@ -53,16 +53,21 @@ public class FBHomePage extends FBComponentBase {
 				String scriptaculousURI = business.getBundleURIToScriptaculousLib();
 				String ricoURI = business.getBundleURIToRico();
 	
-				Script s = parentPage.getAssociatedScript();
+				//Script s = parentPage.getAssociatedScript();
+				Script s = new Script();
+//				parentPage.addJavascriptURL(HOMEPAGE_JS);
+//				parentPage.addJavascriptURL(prototypeURI);
+//				parentPage.addJavascriptURL(scriptaculousURI);
+//				parentPage.addJavascriptURL(ricoURI);
 				s.addScriptSource(prototypeURI);
 				s.addScriptSource(scriptaculousURI);
 				s.addScriptSource(ricoURI);
 				s.addScriptSource(HOMEPAGE_JS);
 
-				parentPage.addScriptSource(prototypeURI);
-				parentPage.addScriptSource(scriptaculousURI);
-				parentPage.addScriptSource(ricoURI);
-				parentPage.addScriptSource(HOMEPAGE_JS);
+//				parentPage.addScriptSource(prototypeURI);
+//				parentPage.addScriptSource(scriptaculousURI);
+//				parentPage.addScriptSource(ricoURI);
+				//parentPage.addScriptSource(HOMEPAGE_JS);
 				
 				// THIS HAS TO BE ADDED TO THE <BODY> in the html, if not it does not work in Safari
 				parentPage.setOnLoad("javascript:bodyOnLoad()");
