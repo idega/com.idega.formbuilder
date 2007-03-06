@@ -475,7 +475,11 @@ public class FormComponent implements Serializable {
 	public void setExternalSrc(String externalSrc) {
 		this.externalSrc = externalSrc;
 		if(propertiesSelect != null) {
-			propertiesSelect.setExternalDataSrc(externalSrc);
+			if(externalSrc.equals("")) {
+				propertiesSelect.setExternalDataSrc(null);
+			} else {
+				propertiesSelect.setExternalDataSrc(externalSrc);
+			}
 		}
 	}
 
