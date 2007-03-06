@@ -58,27 +58,6 @@ public class FBMenu extends FBComponentBase {
 		WFDivision menuHeaderPanel = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		menuHeaderPanel.setId("menuPanelToolbar");
 
-//		HtmlCommandButton newFormButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
-//		newFormButton.setId("newFormButton");
-//		newFormButton.setOnclick("displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/new-dialog.inc');return false");
-//		newFormButton.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['toolbar_new']}"));
-//		
-//		HtmlCommandButton saveFormButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
-//		saveFormButton.setId("saveFormButton");
-//		saveFormButton.setOnclick("saveFormDocument();return false");
-//		saveFormButton.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"));
-//		
-//		HtmlCommandButton homeButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
-//		homeButton.setId("homeButton");
-////		homeButton.setOnclick("FormDocument.logFormDocument(nothing);return false");
-//		homeButton.setAction(application.createMethodBinding("#{workspace.redirectHome}", null));
-//		homeButton.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['toolbar_home']}"));
-//		
-//		addChild(newFormButton, menuHeaderPanel);
-//		addChild(saveFormButton, menuHeaderPanel);
-//		addChild(homeButton, menuHeaderPanel);
-//		addChild(selectFormMenu, menuHeaderPanel);
-		
 		WFDivision newFormPanel = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		newFormPanel.setId("newFormPanel");
 		
@@ -169,10 +148,6 @@ public class FBMenu extends FBComponentBase {
 		if(facet != null) {
 			renderChild(context, facet);
 		}
-//		facet = getFacet(NEW_FORM_PANEL_FACET);
-//		if(facet != null) {
-//			renderChild(context, facet);
-//		}
 		ValueBinding showVB = getValueBinding("show");
 		if(showVB != null) {
 			show = (Boolean) showVB.getValue(context);

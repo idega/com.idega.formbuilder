@@ -45,7 +45,7 @@ function hideInputField() {
 	}
 }
 function confirmFormDelete(parameter) {
-	var go = confirm("Are you sure?");
+	var go = confirm("Do you really want to delete this form?");
 	if (go == true) {
 		if(parameter != null) {
 			var str = parameter.id;

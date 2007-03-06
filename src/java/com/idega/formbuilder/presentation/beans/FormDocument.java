@@ -141,6 +141,50 @@ public class FormDocument implements Serializable {
 		return result;
 	}
 	
+	public String createFormDocument(String parameter) {
+//		String name = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:newTxt");
+//		if(name == null || name.equals("")) {
+//			name = "UNTITLED FORM";
+//		}
+		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
+		if(workspace != null) {
+			Locale locale = workspace.getLocale();
+			DocumentManager formManagerInstance = ActionManager.getDocumentManagerInstance();
+			Document document = null;
+			String id = getFormsService().generateFormId(parameter);
+			LocalizedStringBean formName = new LocalizedStringBean();
+			formName.setString(locale, parameter);
+			
+			try {
+				document = formManagerInstance.createForm(id, formName);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+			
+			workspace.setView("design");
+			workspace.setDesignViewStatus("empty");
+			workspace.setSelectedMenu("0");
+			workspace.setRenderedMenu(true);
+			
+			clearFormDocumentInfo();
+			setFormId(id);
+			setDocument(document);
+			
+			loadFormInfo();
+			
+			Page page = document.getPage(document.getContainedPagesIdList().get(0));
+			FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+			if(formPage != null) {
+				formPage.setPage(page);
+			}
+			FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
+			if(formComponent != null) {
+				formComponent.clearFormComponentInfo();
+			}
+		}
+		return parameter;
+	}
+	
 	public String createNewForm() {
 		String name = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:newTxt");
 		if(name == null || name.equals("")) {
@@ -274,7 +318,6 @@ public class FormDocument implements Serializable {
 		
 		String form_id = retrieveFormIdFormButtonId(getCurrentFormId(FacesContext.getCurrentInstance()), FBFormListItem.delete_button_postfix);
 		
-//		TODO: (alex) display confirmation tab with checkbox to delete submitted data together with form
 		boolean delete_submitted_data = true;
 		
 		if(form_id == null)

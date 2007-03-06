@@ -784,11 +784,15 @@ function createNewForm() {
 	if(name != '') {
 		closeMessage();
 		showLoadingMessage("Creating");
-		FormDocument.createNewForm(refreshViewPanel);
+		FormDocument.createFormDocument(name,refreshViewPanelW);
 	}
 }
 function refreshViewPanel(parameter) {
 	$('workspaceform1:refreshViewPanel').click();
+}
+function refreshViewPanelW(parameter) {
+	$('workspaceform1:refreshViewPanel').click();
+	closeLoadingMessage();
 }
 /*function refreshPagesPanel(parameter) {
 	$('workspaceform1:refreshPagesPanel').click();
