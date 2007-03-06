@@ -7,9 +7,9 @@ import javax.faces.context.FacesContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.idegaweb.IWApplicationContext;
 import com.idega.idegaweb.IWMainApplication;
+import com.idega.webface.WFUtil;
 import com.idega.block.form.business.FormsService;
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
@@ -17,35 +17,39 @@ import com.idega.documentmanager.business.DocumentManagerService;
 import com.idega.documentmanager.business.form.DocumentManager;
 import com.idega.documentmanager.business.form.manager.util.InitializationException;
 
-// TODO: fix this class from static and global stuff
 public class ActionManager implements Serializable {
 	
 	private static final long serialVersionUID = -753995343458793992L;
 	private static Log logger = LogFactory.getLog(ActionManager.class);
+	private FormsService forms_service;
+	public static final String ACTION_MANAGER_MANAGED_BEAN = "actionManager";
 	
-	private static DocumentManager formManagerInstance;
+	private DocumentManager documentManagerInstance;
 	
-	public static DocumentManager getDocumentManagerInstance() {
-		if(formManagerInstance == null) {
+	public ActionManager() {
+		
+	}
+	
+	public DocumentManager getDocumentManagerInstance() {
+		if(documentManagerInstance == null) {
 			return createNewInstance();
 		} else {
-			return formManagerInstance;
+			return documentManagerInstance;
 		}
 	}
 	
-	private static DocumentManager createNewInstance() {
+	private DocumentManager createNewInstance() {
 		try {
-			formManagerInstance = getDocumentManagerService().newDocumentManager(FacesContext.getCurrentInstance());
-			formManagerInstance.setPersistenceManager(getFormsService());
+			documentManagerInstance = getDocumentManagerService().newDocumentManager(FacesContext.getCurrentInstance());
+			documentManagerInstance.setPersistenceManager(getFormsService());
 			
 		} catch(InitializationException ie) {
 			ie.printStackTrace();
 		}
-		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(FormbuilderViewManager.FORM_MANAGER_INSTANCE, formManagerInstance);
-		return formManagerInstance;
+		return documentManagerInstance;
 	}
 	
-	protected static DocumentManagerService getDocumentManagerService() {
+	protected DocumentManagerService getDocumentManagerService() {
 		
 		try {
 			IWApplicationContext iwc = IWMainApplication.getDefaultIWApplicationContext();
@@ -56,14 +60,23 @@ public class ActionManager implements Serializable {
 		return null;
 	}
 	
-	protected static FormsService getFormsService() {
+	protected FormsService getFormsService() {
 		
-		try {
-			IWApplicationContext iwc = IWMainApplication.getDefaultIWApplicationContext();
-			return (FormsService) IBOLookup.getServiceInstance(iwc, FormsService.class);
-		} catch (IBOLookupException e) {
-			logger.error("Could not find FormsService", e);
+		if(forms_service == null) {
+			
+			try {
+				IWApplicationContext iwc = IWMainApplication.getDefaultIWApplicationContext();
+				forms_service = (FormsService) IBOLookup.getServiceInstance(iwc, FormsService.class);
+			} catch (IBOLookupException e) {
+				logger.error("Could not find FormsService", e);
+			}
 		}
-		return null;
+		
+		return forms_service;
+	}
+	
+	public static ActionManager getCurrentInstance() {
+		
+		return (ActionManager)WFUtil.getBeanInstance(ACTION_MANAGER_MANAGED_BEAN);
 	}
 }

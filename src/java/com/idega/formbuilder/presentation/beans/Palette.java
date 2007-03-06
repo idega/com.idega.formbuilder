@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.faces.context.FacesContext;
+
 import com.idega.documentmanager.business.form.ConstComponentCategory;
 import com.idega.documentmanager.business.form.DocumentManager;
 import com.idega.formbuilder.view.ActionManager;
@@ -17,7 +19,7 @@ public class Palette implements Serializable {
 	private List<PaletteComponent> buttons = new ArrayList<PaletteComponent>();
 	
 	public Palette() throws Exception {
-		DocumentManager formManagerInstance = ActionManager.getDocumentManagerInstance();
+		DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
 		if(formManagerInstance != null) {
 			List<String> temp = formManagerInstance.getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.BASIC));
 			Iterator it = temp.iterator();

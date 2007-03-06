@@ -149,7 +149,7 @@ public class FormDocument implements Serializable {
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 		if(workspace != null) {
 			Locale locale = workspace.getLocale();
-			DocumentManager formManagerInstance = ActionManager.getDocumentManagerInstance();
+			DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
 			Document document = null;
 			String id = getFormsService().generateFormId(parameter);
 			LocalizedStringBean formName = new LocalizedStringBean();
@@ -193,7 +193,7 @@ public class FormDocument implements Serializable {
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 		if(workspace != null) {
 			Locale locale = workspace.getLocale();
-			DocumentManager formManagerInstance = ActionManager.getDocumentManagerInstance();
+			DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
 			Document document = null;
 			String id = getFormsService().generateFormId(name);
 			LocalizedStringBean formName = new LocalizedStringBean();
@@ -243,7 +243,7 @@ public class FormDocument implements Serializable {
 			String buttonId = getCurrentFormId(FacesContext.getCurrentInstance());
 			String formId = buttonId.substring(15, buttonId.indexOf("_edit"));
 			if(formId != "") {
-				DocumentManager formManagerInstance = ActionManager.getDocumentManagerInstance();
+				DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
 				document = formManagerInstance.openForm(formId);
 				String firstPage = getCommonPagesIdList().get(0);
 				Page firstP = document.getPage(firstPage);
@@ -278,7 +278,7 @@ public class FormDocument implements Serializable {
 			String buttonId = getCurrentFormId(FacesContext.getCurrentInstance());
 			String formId = buttonId.substring(15, buttonId.indexOf("_code"));
 			if(formId != "") {
-				DocumentManager formManagerInstance = ActionManager.getDocumentManagerInstance();
+				DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
 				document = formManagerInstance.openForm(formId);
 				Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 				workspace.setView(Workspace.CODE_VIEW);
@@ -458,7 +458,7 @@ public class FormDocument implements Serializable {
 	}
 	
 	public void changeForm(ActionEvent ae) {
-		DocumentManager formManagerInstance = ActionManager.getDocumentManagerInstance();
+		DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 		if(formId != null && !formId.equals("") && !formId.equals("INACTIVE")) {
 			try {
@@ -612,7 +612,7 @@ public class FormDocument implements Serializable {
 			if(document != null) {	
 				return document.getFormSourceCode();
 			} else {
-				document = ActionManager.getDocumentManagerInstance().getCurrentDocument();
+				document = ActionManager.getCurrentInstance().getDocumentManagerInstance().getCurrentDocument();
 				return document.getFormSourceCode();
 			}
 		} catch (Exception e) {

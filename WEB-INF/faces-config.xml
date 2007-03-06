@@ -30,6 +30,12 @@
 			<to-view-id>/workspace/forms/</to-view-id>
 		</navigation-case>
 	</navigation-rule>
+	
+	<managed-bean>
+		<managed-bean-name>actionManager</managed-bean-name>
+		<managed-bean-class>com.idega.formbuilder.view.ActionManager</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
 	<managed-bean>
 		<managed-bean-name>formPage</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.presentation.beans.FormPage</managed-bean-class>

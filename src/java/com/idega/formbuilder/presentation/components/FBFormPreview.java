@@ -67,7 +67,7 @@ public class FBFormPreview extends FBComponentBase {
 	protected void initializeComponent(FacesContext context) {
 		super.initializeComponent(context);
 		
-		Document xforms_document = ActionManager.getDocumentManagerInstance().getCurrentDocument();
+		Document xforms_document = ActionManager.getCurrentInstance().getDocumentManagerInstance().getCurrentDocument();
 		if(xforms_document == null) {
 			logger.error("Form document got form ActionManager was null");
 			return;
