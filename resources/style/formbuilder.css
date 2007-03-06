@@ -8,6 +8,11 @@
 	border: 1px solid LightGrey;
 	padding: 25px;
 }
+.fbBottomRightButtonsContainer {
+	position: absolute;
+	right: 0px;
+	bottom: 0px;
+}
 .fbBottomButtonsContainer {
 	position: absolute;
 	bottom: 0px;
