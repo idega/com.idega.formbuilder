@@ -655,7 +655,7 @@ function saveFormDocument() {
 function saveSourceCode(source_code) {
 	if(source_code != null) {
 		showLoadingMessage('Saving');
-		FormDocument.saveSrc(source_code, refreshViewPanel);
+		FormDocument.saveSrc(source_code, doNothing);
 	}
 }
 function doNothing(parameter) {
