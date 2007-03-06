@@ -44,6 +44,20 @@ function hideInputField() {
 		cancelBt.style.display = 'none';
 	}
 }
+function confirmFormDelete(parameter) {
+	var go = confirm("Are you sure?");
+	if (go == true) {
+		if(parameter != null) {
+			var str = parameter.id;
+			var idStr = str.substring(0,str.lastIndexOf('_div'));
+			document.forms[0].elements[idStr].value='true';
+			document.forms[0].submit();
+		}
+	   	return true;
+	} else {
+	  	return false;
+	}
+}
 function getTopPos(inputObj) {
 	  var returnValue = inputObj.offsetTop;
 	  while((inputObj = inputObj.offsetParent) != null)returnValue += inputObj.offsetTop;
