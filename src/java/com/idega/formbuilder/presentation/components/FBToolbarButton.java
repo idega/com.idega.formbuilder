@@ -18,7 +18,16 @@ public class FBToolbarButton extends WFToolbarButton {
 
 	private String toolTip;
 	private String styleClass;
+	private String onclick;
 	
+	public String getOnclick() {
+		return onclick;
+	}
+
+	public void setOnclick(String onclick) {
+		this.onclick = onclick;
+	}
+
 	public String getToolTip() {
 		return toolTip;
 	}
@@ -30,7 +39,6 @@ public class FBToolbarButton extends WFToolbarButton {
 	public void encodeBegin(FacesContext context) {
 		try {
 			ResponseWriter out = context.getResponseWriter();
-			
 			String buttonId = getClientId(context);
 			String imageId = buttonId + "_img";
 			
@@ -43,13 +51,17 @@ public class FBToolbarButton extends WFToolbarButton {
 			out.endElement("input");
 			
 			String formName = determineFormName(this);
-			String click = "document.forms['" + formName + "'].elements['" + buttonId + 
-			"'].value='true';document.forms['" + formName + "'].submit();";
-
 			out.startElement("div", null);
+			out.writeAttribute("id", buttonId + "_div", null);
 			out.writeAttribute("class", styleClass, null);
-//			out.writeAttribute("id", buttonId + "_C", null);
-			out.writeAttribute("onclick", click, null);
+			if(onclick != null && !onclick.equals("")) {
+				out.writeAttribute("onclick", onclick, null);
+			} else {
+				String click = "document.forms['" + formName + "'].elements['" + buttonId + 
+				"'].value='true';document.forms['" + formName + "'].submit();";
+
+				out.writeAttribute("onclick", click, null);
+			}
 			
 			if (getDefaultImageURI() != null) {
 				out.startElement("img", null);
@@ -80,7 +92,7 @@ public class FBToolbarButton extends WFToolbarButton {
 					out.writeAttribute("title", this.toolTip, null);
 				}
 				
-				out.writeAttribute("href","#",null);
+				//out.writeAttribute("href","#",null);
 				
 				String text = getDisplayText();
 				if(text != null){
@@ -111,10 +123,11 @@ public class FBToolbarButton extends WFToolbarButton {
 	}
 	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[3];
+		Object values[] = new Object[4];
 		values[0] = super.saveState(context);
 		values[1] = styleClass;
 		values[2] = toolTip;
+		values[3] = onclick;
 		return values;
 	}
 	
@@ -123,5 +136,6 @@ public class FBToolbarButton extends WFToolbarButton {
 		super.restoreState(context, values[0]);
 		styleClass = (String) values[1];
 		toolTip = (String) values[2];
+		onclick = (String) values[3];
 	}
 }

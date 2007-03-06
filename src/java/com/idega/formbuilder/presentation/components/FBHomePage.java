@@ -53,21 +53,11 @@ public class FBHomePage extends FBComponentBase {
 				String scriptaculousURI = business.getBundleURIToScriptaculousLib();
 				String ricoURI = business.getBundleURIToRico();
 	
-				//Script s = parentPage.getAssociatedScript();
 				Script s = new Script();
-//				parentPage.addJavascriptURL(HOMEPAGE_JS);
-//				parentPage.addJavascriptURL(prototypeURI);
-//				parentPage.addJavascriptURL(scriptaculousURI);
-//				parentPage.addJavascriptURL(ricoURI);
 				s.addScriptSource(prototypeURI);
 				s.addScriptSource(scriptaculousURI);
 				s.addScriptSource(ricoURI);
 				s.addScriptSource(HOMEPAGE_JS);
-
-//				parentPage.addScriptSource(prototypeURI);
-//				parentPage.addScriptSource(scriptaculousURI);
-//				parentPage.addScriptSource(ricoURI);
-				//parentPage.addScriptSource(HOMEPAGE_JS);
 				
 				// THIS HAS TO BE ADDED TO THE <BODY> in the html, if not it does not work in Safari
 				parentPage.setOnLoad("javascript:bodyOnLoad()");
@@ -77,6 +67,9 @@ public class FBHomePage extends FBComponentBase {
 				e.printStackTrace();
 			}
 		}
+		
+		FormList formList = (FormList) WFUtil.getBeanInstance("formSelector");
+		List<SelectItem> formsList = formList.getForms();
 		
 		WFDivision header = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		header.setId("fbHomePageHeaderBlock");
@@ -110,16 +103,36 @@ public class FBHomePage extends FBComponentBase {
 		WFDivision greeting = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		greeting.setId("fbHomePageWelcomeBlock");
 		
-		HtmlOutputText greetingText = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		greetingText.setValue("Good afternoon and welcome. I see you have created several forms. You can manage them in the list below or create a new one ");
-		greetingText.setId("greetingText");
+		HtmlOutputText greetingText1 = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		greetingText1.setValue("Good afternoon ");
+		greetingText1.setId("greetingText1");
+		
+		HtmlOutputText userName = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		userName.setValue(IWContext.getInstance().getCurrentUser().getName());
+		userName.setId("userName");
+		
+		HtmlOutputText greetingText2 = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		greetingText2.setValue(" and welcome. I see you have created ");
+		greetingText2.setId("greetingText2");
+		
+		HtmlOutputText formCount = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		formCount.setValue(formsList.size());
+		formCount.setId("formCount");
+		
+		HtmlOutputText greetingText3 = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		greetingText3.setValue(" forms. You can manage them in the list below or create a new one ");
+		greetingText3.setId("greetingText3");
 		
 		HtmlCommandLink greetingTextL = (HtmlCommandLink) application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
 		greetingTextL.setValue("here");
 		greetingTextL.setOnclick("showInputField();return false");
 		greetingTextL.setId("greetingTextL");
 		
-		addChild(greetingText, greeting);
+		addChild(greetingText1, greeting);
+		addChild(userName, greeting);
+		addChild(greetingText2, greeting);
+		addChild(formCount, greeting);
+		addChild(greetingText3, greeting);
 		addChild(greetingTextL, greeting);
 		
 		addFacet(GREETING_BLOCK_FACET, greeting);
@@ -159,8 +172,7 @@ public class FBHomePage extends FBComponentBase {
 		WFDivision slideEnd = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		slideEnd.setId("slideEnd");
 		
-		FormList formList = (FormList) WFUtil.getBeanInstance("formSelector");
-		List<SelectItem> formsList = formList.getForms();
+		
 		Iterator it = formsList.iterator();
 		while(it.hasNext()) {
 			SelectItem item = (SelectItem) it.next();

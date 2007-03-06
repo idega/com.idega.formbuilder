@@ -18,6 +18,12 @@ public class FBFormListItem extends FBComponentBase {
 	public static final String entries_button_postfix = "_entries";
 	public static final String duplicate_button_postfix = "_duplicate";
 	
+	private static final String ENTRIES_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/application_view_list.png";
+	private static final String EDIT_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/application_form_edit.png";
+	private static final String CODE_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/page_white_code.png";
+	private static final String DUPLICATE_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/page_copy.png";
+	private static final String DELETE_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/bin_closed.png";
+	
 	private static final String CONTENT_DIV_FACET = "CONTENT_DIV_FACET";
 	
 	private String formId;
@@ -75,32 +81,33 @@ public class FBFormListItem extends FBComponentBase {
 		entriesButton.setStyleClass("bottomButton");
 		entriesButton.setId(getId() + entries_button_postfix);
 		entriesButton.setDisplayText("Entries");
-		entriesButton.setDefaultImageURI("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/application_view_list.png");
+		entriesButton.setDefaultImageURI(ENTRIES_BUTTON_ICON);
 		entriesButton.setAction(application.createMethodBinding("#{formDocument.loadFormDocumentEntries}", null));
 		FBToolbarButton editButton = new FBToolbarButton();
 		editButton.setStyleClass("bottomButton");
 		editButton.setDisplayText("Edit");
 		editButton.setId(getId() + "_edit");
-		editButton.setDefaultImageURI("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/application_form_edit.png");
+		editButton.setDefaultImageURI(EDIT_BUTTON_ICON);
 		editButton.setAction(application.createMethodBinding("#{formDocument.loadFormDocument}", null));
 		FBToolbarButton codeButton = new FBToolbarButton();
 		codeButton.setStyleClass("bottomButton");
 		codeButton.setDisplayText("Code");
 		codeButton.setId(getId() + "_code");
-		codeButton.setDefaultImageURI("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/page_white_code.png");
+		codeButton.setDefaultImageURI(CODE_BUTTON_ICON);
 		codeButton.setAction(application.createMethodBinding("#{formDocument.loadFormDocumentCode}", null));
 		FBToolbarButton duplicateButton = new FBToolbarButton();
 		duplicateButton.setStyleClass("bottomButton");
 		duplicateButton.setDisplayText("Duplicate");
 		duplicateButton.setId(getId() + duplicate_button_postfix);
-		duplicateButton.setDefaultImageURI("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/page_copy.png");
+		duplicateButton.setDefaultImageURI(DUPLICATE_BUTTON_ICON);
 		duplicateButton.setAction(application.createMethodBinding("#{formDocument.duplicateFormDocument}", null));
 		FBToolbarButton deleteButton = new FBToolbarButton();
 		deleteButton.setStyleClass("bottomButton");
 		deleteButton.setDisplayText("Delete");
 		deleteButton.setId(getId() + delete_button_postfix);
-		deleteButton.setDefaultImageURI("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/bin_closed.png");
+		deleteButton.setDefaultImageURI(DELETE_BUTTON_ICON);
 		deleteButton.setAction(application.createMethodBinding("#{formDocument.deleteFormDocument}", null));
+		deleteButton.setOnclick("confirmFormDelete(this);");
 		
 		addChild(name, bodyTopLeft);
 		addChild(bodyTopLeft, bodyTop);
