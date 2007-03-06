@@ -11,7 +11,6 @@ import org.apache.myfaces.component.html.ext.HtmlOutputText;
 import org.apache.myfaces.component.html.ext.HtmlSelectBooleanCheckbox;
 import org.apache.myfaces.component.html.ext.HtmlSelectOneRadio;
 
-import com.idega.documentmanager.business.form.Button;
 import com.idega.documentmanager.business.form.Component;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormComponent;
@@ -110,20 +109,20 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		cell = row.createCell();
 		cell.add(errorMsg);
 		
-		HtmlOutputText helpMsgLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		helpMsgLabel.setValue("Help text");
-		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.add(helpMsgLabel);
-		
-		HtmlInputText helpMsg = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
-		helpMsg.setId("propertyHelpText");
-		helpMsg.setValueBinding("value", application.createValueBinding("#{formComponent.helpMessage}"));
-		helpMsg.setOnblur("saveHelpMessage(this.value)");
-		
-		cell = row.createCell();
-		cell.add(helpMsg);
+//		HtmlOutputText helpMsgLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+//		helpMsgLabel.setValue("Help text");
+//		
+//		row = group.createRow();
+//		cell = row.createCell();
+//		cell.add(helpMsgLabel);
+//		
+//		HtmlInputText helpMsg = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+//		helpMsg.setId("propertyHelpText");
+//		helpMsg.setValueBinding("value", application.createValueBinding("#{formComponent.helpMessage}"));
+//		helpMsg.setOnblur("saveHelpMessage(this.value)");
+//		
+//		cell = row.createCell();
+//		cell.add(helpMsg);
 		
 		HtmlOutputText hasAutofillLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		hasAutofillLabel.setValue("Autofill field");
@@ -272,7 +271,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		Table2 local = (Table2) getFacet(LOCAL_PROPERTIES_FACET);
 		FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
 		Component component = formComponent.getComponent();
-		if((component) == null) {
+		if(component == null) {
 			basic.setStyleAttribute("display: block");
 			if(formComponent.getAutofillKey() != "") {
 				auto.setStyleAttribute("display: block");
