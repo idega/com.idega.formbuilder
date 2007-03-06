@@ -7,7 +7,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 
-import org.apache.myfaces.component.html.ext.HtmlCommandButton;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
@@ -49,6 +48,7 @@ public static final String COMPONENT_TYPE = "PageProperties";
 		title.setId("pageTitle");
 		title.setValueBinding("value", application.createValueBinding("#{formPage.title}"));
 		title.setOnblur("savePageTitle(this.value);");
+		title.setOnkeydown("savePropertyOnEnter(this.value,'pageTitle',event);");
 		
 		cell = row.createCell();
 		cell.add(title);

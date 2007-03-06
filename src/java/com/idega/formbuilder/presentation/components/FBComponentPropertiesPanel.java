@@ -62,6 +62,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		title.setId("propertyTitle");
 		title.setValueBinding("value", application.createValueBinding("#{formComponent.label}"));
 		title.setOnblur("saveComponentLabel(this.value);");
+		title.setOnkeydown("savePropertyOnEnter(this.value,'compTitle',event);");
 		
 		cell = row.createCell();
 		cell.add(title);
@@ -105,6 +106,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		errorMsg.setId("propertyErrorMessage");
 		errorMsg.setValueBinding("value", application.createValueBinding("#{formComponent.errorMessage}"));
 		errorMsg.setOnblur("saveErrorMessage(this.value)");
+		errorMsg.setOnkeydown("savePropertyOnEnter(this.value,'compErr',event);");
 		
 		cell = row.createCell();
 		cell.add(errorMsg);
@@ -120,6 +122,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 //		helpMsg.setId("propertyHelpText");
 //		helpMsg.setValueBinding("value", application.createValueBinding("#{formComponent.helpMessage}"));
 //		helpMsg.setOnblur("saveHelpMessage(this.value)");
+//		helpMsg.setOnkeydown("savePropertyOnEnter(this.value,'compHelp',event);");
 //		
 //		cell = row.createCell();
 //		cell.add(helpMsg);
@@ -161,6 +164,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		autofillValue.setId("propertyAutofill");
 		autofillValue.setValueBinding("value", application.createValueBinding("#{formComponent.autofillKey}"));
 		autofillValue.setOnblur("saveAutofill(this.value);");
+		autofillValue.setOnkeydown("savePropertyOnEnter(this.value,'compAuto',event);");
 		
 		cell = row.createCell();
 		cell.add(autofillValue);
@@ -187,6 +191,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		emptyLabel.setId("propertyEmptyLabel");
 		emptyLabel.setValueBinding("value", application.createValueBinding("#{formComponent.emptyLabel}"));
 		emptyLabel.setOnblur("saveEmptyLabel(this.value);");
+		emptyLabel.setOnkeydown("savePropertyOnEnter(this.value,'compEmpty',event);");
 		
 		cell = row.createCell();
 		cell.add(emptyLabel);
@@ -233,6 +238,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		external.setId("propertyExternal");
 		external.setValueBinding("value", application.createValueBinding("#{formComponent.externalSrc}"));
 		external.setOnblur("saveExternalSrc(this.value);");
+		external.setOnkeydown("savePropertyOnEnter(this.value,'compExt',event);");
 		
 		cell = row.createCell();
 		cell.add(external);

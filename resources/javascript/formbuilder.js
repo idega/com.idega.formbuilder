@@ -19,6 +19,46 @@ var draggingButton = false;
 var draggingComponent = false;
 var draggingPage = false;
 
+function savePropertyOnEnter(parameter,attribute,e) {
+	if (!e) e = window.event;
+	if (!e) return true;
+	var key = (typeof e.keyCode != 'undefined' ? e.keyCode : e.charCode);
+	if(key == '13') {
+		switch(attribute) {
+		  	case 'compTitle':
+		  		saveComponentLabel(parameter);
+		    	break;
+		  	case 'compErr':
+		    	saveErrorMessage(parameter);
+		    	break;
+		 	case 'compHelp':
+		 		saveHelpMessage(parameter);
+		 		break;
+		 	case 'compAuto':
+		 		saveAutofill(parameter);
+		 		break;
+		 	case 'compEmpty':
+		 		saveEmptyLabel(parameter);
+		 		break;
+		 	case 'compExt':
+		  		saveExternalSrc(parameter);
+		  		break;
+		  	case 'formTitle':
+		 		saveFormTitle(parameter);
+		 		break;
+		 	case 'formThxTitle':
+		 		saveThankYouTitle(parameter);
+		 		break;
+		 	case 'formThxText':
+		 		saveThankYouText(parameter);
+		 		break;
+		 	case 'pageTitle':
+		  		savePageTitle(parameter);
+		  		break;
+		  	default:
+		}
+	}
+}
 function handleComponentDrag(element) {
 	if(element != null) {
 		var type = element.id;

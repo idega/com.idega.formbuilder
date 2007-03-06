@@ -50,6 +50,7 @@ public class FBFormProperties extends FBComponentBase {
 		title.setId("formTitle");
 		title.setValueBinding("value", application.createValueBinding("#{formDocument.formTitle}"));
 		title.setOnblur("saveFormTitle(this.value)");
+		title.setOnkeydown("savePropertyOnEnter(this.value,'formTitle',event);");
 		
 		cell = row.createCell();
 		cell.add(title);
@@ -81,6 +82,7 @@ public class FBFormProperties extends FBComponentBase {
 		thankYouTitle.setId("thankYouTitle");
 		thankYouTitle.setValueBinding("value", application.createValueBinding("#{formDocument.thankYouTitle}"));
 		thankYouTitle.setOnblur("saveThankYouTitle(this.value)");
+		thankYouTitle.setOnkeydown("savePropertyOnEnter(this.value,'formThxTitle',event);");
 		
 		cell = row.createCell();
 		cell.add(thankYouTitle);
@@ -97,18 +99,10 @@ public class FBFormProperties extends FBComponentBase {
 		thankYouText.setId("thankYouText");
 		thankYouText.setValueBinding("value", application.createValueBinding("#{formDocument.thankYouText}"));
 		thankYouText.setOnblur("saveThankYouText(this.value)");
+		thankYouText.setOnkeydown("savePropertyOnEnter(this.value,'formThxText',event);");
 		
 		cell = row.createCell();
 		cell.add(thankYouText);
-		
-//		HtmlCommandButton newPageButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
-//		newPageButton.setValue("New page");
-//		newPageButton.setId("newPB_FP");
-//		newPageButton.setOnclick("createNewPage();return false");
-//		
-//		row = group.createRow();
-//		cell = row.createCell();
-//		cell.add(newPageButton);
 		
 		addFacet(CONTENT_FACET, table);
 	}
