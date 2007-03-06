@@ -355,9 +355,10 @@ function handleButtonDrop(element, container) {
 function setupComponentDragAndDrop(value1,value2) {
 	Position.includeScrollOffsets = true;
 	Sortable.create(value1 + 'inner',{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangeComponents,scroll:value1,constraint:false});
-	Droppables.add(value1,{onDrop:handleComponentDrop});
+	Droppables.add('viewPanel',{onDrop:handleComponentDrop});
 }
 function handleComponentDrop(element,container) {
+	alert('Drop');
 	var empty = $('emptyForm');
 	if(empty != null) {
 		if(empty.style) {
@@ -367,10 +368,12 @@ function handleComponentDrop(element,container) {
 		}
 	}
 	if(currentElement != null) {
-		$(container.id + 'inner').appendChild(currentElement);
+		//$(container.id + 'inner').appendChild(currentElement);
+		$('dropBoxinner').appendChild(currentElement);
 		currentElement = null;
-		Sortable.create(container.id + 'inner',{dropOnEmpty:true,tag:'div',only:'formElement',onUpdate:rearrangeComponents,scroll:container.id,constraint:false});
-		Droppables.add(container.id,{onDrop:handleComponentDrop});
+		//Sortable.create(container.id + 'inner',{dropOnEmpty:true,tag:'div',only:'formElement',onUpdate:rearrangeComponents,scroll:container.id,constraint:false});
+		Sortable.create('dropBoxinner',{dropOnEmpty:true,tag:'div',only:'formElement',onUpdate:rearrangeComponents,scroll:container.id,constraint:false});
+		Droppables.add('viewPanel',{onDrop:handleComponentDrop});
 	}
 }
 function rearrangeComponents() {
@@ -794,12 +797,6 @@ function refreshViewPanelW(parameter) {
 	$('workspaceform1:refreshViewPanel').click();
 	closeLoadingMessage();
 }
-/*function refreshPagesPanel(parameter) {
-	$('workspaceform1:refreshPagesPanel').click();
-}
-function refreshMainApplication() {
-	$('workspaceform1:loadPageFunction').click();
-}*/
 //--------------------------------
 //Handles the deletion of a form component created with JSF
 function removeComponent(parameter) {
