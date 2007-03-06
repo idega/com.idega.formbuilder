@@ -243,7 +243,7 @@ public class FormComponent implements Serializable {
 	public boolean switchDataSource() {
 		if(dataSrc.equals(DataSourceList.externalDataSrc)) {
 			setDataSrc(DataSourceList.localDataSrc);
-			setExternalSrc("");
+			//setExternalSrc("");
 			return true;
 		} else {
 			setDataSrc(DataSourceList.externalDataSrc);
@@ -475,10 +475,9 @@ public class FormComponent implements Serializable {
 	public void setExternalSrc(String externalSrc) {
 		this.externalSrc = externalSrc;
 		if(propertiesSelect != null) {
-			if(externalSrc.equals("")) {
-				propertiesSelect.setExternalDataSrc(null);
-			} else {
+			if(!externalSrc.equals("")) {
 				propertiesSelect.setExternalDataSrc(externalSrc);
+				//propertiesSelect.setExternalDataSrc(null);
 			}
 		}
 	}

@@ -239,6 +239,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		external.setValueBinding("value", application.createValueBinding("#{formComponent.externalSrc}"));
 		external.setOnblur("saveExternalSrc(this.value);");
 		external.setOnkeydown("savePropertyOnEnter(this.value,'compExt',event);");
+		external.setDisabled(true);
 		
 		cell = row.createCell();
 		cell.add(external);

@@ -69,7 +69,7 @@ public class FBPaletteComponent extends FBComponentBase {
 	public String getEmbededJavascript() {
 		StringBuilder result = new StringBuilder();
 		result.append("<script language=\"JavaScript\">\n");
-		result.append("new Draggable(\"" + type + "\", {tag:\"div\",starteffect:" + onDrag + ",revert:true,ghosting:true});\n");
+		result.append("new Draggable(\"" + type + "\", {tag:\"div\",starteffect:" + onDrag + ",revert:false,ghosting:true});\n");
 		result.append("</script>\n");
 		return result.toString();
 		
