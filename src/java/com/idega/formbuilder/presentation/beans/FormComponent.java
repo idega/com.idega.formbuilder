@@ -363,6 +363,7 @@ public class FormComponent implements Serializable {
 			if(propertiesSelect.getDataSrcUsed() != null) {
 				dataSrc = propertiesSelect.getDataSrcUsed().toString();
 			} else {
+				propertiesSelect.setDataSrcUsed(PropertiesSelect.LOCAL_DATA_SRC);
 				dataSrc = DataSourceList.localDataSrc;
 			}
 			
