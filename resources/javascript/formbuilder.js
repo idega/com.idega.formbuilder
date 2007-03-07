@@ -237,7 +237,7 @@ function placePreviewPage(parameter) {
 		if(parameter.pageTitle != null) {
 		
 			var page = document.createElement('div');
-			page.setAttribute('id', parameter.pageId + '_page');
+			page.setAttribute('id', parameter.pageId + '_P_page');
 			page.setAttribute('class', 'formPageIcon');
 			page.setAttribute('styleClass', 'formPageIcon');
 			page.setAttribute('style', 'position: relative');
@@ -269,13 +269,19 @@ function placePreviewPage(parameter) {
 			//container.appendChild(page);
 			container.insertBefore(page, child);
 		} else {
-			var node = $(parameter.pageId + '_page');
-			container.removeChild(node);
+			var node = $(parameter.pageId + '_P_page');
+			if(node != null) {
+				container.removeChild(node);
+			}
 		}
 	}
 }
 function loadPageInfo(parameter) {
-	FormPage.getFormPageInfo(parameter, placePageInfo);
+	if(pressedPageDelete == false && draggingPage == false) {
+		FormPage.getFormPageInfo(parameter, placePageInfo);
+	}
+	pressedPageDelete = false;
+	draggingPage = false;
 }
 function loadConfirmationPage() {
 	FormPage.getConfirmationPageInfo(placePageInfo);
@@ -284,7 +290,7 @@ function loadThxPage() {
 	FormPage.loadThxPage(placeThxPageInfo);
 }
 function placeThxPageInfo(parameter) {
-	STATIC_ACCORDEON.showTabByIndex(2, false);
+	STATIC_ACCORDEON.showTabByIndex(2, true);
 	$('workspaceform1:refreshViewPanel').click();
 }
 function placePageInfo(parameter) {
@@ -807,12 +813,13 @@ function placeNewPage(parameter) {
 		page.setAttribute('id', parameter.pageId + '_P_page');
 		page.setAttribute('class', 'formPageIcon');
 		page.setAttribute('styleClass', 'formPageIcon');
+		page.setAttribute('onclick', 'loadPageInfo(this.id);');
 		page.setAttribute('style', 'position: relative');
 		
 		var icon = document.createElement('img');
 		icon.setAttribute('id', parameter.pageId + '_pi');
 		icon.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/document-new.png';
-		icon.setAttribute('onclick', 'loadPageInfo(this.id)');
+		
 		icon.style.display = 'block';
 		
 		var label = document.createElement('span');
