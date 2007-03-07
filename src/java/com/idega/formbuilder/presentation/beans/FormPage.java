@@ -164,7 +164,7 @@ public class FormPage implements Serializable {
 		
 		FormPageInfo result = new FormPageInfo();
 		result.setPageTitle(title);
-		
+		result.setPageId(id);
 		return result;
 	}
 	

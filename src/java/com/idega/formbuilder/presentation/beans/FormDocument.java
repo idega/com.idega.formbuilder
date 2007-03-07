@@ -439,19 +439,27 @@ public class FormDocument implements Serializable {
 		return "";
 	}
 	
-	public FormPageInfo togglePreviewPage(boolean value) {
+	public FormPageInfo togglePreviewPage(boolean value) throws Exception {
 		FormPageInfo result = new FormPageInfo();
 		hasPreview = value;
 		if(hasPreview) {
-			Page page = document.addConfirmationPage(null);
+			Page thxPage = document.getThxPage();
+			Page page = null;
+			if(thxPage != null) {
+				page = document.addConfirmationPage(thxPage.getId());
+			} else {
+				page = document.addConfirmationPage(null);
+			}
 			result.setPageTitle(page.getProperties().getLabel().getString(new Locale("en")));
 			result.setPageId(page.getId());
 		} else {
 			Page page = document.getConfirmationPage();
-			result.setPageId(page.getId());
-			result.setPageTitle(null);
 			if(page != null) {
+				result.setPageId(page.getId());
+				result.setPageTitle(null);
 				page.remove();
+			} else {
+				throw new Exception("Confirmation page does not exist in the document");
 			}
 		}
 		return result;
