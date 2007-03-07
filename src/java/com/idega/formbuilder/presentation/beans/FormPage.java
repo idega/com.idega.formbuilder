@@ -41,7 +41,7 @@ public class FormPage implements Serializable {
 		if(document != null) {
 			Page page = document.getThxPage();
 			if(page != null) {
-				this.page = page;
+				loadPageInfo(page);
 				special = true;
 			}
 		}
@@ -135,11 +135,8 @@ public class FormPage implements Serializable {
 		if(document != null) {
 			Page page = document.getConfirmationPage();
 			if(page != null) {
-				this.page = page;
+				FormPageInfo result = loadPageInfo(page);
 				special = true;
-				FormPageInfo result = new FormPageInfo();
-				result.setPageTitle(page.getProperties().getLabel().getString(new Locale("en")));
-				result.setPageId(page.getId());
 				return result;
 			}
 		}

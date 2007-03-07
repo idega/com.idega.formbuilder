@@ -175,25 +175,22 @@ public class FBDesignView extends FBComponentBase {
 		vb = getValueBinding("status");
 		if(vb != null) {
 			status = (String) vb.getValue(context);
-		} else {
-			status = getStatus();
 		}
 		if(status != null) {
-			//if(status.equals(DESIGN_VIEW_STATUS_NOFORM)) {
+			UIComponent pageHeader = getFacet(DESIGN_VIEW_PAGE_FACET);
+			if (pageHeader != null) {
+				renderChild(context, pageHeader);
+			}
+			UIComponent formHeader = getFacet(DESIGN_VIEW_HEADER_FACET);
+			if (formHeader != null) {
+				renderChild(context, formHeader);
+			}
 			if(formPage.isSpecial()) {
 				UIComponent noFormNotice = getFacet(DESIGN_VIEW_NOFORM_FACET);
 				if(noFormNotice != null) {
 					renderChild(context, noFormNotice);
 				}
 			} else  {
-				UIComponent pageHeader = getFacet(DESIGN_VIEW_PAGE_FACET);
-				if (pageHeader != null) {
-					renderChild(context, pageHeader);
-				}
-				UIComponent formHeader = getFacet(DESIGN_VIEW_HEADER_FACET);
-				if (formHeader != null) {
-					renderChild(context, formHeader);
-				}
 				if(page.getContainedComponentsIdList().size() == 0) {
 					UIComponent emptyNotice = getFacet(DESIGN_VIEW_EMPTY_FACET);
 					if (emptyNotice != null) {

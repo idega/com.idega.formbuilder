@@ -70,11 +70,12 @@ public class FBFormPage extends FBComponentBase {
 		WFDivision switcher = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		switcher.setId(getId() + "_page");
 		switcher.setStyleClass(getStyleClass());
+		switcher.setOnclick(onLoad);
 		
 		HtmlGraphicImage pageIconImg = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
 		pageIconImg.setId(getId() + "_pi");
 		pageIconImg.setValue(PAGE_ICON_IMG);
-		pageIconImg.setOnclick(onLoad);
+		//pageIconImg.setOnclick(onLoad);
 		pageIconImg.setStyle("display: block");
 		
 		HtmlOutputText pageIconLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
