@@ -91,7 +91,7 @@ function placeNewButton(parameter) {
 		var db = document.createElement('img');
 		db.setAttribute('class', 'fbSpeedBButton');
 		db.setAttribute('src', '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png');
-		db.setAttribute('onclick', 'removeButton(this.id);');
+		db.setAttribute('onclick', 'removeButton(this.parentNode.id);');
 		node.appendChild(db);
 		currentButton = node;
 	}
@@ -160,7 +160,6 @@ function placeButtonInfo(parameter) {
 function placeNewComponent(parameter) {
 	if(parameter != null) {
 		currentElement = createTreeNode(parameter.documentElement);
-		//alert(currentElement.innerHTML);
 	}
 }
 function createTreeNode(element) {

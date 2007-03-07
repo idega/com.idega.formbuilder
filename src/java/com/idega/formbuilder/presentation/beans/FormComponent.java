@@ -618,7 +618,9 @@ public class FormComponent implements Serializable {
 
 	public void setPlainText(String plainText) {
 		this.plainText = plainText;
-		propertiesPlain.setText(plainText);
+		if(propertiesPlain != null) {
+			propertiesPlain.setText(plainText);
+		}
 	}
 
 	public ComponentPlain getPlainComponent() {
