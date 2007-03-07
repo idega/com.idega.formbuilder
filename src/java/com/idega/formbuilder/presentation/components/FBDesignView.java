@@ -134,7 +134,11 @@ public class FBDesignView extends FBComponentBase {
 		ButtonArea barea = page.getButtonArea();
 		if(barea != null) {
 			System.out.println("Finding button area: " + barea.getId());
-			
+			FBButtonArea area = (FBButtonArea) application.createComponent(FBButtonArea.COMPONENT_TYPE);
+			area.setId("pageButtonArea");
+			area.setStyleClass(componentStyleClass);
+			area.setComponentStyleClass("formButton");
+			addFacet(BUTTON_AREA_FACET, area);
 			//System.out.println(barea.getId());
 		}
 		if(page != null) {
@@ -148,11 +152,12 @@ public class FBDesignView extends FBComponentBase {
 				String nextId = (String) it.next();
 				Component comp = page.getComponent(nextId);
 				if(comp instanceof Container) {
-					FBButtonArea area = (FBButtonArea) application.createComponent(FBButtonArea.COMPONENT_TYPE);
-					area.setId("pageButtonArea");
-					area.setStyleClass(componentStyleClass);
-					area.setComponentStyleClass("formButton");
-					addFacet(BUTTON_AREA_FACET, area);
+					continue;
+//					FBButtonArea area = (FBButtonArea) application.createComponent(FBButtonArea.COMPONENT_TYPE);
+//					area.setId("pageButtonArea");
+//					area.setStyleClass(componentStyleClass);
+//					area.setComponentStyleClass("formButton");
+//					addFacet(BUTTON_AREA_FACET, area);
 				} else {
 					FBFormComponent formComponent = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
 					formComponent.setId(nextId);

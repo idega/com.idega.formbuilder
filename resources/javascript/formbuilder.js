@@ -126,6 +126,14 @@ function placeButtonInfo(parameter) {
 		if(labelTxt != null) {
 			labelTxt.value = parameter.label;
 		}
+		var plainPr = $('plainPropertiesPanel');
+		if(plainPr != null) {
+			plainPr.setAttribute('style', 'display: none');
+		}
+		var labelPr = $('labelPropertiesPanel');
+		if(labelPr != null) {
+			labelPr.setAttribute('style', 'display: block');
+		}
 		var compPr = $('basicPropertiesPanel');
 		if(compPr != null) {
 			compPr.setAttribute('style', 'display: none');

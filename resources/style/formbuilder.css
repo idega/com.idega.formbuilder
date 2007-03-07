@@ -231,15 +231,15 @@ a.okBt:hover {
 	position: absolute;
 	top: 90px;
 	left: 332px;
-	right: 150px;
-	bottom: 75px;
+	right: 10px;
+	bottom: 0px;
+padding-right: 120px;
 	/*border: 1px groove Blue;*/
 }
 .pagesPanel {
 	position: absolute;
-	top: 85px;
-	right: 29px;
-	bottom: 75px;
+	top: 90px;
+	right: 10px;
 	display: inline;
 	background-color: LightGrey;
 	width: 120px;
@@ -370,13 +370,7 @@ a.okBt:hover {
 	padding-bottom: 10px;
 }
 .formButton {
-	height: 95%;
-	width: auto;
-	padding-top: 2px;
-	padding-bottom: 2px;
-	padding-left: 5px;
-	padding-right: 5px;
-	margin-right: 16px;
+
 }
 .formButton:hover {
 	margin-right: 0px;
@@ -705,7 +699,7 @@ background: #fff;
 }
 
 #mainApplication{
-border: 1px solid pink;
+
 }
 
 .viewTabs .selectedTab{
@@ -720,12 +714,12 @@ background: #fff;
 margin-left: 12px;
 }
 
-#optionsPanel{
-backg
+#optionsPanel #fbMenu{
+border-bottom: 1px solid transparent !important;
 }
 
+
 div.ws_mainnavigation{
-border: 1px solid green;
 }
 
 #menuPanelToolbar{
@@ -733,6 +727,7 @@ display: none;
 }
 
 #optionsPanel{
+left: 31px;
 top: 90px;
 bottom: 0;
 position: absolute;
@@ -745,6 +740,7 @@ position: relative !important;
 top: 0 !important;
 bottom: 0 !important;
 height: auto !important;
+border-width: 0 !important;
 }
 
 #mainPalette{
@@ -785,8 +781,75 @@ margin-right: 0 !important;
 margin-left: 0 !important;
 }
 
-.
+#pageButtonArea{
+position: relative !important;
+padding: 0;
+display: block;
+height: auto !important;
+width: auto !important;
+border: 1px solid transparent;
 
-bfe5a7
+}
 
-def2d1
+#optionsPanel{
+border: 1px solid #aeaeae;
+}
+
+#pageButtonArea:hover{
+border-color: #93b825;
+}
+
+#pageButtonArea .formButton{
+display: block !important;
+height: 100% !important;
+width: 100% !important;
+padding: 10px 0 10px 15px !important;
+position: relative !important;
+margin-left: 0 !important;
+}
+
+.accordionTabTitleBar{
+padding: 2px !important;
+height: auto !important;
+}
+
+span.fbMenuTabBar{
+margin: 0 !important;
+font-family: Arial, Verdana, sans-serif !important;
+font-size: 11px;
+font-weight: bold;
+}
+
+
+.fbBottomButtonsContainer input{
+background: #cef4cf;
+border: 1px solid;
+border-top-color: #e5f3e2;
+border-right-color: #d8e6d9;
+border-bottom-color: #87aa89;
+border-left-color: #d7efd9;
+float: right;
+margin-right: 10px;
+}
+
+
+.fbBottomButtonsContainer input:active{
+background: #cef4cf;
+border: 1px solid;
+border-top-color: #87aa89;
+border-right-color: #d8e6d9;
+border-bottom-color: #e5f3e2;
+border-left-color: #87aa89;
+}
+
+
+.fbcomp_header_text{
+font-weight: bold;
+font-size: 1.1em;
+text-decoration: 
+}
+
+
+body#formbuilder div.wf_block.form_viewer_block_formadmin .wf_titlebar{
+display: none;
+}
