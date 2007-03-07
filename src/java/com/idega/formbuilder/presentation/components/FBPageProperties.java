@@ -37,7 +37,7 @@ public static final String COMPONENT_TYPE = "PageProperties";
 		TableCell2 cell = null;
 		
 		HtmlOutputText titleLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		titleLabel.setValue("Page title");
+		titleLabel.setValue("Section title");
 		
 		row = group.createRow();
 		cell = row.createCell();

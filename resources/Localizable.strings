@@ -24,17 +24,17 @@ fbcomp_multiple_select_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resou
 fbcomp_single_select_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
 fbcomp_upload_file_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
 fbcomp_email_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/email.png
-fbcomp_button_next=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/resultset_next.png
-fbcomp_button_previous=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/resultset_previous.png
-fbcomp_button_submit=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield.png
+fbcomp_button_next_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/resultset_next.png
+fbcomp_button_previous_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/resultset_previous.png
+fbcomp_button_submit_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield.png
 
 input.title=Title of input
 
 
 lockey_fbcomp_1input.title=Title of input
-labels_noform_header=No form currently opened
-labels_noform_body=Press the New Form button on the toolbar
-labels_empty_form_header=This form is currently empty
+labels_noform_header=This is a special page
+labels_noform_body=
+labels_empty_form_header=This form section is currently empty
 labels_empty_form_body=To add elements - drag them from the palette
 
 view_preview=Preview
@@ -44,7 +44,7 @@ view_design=Design
 component_palette_panel=Field Palette
 field_properties_panel=Field Properties
 form_properties_panel=Form Properties
-form_steps_panel=Page Properties
+form_steps_panel=Section Properties
 
 no_menu_label=No menu available for this view
 

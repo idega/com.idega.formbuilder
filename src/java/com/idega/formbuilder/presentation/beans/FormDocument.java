@@ -175,7 +175,7 @@ public class FormDocument implements Serializable {
 			Page page = document.getPage(document.getContainedPagesIdList().get(0));
 			FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
 			if(formPage != null) {
-				formPage.setPage(page);
+				formPage.loadPageInfo(page);
 			}
 			FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
 			if(formComponent != null) {
@@ -219,7 +219,7 @@ public class FormDocument implements Serializable {
 			Page page = document.getPage(document.getContainedPagesIdList().get(0));
 			FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
 			if(formPage != null) {
-				formPage.setPage(page);
+				formPage.loadPageInfo(page);
 			}
 			FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
 			if(formComponent != null) {
@@ -256,7 +256,7 @@ public class FormDocument implements Serializable {
 				FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
 				if(formPage != null) {
 					formPage.clearPageInfo();
-					formPage.setPage(firstP);
+					formPage.loadPageInfo(firstP);
 				}
 				workspace.setView("design");
 				workspace.setRenderedMenu(true);

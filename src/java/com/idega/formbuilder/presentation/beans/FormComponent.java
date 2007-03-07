@@ -258,7 +258,12 @@ public class FormComponent implements Serializable {
 		FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
 		Page page = formPage.getPage();
 		if(page != null) {
-			Component component = page.addComponent(type, null);
+			String before = null;
+			ButtonArea area = page.getButtonArea();
+			if(area != null) {
+				before = area.getId();
+			}
+			Component component = page.addComponent(type, before);
 			if(component != null) {
 				Element element = (Element) component.getHtmlRepresentation(new Locale("en")).cloneNode(true);
 				String id = element.getAttribute("id");
@@ -296,12 +301,16 @@ public class FormComponent implements Serializable {
 			ButtonArea area = page.getButtonArea();
 			Button button = null;
 			if(area != null) {
+				//System.out.println("Adding button to page: " + page.getId());
+				//System.out.println("Adding to existing button area: " + area.getId());
 				button = area.addButton(new ConstButtonType(type), null);
 				result.setType(type);
 				result.setId(button.getId());
 				result.setLabel(button.getProperties().getLabel().getString(new Locale("en")));
 			} else {
+				//System.out.println("Adding button to page: " + page.getId());
 				area = page.createButtonArea(null);
+				//System.out.println("Creating a new button area: " + area.getId());
 				button = area.addButton(new ConstButtonType(type), null);
 				result.setType(type);
 				result.setId(button.getId());

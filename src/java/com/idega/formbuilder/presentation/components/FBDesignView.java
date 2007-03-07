@@ -127,7 +127,8 @@ public class FBDesignView extends FBComponentBase {
 		
 		ValueBinding vb;
 		
-		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
+		FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+		Page page = formPage.getPage();
 		System.out.println("Looking in page: " + page.getId());
 		System.out.println(page.getContainedComponentsIdList());
 		ButtonArea barea = page.getButtonArea();
@@ -178,21 +179,13 @@ public class FBDesignView extends FBComponentBase {
 			status = getStatus();
 		}
 		if(status != null) {
-			if(status.equals(DESIGN_VIEW_STATUS_NOFORM)) {
+			//if(status.equals(DESIGN_VIEW_STATUS_NOFORM)) {
+			if(formPage.isSpecial()) {
 				UIComponent noFormNotice = getFacet(DESIGN_VIEW_NOFORM_FACET);
 				if(noFormNotice != null) {
 					renderChild(context, noFormNotice);
 				}
-			} else if(status.equals(DESIGN_VIEW_STATUS_EMPTY)) {
-				UIComponent formHeader = getFacet(DESIGN_VIEW_HEADER_FACET);
-				if (formHeader != null) {
-					renderChild(context, formHeader);
-				}
-				UIComponent emptyNotice = getFacet(DESIGN_VIEW_EMPTY_FACET);
-				if (emptyNotice != null) {
-					renderChild(context, emptyNotice);
-				}
-			} else if(status.equals(DESIGN_VIEW_STATUS_ACTIVE)) {
+			} else  {
 				UIComponent pageHeader = getFacet(DESIGN_VIEW_PAGE_FACET);
 				if (pageHeader != null) {
 					renderChild(context, pageHeader);
@@ -200,6 +193,12 @@ public class FBDesignView extends FBComponentBase {
 				UIComponent formHeader = getFacet(DESIGN_VIEW_HEADER_FACET);
 				if (formHeader != null) {
 					renderChild(context, formHeader);
+				}
+				if(page.getContainedComponentsIdList().size() == 0) {
+					UIComponent emptyNotice = getFacet(DESIGN_VIEW_EMPTY_FACET);
+					if (emptyNotice != null) {
+						renderChild(context, emptyNotice);
+					}
 				}
 			}
 		}
@@ -212,10 +211,14 @@ public class FBDesignView extends FBComponentBase {
 		super.encodeEnd(context);
 		writer.endElement("DIV");
 		
-		if(!status.equals(DESIGN_VIEW_STATUS_NOFORM)) {
-			UIComponent buttonArea = getFacet(BUTTON_AREA_FACET);
-			if (buttonArea != null) {
-				renderChild(context, buttonArea);
+		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
+		if(page != null) {
+			ButtonArea area = page.getButtonArea();
+			if(area != null) {
+				UIComponent buttonArea = getFacet(BUTTON_AREA_FACET);
+				if (buttonArea != null) {
+					renderChild(context, buttonArea);
+				}
 			}
 		}
 		

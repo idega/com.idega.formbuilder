@@ -179,6 +179,7 @@ function placeFormInfo(parameter) {
 		var formTitleTxt = $('formTitle');
 		if(formTitleTxt != null) {
 			formTitleTxt.value = parameter.title;
+			formTitleTxt.focus();
 		}
 		var hasPreviewChk = $('previewScreen');
 		if(hasPreviewChk != null) {
@@ -251,15 +252,15 @@ function placePreviewPage(parameter) {
 			
 			label.appendChild(text);
 			
-			var db = document.createElement('img');
+			/*var db = document.createElement('img');
 			db.id = parameter.pageId + '_db';
 			db.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png';
 			db.setAttribute('onclick', 'deletePage(this.id)');
-			db.setAttribute('class', 'speedButton');
+			db.setAttribute('class', 'speedButton');*/
 			
 			page.appendChild(icon);
 			page.appendChild(label);
-			page.appendChild(db);
+			//page.appendChild(db);
 			
 			var child = container.childNodes[0];
 			//container.appendChild(page);
@@ -277,13 +278,18 @@ function loadConfirmationPage() {
 	FormPage.getConfirmationPageInfo(placePageInfo);
 }
 function loadThxPage() {
+	FormPage.loadThxPage(placeThxPageInfo);
+}
+function placeThxPageInfo(parameter) {
 	STATIC_ACCORDEON.showTabByIndex(2, false);
+	$('workspaceform1:refreshViewPanel').click();
 }
 function placePageInfo(parameter) {
 	if(parameter != null) {
 		var pageTitleTxt = $('pageTitle');
 		if(pageTitleTxt != null) {
 			pageTitleTxt.value = parameter.pageTitle;
+			pageTitleTxt.focus();
 		}
 		STATIC_ACCORDEON.showTabByIndex(3, true);
 		$('workspaceform1:refreshViewPanel').click();
@@ -366,10 +372,7 @@ function setupComponentDragAndDrop(value1,value2) {
 }
 function handleComponentDrop(element,container) {
 	//alert(element.getAttribute('class'));
-	var type = element.getAttribute('class');
-	if(type == 'paletteComponent') {
-		//alert('handleComponentDrop');
-		var empty = $('emptyForm');
+	var empty = $('emptyForm');
 		if(empty != null) {
 			if(empty.style) {
 				empty.style.display = 'none';
@@ -377,6 +380,10 @@ function handleComponentDrop(element,container) {
 				empty.display = 'none';
 			}
 		}
+	var type = element.getAttribute('class');
+	if(type == 'paletteComponent') {
+		//alert('handleComponentDrop');
+		
 		if(currentElement != null) {
 			//$(container.id + 'inner').appendChild(currentElement);
 			$('dropBoxinner').appendChild(currentElement);
@@ -427,6 +434,7 @@ function placeComponentInfo(parameter) {
 		var labelTxt = $('propertyTitle');
 		if(labelTxt != null) {
 			labelTxt.value = parameter.label;
+			labelTxt.focus();
 		}
 		var compPr = $('basicPropertiesPanel');
 		if(compPr != null) {
@@ -558,6 +566,7 @@ function toggleAutofill(parameter) {
 	FormComponent.setAutofill(parameter,nothing);
 }
 function saveComponentLabel(parameter) {
+	//alert('blur');
 	if(parameter != null) {
 		FormComponent.setLabel(parameter, refreshViewPanel);
 	}
@@ -743,13 +752,13 @@ function placeNewPage(parameter) {
 	var container = $('pagesPanel');
 	if(container != null) {
 		var page = document.createElement('div');
-		page.setAttribute('id', parameter + '_P_page');
+		page.setAttribute('id', parameter.pageId + '_P_page');
 		page.setAttribute('class', 'formPageIcon');
 		page.setAttribute('styleClass', 'formPageIcon');
 		page.setAttribute('style', 'position: relative');
 		
 		var icon = document.createElement('img');
-		icon.setAttribute('id', parameter + '_pi');
+		icon.setAttribute('id', parameter.pageId + '_pi');
 		icon.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/document-new.png';
 		icon.setAttribute('onclick', 'loadPageInfo(this.id)');
 		icon.style.display = 'block';
@@ -762,7 +771,7 @@ function placeNewPage(parameter) {
 		label.appendChild(text);
 		
 		var db = document.createElement('img');
-		db.id = parameter + '_db';
+		db.id = parameter.pageId + '_db';
 		db.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png';
 		db.setAttribute('onclick', 'deletePage(this.id)');
 		db.setAttribute('class', 'speedButton');
@@ -772,6 +781,14 @@ function placeNewPage(parameter) {
 		page.appendChild(db);
 		
 		container.appendChild(page);
+		
+		if(parameter != null) {
+			var pageTitleTxt = $('pageTitle');
+			if(pageTitleTxt != null) {
+				pageTitleTxt.value = parameter.pageTitle;
+			}
+			STATIC_ACCORDEON.showTabByIndex(3, true);
+		}
 		$('workspaceform1:refreshViewPanel').click();
 	}
 }

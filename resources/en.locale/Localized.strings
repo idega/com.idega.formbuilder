@@ -32,9 +32,9 @@ input.title=Title of input
 
 
 lockey_fbcomp_1input.title=Title of input
-labels_noform_header=No form currently opened
-labels_noform_body=Press the New Form button on the toolbar
-labels_empty_form_header=This form is currently empty
+labels_noform_header=This is a special page
+labels_noform_body=
+labels_empty_form_header=This form section is currently empty
 labels_empty_form_body=To add elements - drag them from the palette
 
 view_preview=Preview
@@ -44,7 +44,7 @@ view_design=Design
 component_palette_panel=Field Palette
 field_properties_panel=Field Properties
 form_properties_panel=Form Properties
-form_steps_panel=Page Properties
+form_steps_panel=Section Properties
 
 no_menu_label=No menu available for this view
 

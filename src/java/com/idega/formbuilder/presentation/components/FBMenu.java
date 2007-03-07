@@ -122,7 +122,7 @@ public class FBMenu extends FBComponentBase {
 		FBPageProperties pageProperties = (FBPageProperties) application.createComponent(FBPageProperties.COMPONENT_TYPE);
 		
 		Text tab4 = new Text();
-		tab4.setText("Page properties");
+		tab4.setText("Section properties");
 		tab4.setStyleClass("fbMenuTabBar");
 		
 		acc.addPanel(tab4, pageProperties);
