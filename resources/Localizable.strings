@@ -14,19 +14,26 @@ fbcomp_email=Email
 fbcomp_button_next=Next
 fbcomp_button_previous=Previous
 fbcomp_button_submit=Submit
+fbcomp_simple_text=Paragraph
+fbcomp_header_text=Header
+fbcomp_separator=Separator
 
 fbcomp_text_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield.png
-fbcomp_textarea_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
+fbcomp_textarea_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/font.png
 fbcomp_secret_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield_key.png
-fbcomp_multiple_select_minimal_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
-fbcomp_single_select_minimal_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
-fbcomp_multiple_select_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
-fbcomp_single_select_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
-fbcomp_upload_file_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/address-book-new.png
+fbcomp_multiple_select_minimal_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/application_view_list.png
+fbcomp_single_select_minimal_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/application_side_list.png
+fbcomp_multiple_select_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/application_side_boxes.png
+fbcomp_single_select_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/application_side_boxes.png
+fbcomp_upload_file_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/attach.png
 fbcomp_email_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/email.png
 fbcomp_button_next_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/resultset_next.png
 fbcomp_button_previous_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/resultset_previous.png
 fbcomp_button_submit_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield.png
+
+fbcomp_simple_text_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/pencil.png
+fbcomp_header_text_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/font.png
+fbcomp_separator_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/application_split.png
 
 input.title=Title of input
 

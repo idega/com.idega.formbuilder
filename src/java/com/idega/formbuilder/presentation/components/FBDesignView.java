@@ -143,7 +143,7 @@ public class FBDesignView extends FBComponentBase {
 			vb = getValueBinding("selectedComponent");
 			if(vb != null) {
 				selectedComponent = (String) vb.getValue(context);
-			}
+			} 
 			while(it.hasNext()) {
 				String nextId = (String) it.next();
 				Component comp = page.getComponent(nextId);

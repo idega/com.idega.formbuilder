@@ -320,16 +320,16 @@ public class FormComponent implements Serializable {
 			ButtonArea area = page.getButtonArea();
 			Button button = null;
 			if(area != null) {
-				//System.out.println("Adding button to page: " + page.getId());
-				//System.out.println("Adding to existing button area: " + area.getId());
+				System.out.println("Adding button to page: " + page.getId());
+				System.out.println("Adding to existing button area: " + area.getId());
 				button = area.addButton(new ConstButtonType(type), null);
 				result.setType(type);
 				result.setId(button.getId());
 				result.setLabel(button.getProperties().getLabel().getString(new Locale("en")));
 			} else {
-				//System.out.println("Adding button to page: " + page.getId());
+				System.out.println("Adding button to page: " + page.getId());
 				area = page.createButtonArea(null);
-				//System.out.println("Creating a new button area: " + area.getId());
+				System.out.println("Creating a new button area: " + area.getId());
 				button = area.addButton(new ConstButtonType(type), null);
 				result.setType(type);
 				result.setId(button.getId());
@@ -390,6 +390,8 @@ public class FormComponent implements Serializable {
 			plainComponent = null;
 			propertiesPlain = null;
 			
+			plainText = "";
+			
 			required = propertiesSelect.isRequired();
 			
 			labelStringBean = propertiesSelect.getLabel();
@@ -426,6 +428,7 @@ public class FormComponent implements Serializable {
 			propertiesSelect = null;
 			plainComponent = null;
 			propertiesPlain = null;
+			plainText = "";
 			properties = component.getProperties();
 			
 			required = properties.isRequired();

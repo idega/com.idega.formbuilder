@@ -818,7 +818,7 @@ function placeNewPage(parameter) {
 		var label = document.createElement('span');
 		label.style.display = 'block';
 		
-		var text = document.createTextNode('Page');
+		var text = document.createTextNode('Section');
 		
 		label.appendChild(text);
 		

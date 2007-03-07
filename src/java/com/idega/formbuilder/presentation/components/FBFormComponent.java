@@ -9,6 +9,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
 import org.apache.myfaces.component.html.ext.HtmlGraphicImage;
+import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Element;
 
 import com.idega.documentmanager.business.form.Component;
@@ -69,6 +70,8 @@ public class FBFormComponent extends FBComponentBase {
 				try {
 					Locale current = ((Workspace) WFUtil.getBeanInstance("workspace")).getLocale();
 					Element element = component.getHtmlRepresentation(current);
+					DOMUtil.prettyPrintDOM(element);
+					//System.out.println(element);
 					if(element != null) {
 						element.setAttribute("id", id + "_i");
 						setElement(element);
