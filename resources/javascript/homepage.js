@@ -15,6 +15,7 @@ function showInputField() {
 	var cancelBt = $('workspaceform1:cancelBt');
 	if(input != null) {
 		input.style.display = 'inline';
+		input.focus();
 	}
 	if(newBt != null) {
 		newBt.style.display = 'none';
@@ -108,6 +109,23 @@ function getTopPos(inputObj) {
 		document.getElementById('workspaceform1:arrow_down_image').onmousemove = initSlide;
 		document.getElementById('workspaceform1:arrow_down_image').onmouseout = stopSlide;	
 		slidePreviewPane();	
+	}
+	function pressOk(e) {
+		if (!e) e = window.event;
+		if (!e) return true;
+		var key = (typeof e.keyCode != 'undefined' ? e.keyCode : e.charCode);
+		if(key == '13') {
+			clear_workspaceform1();
+			document.forms['workspaceform1'].elements['workspaceform1:_link_hidden_'].value='workspaceform1:okBt';
+			if(document.forms['workspaceform1'].onsubmit) {
+				var result=document.forms['workspaceform1'].onsubmit(); 
+				if( (typeof result == 'undefined') || result ) {
+					document.forms['workspaceform1'].submit();
+				}
+			} else {
+				document.forms['workspaceform1'].submit();
+			}
+		}
 	}
 var container = $('newFormComp');
 Rico.Corner.round(container);

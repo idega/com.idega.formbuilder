@@ -14,6 +14,7 @@ import javax.faces.el.ValueBinding;
 import org.apache.myfaces.component.html.ext.HtmlOutputLabel;
 import org.apache.myfaces.custom.htmlTag.HtmlTag;
 
+import com.idega.documentmanager.business.form.ButtonArea;
 import com.idega.documentmanager.business.form.Component;
 import com.idega.documentmanager.business.form.Container;
 import com.idega.documentmanager.business.form.Page;
@@ -127,6 +128,14 @@ public class FBDesignView extends FBComponentBase {
 		ValueBinding vb;
 		
 		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
+		System.out.println("Looking in page: " + page.getId());
+		System.out.println(page.getContainedComponentsIdList());
+		ButtonArea barea = page.getButtonArea();
+		if(barea != null) {
+			System.out.println("Finding button area: " + barea.getId());
+			
+			//System.out.println(barea.getId());
+		}
 		if(page != null) {
 			List<String> ids = page.getContainedComponentsIdList();
 			Iterator it = ids.iterator();

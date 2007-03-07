@@ -149,6 +149,7 @@ function placeButtonInfo(parameter) {
 function placeNewComponent(parameter) {
 	if(parameter != null) {
 		currentElement = createTreeNode(parameter.documentElement);
+		//alert(currentElement.innerHTML);
 	}
 }
 function createTreeNode(element) {
@@ -325,9 +326,11 @@ function placePageTitle(parameter) {
 	}
 }
 function setupButtonsDragAndDrop(value1, value2) {
+	//alert('setup');
 	Position.includeScrollOffsets = true;
 	Sortable.create(value1,{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangeButtons,scroll:value1,constraint:false});
-	Droppables.add(value1,{onDrop:handleButtonDrop});
+	//Droppables.add(value1,{onDrop:handleButtonDrop});
+	//Droppables.add('dropBox',{onDrop:handleButtonDrop});
 }
 function rearrangeButtons() {
 	draggingButton = true;
@@ -337,44 +340,72 @@ function rearrangeButtons() {
 	FormPage.updateButtonList(componentIDs,idPrefix,delimiter,nothing);
 }
 function handleButtonDrop(element, container) {
+	alert('handleButtonDrop');
 	var cont = $('pageButtonArea');
 	if(cont == null) {
 		var buttonArea = document.createElement('div');
 		buttonArea.id = 'pageButtonArea';
 		buttonArea.style.position = 'relative';
-		buttonArea.styleClass = 'formElement';
-		$('dropBox').appendChild(buttonArea);
-		buttonArea.appendChild(currentButton);
+		buttonArea.setAttribute('class','formElement');
+		var dropBox = $('dropBox');
+		if(dropBox != null) {
+			dropBox.appendChild(buttonArea);
+			buttonArea.appendChild(currentButton);
+		}
 	} else {
-		container.appendChild(currentButton);
+		cont.appendChild(currentButton);
 	}
 	Position.includeScrollOffsets = true;
-	Sortable.create(container.id,{dropOnEmpty:true,tag:'div',only:'formButton',onUpdate:rearrangeButtons,scroll:container.id,constraint:false});
-	Droppables.add(container.id,{onDrop:handleButtonDrop});
+	Sortable.create('pageButtonArea',{dropOnEmpty:true,tag:'div',only:'formButton',onUpdate:rearrangeButtons,scroll:'pageButtonArea',constraint:false});
+	Droppables.add('viewPanel',{onDrop:handleButtonDrop});
 }
 function setupComponentDragAndDrop(value1,value2) {
 	Position.includeScrollOffsets = true;
 	Sortable.create(value1 + 'inner',{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangeComponents,scroll:value1,constraint:false});
-	Droppables.add('viewPanel',{onDrop:handleComponentDrop});
+	Droppables.add('viewPanel',{onDrop:handleComponentDrop,only:'paletteComponent'});
 }
 function handleComponentDrop(element,container) {
-	alert('Drop');
-	var empty = $('emptyForm');
-	if(empty != null) {
-		if(empty.style) {
-			empty.style.display = 'none';
-		} else {
-			empty.display = 'none';
+	//alert(element.getAttribute('class'));
+	var type = element.getAttribute('class');
+	if(type == 'paletteComponent') {
+		//alert('handleComponentDrop');
+		var empty = $('emptyForm');
+		if(empty != null) {
+			if(empty.style) {
+				empty.style.display = 'none';
+			} else {
+				empty.display = 'none';
+			}
 		}
+		if(currentElement != null) {
+			//$(container.id + 'inner').appendChild(currentElement);
+			$('dropBoxinner').appendChild(currentElement);
+			currentElement = null;
+			//Sortable.create(container.id + 'inner',{dropOnEmpty:true,tag:'div',only:'formElement',onUpdate:rearrangeComponents,scroll:container.id,constraint:false});
+			Sortable.create('dropBoxinner',{dropOnEmpty:true,tag:'div',only:'formElement',onUpdate:rearrangeComponents,scroll:'dropBoxinner',constraint:false});
+			Droppables.add('viewPanel',{onDrop:handleComponentDrop});
+		}
+	} else {
+		//alert('handleButtonDrop false');
+		var cont = $('pageButtonArea');
+		if(cont == null) {
+			var buttonArea = document.createElement('div');
+			buttonArea.id = 'pageButtonArea';
+			buttonArea.style.position = 'relative';
+			buttonArea.setAttribute('class','formElement');
+			var dropBox = $('dropBox');
+			if(dropBox != null) {
+				dropBox.appendChild(buttonArea);
+				buttonArea.appendChild(currentButton);
+			}
+		} else {
+			cont.appendChild(currentButton);
+		}
+		Position.includeScrollOffsets = true;
+		Sortable.create('pageButtonArea',{dropOnEmpty:true,tag:'div',only:'formButton',onUpdate:rearrangeButtons,scroll:'pageButtonArea',constraint:false});
+		Droppables.add('viewPanel',{onDrop:handleButtonDrop});
 	}
-	if(currentElement != null) {
-		//$(container.id + 'inner').appendChild(currentElement);
-		$('dropBoxinner').appendChild(currentElement);
-		currentElement = null;
-		//Sortable.create(container.id + 'inner',{dropOnEmpty:true,tag:'div',only:'formElement',onUpdate:rearrangeComponents,scroll:container.id,constraint:false});
-		Sortable.create('dropBoxinner',{dropOnEmpty:true,tag:'div',only:'formElement',onUpdate:rearrangeComponents,scroll:container.id,constraint:false});
-		Droppables.add('viewPanel',{onDrop:handleComponentDrop});
-	}
+	
 }
 function rearrangeComponents() {
 	draggingComponent = true;
@@ -712,7 +743,7 @@ function placeNewPage(parameter) {
 	var container = $('pagesPanel');
 	if(container != null) {
 		var page = document.createElement('div');
-		page.setAttribute('id', parameter + '_page');
+		page.setAttribute('id', parameter + '_P_page');
 		page.setAttribute('class', 'formPageIcon');
 		page.setAttribute('styleClass', 'formPageIcon');
 		page.setAttribute('style', 'position: relative');

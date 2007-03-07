@@ -51,7 +51,7 @@ public class FBPalette extends FBComponentBase {
 		while(it.hasNext()) {
 			PaletteComponent current = (PaletteComponent) it.next();
 			FBPaletteComponent formComponent = (FBPaletteComponent) application.createComponent(FBPaletteComponent.COMPONENT_TYPE);
-			formComponent.setStyleClass(itemStyleClass);
+			formComponent.setStyleClass(itemStyleClass + "Bt");
 			formComponent.setName(current.getName());
 			formComponent.setType(current.getType());
 			formComponent.setIcon(current.getIconPath());

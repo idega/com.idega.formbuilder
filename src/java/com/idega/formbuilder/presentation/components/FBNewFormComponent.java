@@ -41,6 +41,7 @@ public class FBNewFormComponent extends FBComponentBase {
 		formName.setStyleClass("formNameInput");
 		formName.setStyle("display: none");
 		formName.setId("newTxt");
+		formName.setOnkeyup("pressOk(event);");
 		
 		HtmlCommandLink newButton = (HtmlCommandLink) application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
 		newButton.setValue("New Form");
@@ -55,6 +56,7 @@ public class FBNewFormComponent extends FBComponentBase {
 		okButton.setStyleClass("okBt");
 		okButton.setStyle("display: none");
 		okButton.setAction(application.createMethodBinding("#{formDocument.createNewForm}", null));
+		
 		
 		HtmlCommandLink cancelButton = (HtmlCommandLink) application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
 		cancelButton.setValue("Cancel");

@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.faces.context.FacesContext;
-
 import com.idega.documentmanager.business.form.ConstComponentCategory;
 import com.idega.documentmanager.business.form.DocumentManager;
 import com.idega.formbuilder.view.ActionManager;

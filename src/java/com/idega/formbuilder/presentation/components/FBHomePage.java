@@ -119,8 +119,13 @@ public class FBHomePage extends FBComponentBase {
 		formCount.setValue(formsList.size());
 		formCount.setId("formCount");
 		
+		String form = "form";
+		if(formsList.size() != 1) {
+			form += "s";
+		}
+		
 		HtmlOutputText greetingText3 = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		greetingText3.setValue(" forms. You can manage them in the list below or create a new one ");
+		greetingText3.setValue(" " + form + ". You can manage them in the list below or create a new one ");
 		greetingText3.setId("greetingText3");
 		
 		HtmlCommandLink greetingTextL = (HtmlCommandLink) application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
