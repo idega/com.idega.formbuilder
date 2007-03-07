@@ -15,6 +15,7 @@ public class Palette implements Serializable {
 	
 	private List<PaletteComponent> basic = new ArrayList<PaletteComponent>();
 	private List<PaletteComponent> buttons = new ArrayList<PaletteComponent>();
+	private List<PaletteComponent> plain = new ArrayList<PaletteComponent>();
 	
 	public Palette() throws Exception {
 		DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
@@ -28,6 +29,11 @@ public class Palette implements Serializable {
 			Iterator it2 = temp.iterator();
 			while(it2.hasNext()) {
 				buttons.add(new PaletteComponent((String) it2.next()));
+			}
+			temp = formManagerInstance.getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.PLAIN));
+			Iterator it3 = temp.iterator();
+			while(it3.hasNext()) {
+				plain.add(new PaletteComponent((String) it3.next()));
 			}
 		}
 	}
@@ -46,5 +52,13 @@ public class Palette implements Serializable {
 
 	public void setButtons(List<PaletteComponent> buttons) {
 		this.buttons = buttons;
+	}
+
+	public List<PaletteComponent> getPlain() {
+		return plain;
+	}
+
+	public void setPlain(List<PaletteComponent> plain) {
+		this.plain = plain;
 	}
 }

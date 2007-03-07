@@ -25,6 +25,9 @@ function savePropertyOnEnter(parameter,attribute,e) {
 	var key = (typeof e.keyCode != 'undefined' ? e.keyCode : e.charCode);
 	if(key == '13') {
 		switch(attribute) {
+			case 'compText':
+				savePlaintext(parameter);
+				break;
 		  	case 'compTitle':
 		  		saveComponentLabel(parameter);
 		    	break;
@@ -430,100 +433,144 @@ function loadComponentInfo(parameter) {
 }
 function placeComponentInfo(parameter) {
 	if(parameter != null) {
-		var x = parameter.required;
-		var labelTxt = $('propertyTitle');
-		if(labelTxt != null) {
-			labelTxt.value = parameter.label;
-			labelTxt.focus();
-		}
-		var compPr = $('basicPropertiesPanel');
-		if(compPr != null) {
-			compPr.setAttribute('style', 'display: block');
-		}
-		var requiredChk = $('propertyRequired');
-		if(requiredChk != null) {
-			requiredChk.checked = parameter.required;
-		}
-		var errorTxt = $('propertyErrorMessage');
-		if(errorTxt != null) {
-			errorTxt.value = parameter.errorMessage;
-		}
-		var helpTxt = $('propertyHelpText');
-		if(helpTxt != null) {
-			helpTxt.value = parameter.helpMessage;
-		}
-		if(parameter.autofill == true) {
-			var temp = $('propertyHasAutofill');
-			if(temp != null) {
-				temp.checked = true;
+		if(parameter.plain == true) {
+			var plainTxt = $('propertyPlaintext');
+			if(plainTxt != null) {
+				plainTxt.value = parameter.plainText;
+				plainTxt.focus();
 			}
-			var compPr = $('autoPropertiesPanel');
-			if(compPr != null) {
-				compPr.setAttribute('style', 'display: block');
+			var plainPr = $('plainPropertiesPanel');
+			if(plainPr != null) {
+				plainPr.setAttribute('style', 'display: block');
 			}
-			var autoTxt = $('propertyAutofill');
-			if(autoTxt != null) {
-				autoTxt.value = parameter.autofillKey;
-			}
-		} else {
-			var temp = $('propertyHasAutofill');
-			if(temp != null) {
-				temp.checked = false;
-			}
-			var compPr = $('autoPropertiesPanel');
-			if(compPr != null) {
-				compPr.setAttribute('style', 'display: none');
-			}
-		}
-		if(parameter.complex == true) {
-			var emptyTxt = $('propertyEmptyLabel');
-			if(emptyTxt != null) {
-				emptyTxt.value = parameter.emptyLabel;
-			}
-			var advPr = $('advPropertiesPanel');
-			if(advPr != null) {
-				advPr.setAttribute('style', 'display: block');
-			}
-			if(parameter.local == true) {
-				document.workspaceform1.dataSrcSwitch[0].checked = true;
-				var localPr = $('localPropertiesPanel');
-				loadItemset('selectOptsInner',parameter.items);
-				if(localPr != null) {
-					localPr.setAttribute('style', 'display: block');
+				var labelPr = $('labelPropertiesPanel');
+				if(labelPr != null) {
+					labelPr.setAttribute('style', 'display: none');
+				}
+				var compPr = $('basicPropertiesPanel');
+				if(compPr != null) {
+					compPr.setAttribute('style', 'display: none');
+				}
+				var autoPr = $('autoPropertiesPanel');
+				if(autoPr != null) {
+					autoPr.setAttribute('style', 'display: none');
+				}
+				var advPr = $('advPropertiesPanel');
+				if(advPr != null) {
+					advPr.setAttribute('style', 'display: none');
 				}
 				var extPr = $('extPropertiesPanel');
 				if(extPr != null) {
 					extPr.setAttribute('style', 'display: none');
 				}
-			} else {
-				document.workspaceform1.dataSrcSwitch[1].checked = true;
 				var localPr = $('localPropertiesPanel');
 				if(localPr != null) {
 					localPr.setAttribute('style', 'display: none');
 				}
-				var extTxt = $('propertyExternal');
-				if(extTxt != null) {
-					extTxt.value = parameter.externalSrc;
+		} else {
+			var plainPr = $('plainPropertiesPanel');
+			if(plainPr != null) {
+				plainPr.setAttribute('style', 'display: none');
+			}
+			var labelPr = $('labelPropertiesPanel');
+			if(labelPr != null) {
+				labelPr.setAttribute('style', 'display: block');
+			}
+			var x = parameter.required;
+			var labelTxt = $('propertyTitle');
+			if(labelTxt != null) {
+				labelTxt.value = parameter.label;
+				labelTxt.focus();
+			}
+			var compPr = $('basicPropertiesPanel');
+			if(compPr != null) {
+				compPr.setAttribute('style', 'display: block');
+			}
+			var requiredChk = $('propertyRequired');
+			if(requiredChk != null) {
+				requiredChk.checked = parameter.required;
+			}
+			var errorTxt = $('propertyErrorMessage');
+			if(errorTxt != null) {
+				errorTxt.value = parameter.errorMessage;
+			}
+			var helpTxt = $('propertyHelpText');
+			if(helpTxt != null) {
+				helpTxt.value = parameter.helpMessage;
+			}
+			if(parameter.autofill == true) {
+				var temp = $('propertyHasAutofill');
+				if(temp != null) {
+					temp.checked = true;
+				}
+				var compPr = $('autoPropertiesPanel');
+				if(compPr != null) {
+					compPr.setAttribute('style', 'display: block');
+				}
+				var autoTxt = $('propertyAutofill');
+				if(autoTxt != null) {
+					autoTxt.value = parameter.autofillKey;
+				}
+			} else {
+				var temp = $('propertyHasAutofill');
+				if(temp != null) {
+					temp.checked = false;
+				}
+				var compPr = $('autoPropertiesPanel');
+				if(compPr != null) {
+					compPr.setAttribute('style', 'display: none');
+				}
+			}
+			if(parameter.complex == true) {
+				var emptyTxt = $('propertyEmptyLabel');
+				if(emptyTxt != null) {
+					emptyTxt.value = parameter.emptyLabel;
+				}
+				var advPr = $('advPropertiesPanel');
+				if(advPr != null) {
+					advPr.setAttribute('style', 'display: block');
+				}
+				if(parameter.local == true) {
+					document.workspaceform1.dataSrcSwitch[0].checked = true;
+					var localPr = $('localPropertiesPanel');
+					loadItemset('selectOptsInner',parameter.items);
+					if(localPr != null) {
+						localPr.setAttribute('style', 'display: block');
+					}
+					var extPr = $('extPropertiesPanel');
+					if(extPr != null) {
+						extPr.setAttribute('style', 'display: none');
+					}
+				} else {
+					document.workspaceform1.dataSrcSwitch[1].checked = true;
+					var localPr = $('localPropertiesPanel');
+					if(localPr != null) {
+						localPr.setAttribute('style', 'display: none');
+					}
+					var extTxt = $('propertyExternal');
+					if(extTxt != null) {
+						extTxt.value = parameter.externalSrc;
+					}
+					var extPr = $('extPropertiesPanel');
+					if(extPr != null) {
+						extPr.setAttribute('style', 'display: block');
+					}
+				}
+			} else {
+				var advPr = $('advPropertiesPanel');
+				if(advPr != null) {
+					advPr.setAttribute('style', 'display: none');
 				}
 				var extPr = $('extPropertiesPanel');
 				if(extPr != null) {
-					extPr.setAttribute('style', 'display: block');
+					extPr.setAttribute('style', 'display: none');
+				}
+				var localPr = $('localPropertiesPanel');
+				if(localPr != null) {
+					localPr.setAttribute('style', 'display: none');
 				}
 			}
-		} else {
-			var advPr = $('advPropertiesPanel');
-			if(advPr != null) {
-				advPr.setAttribute('style', 'display: none');
-			}
-			var extPr = $('extPropertiesPanel');
-			if(extPr != null) {
-				extPr.setAttribute('style', 'display: none');
-			}
-			var localPr = $('localPropertiesPanel');
-			if(localPr != null) {
-				localPr.setAttribute('style', 'display: none');
-			}
-		}
+		}	
 		STATIC_ACCORDEON.showTabByIndex(1, true);
 	}
 }
@@ -594,6 +641,11 @@ function saveExternalSrc(parameter) {
 function saveAutofill(parameter) {
 	if(parameter != null) {
 		FormComponent.setAutofillKey(parameter, refreshViewPanel);
+	}
+}
+function savePlaintext(parameter) {
+	if(parameter != null) {
+		FormComponent.setPlainText(parameter, refreshViewPanel);
 	}
 }
 function saveHelpMessage(parameter) {

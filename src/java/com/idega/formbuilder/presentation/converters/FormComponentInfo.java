@@ -13,12 +13,22 @@ public class FormComponentInfo {
 	private String emptyLabel;
 	private String externalSrc;
 	private String autofillKey;
+	private String plainText;
 	private List<ItemBean> items;
 	
 	private boolean complex;
 	private boolean local;
 	private boolean autofill;
+	private boolean plain;
 	
+	public boolean isPlain() {
+		return plain;
+	}
+
+	public void setPlain(boolean plain) {
+		this.plain = plain;
+	}
+
 	public void setAutofill(boolean autofill) {
 		this.autofill = autofill;
 	}
@@ -103,6 +113,14 @@ public class FormComponentInfo {
 
 	public void setItems(List<ItemBean> items) {
 		this.items = items;
+	}
+
+	public String getPlainText() {
+		return plainText;
+	}
+
+	public void setPlainText(String plainText) {
+		this.plainText = plainText;
 	}
 
 }

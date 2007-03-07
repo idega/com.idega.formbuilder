@@ -14,10 +14,12 @@ import org.w3c.dom.Element;
 import com.idega.documentmanager.business.form.Button;
 import com.idega.documentmanager.business.form.ButtonArea;
 import com.idega.documentmanager.business.form.Component;
+import com.idega.documentmanager.business.form.ComponentPlain;
 import com.idega.documentmanager.business.form.ComponentSelect;
 import com.idega.documentmanager.business.form.ConstButtonType;
 import com.idega.documentmanager.business.form.Page;
 import com.idega.documentmanager.business.form.PropertiesComponent;
+import com.idega.documentmanager.business.form.PropertiesPlain;
 import com.idega.documentmanager.business.form.PropertiesSelect;
 import com.idega.documentmanager.business.form.beans.ILocalizedItemset;
 import com.idega.documentmanager.business.form.beans.ItemBean;
@@ -33,9 +35,11 @@ public class FormComponent implements Serializable {
 	
 	private PropertiesComponent properties;
 	private PropertiesSelect propertiesSelect;
+	private PropertiesPlain propertiesPlain;
 	
 	private Component component;
 	private ComponentSelect selectComponent;
+	private ComponentPlain plainComponent;
 	
 	private String id;
 	
@@ -45,6 +49,7 @@ public class FormComponent implements Serializable {
 	private String errorMessage;
 	private String helpMessage;
 	private String autofillKey;
+	private String plainText;
 	
 	private String emptyLabel;
 	private String externalSrc;
@@ -109,6 +114,7 @@ public class FormComponent implements Serializable {
 		this.emptyLabel = "";
 		this.helpMessage = "";
 		this.autofillKey = "";
+		this.plainText = "";
 		
 		this.labelStringBean = null;
 		this.errorStringBean = null;
@@ -120,8 +126,11 @@ public class FormComponent implements Serializable {
 		
 		this.component = null;
 		this.selectComponent = null;
+		this.plainComponent = null;
+		
 		this.properties = null;
 		this.propertiesSelect = null;
+		this.propertiesPlain = null;
 	}
 	
 	public void clearFormComponentInfo() {
@@ -140,6 +149,8 @@ public class FormComponent implements Serializable {
 		
 		this.autofillKey = "";
 		
+		this.plainText = "";
+		
 		this.emptyLabel = "";
 		this.emptyLabelBean = null;
 		
@@ -147,9 +158,11 @@ public class FormComponent implements Serializable {
 		
 		this.properties = null;
 		this.propertiesSelect = null;
+		this.propertiesPlain = null;
 		
 		this.component = null;
 		this.selectComponent = null;
+		this.plainComponent = null;
 	}
 	
 	public void removeItem(int index) {
@@ -215,27 +228,33 @@ public class FormComponent implements Serializable {
 	public FormComponentInfo getFormComponentInfo(String id) {
 		loadProperties(id);
 		FormComponentInfo info = new FormComponentInfo();
-		info.setLabel(label);
-		info.setRequired(required);
-		info.setErrorMessage(errorMessage);
-		info.setHelpMessage(helpMessage);
-		info.setAutofillKey(autofillKey);
-		
-		if(propertiesSelect != null) {
-			info.setEmptyLabel(emptyLabel);
-			if(dataSrc.equals(DataSourceList.externalDataSrc)) {
-				info.setExternalSrc(externalSrc);
-				info.setLocal(false);
-				items.clear();
-				info.setItems(items);
-			} else {
-				info.setLocal(true);
-				info.setItems(items);
-				info.setExternalSrc("");
-			}
-			info.setComplex(true);
+		if(propertiesPlain != null) {
+			info.setPlainText(plainText);
+			info.setPlain(true);
 		} else {
-			info.setComplex(false);
+			info.setLabel(label);
+			info.setRequired(required);
+			info.setErrorMessage(errorMessage);
+			info.setHelpMessage(helpMessage);
+			info.setAutofillKey(autofillKey);
+			
+			if(propertiesSelect != null) {
+				info.setEmptyLabel(emptyLabel);
+				if(dataSrc.equals(DataSourceList.externalDataSrc)) {
+					info.setExternalSrc(externalSrc);
+					info.setLocal(false);
+					items.clear();
+					info.setItems(items);
+				} else {
+					info.setLocal(true);
+					info.setItems(items);
+					info.setExternalSrc("");
+				}
+				info.setComplex(true);
+			} else {
+				info.setComplex(false);
+			}
+			info.setPlain(false);
 		}
 		return info;
 	}
@@ -350,12 +369,26 @@ public class FormComponent implements Serializable {
 		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
 		this.id = id;
 		component = page.getComponent(id);
-		if(component instanceof ComponentSelect) {
+		if(component instanceof ComponentPlain) {
+			plainComponent = (ComponentPlain) component;
+			propertiesPlain = plainComponent.getProperties();
+			
+			selectComponent = null;
+			propertiesSelect = null;
+			
+			component = null;
+			properties = null;
+			
+			plainText = propertiesPlain.getText();
+		} else if(component instanceof ComponentSelect) {
 			selectComponent = (ComponentSelect) component;
 			propertiesSelect = selectComponent.getProperties();
 			
 			component = null;
 			properties = null;
+			
+			plainComponent = null;
+			propertiesPlain = null;
 			
 			required = propertiesSelect.isRequired();
 			
@@ -391,6 +424,8 @@ public class FormComponent implements Serializable {
 		} else {
 			selectComponent = null;
 			propertiesSelect = null;
+			plainComponent = null;
+			propertiesPlain = null;
 			properties = component.getProperties();
 			
 			required = properties.isRequired();
@@ -572,6 +607,31 @@ public class FormComponent implements Serializable {
 
 	public void setAutofill(boolean autofill) {
 		this.autofill = autofill;
+	}
+
+	public String getPlainText() {
+		return plainText;
+	}
+
+	public void setPlainText(String plainText) {
+		this.plainText = plainText;
+		propertiesPlain.setText(plainText);
+	}
+
+	public ComponentPlain getPlainComponent() {
+		return plainComponent;
+	}
+
+	public void setPlainComponent(ComponentPlain plainComponent) {
+		this.plainComponent = plainComponent;
+	}
+
+	public PropertiesPlain getPropertiesPlain() {
+		return propertiesPlain;
+	}
+
+	public void setPropertiesPlain(PropertiesPlain propertiesPlain) {
+		this.propertiesPlain = propertiesPlain;
 	}
 
 }

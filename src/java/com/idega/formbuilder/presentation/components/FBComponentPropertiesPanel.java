@@ -7,6 +7,7 @@ import javax.faces.component.UISelectItems;
 import javax.faces.context.FacesContext;
 
 import org.apache.myfaces.component.html.ext.HtmlInputText;
+import org.apache.myfaces.component.html.ext.HtmlInputTextarea;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
 import org.apache.myfaces.component.html.ext.HtmlSelectBooleanCheckbox;
 import org.apache.myfaces.component.html.ext.HtmlSelectOneRadio;
@@ -30,6 +31,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 	private static final String EXTERNAL_PROPERTIES_FACET = "EXTERNAL_PROPERTIES_FACET";
 	private static final String AUTOFILL_PROPERTIES_FACET = "AUTOFILL_PROPERTIES_FACET";
 	private static final String LOCAL_PROPERTIES_FACET = "LOCAL_PROPERTIES_FACET";
+	private static final String PLAIN_PROPERTIES_FACET = "PLAIN_PROPERTIES_FACET";
 	
 	public FBComponentPropertiesPanel() {
 		super();
@@ -172,6 +174,33 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		addFacet(AUTOFILL_PROPERTIES_FACET, table);
 		
 		table = new Table2();
+		table.setId("plainPropertiesPanel");
+		table.setStyleAttribute("width: 250px;");
+		table.setCellpadding(0);
+		group = table.createBodyRowGroup();
+		row = null;
+		cell = null;
+		
+		HtmlOutputText plainTextLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		plainTextLabel.setValue("Text");
+		
+		row = group.createRow();
+		cell = row.createCell();
+		cell.setWidth("100");
+		cell.add(plainTextLabel);
+		
+		HtmlInputTextarea plainTextValue = (HtmlInputTextarea) application.createComponent(HtmlInputTextarea.COMPONENT_TYPE);
+		plainTextValue.setId("propertyPlaintext");
+		plainTextValue.setValueBinding("value", application.createValueBinding("#{formComponent.plainText}"));
+		plainTextValue.setOnblur("savePlaintext(this.value);");
+		plainTextValue.setOnkeydown("savePropertyOnEnter(this.value,'compText',event);");
+		
+		cell = row.createCell();
+		cell.add(plainTextValue);
+		
+		addFacet(PLAIN_PROPERTIES_FACET, table);
+		
+		table = new Table2();
 		table.setId("advPropertiesPanel");
 		table.setStyleAttribute("width: 250px;");
 		table.setCellpadding(0);
@@ -267,45 +296,59 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 	
 	public void encodeBegin(FacesContext context) throws IOException {
 		super.encodeBegin(context);
+		
+		Table2 plain = (Table2) getFacet(PLAIN_PROPERTIES_FACET);
 		Table2 label = (Table2) getFacet(BUTTON_PROPERTIES_FACET);
-		if(label != null) {
-			renderChild(context, label);
-		}
 		Table2 basic = (Table2) getFacet(BASIC_PROPERTIES_FACET);
 		Table2 auto = (Table2) getFacet(AUTOFILL_PROPERTIES_FACET);
 		Table2 adv = (Table2) getFacet(ADVANCED_PROPERTIES_FACET);
 		Table2 ext = (Table2) getFacet(EXTERNAL_PROPERTIES_FACET);
 		Table2 local = (Table2) getFacet(LOCAL_PROPERTIES_FACET);
+		
 		FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
-		Component component = formComponent.getComponent();
-		if(component == null) {
-			basic.setStyleAttribute("display: block");
-			if(formComponent.getAutofillKey() != "") {
-				auto.setStyleAttribute("display: block");
-			} else {
-				auto.setStyleAttribute("display: none");
-			}
-			if(formComponent.getPropertiesSelect() != null) {
-				adv.setStyleAttribute("display: block");
-				if(formComponent.getDataSrc().equals("2")) {
-					ext.setStyleAttribute("display: block");
-					local.setStyleAttribute("display: none");
-				} else {
-					ext.setStyleAttribute("display: none");
-					local.setStyleAttribute("display: block");
-				}
-			} else {
-				adv.setStyleAttribute("display: none");
-				ext.setStyleAttribute("display: none");
-				local.setStyleAttribute("display: none");
-			}
-		} else {
+		if(formComponent.getPropertiesPlain() != null) {
+			//plain.setStyleAttribute("display: none");
+			plain.setStyleAttribute("display: block");
+			label.setStyleAttribute("display: none");
 			basic.setStyleAttribute("display: none");
 			auto.setStyleAttribute("display: none");
 			adv.setStyleAttribute("display: none");
 			ext.setStyleAttribute("display: none");
 			local.setStyleAttribute("display: none");
+		} else {
+			Component component = formComponent.getComponent();
+			if(component == null) {
+				plain.setStyleAttribute("display: none");
+				basic.setStyleAttribute("display: block");
+				if(formComponent.getAutofillKey() != "") {
+					auto.setStyleAttribute("display: block");
+				} else {
+					auto.setStyleAttribute("display: none");
+				}
+				if(formComponent.getPropertiesSelect() != null) {
+					adv.setStyleAttribute("display: block");
+					if(formComponent.getDataSrc().equals("2")) {
+						ext.setStyleAttribute("display: block");
+						local.setStyleAttribute("display: none");
+					} else {
+						ext.setStyleAttribute("display: none");
+						local.setStyleAttribute("display: block");
+					}
+				} else {
+					adv.setStyleAttribute("display: none");
+					ext.setStyleAttribute("display: none");
+					local.setStyleAttribute("display: none");
+				}
+			} else {
+				basic.setStyleAttribute("display: none");
+				auto.setStyleAttribute("display: none");
+				adv.setStyleAttribute("display: none");
+				ext.setStyleAttribute("display: none");
+				local.setStyleAttribute("display: none");
+			}
 		}
+		renderChild(context, plain);
+		renderChild(context, label);
 		renderChild(context, basic);
 		renderChild(context, auto);
 		renderChild(context, adv);

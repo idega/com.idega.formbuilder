@@ -24,6 +24,7 @@ public class FBPalette extends FBComponentBase {
 	
 	private List<FBPaletteComponent> basic = new LinkedList<FBPaletteComponent>();
 	private List<FBPaletteComponent> buttons = new LinkedList<FBPaletteComponent>();
+	private List<FBPaletteComponent> plain = new LinkedList<FBPaletteComponent>();
 
 	public FBPalette() {
 		super();
@@ -58,6 +59,17 @@ public class FBPalette extends FBComponentBase {
 			formComponent.setOnDrag("handleButtonDrag");
 			buttons.add(formComponent);
 		}
+		it = palette.getPlain().iterator();
+		while(it.hasNext()) {
+			PaletteComponent current = (PaletteComponent) it.next();
+			FBPaletteComponent formComponent = (FBPaletteComponent) application.createComponent(FBPaletteComponent.COMPONENT_TYPE);
+			formComponent.setStyleClass(itemStyleClass);
+			formComponent.setName(current.getName());
+			formComponent.setType(current.getType());
+			formComponent.setIcon(current.getIconPath());
+			formComponent.setOnDrag("handleComponentDrag");
+			plain.add(formComponent);
+		}
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
@@ -75,6 +87,9 @@ public class FBPalette extends FBComponentBase {
 		writer.endElement("A");
 		writer.startElement("A", null);
 		writer.writeText("Buttons", null);
+		writer.endElement("A");
+		writer.startElement("A", null);
+		writer.writeText("Plain", null);
 		writer.endElement("A");
 		writer.endElement("DIV");	
 	}
@@ -128,6 +143,39 @@ public class FBPalette extends FBComponentBase {
 		inRow = false;
 		
 		it = buttons.iterator();
+		while(it.hasNext()) {
+			if((count % columns) == 1 || columns == 1) {
+				writer.startElement("TR", null);
+				inRow = true;
+			}
+			FBPaletteComponent current = (FBPaletteComponent) it.next();
+			if(current != null) {
+				writer.startElement("TD", null);
+				current.encodeEnd(context);
+				writer.endElement("TD");
+			}
+			if((count % columns) == 0 || columns == 1) {
+				writer.endElement("TR");
+				inRow = false;
+			}
+			count++;
+		}
+		if(inRow) {
+			writer.endElement("TR");
+		}
+		writer.endElement("TABLE");
+		writer.endElement("DIV");
+		
+		
+		writer.startElement("DIV", null);
+		writer.writeAttribute("id", "paletteBody_3", null);
+		
+		writer.startElement("TABLE", null);
+		
+		count = 1;
+		inRow = false;
+		
+		it = plain.iterator();
 		while(it.hasNext()) {
 			if((count % columns) == 1 || columns == 1) {
 				writer.startElement("TR", null);
