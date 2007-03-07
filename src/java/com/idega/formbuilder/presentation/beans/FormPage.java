@@ -155,7 +155,15 @@ public class FormPage implements Serializable {
 		if(workspace != null) {
 			Document document = ((FormDocument) WFUtil.getBeanInstance("formDocument")).getDocument();
 			if(document != null) {
-				Page page = document.addPage(null);
+				Page page = null;
+				String temp = "";
+				if(document.getConfirmationPage() != null) {
+					temp = document.getConfirmationPage().getId();
+				} else {
+					temp = document.getThxPage().getId();
+					
+				}
+				page = document.addPage(temp);
 				if(page != null) {
 					setPage(page);
 					FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");

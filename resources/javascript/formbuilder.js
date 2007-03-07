@@ -340,7 +340,7 @@ function rearrangeButtons() {
 	FormPage.updateButtonList(componentIDs,idPrefix,delimiter,nothing);
 }
 function handleButtonDrop(element, container) {
-	alert('handleButtonDrop');
+	//alert('handleButtonDrop');
 	var cont = $('pageButtonArea');
 	if(cont == null) {
 		var buttonArea = document.createElement('div');
@@ -588,7 +588,7 @@ function saveAutofill(parameter) {
 	}
 }
 function saveHelpMessage(parameter) {
-	alert('Not implemented');
+	//alert('Not implemented');
 	/*if(parameter != null) {
 		FormComponent.setHelpMessage(parameter, refreshViewPanel);
 	}*/
