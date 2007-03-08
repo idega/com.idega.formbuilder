@@ -129,11 +129,11 @@ public class FBDesignView extends FBComponentBase {
 		
 		FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
 		Page page = formPage.getPage();
-		System.out.println("Looking in page: " + page.getId());
-		System.out.println(page.getContainedComponentsIdList());
+		//System.out.println("Looking in page: " + page.getId());
+		//System.out.println(page.getContainedComponentsIdList());
 		ButtonArea barea = page.getButtonArea();
 		if(barea != null) {
-			System.out.println("Finding button area: " + barea.getId());
+			//System.out.println("Finding button area: " + barea.getId());
 			FBButtonArea area = (FBButtonArea) application.createComponent(FBButtonArea.COMPONENT_TYPE);
 			area.setId("pageButtonArea");
 			area.setStyleClass(componentStyleClass);

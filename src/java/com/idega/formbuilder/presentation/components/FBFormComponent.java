@@ -70,8 +70,6 @@ public class FBFormComponent extends FBComponentBase {
 				try {
 					Locale current = ((Workspace) WFUtil.getBeanInstance("workspace")).getLocale();
 					Element element = component.getHtmlRepresentation(current);
-					DOMUtil.prettyPrintDOM(element);
-					//System.out.println(element);
 					if(element != null) {
 						element.setAttribute("id", id + "_i");
 						setElement(element);

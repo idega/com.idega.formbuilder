@@ -27,12 +27,12 @@ public class ContainerRenderer extends com.idega.webface.renderkit.ContainerRend
 		
 		try {
 			
-			System.out.println("__________________encode begin___________");
+			//System.out.println("__________________encode begin___________");
 			
 			long start = System.currentTimeMillis();
 //			IFormManager fb = FormManagerFactory.newFormManager(ctx);
 			long end = System.currentTimeMillis();
-			System.out.println("inited in: "+(end-start));
+			//System.out.println("inited in: "+(end-start));
 	//		System.out.println("<sugeneruoti komponentai > ");
 	//		DOMUtil.prettyPrintDOM(components_xml);
 	//		System.out.println("<sugeneruoti komponentai />");
@@ -44,7 +44,7 @@ public class ContainerRenderer extends com.idega.webface.renderkit.ContainerRend
 			start = System.currentTimeMillis();
 //			fb.createFormDocument("1", title);
 			end = System.currentTimeMillis();
-			System.out.println("document created in: "+(end-start));
+			//System.out.println("document created in: "+(end-start));
 			
 //			start = System.currentTimeMillis();
 //			fb.createFormComponent("fbcomp_text", null);
@@ -54,7 +54,7 @@ public class ContainerRenderer extends com.idega.webface.renderkit.ContainerRend
 			start = System.currentTimeMillis();
 //			fb.createFormComponent("fbcomp_email", null);
 			end = System.currentTimeMillis();
-			System.out.println("email component created in: "+(end-start));
+			//System.out.println("email component created in: "+(end-start));
 			
 		} catch (Exception e) {
 			e.printStackTrace();
