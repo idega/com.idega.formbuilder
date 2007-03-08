@@ -111,6 +111,10 @@
 		<component-class>com.idega.formbuilder.presentation.components.FBFormListItem</component-class>
 	</component>
 	<component>
+		<component-type>AdminPage</component-type>
+		<component-class>com.idega.formbuilder.presentation.components.FBAdminPage</component-class>
+	</component>
+	<component>
 		<component-type>HomePage</component-type>
 		<component-class>com.idega.formbuilder.presentation.components.FBHomePage</component-class>
 	</component>

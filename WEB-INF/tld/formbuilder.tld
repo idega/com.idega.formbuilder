@@ -11,7 +11,20 @@
     <uri>http://xmlns.idega.com/com.idega.formbuilder</uri>
     <description>JSF Idega Frombuilder Tag Library</description>
 
-	
+	<tag>
+		<name>adminPage</name>
+		<tag-class>com.idega.formbuilder.presentation.tags.FBAdminPageTag</tag-class>
+		<attribute>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
 	<tag>
 		<name>homePage</name>
 		<tag-class>com.idega.formbuilder.presentation.tags.FBHomePageTag</tag-class>

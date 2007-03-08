@@ -8,6 +8,13 @@
 	border: 1px solid LightGrey;
 	padding: 25px;
 }
+#fbAdminPage {
+	margin: 15px;
+	background-color: White;
+	border: 1px solid LightGrey;
+	padding: 25px;
+	height: 100%;
+}
 .fbBottomRightButtonsContainer {
 	position: absolute;
 	right: 0px;
@@ -90,6 +97,7 @@ a.okBt:hover {
 	padding-top: 20px;
 	padding-left: 80px;
 	padding-right: 80px;
+	padding-bottom: 20px;
 	font-size: 18px;
 	font-weight: bold;
 	align: center;
@@ -873,112 +881,4 @@ display: inline !important;
 font-weight: bold;
 font-size: 1.1em;
 text-decoration: 
-}
-
-.sp_table_formadmin, .sp_table2_formadmin {
-	
-	background-color: white;
-	margin: 0px;
-	padding: 0px;
-	display: block;
-}
-
-.sp_table_formadmin {
-	width: 200px;
-}
-.sp_table2_formadmin {
-	width: 100%;
-}
-
-.sp_table2_formadmin th, .sp_table_formadmin th {
-	background-color: #D7D7D7;
-}
-
-.sp_table2_formadmin th {
-	padding-left: 30px;
-	padding-right: 30px;
-}
-
-.sp_table_formadmin td, .sp_table2_formadmin td {
-	
-	padding-right: 5px;
-	padding-left: 5px;
-}
-
-.grid_value_container {
-	width: 150px;
-}
-
-.form_viewer_block_formadmin {
-	overflow: auto;
-	max-height: 500px;
-}
-
-.tables_container_formadmin {
-	background-color: #FAFAFA;
-	overflow: none;
-}
-.tables_container_formadmin, .table1_container_formadmin, .table2_container_formadmin {
-	height: 200px;
-}
-
-.table1_container_formadmin, .table2_container_formadmin {
-	
-	overflow: auto;
-	top: 50;
-	position: absolute;
-	border-color: #D7D7D7;
-	border-style: solid;
-	border-width: 0px;
-	background-color: white;
-	border-bottom-width: 1px;
-}
-.table1_container_formadmin {
-	left: 0;
-	border-right-width: 1px;
-}
-
-.table2_container_formadmin {
-	left: 0;
-	margin-left: 220px;
-	border-left-width: 1px;
-}
-
-.selected-case span.output{
-display: block !important;
-clear: both !important;
-overflow: hidden;
-width: auto !important;
-}
-
-.selected-case span.output label.label{
-float: left;
-clear: both !important;
-padding: 4px;
-}
-
-.selected-case span.output span{
-display: block;
-float: left;
-clear: right !important;
-padding: 4px;
-}
-
-body#formbuilder div.wf_block.form_viewer_block_formadmin .wf_titlebar{
-display: none;
-}
-
-/* Delete the rest if you don't care for the light orange / green stuff in table1 */
-
-.table1_container_formadmin{
-background: #fef9eb;
-}
-
-.table1_container_formadmin table{
-background: #fef9eb;
-}
-
-.table1_container_formadmin table th{
-background: #daf0ca !important;
-border: 1px solid #bfe6a7;
 }
