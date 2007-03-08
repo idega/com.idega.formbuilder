@@ -309,6 +309,9 @@ padding-right: 120px;
 	#paletteBody_2{
 		padding: 0px !important;
 	}
+	#paletteBody_3{
+		padding: 0px !important;
+	}
 	#paletteBody{
 		height: 180px;
 		font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;	/* Font  of sub menu items */
@@ -783,7 +786,7 @@ margin-left: 0 !important;
 
 #pageButtonArea{
 position: relative !important;
-padding: 0;
+padding: 10px;
 display: block;
 height: auto !important;
 width: auto !important;

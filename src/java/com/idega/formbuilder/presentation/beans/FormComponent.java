@@ -420,8 +420,6 @@ public class FormComponent implements Serializable {
 			items = itemset.getItems(new Locale("en"));
 			if(items.size() == 0) {
 				items.add(new ItemBean("", ""));
-				items.add(new ItemBean("", ""));
-				items.add(new ItemBean("", ""));
 			}
 		} else {
 			selectComponent = null;

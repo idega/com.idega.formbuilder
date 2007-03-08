@@ -89,7 +89,7 @@ public class FBPalette extends FBComponentBase {
 		writer.writeText("Buttons", null);
 		writer.endElement("A");
 		writer.startElement("A", null);
-		writer.writeText("Plain", null);
+		writer.writeText("Text", null);
 		writer.endElement("A");
 		writer.endElement("DIV");	
 	}
