@@ -49,13 +49,14 @@
 .newFormComponentIdle {
 	width: 270px;
 	height: 34px;
-	background-color: LightGrey;
+	background: LightGrey  url(/content/files/public/new_form_icon.gif) no-repeat 20px 5px;
 	padding-top: 5px;
 }
 .newIcon {
 	margin-top: 5px;
 	margin-left: 15px;
 	margin-right: 20px;
+  visibility: hidden;
 }
 .newBt {
 	margin-left: 20px;
@@ -101,9 +102,9 @@ a.okBt:hover {
 	font-size: 18px;
 	font-weight: bold;
 	align: center;
-	background-color: LightBlue;
+	background-color: #e5f1ff;
 	height: auto;
-	border: 1px solid Blue;
+	border: 1px solid #b2d7ff;
 	margin-bottom: 25px;
 }
 #headerName {
@@ -116,17 +117,17 @@ a.okBt:hover {
 .formListItem {
 	height: 60px;
 	margin-bottom: 20px;
-	border: 1px groove LightGrey;
+	border: 1px groove #bdbdbd;
 	cursor: pointer;
 }
 .newFormButton {
 	background-color: Red;
 }
 .formListItem:hover {
-	border: 1px groove LightBlue;
+	border: 1px groove #aad192;
 }
 .formListItem:hover .formListItemTop {
-	background-color: LightBlue;
+	background-color: #ddedd3;
 	border-left: 1px solid White;
 	border-top: 1px solid White;
 }
@@ -136,7 +137,7 @@ a.okBt:hover {
 .formListItemTop {
 	padding-top: 0px;
 	height: 50%;
-	background-color: LightGrey;
+	background-color: #e9e9e9;
 	border-left: 1px solid White;
 	border-top: 1px solid White;
 }
@@ -170,14 +171,14 @@ a.okBt:hover {
 	margin-right: 5px;
 }
 .bottomButton a {
-	color: Blue;
+	color: #0096ff;
 	font-weight: Bold;
 	position: relative;
 	bottom: 4px;
 }
 .bottomButton:hover a {
 	text-decoration: none;
-	color: Red;
+	color: #ff2700;
 }
 .formTitle {
 	font-size: 16px;
