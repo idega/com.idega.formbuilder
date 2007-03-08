@@ -375,9 +375,8 @@ padding-right: 120px;
 	width: 88%;
 	height: auto;
 	margin-bottom: 10px;
-	margin-left: 5%;
 	margin-right: 5%;
-	padding-left: 30px;
+margin: auto !important;
 	padding-top: 10px;
 	padding-bottom: 10px;
 }
@@ -849,25 +848,24 @@ font-weight: bold;
 
 
 .fbBottomButtonsContainer input{
-background: #cef4cf;
+background: #fff;
 border: 1px solid;
-border-top-color: #e5f3e2;
-border-right-color: #d8e6d9;
-border-bottom-color: #87aa89;
-border-left-color: #d7efd9;
-
+border-top-color: #d3d3d3;
+border-right-color: #828282;
+border-bottom-color: #5d5d5d;
+border-left-color: #c0c0c0;
 }
 
 .fbBottomButtonsContainer{
 }
 
 .fbBottomButtonsContainer input:active{
-background: #cef4cf;
+background: #fff;
 border: 1px solid;
-border-top-color: #87aa89;
-border-right-color: #d8e6d9;
-border-bottom-color: #e5f3e2;
-border-left-color: #87aa89;
+border-bottom-color: #d3d3d3;
+border-left-color: #828282;
+border-top-color: #5d5d5d;
+border-right-color: #c0c0c0;
 }
 
 .fbBottomButtonsContainer input{
@@ -882,4 +880,20 @@ display: inline !important;
 font-weight: bold;
 font-size: 1.1em;
 text-decoration: 
+}
+
+
+#pagesPanelSpecial{
+height: auto !important;
+margin-top: -55px !important;
+}
+
+#pagesPanelSpecial span{
+width: auto;
+}
+
+.formPageIcon span{
+margin-left: 9px;
+left: 0 !important;
+width: 40px !important;
 }
