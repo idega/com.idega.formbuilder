@@ -8,7 +8,7 @@
 		</tr>
 		<tr>
 			<td>
-				<input class="default" type="text" id="formName" name="file1"/>
+				<input class="default" type="text" id="formName" name="file1" onkeydown="createNewFormOnEnter(event)"/>
 			</td>
 		</tr>
 		<tr>

@@ -999,6 +999,14 @@ function removeComponentNode(parameter) {
 		}
 	}
 }
+function createNewFormOnEnter(e) {
+	if (!e) e = window.event;
+	if (!e) return true;
+	var key = (typeof e.keyCode != 'undefined' ? e.keyCode : e.charCode);
+	if(key == '13') {
+		createNewForm();
+	}
+}
 //----------------------------------------
 /*Setup modal message windows functionality*/
 messageObj = new DHTML_modalMessage();
