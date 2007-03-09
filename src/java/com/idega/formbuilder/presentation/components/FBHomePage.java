@@ -186,7 +186,7 @@ public class FBHomePage extends FBComponentBase {
 			formListItem.setStyleClass("formListItem");
 			formListItem.setFormTitle(item.getLabel());
 			String createdDate = getCreatedDate(item.getValue().toString());
-			formListItem.setFormId("Created " + createdDate);
+			formListItem.setCreatedDate("Created " + createdDate);
 			addChild(formListItem, noname);
 		}
 		addChild(slideEnd, noname);

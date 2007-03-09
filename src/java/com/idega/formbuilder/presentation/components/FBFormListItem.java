@@ -17,6 +17,8 @@ public class FBFormListItem extends FBComponentBase {
 	public static final String delete_button_postfix = "_delete";
 	public static final String entries_button_postfix = "_entries";
 	public static final String duplicate_button_postfix = "_duplicate";
+	public static final String edit_button_postfix = "_edit";
+	public static final String code_button_postfix = "_code";
 	
 	private static final String ENTRIES_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/application_view_list.png";
 	private static final String EDIT_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/application_form_edit.png";
@@ -26,16 +28,8 @@ public class FBFormListItem extends FBComponentBase {
 	
 	private static final String CONTENT_DIV_FACET = "CONTENT_DIV_FACET";
 	
-	private String formId;
+	private String createdDate;
 	private String formTitle;
-	
-	public String getFormId() {
-		return formId;
-	}
-
-	public void setFormId(String formId) {
-		this.formId = formId;
-	}
 
 	public String getFormTitle() {
 		return formTitle;
@@ -76,7 +70,7 @@ public class FBFormListItem extends FBComponentBase {
 		
 		
 		Text created = new Text();
-		created.setText(formId);
+		created.setText(createdDate);
 		created.setStyleClass("createdDate");
 		
 		FBToolbarButton entriesButton = new FBToolbarButton();
@@ -85,24 +79,28 @@ public class FBFormListItem extends FBComponentBase {
 		entriesButton.setDisplayText("Entries");
 		entriesButton.setDefaultImageURI(ENTRIES_BUTTON_ICON);
 		entriesButton.setAction(application.createMethodBinding("#{formDocument.loadFormDocumentEntries}", null));
+		
 		FBToolbarButton editButton = new FBToolbarButton();
 		editButton.setStyleClass("bottomButton");
 		editButton.setDisplayText("Edit");
-		editButton.setId(getId() + "_edit");
+		editButton.setId(getId() + edit_button_postfix);
 		editButton.setDefaultImageURI(EDIT_BUTTON_ICON);
 		editButton.setAction(application.createMethodBinding("#{formDocument.loadFormDocument}", null));
+		
 		FBToolbarButton codeButton = new FBToolbarButton();
 		codeButton.setStyleClass("bottomButton");
 		codeButton.setDisplayText("Code");
-		codeButton.setId(getId() + "_code");
+		codeButton.setId(getId() + code_button_postfix);
 		codeButton.setDefaultImageURI(CODE_BUTTON_ICON);
 		codeButton.setAction(application.createMethodBinding("#{formDocument.loadFormDocumentCode}", null));
+		
 		FBToolbarButton duplicateButton = new FBToolbarButton();
 		duplicateButton.setStyleClass("bottomButton");
 		duplicateButton.setDisplayText("Duplicate");
 		duplicateButton.setId(getId() + duplicate_button_postfix);
 		duplicateButton.setDefaultImageURI(DUPLICATE_BUTTON_ICON);
 		duplicateButton.setAction(application.createMethodBinding("#{formDocument.duplicateFormDocument}", null));
+		
 		FBToolbarButton deleteButton = new FBToolbarButton();
 		deleteButton.setStyleClass("bottomButton");
 		deleteButton.setDisplayText("Delete");
@@ -139,7 +137,7 @@ public class FBFormListItem extends FBComponentBase {
 	public Object saveState(FacesContext context) {
 		Object values[] = new Object[3];
 		values[0] = super.saveState(context);
-		values[1] = formId;
+		values[1] = createdDate;
 		values[2] = formTitle;
 		return values;
 	}
@@ -147,8 +145,16 @@ public class FBFormListItem extends FBComponentBase {
 	public void restoreState(FacesContext context, Object state) {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);
-		formId = (String) values[1];
+		createdDate = (String) values[1];
 		formTitle = (String) values[2];
+	}
+
+	public String getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(String createdDate) {
+		this.createdDate = createdDate;
 	}
 
 }

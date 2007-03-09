@@ -246,13 +246,13 @@ function placePreviewPage(parameter) {
 			var page = document.createElement('div');
 			page.setAttribute('id', parameter.pageId + '_P_page');
 			page.setAttribute('class', 'formPageIcon');
-			page.setAttribute('styleClass', 'formPageIcon');
+			page.setAttribute('styleClass', 'formPageIconSpecial');
 			page.setAttribute('style', 'position: relative');
+			page.setAttribute('onclick', 'loadConfirmationPage(this.id);');
 			
 			var icon = document.createElement('img');
 			icon.setAttribute('id', parameter.pageId + '_pi');
 			icon.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/document-new.png';
-			icon.setAttribute('onclick', 'loadPageInfo(this.id)');
 			icon.style.display = 'block';
 			
 			var label = document.createElement('span');
@@ -262,18 +262,10 @@ function placePreviewPage(parameter) {
 			
 			label.appendChild(text);
 			
-			/*var db = document.createElement('img');
-			db.id = parameter.pageId + '_db';
-			db.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit-delete.png';
-			db.setAttribute('onclick', 'deletePage(this.id)');
-			db.setAttribute('class', 'speedButton');*/
-			
 			page.appendChild(icon);
 			page.appendChild(label);
-			//page.appendChild(db);
 			
 			var child = container.childNodes[0];
-			//container.appendChild(page);
 			container.insertBefore(page, child);
 		} else {
 			var node = $(parameter.pageId + '_P_page');
@@ -968,7 +960,7 @@ function placeThxPage(parameter) {
 			page.setAttribute('class', 'formPageIcon');
 			page.setAttribute('styleClass', 'formPageIcon');
 			page.setAttribute('style', 'position: relative');
-			page.setAttribute('onclick', 'loadPageInfo(this.id);');
+			page.setAttribute('onclick', 'loadThxPage(this.id);');
 			
 			var icon = document.createElement('img');
 			icon.setAttribute('id', parameter.pageId + '_pi');

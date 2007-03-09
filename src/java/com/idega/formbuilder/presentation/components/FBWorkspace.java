@@ -66,15 +66,15 @@ public class FBWorkspace extends FBComponentBase {
 			view = (String) vb.getValue(context);
 		}
 		
-		HtmlAjaxOutputPanel menuPanel = new HtmlAjaxOutputPanel();
-		menuPanel.setId("ajaxMenuPanel");
+//		HtmlAjaxOutputPanel menuPanel = new HtmlAjaxOutputPanel();
+//		menuPanel.setId("ajaxMenuPanel");
 		
 		FBMenu menu = (FBMenu) application.createComponent(FBMenu.COMPONENT_TYPE);
 		menu.setId("optionsPanel");
 		menu.setStyleClass("optionsContainer");
 		menu.setValueBinding("selectedMenu", application.createValueBinding("#{workspace.selectedMenu}"));
 		menu.setValueBinding("show", application.createValueBinding("#{workspace.renderedMenu}"));
-		addChild(menu, menuPanel);
+//		addChild(menu, menuPanel);
 		
 		HtmlAjaxOutputPanel viewPanel = new HtmlAjaxOutputPanel();
 		viewPanel.setId("ajaxViewPanel");
@@ -85,20 +85,20 @@ public class FBWorkspace extends FBComponentBase {
 		views.setStyleClass("formContainer");
 		addChild(views, viewPanel);
 		
-		HtmlAjaxOutputPanel pagesPanel = new HtmlAjaxOutputPanel();
-		pagesPanel.setId("ajaxPagesPanel");
+//		HtmlAjaxOutputPanel pagesPanel = new HtmlAjaxOutputPanel();
+//		pagesPanel.setId("ajaxPagesPanel");
 		
 		FBPagesPanel pages = (FBPagesPanel) application.createComponent(FBPagesPanel.COMPONENT_TYPE);
 		pages.setId("pagesPanel");
 		pages.setStyleClass("pagesPanel");
 		pages.setComponentStyleClass("formPageIcon");
-		addChild(pages, pagesPanel);
+//		addChild(pages, pagesPanel);
 		
 		FBActionsProxy actionsProxy = (FBActionsProxy) application.createComponent(FBActionsProxy.COMPONENT_TYPE);
 		
-		addFacet(WORKSPACE_MENU_FACET, menuPanel);
+		addFacet(WORKSPACE_MENU_FACET, menu);
 		addFacet(WORKSPACE_VIEW_FACET, viewPanel);
-		addFacet(WORKSPACE_PAGES_FACET, pagesPanel);
+		addFacet(WORKSPACE_PAGES_FACET, pages);
 		addFacet(WORKSPACE_ACTIONS_PROXY_FACET, actionsProxy);
 	}
 	

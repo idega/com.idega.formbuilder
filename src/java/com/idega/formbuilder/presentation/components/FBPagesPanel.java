@@ -59,7 +59,7 @@ public class FBPagesPanel extends FBComponentBase {
 					String label = ((PropertiesPage)confirmation.getProperties()).getLabel().getString(locale);
 					formPage.setLabel(label);
 					formPage.setActive(false);
-					formPage.setOnLoad("loadConfirmationPage()");
+					formPage.setOnLoad("loadConfirmationPage();");
 					addFacet(CONFIRMATION_PAGE, formPage);
 				}
 			}
@@ -71,7 +71,7 @@ public class FBPagesPanel extends FBComponentBase {
 				String label = ((PropertiesPage)thanks.getProperties()).getLabel().getString(locale);
 				formPage.setLabel(label);
 				formPage.setActive(false);
-				formPage.setOnLoad("loadThxPage()");
+				formPage.setOnLoad("loadThxPage();");
 				addFacet(THANKYOU_PAGE, formPage);
 			}
 			List<String> ids = formDocument.getCommonPagesIdList();

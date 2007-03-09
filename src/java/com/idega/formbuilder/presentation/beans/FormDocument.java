@@ -461,7 +461,7 @@ public class FormDocument implements Serializable {
 		return result;
 	}
 	
-	public void changeForm(ActionEvent ae) {
+	/*public void changeForm(ActionEvent ae) {
 		DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 		if(formId != null && !formId.equals("") && !formId.equals("INACTIVE")) {
@@ -491,7 +491,7 @@ public class FormDocument implements Serializable {
 				e.printStackTrace();
 			}
 		}
-	}
+	}*/
 	
 	public void saveSrc(String source_code) {
 		
@@ -555,28 +555,6 @@ public class FormDocument implements Serializable {
 				thankYouTextBean = properties.getText();
 				thankYouText = thankYouTextBean.getString(locale);
 			}
-		}
-	}
-	
-	public void saveFormTitle(ActionEvent ae) throws Exception {
-		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("formTitle");
-		if(value != null) {
-			setFormTitle(value);
-			document.setFormTitle(formTitleBean);
-		}
-	}
-	
-	public void saveThankYouLabel(ActionEvent ae) {
-		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("thankYouTitle");
-		if(value != null) {
-			setThankYouTitle(value);
-		}
-	}
-	
-	public void saveThankYouText(ActionEvent ae) {
-		String value = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("thankYouText");
-		if(value != null) {
-			setThankYouText(value);
 		}
 	}
 	

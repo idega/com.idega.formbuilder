@@ -31,7 +31,7 @@ public class FBDesignView extends FBComponentBase {
 	public static final String DESIGN_VIEW_STATUS_EMPTY = "empty";
 	public static final String DESIGN_VIEW_STATUS_ACTIVE = "active";
 	
-	public static final String DESIGN_VIEW_NOFORM_FACET = "noFormNoticeFacet";
+	public static final String DESIGN_VIEW_SPECIAL_FACET = "specialFormFacet";
 	public static final String DESIGN_VIEW_EMPTY_FACET = "emptyFormFacet";
 	public static final String DESIGN_VIEW_HEADER_FACET = "formHeaderFacet";
 	public static final String DESIGN_VIEW_PAGE_FACET = "pageTitleFacet";
@@ -74,7 +74,7 @@ public class FBDesignView extends FBComponentBase {
 		noFormNoticeBody.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['labels_noform_body']}"));
 		addChild(noFormNoticeBody, noFormNotice);
 		
-		addFacet(DESIGN_VIEW_NOFORM_FACET, noFormNotice);
+		addFacet(DESIGN_VIEW_SPECIAL_FACET, noFormNotice);
 		
 		WFDivision formHeading = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		formHeading.setId("formHeading");
@@ -129,17 +129,13 @@ public class FBDesignView extends FBComponentBase {
 		
 		FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
 		Page page = formPage.getPage();
-		//System.out.println("Looking in page: " + page.getId());
-		//System.out.println(page.getContainedComponentsIdList());
 		ButtonArea barea = page.getButtonArea();
 		if(barea != null) {
-			//System.out.println("Finding button area: " + barea.getId());
 			FBButtonArea area = (FBButtonArea) application.createComponent(FBButtonArea.COMPONENT_TYPE);
 			area.setId("pageButtonArea");
 			area.setStyleClass(componentStyleClass);
 			area.setComponentStyleClass("formButton");
 			addFacet(BUTTON_AREA_FACET, area);
-			//System.out.println(barea.getId());
 		}
 		if(page != null) {
 			List<String> ids = page.getContainedComponentsIdList();
@@ -153,11 +149,6 @@ public class FBDesignView extends FBComponentBase {
 				Component comp = page.getComponent(nextId);
 				if(comp instanceof Container) {
 					continue;
-//					FBButtonArea area = (FBButtonArea) application.createComponent(FBButtonArea.COMPONENT_TYPE);
-//					area.setId("pageButtonArea");
-//					area.setStyleClass(componentStyleClass);
-//					area.setComponentStyleClass("formButton");
-//					addFacet(BUTTON_AREA_FACET, area);
 				} else {
 					FBFormComponent formComponent = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
 					formComponent.setId(nextId);
@@ -191,7 +182,7 @@ public class FBDesignView extends FBComponentBase {
 				renderChild(context, formHeader);
 			}
 			if(formPage.isSpecial()) {
-				UIComponent noFormNotice = getFacet(DESIGN_VIEW_NOFORM_FACET);
+				UIComponent noFormNotice = getFacet(DESIGN_VIEW_SPECIAL_FACET);
 				if(noFormNotice != null) {
 					renderChild(context, noFormNotice);
 				}

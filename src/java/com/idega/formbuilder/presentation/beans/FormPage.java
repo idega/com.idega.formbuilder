@@ -180,6 +180,7 @@ public class FormPage implements Serializable {
 		id = page.getId();
 		titleBean = pp.getLabel();
 		title = titleBean.getString(new Locale("en"));
+		special = false;
 		
 		FormPageInfo result = new FormPageInfo();
 		result.setPageTitle(title);

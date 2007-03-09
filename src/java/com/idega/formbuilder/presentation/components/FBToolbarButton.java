@@ -92,7 +92,7 @@ public class FBToolbarButton extends WFToolbarButton {
 					out.writeAttribute("title", this.toolTip, null);
 				}
 				
-				//out.writeAttribute("href","#",null);
+				out.writeAttribute("href","#",null);
 				
 				String text = getDisplayText();
 				if(text != null){

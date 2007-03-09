@@ -75,7 +75,6 @@ public class FBFormPage extends FBComponentBase {
 		HtmlGraphicImage pageIconImg = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
 		pageIconImg.setId(getId() + "_pi");
 		pageIconImg.setValue(PAGE_ICON_IMG);
-		//pageIconImg.setOnclick(onLoad);
 		pageIconImg.setStyle("display: block");
 		
 		HtmlOutputText pageIconLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);

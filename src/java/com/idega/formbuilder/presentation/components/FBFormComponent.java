@@ -9,7 +9,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
 import org.apache.myfaces.component.html.ext.HtmlGraphicImage;
-import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Element;
 
 import com.idega.documentmanager.business.form.Component;

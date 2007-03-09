@@ -27,6 +27,7 @@
 	width: 100%;
 	background-color: #E1E1E1;
 	border: 1px solid #D7D7D7;
+	z-index: 5;
 }
 #fbHomePageHeaderBlock {
 	height: 50px;
@@ -253,6 +254,7 @@ padding-right: 120px;
 	background-color: LightGrey;
 	width: 120px;
 	min-height: 500px;
+	z-index: 5;
 }
 .formPageIconSpecial {
 	cursor: pointer;
@@ -360,8 +362,8 @@ padding-right: 120px;
 	height: 100%;
 	margin-top: 10px;
 	margin-bottom: 10px;
-	padding-left: 5%;
-	padding-right: 5%;
+	padding-left: 2px;
+	padding-right: 2px;
 	overflow: auto;
 }
 .fbPropertyItemLabel {
