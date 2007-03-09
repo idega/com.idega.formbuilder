@@ -19,6 +19,7 @@
 	position: absolute;
 	right: 0px;
 	bottom: 0px;
+	z-index: 5;
 }
 .fbBottomButtonsContainer {
 	position: absolute;
@@ -27,7 +28,6 @@
 	width: 100%;
 	background-color: #E1E1E1;
 	border: 1px solid #D7D7D7;
-	z-index: 5;
 }
 #fbHomePageHeaderBlock {
 	height: 50px;
@@ -248,12 +248,13 @@ padding-right: 120px;
 }
 .pagesPanel {
 	position: absolute;
-	top: 90px;
-	right: 10px;
+	top: 92px !important;
+	right: 12px !important;
 	display: inline;
 	background-color: LightGrey;
-	width: 120px;
-	height: 500px;
+	width: 119px;
+	min-height: 500px;
+	bottom: 28px !important;
 	z-index: 5;
 }
 .formPageIconSpecial {
@@ -362,8 +363,8 @@ padding-right: 120px;
 	height: 100%;
 	margin-top: 10px;
 	margin-bottom: 10px;
-	padding-left: 2px;
-	padding-right: 2px;
+	padding-left: 5%;
+	padding-right: 5%;
 	overflow: auto;
 }
 .fbPropertyItemLabel {
@@ -878,16 +879,39 @@ display: inline !important;
 
 
 
-.fbcomp_header_text{
-font-weight: bold;
-font-size: 1.1em;
-text-decoration: 
+
+h1.title,
+#formHeading{
+	border: 1px #949494 solid;
+	background: #88827e url("/content/files/public/boxHeaderTiler.gif") left top repeat-x;
+	font-family: "Trebuchet MS", Arial, "Helvetica", "Arial", sans-serif;
+	font-size: 118%;
+	color: #fff;
+	font-weight: bold;
+	text-shadow: #000 2px 2px 1px;
+	padding: 4px 0 0 6px;
+	margin: 0 2px 2px;
+	height: 18px;
+	position: relative;
+	line-height: 13px;
 }
 
+.fbcomp_header_text{
+	border-top: 1px #a4a4a4 solid;
+	border-bottom: 1px #a4a4a4 solid;
+	background: url(/content/files/public/sub_header_tiler.gif) repeat-x #d6d6d6;
+	height: 18px;
+	color: #222222;
+	font-size: 12px;
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	padding-left: 15px;
+	padding-top: 4px;
+	margin: 0;
+	clear: both;
+}
 
 #pagesPanelSpecial{
 height: auto !important;
-margin-top: -5px !important;
 }
 
 #pagesPanelSpecial span{
@@ -898,4 +922,84 @@ width: auto;
 margin-left: 9px;
 left: 0 !important;
 width: 40px !important;
+}
+
+select.value{
+width: auto !important;
+min-width: 128px;
+}
+
+
+#dropBox{
+bottom: 40px !important;
+position: absolute;
+height: auto !important;
+top: 10px !important;
+bottom: 28px !important;
+height: auto !important;
+width: auto !important;
+left: 0px !important;
+right: 122px !important;
+overflow: auto !important;
+}
+
+div#dropBoxinner{
+overflow: auto !important;
+height: auto;
+height: auto !important;
+overflow: auto !important;
+}
+
+
+fieldset.group{
+overflow: auto !important;
+top: 40px;
+bottom: 23px !important;
+position: absolute;
+left: 0;
+right: 120px;
+background: #f0f0f0;
+border: 1px solid #a4a4a4;
+}
+
+legend.label{
+background: #e8e8e8;
+border: 1px solid #a4a4a4;
+font-weight: bold;
+	background: url(/content/files/public/sub_header_tiler.gif) repeat-x #d6d6d6;
+}
+
+.case.selected-case{
+overflow: auto !important;
+top: 0px;
+bottom: 28px !important;
+position: absolute;
+left: 0;
+right: 10px;
+}
+
+fieldset.group fieldset.group{
+overflow: auto !important;
+top: 0px;
+bottom: auto !important;
+position: relative !important;
+left: 0;
+right: 120px;
+}
+
+span.selector-item{
+clear: both !important;
+float: left;
+}
+
+span.selector-item span.label{
+	margin-left: 5px;
+}
+
+span.selector-item#C27{
+display: none;
+}
+
+fieldset.group .trigger{
+float: right;
 }
