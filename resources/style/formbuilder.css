@@ -957,7 +957,7 @@ font-weight: bold;
 	background: url(/content/files/public/sub_header_tiler.gif) repeat-x #d6d6d6;
 }
 
-body#formBuilder  .case.selected-case{
+body#formbuilder  .case.selected-case{
 overflow: auto !important;
 top: 0px;
 bottom: 28px !important;
@@ -971,7 +971,7 @@ background: #f0f0f0;
 border: 1px solid #a4a4a4;
 }
 
-body#formBuilder fieldset.group{
+body#formbuilder fieldset.group{
 overflow: auto !important;
 top: 40px;
 bottom: 23px !important;
@@ -980,7 +980,7 @@ left: 0;
 right: 120px;
 }
 
-body#formBuilder fieldset.group fieldset.group{
+body#formbuilder fieldset.group fieldset.group{
 overflow: auto !important;
 top: 0px;
 bottom: auto !important;
