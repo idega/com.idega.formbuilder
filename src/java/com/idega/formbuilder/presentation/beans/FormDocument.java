@@ -141,11 +141,7 @@ public class FormDocument implements Serializable {
 		return result;
 	}
 	
-	public String createFormDocument(String parameter) {
-//		String name = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:newTxt");
-//		if(name == null || name.equals("")) {
-//			name = "UNTITLED FORM";
-//		}
+	public FormDocumentInfo createFormDocument(String parameter) {
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 		if(workspace != null) {
 			Locale locale = workspace.getLocale();
@@ -167,10 +163,10 @@ public class FormDocument implements Serializable {
 			workspace.setRenderedMenu(true);
 			
 			clearFormDocumentInfo();
-			setFormId(id);
-			setDocument(document);
+			//setFormId(id);
+			//setDocument(document);
 			
-			loadFormInfo();
+			loadFormInfo(document);
 			
 			Page page = document.getPage(document.getContainedPagesIdList().get(0));
 			FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
@@ -182,13 +178,13 @@ public class FormDocument implements Serializable {
 				formComponent.clearFormComponentInfo();
 			}
 		}
-		return parameter;
+		return getFormDocumentInfo();
 	}
 	
-	public String createNewForm() {
+	public String createNewForm() throws Exception {
 		String name = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:newTxt");
 		if(name == null || name.equals("")) {
-			name = "UNTITLED FORM";
+			throw new Exception("Form name not provided by the user");
 		}
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 		if(workspace != null) {
@@ -211,10 +207,10 @@ public class FormDocument implements Serializable {
 			workspace.setRenderedMenu(true);
 			
 			clearFormDocumentInfo();
-			setFormId(id);
-			setDocument(document);
+			//setFormId(id);
+			//setDocument(document);
 			
-			loadFormInfo();
+			loadFormInfo(document);
 			
 			Page page = document.getPage(document.getContainedPagesIdList().get(0));
 			FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
@@ -227,7 +223,7 @@ public class FormDocument implements Serializable {
 			}
 			return "newFormSuccess";
 		}
-		return "";
+		return null;
 	}
 	
 	public void save() {
@@ -261,7 +257,7 @@ public class FormDocument implements Serializable {
 				workspace.setView("design");
 				workspace.setRenderedMenu(true);
 				workspace.setSelectedMenu("0");
-				loadFormInfo();
+				loadFormInfo(document);
 				FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
 				if(formComponent != null) {
 					formComponent.clearFormComponentInfo();
@@ -291,7 +287,7 @@ public class FormDocument implements Serializable {
 					formPage.clearPageInfo();
 					formPage.setPage(firstP);
 				}
-				loadFormInfo();
+				loadFormInfo(document);
 				FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
 				if(formComponent != null) {
 					formComponent.clearFormComponentInfo();
@@ -486,7 +482,7 @@ public class FormDocument implements Serializable {
 				workspace.setView("design");
 				workspace.setRenderedMenu(true);
 				workspace.setSelectedMenu("0");
-				loadFormInfo();
+				loadFormInfo(document);
 				FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
 				if(formComponent != null) {
 					formComponent.clearFormComponentInfo();
@@ -526,7 +522,7 @@ public class FormDocument implements Serializable {
 	}
 	
 	public void loadFormProperties(ActionEvent ae) {
-		loadFormInfo();
+		loadFormInfo(document);
 	}
 	
 	public FormDocumentInfo getFormDocumentInfo() {
@@ -538,7 +534,9 @@ public class FormDocument implements Serializable {
 		return info;
 	}
 	
-	public void loadFormInfo() {
+	public void loadFormInfo(Document document) {
+		this.document = document;
+		formId = document.getId();
 		formTitleBean = document.getFormTitle();
 		formTitle = formTitleBean.getString(new Locale("en"));
 		if(document.getConfirmationPage() != null) {
@@ -651,7 +649,9 @@ public class FormDocument implements Serializable {
 
 	public void setThankYouText(String thankYouText) {
 		this.thankYouText = thankYouText;
-		thankYouTextBean.setString(new Locale("en"), thankYouText);
+		if(thankYouTextBean != null) {
+			thankYouTextBean.setString(new Locale("en"), thankYouText);
+		}
 		if(properties != null) {
 			properties.setText(thankYouTextBean);
 		}
@@ -663,7 +663,9 @@ public class FormDocument implements Serializable {
 
 	public FormPageInfo setThankYouTitle(String thankYouTitle) {
 		this.thankYouTitle = thankYouTitle;
-		thankYouTitleBean.setString(new Locale("en"), thankYouTitle);
+		if(thankYouTitleBean != null) {
+			thankYouTitleBean.setString(new Locale("en"), thankYouTitle);
+		}
 		if(properties != null) {
 			properties.setLabel(thankYouTitleBean);
 		}

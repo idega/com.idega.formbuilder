@@ -23,11 +23,23 @@ public class FBActionsProxy extends FBComponentBase {
 	
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
-		HtmlAjaxCommandButton refreshView = (HtmlAjaxCommandButton) application.createComponent(HtmlAjaxCommandButton.COMPONENT_TYPE);
-		refreshView.setId("refreshViewPanel");
-		refreshView.setAjaxSingle(true);
-		refreshView.setReRender("workspaceform1:ajaxViewPanel");
-		add(refreshView);
+		HtmlAjaxCommandButton refreshViewAjax = (HtmlAjaxCommandButton) application.createComponent(HtmlAjaxCommandButton.COMPONENT_TYPE);
+		refreshViewAjax.setId("refreshViewPanel");
+		refreshViewAjax.setAjaxSingle(true);
+		refreshViewAjax.setReRender("workspaceform1:ajaxViewPanel");
+		add(refreshViewAjax);
+
+		HtmlAjaxCommandButton refreshPagesAjax = (HtmlAjaxCommandButton) application.createComponent(HtmlAjaxCommandButton.COMPONENT_TYPE);
+		refreshPagesAjax.setId("refreshPagesPanel");
+		refreshPagesAjax.setAjaxSingle(true);
+		refreshPagesAjax.setReRender("pagesPanel");
+		add(refreshPagesAjax);
+		
+		HtmlAjaxCommandButton refreshOptionsAjax = (HtmlAjaxCommandButton) application.createComponent(HtmlAjaxCommandButton.COMPONENT_TYPE);
+		refreshOptionsAjax.setId("refreshOptionsPanel");
+		refreshOptionsAjax.setAjaxSingle(true);
+		refreshOptionsAjax.setReRender("optionsPanel");
+		add(refreshOptionsAjax);
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {

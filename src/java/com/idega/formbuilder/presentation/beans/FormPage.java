@@ -36,6 +36,28 @@ public class FormPage implements Serializable {
 		special = false;
 	}
 	
+	public FormPageInfo getFirstPageInfo() {
+		Document document = ((FormDocument) WFUtil.getBeanInstance("formDocument")).getDocument();
+		if(document != null) {
+			Page page = document.getPage(document.getContainedPagesIdList().get(0));
+			if(page != null) {
+				return loadPageInfo(page);
+			}
+		}
+		return null;
+	}
+	
+	public FormPageInfo getThxPageInfo() {
+		Document document = ((FormDocument) WFUtil.getBeanInstance("formDocument")).getDocument();
+		if(document != null) {
+			Page page = document.getThxPage();
+			if(page != null) {
+				return loadPageInfo(page);
+			}
+		}
+		return null;
+	}
+	
 	public void loadThxPage() {
 		Document document = ((FormDocument) WFUtil.getBeanInstance("formDocument")).getDocument();
 		if(document != null) {
@@ -215,7 +237,9 @@ public class FormPage implements Serializable {
 
 	public FormPageInfo setTitle(String title) {
 		this.title = title;
-		titleBean.setString(new Locale("en"), title);
+		if(titleBean != null) {
+			titleBean.setString(new Locale("en"), title);
+		}
 		if(properties != null) {
 			properties.setLabel(titleBean);
 		}

@@ -909,6 +909,84 @@ function refreshViewPanel(parameter) {
 }
 function refreshViewPanelW(parameter) {
 	$('workspaceform1:refreshViewPanel').click();
+	placeFormInfo(parameter);
+	FormPage.getFirstPageInfo(refreshPagesPanel);
+	
+}
+function refreshPagesPanel(parameter) {
+	var container = $('pagesPanel');
+	if(container != null) {
+		var childCount = container.childNodes.length;
+		for(var i=0;i<childCount;i++) {
+			container.removeChild(container.childNodes[0]);
+		}
+		
+		var page = document.createElement('div');
+		page.setAttribute('id', parameter.pageId + '_P_page');
+		page.setAttribute('class', 'formPageIcon');
+		page.setAttribute('styleClass', 'formPageIcon');
+		page.setAttribute('onclick', 'loadPageInfo(this.id);');
+		page.setAttribute('style', 'position: relative');
+		
+		var icon = document.createElement('img');
+		icon.setAttribute('id', parameter.pageId + '_pi');
+		icon.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/document-new.png';
+		
+		icon.style.display = 'block';
+		
+		var label = document.createElement('span');
+		label.style.display = 'block';
+		
+		var text = document.createTextNode(parameter.pageTitle);
+		
+		label.appendChild(text);
+		
+		var db = document.createElement('img');
+		db.id = parameter.pageId + '_db';
+		db.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png';
+		db.setAttribute('onclick', 'deletePage(this.id)');
+		db.setAttribute('class', 'speedButton');
+		
+		page.appendChild(icon);
+		page.appendChild(label);
+		page.appendChild(db);
+		
+		container.appendChild(page);
+	}
+	FormPage.getThxPageInfo(placeThxPage);
+}
+function placeThxPage(parameter) {
+	var container = $('pagesPanelSpecial');
+	if(container != null) {
+		var childCount = container.childNodes.length;
+		for(var i=0;i<childCount;i++) {
+			container.removeChild(container.childNodes[0]);
+		}
+		
+			var page = document.createElement('div');
+			page.setAttribute('id', parameter.pageId + '_P_page');
+			page.setAttribute('class', 'formPageIcon');
+			page.setAttribute('styleClass', 'formPageIcon');
+			page.setAttribute('style', 'position: relative');
+			page.setAttribute('onclick', 'loadPageInfo(this.id);');
+			
+			var icon = document.createElement('img');
+			icon.setAttribute('id', parameter.pageId + '_pi');
+			icon.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/document-new.png';
+			icon.style.display = 'block';
+			
+			var label = document.createElement('span');
+			label.style.display = 'block';
+			
+			var text = document.createTextNode(parameter.pageTitle);
+			
+			label.appendChild(text);
+			
+			page.appendChild(icon);
+			page.appendChild(label);
+		
+			container.appendChild(page);
+	}
 	closeLoadingMessage();
 }
 //--------------------------------

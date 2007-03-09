@@ -59,6 +59,7 @@ public class FBFormListItem extends FBComponentBase {
 		
 		WFDivision bodyTop = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		bodyTop.setStyleClass("formListItemTop");
+		bodyTop.setOnclick("document.forms['workspaceform1'].elements['workspaceform1:" + getId() + "_edit" + "'].value='true';document.forms['workspaceform1'].submit();");
 		
 		WFDivision bodyTopLeft = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		bodyTopLeft.setStyleClass("formListItemTopLeft");
@@ -72,6 +73,7 @@ public class FBFormListItem extends FBComponentBase {
 		Text name = new Text();
 		name.setText(formTitle);
 		name.setStyleClass("formTitle");
+		
 		
 		Text created = new Text();
 		created.setText(formId);
