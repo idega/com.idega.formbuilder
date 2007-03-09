@@ -44,7 +44,7 @@ public class FBPagesPanel extends FBComponentBase {
 		
 		writer.startElement("DIV", null);
 		writer.writeAttribute("id", getId(), "id");
-		writer.writeAttribute("style", "display: block; height: 350px; overflow: auto;", null);
+		writer.writeAttribute("style", "display: block; height: 300px; overflow: auto;", null);
 		
 		Locale locale = ((Workspace) WFUtil.getBeanInstance("workspace")).getLocale();
 		FormDocument formDocument = ((FormDocument) WFUtil.getBeanInstance("formDocument"));

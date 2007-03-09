@@ -253,7 +253,7 @@ padding-right: 120px;
 	display: inline;
 	background-color: LightGrey;
 	width: 120px;
-	min-height: 500px;
+	height: 500px;
 	z-index: 5;
 }
 .formPageIconSpecial {
@@ -887,7 +887,7 @@ text-decoration:
 
 #pagesPanelSpecial{
 height: auto !important;
-margin-top: -55px !important;
+margin-top: -5px !important;
 }
 
 #pagesPanelSpecial span{
