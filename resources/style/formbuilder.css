@@ -950,18 +950,6 @@ height: auto !important;
 overflow: auto !important;
 }
 
-
-fieldset.group{
-overflow: auto !important;
-top: 40px;
-bottom: 23px !important;
-position: absolute;
-left: 0;
-right: 120px;
-background: #f0f0f0;
-border: 1px solid #a4a4a4;
-}
-
 legend.label{
 background: #e8e8e8;
 border: 1px solid #a4a4a4;
@@ -978,7 +966,21 @@ left: 0;
 right: 10px;
 }
 
-fieldset.group fieldset.group{
+fieldset.group{
+background: #f0f0f0;
+border: 1px solid #a4a4a4;
+}
+
+body#formBuilder fieldset.group{
+overflow: auto !important;
+top: 40px;
+bottom: 23px !important;
+position: absolute;
+left: 0;
+right: 120px;
+}
+
+body#formBuilder fieldset.group fieldset.group{
 overflow: auto !important;
 top: 0px;
 bottom: auto !important;
@@ -987,6 +989,10 @@ left: 0;
 right: 120px;
 }
 
+
+
+
+
 span.selector-item{
 clear: both !important;
 float: left;
@@ -994,10 +1000,6 @@ float: left;
 
 span.selector-item span.label{
 	margin-left: 5px;
-}
-
-span.selector-item#C27{
-display: none;
 }
 
 fieldset.group .trigger{
