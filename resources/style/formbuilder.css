@@ -957,7 +957,7 @@ font-weight: bold;
 	background: url(/content/files/public/sub_header_tiler.gif) repeat-x #d6d6d6;
 }
 
-.case.selected-case{
+body#formBuilder  .case.selected-case{
 overflow: auto !important;
 top: 0px;
 bottom: 28px !important;
