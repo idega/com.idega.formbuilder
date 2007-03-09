@@ -85,8 +85,9 @@ public class FormComponent implements Serializable {
 
 	public void setDataSrc(String dataSrc) {
 		this.dataSrc = dataSrc;
-		propertiesSelect.setDataSrcUsed(Integer.parseInt(dataSrc));
-	
+		if(propertiesSelect != null) {
+			propertiesSelect.setDataSrcUsed(Integer.parseInt(dataSrc));
+		}
 	}
 
 	public LocalizedStringBean getErrorStringBean() {
@@ -212,6 +213,9 @@ public class FormComponent implements Serializable {
 					
 					selectComponent = null;
 					propertiesSelect = null;
+					
+					plainComponent = null;
+					propertiesPlain = null;
 				}
 			}
 		}
@@ -455,7 +459,9 @@ public class FormComponent implements Serializable {
 
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
-		errorStringBean.setString(new Locale("en"), errorMessage);
+		if(errorStringBean != null) {
+			errorStringBean.setString(new Locale("en"), errorMessage);
+		}
 		if(properties != null) {
 			properties.setErrorMsg(errorStringBean);
 		} else if(propertiesSelect != null) {
@@ -469,7 +475,9 @@ public class FormComponent implements Serializable {
 
 	public void setLabel(String label) {
 		this.label = label;
-		labelStringBean.setString(new Locale("en"), label);
+		if(labelStringBean != null) {
+			labelStringBean.setString(new Locale("en"), label);
+		}
 		if(properties != null) {
 			properties.setLabel(labelStringBean);
 		} else if(propertiesSelect != null) {
@@ -500,7 +508,9 @@ public class FormComponent implements Serializable {
 
 	public void setEmptyLabel(String emptyLabel) {
 		this.emptyLabel = emptyLabel;
-		emptyLabelBean.setString(new Locale("en"), emptyLabel);
+		if(emptyLabelBean != null) {
+			emptyLabelBean.setString(new Locale("en"), emptyLabel);
+		}
 		if(propertiesSelect != null) {
 			propertiesSelect.setEmptyElementLabel(emptyLabelBean);
 		}
@@ -534,7 +544,9 @@ public class FormComponent implements Serializable {
 
 	public void setItems(List<ItemBean> items) {
 		this.items = items;
-		itemset.setItems(new Locale("en"), items);
+		if(itemset != null) {
+			itemset.setItems(new Locale("en"), items);
+		}
 	}
 
 	public ILocalizedItemset getItemset() {
