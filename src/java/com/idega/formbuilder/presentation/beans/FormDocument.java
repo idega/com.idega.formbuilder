@@ -19,6 +19,7 @@ import com.idega.block.form.business.FormsService;
 import com.idega.block.formadmin.presentation.actions.GetAvailableFormsAction;
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
+import com.idega.documentmanager.business.FormLockException;
 import com.idega.documentmanager.business.form.Document;
 import com.idega.documentmanager.business.form.DocumentManager;
 import com.idega.documentmanager.business.form.Page;
@@ -157,6 +158,9 @@ public class FormDocument implements Serializable {
 				e.printStackTrace();
 			}
 			
+//			if(getFormId() != null)
+//				getFormsService().unlockForm(getFormId());
+			
 			workspace.setView("design");
 			workspace.setDesignViewStatus("empty");
 			workspace.setSelectedMenu("0");
@@ -201,6 +205,9 @@ public class FormDocument implements Serializable {
 				e.printStackTrace();
 			}
 			
+//			if(getFormId() != null)
+//				getFormsService().unlockForm(getFormId());
+			
 			workspace.setView("design");
 			workspace.setDesignViewStatus("empty");
 			workspace.setSelectedMenu("0");
@@ -241,6 +248,10 @@ public class FormDocument implements Serializable {
 			if(formId != "") {
 				DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
 				document = formManagerInstance.openForm(formId);
+				
+//				if(getFormId() != null)
+//					getFormsService().unlockForm(getFormId());
+				
 				String firstPage = getCommonPagesIdList().get(0);
 				Page firstP = document.getPage(firstPage);
 				Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
@@ -263,6 +274,9 @@ public class FormDocument implements Serializable {
 					formComponent.clearFormComponentInfo();
 				}
 			}
+		} catch (FormLockException e) {
+			// TODO: inform about lock
+			logger.info("Form was locked when tried to open it", e);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -276,6 +290,10 @@ public class FormDocument implements Serializable {
 			if(formId != "") {
 				DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
 				document = formManagerInstance.openForm(formId);
+				
+//				if(getFormId() != null)
+//					getFormsService().unlockForm(getFormId());
+				
 				Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 				workspace.setView(Workspace.CODE_VIEW);
 				workspace.setRenderedMenu(false);
@@ -293,6 +311,9 @@ public class FormDocument implements Serializable {
 					formComponent.clearFormComponentInfo();
 				}
 			}
+		} catch (FormLockException e) {
+			// TODO: inform about lock
+			logger.info("Form was locked when tried to open it", e);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -323,6 +344,9 @@ public class FormDocument implements Serializable {
 		try {
 			getFormsService().removeForm(form_id, delete_submitted_data);
 			
+		} catch (FormLockException e) {
+			// TODO: inform about lock
+			logger.info("Form was locked when tried to delete it", e);
 		} catch (Exception e) {
 			logger.error("Exception while removing form", e);
 //			TODO: (alex) tell user about error
@@ -536,7 +560,7 @@ public class FormDocument implements Serializable {
 	
 	public void loadFormInfo(Document document) {
 		this.document = document;
-		formId = document.getId();
+		setFormId(document.getId());
 		formTitleBean = document.getFormTitle();
 		formTitle = formTitleBean.getString(new Locale("en"));
 		if(document.getConfirmationPage() != null) {
