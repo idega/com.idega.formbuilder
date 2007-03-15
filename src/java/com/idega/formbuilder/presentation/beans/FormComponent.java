@@ -51,7 +51,6 @@ public class FormComponent implements Serializable {
 	private String autofillKey;
 	private String plainText;
 	
-	private String emptyLabel;
 	private String externalSrc;
 	private List<ItemBean> items = new ArrayList<ItemBean>();
 	
@@ -59,7 +58,6 @@ public class FormComponent implements Serializable {
 	private LocalizedStringBean errorStringBean;
 	private LocalizedStringBean helpStringBean;
 	
-	private LocalizedStringBean emptyLabelBean;
 	private ILocalizedItemset itemset;
 	
 	private String dataSrc;
@@ -112,7 +110,6 @@ public class FormComponent implements Serializable {
 		this.label = "";
 		this.errorMessage = "";
 		this.required = false;
-		this.emptyLabel = "";
 		this.helpMessage = "";
 		this.autofillKey = "";
 		this.plainText = "";
@@ -120,7 +117,6 @@ public class FormComponent implements Serializable {
 		this.labelStringBean = null;
 		this.errorStringBean = null;
 		this.helpStringBean = null;
-		this.emptyLabelBean = null;
 		this.itemset = null;
 		
 		this.dataSrc = DataSourceList.localDataSrc;
@@ -151,9 +147,6 @@ public class FormComponent implements Serializable {
 		this.autofillKey = "";
 		
 		this.plainText = "";
-		
-		this.emptyLabel = "";
-		this.emptyLabelBean = null;
 		
 		this.itemset = null;
 		
@@ -243,7 +236,6 @@ public class FormComponent implements Serializable {
 			info.setAutofillKey(autofillKey);
 			
 			if(propertiesSelect != null) {
-				info.setEmptyLabel(emptyLabel);
 				if(dataSrc.equals(DataSourceList.externalDataSrc)) {
 					info.setExternalSrc(externalSrc);
 					info.setLocal(false);
@@ -288,6 +280,7 @@ public class FormComponent implements Serializable {
 			}
 			Component component = page.addComponent(type, before);
 			if(component != null) {
+				
 				Element element = (Element) component.getHtmlRepresentation(new Locale("en")).cloneNode(true);
 				String id = element.getAttribute("id");
 				element.removeAttribute("id");
@@ -415,9 +408,6 @@ public class FormComponent implements Serializable {
 				dataSrc = DataSourceList.localDataSrc;
 			}
 			
-			emptyLabelBean = propertiesSelect.getEmptyElementLabel();
-			emptyLabel = emptyLabelBean.getString(new Locale("en"));
-			
 			externalSrc = propertiesSelect.getExternalDataSrc();
 			
 			itemset = propertiesSelect.getItemset();
@@ -500,28 +490,6 @@ public class FormComponent implements Serializable {
 
 	public PropertiesComponent getProperties() {
 		return properties;
-	}
-
-	public String getEmptyLabel() {
-		return emptyLabel;
-	}
-
-	public void setEmptyLabel(String emptyLabel) {
-		this.emptyLabel = emptyLabel;
-		if(emptyLabelBean != null) {
-			emptyLabelBean.setString(new Locale("en"), emptyLabel);
-		}
-		if(propertiesSelect != null) {
-			propertiesSelect.setEmptyElementLabel(emptyLabelBean);
-		}
-	}
-
-	public LocalizedStringBean getEmptyLabelBean() {
-		return emptyLabelBean;
-	}
-
-	public void setEmptyLabelBean(LocalizedStringBean emptyLabelBean) {
-		this.emptyLabelBean = emptyLabelBean;
 	}
 
 	public String getExternalSrc() {

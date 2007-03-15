@@ -10,7 +10,6 @@ public class FormComponentInfo {
 	private String label;
 	private String errorMessage;
 	private String helpMessage;
-	private String emptyLabel;
 	private String externalSrc;
 	private String autofillKey;
 	private String plainText;
@@ -87,12 +86,6 @@ public class FormComponentInfo {
 	}
 	public void setRequired(boolean required) {
 		this.required = required;
-	}
-	public String getEmptyLabel() {
-		return emptyLabel;
-	}
-	public void setEmptyLabel(String emptyLabel) {
-		this.emptyLabel = emptyLabel;
 	}
 	public String getExternalSrc() {
 		return externalSrc;

@@ -208,23 +208,6 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		row = null;
 		cell = null;
 		
-		HtmlOutputText emptyLabelLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		emptyLabelLabel.setValue("Empty item label");
-		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.setWidth("100");
-		cell.add(emptyLabelLabel);
-		
-		HtmlInputText emptyLabel = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
-		emptyLabel.setId("propertyEmptyLabel");
-		emptyLabel.setValueBinding("value", application.createValueBinding("#{formComponent.emptyLabel}"));
-		emptyLabel.setOnblur("saveEmptyLabel(this.value);");
-		emptyLabel.setOnkeydown("savePropertyOnEnter(this.value,'compEmpty',event);");
-		
-		cell = row.createCell();
-		cell.add(emptyLabel);
-		
 		HtmlOutputText advancedL = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		advancedL.setValue("Select source");
 

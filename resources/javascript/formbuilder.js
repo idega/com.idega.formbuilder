@@ -40,9 +40,6 @@ function savePropertyOnEnter(parameter,attribute,e) {
 		 	case 'compAuto':
 		 		saveAutofill(parameter);
 		 		break;
-		 	case 'compEmpty':
-		 		saveEmptyLabel(parameter);
-		 		break;
 		 	case 'compExt':
 		  		saveExternalSrc(parameter);
 		  		break;
@@ -631,11 +628,6 @@ function saveRequired(parameter) {
 function saveErrorMessage(parameter) {
 	if(parameter != null) {
 		FormComponent.setErrorMessage(parameter, refreshViewPanel);
-	}
-}
-function saveEmptyLabel(parameter) {
-	if(parameter != null) {
-		FormComponent.setEmptyLabel(parameter, refreshViewPanel);
 	}
 }
 function saveExternalSrc(parameter) {
