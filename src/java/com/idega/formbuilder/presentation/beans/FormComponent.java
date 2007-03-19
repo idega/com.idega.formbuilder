@@ -27,6 +27,7 @@ import com.idega.documentmanager.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.presentation.components.FBDesignView;
 import com.idega.formbuilder.presentation.converters.FormButtonInfo;
 import com.idega.formbuilder.presentation.converters.FormComponentInfo;
+import com.idega.formbuilder.presentation.converters.PaletteComponentInfo;
 import com.idega.webface.WFUtil;
 
 public class FormComponent implements Serializable {
@@ -268,7 +269,7 @@ public class FormComponent implements Serializable {
 		}
 	}
 	
-	public Element addComponent(String type) throws Exception {
+	public Element addComponent(PaletteComponentInfo info) throws Exception {
 		Element rootDivImported = null;
 		FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
 		Page page = formPage.getPage();
@@ -278,7 +279,7 @@ public class FormComponent implements Serializable {
 			if(area != null) {
 				before = area.getId();
 			}
-			Component component = page.addComponent(type, before);
+			Component component = page.addComponent(info.getType(), before);
 			if(component != null) {
 				Element element = (Element) component.getHtmlRepresentation(new Locale("en")).cloneNode(true);
 				String id = element.getAttribute("id");

@@ -43,7 +43,8 @@ FBDraggable.prototype = (new Rico.Draggable()).extend( {
 				var inner = dojo.html.getBorderBox(child);
 				childBoxes.push({top: pos.y, bottom: pos.y+inner.height,left: pos.x, right: pos.x+inner.width, height: inner.height, width: inner.width, node: child});
 			}
-   			FormComponent.addComponent(this.name, placeNewComponent);
+			var info = new PaletteComponentInfo(this.name, null);// { type:this.name, name: "", iconPath: "", autofill_key: "" };
+   			FormComponent.addComponent(info, placeNewComponent);
    		} else if(this.type == 'fbbutton') {
    			FormComponent.addButton(this.name, placeNewButton);
    		}
@@ -77,6 +78,10 @@ FBDraggable.prototype = (new Rico.Draggable()).extend( {
 
 } );
 
+function PaletteComponentInfo(type,autofill) {
+	this.type = type;
+	this.autofill = autofill;
+}
 
 var FBDropzone = Class.create();
 
@@ -173,7 +178,7 @@ FBDropzone.prototype = (new Rico.Dropzone()).extend( {
 				}
 			}
 			var box = $('dropBoxinner');
-      		if(currentElement != null) {
+      		try {
 		         if(CURRENT_ELEMENT_UNDER != -1) {
 		         	FormComponent.moveComponent(currentElement.getAttribute('id'), CURRENT_ELEMENT_UNDER, insertNewComponent);
 		         } else {
@@ -182,7 +187,7 @@ FBDropzone.prototype = (new Rico.Dropzone()).extend( {
 						currentElement = null;
 		         	}
 		         }
-      		} else {
+      		} catch(e) {
       			alert('Element is unavailable');
       		}
       		Sortable.create('dropBoxinner',{dropOnEmpty:true,tag:'div',only:'formElement',onUpdate:rearrangeComponents,scroll:'dropBoxinner',constraint:false});

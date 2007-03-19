@@ -19,6 +19,7 @@
     	<convert converter="bean" match="com.idega.formbuilder.presentation.converters.FormComponentInfo" />
     	<convert converter="bean" match="com.idega.formbuilder.presentation.converters.FormButtonInfo" />
     	<convert converter="bean" match="com.idega.documentmanager.business.form.beans.ItemBean" />
+    	<convert converter="bean" match="com.idega.formbuilder.presentation.converters.PaletteComponentInfo" />
   	</allow>
   
   	<signatures>
@@ -30,9 +31,10 @@
   			import com.idega.formbuilder.presentation.converters.FormComponentInfo;
   			import com.idega.formbuilder.presentation.beans.FormComponent;
   			import com.idega.formbuilder.presentation.converters.FormButtonInfo;
+  			import com.idega.formbuilder.presentation.converters.PaletteComponentInfo;
   			import com.idega.documentmanager.business.form.beans.ItemBean;
 			
-			
+			FormComponent.addComponent(PaletteComponentInfo);
 			FormComponent.getFormButtonInfo();
 			FormComponent.addButton();
 			FormDocument.getFormDocumentInfo();
