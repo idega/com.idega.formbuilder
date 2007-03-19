@@ -28,6 +28,7 @@
 	width: 100%;
 	background-color: #E1E1E1;
 	border: 1px solid #D7D7D7;
+	z-index: 5;
 }
 #fbHomePageHeaderBlock {
 	height: 50px;
@@ -50,7 +51,7 @@
 .newFormComponentIdle {
 	width: 270px;
 	height: 34px;
-	background: LightGrey  url(/content/files/public/new_form_icon.gif) no-repeat 20px 5px;
+	background: LightGrey  url(images/new_form_icon.gif) no-repeat 20px 5px;
 	padding-top: 5px;
 }
 .newIcon {
@@ -363,8 +364,8 @@ padding-right: 120px;
 	height: 100%;
 	margin-top: 10px;
 	margin-bottom: 10px;
-	padding-left: 5%;
-	padding-right: 5%;
+	padding-left: 5px;
+	padding-right: 5px;
 	overflow: auto;
 }
 .fbPropertyItemLabel {
@@ -378,7 +379,7 @@ padding-right: 120px;
 	width: 88%;
 	height: auto;
 	margin-bottom: 10px;
-	margin-right: 5%;
+	margin-right: 5px;
 margin: auto !important;
 	padding-top: 10px;
 	padding-bottom: 10px;
@@ -551,7 +552,7 @@ margin: auto !important;
 	margin: 5px 5px 0px 5px;
 	border-width: 0 !important;
 	text-align: left;
-	background: #f5f5f5 url(/content/files/public/paletteButton.gif);
+	background: #f5f5f5 url(images/paletteButton.gif);
 	text-decoration: none;
 	font-family: "Lucida Grande", "Lucida Sans Unicode", Geneva, Arial, Verdana, sans-serif !important;
 	font-weight: normal;
@@ -804,6 +805,9 @@ width: auto !important;
 border: 1px solid transparent;
 
 }
+.activeButtonArea {
+	background-color: Red;
+}
 
 #optionsPanel{
 border: 1px solid #aeaeae;
@@ -883,7 +887,7 @@ display: inline !important;
 h1.title,
 #formHeading{
 	border: 1px #949494 solid;
-	background: #88827e url("/content/files/public/boxHeaderTiler.gif") left top repeat-x;
+	background: #88827e url("images/boxHeaderTiler.gif") left top repeat-x;
 	font-family: "Trebuchet MS", Arial, "Helvetica", "Arial", sans-serif;
 	font-size: 118%;
 	color: #fff;
@@ -899,7 +903,7 @@ h1.title,
 .fbcomp_header_text{
 	border-top: 1px #a4a4a4 solid;
 	border-bottom: 1px #a4a4a4 solid;
-	background: url(/content/files/public/sub_header_tiler.gif) repeat-x #d6d6d6;
+	background: url(images/sub_header_tiler.gif) repeat-x #d6d6d6;
 	height: 18px;
 	color: #222222;
 	font-size: 12px;
@@ -954,7 +958,7 @@ legend.label{
 background: #e8e8e8;
 border: 1px solid #a4a4a4;
 font-weight: bold;
-	background: url(/content/files/public/sub_header_tiler.gif) repeat-x #d6d6d6;
+	background: url(images/sub_header_tiler.gif) repeat-x #d6d6d6;
 }
 
 body#formbuilder  .case.selected-case{
