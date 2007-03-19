@@ -95,16 +95,17 @@ FBDropzone.prototype = (new Rico.Dropzone()).extend( {
    		} else if(this.type == 'fbbutton') {
    			var cont = $('pageButtonArea');
 			if(cont == null) {
-				var buttonArea = document.createElement('div');
-				buttonArea.id = 'pageButtonArea';
-				buttonArea.style.position = 'relative';
-				//buttonArea.setAttribute('class','formElement activeButtonArea');
-				buttonArea.setAttribute('class','formElement');
-				//buttonArea.style.backgroundColor = 'Red';
+				cont = document.createElement('div');
+				cont.id = 'pageButtonArea';
+				cont.style.position = 'relative';
+				cont.setAttribute('class','formElement');
+				cont.style.backgroundColor = 'Silver';
 				var dropBox = $('dropBox');
 				if(dropBox != null) {
-					dropBox.appendChild(buttonArea);
+					dropBox.appendChild(cont);
 				}
+			} else {
+				cont.style.backgroundColor = 'Silver';
 			}
    		}
    	},
@@ -115,43 +116,49 @@ FBDropzone.prototype = (new Rico.Dropzone()).extend( {
    			cont.style.backgroundColor = 'White';
    		} else if(this.type == 'fbbutton') {
    			var cont = $('pageButtonArea');
-			if(cont == null) {
-				
+			if(cont != null) {
+				cont.style.backgroundColor = 'White';
 			}
    		}
    	},
 
 	showHover: function() {
-		var children;
-		if(CURRENT_ELEMENT_UNDER != -1) {
-			var cont = $('dropBoxinner');
-				if(cont != null) {
-					children = getPageComponents();
-					var line = $('insertMarker');
-					if(line != null) {
-						var cloneLine = line.cloneNode(false);
-						cont.removeChild(line);
-						cont.insertBefore(cloneLine, children[CURRENT_ELEMENT_UNDER]);
-						//printStatus("Current childcount: " + children[CURRENT_ELEMENT_UNDER+1].id + " Swap line marker before: " + CURRENT_ELEMENT_UNDER);
-					} else {
-						line = document.createElement('hr');
-						line.id = 'insertMarker';
-						cont.insertBefore(line, children[CURRENT_ELEMENT_UNDER]);
-						//printStatus("Create line marker before: " + CURRENT_ELEMENT_UNDER);
+		if(this.type == 'fbcomp') {
+			var children;
+			if(CURRENT_ELEMENT_UNDER != -1) {
+				var cont = $('dropBoxinner');
+					if(cont != null) {
+						children = getPageComponents();
+						var line = $('insertMarker');
+						if(line != null) {
+							var cloneLine = line.cloneNode(false);
+							cont.removeChild(line);
+							cont.insertBefore(cloneLine, children[CURRENT_ELEMENT_UNDER]);
+							//printStatus("Current childcount: " + children[CURRENT_ELEMENT_UNDER+1].id + " Swap line marker before: " + CURRENT_ELEMENT_UNDER);
+						} else {
+							line = document.createElement('hr');
+							line.id = 'insertMarker';
+							cont.insertBefore(line, children[CURRENT_ELEMENT_UNDER]);
+							//printStatus("Create line marker before: " + CURRENT_ELEMENT_UNDER);
+						}
 					}
-				}
+			}
+		} else if(this.type == 'fbbutton') {
+			
 		}
+		
    	},
 
    	hideHover: function() {
-   		var cont = $('dropBoxinner');
-				if(cont != null) {
-					var line = $('insertMarker');
-					if(line != null) {
-						cont.removeChild(line);
-					}
+   		if(this.type == 'fbcomp') {
+   			var cont = $('dropBoxinner');
+   			if(cont != null) {
+				var line = $('insertMarker');
+				if(line != null) {
+					cont.removeChild(line);
 				}
-   		
+			}
+   		}
    	},
 
    	accept: function(draggableObjects) {
