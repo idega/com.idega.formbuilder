@@ -70,14 +70,18 @@ public class FormPage implements Serializable {
 	}
 	
 	public void updateComponentList(String idSequence, String idPrefix, String delimiter) throws Exception {
-		List<String> ids = page.getContainedComponentsIdList();
-		ids.clear();
-		String test = "&" + idSequence;
-		StringTokenizer tokenizer = new StringTokenizer(test, delimiter);
-		while(tokenizer.hasMoreTokens()) {
-			ids.add(idPrefix + tokenizer.nextToken());
+		if(page != null) {
+			List<String> ids = page.getContainedComponentsIdList();
+			ids.clear();
+			String test = "&" + idSequence;
+			StringTokenizer tokenizer = new StringTokenizer(test, delimiter);
+			while(tokenizer.hasMoreTokens()) {
+				ids.add(idPrefix + tokenizer.nextToken());
+			}
+			page.rearrangeComponents();
+		} else {
+			throw new Exception("Page component missing");
 		}
-		page.rearrangeComponents();
 	}
 	
 	public void updateButtonList(String idSequence, String idPrefix, String delimiter) throws Exception {

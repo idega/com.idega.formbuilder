@@ -16,6 +16,15 @@ public class FBPaletteComponent extends FBComponentBase {
 	private String type;
 	private String icon;
 	private String onDrag;
+	private String category;
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
 
 	public String getOnDrag() {
 		return onDrag;
@@ -69,19 +78,20 @@ public class FBPaletteComponent extends FBComponentBase {
 	public String getEmbededJavascript() {
 		StringBuilder result = new StringBuilder();
 		result.append("<script language=\"JavaScript\">\n");
-		result.append("new Draggable(\"" + type + "\", {tag:\"div\",starteffect:" + onDrag + ",revert:true,ghosting:true});\n");
+		result.append("dndMgr.registerDraggable( new FBDraggable($('" + type + "'), '" + type + "', '" + category + "') );\n");
 		result.append("</script>\n");
 		return result.toString();
 		
 	}
 	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[5];
+		Object values[] = new Object[6];
 		values[0] = super.saveState(context);
 		values[1] = name;
 		values[2] = type;
 		values[3] = icon;
 		values[4] = onDrag;
+		values[5] = category;
 		return values;
 	}
 	
@@ -92,6 +102,7 @@ public class FBPaletteComponent extends FBComponentBase {
 		type = (String) values[2];
 		icon = (String) values[3];
 		onDrag = (String) values[4];
+		category = (String) values[5];
 	}
 
 	public String getName() {

@@ -268,7 +268,7 @@ public class FormComponent implements Serializable {
 		}
 	}
 	
-	public Element createComponent(String type) throws Exception {
+	public Element addComponent(String type) throws Exception {
 		Element rootDivImported = null;
 		FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
 		Page page = formPage.getPage();
@@ -280,7 +280,6 @@ public class FormComponent implements Serializable {
 			}
 			Component component = page.addComponent(type, before);
 			if(component != null) {
-				
 				Element element = (Element) component.getHtmlRepresentation(new Locale("en")).cloneNode(true);
 				String id = element.getAttribute("id");
 				element.removeAttribute("id");
@@ -307,7 +306,25 @@ public class FormComponent implements Serializable {
 		        }
 			}
 		}
+		//System.out.println(page.getContainedComponentsIdList());
 		return rootDivImported;
+	}
+	
+	public String moveComponent(String id, int before) throws Exception {
+		FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+		Page page = formPage.getPage();
+		String beforeId = "";
+		if(page != null) {
+			List<String> ids = page.getContainedComponentsIdList();
+			if(ids.indexOf(id) != -1) {
+				beforeId = ids.get(before);
+				ids.remove(id);
+				ids.add(before, id);
+			}
+			page.rearrangeComponents();
+		}
+		//System.out.println(page.getContainedComponentsIdList());
+		return beforeId;
 	}
 	
 	public FormButtonInfo addButton(String type) {
@@ -390,7 +407,7 @@ public class FormComponent implements Serializable {
 			plainText = "";
 			
 			required = propertiesSelect.isRequired();
-			
+			//System.out.println(propertiesSelect.isRequired());
 			labelStringBean = propertiesSelect.getLabel();
 			label = labelStringBean.getString(new Locale("en"));
 			
@@ -399,7 +416,8 @@ public class FormComponent implements Serializable {
 			
 			autofillKey = propertiesSelect.getAutofillKey();
 			
-//			helpStringBean = propertiesSelect.get
+			helpStringBean = propertiesSelect.getHelpText();
+			helpMessage = helpStringBean.getString(new Locale("en"));
 			
 			if(propertiesSelect.getDataSrcUsed() != null) {
 				dataSrc = propertiesSelect.getDataSrcUsed().toString();
@@ -424,12 +442,15 @@ public class FormComponent implements Serializable {
 			properties = component.getProperties();
 			
 			required = properties.isRequired();
-			
+			//System.out.println(properties.isRequired());
 			labelStringBean = properties.getLabel();
 			label = labelStringBean.getString(new Locale("en"));
 			
 			errorStringBean = properties.getErrorMsg();
 			errorMessage = errorStringBean.getString(new Locale("en"));
+			
+			helpStringBean = properties.getHelpText();
+			helpMessage = helpStringBean.getString(new Locale("en"));
 			
 			autofillKey = properties.getAutofillKey();
 		}
@@ -559,6 +580,14 @@ public class FormComponent implements Serializable {
 
 	public void setHelpMessage(String helpMessage) {
 		this.helpMessage = helpMessage;
+		if(helpStringBean != null) {
+			helpStringBean.setString(new Locale("en"), helpMessage);
+		}
+		if(properties != null) {
+			properties.setHelpText(helpStringBean);
+		} else if(propertiesSelect != null) {
+			propertiesSelect.setHelpText(helpStringBean);
+		}
 	}
 
 	public LocalizedStringBean getHelpStringBean() {

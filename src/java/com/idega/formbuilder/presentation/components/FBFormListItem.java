@@ -9,6 +9,7 @@ import javax.faces.context.FacesContext;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.presentation.text.Text;
 import com.idega.webface.WFDivision;
+import com.idega.webface.WFToolbarButton;
 
 public class FBFormListItem extends FBComponentBase {
 	
@@ -51,9 +52,11 @@ public class FBFormListItem extends FBComponentBase {
 		WFDivision body = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		body.setStyleClass(getStyleClass());
 		
+		String formName = WFToolbarButton.determineFormName(this);
+		
 		WFDivision bodyTop = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		bodyTop.setStyleClass("formListItemTop");
-		bodyTop.setOnclick("document.forms['workspaceform1'].elements['workspaceform1:" + getId() + "_edit" + "'].value='true';document.forms['workspaceform1'].submit();");
+		bodyTop.setOnclick("document.forms['" + formName + "'].elements['" + formName + ":" + getId() + edit_button_postfix + "'].value='true';document.forms['" + formName + "'].submit();");
 		
 		WFDivision bodyTopLeft = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		bodyTopLeft.setStyleClass("formListItemTopLeft");

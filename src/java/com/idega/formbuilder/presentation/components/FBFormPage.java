@@ -84,7 +84,7 @@ public class FBFormPage extends FBComponentBase {
 		addChild(pageIconImg, switcher);
 		addChild(pageIconLabel, switcher);
 		
-		if(onDelete != null && !onDelete.equals("")) {
+		if("".equals(onDelete)) {
 			HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
 			deleteButton.setId(getId() + "_db");
 			deleteButton.setValue(DELETE_ICON_IMG);

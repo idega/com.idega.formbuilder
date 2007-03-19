@@ -45,6 +45,7 @@ public class FBPalette extends FBComponentBase {
 			formComponent.setType(current.getType());
 			formComponent.setIcon(current.getIconPath());
 			formComponent.setOnDrag("handleComponentDrag");
+			formComponent.setCategory("fbcomp");
 			basic.add(formComponent);
 		}
 		
@@ -57,6 +58,7 @@ public class FBPalette extends FBComponentBase {
 			formComponent.setType(current.getType());
 			formComponent.setIcon(current.getIconPath());
 			formComponent.setOnDrag("handleButtonDrag");
+			formComponent.setCategory("fbbutton");
 			buttons.add(formComponent);
 		}
 		it = palette.getPlain().iterator();
@@ -68,6 +70,7 @@ public class FBPalette extends FBComponentBase {
 			formComponent.setType(current.getType());
 			formComponent.setIcon(current.getIconPath());
 			formComponent.setOnDrag("handleComponentDrag");
+			formComponent.setCategory("fbcomp");
 			plain.add(formComponent);
 		}
 	}

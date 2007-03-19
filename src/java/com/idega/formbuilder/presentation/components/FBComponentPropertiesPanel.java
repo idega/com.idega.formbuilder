@@ -113,21 +113,21 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		cell = row.createCell();
 		cell.add(errorMsg);
 		
-//		HtmlOutputText helpMsgLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-//		helpMsgLabel.setValue("Help text");
-//		
-//		row = group.createRow();
-//		cell = row.createCell();
-//		cell.add(helpMsgLabel);
-//		
-//		HtmlInputText helpMsg = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
-//		helpMsg.setId("propertyHelpText");
-//		helpMsg.setValueBinding("value", application.createValueBinding("#{formComponent.helpMessage}"));
-//		helpMsg.setOnblur("saveHelpMessage(this.value)");
-//		helpMsg.setOnkeydown("savePropertyOnEnter(this.value,'compHelp',event);");
-//		
-//		cell = row.createCell();
-//		cell.add(helpMsg);
+		HtmlOutputText helpMsgLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		helpMsgLabel.setValue("Help text");
+		
+		row = group.createRow();
+		cell = row.createCell();
+		cell.add(helpMsgLabel);
+		
+		HtmlInputText helpMsg = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+		helpMsg.setId("propertyHelpText");
+		helpMsg.setValueBinding("value", application.createValueBinding("#{formComponent.helpMessage}"));
+		helpMsg.setOnblur("saveHelpMessage(this.value)");
+		helpMsg.setOnkeydown("savePropertyOnEnter(this.value,'compHelp',event);");
+		
+		cell = row.createCell();
+		cell.add(helpMsg);
 		
 		HtmlOutputText hasAutofillLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		hasAutofillLabel.setValue("Autofill field");

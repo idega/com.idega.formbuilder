@@ -14,10 +14,10 @@
 				 javascripturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax.js,
 												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/modal-message.js,
 												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax-dynamic-content.js,
+												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/categories-tabs.js,
 												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/scriptaculous/prototype.js,
 												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/scriptaculous/scriptaculous.js,
-												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js,
-												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/categories-tabs.js,
+												
 												/dwr/interface/FormComponent.js,
 												/dwr/interface/FormDocument.js,
 												/dwr/interface/FormPage.js,

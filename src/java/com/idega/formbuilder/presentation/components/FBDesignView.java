@@ -129,37 +129,39 @@ public class FBDesignView extends FBComponentBase {
 		
 		FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
 		Page page = formPage.getPage();
-		ButtonArea barea = page.getButtonArea();
-		if(barea != null) {
-			FBButtonArea area = (FBButtonArea) application.createComponent(FBButtonArea.COMPONENT_TYPE);
-			area.setId("pageButtonArea");
-			area.setStyleClass(componentStyleClass);
-			area.setComponentStyleClass("formButton");
-			addFacet(BUTTON_AREA_FACET, area);
-		}
 		if(page != null) {
-			List<String> ids = page.getContainedComponentsIdList();
-			Iterator it = ids.iterator();
-			vb = getValueBinding("selectedComponent");
-			if(vb != null) {
-				selectedComponent = (String) vb.getValue(context);
-			} 
-			while(it.hasNext()) {
-				String nextId = (String) it.next();
-				Component comp = page.getComponent(nextId);
-				if(comp instanceof Container) {
-					continue;
-				} else {
-					FBFormComponent formComponent = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
-					formComponent.setId(nextId);
-					formComponent.setStyleClass(getComponentStyleClass());
-					if(nextId.equals(selectedComponent)) {
-						formComponent.setSelected(true);
+			ButtonArea barea = page.getButtonArea();
+			if(barea != null) {
+				FBButtonArea area = (FBButtonArea) application.createComponent(FBButtonArea.COMPONENT_TYPE);
+				area.setId("pageButtonArea");
+				area.setStyleClass(componentStyleClass);
+				area.setComponentStyleClass("formButton");
+				addFacet(BUTTON_AREA_FACET, area);
+			}
+			if(page != null) {
+				List<String> ids = page.getContainedComponentsIdList();
+				Iterator it = ids.iterator();
+				vb = getValueBinding("selectedComponent");
+				if(vb != null) {
+					selectedComponent = (String) vb.getValue(context);
+				} 
+				while(it.hasNext()) {
+					String nextId = (String) it.next();
+					Component comp = page.getComponent(nextId);
+					if(comp instanceof Container) {
+						continue;
 					} else {
-						formComponent.setSelected(false);
+						FBFormComponent formComponent = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
+						formComponent.setId(nextId);
+						formComponent.setStyleClass(getComponentStyleClass());
+						if(nextId.equals(selectedComponent)) {
+							formComponent.setSelected(true);
+						} else {
+							formComponent.setSelected(false);
+						}
+						formComponent.setSelectedStyleClass(getComponentStyleClass() + "Sel");
+					    add(formComponent);
 					}
-					formComponent.setSelectedStyleClass(getComponentStyleClass() + "Sel");
-				    add(formComponent);
 				}
 			}
 		}
