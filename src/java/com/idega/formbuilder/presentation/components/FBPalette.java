@@ -25,6 +25,7 @@ public class FBPalette extends FBComponentBase {
 	private List<FBPaletteComponent> basic = new LinkedList<FBPaletteComponent>();
 	private List<FBPaletteComponent> buttons = new LinkedList<FBPaletteComponent>();
 	private List<FBPaletteComponent> plain = new LinkedList<FBPaletteComponent>();
+	private List<FBPaletteComponent> autofilled = new LinkedList<FBPaletteComponent>();
 
 	public FBPalette() {
 		super();
@@ -73,6 +74,18 @@ public class FBPalette extends FBComponentBase {
 			formComponent.setCategory("fbcomp");
 			plain.add(formComponent);
 		}
+		
+		it = palette.getAutofilled().iterator();
+		while(it.hasNext()) {
+			PaletteComponent current = (PaletteComponent) it.next();
+			FBPaletteComponent formComponent = (FBPaletteComponent) application.createComponent(FBPaletteComponent.COMPONENT_TYPE);
+			formComponent.setStyleClass(itemStyleClass);
+			formComponent.setName(current.getName());
+			formComponent.setType(current.getType());
+			formComponent.setIcon(current.getIconPath());
+			formComponent.setOnDrag("handleComponentDrag");
+			autofilled.add(formComponent);
+		}
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
@@ -94,6 +107,9 @@ public class FBPalette extends FBComponentBase {
 		writer.startElement("A", null);
 		writer.writeText("Text", null);
 		writer.endElement("A");
+		writer.startElement("A", null);
+		writer.writeText("Custom", null);
+		writer.endElement("A");
 		writer.endElement("DIV");	
 	}
 	
@@ -103,15 +119,29 @@ public class FBPalette extends FBComponentBase {
 		writer.startElement("DIV", null);
 		writer.writeAttribute("id", "paletteBody", null);
 		
+		addTab("paletteBody_1", context, basic);
+		addTab("paletteBody_2", context, buttons);
+		addTab("paletteBody_3", context, plain);
+		addTab("paletteBody_4", context, autofilled);
+		
+		writer.endElement("DIV");
+		writer.endElement("DIV");
+		writer.write(getEmbededJavascript());
+	}
+	
+	private void addTab(String tab_id, FacesContext context, List<FBPaletteComponent> components) throws IOException {
+		
+		ResponseWriter writer = context.getResponseWriter();
+		
 		writer.startElement("DIV", null);
-		writer.writeAttribute("id", "paletteBody_1", null);
+		writer.writeAttribute("id", tab_id, null);
 		
 		writer.startElement("TABLE", null);
 		
 		int count = 1;
 		boolean inRow = false;
 		
-		Iterator it = basic.iterator();
+		Iterator it = components.iterator();
 		while(it.hasNext()) {
 			if((count % columns) == 1 || columns == 1) {
 				writer.startElement("TR", null);
@@ -134,78 +164,6 @@ public class FBPalette extends FBComponentBase {
 		}
 		writer.endElement("TABLE");
 		writer.endElement("DIV");
-		
-		
-		
-		writer.startElement("DIV", null);
-		writer.writeAttribute("id", "paletteBody_2", null);
-		
-		writer.startElement("TABLE", null);
-		
-		count = 1;
-		inRow = false;
-		
-		it = buttons.iterator();
-		while(it.hasNext()) {
-			if((count % columns) == 1 || columns == 1) {
-				writer.startElement("TR", null);
-				inRow = true;
-			}
-			FBPaletteComponent current = (FBPaletteComponent) it.next();
-			if(current != null) {
-				writer.startElement("TD", null);
-				current.encodeEnd(context);
-				writer.endElement("TD");
-			}
-			if((count % columns) == 0 || columns == 1) {
-				writer.endElement("TR");
-				inRow = false;
-			}
-			count++;
-		}
-		if(inRow) {
-			writer.endElement("TR");
-		}
-		writer.endElement("TABLE");
-		writer.endElement("DIV");
-		
-		
-		writer.startElement("DIV", null);
-		writer.writeAttribute("id", "paletteBody_3", null);
-		
-		writer.startElement("TABLE", null);
-		
-		count = 1;
-		inRow = false;
-		
-		it = plain.iterator();
-		while(it.hasNext()) {
-			if((count % columns) == 1 || columns == 1) {
-				writer.startElement("TR", null);
-				inRow = true;
-			}
-			FBPaletteComponent current = (FBPaletteComponent) it.next();
-			if(current != null) {
-				writer.startElement("TD", null);
-				current.encodeEnd(context);
-				writer.endElement("TD");
-			}
-			if((count % columns) == 0 || columns == 1) {
-				writer.endElement("TR");
-				inRow = false;
-			}
-			count++;
-		}
-		if(inRow) {
-			writer.endElement("TR");
-		}
-		writer.endElement("TABLE");
-		writer.endElement("DIV");
-		
-		writer.endElement("DIV");
-		
-		writer.endElement("DIV");
-		writer.write(getEmbededJavascript());
 	}
 	
 	private String getEmbededJavascript() {
