@@ -316,13 +316,7 @@ padding-right: 120px;
 		position:absolute;
 		bottom:-1px;	/* Change this value to -2px if you're not using a strict doctype */
 	}
-	#paletteBody_1{
-		padding: 0px !important;
-	}
-	#paletteBody_2{
-		padding: 0px !important;
-	}
-	#paletteBody_3{
+	#paletteBody_1, #paletteBody_2, #paletteBody_3, #paletteBody_4 {
 		padding: 0px !important;
 	}
 	#paletteBody{

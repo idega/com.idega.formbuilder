@@ -16,6 +16,7 @@ public class Palette implements Serializable {
 	private List<PaletteComponent> basic = new ArrayList<PaletteComponent>();
 	private List<PaletteComponent> buttons = new ArrayList<PaletteComponent>();
 	private List<PaletteComponent> plain = new ArrayList<PaletteComponent>();
+	private List<PaletteComponent> autofilled = new ArrayList<PaletteComponent>();
 	
 	public Palette() throws Exception {
 		DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
@@ -35,6 +36,11 @@ public class Palette implements Serializable {
 			while(it3.hasNext()) {
 				plain.add(new PaletteComponent((String) it3.next()));
 			}
+			
+//			temporary hardcoded for 'pilot' reference
+			PaletteComponent af_comp = new PaletteComponent("fbcomp_text");
+			af_comp.setAutofillKey("loginSession.user.name");
+			autofilled.add(af_comp);
 		}
 	}
 
@@ -44,6 +50,14 @@ public class Palette implements Serializable {
 
 	public void setBasic(List<PaletteComponent> basic) {
 		this.basic = basic;
+	}
+	
+	public List<PaletteComponent> getAutofilled() {
+		return autofilled;
+	}
+
+	public void setAutofilled(List<PaletteComponent> autofilled) {
+		this.autofilled = autofilled;
 	}
 
 	public List<PaletteComponent> getButtons() {

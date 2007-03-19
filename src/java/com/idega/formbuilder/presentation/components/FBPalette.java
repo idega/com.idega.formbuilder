@@ -84,6 +84,7 @@ public class FBPalette extends FBComponentBase {
 			formComponent.setType(current.getType());
 			formComponent.setIcon(current.getIconPath());
 			formComponent.setOnDrag("handleComponentDrag");
+			formComponent.setCategory("fbcomp");
 			autofilled.add(formComponent);
 		}
 	}
