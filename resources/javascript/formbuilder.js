@@ -59,7 +59,7 @@ function savePropertyOnEnter(parameter,attribute,e) {
 		}
 	}
 }
-function handleComponentDrag(element) {
+/*function handleComponentDrag(element) {
 	if(element != null) {
 		var type = element.id;
 		FormComponent.createComponent(type, placeNewComponent);
@@ -70,7 +70,7 @@ function handleButtonDrag(element) {
 		var type = element.id;
 		FormComponent.addButton(type, placeNewButton);
 	}
-}
+}*/
 function placeNewButton(parameter) {
 	if(parameter != null) {
 		var node = document.createElement('div');
@@ -325,7 +325,6 @@ function savePageTitle(parameter) {
 function placePageTitle(parameter) {
 	var container = $('pagesPanel');
 	if(container != null) {
-		//TODO very important to handle the renaming of pages right after they have been created
 		var node = $(parameter.pageId + '_P_page');
 		if(node != null) {
 			var parent = node.childNodes[1];
@@ -368,15 +367,34 @@ function handleButtonDrop(element, container) {
 	}
 	Position.includeScrollOffsets = true;
 	Sortable.create('pageButtonArea',{dropOnEmpty:true,tag:'div',only:'formButton',onUpdate:rearrangeButtons,scroll:'pageButtonArea',constraint:false});
-	Droppables.add('viewPanel',{onDrop:handleButtonDrop});
+	//Droppables.add('viewPanel',{onDrop:handleButtonDrop});
 }
 function setupComponentDragAndDrop(value1,value2) {
 	Position.includeScrollOffsets = true;
 	Sortable.create(value1 + 'inner',{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangeComponents,scroll:value1,constraint:false});
-	Droppables.add('viewPanel',{onDrop:handleComponentDrop,only:'paletteComponent'});
+	dndMgr.registerDropZone(new FBDropzone('viewPanel', 'fbcomp'));
+	dndMgr.registerDropZone(new FBDropzone('dropBox', 'fbbutton'));
 }
-function handleComponentDrop(element,container) {
-	//alert(element.getAttribute('class'));
+function insertNewComponent(parameter) {
+	var empty = $('emptyForm');
+		if(empty != null) {
+			if(empty.style) {
+				empty.style.display = 'none';
+			} else {
+				empty.display = 'none';
+			}
+		}
+	if(parameter == '') {
+		$('dropBoxinner').appendChild(currentElement);
+		currentElement = null;
+	} else {
+		var node = $(parameter);
+		$('dropBoxinner').insertBefore(currentElement, node);
+		currentElement = null;
+	}
+	Sortable.create('dropBoxinner',{dropOnEmpty:true,tag:'div',only:'formElement',onUpdate:rearrangeComponents,scroll:'dropBoxinner',constraint:false});
+}
+/*function handleComponentDrop(element,container) {
 	var empty = $('emptyForm');
 		if(empty != null) {
 			if(empty.style) {
@@ -387,10 +405,8 @@ function handleComponentDrop(element,container) {
 		}
 	var type = element.getAttribute('class');
 	if(type == 'paletteComponent') {
-		//alert('handleComponentDrop');
 		
 		if(currentElement != null) {
-			//$(container.id + 'inner').appendChild(currentElement);
 			$('dropBoxinner').appendChild(currentElement);
 			currentElement = null;
 			//Sortable.create(container.id + 'inner',{dropOnEmpty:true,tag:'div',only:'formElement',onUpdate:rearrangeComponents,scroll:container.id,constraint:false});
@@ -398,7 +414,6 @@ function handleComponentDrop(element,container) {
 			Droppables.add('viewPanel',{onDrop:handleComponentDrop});
 		}
 	} else {
-		//alert('handleButtonDrop false');
 		var cont = $('pageButtonArea');
 		if(cont == null) {
 			var buttonArea = document.createElement('div');
@@ -417,8 +432,7 @@ function handleComponentDrop(element,container) {
 		Sortable.create('pageButtonArea',{dropOnEmpty:true,tag:'div',only:'formButton',onUpdate:rearrangeButtons,scroll:'pageButtonArea',constraint:false});
 		Droppables.add('viewPanel',{onDrop:handleButtonDrop});
 	}
-	
-}
+}*/
 function rearrangeComponents() {
 	draggingComponent = true;
 	var componentIDs = Sortable.serialize('dropBoxinner',{tag:'div',name:'id'});
@@ -435,11 +449,12 @@ function loadComponentInfo(parameter) {
 }
 function placeComponentInfo(parameter) {
 	if(parameter != null) {
+		document.body.focus();
 		if(parameter.plain == true) {
 			var plainTxt = $('propertyPlaintext');
 			if(plainTxt != null) {
 				plainTxt.value = parameter.plainText;
-				plainTxt.focus();
+				//plainTxt.focus();
 			}
 			var plainPr = $('plainPropertiesPanel');
 			if(plainPr != null) {
@@ -490,6 +505,7 @@ function placeComponentInfo(parameter) {
 			}
 			var requiredChk = $('propertyRequired');
 			if(requiredChk != null) {
+				//alert(parameter.required);
 				requiredChk.checked = parameter.required;
 			}
 			var errorTxt = $('propertyErrorMessage');
@@ -615,7 +631,6 @@ function toggleAutofill(parameter) {
 	FormComponent.setAutofill(parameter,nothing);
 }
 function saveComponentLabel(parameter) {
-	//alert('blur');
 	if(parameter != null) {
 		FormComponent.setLabel(parameter, refreshViewPanel);
 	}
@@ -628,6 +643,11 @@ function saveRequired(parameter) {
 function saveErrorMessage(parameter) {
 	if(parameter != null) {
 		FormComponent.setErrorMessage(parameter, refreshViewPanel);
+	}
+}
+function saveEmptyLabel(parameter) {
+	if(parameter != null) {
+		FormComponent.setEmptyLabel(parameter, refreshViewPanel);
 	}
 }
 function saveExternalSrc(parameter) {
@@ -646,10 +666,9 @@ function savePlaintext(parameter) {
 	}
 }
 function saveHelpMessage(parameter) {
-	//alert('Not implemented');
-	/*if(parameter != null) {
+	if(parameter != null) {
 		FormComponent.setHelpMessage(parameter, refreshViewPanel);
-	}*/
+	}
 }
 function switchDataSource() {
 	FormComponent.switchDataSource(placeDataSource);
@@ -694,14 +713,14 @@ function saveLabel(parameter) {
 	var index = parameter.id.split('_')[1];
 	var value = parameter.value;
 	if(value.length != 0) {
-		FormComponent.saveLabel(index,value,nothing);
+		FormComponent.saveLabel(index,value,refreshViewPanel);
 	}
 }
 function saveValue(parameter) {
 	var index = parameter.id.split('_')[1];
 	var value = parameter.value;
 	if(value.length != 0) {
-		FormComponent.saveValue(index,value,nothing);
+		FormComponent.saveValue(index,value,refreshViewPanel);
 	}
 }
 function addNewItem(parameter) {
