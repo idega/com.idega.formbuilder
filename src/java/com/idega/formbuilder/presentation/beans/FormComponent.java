@@ -280,7 +280,12 @@ public class FormComponent implements Serializable {
 				before = area.getId();
 			}
 			Component component = page.addComponent(info.getType(), before);
+			
 			if(component != null) {
+				
+				if(info.getAutofill() != null)
+					component.getProperties().setAutofillKey(info.getAutofill());
+				
 				Element element = (Element) component.getHtmlRepresentation(new Locale("en")).cloneNode(true);
 				String id = element.getAttribute("id");
 				element.removeAttribute("id");

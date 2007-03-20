@@ -12,6 +12,7 @@ import com.idega.idegaweb.include.GlobalIncludeManager;
 public class IWBundleStarter implements IWBundleStartable {
 	
 	public static final String IW_BUNDLE_IDENTIFIER = "com.idega.formbuilder";
+	public static final String FB_CFG_FILE = "formbuilder-properties.xml";
 	
 	public void start(IWBundle starterBundle) {
 		FormbuilderViewManager cViewManager = FormbuilderViewManager.getInstance(starterBundle.getApplication());

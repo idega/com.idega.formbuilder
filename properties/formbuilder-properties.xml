@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- PLEASE COMMENT YOUR ENTRIES -->
+<config>
+
+	<!-- autofill components are any component type bind to jsf value binding expression -->    
+    <properties name="autofill-components">
+    	<!-- text component autofilled with user's name -->
+        <property name="fbcomp_text" value="loginSession.user.name" />
+    </properties>
+</config>

@@ -4,14 +4,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.idega.documentmanager.business.form.ConstComponentCategory;
 import com.idega.documentmanager.business.form.DocumentManager;
+import com.idega.formbuilder.IWBundleStarter;
 import com.idega.formbuilder.view.ActionManager;
+import com.idega.util.config.Config;
+import com.idega.util.config.ConfigFactory;
 
 public class Palette implements Serializable {
 	
 	private static final long serialVersionUID = -753995857658793992L;
+	private static final String af_components = "autofill-components";
 	
 	private List<PaletteComponent> basic = new ArrayList<PaletteComponent>();
 	private List<PaletteComponent> buttons = new ArrayList<PaletteComponent>();
@@ -37,10 +42,19 @@ public class Palette implements Serializable {
 				plain.add(new PaletteComponent((String) it3.next()));
 			}
 			
-//			temporary hardcoded for 'pilot' reference
-			PaletteComponent af_comp = new PaletteComponent("fbcomp_text");
-			af_comp.setAutofillKey("loginSession.user.name");
-			autofilled.add(af_comp);
+			Config cfg = ConfigFactory.getInstance().getConfig(IWBundleStarter.IW_BUNDLE_IDENTIFIER, IWBundleStarter.FB_CFG_FILE);
+			Map<String, String > props = cfg.getProperies(af_components);
+			
+			if(props != null) {
+				
+				for (Iterator<String> iter = props.keySet().iterator(); iter.hasNext();) {
+					String component_type = iter.next();
+					
+					PaletteComponent af_comp = new PaletteComponent(component_type);
+					af_comp.setAutofillKey(props.get(component_type));
+					autofilled.add(af_comp);
+				}
+			}
 		}
 	}
 

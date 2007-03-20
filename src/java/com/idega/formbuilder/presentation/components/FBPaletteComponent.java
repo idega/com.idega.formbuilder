@@ -13,6 +13,7 @@ public class FBPaletteComponent extends FBComponentBase {
 	public static final String COMPONENT_TYPE = "PaletteComponent";
 	
 	private String name;
+	private String autofill_key;
 	private String type;
 	private String icon;
 	private String onDrag;
@@ -56,6 +57,7 @@ public class FBPaletteComponent extends FBComponentBase {
 			type = (String) vb.getValue(context);	
 		}
 		writer.writeAttribute("id", type, "type");
+		
 		writer.startElement("IMG", null);
 		vb = getValueBinding("icon");
 		if(vb != null) {
@@ -78,20 +80,21 @@ public class FBPaletteComponent extends FBComponentBase {
 	public String getEmbededJavascript() {
 		StringBuilder result = new StringBuilder();
 		result.append("<script language=\"JavaScript\">\n");
-		result.append("dndMgr.registerDraggable( new FBDraggable($('" + type + "'), '" + type + "', '" + category + "') );\n");
+		result.append("dndMgr.registerDraggable( new FBDraggable($('" + type + "'), '" + type + "', '" + category + "', '"+autofill_key+"') );\n");
 		result.append("</script>\n");
 		return result.toString();
 		
 	}
 	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[6];
+		Object values[] = new Object[7];
 		values[0] = super.saveState(context);
 		values[1] = name;
 		values[2] = type;
 		values[3] = icon;
 		values[4] = onDrag;
 		values[5] = category;
+		values[6] = autofill_key;
 		return values;
 	}
 	
@@ -103,6 +106,7 @@ public class FBPaletteComponent extends FBComponentBase {
 		icon = (String) values[3];
 		onDrag = (String) values[4];
 		category = (String) values[5];
+		autofill_key = (String) values[6];
 	}
 
 	public String getName() {
@@ -119,5 +123,13 @@ public class FBPaletteComponent extends FBComponentBase {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getAutofillKey() {
+		return autofill_key;
+	}
+
+	public void setAutofillKey(String autofill_key) {
+		this.autofill_key = autofill_key;
 	}
 }

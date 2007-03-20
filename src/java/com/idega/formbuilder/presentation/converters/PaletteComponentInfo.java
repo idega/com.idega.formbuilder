@@ -17,7 +17,4 @@ public class PaletteComponentInfo {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
-	
-
 }

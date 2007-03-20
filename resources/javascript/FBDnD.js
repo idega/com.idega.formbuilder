@@ -7,10 +7,11 @@ var FBDraggable = Class.create();
 
 FBDraggable.prototype = (new Rico.Draggable()).extend( {
 
-   	initialize: function(htmlElement, name, type) {
+   	initialize: function(htmlElement, name, type, autofill) {
       	this.type        = type;
       	this.htmlElement = $(htmlElement);
       	this.name        = name;
+      	this.autofill    = autofill;
    	},
 
    	select: function() {
@@ -43,7 +44,8 @@ FBDraggable.prototype = (new Rico.Draggable()).extend( {
 				var inner = dojo.html.getBorderBox(child);
 				childBoxes.push({top: pos.y, bottom: pos.y+inner.height,left: pos.x, right: pos.x+inner.width, height: inner.height, width: inner.width, node: child});
 			}
-			var info = new PaletteComponentInfo(this.name, null);// { type:this.name, name: "", iconPath: "", autofill_key: "" };
+			
+			var info = new PaletteComponentInfo(this.name, this.autofill);// { type:this.name, name: "", iconPath: "", autofill_key: "" };
    			FormComponent.addComponent(info, placeNewComponent);
    		} else if(this.type == 'fbbutton') {
    			FormComponent.addButton(this.name, placeNewButton);
