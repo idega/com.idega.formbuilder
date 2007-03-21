@@ -10,6 +10,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.model.SelectItem;
 
+import org.ajax4jsf.ajax.html.HtmlAjaxCommandButton;
 import org.apache.myfaces.component.html.ext.HtmlCommandLink;
 import org.apache.myfaces.component.html.ext.HtmlGraphicImage;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
@@ -28,6 +29,7 @@ public class FBHomePage extends FBComponentBase {
 	private static final String HEADER_BLOCK_FACET = "HEADER_BLOCK_FACET";
 	private static final String GREETING_BLOCK_FACET = "GREETING_BLOCK_FACET";
 	private static final String FORM_LIST_FACET = "FORM_LIST_FACET";
+	private static final String REFRESH_FACET_PROXY = "REFRESH_FACET_PROXY"; 
 	
 	public FBHomePage() {
 		super();
@@ -37,9 +39,6 @@ public class FBHomePage extends FBComponentBase {
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
 		getChildren().clear();
-		
-		FormList formList = (FormList) WFUtil.getBeanInstance("formSelector");
-		List<SelectItem> formsList = formList.getForms();
 		
 		WFDivision header = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		header.setId("fbHomePageHeaderBlock");
@@ -69,6 +68,47 @@ public class FBHomePage extends FBComponentBase {
 		
 		addFacet(HEADER_BLOCK_FACET, header);
 		
+		HtmlAjaxCommandButton refreshViewAjax = (HtmlAjaxCommandButton) application.createComponent(HtmlAjaxCommandButton.COMPONENT_TYPE);
+		refreshViewAjax.setId("refreshView");
+		refreshViewAjax.setAjaxSingle(true);
+		refreshViewAjax.setReRender("fbHomePage");
+		refreshViewAjax.setStyle("display: none");
+		
+		addFacet(REFRESH_FACET_PROXY, refreshViewAjax);
+	}
+	
+	public String getEmbededJavascript() {
+		StringBuilder result = new StringBuilder();
+		result.append("<script language=\"JavaScript\">\n");
+		result.append("initGalleryScript();\n");
+		result.append("</script>\n");
+		return result.toString();
+		
+	}
+	
+	private String getCreatedDate(String formId) {
+		String interm1 = formId.substring(formId.indexOf("-") + 5);
+		String month = interm1.substring(0, 3);
+		String interm2 = interm1.substring(interm1.indexOf("_") + 1);
+		String day = interm2.substring(0, 2);
+		String year = interm2.substring(interm2.length() - 4);
+		return month + " " + day + ", " + year;
+	}
+	
+	public void encodeBegin(FacesContext context) throws IOException {
+		Application application = context.getApplication();
+		ResponseWriter writer = context.getResponseWriter();
+		super.encodeBegin(context);
+		
+		writer.startElement("DIV", this);
+		writer.writeAttribute("id", getId(), "id");
+		writer.writeAttribute("class", getStyleClass(), "styleClass");
+		
+		
+		
+		FormList formList = (FormList) WFUtil.getBeanInstance("formSelector");
+		List<SelectItem> formsList = formList.getForms();
+		System.out.println(formsList.size());
 		
 		WFDivision greeting = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		greeting.setId("fbHomePageWelcomeBlock");
@@ -136,6 +176,7 @@ public class FBHomePage extends FBComponentBase {
 		
 		WFDivision noname = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		noname.setStyleClass("noname");
+		noname.getChildren().clear();
 		
 		addChild(noname, forms);
 		addChild(arrowUpImg, arrowUp);
@@ -164,32 +205,6 @@ public class FBHomePage extends FBComponentBase {
 		addFacet(FORM_LIST_FACET, listContainer);
 	}
 	
-	public String getEmbededJavascript() {
-		StringBuilder result = new StringBuilder();
-		result.append("<script language=\"JavaScript\">\n");
-		result.append("initGalleryScript();\n");
-		result.append("</script>\n");
-		return result.toString();
-		
-	}
-	
-	private String getCreatedDate(String formId) {
-		String interm1 = formId.substring(formId.indexOf("-") + 5);
-		String month = interm1.substring(0, 3);
-		String interm2 = interm1.substring(interm1.indexOf("_") + 1);
-		String day = interm2.substring(0, 2);
-		String year = interm2.substring(interm2.length() - 4);
-		return month + " " + day + ", " + year;
-	}
-	
-	public void encodeBegin(FacesContext context) throws IOException {
-		ResponseWriter writer = context.getResponseWriter();
-		super.encodeBegin(context);
-		writer.startElement("DIV", this);
-		writer.writeAttribute("id", getId(), "id");
-		writer.writeAttribute("class", getStyleClass(), "styleClass");
-	}
-	
 	public void encodeChildren(FacesContext context) throws IOException {
 		if(!isRendered()) {
 			return;
@@ -210,6 +225,16 @@ public class FBHomePage extends FBComponentBase {
 		if(list != null) {
 			renderChild(context, list);
 		}
+		
+		ResponseWriter writer = context.getResponseWriter();
+		writer.startElement("DIV", this);
+		writer.writeAttribute("id", "actionsProxy", null);
+		writer.writeAttribute("style", "display: none;", null);
+		UIComponent button = getFacet(REFRESH_FACET_PROXY);
+		if(button != null) {
+			renderChild(context, button);
+		}
+		writer.endElement("DIV");
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {

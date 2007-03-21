@@ -331,28 +331,21 @@ public class FormDocument implements Serializable {
 		}
 	}
 	
-	public String deleteFormDocument() {
-		
-		String form_id = retrieveFormIdFormButtonId(getCurrentFormId(FacesContext.getCurrentInstance()), FBFormListItem.delete_button_postfix);
-		
+	public String deleteFormDocument(String documentId) {
 		boolean delete_submitted_data = true;
 		
-		if(form_id == null)
-//			TODO: (alex) tell user about error			
+		if(documentId == null)		
 			throw new NullPointerException("Form id not found");
 		
 		try {
-			getFormsService().removeForm(form_id, delete_submitted_data);
-			
+			getFormsService().removeForm(documentId, delete_submitted_data);
 		} catch (FormLockException e) {
 			// TODO: inform about lock
 			logger.info("Form was locked when tried to delete it", e);
 		} catch (Exception e) {
 			logger.error("Exception while removing form", e);
-//			TODO: (alex) tell user about error
 		}
-		
-		return "redirectHome";
+		return documentId;
 	}
 	
 	public String loadFormDocumentEntries() {
@@ -366,25 +359,25 @@ public class FormDocument implements Serializable {
 		return "loadEntriesSuccess";
 	}
 	
-	public String duplicateFormDocument() {
+	public String duplicateFormDocument(String documentId, String newTitle) {
 		
-		String form_id = retrieveFormIdFormButtonId(getCurrentFormId(FacesContext.getCurrentInstance()), FBFormListItem.duplicate_button_postfix);
+		//String form_id = retrieveFormIdFormButtonId(getCurrentFormId(FacesContext.getCurrentInstance()), FBFormListItem.duplicate_button_postfix);
 		
 //		TODO: (alex) display tab with new form name
 		
-		if(form_id == null)
+		if(documentId == null || newTitle == null)
 //			TODO: (alex) tell user about error			
 			throw new NullPointerException("Form id not found");
 		
 		try {
-			getFormsService().duplicateForm(form_id, null);
+			getFormsService().duplicateForm(documentId, newTitle);
 			
 		} catch (Exception e) {
 			logger.error("Exception while duplicating form", e);
 //			TODO: (alex) tell user about error
 		}
 		
-		return "redirectHome";
+		return documentId;
 	}
 	
 	public void updatePagesList(String idSequence, String idPrefix, String delimiter) throws Exception {

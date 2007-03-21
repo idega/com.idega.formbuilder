@@ -24,10 +24,12 @@
 												/dwr/engine.js">
 			<h:form id="workspaceform1">
 				<t:div id="mainApplication" forceId="true">
+					<t:div id="statusContainer" forceId="true" styleClass="statusContainer">
+						<f:verbatim>
+  							<span class="statusMsg" id="statusMsg">x</span>
+  						</f:verbatim>
+					</t:div>
 					<fb:workspace id="mainWorkspace" view="#{workspace.view}"/>
-				</t:div>
-				<t:div styleClass="fbBottomButtonsContainer">
-					
 				</t:div>
 				<t:div styleClass="fbBottomButtonsContainer">
 					<t:commandButton id="newFormButton" forceId="true" type="button" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/new-dialog.inc');return false" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}"></t:commandButton>

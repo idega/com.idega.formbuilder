@@ -1,4 +1,3 @@
-//Handles the display of a modal dialog window
 function displayMessage(url) {
 	messageObj.setSource(url);
 	messageObj.setCssClassMessageBox(false);
@@ -8,6 +7,19 @@ function displayMessage(url) {
 }
 function closeMessage() {
 	messageObj.close();
+}
+function setStatus(s,n) {
+	$('statusContainer').style.visibility = "visible";
+	$('statusMsg').innerHTML = s;
+	setTimeout( "$('statusContainer').style.visibility = 'hidden';", n );
+	closeMessage();
+}
+function showStatus(text) {
+	$('statusContainer').style.visibility = "visible";
+	$('statusMsg').innerHTML = text;
+}
+function closeStatus() {
+	$('statusContainer').style.visibility = 'hidden';
 }
 
 var currentButton = null;
@@ -274,6 +286,7 @@ function placePreviewPage(parameter) {
 }
 function loadPageInfo(parameter) {
 	if(pressedPageDelete == false && draggingPage == false) {
+		showStatus('Loading section...');
 		FormPage.getFormPageInfo(parameter, placePageInfo);
 	}
 	pressedPageDelete = false;
@@ -299,6 +312,7 @@ function placePageInfo(parameter) {
 		STATIC_ACCORDEON.showTabByIndex(3, true);
 		$('workspaceform1:refreshViewPanel').click();
 	}
+	
 }
 function setupPagesDragAndDrop(value1, value2) {
 	Position.includeScrollOffsets = true;
@@ -800,8 +814,22 @@ function getEmptySelect(index,lbl,vl) {
 	
 }
 function saveFormDocument() {
-	showLoadingMessage('Saving');
-	FormDocument.save(doNothing);
+	var saveButton = $('saveFormButton');
+	if(saveButton != null) {
+		saveButton.setAttribute('disabled','true');
+	}
+	showStatus('Saving form document...');
+	FormDocument.save(savedFormDocument);
+}
+function savedFormDocument(parameter) {
+	closeStatus();
+	var saveButton = $('saveFormButton');
+	if(saveButton != null) {
+		saveButton.setAttribute('disabled','false');
+	}
+}
+function showNotification(parameter) {
+	setStatus('done positioning element.',1500);
 }
 function saveSourceCode(source_code) {
 	if(source_code != null) {
@@ -1022,3 +1050,5 @@ function createNewFormOnEnter(e) {
 /*Setup modal message windows functionality*/
 messageObj = new DHTML_modalMessage();
 messageObj.setShadowOffset(5);
+$('statusContainer').style.visibility = 'hidden';
+Rico.Corner.round('statusContainer');

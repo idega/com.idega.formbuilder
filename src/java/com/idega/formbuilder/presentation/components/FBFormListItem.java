@@ -51,6 +51,7 @@ public class FBFormListItem extends FBComponentBase {
 		
 		WFDivision body = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		body.setStyleClass(getStyleClass());
+		body.setId("Item" + getId());
 		
 		String formName = WFToolbarButton.determineFormName(this);
 		
@@ -66,6 +67,7 @@ public class FBFormListItem extends FBComponentBase {
 		
 		WFDivision bodyBottom = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		bodyBottom.setStyleClass("formListItemBottom");
+		body.setId("ItemBottom" + getId());
 		
 		Text name = new Text();
 		name.setText(formTitle);
@@ -102,15 +104,16 @@ public class FBFormListItem extends FBComponentBase {
 		duplicateButton.setDisplayText("Duplicate");
 		duplicateButton.setId(getId() + duplicate_button_postfix);
 		duplicateButton.setDefaultImageURI(DUPLICATE_BUTTON_ICON);
-		duplicateButton.setAction(application.createMethodBinding("#{formDocument.duplicateFormDocument}", null));
+		//duplicateButton.setAction(application.createMethodBinding("#{formDocument.duplicateFormDocument}", null));
+		duplicateButton.setOnclick("duplicateForm('" + "ItemBottom" + getId() + "');");
 		
 		FBToolbarButton deleteButton = new FBToolbarButton();
 		deleteButton.setStyleClass("bottomButton");
 		deleteButton.setDisplayText("Delete");
 		deleteButton.setId(getId() + delete_button_postfix);
 		deleteButton.setDefaultImageURI(DELETE_BUTTON_ICON);
-		deleteButton.setAction(application.createMethodBinding("#{formDocument.deleteFormDocument}", null));
-		deleteButton.setOnclick("confirmFormDelete(this);");
+		//deleteButton.setAction(application.createMethodBinding("#{formDocument.deleteFormDocument}", null));
+		deleteButton.setOnclick("deleteForm('" + "ItemBottom" + getId() + "');");
 		
 		addChild(name, bodyTopLeft);
 		addChild(bodyTopLeft, bodyTop);

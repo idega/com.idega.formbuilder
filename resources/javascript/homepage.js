@@ -8,6 +8,8 @@ var slideEndMarker = false;
 var galleryContainer = false;
 var imageGalleryCaptions = new Array();
 
+var ITEM_ID_PREFIX = 'ItemBottom';
+
 function showInputField() {
 	var input = $('workspaceform1:newTxt');
 	var newBt = $('workspaceform1:newBt');
@@ -112,6 +114,80 @@ function initGalleryScript() {
 	slidePreviewPane();
 	Rico.Corner.round('newFormComp');
 }
+function duplicateForm(parameter) {
+	var container = $(parameter);
+	hideDialog(parameter);
+	new Rico.Effect.Size(parameter, null, 100, 500, 10, {complete:function() {showDialog(parameter,'duplicate')}});
+}
+function duplicateFormDocument(parameter, newTitle) {
+	if(parameter.indexOf(ITEM_ID_PREFIX) == 0) {
+		var formId = parameter.substring(ITEM_ID_PREFIX.length);
+		if(newTitle != '') {
+			FormDocument.duplicateFormDocument(formId,newTitle,refreshHomePageView);
+		}
+	}
+}
+function deleteForm(parameter) {
+	var container = $(parameter);
+	hideDialog(parameter);
+	new Rico.Effect.Size(parameter, null, 100, 500, 10, {complete:function() {showDialog(parameter,'delete');}});
+}
+function showDialog(parameter,type) {
+	if(type == 'delete') {
+		var dialogNode = createDeleteDialog();
+		if(dialogNode != null) {
+			var containerNode = $(parameter).childNodes[1];
+			var oldNode = $(parameter + '_DD');
+			if(oldNode == null) {
+				dialogNode.id = parameter + '_DD';
+				dialogNode.childNodes[1].setAttribute("onclick","deleteFormDocument('" + parameter + "');");
+				dialogNode.childNodes[2].setAttribute("onclick","hideDialog('" + parameter + "');");
+				containerNode.appendChild(dialogNode);
+			}
+		}
+	} else if(type == 'duplicate') {
+		var dialogNode = createDuplicateDialog();
+		if(dialogNode != null) {
+			var containerNode = $(parameter).childNodes[1];
+			var oldNode = $(parameter + '_DupD');
+			if(oldNode == null) {
+				dialogNode.id = parameter + '_DupD';
+				dialogNode.childNodes[2].setAttribute("onclick","duplicateFormDocument('" + parameter + "',this.previousSibling.value);");
+				dialogNode.childNodes[3].setAttribute("onclick","hideDialog('" + parameter + "');");
+				containerNode.appendChild(dialogNode);
+			}
+		}
+	}
+}
+function hideDialog(parameter) {
+	var root = $(parameter);
+	if(root != null) {
+		var bottomHalf = root.childNodes[1];
+		if(bottomHalf != null) {
+			var index = bottomHalf.childNodes.length - 1;
+			if(index > 9) {
+				var node = bottomHalf.childNodes[index];
+				bottomHalf.removeChild(node);
+				new Rico.Effect.Size(parameter, null, 60, 50, 1);
+			}
+		}
+	}
+	
+}
+function deleteFormDocument(parameter) {
+	if(parameter.indexOf(ITEM_ID_PREFIX) == 0) {
+		var formId = parameter.substring(ITEM_ID_PREFIX.length);
+		FormDocument.deleteFormDocument(formId,refreshHomePageView);
+	}
+}
+function refreshHomePageView(result) {
+	if(result != null) {
+		window.location="/workspace/forms/";
+	}
+}
+function showDuplicateDialog(parameter) {
+	new Rico.Effect.Size(parameter, null, 100, 500, 10);
+}
 function pressOk(e) {
 	if (!e) e = window.event;
 	if (!e) return true;
@@ -128,4 +204,44 @@ function pressOk(e) {
 			document.forms['workspaceform1'].submit();
 		}
 	}
+}
+function createDuplicateDialog() {
+	var root = document.createElement('div');
+	root.setAttribute('class','duplicateFormDialog');
+	
+	var lbl = document.createElement('label');
+	var txt = document.createTextNode('Please enter the name of the new form:');
+	var formInput = document.createElement('input');
+	formInput.type = 'text';
+	formInput.value = '';
+	var okBtn = document.createElement('input');
+	okBtn.type = 'button';
+	okBtn.value = 'OK';
+	var cancelBtn = document.createElement('input');
+	cancelBtn.type = 'button';
+	cancelBtn.value = 'Cancel';
+	lbl.appendChild(txt);
+	root.appendChild(lbl);
+	root.appendChild(formInput);
+	root.appendChild(okBtn);
+	root.appendChild(cancelBtn);
+	return root;
+}
+function createDeleteDialog() {
+	var root = document.createElement('div');
+	root.setAttribute('class','deleteFormDialog');
+	
+	var lbl = document.createElement('label');
+	var txt = document.createTextNode('Are you sure you want to send this form to trash?');
+	var okBtn = document.createElement('input');
+	okBtn.type = 'button';
+	okBtn.value = 'OK';
+	var cancelBtn = document.createElement('input');
+	cancelBtn.type = 'button';
+	cancelBtn.value = 'Cancel';
+	lbl.appendChild(txt);
+	root.appendChild(lbl);
+	root.appendChild(okBtn);
+	root.appendChild(cancelBtn);
+	return root;
 }

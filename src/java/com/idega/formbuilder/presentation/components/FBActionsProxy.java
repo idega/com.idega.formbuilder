@@ -28,6 +28,7 @@ public class FBActionsProxy extends FBComponentBase {
 		refreshViewAjax.setId("refreshViewPanel");
 		refreshViewAjax.setAjaxSingle(true);
 		refreshViewAjax.setReRender("workspaceform1:ajaxViewPanel");
+		refreshViewAjax.setOncomplete("closeStatus();");
 		add(refreshViewAjax);
 	}
 	

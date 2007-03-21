@@ -14,7 +14,10 @@
 					javascripturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/scriptaculous/prototype.js,
 									/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/scriptaculous/scriptaculous.js,
 									/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/rico.js,
-									/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/homepage.js">
+									/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/homepage.js,
+									
+									/dwr/interface/FormDocument.js,
+									/dwr/engine.js">
 			<h:form id="workspaceform1">
 				<fb:homePage id="fbHomePage" />
 			</h:form>
