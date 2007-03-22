@@ -30,7 +30,6 @@ public class FBWorkspace extends FBComponentBase {
 	private static final String FORMBUILDER_PAGE_SCRIPT = "script";
 	
 	private static final String FORMBUILDER_JS = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js";
-	private static final String DND_JS = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/FBDnD.js";
 	
 	private String view;
 
@@ -57,7 +56,6 @@ public class FBWorkspace extends FBComponentBase {
 //				script.addScriptSource(scriptaculousURI);
 				script.addScriptSource(dojoURI);
 				script.addScriptSource(ricoURI);
-				script.addScriptSource(DND_JS);
 				script.addScriptSource(FORMBUILDER_JS);
 				
 //				// THIS HAS TO BE ADDED TO THE <BODY> in the html, if not it does not work in Safari
@@ -93,6 +91,9 @@ public class FBWorkspace extends FBComponentBase {
 		pages.setId("pagesPanel");
 		pages.setStyleClass("pagesPanel");
 		pages.setComponentStyleClass("formPageIcon");
+		pages.setGeneralPartStyleClass("pagesGeneralContainer");
+		pages.setSpecialPartStyleClass("pagesSpecialContainer");
+		pages.setSelectedStyleClass("formPageIconSelected");
 		
 		FBActionsProxy actionsProxy = (FBActionsProxy) application.createComponent(FBActionsProxy.COMPONENT_TYPE);
 		

@@ -360,18 +360,11 @@ public class FormDocument implements Serializable {
 	}
 	
 	public String duplicateFormDocument(String documentId, String newTitle) {
-		
-		//String form_id = retrieveFormIdFormButtonId(getCurrentFormId(FacesContext.getCurrentInstance()), FBFormListItem.duplicate_button_postfix);
-		
-//		TODO: (alex) display tab with new form name
-		
 		if(documentId == null || newTitle == null)
 //			TODO: (alex) tell user about error			
 			throw new NullPointerException("Form id not found");
-		
 		try {
 			getFormsService().duplicateForm(documentId, newTitle);
-			
 		} catch (Exception e) {
 			logger.error("Exception while duplicating form", e);
 //			TODO: (alex) tell user about error

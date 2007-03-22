@@ -35,7 +35,9 @@
 					<t:commandButton id="newFormButton" forceId="true" type="button" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/new-dialog.inc');return false" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}"></t:commandButton>
 					<t:commandButton id="saveFormButton" forceId="true" type="button" onclick="saveFormDocument();return false" value="#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"></t:commandButton>
 					<h:commandButton id="homeButton" type="button" onclick="window.location.href = '/workspace/forms/';" value="#{localizedStrings['com.idega.formbuilder']['toolbar_home']}"></h:commandButton>
+					<!--
 					<t:commandButton id="newPageButton" forceId="true" type="button" onclick="createNewPage();return false;" value="New section" />
+					-->
 				</t:div>
 			</h:form>
 		</ws:page>

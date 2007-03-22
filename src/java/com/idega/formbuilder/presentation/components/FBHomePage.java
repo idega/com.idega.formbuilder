@@ -104,11 +104,8 @@ public class FBHomePage extends FBComponentBase {
 		writer.writeAttribute("id", getId(), "id");
 		writer.writeAttribute("class", getStyleClass(), "styleClass");
 		
-		
-		
 		FormList formList = (FormList) WFUtil.getBeanInstance("formSelector");
 		List<SelectItem> formsList = formList.getForms();
-		System.out.println(formsList.size());
 		
 		WFDivision greeting = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		greeting.setId("fbHomePageWelcomeBlock");

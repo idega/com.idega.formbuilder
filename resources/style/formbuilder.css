@@ -21,6 +21,9 @@ span.statusMsg {
 	background-color: White;
 	border: 1px solid LightGrey;
 	padding: 25px;
+	height: 100%;
+	margin-bottom: 0px;
+	bottom: 0px;
 }
 #fbAdminPage {
 	margin: 15px;
@@ -218,6 +221,16 @@ a.okBt:hover {
 	position: relative;
 	left: 210px;
 }
+.pagesGeneralContainer {
+	display: block;
+	height: 300px;
+	overflow: auto;
+}
+.pagesSpecialContainer {
+	display: block;
+	height: 150px;
+	overflow: auto;
+}
 /*---Form scroller--------*/
 	#formListContainer {			
 		height: 300px;
@@ -306,6 +319,16 @@ padding-right: 120px;
 }
 .formPageIcon:hover {
 	border-color: Black;
+}
+.formPageIconSelected {
+	cursor: pointer;
+	margin-top: 10px;
+	margin-right: 10px;
+	margin-left: 10px;
+	border: 2px dotted LightGrey;
+	padding-top: 10px;
+	padding-left: 10px;
+	background-color: Red;
 }
 .formPageIcon:hover .speedButton {
 	display: inline;

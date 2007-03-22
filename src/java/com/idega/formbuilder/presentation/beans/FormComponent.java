@@ -283,8 +283,10 @@ public class FormComponent implements Serializable {
 			
 			if(component != null) {
 				
-				if(info.getAutofill() != null)
-					component.getProperties().setAutofillKey(info.getAutofill());
+				if(info.getAutofill() != null) {
+					if(component.getProperties() != null)
+						component.getProperties().setAutofillKey(info.getAutofill());
+				}
 				
 				Element element = (Element) component.getHtmlRepresentation(new Locale("en")).cloneNode(true);
 				String id = element.getAttribute("id");
@@ -317,20 +319,23 @@ public class FormComponent implements Serializable {
 	}
 	
 	public String moveComponent(String id, int before) throws Exception {
-		FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
-		Page page = formPage.getPage();
-		String beforeId = "";
-		if(page != null) {
-			List<String> ids = page.getContainedComponentsIdList();
-			if(ids.indexOf(id) != -1) {
-				beforeId = ids.get(before);
-				ids.remove(id);
-				ids.add(before, id);
+		if(before == -1) {
+			 return "append";
+		} else {
+			FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+			Page page = formPage.getPage();
+			String beforeId = "";
+			if(page != null) {
+				List<String> ids = page.getContainedComponentsIdList();
+				if(ids.indexOf(id) != -1) {
+					beforeId = ids.get(before);
+					ids.remove(id);
+					ids.add(before, id);
+				}
+				page.rearrangeComponents();
 			}
-			page.rearrangeComponents();
+			return beforeId;
 		}
-		//System.out.println(page.getContainedComponentsIdList());
-		return beforeId;
 	}
 	
 	public FormButtonInfo addButton(String type) {
