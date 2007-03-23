@@ -2,6 +2,20 @@
 .fbSelectListItem {
 	width: 95px;
 }
+.pagesPanelToolbar {
+	width: 98%;
+	height: 25px;
+	background-color: LightGrey;
+	border-top: 1px solid White;
+	border-left: 1px solid White;
+	border-right: 1px solid Grey;
+	border-bottom: 1px solid Grey;
+}
+.pagesPanelHeaderText {
+	font-size: 12px;
+	font-weight: bold;
+	cursor: pointer;
+}
 .statusContainer {
    background-color : #ffd363;
    position: relative;
@@ -290,47 +304,48 @@ padding-right: 120px;
 	right: 12px !important;
 	display: inline;
 	background-color: LightGrey;
-	width: 119px;
+	width: 170px;
 	min-height: 500px;
 	bottom: 28px !important;
 	z-index: 5;
 }
+.pageIconLabel {
+}
+.pageIconIcon {
+}
 .formPageIconSpecial {
 	cursor: pointer;
-	margin-top: 10px;
+	margin-top: 15px;
 	margin-right: 10px;
 	margin-left: 10px;
-	border: 2px dotted LightGrey;
+	border: 2px solid LightGrey;
 	padding-top: 10px;
 	padding-left: 10px;
 	margin-bottom: 10px;
 }
-.formPageIconSpecial:hover {
-	border-color: Black;
-}
 .formPageIcon {
 	cursor: pointer;
-	margin-top: 10px;
+	margin-top: 15px;
 	margin-right: 10px;
 	margin-left: 10px;
-	border: 2px dotted LightGrey;
+	border: 2px solid LightGrey;
 	padding-top: 10px;
 	padding-left: 10px;
 }
-.formPageIcon:hover {
+.formPageIcon:hover, .formPageIconSpecial:hover {
 	border-color: Black;
 }
 .formPageIconSelected {
 	cursor: pointer;
-	margin-top: 10px;
+	margin-top: 15px;
 	margin-right: 10px;
 	margin-left: 10px;
-	border: 2px dotted LightGrey;
+	border: 2px solid LightGrey;
 	padding-top: 10px;
 	padding-left: 10px;
-	background-color: Red;
+	background-color: Grey;
 }
-.formPageIcon:hover .speedButton {
+.formPageIcon:hover .speedButton, .formPageIconSelected:hover .speedButton {
 	display: inline;
 	cursor: pointer;
 }
@@ -984,7 +999,7 @@ bottom: 28px !important;
 height: auto !important;
 width: auto !important;
 left: 0px !important;
-right: 122px !important;
+right: 173px !important;
 overflow: auto !important;
 }
 

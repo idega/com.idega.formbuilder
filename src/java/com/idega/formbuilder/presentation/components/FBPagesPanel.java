@@ -10,7 +10,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-import org.apache.myfaces.component.html.ext.HtmlCommandButton;
+import org.apache.myfaces.component.html.ext.HtmlGraphicImage;
 
 import com.idega.documentmanager.business.form.Document;
 import com.idega.documentmanager.business.form.Page;
@@ -72,15 +72,15 @@ public class FBPagesPanel extends FBComponentBase {
 		
 		WFDivision topToolbar = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		topToolbar.setStyleClass("pagesPanelToolbar");
-		HtmlCommandButton newSectionBtn = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
+		HtmlGraphicImage newSectionBtn = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
 		newSectionBtn.setId("newPageButton");
-		newSectionBtn.setOnclick("createNewPage();return false;");
-		newSectionBtn.setValue("New Section");
+		newSectionBtn.setOnclick("createNewPage();");
+		newSectionBtn.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/list-add.png");
 		addChild(newSectionBtn, topToolbar);
 		addFacet(TOOLBAR_FACET, topToolbar);
 		
 		WFDivision generalPagesHeader = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
-		generalPagesHeader.setStyleClass("pagesPanelHeader");
+		generalPagesHeader.setStyleClass("pagesPanelToolbar");
 		Text generalPagesHeaderText = new Text();
 		generalPagesHeaderText.setText("General sections");
 		generalPagesHeaderText.setStyleClass("pagesPanelHeaderText");
@@ -88,7 +88,7 @@ public class FBPagesPanel extends FBComponentBase {
 		addFacet(GENERAL_PAGES_HEADER, generalPagesHeader);
 		
 		WFDivision specialPagesHeader = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
-		specialPagesHeader.setStyleClass("pagesPanelHeader");
+		specialPagesHeader.setStyleClass("pagesPanelToolbar");
 		Text specialPagesHeaderText = new Text();
 		specialPagesHeaderText.setText("Special sections");
 		specialPagesHeaderText.setStyleClass("pagesPanelHeaderText");
@@ -125,16 +125,27 @@ public class FBPagesPanel extends FBComponentBase {
 		FormDocument formDocument = ((FormDocument) WFUtil.getBeanInstance("formDocument"));
 		Document document = formDocument.getDocument();
 		if(document != null) {
+			String selectedPageId = null;
+			Page selectedPage = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
+			if(selectedPage != null) {
+				selectedPageId = selectedPage.getId();
+			}
+			
 			if(formDocument.isHasPreview()) {
 				Page confirmation = document.getConfirmationPage();
 				if(confirmation != null) {
 					FBFormPage formPage = (FBFormPage) application.createComponent(FBFormPage.COMPONENT_TYPE);
 					formPage.setId(confirmation.getId() + "_P");
-					formPage.setStyleClass(componentStyleClass + "Special");
+					if(confirmation.getId().equals(selectedPageId)) {
+						formPage.setStyleClass(selectedStyleClass);
+					} else {
+						formPage.setStyleClass(componentStyleClass + "Special");
+					}
+					//formPage.setStyleClass(componentStyleClass + "Special");
 					String label = ((PropertiesPage)confirmation.getProperties()).getLabel().getString(locale);
 					formPage.setLabel(label);
 					formPage.setActive(false);
-					formPage.setOnLoad("loadConfirmationPage();");
+					formPage.setOnLoad("loadConfirmationPage(this.id);");
 					addFacet(CONFIRMATION_PAGE, formPage);
 				}
 			}
@@ -142,21 +153,21 @@ public class FBPagesPanel extends FBComponentBase {
 			if(thanks != null) {
 				FBFormPage formPage = (FBFormPage) application.createComponent(FBFormPage.COMPONENT_TYPE);
 				formPage.setId(thanks.getId() + "_P");
-				formPage.setStyleClass(componentStyleClass + "Special");
+				if(thanks.getId().equals(selectedPageId)) {
+					formPage.setStyleClass(selectedStyleClass);
+				} else {
+					formPage.setStyleClass(componentStyleClass + "Special");
+				}
+				//formPage.setStyleClass(componentStyleClass + "Special");
 				String label = ((PropertiesPage)thanks.getProperties()).getLabel().getString(locale);
 				formPage.setLabel(label);
 				formPage.setActive(false);
-				formPage.setOnLoad("loadThxPage();");
+				formPage.setOnLoad("loadThxPage(this.id);");
 				addFacet(THANKYOU_PAGE, formPage);
 			}
 			List<String> ids = formDocument.getCommonPagesIdList();
 			Iterator it = ids.iterator();
-			String selectedPageId = null;
-			Page selectedPage = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
-			if(selectedPage != null) {
-				selectedPageId = selectedPage.getId();
-			}
-			//System.out.println(selectedPageId);
+			
 			while(it.hasNext()) {
 				
 				String nextId = (String) it.next();
@@ -166,11 +177,10 @@ public class FBPagesPanel extends FBComponentBase {
 					formPage.setId(nextId + "_P");
 					if(nextId.equals(selectedPageId)) {
 						formPage.setStyleClass(selectedStyleClass);
-						//System.out.println(nextId);
 					} else {
 						formPage.setStyleClass(componentStyleClass);
 					}
-					formPage.setOnDelete("deletePage(this.id)");
+					formPage.setOnDelete("deletePage(this.id);");
 					formPage.setOnLoad("loadPageInfo(this.id);");
 					String label = ((PropertiesPage)currentPage.getProperties()).getLabel().getString(locale);
 					formPage.setLabel(label);

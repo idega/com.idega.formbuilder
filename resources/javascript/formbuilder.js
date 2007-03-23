@@ -2,12 +2,11 @@ var PAGES_PANEL_ID = 'pagesPanel';
 var SP_PAGES_PANEL_ID = 'pagesPanelSpecial';
 var PAGE_ICON_STYLE = 'formPageIcon';
 var PAGE_ICON_SELECTED = 'formPageIconSelected';
-
-dojo.require("dojo.html.*");
-
 var CURRENT_ELEMENT_UNDER = -1;
 var LAST_ELEMENT_UNDER = -1;
 var childBoxes = [];
+
+dojo.require("dojo.html.*");
 
 var FBDraggable = Class.create();
 
@@ -152,6 +151,7 @@ FBDropzone.prototype = (new Rico.Dropzone()).extend( {
 						var count = children.length;
 						var beforeNode = children[index];
 						var ids = beforeNode.id;
+						//console.log(ids);
 						cont.insertBefore(node, beforeNode);
 					}
 			}
@@ -175,7 +175,6 @@ FBDropzone.prototype = (new Rico.Dropzone()).extend( {
 
    	accept: function(draggableObjects) {
    		if(this.type == 'fbcomp') {
-   			//alert(CURRENT_ELEMENT_UNDER);
       		var empty = $('emptyForm');
 			if(empty != null) {
 				if(empty.style) {
@@ -580,18 +579,20 @@ function markSelectedPage(parameter) {
 function loadPageInfo(parameter) {
 	if(pressedPageDelete == false && draggingPage == false) {
 		showStatus('Loading section...');
-		//alert($(parameter));
-		//$(parameter).style.backgroundColor = 'Red';
 		markSelectedPage(parameter);
 		FormPage.getFormPageInfo(parameter, placePageInfo);
 	}
 	pressedPageDelete = false;
 	draggingPage = false;
 }
-function loadConfirmationPage() {
+function loadConfirmationPage(parameter) {
+	showStatus('Loading section...');
+	markSelectedPage(parameter);
 	FormPage.getConfirmationPageInfo(placePageInfo);
 }
-function loadThxPage() {
+function loadThxPage(parameter) {
+	showStatus('Loading section...');
+	markSelectedPage(parameter);
 	FormPage.loadThxPage(placeThxPageInfo);
 }
 function placeThxPageInfo(parameter) {
@@ -815,7 +816,6 @@ function placeComponentInfo(parameter) {
 			}
 			var requiredChk = $('propertyRequired');
 			if(requiredChk != null) {
-				//alert(parameter.required);
 				requiredChk.checked = parameter.required;
 			}
 			var errorTxt = $('propertyErrorMessage');
@@ -1186,6 +1186,15 @@ function placeNewPage(parameter) {
 	}
 }
 function deletePage(parameter) {
+	var root = $(PAGES_PANEL_ID);
+	if(root != null) {
+		var nodes = root.getElementsByTagName('div');
+		if(nodes.length == 1) {
+			pressedPageDelete = true;
+			setStatus('Cannot delete section',3000);
+			return;
+		}
+	}
 	if(parameter != null) {
 		var node = $(parameter);
 		if(node != null) {
@@ -1203,11 +1212,13 @@ function removePageNode(parameter) {
 		if(node != null) {
 			var parentNode = node.parentNode;
 			if(parentNode != null) {
+				showStatus('Loading section...');
 				parentNode.removeChild(node);
 			}
 		}
 	}
 	$('workspaceform1:refreshViewPanel').click();
+	closeStatus();
 }
 //Handles the closing of the loading indicator
 function closeLoadingMessage() {
