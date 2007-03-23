@@ -80,7 +80,11 @@ public class FBPaletteComponent extends FBComponentBase {
 	public String getEmbededJavascript() {
 		StringBuilder result = new StringBuilder();
 		result.append("<script language=\"JavaScript\">\n");
-		result.append("dndMgr.registerDraggable( new FBDraggable($('" + type + "'), '" + type + "', '" + category + "', '"+autofill_key+"') );\n");
+		if(autofill_key == null) {
+			result.append("dndMgr.registerDraggable( new FBDraggable($('" + type + "'), '" + type + "', '" + category + "', null) );\n");
+		} else {
+			result.append("dndMgr.registerDraggable( new FBDraggable($('" + type + "'), '" + type + "', '" + category + "', '"+autofill_key+"') );\n");
+		}
 		result.append("</script>\n");
 		return result.toString();
 		
