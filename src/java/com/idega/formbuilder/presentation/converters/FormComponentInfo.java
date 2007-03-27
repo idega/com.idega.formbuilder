@@ -6,6 +6,7 @@ import com.idega.documentmanager.business.form.beans.ItemBean;
 
 public class FormComponentInfo {
 	
+	private String id;
 	private boolean required;
 	private String label;
 	private String errorMessage;
@@ -114,6 +115,14 @@ public class FormComponentInfo {
 
 	public void setPlainText(String plainText) {
 		this.plainText = plainText;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }

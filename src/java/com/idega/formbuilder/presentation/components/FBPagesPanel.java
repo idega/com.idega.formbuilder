@@ -137,7 +137,7 @@ public class FBPagesPanel extends FBComponentBase {
 					FBFormPage formPage = (FBFormPage) application.createComponent(FBFormPage.COMPONENT_TYPE);
 					formPage.setId(confirmation.getId() + "_P");
 					if(confirmation.getId().equals(selectedPageId)) {
-						formPage.setStyleClass(selectedStyleClass);
+						formPage.setStyleClass(selectedStyleClass + "Special");
 					} else {
 						formPage.setStyleClass(componentStyleClass + "Special");
 					}
@@ -154,7 +154,7 @@ public class FBPagesPanel extends FBComponentBase {
 				FBFormPage formPage = (FBFormPage) application.createComponent(FBFormPage.COMPONENT_TYPE);
 				formPage.setId(thanks.getId() + "_P");
 				if(thanks.getId().equals(selectedPageId)) {
-					formPage.setStyleClass(selectedStyleClass);
+					formPage.setStyleClass(selectedStyleClass + "Special");
 				} else {
 					formPage.setStyleClass(componentStyleClass + "Special");
 				}

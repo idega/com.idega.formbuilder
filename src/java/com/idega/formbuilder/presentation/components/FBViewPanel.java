@@ -90,6 +90,7 @@ public class FBViewPanel extends FBComponentBase {
 		designView.setId("dropBox");
 		designView.setStyleClass("dropBox");
 		designView.setComponentStyleClass("formElement");
+		designView.setSelectedStyleClass("formElement selectedElement");
 		designView.setValueBinding("status", application.createValueBinding("#{workspace.designViewStatus}"));
 		addFacet(DESIGN_VIEW, designView);
 		

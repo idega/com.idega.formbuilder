@@ -68,9 +68,6 @@ public class FBFormComponentTag extends UIComponentTagBase {
 			if(this.styleClass != null) {
 				field.setStyleClass(this.styleClass);
 			}
-			if(this.onclick != null) {
-				field.setOnclick(this.onclick);
-			}
 	    }
 	}
 }

@@ -11,7 +11,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
 
-import org.apache.myfaces.component.html.ext.HtmlOutputLabel;
 import org.apache.myfaces.custom.htmlTag.HtmlTag;
 
 import com.idega.documentmanager.business.form.ButtonArea;
@@ -19,6 +18,7 @@ import com.idega.documentmanager.business.form.Component;
 import com.idega.documentmanager.business.form.Container;
 import com.idega.documentmanager.business.form.Page;
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.formbuilder.presentation.beans.FormComponent;
 import com.idega.formbuilder.presentation.beans.FormPage;
 import com.idega.webface.WFDivision;
 import com.idega.webface.WFUtil;
@@ -39,16 +39,8 @@ public class FBDesignView extends FBComponentBase {
 	public static final String BUTTON_AREA_FACET = "BUTTON_AREA_FACET";
 	
 	private String componentStyleClass;
+	private String selectedStyleClass;
 	private String status;
-	private String selectedComponent;
-
-	public String getSelectedComponent() {
-		return selectedComponent;
-	}
-
-	public void setSelectedComponent(String selectedComponent) {
-		this.selectedComponent = selectedComponent;
-	}
 
 	public FBDesignView() {
 		super();
@@ -80,10 +72,12 @@ public class FBDesignView extends FBComponentBase {
 		formHeading.setId("formHeading");
 		formHeading.setStyleClass("formHeading");
 		
-		HtmlOutputLabel formHeadingHeader = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-		formHeadingHeader.setValueBinding("value", application.createValueBinding("#{formDocument.formTitle}"));
+		FBInlineEdit formHeadingHeader = (FBInlineEdit) application.createComponent(FBInlineEdit.COMPONENT_TYPE);
 		formHeadingHeader.setId("formHeadingHeader");
-		formHeadingHeader.setOnclick("loadFormInfo()");
+		formHeadingHeader.setValueBinding("value", application.createValueBinding("#{formDocument.formTitle}"));
+		formHeadingHeader.setOnSelect("loadFormInfo();");
+		formHeadingHeader.setOnBlur("saveFormTitleOnBlur");
+		formHeadingHeader.setOnReturn("saveFormTitleOnReturn");
 		addChild(formHeadingHeader, formHeading);
 		
 		addFacet(DESIGN_VIEW_HEADER_FACET, formHeading);
@@ -92,10 +86,11 @@ public class FBDesignView extends FBComponentBase {
 		pageNotice.setId("pageNotice");
 		pageNotice.setStyleClass("formHeading");
 		
-		HtmlOutputLabel currentPageTitle = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-		currentPageTitle.setValueBinding("value", application.createValueBinding("#{formPage.title}"));
+		FBInlineEdit currentPageTitle = (FBInlineEdit) application.createComponent(FBInlineEdit.COMPONENT_TYPE);
 		currentPageTitle.setId("currentPageTitle");
-		currentPageTitle.setOnclick("");
+		currentPageTitle.setValueBinding("value", application.createValueBinding("#{formPage.title}"));
+		currentPageTitle.setOnBlur("savePageTitleOnBlur");
+		currentPageTitle.setOnReturn("savePageTitleOnReturn");
 		addChild(currentPageTitle, pageNotice);
 		
 		addFacet(DESIGN_VIEW_PAGE_FACET, pageNotice);
@@ -130,6 +125,12 @@ public class FBDesignView extends FBComponentBase {
 		FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
 		Page page = formPage.getPage();
 		if(page != null) {
+			String selectedComponentId = null;
+			Component selectedComponent = ((FormComponent) WFUtil.getBeanInstance("formComponent")).getComponent();
+			if(selectedComponent != null) {
+				selectedComponentId = selectedComponent.getId();
+				//System.out.println(selectedComponentId);
+			}
 			ButtonArea barea = page.getButtonArea();
 			if(barea != null) {
 				FBButtonArea area = (FBButtonArea) application.createComponent(FBButtonArea.COMPONENT_TYPE);
@@ -141,10 +142,6 @@ public class FBDesignView extends FBComponentBase {
 			if(page != null) {
 				List<String> ids = page.getContainedComponentsIdList();
 				Iterator it = ids.iterator();
-				vb = getValueBinding("selectedComponent");
-				if(vb != null) {
-					selectedComponent = (String) vb.getValue(context);
-				} 
 				while(it.hasNext()) {
 					String nextId = (String) it.next();
 					Component comp = page.getComponent(nextId);
@@ -153,13 +150,12 @@ public class FBDesignView extends FBComponentBase {
 					} else {
 						FBFormComponent formComponent = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
 						formComponent.setId(nextId);
-						formComponent.setStyleClass(getComponentStyleClass());
-						if(nextId.equals(selectedComponent)) {
-							formComponent.setSelected(true);
+						if(nextId.equals(selectedComponentId)) {
+							formComponent.setStyleClass(getSelectedStyleClass());
 						} else {
-							formComponent.setSelected(false);
+							formComponent.setStyleClass(getComponentStyleClass());
 						}
-						formComponent.setSelectedStyleClass(getComponentStyleClass() + "Sel");
+						formComponent.setOnLoad("loadComponentInfo(this.id);");
 					    add(formComponent);
 					}
 				}
@@ -237,11 +233,10 @@ public class FBDesignView extends FBComponentBase {
 	}
 	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[4];
+		Object values[] = new Object[3];
 		values[0] = super.saveState(context);
 		values[1] = componentStyleClass;
 		values[2] = status;
-		values[3] = selectedComponent;
 		return values;
 	}
 	
@@ -250,7 +245,6 @@ public class FBDesignView extends FBComponentBase {
 		super.restoreState(context, values[0]);
 		componentStyleClass = (String) values[1];
 		status = (String) values[2];
-		selectedComponent = (String) values[3];
 	}
 	
 	private String getEmbededJavascript(Object values[]) {
@@ -275,6 +269,14 @@ public class FBDesignView extends FBComponentBase {
 
 	public void setComponentStyleClass(String componentStyleClass) {
 		this.componentStyleClass = componentStyleClass;
+	}
+
+	public String getSelectedStyleClass() {
+		return selectedStyleClass;
+	}
+
+	public void setSelectedStyleClass(String selectedStyleClass) {
+		this.selectedStyleClass = selectedStyleClass;
 	}
 	
 }

@@ -9,6 +9,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.idega.documentmanager.business.form.Button;
@@ -192,6 +193,48 @@ public class FormComponent implements Serializable {
 		setItems(items);
 	}
 	
+	public Element getComponentGUINode() throws Exception {
+		Element resultI = null;
+		Locale current = ((Workspace) WFUtil.getBeanInstance("workspace")).getLocale();
+		Element element = null;
+		if(component != null) {
+			element = (Element) component.getHtmlRepresentation(current).cloneNode(true);
+		} else if(selectComponent != null) {
+			element = (Element) selectComponent.getHtmlRepresentation(current).cloneNode(true);
+		} else if(plainComponent != null) {
+			element = (Element) plainComponent.getHtmlRepresentation(current).cloneNode(true);
+		}
+		if(element != null) {
+			element.setAttribute("id", id + "_i");
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			Document domDocument = null;
+	        try {
+	        	DocumentBuilder builder = factory.newDocumentBuilder();
+	        	domDocument = builder.newDocument();
+	        	
+	        	Element result = domDocument.createElement("DIV");
+	        	result.setAttribute("class", "formElement");
+	        	result.setAttribute("id", id);
+	        	result.setAttribute("onclick", "loadComponentInfo(this.id);");
+	        	
+	        	Element deleteButton = domDocument.createElement("IMG");
+				deleteButton.setAttribute("id", "db" + id);
+				deleteButton.setAttribute("src", "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png");
+				deleteButton.setAttribute("onclick", "removeComponent(this);");
+				deleteButton.setAttribute("class", "speedButton");
+				
+				Element deleteButtonI = (Element) element.getOwnerDocument().importNode(deleteButton, true);
+		         
+				resultI = (Element) element.getOwnerDocument().importNode(result, true);
+		        resultI.appendChild(element);
+		        resultI.appendChild(deleteButtonI);
+	        } catch (ParserConfigurationException pce) {
+	            pce.printStackTrace();
+	        }
+		}
+		return resultI;
+	}
+	
 	public void loadButton(String id) {
 		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
 		if(page != null) {
@@ -226,6 +269,7 @@ public class FormComponent implements Serializable {
 	public FormComponentInfo getFormComponentInfo(String id) {
 		loadProperties(id);
 		FormComponentInfo info = new FormComponentInfo();
+		info.setId(id);
 		if(propertiesPlain != null) {
 			info.setPlainText(plainText);
 			info.setPlain(true);

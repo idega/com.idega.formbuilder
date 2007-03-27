@@ -26,32 +26,14 @@ public class FBFormComponent extends FBComponentBase {
 	private static final String DELETE_BUTTON_FACET = "DELETE_BUTTON_FACET";
 	
 	private Element element;
-	private String onclick;
-	private boolean selected;
-	private String selectedStyleClass;
+	private String onLoad;
 
-	public String getSelectedStyleClass() {
-		return selectedStyleClass;
+	public String getOnLoad() {
+		return onLoad;
 	}
 
-	public void setSelectedStyleClass(String selectedStyleClass) {
-		this.selectedStyleClass = selectedStyleClass;
-	}
-
-	public boolean isSelected() {
-		return selected;
-	}
-
-	public void setSelected(boolean selected) {
-		this.selected = selected;
-	}
-
-	public String getOnclick() {
-		return onclick;
-	}
-
-	public void setOnclick(String onclick) {
-		this.onclick = onclick;
+	public void setOnLoad(String onLoad) {
+		this.onLoad = onLoad;
 	}
 
 	public FBFormComponent() {
@@ -69,18 +51,14 @@ public class FBFormComponent extends FBComponentBase {
 				try {
 					Locale current = ((Workspace) WFUtil.getBeanInstance("workspace")).getLocale();
 					Element element = component.getHtmlRepresentation(current);
-//					System.out.println("__________________________________");
-//					DOMUtil.prettyPrintDOM(element);
-//					System.out.println("_______________xxx___________________");
 					if(element != null) {
 						element.setAttribute("id", id + "_i");
 						setElement(element);
-						setOnclick("loadComponentInfo(this.id)");
 						
 						HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
 						deleteButton.setId("db" + id);
 						deleteButton.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png");
-						deleteButton.setOnclick("removeComponent(this)");
+						deleteButton.setOnclick("removeComponent(this);");
 						deleteButton.setStyleClass("speedButton");
 						
 						addFacet(DELETE_BUTTON_FACET, deleteButton);
@@ -96,13 +74,9 @@ public class FBFormComponent extends FBComponentBase {
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeBegin(context);
 		writer.startElement("DIV", this);
-		if(!isSelected()) {
-			writer.writeAttribute("class", getStyleClass(), "styleClass");
-		} else {
-			writer.writeAttribute("class", selectedStyleClass, "styleClass");
-		}
+		writer.writeAttribute("class", getStyleClass(), "styleClass");
 		writer.writeAttribute("id", getId(), "id");
-		writer.writeAttribute("onclick", onclick, "onclick");
+		writer.writeAttribute("onclick", onLoad, "onclick");
 		DOMTransformer.renderNode(element, this, writer);
 	}
 	
@@ -123,12 +97,10 @@ public class FBFormComponent extends FBComponentBase {
 	}
 	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[5];
+		Object values[] = new Object[3];
 		values[0] = super.saveState(context);
 		values[1] = element;
-		values[2] = onclick;
-		values[3] = selected;
-		values[4] = selectedStyleClass;
+		values[2] = onLoad;
 		return values;
 	}
 	
@@ -136,9 +108,7 @@ public class FBFormComponent extends FBComponentBase {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);
 		element = (Element) values[1];
-		onclick = (String) values[2];
-		selected = (Boolean) values[3];
-		selectedStyleClass = (String) values[4];
+		onLoad = (String) values[2];
 	}
 
 	public Element getElement() {

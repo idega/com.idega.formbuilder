@@ -2,6 +2,11 @@
 .fbSelectListItem {
 	width: 95px;
 }
+.propertiesPanelSection {
+	width: 100%;
+	padding-left: 15px;
+	padding-top: 5px;
+}
 .pagesPanelToolbar {
 	width: 98%;
 	height: 25px;
@@ -335,7 +340,7 @@ padding-right: 120px;
 .formPageIcon:hover, .formPageIconSpecial:hover {
 	border-color: Black;
 }
-.formPageIconSelected {
+.formPageIconSelected, .formPageIconSelectedSpecial {
 	cursor: pointer;
 	margin-top: 15px;
 	margin-right: 10px;
@@ -432,13 +437,15 @@ padding-right: 120px;
 	background-color: Red;
 }
 .formElement {
-	width: 88%;
-	height: auto;
 	margin-bottom: 10px;
-	margin-right: 5px;
-margin: auto !important;
+	margin-right: 25px;
+	margin-left: 25px;
 	padding-top: 10px;
 	padding-bottom: 10px;
+	padding-left: 10px;
+}
+.selectedElement {
+	background-color: Silver;
 }
 .formButton {
 
@@ -446,26 +453,12 @@ margin: auto !important;
 .formButton:hover {
 	margin-right: 0px;
 }
-.formElementSel {
-	background-color: Silver;
-	width: 88%;
-	height: auto;	
-	margin-bottom: 10px;
-	margin-left: 5%;
-	margin-right: 5%;
-	padding-left: 30px;
-	padding-top: 10px;
-	padding-bottom: 10px;
-}
 .formElement:hover {
 	border:1px solid #93B825;
 	padding-top: 9px;
 	padding-bottom: 9px;
-	padding-left: 29px;
+	padding-left: 9px;
 	cursor: pointer;
-	background-color: Silver;
-}
-.formElement:active {
 	background-color: Silver;
 }
 .fbSpeedBButton {

@@ -46,8 +46,9 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		
 		Table2 table = new Table2();
 		table.setId("labelPropertiesPanel");
-		table.setStyleAttribute("width: 250px;");
+		//table.setStyleAttribute("width: 250px;");
 		table.setCellpadding(0);
+		table.setStyleClass("propertiesPanelSection");
 		TableRowGroup group = table.createBodyRowGroup();
 		TableRow row = null;
 		TableCell2 cell = null;
@@ -55,19 +56,21 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		HtmlOutputText titleLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		titleLabel.setValue("Field name");
 		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.setWidth("100");
-		cell.add(titleLabel);
-		
 		HtmlInputText title = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		title.setId("propertyTitle");
 		title.setValueBinding("value", application.createValueBinding("#{formComponent.label}"));
 		title.setOnblur("saveComponentLabel(this.value);");
 		title.setOnkeydown("savePropertyOnEnter(this.value,'compTitle',event);");
 		
+		row = group.createRow();
 		cell = row.createCell();
+		cell.setWidth("100");
+		cell.add(titleLabel);
 		cell.add(title);
+		
+		
+		//cell = row.createCell();
+		
 		
 		addFacet(BUTTON_PROPERTIES_FACET, table);
 		
@@ -75,7 +78,8 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		
 		table = new Table2();
 		table.setId("basicPropertiesPanel");
-		table.setStyleAttribute("width: 250px;");
+		//table.setStyleAttribute("width: 250px;");
+		table.setStyleClass("propertiesPanelSection");
 		table.setCellpadding(0);
 		group = table.createBodyRowGroup();
 		row = null;
@@ -84,71 +88,80 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		HtmlOutputText requiredLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		requiredLabel.setValue("Required field");
 		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.setWidth("100");
-		cell.add(requiredLabel);
-		
 		HtmlSelectBooleanCheckbox required = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
 		required.setId("propertyRequired");
 		required.setValueBinding("value", application.createValueBinding("#{formComponent.required}"));
 		required.setOnclick("saveRequired(this.checked);");
 		
+		row = group.createRow();
 		cell = row.createCell();
+		cell.setWidth("100");
+		cell.add(requiredLabel);
 		cell.add(required);
+		
+		
+		//cell = row.createCell();
+		
 		
 		HtmlOutputText errorMsgLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		errorMsgLabel.setValue("Error message");
 		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.add(errorMsgLabel);
-		
-		HtmlInputText errorMsg = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+		HtmlInputTextarea errorMsg = (HtmlInputTextarea) application.createComponent(HtmlInputTextarea.COMPONENT_TYPE);
 		errorMsg.setId("propertyErrorMessage");
 		errorMsg.setValueBinding("value", application.createValueBinding("#{formComponent.errorMessage}"));
 		errorMsg.setOnblur("saveErrorMessage(this.value)");
 		errorMsg.setOnkeydown("savePropertyOnEnter(this.value,'compErr',event);");
 		
+		row = group.createRow();
 		cell = row.createCell();
+		cell.add(errorMsgLabel);
 		cell.add(errorMsg);
+		
+		
+//		cell = row.createCell();
+		
 		
 		HtmlOutputText helpMsgLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		helpMsgLabel.setValue("Help text");
 		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.add(helpMsgLabel);
-		
-		HtmlInputText helpMsg = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+		HtmlInputTextarea helpMsg = (HtmlInputTextarea) application.createComponent(HtmlInputTextarea.COMPONENT_TYPE);
 		helpMsg.setId("propertyHelpText");
 		helpMsg.setValueBinding("value", application.createValueBinding("#{formComponent.helpMessage}"));
 		helpMsg.setOnblur("saveHelpMessage(this.value)");
 		helpMsg.setOnkeydown("savePropertyOnEnter(this.value,'compHelp',event);");
 		
+		row = group.createRow();
 		cell = row.createCell();
+		cell.add(helpMsgLabel);
 		cell.add(helpMsg);
+		
+		
+//		cell = row.createCell();
+		
 		
 		HtmlOutputText hasAutofillLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		hasAutofillLabel.setValue("Autofill field");
-		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.add(hasAutofillLabel);
 		
 		HtmlSelectBooleanCheckbox hasAutofill = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
 		hasAutofill.setId("propertyHasAutofill");
 		hasAutofill.setOnclick("toggleAutofill(this.checked);");
 		hasAutofill.setValueBinding("value", application.createValueBinding("#{formComponent.autofill}"));
 		
+		row = group.createRow();
 		cell = row.createCell();
+		cell.add(hasAutofillLabel);
 		cell.add(hasAutofill);
+		
+		
+//		cell = row.createCell();
+		
 		
 		addFacet(BASIC_PROPERTIES_FACET, table);
 		
 		table = new Table2();
 		table.setId("autoPropertiesPanel");
-		table.setStyleAttribute("width: 250px;");
+//		table.setStyleAttribute("width: 250px;");
+		table.setStyleClass("propertiesPanelSection");
 		table.setCellpadding(0);
 		group = table.createBodyRowGroup();
 		row = null;
@@ -157,25 +170,28 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		HtmlOutputText autofillLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		autofillLabel.setValue("");
 		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.setWidth("100");
-		cell.add(autofillLabel);
-		
 		HtmlInputText autofillValue = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		autofillValue.setId("propertyAutofill");
 		autofillValue.setValueBinding("value", application.createValueBinding("#{formComponent.autofillKey}"));
 		autofillValue.setOnblur("saveAutofill(this.value);");
 		autofillValue.setOnkeydown("savePropertyOnEnter(this.value,'compAuto',event);");
 		
+		row = group.createRow();
 		cell = row.createCell();
+		cell.setWidth("100");
+		cell.add(autofillLabel);
 		cell.add(autofillValue);
+		
+		
+//		cell = row.createCell();
+		
 		
 		addFacet(AUTOFILL_PROPERTIES_FACET, table);
 		
 		table = new Table2();
 		table.setId("plainPropertiesPanel");
-		table.setStyleAttribute("width: 250px;");
+//		table.setStyleAttribute("width: 250px;");
+		table.setStyleClass("propertiesPanelSection");
 		table.setCellpadding(0);
 		group = table.createBodyRowGroup();
 		row = null;
@@ -184,18 +200,20 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		HtmlOutputText plainTextLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		plainTextLabel.setValue("Text");
 		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.setWidth("100");
-		cell.add(plainTextLabel);
-		
 		HtmlInputTextarea plainTextValue = (HtmlInputTextarea) application.createComponent(HtmlInputTextarea.COMPONENT_TYPE);
 		plainTextValue.setId("propertyPlaintext");
 		plainTextValue.setValueBinding("value", application.createValueBinding("#{formComponent.plainText}"));
 		plainTextValue.setOnblur("savePlaintext(this.value);");
 		plainTextValue.setOnkeydown("savePropertyOnEnter(this.value,'compText',event);");
 		
+		row = group.createRow();
 		cell = row.createCell();
+		cell.setWidth("100");
+		cell.add(plainTextLabel);
+		
+		
+		
+//		cell = row.createCell();
 		cell.add(plainTextValue);
 		
 		addFacet(PLAIN_PROPERTIES_FACET, table);

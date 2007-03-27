@@ -21,7 +21,8 @@
 												/dwr/interface/FormComponent.js,
 												/dwr/interface/FormDocument.js,
 												/dwr/interface/FormPage.js,
-												/dwr/engine.js">
+												/dwr/engine.js,
+												/dwr/util.js">
 			<h:form id="workspaceform1">
 				<t:div id="mainApplication" forceId="true">
 					<t:div id="statusContainer" forceId="true" styleClass="statusContainer">
