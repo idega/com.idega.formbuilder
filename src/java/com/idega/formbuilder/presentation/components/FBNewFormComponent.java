@@ -19,6 +19,9 @@ public class FBNewFormComponent extends FBComponentBase {
 	
 	private static final String CONTENT_DIV_FACET = "CONTENT_DIV_FACET";
 	
+	private static final String CANCEL_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/cancel.png";
+	private static final String OK_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/accept.png";
+	
 	public FBNewFormComponent() {
 		super();
 		setRendererType(null);
@@ -50,19 +53,18 @@ public class FBNewFormComponent extends FBComponentBase {
 		newButton.setStyle("display: inline");
 		newButton.setOnclick("showInputField();return false;");
 		
-		HtmlCommandLink okButton = (HtmlCommandLink) application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
-		okButton.setValue("OK");
+		FBToolbarButton okButton = new FBToolbarButton();
+		okButton.setStyleClass("bottomButtonHidden");
 		okButton.setId("okBt");
-		okButton.setStyleClass("okBt");
-		okButton.setStyle("display: none");
+		okButton.setDisplayText("OK");
+		okButton.setDefaultImageURI(OK_BUTTON_ICON);
 		okButton.setAction(application.createMethodBinding("#{formDocument.createNewForm}", null));
 		
-		
-		HtmlCommandLink cancelButton = (HtmlCommandLink) application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
-		cancelButton.setValue("Cancel");
+		FBToolbarButton cancelButton = new FBToolbarButton();
+		cancelButton.setStyleClass("bottomButtonHidden");
 		cancelButton.setId("cancelBt");
-		cancelButton.setStyleClass("cancelBt");
-		cancelButton.setStyle("display: none");
+		cancelButton.setDisplayText("Cancel");
+		cancelButton.setDefaultImageURI(CANCEL_BUTTON_ICON);
 		cancelButton.setOnclick("hideInputField();return false;");
 		
 		addChild(newIcon, body);
