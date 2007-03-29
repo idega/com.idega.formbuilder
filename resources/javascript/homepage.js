@@ -9,43 +9,50 @@ var galleryContainer = false;
 var imageGalleryCaptions = new Array();
 
 var ITEM_ID_PREFIX = 'ItemBottom';
+var NEW_FORM_COMP_STATE = false;
 
 function showInputField() {
-	var input = $('workspaceform1:newTxt');
+	new Rico.Effect.Size('newFormComp', 350, null, 500, 10, {complete:toggleControls});
+}
+function toggleControls() {
 	var newBt = $('workspaceform1:newBt');
-	var okBt = $('workspaceform1:okBt');
-	var cancelBt = $('workspaceform1:cancelBt');
-	if(input != null) {
-		input.style.display = 'inline';
-		input.focus();
-	}
-	if(newBt != null) {
-		newBt.style.display = 'none';
-	}
-	if(okBt != null) {
-		okBt.style.display = 'inline';
-	}
-	if(cancelBt != null) {
-		cancelBt.style.display = 'inline';
+	var input = $('workspaceform1:newTxt');
+	var okBt = $('workspaceform1:okBt_div');
+	var cancelBt = $('workspaceform1:cancelBt_div');
+	if(NEW_FORM_COMP_STATE == false) {
+		if(newBt != null) {
+			newBt.style.display = 'none';
+		}
+		if(okBt != null) {
+			okBt.style.display = 'inline';
+		}
+		if(cancelBt != null) {
+			cancelBt.style.display = 'inline';
+		}
+		if(input != null) {
+			input.style.display = 'inline';
+			input.focus();
+		}
+		NEW_FORM_COMP_STATE = true;
+	} else {
+		if(input != null) {
+			input.style.display = 'none';
+		}
+		if(newBt != null) {
+			newBt.style.display = 'inline';
+		}
+		if(okBt != null) {
+			okBt.style.display = 'none';
+		}
+		if(cancelBt != null) {
+			cancelBt.style.display = 'none';
+		}
+		NEW_FORM_COMP_STATE = false;
 	}
 }
 function hideInputField() {
-	var input = $('workspaceform1:newTxt');
-	var newBt = $('workspaceform1:newBt');
-	var okBt = $('workspaceform1:okBt');
-	var cancelBt = $('workspaceform1:cancelBt');
-	if(input != null) {
-		input.style.display = 'none';
-	}
-	if(newBt != null) {
-		newBt.style.display = 'inline';
-	}
-	if(okBt != null) {
-		okBt.style.display = 'none';
-	}
-	if(cancelBt != null) {
-		cancelBt.style.display = 'none';
-	}
+	toggleControls();
+	new Rico.Effect.Size('newFormComp', 200, null, 500, 10);
 }
 function confirmFormDelete(parameter) {
 	var go = confirm("Do you really want to delete this form?");
@@ -193,16 +200,8 @@ function pressOk(e) {
 	if (!e) return true;
 	var key = (typeof e.keyCode != 'undefined' ? e.keyCode : e.charCode);
 	if(key == '13') {
-		//clear_workspaceform1();
-		document.forms['workspaceform1'].elements['workspaceform1:_link_hidden_'].value='workspaceform1:okBt';
-		if(document.forms['workspaceform1'].onsubmit) {
-			var result=document.forms['workspaceform1'].onsubmit(); 
-			if( (typeof result == 'undefined') || result ) {
-				document.forms['workspaceform1'].submit();
-			}
-		} else {
-			document.forms['workspaceform1'].submit();
-		}
+		$('workspaceform1:okBt').click();
+		//document.forms['workspaceform1'].submit();
 	}
 }
 function createDuplicateDialog() {
