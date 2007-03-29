@@ -2,6 +2,10 @@
 .fbSelectListItem {
 	width: 95px;
 }
+#insertMarker {
+	width: 300px;
+	height: 50px;
+}
 .propertiesPanelSection {
 	width: 100%;
 	padding-left: 15px;
@@ -80,12 +84,12 @@ span.statusMsg {
 }
 #fbHPRight {
 	position: absolute;
-	right: 0px;
+	right: 100px;
 	top: 100px;
 	width: 300px;
 }
 .newFormComponentIdle {
-	width: 270px;
+	width: 200px;
 	height: 34px;
 	background: LightGrey  url(images/new_form_icon.gif) no-repeat 20px 5px;
 	padding-top: 5px;
@@ -197,17 +201,23 @@ a.okBt:hover {
 	padding-top: 5px;
 	padding-bottom: 5px;
 }
+.bottomButtonHidden {
+	display: none;
+	margin-left: 15px;
+	height: 20px;
+	padding-bottom: 5px;
+}
 .bottomButton {
 	display: inline;
 	margin-left: 15px;
 	height: 20px;
 	padding-bottom: 5px;
 }
-.bottomButton img {
+.bottomButton img,.bottomButtonHidden img {
 	align: left;
 	margin-right: 5px;
 }
-.bottomButton a {
+.bottomButton a, .bottomButtonHidden a {
 	color: #0096ff;
 	font-weight: Bold;
 	position: relative;
@@ -443,6 +453,7 @@ padding-right: 120px;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	padding-left: 10px;
+	position: relative;
 }
 .selectedElement {
 	background-color: Silver;
