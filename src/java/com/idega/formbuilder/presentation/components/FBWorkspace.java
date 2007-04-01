@@ -26,7 +26,6 @@ public class FBWorkspace extends FBComponentBase {
 	private static final String WORKSPACE_MENU_FACET = "menu";
 	private static final String WORKSPACE_VIEW_FACET = "view";
 	private static final String WORKSPACE_PAGES_FACET = "pages";
-	private static final String WORKSPACE_ACTIONS_PROXY_FACET = "proxy";
 	private static final String FORMBUILDER_PAGE_SCRIPT = "script";
 	
 	private static final String FORMBUILDER_JS = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js";
@@ -93,14 +92,11 @@ public class FBWorkspace extends FBComponentBase {
 		pages.setComponentStyleClass("formPageIcon");
 		pages.setGeneralPartStyleClass("pagesGeneralContainer");
 		pages.setSpecialPartStyleClass("pagesSpecialContainer");
-		pages.setSelectedStyleClass("formPageIconSelected");
-		
-		FBActionsProxy actionsProxy = (FBActionsProxy) application.createComponent(FBActionsProxy.COMPONENT_TYPE);
+		pages.setSelectedStyleClass("selectedElement");
 		
 		addFacet(WORKSPACE_MENU_FACET, menu);
 		addFacet(WORKSPACE_VIEW_FACET, viewPanel);
 		addFacet(WORKSPACE_PAGES_FACET, pages);
-		addFacet(WORKSPACE_ACTIONS_PROXY_FACET, actionsProxy);
 	}
 	
 	public String getEmbededJavascript() {
@@ -148,10 +144,6 @@ public class FBWorkspace extends FBComponentBase {
 		UIComponent pages = getFacet(WORKSPACE_PAGES_FACET);
 		if(pages != null) {
 			renderChild(context, pages);
-		}
-		UIComponent proxy = getFacet(WORKSPACE_ACTIONS_PROXY_FACET);
-		if(proxy != null) {
-			renderChild(context, proxy);
 		}
 	}
 	

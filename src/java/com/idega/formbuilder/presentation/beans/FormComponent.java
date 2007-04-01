@@ -5,12 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import com.idega.documentmanager.business.form.Button;
 import com.idega.documentmanager.business.form.ButtonArea;
@@ -25,7 +21,6 @@ import com.idega.documentmanager.business.form.PropertiesSelect;
 import com.idega.documentmanager.business.form.beans.ILocalizedItemset;
 import com.idega.documentmanager.business.form.beans.ItemBean;
 import com.idega.documentmanager.business.form.beans.LocalizedStringBean;
-import com.idega.formbuilder.presentation.components.FBDesignView;
 import com.idega.formbuilder.presentation.converters.FormButtonInfo;
 import com.idega.formbuilder.presentation.converters.FormComponentInfo;
 import com.idega.formbuilder.presentation.converters.PaletteComponentInfo;
@@ -63,6 +58,41 @@ public class FormComponent implements Serializable {
 	private ILocalizedItemset itemset;
 	
 	private String dataSrc;
+	
+	public Element saveComponentLabel(String value) {
+		setLabel(value);
+		return getComponentGUINode();
+	}
+	
+	public Element saveComponentExternalSrc(String value) {
+		setExternalSrc(value);
+		return getComponentGUINode();
+	}
+	
+	public Element saveComponentRequired(boolean value) {
+		setRequired(value);
+		return getComponentGUINode();
+	}
+	
+	public Element saveComponentErrorMessage(String value) {
+		setErrorMessage(value);
+		return getComponentGUINode();
+	}
+	
+	public Element saveComponentHelpMessage(String value) {
+		setHelpMessage(value);
+		return getComponentGUINode();
+	}
+	
+	public Element saveComponentPlainText(String value) {
+		setPlainText(value);
+		return getComponentGUINode();
+	}
+	
+	public Element saveComponentAutofillKey(String value) {
+		setAutofillKey(value);
+		return getComponentGUINode();
+	}
 	
 	public String getDataSrc() {
 		if(propertiesSelect != null) {
@@ -193,20 +223,24 @@ public class FormComponent implements Serializable {
 		setItems(items);
 	}
 	
-	public Element getComponentGUINode() throws Exception {
-		Element resultI = null;
+	public Element getComponentGUINode() {
+		//Element resultI = null;
 		Locale current = ((Workspace) WFUtil.getBeanInstance("workspace")).getLocale();
 		Element element = null;
-		if(component != null) {
-			element = (Element) component.getHtmlRepresentation(current).cloneNode(true);
-		} else if(selectComponent != null) {
-			element = (Element) selectComponent.getHtmlRepresentation(current).cloneNode(true);
-		} else if(plainComponent != null) {
-			element = (Element) plainComponent.getHtmlRepresentation(current).cloneNode(true);
+		try {
+			if(component != null) {
+				element = (Element) component.getHtmlRepresentation(current).cloneNode(true);
+			} else if(selectComponent != null) {
+				element = (Element) selectComponent.getHtmlRepresentation(current).cloneNode(true);
+			} else if(plainComponent != null) {
+				element = (Element) plainComponent.getHtmlRepresentation(current).cloneNode(true);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 		if(element != null) {
 			element.setAttribute("id", id + "_i");
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			/*DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			Document domDocument = null;
 	        try {
 	        	DocumentBuilder builder = factory.newDocumentBuilder();
@@ -230,9 +264,9 @@ public class FormComponent implements Serializable {
 		        resultI.appendChild(deleteButtonI);
 	        } catch (ParserConfigurationException pce) {
 	            pce.printStackTrace();
-	        }
+	        }*/
 		}
-		return resultI;
+		return element;
 	}
 	
 	public void loadButton(String id) {
@@ -303,7 +337,6 @@ public class FormComponent implements Serializable {
 	public boolean switchDataSource() {
 		if(dataSrc.equals(DataSourceList.externalDataSrc)) {
 			setDataSrc(DataSourceList.localDataSrc);
-			//setExternalSrc("");
 			return true;
 		} else {
 			setDataSrc(DataSourceList.externalDataSrc);
@@ -313,8 +346,8 @@ public class FormComponent implements Serializable {
 		}
 	}
 	
-	public Element addComponent(PaletteComponentInfo info) throws Exception {
-		Element rootDivImported = null;
+	public Node addComponent(PaletteComponentInfo info) throws Exception {
+//		Element rootDivImported = null;
 		FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
 		Page page = formPage.getPage();
 		if(page != null) {
@@ -332,34 +365,35 @@ public class FormComponent implements Serializable {
 						component.getProperties().setAutofillKey(info.getAutofill());
 				}
 				
-				Element element = (Element) component.getHtmlRepresentation(new Locale("en")).cloneNode(true);
-				String id = element.getAttribute("id");
-				element.removeAttribute("id");
-				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-				org.w3c.dom.Document domDocument = null;
-		        try {
-		          DocumentBuilder builder = factory.newDocumentBuilder();
-		          domDocument = builder.newDocument();
-		          Element delete = domDocument.createElement("IMG");
-		          delete.setAttribute("src", "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png");
-		          delete.setAttribute("class", "speedButton");
-		          delete.setAttribute("onclick", "removeComponent(this);");
-		          Element deleteIcon = (Element) element.getOwnerDocument().importNode(delete, true);
-		          Element rootDiv = domDocument.createElement("DIV");
-		          rootDiv.setAttribute("id", id);
-		          rootDiv.setAttribute("class", "formElement");
-		          rootDiv.setAttribute("onclick", "loadComponentInfo(this.id);");
-		          rootDivImported = (Element) element.getOwnerDocument().importNode(rootDiv, true);
-		          rootDivImported.appendChild(element);
-		          rootDivImported.appendChild(deleteIcon);
-		          ((Workspace) WFUtil.getBeanInstance("workspace")).setDesignViewStatus(FBDesignView.DESIGN_VIEW_STATUS_ACTIVE);
-		        } catch (ParserConfigurationException pce) {
-		            pce.printStackTrace();
-		        }
+				Node element = component.getHtmlRepresentation(new Locale("en")).cloneNode(true);
+//				DOMUtil.prettyPrintDOM(element);
+//				String id = element.getAttribute("id");
+//				element.removeAttribute("id");
+//				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+//				org.w3c.dom.Document domDocument = null;
+//		        try {
+//		          DocumentBuilder builder = factory.newDocumentBuilder();
+//		          domDocument = builder.newDocument();
+//		          Element delete = domDocument.createElement("IMG");
+//		          delete.setAttribute("src", "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png");
+//		          delete.setAttribute("class", "speedButton");
+//		          delete.setAttribute("onclick", "removeComponent(this);");
+//		          Element deleteIcon = (Element) element.getOwnerDocument().importNode(delete, true);
+//		          Element rootDiv = domDocument.createElement("DIV");
+//		          rootDiv.setAttribute("id", id);
+//		          rootDiv.setAttribute("class", "formElement");
+//		          rootDiv.setAttribute("onclick", "loadComponentInfo(this.id);");
+//		          rootDivImported = (Element) element.getOwnerDocument().importNode(rootDiv, true);
+//		          rootDivImported.appendChild(element);
+//		          rootDivImported.appendChild(deleteIcon);
+//		          ((Workspace) WFUtil.getBeanInstance("workspace")).setDesignViewStatus(FBDesignView.DESIGN_VIEW_STATUS_ACTIVE);
+//		        } catch (ParserConfigurationException pce) {
+//		            pce.printStackTrace();
+//		        }
+				return element;
 			}
 		}
-		//System.out.println(page.getContainedComponentsIdList());
-		return rootDivImported;
+		return null;
 	}
 	
 	public String moveComponent(String id, int before) throws Exception {
@@ -389,16 +423,12 @@ public class FormComponent implements Serializable {
 			ButtonArea area = page.getButtonArea();
 			Button button = null;
 			if(area != null) {
-				//System.out.println("Adding button to page: " + page.getId());
-				//System.out.println("Adding to existing button area: " + area.getId());
 				button = area.addButton(new ConstButtonType(type), null);
 				result.setType(type);
 				result.setId(button.getId());
 				result.setLabel(button.getProperties().getLabel().getString(new Locale("en")));
 			} else {
-				//System.out.println("Adding button to page: " + page.getId());
 				area = page.createButtonArea(null);
-				//System.out.println("Creating a new button area: " + area.getId());
 				button = area.addButton(new ConstButtonType(type), null);
 				result.setType(type);
 				result.setId(button.getId());
@@ -462,7 +492,6 @@ public class FormComponent implements Serializable {
 			plainText = "";
 			
 			required = propertiesSelect.isRequired();
-			//System.out.println(propertiesSelect.isRequired());
 			labelStringBean = propertiesSelect.getLabel();
 			label = labelStringBean.getString(new Locale("en"));
 			
@@ -497,7 +526,7 @@ public class FormComponent implements Serializable {
 			properties = component.getProperties();
 			
 			required = properties.isRequired();
-			//System.out.println(properties.isRequired());
+
 			labelStringBean = properties.getLabel();
 			label = labelStringBean.getString(new Locale("en"));
 			
@@ -527,11 +556,11 @@ public class FormComponent implements Serializable {
 		this.errorMessage = errorMessage;
 		if(errorStringBean != null) {
 			errorStringBean.setString(new Locale("en"), errorMessage);
-		}
-		if(properties != null) {
-			properties.setErrorMsg(errorStringBean);
-		} else if(propertiesSelect != null) {
-			propertiesSelect.setErrorMsg(errorStringBean);
+			if(properties != null) {
+				properties.setErrorMsg(errorStringBean);
+			} else if(propertiesSelect != null) {
+				propertiesSelect.setErrorMsg(errorStringBean);
+			}
 		}
 	}
 
@@ -543,11 +572,11 @@ public class FormComponent implements Serializable {
 		this.label = label;
 		if(labelStringBean != null) {
 			labelStringBean.setString(new Locale("en"), label);
-		}
-		if(properties != null) {
-			properties.setLabel(labelStringBean);
-		} else if(propertiesSelect != null) {
-			propertiesSelect.setLabel(labelStringBean);
+			if(properties != null) {
+				properties.setLabel(labelStringBean);
+			} else if(propertiesSelect != null) {
+				propertiesSelect.setLabel(labelStringBean);
+			}
 		}
 	}
 
@@ -577,7 +606,6 @@ public class FormComponent implements Serializable {
 		if(propertiesSelect != null) {
 			if(!externalSrc.equals("")) {
 				propertiesSelect.setExternalDataSrc(externalSrc);
-				//propertiesSelect.setExternalDataSrc(null);
 			}
 		}
 	}
@@ -637,11 +665,11 @@ public class FormComponent implements Serializable {
 		this.helpMessage = helpMessage;
 		if(helpStringBean != null) {
 			helpStringBean.setString(new Locale("en"), helpMessage);
-		}
-		if(properties != null) {
-			properties.setHelpText(helpStringBean);
-		} else if(propertiesSelect != null) {
-			propertiesSelect.setHelpText(helpStringBean);
+			if(properties != null) {
+				properties.setHelpText(helpStringBean);
+			} else if(propertiesSelect != null) {
+				propertiesSelect.setHelpText(helpStringBean);
+			}
 		}
 	}
 

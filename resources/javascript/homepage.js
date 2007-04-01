@@ -119,6 +119,22 @@ function initGalleryScript() {
 	document.getElementById('workspaceform1:arrow_down_image').onmousemove = initSlide;
 	document.getElementById('workspaceform1:arrow_down_image').onmouseout = stopSlide;	
 	slidePreviewPane();
+	var newBt = $('workspaceform1:newBt');
+	var input = $('workspaceform1:newTxt');
+	var okBt = $('workspaceform1:okBt_div');
+	var cancelBt = $('workspaceform1:cancelBt_div');
+	if(input != null) {
+			input.style.display = 'none';
+		}
+		if(newBt != null) {
+			newBt.style.display = 'inline';
+		}
+		if(okBt != null) {
+			okBt.style.display = 'none';
+		}
+		if(cancelBt != null) {
+			cancelBt.style.display = 'none';
+		}
 	Rico.Corner.round('newFormComp');
 }
 function duplicateForm(parameter) {

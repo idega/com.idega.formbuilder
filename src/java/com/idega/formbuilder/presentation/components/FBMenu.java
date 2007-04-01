@@ -120,13 +120,13 @@ public class FBMenu extends FBComponentBase {
 		
 		acc.addPanel(tab3, formProperties);
 		
-		FBPageProperties pageProperties = (FBPageProperties) application.createComponent(FBPageProperties.COMPONENT_TYPE);
-		
-		Text tab4 = new Text();
-		tab4.setText("Section properties");
-		tab4.setStyleClass("fbMenuTabBar");
-		
-		acc.addPanel(tab4, pageProperties);
+//		FBPageProperties pageProperties = (FBPageProperties) application.createComponent(FBPageProperties.COMPONENT_TYPE);
+//		
+//		Text tab4 = new Text();
+//		tab4.setText("Section properties");
+//		tab4.setStyleClass("fbMenuTabBar");
+//		
+//		acc.addPanel(tab4, pageProperties);
 		add(acc);
 		
 		HtmlOutputText noMenuLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);

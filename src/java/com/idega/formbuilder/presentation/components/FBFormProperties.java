@@ -52,7 +52,7 @@ public class FBFormProperties extends FBComponentBase {
 		title.setOnblur("saveFormTitle(this.value)");
 		title.setOnkeydown("savePropertyOnEnter(this.value,'formTitle',event);");
 		
-		cell = row.createCell();
+		//cell = row.createCell();
 		cell.add(title);
 		
 		HtmlOutputText previewLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
@@ -67,7 +67,7 @@ public class FBFormProperties extends FBComponentBase {
 		preview.setValueBinding("value", application.createValueBinding("#{formDocument.hasPreview}"));
 		preview.setOnchange("saveHasPreview(this);");
 		
-		cell = row.createCell();
+		//cell = row.createCell();
 		cell.add(preview);
 		
 		HtmlOutputText thankYouTitleLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
@@ -84,7 +84,7 @@ public class FBFormProperties extends FBComponentBase {
 		thankYouTitle.setOnblur("saveThankYouTitle(this.value)");
 		thankYouTitle.setOnkeydown("savePropertyOnEnter(this.value,'formThxTitle',event);");
 		
-		cell = row.createCell();
+		//cell = row.createCell();
 		cell.add(thankYouTitle);
 		
 		HtmlOutputText thankYouTextLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
@@ -101,7 +101,7 @@ public class FBFormProperties extends FBComponentBase {
 		thankYouText.setOnblur("saveThankYouText(this.value)");
 		thankYouText.setOnkeydown("savePropertyOnEnter(this.value,'formThxText',event);");
 		
-		cell = row.createCell();
+		//cell = row.createCell();
 		cell.add(thankYouText);
 		
 		addFacet(CONTENT_FACET, table);

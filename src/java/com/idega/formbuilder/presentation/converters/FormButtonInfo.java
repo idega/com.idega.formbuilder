@@ -6,6 +6,20 @@ public class FormButtonInfo {
 	private String type;
 	private String label;
 	
+	public FormButtonInfo() {
+		this("", "", "");
+	}
+	
+	public FormButtonInfo(String id, String label, String type) {
+		this.id = id;
+		this.type = type;
+		this.label = label;
+	}
+	
+	public FormButtonInfo(String id, String label) {
+		this(id, label, "");
+	}
+	
 	public String getId() {
 		return id;
 	}

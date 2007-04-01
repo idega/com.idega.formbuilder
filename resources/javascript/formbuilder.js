@@ -1,3 +1,5 @@
+dojo.require("dojo.html.*");
+
 var PAGES_PANEL_ID = 'pagesPanel';
 var SP_PAGES_PANEL_ID = 'pagesPanelSpecial';
 var PAGE_ICON_STYLE = 'formPageIcon';
@@ -6,6 +8,8 @@ var CURRENT_ELEMENT_UNDER = -1;
 var LAST_ELEMENT_UNDER = -1;
 var childBoxes = [];
 
+var CURRENT_PAGE_ID;
+var PREVIOUS_PAGE_ID;
 var CURRENT_ELEMENT_ID;
 var PREVIOUS_ELEMENT_ID;
 var TEMP_INLINE_VALUE;
@@ -14,9 +18,17 @@ var ON_BLUR;
 var ON_RETURN;
 var ON_SELECT;
 
-var debugString = 'Info: ';
+var currentButton = null;
+var currentElement = null;
+var pressedComponentDelete = false;
+var pressedButtonDelete = false;
+var pressedPageDelete = false;
+var draggingButton = false;
+var draggingComponent = false;
+var draggingPage = false;
 
-dojo.require("dojo.html.*");
+$('statusContainer').style.visibility = 'hidden';
+Rico.Corner.round('statusContainer');
 
 var FBDraggable = Class.create();
 
@@ -32,7 +44,6 @@ FBDraggable.prototype = (new Rico.Draggable()).extend( {
    	select: function() {
       	this.selected = true;
       	var el = this.htmlElement;
-
       	el.style.color           = "#ffffff";
       	el.style.backgroundColor = "#08246b";
       	el.style.border          = "1px solid blue";
@@ -72,7 +83,6 @@ FBDraggable.prototype = (new Rico.Draggable()).extend( {
    		} else if(this.type == 'fbbutton') {
    			FormComponent.removeButton(currentButton.getAttribute('id'),nothing);
    		}
-      	
    	},
 
    	endDrag: function() {
@@ -89,7 +99,6 @@ FBDraggable.prototype = (new Rico.Draggable()).extend( {
    	},
 
    	getDroppedGUI: function() {
-   		//alert('Dropped');
    	}
 
 } );
@@ -160,15 +169,13 @@ FBDropzone.prototype = (new Rico.Dropzone()).extend( {
 						var count = children.length;
 						var beforeNode = children[index];
 						var ids = beforeNode.id;
-						debugString = 'Marker: '+node.id + ' Before: '+beforeNode.id;
-						console.log(debugString);
+						console.log('Marker: '+node.id + ' Before: '+beforeNode.id);
 						cont.insertBefore(node, beforeNode);
 					}
 			}
 		} else if(this.type == 'fbbutton') {
-			
+			//TODO precise dropping of buttons
 		}
-		
    	},
 
    	hideHover: function() {
@@ -239,20 +246,16 @@ FBDropzone.prototype = (new Rico.Dropzone()).extend( {
 function getEmptySpaceBox() {
 	var node = document.createElement('div');
 	node.id = 'insertMarker';
-	node.style.width = '300px';
-	node.style.height = '50px';
 	return node;
 }
 
 function currentMousePosition(e) {
-	var tempBox;
 	if(!e) e = window.event;
 	for(var i = 0, child; i < childBoxes.length; i++){
 		with(childBoxes[i]){
 			if (e.pageX >= left && e.pageX <= right && e.pageY >= top && e.pageY <= bottom) {
 				CURRENT_ELEMENT_UNDER = i;
 			}
-			tempBox = childBoxes[i];
 		}
 	}
 }
@@ -270,11 +273,6 @@ function getPageComponents() {
 		}
 	}
 	return result;
-}
-
-function printStatus(value) {
-	window.status = value;
-	return true;
 }
 
 function displayMessage(url) {
@@ -300,15 +298,6 @@ function showStatus(text) {
 function closeStatus() {
 	$('statusContainer').style.visibility = 'hidden';
 }
-
-var currentButton = null;
-var currentElement = null;
-var pressedComponentDelete = false;
-var pressedButtonDelete = false;
-var pressedPageDelete = false;
-var draggingButton = false;
-var draggingComponent = false;
-var draggingPage = false;
 
 function savePropertyOnEnter(parameter,attribute,e) {
 	if (!e) e = window.event;
@@ -343,33 +332,63 @@ function savePropertyOnEnter(parameter,attribute,e) {
 		 	case 'formThxText':
 		 		saveThankYouText(parameter);
 		 		break;
-		 	case 'pageTitle':
-		  		savePageTitle(parameter);
-		  		break;
 		  	default:
 		}
 	}
 }
+function createButtonAreaNode() {
+	var node = document.createElement('div');
+	node.id = 'pageButtonArea';
+	node.setAttribute('class', 'formElement');
+	
+	return node;
+}
+function createButtonNode(parameter) {
+	var node = document.createElement('div');
+	node.id = parameter.id;
+	node.style.display = 'inline';
+	node.setAttribute('class', 'formButton');
+	node.setAttribute('onclick', "loadButtonInfo(this.id);");
+	
+	var button = document.createElement('input');
+	button.setAttribute('type', 'button');
+	button.setAttribute('enabled', 'false');
+	button.id = parameter.type;
+	button.setAttribute('value', parameter.label);
+	button.style.display = 'inline';
+	node.appendChild(button);
+	
+	var db = document.createElement('img');
+	db.setAttribute('class', 'fbSpeedBButton');
+	db.setAttribute('src', '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png');
+	db.setAttribute('onclick', 'removeButton(this.parentNode.id);');
+	node.appendChild(db);
+	
+	return node;
+}
+function createNewComponent(htmlNode) {
+	var node = document.createElement('div');
+	var nodeId = htmlNode.getAttribute('id');
+	node.setAttribute('id', nodeId);
+	//htmlNode.setAttribute('id', nodeId + '_i');
+	htmlNode.removeAttribute('id');
+	node.setAttribute('class', 'formElement');
+	node.setAttribute('onclick', 'loadComponentInfo(this);');
+	
+	node.appendChild(htmlNode);
+	
+	var delImg = document.createElement('img');
+	delImg.id = 'db' + nodeId;
+	delImg.setAttribute('src', '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png');
+	delImg.setAttribute('onclick', 'removeComponent(this);');
+	delImg.setAttribute('class', 'speedButton');
+	node.appendChild(delImg);
+	
+	return node;
+}
 function placeNewButton(parameter) {
 	if(parameter != null) {
-		var node = document.createElement('div');
-		node.id = parameter.id;
-		node.style.display = 'inline';
-		node.setAttribute('class', 'formButton');
-		node.setAttribute('onclick', "loadButtonInfo(this.id);");
-		var button = document.createElement('input');
-		button.setAttribute('type', 'button');
-		button.setAttribute('enabled', 'false');
-		button.id = parameter.type;
-		button.setAttribute('value', parameter.label);
-		button.style.display = 'inline';
-		node.appendChild(button);
-		var db = document.createElement('img');
-		db.setAttribute('class', 'fbSpeedBButton');
-		db.setAttribute('src', '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png');
-		db.setAttribute('onclick', 'removeButton(this.parentNode.id);');
-		node.appendChild(db);
-		currentButton = node;
+		currentButton = createButtonNode(parameter);
 	}
 }
 function removeButton(parameter) {
@@ -435,8 +454,7 @@ function placeButtonInfo(parameter) {
 }
 function placeNewComponent(parameter) {
 	if(parameter != null) {
-		currentElement = createTreeNode(parameter.documentElement);
-		console.log("Creating new component: " + currentElement);
+		currentElement = createNewComponent(createTreeNode(parameter.documentElement));
 	}
 }
 function createTreeNode(element) {
@@ -485,7 +503,13 @@ function savePageTitleOnBlur(e) {
 	if (!e) return true;
 	var text = e.target.value;
 	if(text != '') {
-		$('pageTitle').value = text;
+		var node = $(CURRENT_PAGE_ID);
+		if(node != null) {
+			var parent = node.childNodes[1];
+			var textNode = parent.childNodes[0];
+			var newTextNode = document.createTextNode(text);
+			parent.replaceChild(newTextNode, textNode);
+		}
 		FormPage.setTitle(text, disableInlineEdit);
 		TEMP_INLINE_VALUE = text;
 	}
@@ -507,7 +531,13 @@ function savePageTitleOnReturn(e) {
 	if(key == '13') {
 		var text = e.target.value;
 		if(text != '') {
-			$('pageTitle').value = text;
+			var node = $(CURRENT_PAGE_ID);
+			if(node != null) {
+				var parent = node.childNodes[1];
+				var textNode = parent.childNodes[0];
+				var newTextNode = document.createTextNode(text);
+				parent.replaceChild(newTextNode, textNode);
+			}
 			FormPage.setTitle(text, disableInlineEdit);
 			TEMP_INLINE_VALUE = text;
 		}
@@ -551,36 +581,25 @@ function getInlineEditSpan(parameter, click) {
 	span.appendChild(textNode);
 	return span;
 }
-//---------------------------------------------
 function loadFormInfo() {
 	FormDocument.getFormDocumentInfo(placeFormInfo);
 }
 function placeFormInfo(parameter) {
 	if(parameter != null) {
-		var formTitleTxt = $('formTitle');
-		if(formTitleTxt != null) {
-			formTitleTxt.value = parameter.title;
-			//formTitleTxt.focus();
-		}
-		var hasPreviewChk = $('previewScreen');
-		if(hasPreviewChk != null) {
-			hasPreviewChk.value = parameter.hasPreview;
-		}
-		var thankYouTitleTxt = $('thankYouTitle');
-		if(thankYouTitleTxt != null) {
-			thankYouTitleTxt.value = parameter.thankYouTitle;
-		}
-		var thankYouTextTxt = $('thankYouText');
-		if(thankYouTextTxt != null) {
-			thankYouTextTxt.value = parameter.thankYouText;
-		}
+		DWRUtil.setValue('formTitle', parameter.title);
+		DWRUtil.setValue('previewScreen', parameter.hasPreview);
+		DWRUtil.setValue('thankYouTitle', parameter.thankYouTitle);
+		DWRUtil.setValue('thankYouText', parameter.thankYouText);
 		STATIC_ACCORDEON.showTabByIndex(2, true);
 	}
 }
 function saveFormTitle(parameter) {
 	if(parameter != null) {
-		FormDocument.setFormTitle(parameter, refreshViewPanel);
+		FormDocument.saveFormTitle(parameter, updateFormTitle);
 	}
+}
+function updateFormTitle(parameter) {
+	DWRUtil.setValue('formHeadingHeader', parameter);
 }
 function saveThankYouTitle(parameter) {
 	if(parameter != null) {
@@ -609,6 +628,7 @@ function saveHasPreview(parameter) {
 		FormDocument.togglePreviewPage(parameter.checked, placePreviewPage);
 	}
 }
+//TODO make a createNewPage method
 function placePreviewPage(parameter) {
 	var container = $('pagesPanelSpecial');
 	if(container != null) {
@@ -647,68 +667,156 @@ function placePreviewPage(parameter) {
 	}
 }
 function markSelectedPage(parameter) {
-		var root = $(PAGES_PANEL_ID);
-		if(root != null) {
-			var nodes = root.getElementsByTagName('div');
-			for(var i=0;i<nodes.length;i++) {
-				var current = nodes[i];
-				current.setAttribute('class',PAGE_ICON_STYLE);
-			}
-		}
-		root = $(SP_PAGES_PANEL_ID);
-		if(root != null) {
-			var nodes = root.getElementsByTagName('div');
-			for(var i=0;i<nodes.length;i++) {
-				var current = nodes[i];
-				current.setAttribute('class',PAGE_ICON_STYLE);
-			}
-		}
-		$(parameter).setAttribute('class',PAGE_ICON_SELECTED);
+	if(CURRENT_PAGE_ID != null) {
+		PREVIOUS_PAGE_ID = CURRENT_PAGE_ID;
+		$(PREVIOUS_PAGE_ID).setAttribute('class','formPageIcon');
+	}
+	CURRENT_PAGE_ID = parameter.pageId + '_P_page';
+	$(CURRENT_PAGE_ID).setAttribute('class','formPageIcon selectedElement');
 }
 function loadPageInfo(parameter) {
 	if(pressedPageDelete == false && draggingPage == false) {
-		showStatus('Loading section...');
-		markSelectedPage(parameter);
+		showLoadingMessage('Loading section...');
 		FormPage.getFormPageInfo(parameter, placePageInfo);
 	}
 	pressedPageDelete = false;
 	draggingPage = false;
 }
 function loadConfirmationPage(parameter) {
-	showStatus('Loading section...');
+	showLoadingMessage('Loading section...');
+	FormPage.getConfirmationPageInfo(placeConfirmationPageInfo);
+}
+function placeConfirmationPageInfo(parameter) {
 	markSelectedPage(parameter);
-	FormPage.getConfirmationPageInfo(placePageInfo);
+	hideAllNotices();
+	DWRUtil.setValue('currentPageTitle', parameter.pageTitle);
+	clearDesignView();
+	showNotice('noFormNotice');
+	if(parameter.buttonAreaId != null) {
+		var dropBox = $('dropBox');
+		if(dropBox != null) {
+			var area = $('pageButtonArea');
+			if(area != null) {
+				dropBox.removeChild(area);
+			}
+			area = createButtonAreaNode();
+			console.log(area.childNodes.length);
+			for(var i=0;i<parameter.buttons.length;i++) {
+				var buttonInfo = parameter.buttons[i];
+				var newNode = createButtonNode(buttonInfo);
+				area.appendChild(newNode);
+			}
+			dropBox.appendChild(area);
+		}
+	}
+	closeLoadingMessage();
 }
 function loadThxPage(parameter) {
-	showStatus('Loading section...');
-	markSelectedPage(parameter);
-	FormPage.loadThxPage(placeThxPageInfo);
+	showLoadingMessage('Loading section...');
+	FormPage.getThxPageInfo(placeThxPageInfo);
 }
 function placeThxPageInfo(parameter) {
+	markSelectedPage(parameter);
 	STATIC_ACCORDEON.showTabByIndex(2, true);
-	$('workspaceform1:refreshViewPanel').click();
+	hideAllNotices();
+	DWRUtil.setValue('currentPageTitle', parameter.pageTitle);
+	clearDesignView();
+	showNotice('noFormNotice');
+	closeLoadingMessage();
+}
+function clearDesignView() {
+	var dropBoxinner = $('dropBoxinner');
+	if(dropBoxinner != null) {
+		var childCount = dropBoxinner.childNodes.length;
+		for(var i=0;i<childCount;i++) {
+			var child = dropBoxinner.childNodes[0]
+			dropBoxinner.removeChild(child);
+		}
+	}
+	var dropBox = $('dropBox');
+	if(dropBox != null) {
+		var area = $('pageButtonArea');
+		if(area != null) {
+			dropBox.removeChild(area);
+		}
+	}
+}
+function showNotice(notice) {
+	var empty = $(notice);
+	if(empty != null) {
+		if(empty.style) {
+			empty.style.display = 'block';
+		} else {
+			empty.display = 'block';
+		}
+	}
+}
+function hideAllNotices() {
+	var empty = $('emptyForm');
+	if(empty != null) {
+		if(empty.style) {
+			empty.style.display = 'none';
+		} else {
+			empty.display = 'none';
+		}
+	}
+	empty = $('noFormNotice');
+	if(empty != null) {
+		if(empty.style) {
+			empty.style.display = 'none';
+		} else {
+			empty.display = 'none';
+		}
+	}
 }
 function placePageInfo(parameter) {
 	if(parameter != null) {
-		var pageTitleTxt = $('pageTitle');
-		if(pageTitleTxt != null) {
-			pageTitleTxt.value = parameter.pageTitle;
-			pageTitleTxt.focus();
+		markSelectedPage(parameter);
+		hideAllNotices();
+		DWRUtil.setValue('currentPageTitle', parameter.pageTitle);
+		var dropBoxinner = $('dropBoxinner');
+		if(dropBoxinner != null) {
+			var childCount = dropBoxinner.childNodes.length;
+			
+				for(var i=0;i<childCount;i++) {
+					var child = dropBoxinner.childNodes[0]
+					dropBoxinner.removeChild(child);
+				}
+				if(parameter.components.length > 0) {
+					for(var i=0;i<parameter.components.length;i++) {
+						var element = parameter.components[i];
+						var transformed = createTreeNode(element.documentElement);
+						var newNode = createNewComponent(transformed);
+						dropBoxinner.appendChild(newNode);
+					}
+				} else {
+					showNotice('emptyForm');
+				}
 		}
-		STATIC_ACCORDEON.showTabByIndex(3, true);
-		$('workspaceform1:refreshViewPanel').click();
+		if(parameter.buttonAreaId != null) {
+			var dropBox = $('dropBox');
+			if(dropBox != null) {
+				var area = $('pageButtonArea');
+				if(area != null) {
+					dropBox.removeChild(area);
+				}
+				area = createButtonAreaNode();
+				console.log(area.childNodes.length);
+				for(var i=0;i<parameter.buttons.length;i++) {
+					var buttonInfo = parameter.buttons[i];
+					var newNode = createButtonNode(buttonInfo);
+					area.appendChild(newNode);
+				}
+				dropBox.appendChild(area);
+			}
+		}
+		closeLoadingMessage();
 	}
-	
 }
 function setupPagesDragAndDrop(value1, value2) {
 	Position.includeScrollOffsets = true;
 	Sortable.create(value1,{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangePages,scroll:value1,constraint:false});
-	Droppables.add(value1,{onDrop:lalala});
-}
-function lalala(element, container) {
-	Position.includeScrollOffsets = true;
-	Sortable.create(value1,{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangePages,scroll:value1,constraint:false});
-	Droppables.add(value1,{onDrop:lalala});
+	Droppables.add(value1);
 }
 function rearrangePages() {
 	draggingPage = true;
@@ -717,21 +825,14 @@ function rearrangePages() {
 	var idPrefix = 'fbcomp_';
 	FormDocument.updatePagesList(componentIDs,idPrefix,delimiter,nothing);
 }
-function savePageTitle(parameter) {
-	if(parameter != null) {
-		FormPage.setTitle(parameter, placePageTitle);
-	}
-}
 function placePageTitle(parameter) {
-	var container = $('pagesPanel');
-	if(container != null) {
+	if(parameter != null) {
 		var node = $(parameter.pageId + '_P_page');
 		if(node != null) {
 			var parent = node.childNodes[1];
 			var textNode = parent.childNodes[0];
 			var newTextNode = document.createTextNode(parameter.pageTitle);
 			parent.replaceChild(newTextNode, textNode);
-			$('workspaceform1:refreshViewPanel').click();
 		}
 	}
 }
@@ -745,24 +846,6 @@ function rearrangeButtons() {
 	var delimiter = '&id[]=';
 	var idPrefix = 'fbcomp_';
 	FormPage.updateButtonList(componentIDs,idPrefix,delimiter,nothing);
-}
-function handleButtonDrop(element, container) {
-	var cont = $('pageButtonArea');
-	if(cont == null) {
-		var buttonArea = document.createElement('div');
-		buttonArea.id = 'pageButtonArea';
-		buttonArea.style.position = 'relative';
-		buttonArea.setAttribute('class','formElement');
-		var dropBox = $('dropBox');
-		if(dropBox != null) {
-			dropBox.appendChild(buttonArea);
-			buttonArea.appendChild(currentButton);
-		}
-	} else {
-		cont.appendChild(currentButton);
-	}
-	Position.includeScrollOffsets = true;
-	Sortable.create('pageButtonArea',{dropOnEmpty:true,tag:'div',only:'formButton',onUpdate:rearrangeButtons,scroll:'pageButtonArea',constraint:false});
 }
 function setupComponentDragAndDrop(value1,value2) {
 	Position.includeScrollOffsets = true;
@@ -781,14 +864,7 @@ function markSelectedComponent(parameter) {
 	}
 }
 function insertNewComponent(parameter) {
-	var empty = $('emptyForm');
-		if(empty != null) {
-			if(empty.style) {
-				empty.style.display = 'none';
-			} else {
-				empty.display = 'none';
-			}
-		}
+	hideAllNotices();
 	console.log("Inserting: " + currentElement);
 	if(parameter == 'append') {
 		$('dropBoxinner').appendChild(currentElement);
@@ -807,12 +883,16 @@ function rearrangeComponents() {
 	var idPrefix = 'fbcomp_';
 	FormPage.updateComponentList(componentIDs,idPrefix,delimiter,nothing);
 }
-function loadComponentInfo(parameter) {
-	if(pressedComponentDelete == false && draggingComponent == false) {
-		FormComponent.getFormComponentInfo(parameter, placeComponentInfo);
+function loadComponentInfo(component) {
+	if(component != null) {
+		if(component.id) {
+			if(pressedComponentDelete == false && draggingComponent == false) {
+				FormComponent.getFormComponentInfo(component.id, placeComponentInfo);
+			}
+			pressedComponentDelete = false;
+			draggingComponent = false;
+		}
 	}
-	pressedComponentDelete = false;
-	draggingComponent = false;
 }
 function placeComponentInfo(parameter) {
 	if(parameter != null) {
@@ -1003,58 +1083,49 @@ function toggleAutofill(parameter) {
 	}
 	FormComponent.setAutofill(parameter,nothing);
 }
-function reRenderChangedComponent() {
-	FormComponent.getComponentGUINode(replaceChangedComponent);
-}
 function replaceChangedComponent(parameter) {
 	var newNode = createTreeNode(parameter.documentElement);
 	if(newNode != null) {
 		var nodeId = newNode.id;
 		var oldNode = $(nodeId);
 		if(oldNode != null) {
-			var parentNode = oldNode.parentNode;
-			parentNode.replaceChild(newNode, oldNode);
+			oldNode.replaceChild(newNode.childNodes[0], oldNode.childNodes[0]);
 		}
 	}
 }
 function saveComponentLabel(parameter) {
 	if(parameter != null) {
-		FormComponent.setLabel(parameter, reRenderChangedComponent);
+		FormComponent.saveComponentLabel(parameter, replaceChangedComponent);
 	}
 }
 function saveRequired(parameter) {
 	if(parameter != null) {
-		FormComponent.setRequired(parameter, reRenderChangedComponent);
+		FormComponent.saveComponentRequired(parameter, replaceChangedComponent);
 	}
 }
 function saveErrorMessage(parameter) {
 	if(parameter != null) {
-		FormComponent.setErrorMessage(parameter, reRenderChangedComponent);
-	}
-}
-function saveEmptyLabel(parameter) {
-	if(parameter != null) {
-		FormComponent.setEmptyLabel(parameter, reRenderChangedComponent);
+		FormComponent.setComponentErrorMessage(parameter, replaceChangedComponent);
 	}
 }
 function saveExternalSrc(parameter) {
 	if(parameter != null) {
-		FormComponent.setExternalSrc(parameter, reRenderChangedComponent);
+		FormComponent.setComponentExternalSrc(parameter, replaceChangedComponent);
 	}
 }
 function saveAutofill(parameter) {
 	if(parameter != null) {
-		FormComponent.setAutofillKey(parameter, reRenderChangedComponent);
+		FormComponent.setComponentAutofillKey(parameter, replaceChangedComponent);
 	}
 }
 function savePlaintext(parameter) {
 	if(parameter != null) {
-		FormComponent.setPlainText(parameter, reRenderChangedComponent);
+		FormComponent.setComponentPlainText(parameter, replaceChangedComponent);
 	}
 }
 function saveHelpMessage(parameter) {
 	if(parameter != null) {
-		FormComponent.setHelpMessage(parameter, reRenderChangedComponent);
+		FormComponent.setComponentHelpMessage(parameter, replaceChangedComponent);
 	}
 }
 function switchDataSource() {
@@ -1096,6 +1167,7 @@ function expandOrCollapse(node,expand) {
 		node.setAttribute('onclick','expandOrCollapse(this,true);');
 	}
 }
+//TODO change these methods according to the new DWR support
 function saveLabel(parameter) {
 	var index = parameter.id.split('_')[1];
 	var value = parameter.value;
@@ -1191,18 +1263,15 @@ function saveFormDocument() {
 	if(saveButton != null) {
 		saveButton.setAttribute('disabled','true');
 	}
-	showStatus('Saving form document...');
+	showLoadingMessage('Saving document...');
 	FormDocument.save(savedFormDocument);
 }
 function savedFormDocument(parameter) {
-	closeStatus();
+	closeLoadingMessage();
 	var saveButton = $('saveFormButton');
 	if(saveButton != null) {
 		saveButton.setAttribute('disabled','false');
 	}
-}
-function showNotification(parameter) {
-	setStatus('done positioning element.',1500);
 }
 function saveSourceCode(source_code) {
 	if(source_code != null) {
@@ -1218,6 +1287,11 @@ function createNewPage() {
 	FormPage.createNewPage(placeNewPage);
 }
 function placeNewPage(parameter) {
+	markSelectedPage(parameter);
+	hideAllNotices();
+	DWRUtil.setValue('currentPageTitle', parameter.pageTitle);
+	clearDesignView();
+	showNotice('noFormNotice');
 	var container = $('pagesPanel');
 	if(container != null) {
 		var page = document.createElement('div');
@@ -1252,14 +1326,6 @@ function placeNewPage(parameter) {
 		
 		container.appendChild(page);
 		
-		if(parameter != null) {
-			var pageTitleTxt = $('pageTitle');
-			if(pageTitleTxt != null) {
-				pageTitleTxt.value = parameter.pageTitle;
-			}
-			STATIC_ACCORDEON.showTabByIndex(3, true);
-		}
-		$('workspaceform1:refreshViewPanel').click();
 	}
 }
 function deletePage(parameter) {
@@ -1294,7 +1360,7 @@ function removePageNode(parameter) {
 			}
 		}
 	}
-	$('workspaceform1:refreshViewPanel').click();
+	//TODO load previous page
 	closeStatus();
 }
 //Handles the closing of the loading indicator
@@ -1308,67 +1374,71 @@ function closeLoadingMessage() {
      	}
  	}
 }
-//--------------------------------------------
-
-//Handles the creation of a new form
+//TODO redo the new form handling to get rid of a4j completely
 function createNewForm() {
-	var name = document.forms['newFormDialogForm'].elements['formName'].value;
-	if(name != '') {
+	var title = document.forms['newFormDialogForm'].elements['formName'].value;
+	if(title != '') {
 		closeMessage();
-		showLoadingMessage("Creating");
-		FormDocument.createFormDocument(name,refreshViewPanelW);
+		showLoadingMessage("Creating form...");
+		FormDocument.createFormDocument(title,createdNewForm);
 	}
 }
-function refreshViewPanel(parameter) {
-	$('workspaceform1:refreshViewPanel').click();
+function createdNewForm(parameter) {
+	if(parameter != null) {
+		placeFormInfo(parameter);
+		DWRUtil.setValue('formHeadingHeader', parameter.title);
+		FormPage.getThxPageInfo(placeThxPage);
+	}
 }
-function refreshViewPanelW(parameter) {
-	$('workspaceform1:refreshViewPanel').click();
-	placeFormInfo(parameter);
-	FormPage.getFirstPageInfo(refreshPagesPanel);
-	
-}
-function refreshPagesPanel(parameter) {
-	var container = $('pagesPanel');
-	if(container != null) {
-		var childCount = container.childNodes.length;
-		for(var i=0;i<childCount;i++) {
-			container.removeChild(container.childNodes[0]);
+function refreshWorkspace(parameter) {
+	if(parameter != null) {
+		placePageInfo(parameter);
+		var container = $('pagesPanel');
+		if(container != null) {
+			var childCount = container.childNodes.length;
+			for(var i=0;i<childCount;i++) {
+				container.removeChild(container.childNodes[0]);
+			}
+			var firstPage = createNewPageNode(parameter,false);
+			container.appendChild(firstPage);
 		}
-		
-		var page = document.createElement('div');
-		page.setAttribute('id', parameter.pageId + '_P_page');
-		page.setAttribute('class', 'formPageIcon');
-		page.setAttribute('styleClass', 'formPageIcon');
-		page.setAttribute('onclick', 'loadPageInfo(this.id);');
-		page.setAttribute('style', 'position: relative');
-		
-		var icon = document.createElement('img');
-		icon.setAttribute('id', parameter.pageId + '_pi');
-		icon.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/document-new.png';
-		
-		icon.style.display = 'block';
-		
-		var label = document.createElement('span');
-		label.style.display = 'block';
-		
-		var text = document.createTextNode(parameter.pageTitle);
-		
-		label.appendChild(text);
-		
-		var db = document.createElement('img');
-		db.id = parameter.pageId + '_db';
-		db.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png';
-		db.setAttribute('onclick', 'deletePage(this.id)');
-		db.setAttribute('class', 'speedButton');
-		
-		page.appendChild(icon);
-		page.appendChild(label);
-		page.appendChild(db);
-		
-		container.appendChild(page);
+		closeLoadingMessage();
 	}
-	FormPage.getThxPageInfo(placeThxPage);
+}
+function createNewPageNode(parameter,special) {
+	var page = document.createElement('div');
+	page.setAttribute('id', parameter.pageId + '_P_page');
+	page.setAttribute('class', 'formPageIcon');
+	page.setAttribute('styleClass', 'formPageIcon');
+	page.setAttribute('onclick', 'loadPageInfo(this.id);');
+	page.setAttribute('style', 'position: relative');
+		
+	var icon = document.createElement('img');
+	icon.setAttribute('id', parameter.pageId + '_pi');
+	icon.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/document-new.png';
+	//icon.style.display = 'block';
+		
+	var label = document.createElement('span');
+	//label.style.display = 'block';
+		
+	var text = document.createTextNode(parameter.pageTitle);
+	label.appendChild(text);
+	
+	page.appendChild(icon);
+	page.appendChild(label);
+	
+	if(special == false) {
+		return page;
+	}
+	var db = document.createElement('img');
+	db.id = parameter.pageId + '_db';
+	db.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png';
+	db.setAttribute('onclick', 'deletePage(this.id)');
+	db.setAttribute('class', 'speedButton');	
+		
+	page.appendChild(db);
+	
+	return page;
 }
 function placeThxPage(parameter) {
 	var container = $('pagesPanelSpecial');
@@ -1377,35 +1447,11 @@ function placeThxPage(parameter) {
 		for(var i=0;i<childCount;i++) {
 			container.removeChild(container.childNodes[0]);
 		}
-		
-			var page = document.createElement('div');
-			page.setAttribute('id', parameter.pageId + '_P_page');
-			page.setAttribute('class', 'formPageIcon');
-			page.setAttribute('styleClass', 'formPageIcon');
-			page.setAttribute('style', 'position: relative');
-			page.setAttribute('onclick', 'loadThxPage(this.id);');
-			
-			var icon = document.createElement('img');
-			icon.setAttribute('id', parameter.pageId + '_pi');
-			icon.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/document-new.png';
-			icon.style.display = 'block';
-			
-			var label = document.createElement('span');
-			label.style.display = 'block';
-			
-			var text = document.createTextNode(parameter.pageTitle);
-			
-			label.appendChild(text);
-			
-			page.appendChild(icon);
-			page.appendChild(label);
-		
-			container.appendChild(page);
+		var page = createNewPageNode(parameter,true);
+		container.appendChild(page);
+		FormPage.getFirstPageInfo(refreshWorkspace);
 	}
-	closeLoadingMessage();
 }
-//--------------------------------
-//Handles the deletion of a form component created with JSF
 function removeComponent(parameter) {
 	var node = parameter.parentNode;
 	if(node != null) {
@@ -1419,6 +1465,9 @@ function removeComponentNode(parameter) {
 		var parentNode = node.parentNode;
 		if(parentNode != null) {
 			parentNode.removeChild(node);
+			if(parentNode.getElementsByTagName('div').length == 0) {
+				showNotice('emptyForm');
+			}
 		}
 	}
 }
@@ -1430,9 +1479,10 @@ function createNewFormOnEnter(e) {
 		createNewForm();
 	}
 }
-//----------------------------------------
+function initializeWorkspace() {
+	
+}
+initializeWorkspace();
 /*Setup modal message windows functionality*/
 messageObj = new DHTML_modalMessage();
 messageObj.setShadowOffset(5);
-$('statusContainer').style.visibility = 'hidden';
-Rico.Corner.round('statusContainer');

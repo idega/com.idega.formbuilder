@@ -97,6 +97,7 @@ public class FBDesignView extends FBComponentBase {
 		
 		WFDivision emptyForm = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		emptyForm.setId("emptyForm");
+		emptyForm.setStyle("display: none;");
 		
 		HtmlOutputText emptyFormHeader = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		emptyFormHeader.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['labels_empty_form_header']}"));
@@ -129,7 +130,6 @@ public class FBDesignView extends FBComponentBase {
 			Component selectedComponent = ((FormComponent) WFUtil.getBeanInstance("formComponent")).getComponent();
 			if(selectedComponent != null) {
 				selectedComponentId = selectedComponent.getId();
-				//System.out.println(selectedComponentId);
 			}
 			ButtonArea barea = page.getButtonArea();
 			if(barea != null) {
@@ -155,7 +155,9 @@ public class FBDesignView extends FBComponentBase {
 						} else {
 							formComponent.setStyleClass(getComponentStyleClass());
 						}
-						formComponent.setOnLoad("loadComponentInfo(this.id);");
+						formComponent.setOnLoad("loadComponentInfo(this);");
+						formComponent.setOnDelete("removeComponent(this);");
+						formComponent.setSpeedButtonStyleClass("speedButton");
 					    add(formComponent);
 					}
 				}
@@ -179,18 +181,21 @@ public class FBDesignView extends FBComponentBase {
 			if (formHeader != null) {
 				renderChild(context, formHeader);
 			}
-			if(formPage.isSpecial()) {
-				UIComponent noFormNotice = getFacet(DESIGN_VIEW_SPECIAL_FACET);
-				if(noFormNotice != null) {
-					renderChild(context, noFormNotice);
+			WFDivision noFormNotice = (WFDivision) getFacet(DESIGN_VIEW_SPECIAL_FACET);
+			WFDivision emptyNotice = (WFDivision) getFacet(DESIGN_VIEW_EMPTY_FACET);
+			if(noFormNotice != null && emptyNotice != null) {
+				if(formPage.isSpecial()) {
+					noFormNotice.setStyle("display: block;");
+					emptyNotice.setStyle("display: none;");
+				} else if(page.getContainedComponentsIdList().size() == 0) {
+					emptyNotice.setStyle("display: block;");
+					noFormNotice.setStyle("display: none;");
+				} else {
+					noFormNotice.setStyle("display: none;");
+					emptyNotice.setStyle("display: none;");
 				}
-			} else  {
-				if(page.getContainedComponentsIdList().size() == 0) {
-					UIComponent emptyNotice = getFacet(DESIGN_VIEW_EMPTY_FACET);
-					if (emptyNotice != null) {
-						renderChild(context, emptyNotice);
-					}
-				}
+				renderChild(context, noFormNotice);
+				renderChild(context, emptyNotice);
 			}
 		}
 		writer.startElement("DIV", null);

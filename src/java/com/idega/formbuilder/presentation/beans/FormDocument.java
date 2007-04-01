@@ -80,53 +80,6 @@ public class FormDocument implements Serializable {
 		return result;
 	}
 	
-//	public void logFormDocument() {
-//		Locale locale = new Locale("en");
-//		System.out.println("Document ID: " + formId);
-//		System.out.println("Document title: " + formTitle);
-//		
-//		List<String> pages = document.getContainedPagesIdList();
-//		Iterator it = pages.iterator();
-//		while(it.hasNext()) {
-//			String pageId = (String) it.next();
-//			Page page = document.getPage(pageId);
-//			if(page != null) {
-//				System.out.println("Page ID: " + page.getId());
-//				System.out.println("Page Type: " + page.getType());
-//				System.out.println("Page title: " + page.getProperties().getLabel().getString(locale));
-//				
-//				List<String> components = page.getContainedComponentsIdList();
-//				Iterator itr = components.iterator();
-//				while(itr.hasNext()) {
-//					String componentId = (String) itr.next();
-//					Component component = page.getComponent(componentId);
-//					if(component != null) {
-//						System.out.println("Component ID: " + component.getId());
-//						System.out.println("Component Type: " + component.getType());
-//					}
-//				}
-//				
-//				ButtonArea area = page.getButtonArea();
-//				if(area != null) {
-//					System.out.println("ButtonArea ID: " + area.getId());
-//					System.out.println("ButtonArea Type: " + area.getType());
-//					
-//					List<String> ids = area.getContainedComponentsIdList();
-//					Iterator its = ids.iterator();
-//					while(its.hasNext()) {
-//						String buttonId = (String) its.next();
-//						Button button = (Button) area.getComponent(buttonId);
-//						
-//						if(button != null) {
-//							System.out.println("Button ID: " + button.getId());
-//							System.out.println("Button Type: " + button.getType());
-//						}
-//					}
-//				}
-//			}
-//		}
-//	}
-	
 	private String getCurrentFormId(FacesContext context) {
 		String result = "";
 		Map map = context.getExternalContext().getRequestParameterMap();
@@ -142,7 +95,7 @@ public class FormDocument implements Serializable {
 		return result;
 	}
 	
-	public FormDocumentInfo createFormDocument(String parameter) {
+	public FormDocumentInfo createFormDocument(String parameter) throws Exception {
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 		if(workspace != null) {
 			Locale locale = workspace.getLocale();
@@ -167,8 +120,6 @@ public class FormDocument implements Serializable {
 			workspace.setRenderedMenu(true);
 			
 			clearFormDocumentInfo();
-			//setFormId(id);
-			//setDocument(document);
 			
 			loadFormInfo(document);
 			
@@ -214,8 +165,6 @@ public class FormDocument implements Serializable {
 			workspace.setRenderedMenu(true);
 			
 			clearFormDocumentInfo();
-			//setFormId(id);
-			//setDocument(document);
 			
 			loadFormInfo(document);
 			
@@ -471,38 +420,6 @@ public class FormDocument implements Serializable {
 		return result;
 	}
 	
-	/*public void changeForm(ActionEvent ae) {
-		DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
-		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
-		if(formId != null && !formId.equals("") && !formId.equals("INACTIVE")) {
-			try {
-				document = formManagerInstance.openForm(formId);
-				String firstPage = document.getContainedPagesIdList().get(0);
-				Page firstP = document.getPage(firstPage);
-				if(firstP.getContainedComponentsIdList().size() > 0) {
-					workspace.setDesignViewStatus("active");
-				} else {
-					workspace.setDesignViewStatus("empty");
-				}
-				FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
-				if(formPage != null) {
-					formPage.clearPageInfo();
-					formPage.setPage(firstP);
-				}
-				workspace.setView("design");
-				workspace.setRenderedMenu(true);
-				workspace.setSelectedMenu("0");
-				loadFormInfo(document);
-				FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
-				if(formComponent != null) {
-					formComponent.clearFormComponentInfo();
-				}
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}*/
-	
 	public void saveSrc(String source_code) {
 		
 		if(source_code == null)
@@ -591,6 +508,11 @@ public class FormDocument implements Serializable {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public String saveFormTitle(String formTitle) {
+		setFormTitle(formTitle);
+		return formTitle;
 	}
 
 	public LocalizedStringBean getFormTitleBean() {

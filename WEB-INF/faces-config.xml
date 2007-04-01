@@ -143,10 +143,6 @@
 		<component-class>com.idega.formbuilder.presentation.components.FBSourceView</component-class>
 	</component>
 	<component>
-		<component-type>ActionsProxy</component-type>
-		<component-class>com.idega.formbuilder.presentation.components.FBActionsProxy</component-class>
-	</component>
-	<component>
 		<component-type>MenuPanel</component-type>
 		<component-class>com.idega.formbuilder.presentation.components.FBMenuPanel</component-class>
 	</component>

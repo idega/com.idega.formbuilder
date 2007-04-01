@@ -25,8 +25,20 @@ public class FBFormComponent extends FBComponentBase {
 	
 	private static final String DELETE_BUTTON_FACET = "DELETE_BUTTON_FACET";
 	
+	private static final String DELETE_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png";
+	
 	private Element element;
 	private String onLoad;
+	private String onDelete;
+	private String speedButtonStyleClass;
+
+	public String getOnDelete() {
+		return onDelete;
+	}
+
+	public void setOnDelete(String onDelete) {
+		this.onDelete = onDelete;
+	}
 
 	public String getOnLoad() {
 		return onLoad;
@@ -45,21 +57,21 @@ public class FBFormComponent extends FBComponentBase {
 		Application application = context.getApplication();
 		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
 		if(page != null) {
-			String id = getId();
-			Component component = page.getComponent(id);
+			Component component = page.getComponent(getId());
 			if(component != null) {
 				try {
 					Locale current = ((Workspace) WFUtil.getBeanInstance("workspace")).getLocale();
-					Element element = component.getHtmlRepresentation(current);
+					Element element = (Element) component.getHtmlRepresentation(current).cloneNode(true);
 					if(element != null) {
-						element.setAttribute("id", id + "_i");
+						element.removeAttribute("id");
+//						element.setAttribute("id", getId() + "_i");
 						setElement(element);
 						
 						HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
-						deleteButton.setId("db" + id);
-						deleteButton.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png");
-						deleteButton.setOnclick("removeComponent(this);");
-						deleteButton.setStyleClass("speedButton");
+						deleteButton.setId("db" + getId());
+						deleteButton.setValue(DELETE_BUTTON_ICON);
+						deleteButton.setOnclick(onDelete);
+						deleteButton.setStyleClass(speedButtonStyleClass);
 						
 						addFacet(DELETE_BUTTON_FACET, deleteButton);
 					}
@@ -97,10 +109,12 @@ public class FBFormComponent extends FBComponentBase {
 	}
 	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[3];
+		Object values[] = new Object[5];
 		values[0] = super.saveState(context);
 		values[1] = element;
 		values[2] = onLoad;
+		values[3] = onDelete;
+		values[4] = speedButtonStyleClass;
 		return values;
 	}
 	
@@ -109,6 +123,8 @@ public class FBFormComponent extends FBComponentBase {
 		super.restoreState(context, values[0]);
 		element = (Element) values[1];
 		onLoad = (String) values[2];
+		onDelete = (String) values[3];
+		speedButtonStyleClass = (String) values[4];
 	}
 
 	public Element getElement() {
@@ -117,6 +133,14 @@ public class FBFormComponent extends FBComponentBase {
 
 	public void setElement(Element element) {
 		this.element = element;
+	}
+
+	public String getSpeedButtonStyleClass() {
+		return speedButtonStyleClass;
+	}
+
+	public void setSpeedButtonStyleClass(String speedButtonStyleClass) {
+		this.speedButtonStyleClass = speedButtonStyleClass;
 	}
 
 }
