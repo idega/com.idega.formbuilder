@@ -348,7 +348,7 @@ function createButtonNode(parameter) {
 	node.id = parameter.id;
 	node.style.display = 'inline';
 	node.setAttribute('class', 'formButton');
-	node.setAttribute('onclick', "loadButtonInfo(this.id);");
+	node.setAttribute('onclick', "loadButtonInfo(this);");
 	
 	var button = document.createElement('input');
 	button.setAttribute('type', 'button');
@@ -361,7 +361,7 @@ function createButtonNode(parameter) {
 	var db = document.createElement('img');
 	db.setAttribute('class', 'fbSpeedBButton');
 	db.setAttribute('src', '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png');
-	db.setAttribute('onclick', 'removeButton(this.parentNode.id);');
+	db.setAttribute('onclick', 'removeButton(this);');
 	node.appendChild(db);
 	
 	return node;
@@ -393,8 +393,10 @@ function placeNewButton(parameter) {
 }
 function removeButton(parameter) {
 	if(parameter != null) {
-		pressedButtonDelete = true;
-		FormComponent.removeButton(parameter, removeButtonNode);
+		if(parameter.parentNode) {
+			pressedButtonDelete = true;
+			FormComponent.removeButton(parameter.parentNode.id, removeButtonNode);
+		}
 	}
 }
 function removeButtonNode(parameter) {
@@ -408,19 +410,27 @@ function removeButtonNode(parameter) {
 		}
 	}
 }
-function loadButtonInfo(parameter) {
-	if(pressedButtonDelete == false && draggingButton == false) {
-		FormComponent.getFormButtonInfo(parameter, placeButtonInfo);
+function loadButtonInfo(button) {
+	if(button != null) {
+		console.log('loading button info: ' + button.id);
+		if(button.id) {
+			if(pressedButtonDelete == false && draggingButton == false) {
+				FormComponent.getFormButtonInfo(button.id, placeButtonInfo);
+			}
+		}
 	}
 	pressedButtonDelete = false;
 	draggingButton = false;
 }
 function placeButtonInfo(parameter) {
 	if(parameter != null) {
-		var labelTxt = $('propertyTitle');
-		if(labelTxt != null) {
-			labelTxt.value = parameter.label;
+		if(CURRENT_ELEMENT_ID != null) {
+			PREVIOUS_ELEMENT_ID = CURRENT_ELEMENT_ID;
+			$(PREVIOUS_ELEMENT_ID).setAttribute('class','formButton');
 		}
+		CURRENT_ELEMENT_ID = parameter.id;
+		$(CURRENT_ELEMENT_ID).setAttribute('class','formButton selectedElement');
+		DWRUtil.setValue('propertyTitle',parameter.label);
 		var plainPr = $('plainPropertiesPanel');
 		if(plainPr != null) {
 			plainPr.setAttribute('style', 'display: none');
@@ -625,37 +635,16 @@ function saveThankYouText(parameter) {
 }
 function saveHasPreview(parameter) {
 	if(parameter != null) {
-		FormDocument.togglePreviewPage(parameter.checked, placePreviewPage);
+		if(parameter.checked) {
+			FormDocument.togglePreviewPage(parameter.checked, placePreviewPage);
+		}
 	}
 }
-//TODO make a createNewPage method
 function placePreviewPage(parameter) {
 	var container = $('pagesPanelSpecial');
 	if(container != null) {
 		if(parameter.pageTitle != null) {
-		
-			var page = document.createElement('div');
-			page.setAttribute('id', parameter.pageId + '_P_page');
-			page.setAttribute('class', 'formPageIcon');
-			page.setAttribute('styleClass', 'formPageIconSpecial');
-			page.setAttribute('style', 'position: relative');
-			page.setAttribute('onclick', 'loadConfirmationPage(this.id);');
-			
-			var icon = document.createElement('img');
-			icon.setAttribute('id', parameter.pageId + '_pi');
-			icon.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/document-new.png';
-			icon.style.display = 'block';
-			
-			var label = document.createElement('span');
-			label.style.display = 'block';
-			
-			var text = document.createTextNode(parameter.pageTitle);
-			
-			label.appendChild(text);
-			
-			page.appendChild(icon);
-			page.appendChild(label);
-			
+			var page = createNewPageNode(parameter,true);
 			var child = container.childNodes[0];
 			container.insertBefore(page, child);
 		} else {
@@ -671,7 +660,7 @@ function markSelectedPage(parameter) {
 		PREVIOUS_PAGE_ID = CURRENT_PAGE_ID;
 		$(PREVIOUS_PAGE_ID).setAttribute('class','formPageIcon');
 	}
-	CURRENT_PAGE_ID = parameter.pageId + '_P_page';
+	CURRENT_PAGE_ID = parameter + '_P_page';
 	$(CURRENT_PAGE_ID).setAttribute('class','formPageIcon selectedElement');
 }
 function loadPageInfo(parameter) {
@@ -687,7 +676,7 @@ function loadConfirmationPage(parameter) {
 	FormPage.getConfirmationPageInfo(placeConfirmationPageInfo);
 }
 function placeConfirmationPageInfo(parameter) {
-	markSelectedPage(parameter);
+	markSelectedPage(parameter.pageId);
 	hideAllNotices();
 	DWRUtil.setValue('currentPageTitle', parameter.pageTitle);
 	clearDesignView();
@@ -716,7 +705,7 @@ function loadThxPage(parameter) {
 	FormPage.getThxPageInfo(placeThxPageInfo);
 }
 function placeThxPageInfo(parameter) {
-	markSelectedPage(parameter);
+	markSelectedPage(parameter.pageId);
 	STATIC_ACCORDEON.showTabByIndex(2, true);
 	hideAllNotices();
 	DWRUtil.setValue('currentPageTitle', parameter.pageTitle);
@@ -771,7 +760,7 @@ function hideAllNotices() {
 }
 function placePageInfo(parameter) {
 	if(parameter != null) {
-		markSelectedPage(parameter);
+		markSelectedPage(parameter.pageId);
 		hideAllNotices();
 		DWRUtil.setValue('currentPageTitle', parameter.pageTitle);
 		var dropBoxinner = $('dropBoxinner');
@@ -811,12 +800,15 @@ function placePageInfo(parameter) {
 			}
 		}
 		closeLoadingMessage();
+		Sortable.create('dropBoxinner',{dropOnEmpty:true,tag:'div',only:'formElement',onUpdate:rearrangeComponents,scroll:'dropBoxinner',constraint:false});
+		Sortable.create('pageButtonArea',{dropOnEmpty:true,tag:'div',only:'formButton',onUpdate:rearrangeButtons,scroll:'pageButtonArea',constraint:false});
 	}
 }
 function setupPagesDragAndDrop(value1, value2) {
 	Position.includeScrollOffsets = true;
 	Sortable.create(value1,{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangePages,scroll:value1,constraint:false});
 	Droppables.add(value1);
+	FormPage.getId(markSelectedPage);
 }
 function rearrangePages() {
 	draggingPage = true;
@@ -885,6 +877,7 @@ function rearrangeComponents() {
 }
 function loadComponentInfo(component) {
 	if(component != null) {
+		console.log('loading component info: ' + component.id);
 		if(component.id) {
 			if(pressedComponentDelete == false && draggingComponent == false) {
 				FormComponent.getFormComponentInfo(component.id, placeComponentInfo);
@@ -1084,18 +1077,36 @@ function toggleAutofill(parameter) {
 	FormComponent.setAutofill(parameter,nothing);
 }
 function replaceChangedComponent(parameter) {
-	var newNode = createTreeNode(parameter.documentElement);
+	var newNodeHtml = createTreeNode(parameter.documentElement);
+	var newNode = createNewComponent(newNodeHtml);
 	if(newNode != null) {
 		var nodeId = newNode.id;
 		var oldNode = $(nodeId);
 		if(oldNode != null) {
+			console.log("Performing actual update: " + nodeId);
 			oldNode.replaceChild(newNode.childNodes[0], oldNode.childNodes[0]);
+		}
+	}
+}
+function replaceChangedButton(parameter) {
+	if(parameter != null) {
+		var button = $(parameter.id).childNodes[0];
+		if(button != null) {
+			button.value = parameter.label;
 		}
 	}
 }
 function saveComponentLabel(parameter) {
 	if(parameter != null) {
-		FormComponent.saveComponentLabel(parameter, replaceChangedComponent);
+		var node = $(CURRENT_ELEMENT_ID);
+		var buttonArea = node.parentNode.id;
+		if(node.parentNode.id == 'pageButtonArea') {
+			console.log('Saving button label: ' + parameter);
+			FormComponent.saveButtonLabel(parameter, replaceChangedButton);
+		} else {
+			console.log('Saving component label: ' + parameter);
+			FormComponent.saveComponentLabel(parameter, replaceChangedComponent);
+		}
 	}
 }
 function saveRequired(parameter) {
@@ -1105,27 +1116,27 @@ function saveRequired(parameter) {
 }
 function saveErrorMessage(parameter) {
 	if(parameter != null) {
-		FormComponent.setComponentErrorMessage(parameter, replaceChangedComponent);
+		FormComponent.saveComponentErrorMessage(parameter, replaceChangedComponent);
 	}
 }
 function saveExternalSrc(parameter) {
 	if(parameter != null) {
-		FormComponent.setComponentExternalSrc(parameter, replaceChangedComponent);
+		FormComponent.saveComponentExternalSrc(parameter, replaceChangedComponent);
 	}
 }
 function saveAutofill(parameter) {
 	if(parameter != null) {
-		FormComponent.setComponentAutofillKey(parameter, replaceChangedComponent);
+		FormComponent.saveComponentAutofillKey(parameter, replaceChangedComponent);
 	}
 }
 function savePlaintext(parameter) {
 	if(parameter != null) {
-		FormComponent.setComponentPlainText(parameter, replaceChangedComponent);
+		FormComponent.saveComponentPlainText(parameter, replaceChangedComponent);
 	}
 }
 function saveHelpMessage(parameter) {
 	if(parameter != null) {
-		FormComponent.setComponentHelpMessage(parameter, replaceChangedComponent);
+		FormComponent.saveComponentHelpMessage(parameter, replaceChangedComponent);
 	}
 }
 function switchDataSource() {
@@ -1167,19 +1178,18 @@ function expandOrCollapse(node,expand) {
 		node.setAttribute('onclick','expandOrCollapse(this,true);');
 	}
 }
-//TODO change these methods according to the new DWR support
 function saveLabel(parameter) {
 	var index = parameter.id.split('_')[1];
 	var value = parameter.value;
 	if(value.length != 0) {
-		FormComponent.saveLabel(index,value,reRenderChangedComponent);
+		FormComponent.saveSelectOptionLabel(index,value,replaceChangedComponent);
 	}
 }
 function saveValue(parameter) {
 	var index = parameter.id.split('_')[1];
 	var value = parameter.value;
 	if(value.length != 0) {
-		FormComponent.saveValue(index,value,reRenderChangedComponent);
+		FormComponent.saveSelectOptionValue(index,value,replaceChangedComponent);
 	}
 }
 function addNewItem(parameter) {
@@ -1189,14 +1199,13 @@ function addNewItem(parameter) {
 }
 function deleteThisItem(ind) {
 	var index = ind.split('_')[1];
-	FormComponent.removeItem(index,reRenderChangedComponent);
 	var currRow = $(ind);
 	var node = $(ind);
 	if(node != null) {
 		var node2 = node.parentNode;
 		node2.removeChild(currRow);
 	}
-	
+	FormComponent.removeSelectOption(index,replaceChangedComponent);
 }
 function getNextRowIndex(parameter) {
 	var lastC = parameter.lastChild;
@@ -1276,10 +1285,10 @@ function savedFormDocument(parameter) {
 function saveSourceCode(source_code) {
 	if(source_code != null) {
 		showLoadingMessage('Saving');
-		FormDocument.saveSrc(source_code, doNothing);
+		FormDocument.saveSrc(source_code, savedSourceCode);
 	}
 }
-function doNothing(parameter) {
+function savedSourceCode(parameter) {
 	closeLoadingMessage();
 }
 function nothing(parameter) {}
@@ -1287,45 +1296,15 @@ function createNewPage() {
 	FormPage.createNewPage(placeNewPage);
 }
 function placeNewPage(parameter) {
-	markSelectedPage(parameter);
 	hideAllNotices();
 	DWRUtil.setValue('currentPageTitle', parameter.pageTitle);
 	clearDesignView();
-	showNotice('noFormNotice');
+	showNotice('emptyForm');
 	var container = $('pagesPanel');
 	if(container != null) {
-		var page = document.createElement('div');
-		page.setAttribute('id', parameter.pageId + '_P_page');
-		page.setAttribute('class', 'formPageIcon');
-		page.setAttribute('styleClass', 'formPageIcon');
-		page.setAttribute('onclick', 'loadPageInfo(this.id);');
-		page.setAttribute('style', 'position: relative');
-		
-		var icon = document.createElement('img');
-		icon.setAttribute('id', parameter.pageId + '_pi');
-		icon.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/document-new.png';
-		
-		icon.style.display = 'block';
-		
-		var label = document.createElement('span');
-		label.style.display = 'block';
-		
-		var text = document.createTextNode('Section');
-		
-		label.appendChild(text);
-		
-		var db = document.createElement('img');
-		db.id = parameter.pageId + '_db';
-		db.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png';
-		db.setAttribute('onclick', 'deletePage(this.id)');
-		db.setAttribute('class', 'speedButton');
-		
-		page.appendChild(icon);
-		page.appendChild(label);
-		page.appendChild(db);
-		
+		var page = createNewPageNode(parameter,false);
 		container.appendChild(page);
-		
+		markSelectedPage(parameter.pageId);
 	}
 }
 function deletePage(parameter) {
@@ -1416,10 +1395,8 @@ function createNewPageNode(parameter,special) {
 	var icon = document.createElement('img');
 	icon.setAttribute('id', parameter.pageId + '_pi');
 	icon.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/document-new.png';
-	//icon.style.display = 'block';
 		
 	var label = document.createElement('span');
-	//label.style.display = 'block';
 		
 	var text = document.createTextNode(parameter.pageTitle);
 	label.appendChild(text);
@@ -1479,10 +1456,5 @@ function createNewFormOnEnter(e) {
 		createNewForm();
 	}
 }
-function initializeWorkspace() {
-	
-}
-initializeWorkspace();
-/*Setup modal message windows functionality*/
 messageObj = new DHTML_modalMessage();
 messageObj.setShadowOffset(5);

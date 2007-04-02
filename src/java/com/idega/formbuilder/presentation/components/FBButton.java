@@ -70,7 +70,6 @@ public class FBButton extends FBComponentBase {
 		
 		writer.startElement("img", null);
 		writer.writeAttribute("class", "fbSpeedBButton", null);
-		//writer.writeAttribute("style", "display: inline;", null);
 		writer.writeAttribute("src", DELETE_BUTTON_IMG, null);
 		writer.writeAttribute("onclick", onDelete, "onclick");
 		writer.endElement("img");
