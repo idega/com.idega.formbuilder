@@ -1,6 +1,7 @@
 package com.idega.formbuilder.presentation.components;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
@@ -13,10 +14,12 @@ import org.ajax4jsf.ajax.html.HtmlAjaxOutputPanel;
 import com.idega.block.web2.business.Web2Business;
 import com.idega.business.IBOLookup;
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Page;
 import com.idega.presentation.PresentationObjectUtil;
 import com.idega.presentation.Script;
+import com.idega.webface.WFUtil;
 
 
 public class FBWorkspace extends FBComponentBase {
@@ -37,7 +40,20 @@ public class FBWorkspace extends FBComponentBase {
 		setRendererType(null);
 	}
 	
-	protected void initializeComponent(FacesContext context) {		
+	protected void initializeComponent(FacesContext context) {
+		
+		if(context.getExternalContext().getRequestParameterMap().containsKey(FormDocument.FROM_APP_REQ_PARAM)) {
+			FormDocument fd = (FormDocument)WFUtil.getBeanInstance(FormDocument.BEAN_ID);
+			
+			try {
+				fd.createNewForm();
+				
+			} catch (Exception e) {
+				// TODO: use logger and redirect back to applications list if possible
+				e.printStackTrace();
+			}
+		}
+		
 		Application application = context.getApplication();
 		getChildren().clear();
 	

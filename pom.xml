@@ -73,5 +73,11 @@
       <version>3.5.0</version>
       <type>jar</type>
     </dependency>
+    <dependency>
+      <groupId>com.idega.block.platform</groupId>
+      <artifactId>com.idega.content</artifactId>
+      <version>3.5.0</version>
+      <type>jar</type>
+    </dependency>
   </dependencies>
 </project>

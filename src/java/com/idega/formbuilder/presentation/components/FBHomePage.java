@@ -15,8 +15,8 @@ import org.apache.myfaces.component.html.ext.HtmlCommandLink;
 import org.apache.myfaces.component.html.ext.HtmlGraphicImage;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
 
+import com.idega.documentmanager.business.PersistenceManager;
 import com.idega.formbuilder.presentation.FBComponentBase;
-import com.idega.formbuilder.presentation.beans.FormList;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.text.Text;
 import com.idega.webface.WFDivision;
@@ -104,8 +104,8 @@ public class FBHomePage extends FBComponentBase {
 		writer.writeAttribute("id", getId(), "id");
 		writer.writeAttribute("class", getStyleClass(), "styleClass");
 		
-		FormList formList = (FormList) WFUtil.getBeanInstance("formSelector");
-		List<SelectItem> formsList = formList.getForms();
+		PersistenceManager persistence_manager = (PersistenceManager) WFUtil.getBeanInstance("persistenceManager");
+		List<SelectItem> formsList = persistence_manager.getForms();
 		
 		WFDivision greeting = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		greeting.setId("fbHomePageWelcomeBlock");

@@ -1,6 +1,7 @@
 package com.idega.formbuilder.presentation.beans;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,29 +10,40 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import javax.ejb.FinderException;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.idega.block.form.business.FormsService;
+import com.idega.block.form.presentation.FormViewer;
 import com.idega.block.formadmin.presentation.actions.GetAvailableFormsAction;
-import com.idega.business.IBOLookup;
-import com.idega.business.IBOLookupException;
+import com.idega.content.TemplatesLoader;
+import com.idega.content.themes.helpers.ThemesHelper;
+import com.idega.content.tree.PageTemplate;
+import com.idega.core.builder.business.BuilderService;
+import com.idega.core.builder.business.BuilderServiceFactory;
+import com.idega.core.builder.data.ICDomain;
+import com.idega.core.builder.data.ICDomainHome;
+import com.idega.data.IDOLookup;
+import com.idega.data.IDOLookupException;
 import com.idega.documentmanager.business.FormLockException;
+import com.idega.documentmanager.business.PersistenceManager;
 import com.idega.documentmanager.business.form.Document;
 import com.idega.documentmanager.business.form.DocumentManager;
 import com.idega.documentmanager.business.form.Page;
 import com.idega.documentmanager.business.form.PageThankYou;
 import com.idega.documentmanager.business.form.PropertiesThankYouPage;
 import com.idega.documentmanager.business.form.beans.LocalizedStringBean;
+import com.idega.formbuilder.business.egov.Application;
+import com.idega.formbuilder.business.egov.ApplicationBusiness;
 import com.idega.formbuilder.presentation.components.FBFormListItem;
 import com.idega.formbuilder.presentation.converters.FormDocumentInfo;
 import com.idega.formbuilder.presentation.converters.FormPageInfo;
 import com.idega.formbuilder.view.ActionManager;
-import com.idega.idegaweb.IWApplicationContext;
 import com.idega.idegaweb.IWMainApplication;
+import com.idega.presentation.IWContext;
 import com.idega.webface.WFUtil;
 
 public class FormDocument implements Serializable {
@@ -40,9 +52,12 @@ public class FormDocument implements Serializable {
 	
 	private static Log logger = LogFactory.getLog(FormDocument.class);
 	
+	private PersistenceManager persistence_manager;
+	
 	private Document document;
 	private PropertiesThankYouPage properties;
 	
+	private ApplicationBusiness app_business_bean;
 	private String formTitle;
 	private String formId;
 	private boolean hasPreview;
@@ -53,8 +68,16 @@ public class FormDocument implements Serializable {
 	private LocalizedStringBean formTitleBean;
 	private LocalizedStringBean thankYouTitleBean;
 	private LocalizedStringBean thankYouTextBean;
+	private static final String root_uri = "/pages/";
+	private static final String applications_forms_page_uri = "/pages/applications_forms/";
+	private static final String applications_forms_page_name = "applications_forms";
+	private static final String egov_form_type = "egovform";
+	private static final String form_id_property_name = "formId";
 	
-	protected FormsService forms_service;
+	public static final String BEAN_ID = "formDocument";
+	public static final String APP_FORM_NAME_PARAM = "appform_name";
+	public static final String APP_ID_PARAM = "appid";
+	public static final String FROM_APP_REQ_PARAM = "fapp";
 	
 	public List<String> getCommonPagesIdList() {
 		List<String> result = new LinkedList<String>();
@@ -101,7 +124,7 @@ public class FormDocument implements Serializable {
 			Locale locale = workspace.getLocale();
 			DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
 			Document document = null;
-			String id = getFormsService().generateFormId(parameter);
+			String id = getPersistenceManager().generateFormId(parameter);
 			LocalizedStringBean formName = new LocalizedStringBean();
 			formName.setString(locale, parameter);
 			
@@ -137,16 +160,33 @@ public class FormDocument implements Serializable {
 	}
 	
 	public String createNewForm() throws Exception {
-		String name = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("workspaceform1:newTxt");
+		
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		Map req_param_map = ctx.getExternalContext().getRequestParameterMap();
+		String name = (String)req_param_map.get("workspaceform1:newTxt");
+		
 		if(name == null || name.equals("")) {
-			throw new Exception("Form name not provided by the user");
+			
+			Map session_map = ctx.getExternalContext().getSessionMap();
+			
+			if(req_param_map.containsKey(FROM_APP_REQ_PARAM)) {
+				
+				System.out.println("contains req k -> new form");
+				
+				name = (String)session_map.get(APP_FORM_NAME_PARAM);
+			}
 		}
+		
+		if(name == null || name.equals(""))
+			throw new Exception("Form name not provided by the user");
+
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
+		
 		if(workspace != null) {
 			Locale locale = workspace.getLocale();
 			DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
 			Document document = null;
-			String id = getFormsService().generateFormId(name);
+			String id = getPersistenceManager().generateFormId(name);
 			LocalizedStringBean formName = new LocalizedStringBean();
 			formName.setString(locale, name);
 			
@@ -183,14 +223,140 @@ public class FormDocument implements Serializable {
 	}
 	
 	public void save() {
+		
 		try {
-			document.save();
+			
+			FacesContext ctx = FacesContext.getCurrentInstance();
+			Map session = ctx.getExternalContext().getSessionMap();
+			
+			if(session.containsKey(APP_ID_PARAM)) {
+				
+				document.save();
+				String app_id = (String)session.get(APP_ID_PARAM);
+				String name = (String)session.get(APP_FORM_NAME_PARAM);
+				session.remove(APP_ID_PARAM);
+				session.remove(APP_FORM_NAME_PARAM);
+				
+				if(app_id == null || name == null) {
+					logger.warn("Application id or name was not set when trying to save application form for the first time.");
+					return;
+				}
+				
+				IWMainApplication iwma = IWMainApplication.getIWMainApplication(ctx);
+				
+				Map<String, PageTemplate> p_templates = TemplatesLoader.getPageTemplates(iwma);
+				PageTemplate egov_form_template = p_templates.get(egov_form_type);
+				
+				
+				if(egov_form_template == null) {
+					logger.error("eGov form page was not created for application due to missing eGov form page template");
+					return;
+				}
+				
+				BuilderService bservice = getBuilderService();
+				
+				ICDomain domain = getDomain();
+				int domain_id = -1;
+				
+				if(domain != null)
+					domain_id = domain.getID();
+				
+				String key = bservice.getPageKeyByURI(root_uri);
+				
+//				TODO: that's annoying, as I can't get the page key by uri. consult so called tosc guys ;]
+				
+//				String key = bservice.getPageKeyByURI(applications_forms_page_uri);
+				
+				
+//				if(key == null) {
+//					
+//					key = bservice.getPageKeyByURI(root_uri);
+//					
+//					int created_page_key =
+//						//bservice.getCurrentDomain().getID()
+//						bservice.createNewPage(
+//								key, 
+//								applications_forms_page_name, 
+//								bservice.getPageKey(),
+//								null, 		//template id
+//								null,        //uri
+//								bservice.getTree(IWContext.getIWContext(ctx)), 
+//								IWContext.getIWContext(ctx), 
+//								null, //subtype 
+//								domain_id, 
+//								bservice.getIBXMLFormat(),
+//								null 		//source markup
+//						);
+//					
+//					key = String.valueOf(created_page_key); 
+//				}
+				
+				int created_page_key =
+					//bservice.getCurrentDomain().getID()
+					bservice.createNewPage(
+							key, 
+							name, 
+							bservice.getPageKey(),
+							null, 		//template id
+							null,        //uri
+							bservice.getTree(IWContext.getIWContext(ctx)), 
+							IWContext.getIWContext(ctx), 
+							egov_form_type, //subtype 
+							domain_id, 
+							bservice.getIBXMLFormat(),
+							null 		//source markup
+					);
+				
+				ThemesHelper helper = ThemesHelper.getInstance();
+				
+				String webdav_uri_to_page = helper.loadPageToSlide(egov_form_type, egov_form_template.getTemplateFile(), null, created_page_key);
+				if (webdav_uri_to_page != null) {
+					helper.getThemesService().updatePageWebDav(created_page_key, webdav_uri_to_page);
+				}
+				
+				String page_uri = bservice.getPageURI(created_page_key);
+				
+//				TODO: create page with formviewer which points to xforms_file_reference form
+				Application app = getAppBusiness().getApplication(Integer.parseInt(app_id));
+				
+				if(app == null) {
+//					TODO: log - something wrong, as it should be created and saved before going here actually
+					
+				} else {
+					app.setUrl(page_uri);
+					app.store();
+				}
+				
+				String page_key_str = String.valueOf(created_page_key);
+				
+				List<String> formviewer_ids = bservice.getModuleId(page_key_str, FormViewer.class.getName());
+				
+				if(formviewer_ids == null || formviewer_ids.isEmpty()) {
+					logger.error("Formviewer not found in the page: "+page_uri);
+					return;
+				}
+				
+				String formviewer_id = formviewer_ids.get(0);
+				bservice.setProperty(page_key_str, formviewer_id, form_id_property_name, new String[] {document.getId()}, iwma);
+				
+			} else
+				document.save();
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
+	public void setAppBusiness(ApplicationBusiness app_business_bean) {
+		this.app_business_bean = app_business_bean;
+	}
+	
+	public ApplicationBusiness getAppBusiness() {
+		return app_business_bean;
+	}
+	
 	public String loadFormDocument() {
+		
 		try {
 			String buttonId = getCurrentFormId(FacesContext.getCurrentInstance());
 			String formId = buttonId.substring(15, buttonId.indexOf("_edit"));
@@ -287,7 +453,7 @@ public class FormDocument implements Serializable {
 			throw new NullPointerException("Form id not found");
 		
 		try {
-			getFormsService().removeForm(documentId, delete_submitted_data);
+			getPersistenceManager().removeForm(documentId, delete_submitted_data);
 		} catch (FormLockException e) {
 			// TODO: inform about lock
 			logger.info("Form was locked when tried to delete it", e);
@@ -313,7 +479,7 @@ public class FormDocument implements Serializable {
 //			TODO: (alex) tell user about error			
 			throw new NullPointerException("Form id not found");
 		try {
-			getFormsService().duplicateForm(documentId, newTitle);
+			getPersistenceManager().duplicateForm(documentId, newTitle);
 		} catch (Exception e) {
 			logger.error("Exception while duplicating form", e);
 //			TODO: (alex) tell user about error
@@ -620,17 +786,39 @@ public class FormDocument implements Serializable {
 		this.tempValue = tempValue;
 	}
 	
-	protected FormsService getFormsService() {
+	public PersistenceManager getPersistenceManager() {
 		
-		if (forms_service == null) {
-			try {
-				IWApplicationContext iwc = IWMainApplication.getDefaultIWApplicationContext();
-				forms_service = (FormsService) IBOLookup.getServiceInstance(iwc, FormsService.class);
-			}
-			catch (IBOLookupException e) {
-				logger.error("Could not find FormsService");
-			}
+		return persistence_manager;
+	}
+	
+	public void setPersistenceManager(PersistenceManager persistence_manager) {
+		this.persistence_manager = persistence_manager;
+	}
+	
+	protected BuilderService getBuilderService() {
+		
+		try {
+			return BuilderServiceFactory.getBuilderService(IWMainApplication.getDefaultIWApplicationContext());
+		} catch (RemoteException e) {
+			
+			logger.error("Error while retrieving builder service", e);
 		}
-		return forms_service;
+		return null;
+	}
+	
+	public ICDomain getDomain() {
+		ICDomainHome domainHome = null;
+		try {
+			domainHome = (ICDomainHome) IDOLookup.getHome(ICDomain.class);
+		} catch (IDOLookupException e) {
+			logger.error(e);
+			return null;
+		}
+		try {
+			return domainHome.findFirstDomain();
+		} catch (FinderException e) {
+			logger.error(e);
+			return null;
+		}
 	}
 }

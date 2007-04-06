@@ -35,6 +35,10 @@
 		<managed-bean-name>actionManager</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.view.ActionManager</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
+		<managed-property>
+		  	<property-name>persistenceManager</property-name>
+		    <value>#{persistenceManager}</value>
+		</managed-property>
 	</managed-bean>
 	<managed-bean>
 		<managed-bean-name>formPage</managed-bean-name>
@@ -55,6 +59,14 @@
 		<managed-bean-name>formDocument</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.presentation.beans.FormDocument</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
+		<managed-property>
+	    	<property-name>appBusiness</property-name>
+		    <value>#{appBusiness}</value>
+		</managed-property>
+		<managed-property>
+		  	<property-name>persistenceManager</property-name>
+		    <value>#{persistenceManager}</value>
+		</managed-property>
 	</managed-bean>
 	<managed-bean>
 		<managed-bean-name>dataSources</managed-bean-name>
@@ -70,11 +82,6 @@
 		<managed-bean-name>formField</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.presentation.beans.PaletteComponent</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
-	</managed-bean>
-	<managed-bean>
-		<managed-bean-name>formSelector</managed-bean-name>
-		<managed-bean-class>com.idega.formbuilder.presentation.beans.FormList</managed-bean-class>
-		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
 		<managed-bean-name>localeList</managed-bean-name>
