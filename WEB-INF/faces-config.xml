@@ -37,7 +37,7 @@
 		<managed-bean-scope>session</managed-bean-scope>
 		<managed-property>
 		  	<property-name>persistenceManager</property-name>
-		    <value>#{persistenceManager}</value>
+		    <value>#{formbuilderPersistenceManager}</value>
 		</managed-property>
 	</managed-bean>
 	<managed-bean>
@@ -65,7 +65,7 @@
 		</managed-property>
 		<managed-property>
 		  	<property-name>persistenceManager</property-name>
-		    <value>#{persistenceManager}</value>
+		    <value>#{formbuilderPersistenceManager}</value>
 		</managed-property>
 	</managed-bean>
 	<managed-bean>
