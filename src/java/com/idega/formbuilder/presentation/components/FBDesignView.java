@@ -70,7 +70,7 @@ public class FBDesignView extends FBComponentBase {
 		
 		WFDivision formHeading = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		formHeading.setId("formHeading");
-		formHeading.setStyleClass("formHeading");
+		formHeading.setStyleClass("info");
 		
 		FBInlineEdit formHeadingHeader = (FBInlineEdit) application.createComponent(FBInlineEdit.COMPONENT_TYPE);
 		formHeadingHeader.setId("formHeadingHeader");
@@ -84,13 +84,14 @@ public class FBDesignView extends FBComponentBase {
 		
 		WFDivision pageNotice = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		pageNotice.setId("pageNotice");
-		pageNotice.setStyleClass("formHeading");
+		pageNotice.setStyleClass("label");
 		
 		FBInlineEdit currentPageTitle = (FBInlineEdit) application.createComponent(FBInlineEdit.COMPONENT_TYPE);
 		currentPageTitle.setId("currentPageTitle");
 		currentPageTitle.setValueBinding("value", application.createValueBinding("#{formPage.title}"));
 		currentPageTitle.setOnBlur("savePageTitleOnBlur");
 		currentPageTitle.setOnReturn("savePageTitleOnReturn");
+//		currentPageTitle.setStyleClass("label");
 		addChild(currentPageTitle, pageNotice);
 		
 		addFacet(DESIGN_VIEW_PAGE_FACET, pageNotice);
@@ -173,13 +174,13 @@ public class FBDesignView extends FBComponentBase {
 			status = (String) vb.getValue(context);
 		}
 		if(status != null) {
-			UIComponent pageHeader = getFacet(DESIGN_VIEW_PAGE_FACET);
-			if (pageHeader != null) {
-				renderChild(context, pageHeader);
-			}
 			UIComponent formHeader = getFacet(DESIGN_VIEW_HEADER_FACET);
 			if (formHeader != null) {
 				renderChild(context, formHeader);
+			}
+			UIComponent pageHeader = getFacet(DESIGN_VIEW_PAGE_FACET);
+			if (pageHeader != null) {
+				renderChild(context, pageHeader);
 			}
 			WFDivision noFormNotice = (WFDivision) getFacet(DESIGN_VIEW_SPECIAL_FACET);
 			WFDivision emptyNotice = (WFDivision) getFacet(DESIGN_VIEW_EMPTY_FACET);

@@ -316,7 +316,7 @@ a.okBt:hover {
 	position: absolute;
 	top: 92px !important;
 	right: 12px !important;
-	display: none;
+	display: inline;
 	background-color: LightGrey;
 	width: 170px;
 	min-height: 500px;
@@ -421,11 +421,12 @@ a.okBt:hover {
 }
 .dropBox {
 	height: 100%;
-	margin-top: 10px;
+	margin-top: -10px;
 	margin-bottom: 10px;
-	padding-left: 5px;
-	padding-right: 5px;
-	overflow: auto;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 0px;
+	overflow-y: auto				!important;
 }
 .fbPropertyItemLabel {
 	padding: 10px;
@@ -436,8 +437,8 @@ a.okBt:hover {
 }
 .formElement {
 	margin-bottom: 10px;
-	margin-right: 25px;
-	margin-left: 25px;
+	margin-right: 0px;
+	margin-left: 0px;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	padding-left: 10px;
@@ -545,6 +546,26 @@ a.okBt:hover {
 .formHeading:hover {
 	cursor: pointer;
 	background-color: Grey;
+}
+div.info span, div.info input {
+	margin: 0;
+	font-size: 22px;
+}
+div.label {
+	clear: both;
+	position: relative;
+	border-top: 1px #fff solid;
+	border-bottom: 1px #B2B6B8 solid;
+	height: 28px;
+	background: url(images/header_tiler.gif) repeat-x #fff;
+}
+div.label span,div.label input {
+	float: left;
+	color: #002243;
+	font-size: 13px;
+	text-transform: uppercase;
+	margin: 0;
+	padding: 7px 0 0 14px;
 }
 .toolbarButton {
 	text-decoration: none 					! important;
@@ -822,7 +843,7 @@ span.fbMenuTabBar{
 	margin-right: 10px;
 	display: inline 		!important;
 }
-h1.title,#formHeading{
+h1.title{
 	border: 1px #949494 solid;
 	background: #88827e url(images/boxHeaderTiler.gif) left top repeat-x;
 	font-family: "Trebuchet MS", Arial, "Helvetica", "Arial", sans-serif;
