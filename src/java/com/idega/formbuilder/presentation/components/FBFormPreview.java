@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,19 +26,20 @@ public class FBFormPreview extends FBComponentBase {
 	public static final String COMPONENT_TYPE = "FormPreview";
 	public static final String FORM_VIEWER = "FORM_VIEWER";
 	
-//	private static final String container_tag = "div";
+	private static final String container_tag = "div";
 	
 	public void encodeBegin(FacesContext ctx) throws IOException {
 		super.encodeBegin(ctx);
-//		ResponseWriter writer = ctx.getResponseWriter();
+		ResponseWriter writer = ctx.getResponseWriter();
 //		super.encodeBegin(ctx);
 //		
-//		writer.startElement(container_tag, this);
+		writer.startElement(container_tag, this);
+		writer.writeAttribute("id", getId(), null);
 	}
 	
 	@Override
 	public void encodeEnd(FacesContext ctx) throws IOException {
-//		ResponseWriter writer = ctx.getResponseWriter();
+		ResponseWriter writer = ctx.getResponseWriter();
 //		
 //		try {
 //			
@@ -59,7 +61,7 @@ public class FBFormPreview extends FBComponentBase {
 //		} catch (Exception e) {
 //			logger.error("Error when parsing form to response writer", e);
 //		}
-//		writer.endElement(container_tag);
+		writer.endElement(container_tag);
 		super.encodeEnd(ctx);
 	}
 	

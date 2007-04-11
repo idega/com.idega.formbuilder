@@ -260,73 +260,68 @@ a.okBt:hover {
 	height: 150px;
 	overflow: auto;
 }
-/*---Form scroller--------*/
-	#formListContainer {			
-		height: 300px;
-		border:1px solid #000;	/* Black border */		
-		padding:1px;	/* A little space between the black border and the content inside */	
-	}
-	.arrowUpImg {	/* Arrow down image */
-		height:35px;
-		margin-left: 45%;
-	}
-	.arrowDownImg {
-		height:35px;	/* Arrow up image */
-		margin-left: 45%;
-	}
-	#forms {
-		position:relative;
-		overflow:hidden;
-		height:230px;	/* Height of boxes for the images */
-	}
-	#forms .noname {	/* DIV where the images are located */
-		position:relative;
-		height:600px;	/* Height of boxes for the images */
-	}
-	#forms .formListItem {
-		position:relative;	/* Don't change this */
-		height:60px;	/* Higher than total height of thumbnails */
-	}
+#formListContainer {			
+	height: 300px;
+	border:1px solid #000;	/* Black border */		
+	padding:1px;	/* A little space between the black border and the content inside */	
+}
+.arrowUpImg {	/* Arrow down image */
+	height:35px;
+	margin-left: 45%;
+}
+.arrowDownImg {
+	height:35px;	/* Arrow up image */
+	margin-left: 45%;
+}
+#forms {
+	position:relative;
+	overflow:hidden;
+	height:230px;	/* Height of boxes for the images */
+}
+#forms .noname {	/* DIV where the images are located */
+	position:relative;
+	height:600px;	/* Height of boxes for the images */
+}
+#forms .formListItem {
+	position:relative;	/* Don't change this */
+	height:60px;	/* Higher than total height of thumbnails */
+}
 /*---Page layout styles---*/
 #mainApplication {
 	margin-left: 25px;
 	margin-right: 25px;
 	margin-top: 5px;
 	margin-bottom: 20px;
-
-	/*border: 2px groove Black;*/
 }
 #mainWorkspace {
-	/*border: 2px groove Red;*/
 	margin-top: 20px;
-}
-#optionsPanel {
-	height: 100%;
-	/*border: 1px groove Black;*/
 }
 #viewPanel {
 	position: absolute;
 	top: 90px;
 	left: 332px;
-	right: 10px;
+	right: 185px;
 	bottom: 0px;
-padding-right: 120px;
-	/*border: 1px groove Blue;*/
+	padding-right: 0px;
+	background: #fff;
+	border: 1px solid #aeaeae;
+}
+#previewView {
+	overflow-y: auto				!important;
+	height: 100%;
+	margin-top: -15px;
+	border-top: 1px solid Grey;
 }
 .pagesPanel {
 	position: absolute;
 	top: 92px !important;
 	right: 12px !important;
-	display: inline;
+	display: none;
 	background-color: LightGrey;
 	width: 170px;
 	min-height: 500px;
 	bottom: 28px !important;
 	z-index: 5;
-}
-.pageIconLabel {
-}
-.pageIconIcon {
 }
 .formPageIconSpecial {
 	cursor: pointer;
@@ -364,66 +359,59 @@ padding-right: 120px;
 	display: inline;
 	cursor: pointer;
 }
-.pagesPanelBottom {
-	
-}
-.accordionTabTitleBar {
-	padding-top: 5px;
-	height: 25px;
-}
 .fbMenuTabBar {
 	font-size: 14px;
 	font-weight: bold;
 	margin-left: 10px;
 	cursor: pointer;
 }
-	#mainPalette{
-		background-color: #FFF;	/* Background color of main menu */
-		font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;	/* Fonts of main menu items */
-		font-size: 13px;	/* Font size of main menu items */
-		border-bottom:1px solid #000000;	/* Bottom border of main menu */
-		height:20px;	/* Height of main menu */
-		position:relative;	/* Don't change this position attribute */
-	}
-	#mainPalette a{
-		padding-left:0px;	/* Spaces at the left of main menu items */
-		padding-right:0px;	/* Spaces at the right of main menu items */
-		font-weight:bold;
-		/* Don't change these two options */
-		position:absolute;
-		bottom:-1px;	/* Change this value to -2px if you're not using a strict doctype */
-	}
-	#paletteBody_1, #paletteBody_2, #paletteBody_3, #paletteBody_4 {
-		padding: 0px !important;
-	}
-	#paletteBody{
-		height: 180px;
-		font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;	/* Font  of sub menu items */
-		background-color:#E2EBED;	/* Background color of sub menu items */
-		width:100%;	/* Don't change this option */
-	}	
-	#paletteBody div{
-		white-space:nowrap;	/* Don't change this option */
-	}
-	#mainPalette .activeMenuItem{
-		width: 40px;
-		padding-right: 10px;
-		/* Border options */
-		border-left:1px solid #000000;
-		border-top:1px solid #000000;
-		border-right:1px solid #000000;		
-		background-color: #E2EBED;	/* Background color */
-		cursor:pointer;	/* Cursor like a hand when the user moves the mouse over the menu item */
-	}
-	#mainPalette .activeMenuItem img{
-		position:absolute;
-		bottom:0px;
-		right:0px;
-	}	
-	#mainPalette .inactiveMenuItem{		
-		color: #000;	/* Text color */
-		cursor:pointer;	/* Cursor like a hand when the user moves the mouse over the menu item */
-	}
+#mainPalette{
+	background-color: #FFF;	/* Background color of main menu */
+	font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;	/* Fonts of main menu items */
+	font-size: 13px;	/* Font size of main menu items */
+	height:20px;	/* Height of main menu */
+	position:relative;	/* Don't change this position attribute */
+	background: #fef9eb 	!important;
+	border-bottom: 1px solid #aeaeae;
+	padding: 0 2px 			!important;
+}
+#mainPalette a{
+	padding-left:0px;	/* Spaces at the left of main menu items */
+	padding-right:0px;	/* Spaces at the right of main menu items */
+	font-weight:bold;
+	/* Don't change these two options */
+	position:absolute;
+	bottom:-1px;	/* Change this value to -2px if you're not using a strict doctype */
+}
+#paletteBody_1, #paletteBody_2, #paletteBody_3, #paletteBody_4 {
+	padding: 0px !important;
+}
+#paletteBody{
+	height: 180px;
+	font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;	/* Font  of sub menu items */
+	background: #fef9eb 	!important;	/* Background color of sub menu items */
+	width:100%;	/* Don't change this option */
+}	
+#paletteBody div{
+	white-space:nowrap;	/* Don't change this option */
+}
+#mainPalette .activeMenuItem{
+	width: 40px;
+	padding-right: 10px;
+	border-left:1px solid #000000;
+	border-top:1px solid #000000;
+	border-right:1px solid #000000;		
+	cursor:pointer;	/* Cursor like a hand when the user moves the mouse over the menu item */
+	background: #fef9eb 	!important;
+	border-bottom: 1px solid #fef9eb;
+	margin-right: 0 		!important;
+	margin-left: 0 			!important;
+}
+#mainPalette .activeMenuItem img{
+	position:absolute;
+	bottom:0px;
+	right:0px;
+}	
 #selectOpts {
 	width: 100%;
 	overflow: auto;
@@ -494,7 +482,9 @@ padding-right: 120px;
 .viewTabs {
 	background-color: #f5f5f5;
 	width: 500px;
-	display: inline;
+	display: block;
+	position: relative;
+	top: -20px;
 }
 .showPagesButton {
 	display: inline;
@@ -527,14 +517,6 @@ padding-right: 120px;
 	height: 100px;
 	display: block;
 }
-.sourceView {
-	/*display: inline;
-	position: relative;
-	top: 0px;
-	left: 0px;
-	width: 100%;
-	background-color: Silver;*/
-}
 .sourceView textarea {
 	top: 20px;
 	bottom: 20px;
@@ -564,19 +546,11 @@ padding-right: 120px;
 	cursor: pointer;
 	background-color: Grey;
 }
-/*.sourceView textarea {
-	width: 100%;
-	height: 400px;
-  	font-size: 11px;
-  	color:#4a4a4a;
- 	background-color: Red;
-}*/
 .toolbarButton {
 	text-decoration: none 					! important;
 	color: #000;
 	height: 12px;
 	width: 250px;
-	/*line-height: 20px;*/
 	vertical-align: middle;
 	border: none;
 	background-color: #FAFAFA;
@@ -588,8 +562,6 @@ padding-right: 120px;
 .toolbarButton:hover {
 	border: 1px solid #000;
 	margin: 1px;
-}
-.toolbarButton:hover {
 	color: #FFF;
 	background-color: #317082;
 	text-decoration: none;
@@ -604,7 +576,6 @@ padding-right: 120px;
 	margin-bottom: 10px;
 	margin-top: 10px;
 }
-
 .paletteComponent,.paletteComponentBt {
 	display: block;
 	width: 124px;
@@ -618,11 +589,10 @@ padding-right: 120px;
 	font-weight: normal;
 	font-size: 11px !important;
 	color: #565656;
-
 }
 .paletteComponent img,.paletteComponentBt img {
-margin: 3px 5px 0;
-float: left;
+	margin: 3px 5px 0;
+	float: left;
 }
 .paletteComponent:hover,.paletteComponentBt:hover {
 	background-color:#DFEEA3;
@@ -641,7 +611,6 @@ float: left;
 	font-size: inherit;
 	padding-bottom: 0px;
 	width: 60px;
-
 }
 .menuPanelTitle {
 	background: White;
@@ -658,15 +627,11 @@ float: left;
 	padding-right: 5%;
 	overflow: none;
 }
-/*.propertiesBox * {
-	display: block;
-}*/
 .toolbar_button {
 	text-decoration: none 					! important;
 	color: #000;
 	height: 12px;
 	width: 250px;
-	/*line-height: 20px;*/
 	vertical-align: middle;
 	border: none;
 	background-color: #FAFAFA;
@@ -678,6 +643,9 @@ float: left;
 .toolbar_button:hover {
 	border: 1px solid #000;
 	margin: 1px;
+	color: #FFF;
+	background-color: #317082;
+	text-decoration: none;
 }
 .toolbar_field {
 	text-decoration: none;
@@ -693,11 +661,6 @@ float: left;
 	display: block;
 	font-size: 1.0em;
 }
-.toolbar_button:hover {
-	color: #FFF;
-	background-color: #317082;
-	text-decoration: none;
-}
 .float_left {
 	float: left;
 }
@@ -712,7 +675,6 @@ float: left;
 	text-align: center;
 	margin: 0px;
 	padding: 10px;
-	
 }
 /*---Popup model dialog styles---*/
 .modalDialog_transparentDivs {	
@@ -736,7 +698,6 @@ float: left;
 	filter: alpha(opacity=30);
 	opacity: 0.3;
 }
-
 #progressBar { 
 	padding-top: 5px; 
 }
@@ -755,197 +716,113 @@ float: left;
 
 /* Beginning of the end*/
 
-#viewPanel{
-border: 1px solid #aeaeae;
+.viewTabs .selectedTab,.viewTabs .unselectedTab{
+	border: 1px solid #aeaeae;
+	margin: 0 1px;
+	padding: 5px;
+	height: 22px !important;
+	background: #fff;
 }
-
-.viewTabs{
-position: relative;
-top: -20px;
-}
-
-.viewTabs .selectedTab,
-.viewTabs .unselectedTab{
-border: 1px solid #aeaeae;
-margin: 0 1px;
-padding: 5px;
-height: 22px !important;
-background: #fff;
-}
-
-#mainApplication{
-
-}
-
 .viewTabs .selectedTab{
-border-bottom: 1px solid #fff;
+	border-bottom: 1px solid #fff;
 }
-
-#viewPanel{
-background: #fff;
-}
-
 #view1Box{
-margin-left: 12px;
+	margin-left: 12px;
 }
-
 #optionsPanel #fbMenu{
-border-bottom: 1px solid transparent !important;
+	border-bottom: 1px solid transparent !important;
 }
-
-
-div.ws_mainnavigation{
-}
-
 #menuPanelToolbar{
-display: none;
+	display: none;
 }
-
 #optionsPanel{
-left: 31px;
-top: 90px;
-bottom: 0;
-position: absolute;
-background: #fef9eb;
+	left: 31px;
+	top: 90px;
+	bottom: 0;
+	position: absolute;
+	background: #fef9eb;
+	height: 100%;
+	border: 1px solid #aeaeae;
 }
-
-
 #fbMenu{
-position: relative !important;
-top: 0 !important;
-bottom: 0 !important;
-height: auto !important;
-border-width: 0 !important;
+	position: relative 		!important;
+	top: 0 					!important;
+	bottom: 0 				!important;
+	height: auto 			!important;
+	border-width: 0 		!important;
 }
-
-#mainPalette{
-background: #fef9eb !important;
-border-bottom: 1px solid #aeaeae;
-padding: 0 2px !important;
-}
-
-#paletteBody{
-background: #fef9eb !important;
-
-}
-
 .accordionTabContentBox{
-background: #fef9eb !important;
-border-width: 0px !important;
+	background: #fef9eb 	!important;
+	border-width: 0px 		!important;
 }
-
-#mainPalette .activeMenuItem,
+#mainPalette .activeMenuItem,#mainPalette .inactiveMenuItem{
+	padding: 3px 10px 		!important;
+	width: auto 			!important;
+	border: 1px solid #aeaeae;
+}
 #mainPalette .inactiveMenuItem{
-padding: 3px 10px !important;
-width: auto !important;
-border: 1px solid #aeaeae;
+	background: #fff 		!important;
+	margin-right: 0 		!important;
+	margin-left: 0 			!important;
+	color: #000;			/* Text color */
+	cursor:pointer;			/* Cursor like a hand when the user moves the mouse over the menu item */
 }
-
-
-
-#mainPalette .activeMenuItem{
-background: #fef9eb !important;
-border-bottom: 1px solid #fef9eb;
-margin-right: 0 !important;
-margin-left: 0 !important;
-}
-
-#mainPalette .inactiveMenuItem{
-background: #fff !important;
-margin-right: 0 !important;
-margin-left: 0 !important;
-}
-
 #pageButtonArea{
-position: relative !important;
-padding: 10px;
-display: block;
-height: auto !important;
-width: auto !important;
-border: 1px solid transparent;
-
+	position: relative 		!important;
+	padding: 10px;
+	display: block;
+	height: auto 			!important;
+	width: auto 			!important;
+	border: 1px solid transparent;
 }
 .activeButtonArea {
 	background-color: Red;
 }
-
-#optionsPanel{
-border: 1px solid #aeaeae;
-}
-
 #pageButtonArea:hover{
-border-color: #93b825;
+	border-color: #93b825;
 }
-/*.formButton {
-	height: 95%;
-	width: auto;
-	padding-top: 2px;
-	padding-bottom: 2px;
-	padding-left: 5px;
-	padding-right: 5px;
-	
-}
-.formButton:hover {
-	margin-right: 0px;
-}*/
 #pageButtonArea .formButton{
-display: inline !important;
-height: 100% !important;
-width: 100% !important;
-padding: 10px 0 10px 15px !important;
-position: relative !important;
-margin-left: 0 !important;
-margin-right: 16px !important;
+	display: inline 		!important;
+	height: 100% 			!important;
+	width: 100% 			!important;
+	padding: 10px 0 10px 15px !important;
+	position: relative 		!important;
+	margin-left: 0 			!important;
+	margin-right: 16px 		!important;
 }
 #pageButtonArea .formButton:hover {
-	margin-right: 0px !important;
+	margin-right: 0px 		!important;
 }
-
 .accordionTabTitleBar{
-padding: 2px !important;
-height: auto !important;
+	padding: 2px 			!important;
+	height: auto 			!important;
 }
-
 span.fbMenuTabBar{
-margin: 0 !important;
-font-family: Arial, Verdana, sans-serif !important;
-font-size: 11px;
-font-weight: bold;
+	margin: 0 				!important;
+	font-family: Arial, Verdana, sans-serif !important;
+	font-size: 11px;
+	font-weight: bold;
 }
-
-
-.fbBottomButtonsContainer input{
-background: #fff;
-border: 1px solid;
-border-top-color: #d3d3d3;
-border-right-color: #828282;
-border-bottom-color: #5d5d5d;
-border-left-color: #c0c0c0;
-}
-
-.fbBottomButtonsContainer{
-}
-
 .fbBottomButtonsContainer input:active{
-background: #fff;
-border: 1px solid;
-border-bottom-color: #d3d3d3;
-border-left-color: #828282;
-border-top-color: #5d5d5d;
-border-right-color: #c0c0c0;
+	background: #fff;
+	border: 1px solid;
+	border-bottom-color: #d3d3d3;
+	border-left-color: #828282;
+	border-top-color: #5d5d5d;
+	border-right-color: #c0c0c0;
 }
-
 .fbBottomButtonsContainer input{
-float: right;
-margin-right: 10px;
-display: inline !important;
+	background: #fff;
+	border: 1px solid;
+	border-top-color: #d3d3d3;
+	border-right-color: #828282;
+	border-bottom-color: #5d5d5d;
+	border-left-color: #c0c0c0;
+	float: right;
+	margin-right: 10px;
+	display: inline 		!important;
 }
-
-
-
-
-h1.title,
-#formHeading{
+h1.title,#formHeading{
 	border: 1px #949494 solid;
 	background: #88827e url(images/boxHeaderTiler.gif) left top repeat-x;
 	font-family: "Trebuchet MS", Arial, "Helvetica", "Arial", sans-serif;
@@ -959,113 +836,30 @@ h1.title,
 	position: relative;
 	line-height: 13px;
 }
-
-.fbcomp_header_text{
-	border-top: 1px #a4a4a4 solid;
-	border-bottom: 1px #a4a4a4 solid;
-	background: url(images/sub_header_tiler.gif) repeat-x #d6d6d6;
-	height: 18px;
-	color: #222222;
-	font-size: 12px;
-	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-	padding-left: 15px;
-	padding-top: 4px;
-	margin: 0;
-	clear: both;
-}
-
 #pagesPanelSpecial{
-height: auto !important;
+	height: auto 			!important;
 }
-
 #pagesPanelSpecial span{
-width: auto;
+	width: auto;
 }
-
 .formPageIcon span{
-margin-left: 9px;
-left: 0 !important;
-width: 40px !important;
+	margin-left: 9px;
+	left: 0 				!important;
+	width: 40px 			!important;
 }
-
-select.value{
-width: auto !important;
-min-width: 128px;
-}
-
-
 #dropBox{
-bottom: 40px !important;
-position: absolute;
-height: auto !important;
-top: 10px !important;
-bottom: 28px !important;
-height: auto !important;
-width: auto !important;
-left: 0px !important;
-right: 173px !important;
-overflow: auto !important;
+	bottom: 40px 			!important;
+	position: absolute;
+	height: auto 			!important;
+	top: 10px 				!important;
+	bottom: 28px 			!important;
+	height: auto 			!important;
+	width: auto 			!important;
+	left: 0px 				!important;
+	right: 0px	 			!important;
+	overflow: auto 			!important;
 }
-
 div#dropBoxinner{
-overflow: auto !important;
-height: auto;
-height: auto !important;
-overflow: auto !important;
-}
-
-legend.label{
-background: #e8e8e8;
-border: 1px solid #a4a4a4;
-font-weight: bold;
-	background: url(images/sub_header_tiler.gif) repeat-x #d6d6d6;
-}
-
-body#formbuilder  .case.selected-case{
-overflow: auto !important;
-top: 0px;
-bottom: 28px !important;
-position: absolute;
-left: 0;
-right: 10px;
-}
-
-fieldset.group{
-background: #f0f0f0;
-border: 1px solid #a4a4a4;
-}
-
-body#formbuilder fieldset.group{
-overflow: auto !important;
-top: 40px;
-bottom: 23px !important;
-position: absolute;
-left: 0;
-right: 120px;
-}
-
-body#formbuilder fieldset.group fieldset.group{
-overflow: auto !important;
-top: 0px;
-bottom: auto !important;
-position: relative !important;
-left: 0;
-right: 120px;
-}
-
-
-
-
-
-span.selector-item{
-clear: both !important;
-float: left;
-}
-
-span.selector-item span.label{
-	margin-left: 5px;
-}
-
-fieldset.group .trigger{
-float: right;
+	height: auto 			!important;
+	overflow: auto 			!important;
 }

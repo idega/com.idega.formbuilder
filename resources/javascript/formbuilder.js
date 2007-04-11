@@ -169,7 +169,7 @@ FBDropzone.prototype = (new Rico.Dropzone()).extend( {
 						var count = children.length;
 						var beforeNode = children[index];
 						var ids = beforeNode.id;
-						console.log('Marker: '+node.id + ' Before: '+beforeNode.id);
+						//console.log('Marker: '+node.id + ' Before: '+beforeNode.id);
 						cont.insertBefore(node, beforeNode);
 					}
 			}
@@ -203,14 +203,14 @@ FBDropzone.prototype = (new Rico.Dropzone()).extend( {
 			var index = CURRENT_ELEMENT_UNDER;
       		try {
 		         if(index != null) {
-		         	console.log("Accepting: " + currentElement);
+		         	//console.log("Accepting: " + currentElement);
 		         	var currentId = currentElement.getAttribute('id');
 		         	if(currentId != null) {
 		         		FormComponent.moveComponent(currentId, index, insertNewComponent);
 		         	}
 		         }
       		} catch(e) {
-      			console.log("Canceling: " + currentElement);
+      			//console.log("Canceling: " + currentElement);
       			FormComponent.removeComponent(currentElement.getAttribute('id'),nothing);
       		}
       		Sortable.create('dropBoxinner',{dropOnEmpty:true,tag:'div',only:'formElement',onUpdate:rearrangeComponents,scroll:'dropBoxinner',constraint:false});
@@ -412,7 +412,7 @@ function removeButtonNode(parameter) {
 }
 function loadButtonInfo(button) {
 	if(button != null) {
-		console.log('loading button info: ' + button.id);
+		//console.log('loading button info: ' + button.id);
 		if(button.id) {
 			if(pressedButtonDelete == false && draggingButton == false) {
 				FormComponent.getFormButtonInfo(button.id, placeButtonInfo);
@@ -689,7 +689,7 @@ function placeConfirmationPageInfo(parameter) {
 				dropBox.removeChild(area);
 			}
 			area = createButtonAreaNode();
-			console.log(area.childNodes.length);
+			//console.log(area.childNodes.length);
 			for(var i=0;i<parameter.buttons.length;i++) {
 				var buttonInfo = parameter.buttons[i];
 				var newNode = createButtonNode(buttonInfo);
@@ -790,7 +790,7 @@ function placePageInfo(parameter) {
 					dropBox.removeChild(area);
 				}
 				area = createButtonAreaNode();
-				console.log(area.childNodes.length);
+				//console.log(area.childNodes.length);
 				for(var i=0;i<parameter.buttons.length;i++) {
 					var buttonInfo = parameter.buttons[i];
 					var newNode = createButtonNode(buttonInfo);
@@ -857,7 +857,7 @@ function markSelectedComponent(parameter) {
 }
 function insertNewComponent(parameter) {
 	hideAllNotices();
-	console.log("Inserting: " + currentElement);
+	//console.log("Inserting: " + currentElement);
 	if(parameter == 'append') {
 		$('dropBoxinner').appendChild(currentElement);
 		currentElement = null;
@@ -877,7 +877,7 @@ function rearrangeComponents() {
 }
 function loadComponentInfo(component) {
 	if(component != null) {
-		console.log('loading component info: ' + component.id);
+		//console.log('loading component info: ' + component.id);
 		if(component.id) {
 			if(pressedComponentDelete == false && draggingComponent == false) {
 				FormComponent.getFormComponentInfo(component.id, placeComponentInfo);
@@ -896,7 +896,7 @@ function placeComponentInfo(parameter) {
 		CURRENT_ELEMENT_ID = parameter.id;
 		$(CURRENT_ELEMENT_ID).setAttribute('class','formElement selectedElement');
 		
-		console.log("Loading element: " + CURRENT_ELEMENT_ID + " instead of: " + PREVIOUS_ELEMENT_ID);
+		//console.log("Loading element: " + CURRENT_ELEMENT_ID + " instead of: " + PREVIOUS_ELEMENT_ID);
 		if(parameter.plain == true) {
 			var plainTxt = $('propertyPlaintext');
 			if(plainTxt != null) {
@@ -1083,7 +1083,7 @@ function replaceChangedComponent(parameter) {
 		var nodeId = newNode.id;
 		var oldNode = $(nodeId);
 		if(oldNode != null) {
-			console.log("Performing actual update: " + nodeId);
+			//console.log("Performing actual update: " + nodeId);
 			oldNode.replaceChild(newNode.childNodes[0], oldNode.childNodes[0]);
 		}
 	}
@@ -1101,10 +1101,10 @@ function saveComponentLabel(parameter) {
 		var node = $(CURRENT_ELEMENT_ID);
 		var buttonArea = node.parentNode.id;
 		if(node.parentNode.id == 'pageButtonArea') {
-			console.log('Saving button label: ' + parameter);
+			//console.log('Saving button label: ' + parameter);
 			FormComponent.saveButtonLabel(parameter, replaceChangedButton);
 		} else {
-			console.log('Saving component label: ' + parameter);
+			//console.log('Saving component label: ' + parameter);
 			FormComponent.saveComponentLabel(parameter, replaceChangedComponent);
 		}
 	}
@@ -1455,6 +1455,10 @@ function createNewFormOnEnter(e) {
 	if(key == '13') {
 		createNewForm();
 	}
+}
+function switchToPreview() {
+	//new Rico.Effect.Size('pagesPanelMain', 0, null, 500, 10, {complete:closeLoadingMessage});
+	closeLoadingMessage();
 }
 messageObj = new DHTML_modalMessage();
 messageObj.setShadowOffset(5);

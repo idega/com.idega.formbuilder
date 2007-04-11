@@ -104,6 +104,7 @@ public class FBPagesPanel extends FBComponentBase {
 		super.encodeBegin(context);
 		
 		writer.startElement("DIV", this);
+		writer.writeAttribute("id", getId() + "Main", "id");
 		writer.writeAttribute("class", getStyleClass(), "styleClass");
 		
 		UIComponent component = getFacet(TOOLBAR_FACET);
