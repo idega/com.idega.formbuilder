@@ -772,10 +772,13 @@ body#formbuilder .toolbarButton:hover {
 	height: auto 			!important;
 	border-width: 0 		!important;
 }
-.acStretch{
+
+/*Accordion*/
+body#formbuilder .acStretch{
 	background: #fef9eb 	!important;
 	border-width: 0px 		!important;
 }
+
 #mainPalette .activeMenuItem,#mainPalette .inactiveMenuItem{
 	padding: 3px 10px 		!important;
 	width: auto 			!important;
