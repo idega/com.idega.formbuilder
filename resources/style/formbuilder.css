@@ -567,7 +567,7 @@ div.label span,div.label input {
 	margin: 0;
 	padding: 7px 0 0 14px;
 }
-.toolbarButton {
+body#formbuilder .toolbarButton {
 	text-decoration: none 					! important;
 	color: #000;
 	height: 12px;
@@ -580,7 +580,7 @@ div.label span,div.label input {
 	display: block;
 	font-size: 1.0em;
 }
-.toolbarButton:hover {
+body#formbuilder .toolbarButton:hover {
 	border: 1px solid #000;
 	margin: 1px;
 	color: #FFF;
@@ -772,7 +772,7 @@ div.label span,div.label input {
 	height: auto 			!important;
 	border-width: 0 		!important;
 }
-.accordionTabContentBox{
+.acStretch{
 	background: #fef9eb 	!important;
 	border-width: 0px 		!important;
 }
@@ -814,10 +814,7 @@ div.label span,div.label input {
 #pageButtonArea .formButton:hover {
 	margin-right: 0px 		!important;
 }
-.accordionTabTitleBar{
-	padding: 2px 			!important;
-	height: auto 			!important;
-}
+
 span.fbMenuTabBar{
 	margin: 0 				!important;
 	font-family: Arial, Verdana, sans-serif !important;
