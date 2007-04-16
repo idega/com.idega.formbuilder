@@ -50,42 +50,9 @@ public class FBMenu extends FBComponentBase {
 		Application application = context.getApplication();
 		getChildren().clear();
 		
-//		WFDivision menuHeaderPanel = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
-//		menuHeaderPanel.setId("menuPanelToolbar");
-//
-//		WFDivision newFormPanel = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
-//		newFormPanel.setId("newFormPanel");
-//		
-//		HtmlOutputLabel newFormLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-//		newFormLabel.setFor("newFormInput");
-//		newFormLabel.setStyleClass("fbStandardLabel");
-//		
-//		HtmlOutputLabel newFormInput = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-//		newFormInput.setValueBinding("value", application.createValueBinding("#{formDocument.tempValue}"));
-//		newFormInput.setStyleClass("fbStandardInput");
-//		newFormInput.setId("newFormInput");
-		
-//		HtmlCommandButton createNewFormButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
-//		createNewFormButton.setId("createNewFormButton");
-//		createNewFormButton.setOnclick("createNewForm();return false");
-//		createNewFormButton.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['toolbar_create']}"));
-//		createNewFormButton.setStyleClass("fbStdImgButton");
-//		
-//		HtmlCommandButton cancelNewFormButton = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
-//		cancelNewFormButton.setId("cancelNewFormButton");
-//		cancelNewFormButton.setOnclick("closeNewFormPanel();return false");
-//		cancelNewFormButton.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['toolbar_cancel']}"));
-//		cancelNewFormButton.setStyleClass("fbStdImgButton");
-		
-//		addChild(newFormLabel, newFormPanel);
-//		addChild(newFormInput, newFormPanel);
-//		addChild(createNewFormButton, newFormPanel);
-//		addChild(cancelNewFormButton, newFormPanel);
-		
 		Accordion acc = new Accordion("fbMenu");
 		acc.setId("fbMenuAccordion");
 		acc.setHeight("400");
-		acc.setIncludeJavascript(false);
 		
 		FBPalette palette = (FBPalette) application.createComponent(FBPalette.COMPONENT_TYPE);
 		palette.setColumns(2);
@@ -116,14 +83,6 @@ public class FBMenu extends FBComponentBase {
 		acc.addPanel(tab3, formProperties);
 		
 		add(acc);
-		
-//		HtmlOutputText noMenuLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-//		noMenuLabel.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['no_menu_label']}"));
-//		noMenuLabel.setStyleClass("noMenuLabel");
-		
-//		addFacet(MENU_TOOLBAR_FACET, menuHeaderPanel);
-//		addFacet(NEW_FORM_PANEL_FACET, newFormPanel);
-//		addFacet(NO_MENU_FACET, noMenuLabel);
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
@@ -133,10 +92,6 @@ public class FBMenu extends FBComponentBase {
 		writer.writeAttribute("id", getId(), "id");
 		writer.writeAttribute("style", "width: 300px;", null);
 		
-//		UIComponent facet = getFacet(MENU_TOOLBAR_FACET);
-//		if(facet != null) {
-//			renderChild(context, facet);
-//		}
 		ValueBinding showVB = getValueBinding("show");
 		if(showVB != null) {
 			show = (Boolean) showVB.getValue(context);

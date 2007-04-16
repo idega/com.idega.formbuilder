@@ -66,14 +66,6 @@ public class FBHomePage extends FBComponentBase {
 		addChild(headerPartRight, header);
 		
 		addFacet(HEADER_BLOCK_FACET, header);
-		
-//		HtmlAjaxCommandButton refreshViewAjax = (HtmlAjaxCommandButton) application.createComponent(HtmlAjaxCommandButton.COMPONENT_TYPE);
-//		refreshViewAjax.setId("refreshView");
-//		refreshViewAjax.setAjaxSingle(true);
-//		refreshViewAjax.setReRender("fbHomePage");
-//		refreshViewAjax.setStyle("display: none");
-//		
-//		addFacet(REFRESH_FACET_PROXY, refreshViewAjax);
 	}
 	
 	public String getEmbededJavascript() {

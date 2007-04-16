@@ -8,6 +8,7 @@ import javax.faces.context.ResponseWriter;
 
 import org.apache.myfaces.custom.tabbedpane.HtmlPanelTab;
 import org.apache.myfaces.custom.tabbedpane.HtmlPanelTabbedPane;
+import org.apache.myfaces.custom.tabbedpane.TabChangeEvent;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.Workspace;
@@ -39,7 +40,10 @@ public class FBViewPanel extends FBComponentBase {
 		tabbedPane.setStyleClass("tabbedPane");
 		tabbedPane.setActiveTabStyleClass("activeTab");
 		tabbedPane.setInactiveTabStyleClass("inactiveTab");
-		tabbedPane.setServerSideTabSwitch(false);
+		tabbedPane.setServerSideTabSwitch(true);
+		tabbedPane.setActiveSubStyleClass("activeSub");
+		tabbedPane.setInactiveSubStyleClass("inactiveSub");
+		tabbedPane.setTabChangeListener(application.createMethodBinding("#{workspace.processTabChange}", new Class[] {TabChangeEvent.class}));
 		
 		HtmlPanelTab tab1 = (HtmlPanelTab) application.createComponent(HtmlPanelTab.COMPONENT_TYPE);
 		tab1.setLabel("Design");
@@ -69,7 +73,7 @@ public class FBViewPanel extends FBComponentBase {
 		tab3.getChildren().add(sourceView);
 
 		tabbedPane.getChildren().add(tab1);
-		tabbedPane.getChildren().add(tab2);
+//		tabbedPane.getChildren().add(tab2);
 		tabbedPane.getChildren().add(tab3);
 		
 		addFacet(SWITCHER_FACET, tabbedPane);

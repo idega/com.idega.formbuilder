@@ -5,10 +5,10 @@ import java.util.Locale;
 
 import javax.faces.event.ActionEvent;
 
-import com.idega.webface.event.WFTabEvent;
-import com.idega.webface.event.WFTabListener;
+import org.apache.myfaces.custom.tabbedpane.TabChangeEvent;
+import org.apache.myfaces.custom.tabbedpane.TabChangeListener;
 
-public class Workspace implements Serializable, WFTabListener {
+public class Workspace implements Serializable, TabChangeListener {
 	
 	private static final long serialVersionUID = -7539955904708793992L;
 	
@@ -27,10 +27,6 @@ public class Workspace implements Serializable, WFTabListener {
 	public Locale getLocale() {
 		return locale;
 	}
-	
-	public void tabPressed(WFTabEvent event) {
-		System.out.println("sdfsdsdsdf");
-	}
 
 	public void setLocale(Locale locale) {
 		this.locale = locale;
@@ -45,20 +41,9 @@ public class Workspace implements Serializable, WFTabListener {
 		this.locale = new Locale("en");
 	}
 	
-	public void togglePagesPanel(ActionEvent ae) {
-		if(pagesPanelVisible) {
-			pagesPanelVisible = false;
-		} else {
-			pagesPanelVisible = true;
-		}
-	}
-	
-	public String redirectHome() {
-		return "redirectHome";
-	}
-	
-	public void changeView(ActionEvent ae) {
-		String buttonId = ae.getComponent().getId();
+	public void processTabChange(TabChangeEvent tce) {
+		try {
+		String buttonId = tce.getComponent().getId();
 		if(buttonId.equals("designViewTab")) {
 			this.view = "design";
 			this.renderedMenu = true;
@@ -69,7 +54,21 @@ public class Workspace implements Serializable, WFTabListener {
 			this.view = "source";
 			this.renderedMenu = false;
 		}
-		
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void togglePagesPanel(ActionEvent ae) {
+		if(pagesPanelVisible) {
+			pagesPanelVisible = false;
+		} else {
+			pagesPanelVisible = true;
+		}
+	}
+	
+	public String redirectHome() {
+		return "redirectHome";
 	}
 
 	public boolean isRenderedMenu() {
