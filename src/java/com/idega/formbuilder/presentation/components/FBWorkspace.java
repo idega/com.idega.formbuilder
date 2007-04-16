@@ -1,15 +1,12 @@
 package com.idega.formbuilder.presentation.components;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
-
-import org.ajax4jsf.ajax.html.HtmlAjaxOutputPanel;
 
 import com.idega.block.web2.business.Web2Business;
 import com.idega.business.IBOLookup;
@@ -93,14 +90,14 @@ public class FBWorkspace extends FBComponentBase {
 		menu.setValueBinding("selectedMenu", application.createValueBinding("#{workspace.selectedMenu}"));
 		menu.setValueBinding("show", application.createValueBinding("#{workspace.renderedMenu}"));
 
-		HtmlAjaxOutputPanel viewPanel = new HtmlAjaxOutputPanel();
-		viewPanel.setId("ajaxViewPanel");
+//		HtmlAjaxOutputPanel viewPanel = new HtmlAjaxOutputPanel();
+//		viewPanel.setId("ajaxViewPanel");
 		
 		FBViewPanel views = (FBViewPanel) application.createComponent(FBViewPanel.COMPONENT_TYPE);
 		views.setValueBinding("view", vb);
 		views.setId("viewPanel");
 		views.setStyleClass("formContainer");
-		addChild(views, viewPanel);
+//		addChild(views, viewPanel);
 		
 		FBPagesPanel pages = (FBPagesPanel) application.createComponent(FBPagesPanel.COMPONENT_TYPE);
 		pages.setId("pagesPanel");
@@ -111,7 +108,7 @@ public class FBWorkspace extends FBComponentBase {
 		pages.setSelectedStyleClass("selectedElement");
 		
 		addFacet(WORKSPACE_MENU_FACET, menu);
-		addFacet(WORKSPACE_VIEW_FACET, viewPanel);
+		addFacet(WORKSPACE_VIEW_FACET, views);
 		addFacet(WORKSPACE_PAGES_FACET, pages);
 	}
 	

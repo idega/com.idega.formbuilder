@@ -10,7 +10,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.model.SelectItem;
 
-import org.ajax4jsf.ajax.html.HtmlAjaxCommandButton;
 import org.apache.myfaces.component.html.ext.HtmlCommandLink;
 import org.apache.myfaces.component.html.ext.HtmlGraphicImage;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
@@ -29,7 +28,7 @@ public class FBHomePage extends FBComponentBase {
 	private static final String HEADER_BLOCK_FACET = "HEADER_BLOCK_FACET";
 	private static final String GREETING_BLOCK_FACET = "GREETING_BLOCK_FACET";
 	private static final String FORM_LIST_FACET = "FORM_LIST_FACET";
-	private static final String REFRESH_FACET_PROXY = "REFRESH_FACET_PROXY"; 
+//	private static final String REFRESH_FACET_PROXY = "REFRESH_FACET_PROXY"; 
 	
 	public FBHomePage() {
 		super();
@@ -68,13 +67,13 @@ public class FBHomePage extends FBComponentBase {
 		
 		addFacet(HEADER_BLOCK_FACET, header);
 		
-		HtmlAjaxCommandButton refreshViewAjax = (HtmlAjaxCommandButton) application.createComponent(HtmlAjaxCommandButton.COMPONENT_TYPE);
-		refreshViewAjax.setId("refreshView");
-		refreshViewAjax.setAjaxSingle(true);
-		refreshViewAjax.setReRender("fbHomePage");
-		refreshViewAjax.setStyle("display: none");
-		
-		addFacet(REFRESH_FACET_PROXY, refreshViewAjax);
+//		HtmlAjaxCommandButton refreshViewAjax = (HtmlAjaxCommandButton) application.createComponent(HtmlAjaxCommandButton.COMPONENT_TYPE);
+//		refreshViewAjax.setId("refreshView");
+//		refreshViewAjax.setAjaxSingle(true);
+//		refreshViewAjax.setReRender("fbHomePage");
+//		refreshViewAjax.setStyle("display: none");
+//		
+//		addFacet(REFRESH_FACET_PROXY, refreshViewAjax);
 	}
 	
 	public String getEmbededJavascript() {
@@ -223,15 +222,15 @@ public class FBHomePage extends FBComponentBase {
 			renderChild(context, list);
 		}
 		
-		ResponseWriter writer = context.getResponseWriter();
-		writer.startElement("DIV", this);
-		writer.writeAttribute("id", "actionsProxy", null);
-		writer.writeAttribute("style", "display: none;", null);
-		UIComponent button = getFacet(REFRESH_FACET_PROXY);
-		if(button != null) {
-			renderChild(context, button);
-		}
-		writer.endElement("DIV");
+//		ResponseWriter writer = context.getResponseWriter();
+//		writer.startElement("DIV", this);
+//		writer.writeAttribute("id", "actionsProxy", null);
+//		writer.writeAttribute("style", "display: none;", null);
+//		UIComponent button = getFacet(REFRESH_FACET_PROXY);
+//		if(button != null) {
+//			renderChild(context, button);
+//		}
+//		writer.endElement("DIV");
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {

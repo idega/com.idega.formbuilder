@@ -5,7 +5,10 @@ import java.util.Locale;
 
 import javax.faces.event.ActionEvent;
 
-public class Workspace implements Serializable {
+import com.idega.webface.event.WFTabEvent;
+import com.idega.webface.event.WFTabListener;
+
+public class Workspace implements Serializable, WFTabListener {
 	
 	private static final long serialVersionUID = -7539955904708793992L;
 	
@@ -23,6 +26,10 @@ public class Workspace implements Serializable {
 	
 	public Locale getLocale() {
 		return locale;
+	}
+	
+	public void tabPressed(WFTabEvent event) {
+		System.out.println("sdfsdsdsdf");
 	}
 
 	public void setLocale(Locale locale) {
