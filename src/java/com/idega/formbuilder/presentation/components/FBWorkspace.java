@@ -8,6 +8,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
 
+import org.apache.myfaces.renderkit.html.util.AddResource;
+import org.apache.myfaces.renderkit.html.util.AddResourceFactory;
+
 import com.idega.block.web2.business.Web2Business;
 import com.idega.business.IBOLookup;
 import com.idega.formbuilder.presentation.FBComponentBase;
@@ -67,6 +70,13 @@ public class FBWorkspace extends FBComponentBase {
 //				String scriptaculousURI = business.getBundleURIToScriptaculousLib();
 				String dojoURI = business.getBundleURIToDojoLib();
 				String ricoURI = business.getBundleURIToRicoLib();
+				
+				AddResource resourceAdder = AddResourceFactory.getInstance(context);
+				
+				resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, prototypeURI);
+				resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, dojoURI);
+				resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, ricoURI);
+				resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, FORMBUILDER_JS);
 
 				Script script = new Script();
 				script.addScriptSource(DWR_ENGINE_JS);
@@ -74,11 +84,11 @@ public class FBWorkspace extends FBComponentBase {
 				script.addScriptSource(FORM_COMPONENT_JS);
 				script.addScriptSource(FORM_DOCUMENT_JS);
 				script.addScriptSource(FORM_PAGE_JS);
-				script.addScriptSource(prototypeURI);
+//				script.addScriptSource(prototypeURI);
 //				script.addScriptSource(scriptaculousURI);
-				script.addScriptSource(dojoURI);
-				script.addScriptSource(ricoURI);
-				script.addScriptSource(FORMBUILDER_JS);
+//				script.addScriptSource(dojoURI);
+//				script.addScriptSource(ricoURI);
+//				script.addScriptSource(FORMBUILDER_JS);
 				
 				
 //				// THIS HAS TO BE ADDED TO THE <BODY> in the html, if not it does not work in Safari
@@ -101,14 +111,10 @@ public class FBWorkspace extends FBComponentBase {
 		menu.setValueBinding("selectedMenu", application.createValueBinding("#{workspace.selectedMenu}"));
 		menu.setValueBinding("show", application.createValueBinding("#{workspace.renderedMenu}"));
 
-//		HtmlAjaxOutputPanel viewPanel = new HtmlAjaxOutputPanel();
-//		viewPanel.setId("ajaxViewPanel");
-		
 		FBViewPanel views = (FBViewPanel) application.createComponent(FBViewPanel.COMPONENT_TYPE);
 		views.setValueBinding("view", vb);
 		views.setId("viewPanel");
 		views.setStyleClass("formContainer");
-//		addChild(views, viewPanel);
 		
 		FBPagesPanel pages = (FBPagesPanel) application.createComponent(FBPagesPanel.COMPONENT_TYPE);
 		pages.setId("pagesPanel");

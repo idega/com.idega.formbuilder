@@ -57,5 +57,20 @@ public class FBComponentBase extends IWBaseComponent {
 	public String getRendererType() {
 		return null;
 	}
+	
+	public Object saveState(FacesContext context) {
+		Object values[] = new Object[3];
+		values[0] = super.saveState(context); 
+		values[1] = id;
+		values[2] = styleClass;
+		return values;
+	}
+	
+	public void restoreState(FacesContext context, Object state) {
+		Object values[] = (Object[]) state;
+		super.restoreState(context, values[0]);
+		id = (String) values[1];
+		styleClass = (String) values[2];
+	}
 
 }

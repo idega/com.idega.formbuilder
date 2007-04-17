@@ -65,7 +65,6 @@ public class FBFormComponent extends FBComponentBase {
 					if(element != null) {
 						
 						element.removeAttribute("id");
-//						element.setAttribute("id", getId() + "_i");
 						setElement(element);
 						
 						HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);

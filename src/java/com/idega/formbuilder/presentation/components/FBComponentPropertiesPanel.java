@@ -1,8 +1,11 @@
 package com.idega.formbuilder.presentation.components;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
 
 import javax.faces.application.Application;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectItems;
 import javax.faces.context.FacesContext;
 
@@ -15,10 +18,7 @@ import org.apache.myfaces.component.html.ext.HtmlSelectOneRadio;
 import com.idega.documentmanager.business.form.Component;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormComponent;
-import com.idega.presentation.Table2;
-import com.idega.presentation.TableCell2;
-import com.idega.presentation.TableRow;
-import com.idega.presentation.TableRowGroup;
+import com.idega.webface.WFDivision;
 import com.idega.webface.WFUtil;
 
 public class FBComponentPropertiesPanel extends FBComponentBase {
@@ -33,57 +33,23 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 	private static final String LOCAL_PROPERTIES_FACET = "LOCAL_PROPERTIES_FACET";
 	private static final String PLAIN_PROPERTIES_FACET = "PLAIN_PROPERTIES_FACET";
 	
+	private static final String PROPERTIES_PANEL_SECTION_STYLE = "propertiesPanelSection";
+	
 	public FBComponentPropertiesPanel() {
 		super();
 		setRendererType(null);
 	}
 	
-	protected void initializeComponent(FacesContext context) {
-		Application application = context.getApplication();
-		getChildren().clear();
+	private WFDivision createPanelSection(String id, Application application) {
+		WFDivision body = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		body.setId(id);
+		body.setStyleClass(PROPERTIES_PANEL_SECTION_STYLE);
 		
-//		Label property for all components and buttons
-		
-		Table2 table = new Table2();
-		table.setId("labelPropertiesPanel");
-		//table.setStyleAttribute("width: 250px;");
-		table.setCellpadding(0);
-		table.setStyleClass("propertiesPanelSection");
-		TableRowGroup group = table.createBodyRowGroup();
-		TableRow row = null;
-		TableCell2 cell = null;
-		
-		HtmlOutputText titleLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		titleLabel.setValue("Field name");
-		
-		HtmlInputText title = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
-		title.setId("propertyTitle");
-		title.setValueBinding("value", application.createValueBinding("#{formComponent.label}"));
-		title.setOnblur("saveComponentLabel(this.value);");
-		title.setOnkeydown("savePropertyOnEnter(this.value,'compTitle',event);");
-		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.setWidth("100");
-		cell.add(titleLabel);
-		cell.add(title);
-		
-		
-		//cell = row.createCell();
-		
-		
-		addFacet(BUTTON_PROPERTIES_FACET, table);
-		
-//		Basic propertis for all components
-		
-		table = new Table2();
-		table.setId("basicPropertiesPanel");
-		//table.setStyleAttribute("width: 250px;");
-		table.setStyleClass("propertiesPanelSection");
-		table.setCellpadding(0);
-		group = table.createBodyRowGroup();
-		row = null;
-		cell = null;
+		return body;
+	}
+	
+	private UIComponent createBasicProperties(Application application) {
+		WFDivision body = createPanelSection("basicPropertiesPanel", application);
 		
 		HtmlOutputText requiredLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		requiredLabel.setValue("Required field");
@@ -93,15 +59,8 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		required.setValueBinding("value", application.createValueBinding("#{formComponent.required}"));
 		required.setOnclick("saveRequired(this.checked);");
 		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.setWidth("100");
-		cell.add(requiredLabel);
-		cell.add(required);
-		
-		
-		//cell = row.createCell();
-		
+		body.add(requiredLabel);
+		body.add(required);
 		
 		HtmlOutputText errorMsgLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		errorMsgLabel.setValue("Error message");
@@ -112,14 +71,8 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		errorMsg.setOnblur("saveErrorMessage(this.value)");
 		errorMsg.setOnkeydown("savePropertyOnEnter(this.value,'compErr',event);");
 		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.add(errorMsgLabel);
-		cell.add(errorMsg);
-		
-		
-//		cell = row.createCell();
-		
+		body.add(errorMsgLabel);
+		body.add(errorMsg);
 		
 		HtmlOutputText helpMsgLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		helpMsgLabel.setValue("Help text");
@@ -130,14 +83,8 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		helpMsg.setOnblur("saveHelpMessage(this.value)");
 		helpMsg.setOnkeydown("savePropertyOnEnter(this.value,'compHelp',event);");
 		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.add(helpMsgLabel);
-		cell.add(helpMsg);
-		
-		
-//		cell = row.createCell();
-		
+		body.add(helpMsgLabel);
+		body.add(helpMsg);
 		
 		HtmlOutputText hasAutofillLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		hasAutofillLabel.setValue("Autofill field");
@@ -147,25 +94,14 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		hasAutofill.setOnclick("toggleAutofill(this.checked);");
 		hasAutofill.setValueBinding("value", application.createValueBinding("#{formComponent.autofill}"));
 		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.add(hasAutofillLabel);
-		cell.add(hasAutofill);
+		body.add(hasAutofillLabel);
+		body.add(hasAutofill);
 		
-		
-//		cell = row.createCell();
-		
-		
-		addFacet(BASIC_PROPERTIES_FACET, table);
-		
-		table = new Table2();
-		table.setId("autoPropertiesPanel");
-//		table.setStyleAttribute("width: 250px;");
-		table.setStyleClass("propertiesPanelSection");
-		table.setCellpadding(0);
-		group = table.createBodyRowGroup();
-		row = null;
-		cell = null;
+		return body;
+	}
+	
+	private UIComponent createAutofillProperties(Application application) {
+		WFDivision body = createPanelSection("autoPropertiesPanel", application);
 		
 		HtmlOutputText autofillLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		autofillLabel.setValue("");
@@ -176,26 +112,32 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		autofillValue.setOnblur("saveAutofill(this.value);");
 		autofillValue.setOnkeydown("savePropertyOnEnter(this.value,'compAuto',event);");
 		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.setWidth("100");
-		cell.add(autofillLabel);
-		cell.add(autofillValue);
+		body.add(autofillLabel);
+		body.add(autofillValue);
 		
+		return body;
+	}
+	
+	private UIComponent createButtonProperties(Application application) {
+		WFDivision body = createPanelSection("labelPropertiesPanel", application);
 		
-//		cell = row.createCell();
+		HtmlOutputText titleLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		titleLabel.setValue("Field name");
 		
+		HtmlInputText title = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+		title.setId("propertyTitle");
+		title.setValueBinding("value", application.createValueBinding("#{formComponent.label}"));
+		title.setOnblur("saveComponentLabel(this.value);");
+		title.setOnkeydown("savePropertyOnEnter(this.value,'compTitle',event);");
 		
-		addFacet(AUTOFILL_PROPERTIES_FACET, table);
+		body.add(titleLabel);
+		body.add(title);
 		
-		table = new Table2();
-		table.setId("plainPropertiesPanel");
-//		table.setStyleAttribute("width: 250px;");
-		table.setStyleClass("propertiesPanelSection");
-		table.setCellpadding(0);
-		group = table.createBodyRowGroup();
-		row = null;
-		cell = null;
+		return body;
+	}
+	
+	private UIComponent createPlainProperties(Application application) {
+		WFDivision body = createPanelSection("plainPropertiesPanel", application);
 		
 		HtmlOutputText plainTextLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		plainTextLabel.setValue("Text");
@@ -206,32 +148,17 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		plainTextValue.setOnblur("savePlaintext(this.value);");
 		plainTextValue.setOnkeydown("savePropertyOnEnter(this.value,'compText',event);");
 		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.setWidth("100");
-		cell.add(plainTextLabel);
+		body.add(plainTextLabel);
+		body.add(plainTextValue);
 		
-		
-		
-//		cell = row.createCell();
-		cell.add(plainTextValue);
-		
-		addFacet(PLAIN_PROPERTIES_FACET, table);
-		
-		table = new Table2();
-		table.setId("advPropertiesPanel");
-		table.setStyleAttribute("width: 250px;");
-		table.setCellpadding(0);
-		group = table.createBodyRowGroup();
-		row = null;
-		cell = null;
+		return body;
+	}
+	
+	private UIComponent createAdvancedProperties(Application application) {
+		WFDivision body = createPanelSection("advPropertiesPanel", application);
 		
 		HtmlOutputText advancedL = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		advancedL.setValue("Select source");
-
-		row = group.createRow();
-		cell = row.createCell();
-		cell.add(advancedL);
 		
 		HtmlSelectOneRadio dataSrcSwitch = (HtmlSelectOneRadio) application.createComponent(HtmlSelectOneRadio.COMPONENT_TYPE);
 		dataSrcSwitch.setStyleClass("inlineRadioButton");
@@ -243,26 +170,17 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		dataSrcs.setValueBinding("value", application.createValueBinding("#{dataSources.sources}"));
 		addChild(dataSrcs, dataSrcSwitch);
 		
-		cell = row.createCell();
-		cell.add(dataSrcSwitch);
+		body.add(advancedL);
+		body.add(dataSrcSwitch);
 		
-		addFacet(ADVANCED_PROPERTIES_FACET, table);
-		
-		table = new Table2();
-		table.setId("extPropertiesPanel");
-		table.setStyleAttribute("width: 250px;");
-		table.setCellpadding(0);
-		group = table.createBodyRowGroup();
-		row = null;
-		cell = null;
+		return body;
+	}
+	
+	private UIComponent createExternalProperties(Application application) {
+		WFDivision body = createPanelSection("extPropertiesPanel", application);
 		
 		HtmlOutputText externalSrcLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		externalSrcLabel.setValue("External data source");
-		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.setWidth("100");
-		cell.add(externalSrcLabel);
 		
 		HtmlInputText external = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		external.setId("propertyExternal");
@@ -271,44 +189,83 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		external.setOnkeydown("savePropertyOnEnter(this.value,'compExt',event);");
 		external.setDisabled(true);
 		
-		cell = row.createCell();
-		cell.add(external);
+		body.add(externalSrcLabel);
+		body.add(external);
 		
-		addFacet(EXTERNAL_PROPERTIES_FACET, table);
-		
-		table = new Table2();
-		table.setId("localPropertiesPanel");
-		table.setStyleAttribute("width: 250px;");
-		table.setCellpadding(0);
-		group = table.createBodyRowGroup();
-		row = null;
-		cell = null;
+		return body;
+	}
+	
+	private UIComponent createLocalProperties(Application application) {
+		WFDivision body = createPanelSection("localPropertiesPanel", application);
 		
 		FBSelectValuesList selectValues = (FBSelectValuesList) application.createComponent(FBSelectValuesList.COMPONENT_TYPE);
 		selectValues.setValueBinding("itemSet", application.createValueBinding("#{formComponent.items}"));
 		selectValues.setId("selectOpts");
 		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.add(selectValues);
+		body.add(selectValues);
 		
-		addFacet(LOCAL_PROPERTIES_FACET, table);
+		return body;
+	}
+
+	
+	protected void initializeComponent(FacesContext context) {
+		Application application = context.getApplication();
+		getChildren().clear();
+		
+		addFacet(BUTTON_PROPERTIES_FACET, createButtonProperties(application));
+		addFacet(BASIC_PROPERTIES_FACET, createBasicProperties(application));
+		addFacet(AUTOFILL_PROPERTIES_FACET, createAutofillProperties(application));
+		addFacet(PLAIN_PROPERTIES_FACET, createPlainProperties(application));
+		addFacet(ADVANCED_PROPERTIES_FACET, createAdvancedProperties(application));
+		addFacet(EXTERNAL_PROPERTIES_FACET, createExternalProperties(application));
+		addFacet(LOCAL_PROPERTIES_FACET, createLocalProperties(application));
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
+		Application application = context.getApplication();
 		super.encodeBegin(context);
 		
-		Table2 plain = (Table2) getFacet(PLAIN_PROPERTIES_FACET);
+		/*Table2 plain = (Table2) getFacet(PLAIN_PROPERTIES_FACET);
 		Table2 label = (Table2) getFacet(BUTTON_PROPERTIES_FACET);
 		Table2 basic = (Table2) getFacet(BASIC_PROPERTIES_FACET);
 		Table2 auto = (Table2) getFacet(AUTOFILL_PROPERTIES_FACET);
 		Table2 adv = (Table2) getFacet(ADVANCED_PROPERTIES_FACET);
 		Table2 ext = (Table2) getFacet(EXTERNAL_PROPERTIES_FACET);
-		Table2 local = (Table2) getFacet(LOCAL_PROPERTIES_FACET);
-		
+		Table2 local = (Table2) getFacet(LOCAL_PROPERTIES_FACET);*/
+		WFDivision plain = (WFDivision) getFacet(PLAIN_PROPERTIES_FACET);
+		if(plain == null) {
+			plain = (WFDivision) createPlainProperties(application);
+		}
+		WFDivision label = (WFDivision) getFacet(BUTTON_PROPERTIES_FACET);
+		if(label == null) {
+			label = (WFDivision) createButtonProperties(application);
+		}
+		WFDivision basic = (WFDivision) getFacet(BASIC_PROPERTIES_FACET);
+		if(basic == null) {
+			basic = (WFDivision) createBasicProperties(application);
+		}
+		WFDivision auto = (WFDivision) getFacet(AUTOFILL_PROPERTIES_FACET);
+		if(auto == null) {
+			auto = (WFDivision) createAutofillProperties(application);
+		}
+		WFDivision adv = (WFDivision) getFacet(ADVANCED_PROPERTIES_FACET);
+		if(adv == null) {
+			adv = (WFDivision) createAdvancedProperties(application);
+		}
+		WFDivision ext = (WFDivision) getFacet(EXTERNAL_PROPERTIES_FACET);
+		if(ext == null) {
+			ext = (WFDivision) createExternalProperties(application);
+		}
+		WFDivision local = (WFDivision) getFacet(LOCAL_PROPERTIES_FACET);
+		if(local == null) {
+			local = (WFDivision) createLocalProperties(application);
+		}
+
+		Map map = getFacets();
+		Set set = map.keySet();
+		Object array[] = set.toArray();
 		FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
 		if(formComponent.getPropertiesPlain() != null) {
-			//plain.setStyleAttribute("display: none");
 			plain.setStyleAttribute("display: block");
 			label.setStyleAttribute("display: none");
 			basic.setStyleAttribute("display: none");

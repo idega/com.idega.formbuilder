@@ -40,10 +40,6 @@ public class FormPageInfo {
 	}
 
 	public List<Element> getComponents() {
-		Iterator it = components.iterator();
-		while(it.hasNext()) {
-			DOMUtil.prettyPrintDOM((Element) it.next());
-		}
 		return components;
 	}
 

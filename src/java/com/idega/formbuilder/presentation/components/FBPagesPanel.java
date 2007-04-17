@@ -120,7 +120,6 @@ public class FBPagesPanel extends FBComponentBase {
 		writer.startElement("DIV", null);
 		writer.writeAttribute("id", getId(), "id");
 		writer.writeAttribute("class", generalPartStyleClass, null);
-		//writer.writeAttribute("style", "display: block; height: 300px; overflow: auto;", null);
 		
 		Locale locale = ((Workspace) WFUtil.getBeanInstance("workspace")).getLocale();
 		FormDocument formDocument = ((FormDocument) WFUtil.getBeanInstance("formDocument"));
@@ -203,7 +202,6 @@ public class FBPagesPanel extends FBComponentBase {
 		writer.startElement("DIV", null);
 		writer.writeAttribute("id", getId() + "Special", null);
 		writer.writeAttribute("class", specialPartStyleClass, null);
-		//writer.writeAttribute("style", "display: block; height: 150px; overflow: auto; margin-top: 15px;", null);
 		
 		component = getFacet(CONFIRMATION_PAGE);
 		if(component != null) {
