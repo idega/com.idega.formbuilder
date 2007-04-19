@@ -2,6 +2,44 @@
 .fbSelectListItem {
 	width: 95px;
 }
+.myFaces_panelTabbedPane {
+	margin-top:	-33px					!important;
+	width: 100%							!important;
+}
+.tabContent {
+}
+.activeTab input, .inactiveTab input {
+	border: none;
+}
+.activeTab input {
+	background-color: #DFEEA3;
+}
+.inactiveTab input {
+	background-color: #f5f5f5;
+}
+.activeTab input:active, .inactiveTab input:active {
+	border: none;
+}
+.activeTab, .inactiveTab {
+	border: 1px solid #aeaeae;
+	margin: 0 1px;
+	padding: 5px;
+	height: 22px !important;
+	background: #fff;
+}
+.activeTab {
+	width: 100px;
+	height: 30px;
+	text-decoration: none;
+	background-color: #DFEEA3;
+	border-bottom: 1px solid #fff;
+}
+.inactiveTab {
+	width: 100px;
+	height: 30px;
+	text-decoration: none;
+	background-color: #f5f5f5;
+}
 #insertMarker {
 	width: 300px;
 	height: 50px;
@@ -371,7 +409,7 @@ a.okBt:hover {
 	font-size: 13px;	/* Font size of main menu items */
 	height:20px;	/* Height of main menu */
 	position:relative;	/* Don't change this position attribute */
-	background: #fef9eb 	!important;
+	background: #FFF 	!important;
 	border-bottom: 1px solid #aeaeae;
 	padding: 0 2px 			!important;
 }
@@ -389,7 +427,7 @@ a.okBt:hover {
 #paletteBody{
 	height: 180px;
 	font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;	/* Font  of sub menu items */
-	background: #fef9eb 	!important;	/* Background color of sub menu items */
+	background: #FFF 	!important;	/* Background color of sub menu items */
 	width:100%;	/* Don't change this option */
 }	
 #paletteBody div{
@@ -485,7 +523,13 @@ a.okBt:hover {
 	width: 500px;
 	display: block;
 	position: relative;
-	top: -20px;
+	top: -40px;
+}
+.viewTabs ul {
+	list-style:none;
+}
+.viewTabs ul li {
+	display: inline;
 }
 .showPagesButton {
 	display: inline;
@@ -527,18 +571,6 @@ a.okBt:hover {
 .sourceView input {
 	align: center;
 }
-.selectedTab {
-	text-decoration: none;
-	height: auto;
-	background-color: #DFEEA3;
-	display: inline;
-}
-.unselectedTab {
-	text-decoration: none;
-	height: auto;
-	background-color: #f5f5f5;
-	display: inline;
-}
 .formHeading {
 	font-size: 24px;
 	text-align: center;
@@ -567,7 +599,7 @@ div.label span,div.label input {
 	margin: 0;
 	padding: 7px 0 0 14px;
 }
-body#formbuilder .toolbarButton {
+.toolbarButton {
 	text-decoration: none 					! important;
 	color: #000;
 	height: 12px;
@@ -580,7 +612,7 @@ body#formbuilder .toolbarButton {
 	display: block;
 	font-size: 1.0em;
 }
-body#formbuilder .toolbarButton:hover {
+.toolbarButton:hover {
 	border: 1px solid #000;
 	margin: 1px;
 	color: #FFF;
@@ -772,13 +804,10 @@ body#formbuilder .toolbarButton:hover {
 	height: auto 			!important;
 	border-width: 0 		!important;
 }
-
-/*Accordion*/
-body#formbuilder .acStretch{
+.accordionTabContentBox{
 	background: #fef9eb 	!important;
 	border-width: 0px 		!important;
 }
-
 #mainPalette .activeMenuItem,#mainPalette .inactiveMenuItem{
 	padding: 3px 10px 		!important;
 	width: auto 			!important;
@@ -817,7 +846,10 @@ body#formbuilder .acStretch{
 #pageButtonArea .formButton:hover {
 	margin-right: 0px 		!important;
 }
-
+.accordionTabTitleBar{
+	padding: 2px 			!important;
+	height: auto 			!important;
+}
 span.fbMenuTabBar{
 	margin: 0 				!important;
 	font-family: Arial, Verdana, sans-serif !important;
