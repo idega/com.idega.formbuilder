@@ -201,6 +201,7 @@ public class FBDesignView extends FBComponentBase {
 		}
 		writer.startElement("DIV", null);
 		writer.writeAttribute("id", getId() + "inner", null);
+		writer.writeAttribute("class", getStyleClass() + "inner", null);
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {

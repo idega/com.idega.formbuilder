@@ -721,8 +721,7 @@ div.label span,div.label input {
 	margin: 0;
 	padding: 7px 0 0 14px;
 }
-
-.toolbarButton {
+body#formbuilder .toolbarButton {
 	text-decoration: none ! important;
 	color: #000;
 	height: 12px;
@@ -736,7 +735,7 @@ div.label span,div.label input {
 	font-size: 1.0em;
 }
 
-.toolbarButton:hover {
+body#formbuilder .toolbarButton:hover {
 	border: 1px solid #000;
 	margin: 1px;
 	color: #FFF;
@@ -957,55 +956,49 @@ div.label span,div.label input {
 	border-width: 0 !important;
 }
 
-.accordionTabContentBox {
-	background: #fef9eb !important;
-	border-width: 0px !important;
+/*Accordion*/
+body#formbuilder .acStretch{
+	background: #fef9eb 	!important;
+	border-width: 0px 		!important;
 }
 
-#mainPalette .activeMenuItem,#mainPalette .inactiveMenuItem {
-	padding: 3px 10px !important;
-	width: auto !important;
+#mainPalette .activeMenuItem,#mainPalette .inactiveMenuItem{
+	padding: 3px 10px 		!important;
+	width: auto 			!important;
 	border: 1px solid #aeaeae;
 }
-
-#mainPalette .inactiveMenuItem {
-	background: #fff !important;
-	margin-right: 0 !important;
-	margin-left: 0 !important;
-	color: #000; /* Text color */
-	cursor: pointer;
-	/* Cursor like a hand when the user moves the mouse over the menu item */
+#mainPalette .inactiveMenuItem{
+	background: #fff 		!important;
+	margin-right: 0 		!important;
+	margin-left: 0 			!important;
+	color: #000;			/* Text color */
+	cursor:pointer;			/* Cursor like a hand when the user moves the mouse over the menu item */
 }
-
-#pageButtonArea {
-	position: relative !important;
+#pageButtonArea{
+	position: relative 		!important;
 	padding: 10px;
 	display: block;
-	height: auto !important;
-	width: auto !important;
+	height: auto 			!important;
+	width: auto 			!important;
 	border: 1px solid transparent;
 }
-
 .activeButtonArea {
 	background-color: Red;
 }
-
-#pageButtonArea :hover {
+#pageButtonArea:hover{
 	border-color: #93b825;
 }
-
-#pageButtonArea .formButton {
-	display: inline !important;
-	height: 100% !important;
-	width: 100% !important;
+#pageButtonArea .formButton{
+	display: inline 		!important;
+	height: 100% 			!important;
+	width: 100% 			!important;
 	padding: 10px 0 10px 15px !important;
-	position: relative !important;
-	margin-left: 0 !important;
-	margin-right: 16px !important;
+	position: relative 		!important;
+	margin-left: 0 			!important;
+	margin-right: 16px 		!important;
 }
-
 #pageButtonArea .formButton:hover {
-	margin-right: 0px !important;
+	margin-right: 0px 		!important;
 }
 
 .accordionTabTitleBar {

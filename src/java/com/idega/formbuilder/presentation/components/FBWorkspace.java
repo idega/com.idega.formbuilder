@@ -11,11 +11,9 @@ import javax.faces.el.ValueBinding;
 import org.apache.myfaces.renderkit.html.util.AddResource;
 import org.apache.myfaces.renderkit.html.util.AddResourceFactory;
 
-import com.idega.block.web2.business.Web2Business;
-import com.idega.business.IBOLookup;
+import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
-import com.idega.presentation.IWContext;
 import com.idega.webface.WFUtil;
 
 public class FBWorkspace extends FBComponentBase {
@@ -75,7 +73,8 @@ public class FBWorkspace extends FBComponentBase {
 //			String dojoURI = business.getBundleURIToDojoLib();
 ////			String ricoURI = business.getBundleURIToRicoLib();
 //
-//			AddResource resourceAdder = AddResourceFactory.getInstance(context);
+			AddResource resourceAdder = AddResourceFactory.getInstance(context);
+			resourceAdder.addStyleSheet(context, AddResource.HEADER_BEGIN, FormbuilderViewManager.FORMBUILDER_CSS);
 //
 //			// resourceAdder.addJavaScriptAtPosition(context,
 //			// AddResource.HEADER_BEGIN, prototypeURI);

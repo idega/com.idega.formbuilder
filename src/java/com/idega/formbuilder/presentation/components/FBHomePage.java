@@ -19,6 +19,7 @@ import org.apache.myfaces.renderkit.html.util.AddResourceFactory;
 import com.idega.block.web2.business.Web2Business;
 import com.idega.business.IBOLookup;
 import com.idega.documentmanager.business.PersistenceManager;
+import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.text.Text;
@@ -58,6 +59,7 @@ public class FBHomePage extends FBComponentBase {
 			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, DWR_ENGINE_JS);
 			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, DWR_FORM_DOCUMENT_JS);
 			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, HOMEPAGE_JS);
+			resourceAdder.addStyleSheet(context, AddResource.HEADER_BEGIN, FormbuilderViewManager.FORMBUILDER_CSS);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

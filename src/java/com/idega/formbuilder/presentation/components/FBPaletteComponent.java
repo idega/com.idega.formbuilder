@@ -51,13 +51,12 @@ public class FBPaletteComponent extends FBComponentBase {
 	public void encodeEnd(FacesContext context) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		writer.startElement("DIV", this);
-		writer.writeAttribute("class", getStyleClass(), "styleClass");
+		writer.writeAttribute("class", getStyleClass() + " " + category, "styleClass");
 		ValueBinding vb = getValueBinding("type");
 		if(vb != null) {
 			type = (String) vb.getValue(context);	
 		}
 		writer.writeAttribute("id", type, "type");
-		
 		writer.startElement("IMG", null);
 		vb = getValueBinding("icon");
 		if(vb != null) {
@@ -74,17 +73,18 @@ public class FBPaletteComponent extends FBComponentBase {
 		writer.writeText(name, null);
 		writer.endElement("SPAN");
 		writer.endElement("DIV");
-//		writer.write(getEmbededJavascript());
+		writer.write(getEmbededJavascript());
 	}
 	
 	public String getEmbededJavascript() {
 		StringBuilder result = new StringBuilder();
 		result.append("<script language=\"JavaScript\">\n");
-		if(autofill_key == null) {
+//		result.append("$('" + type + "').draggableTag($$('.dropBox'), null, '" + category + "');\n");
+		/*if(autofill_key == null) {
 			result.append("dndMgr.registerDraggable( new FBDraggable($('" + type + "'), '" + type + "', '" + category + "', null) );\n");
 		} else {
 			result.append("dndMgr.registerDraggable( new FBDraggable($('" + type + "'), '" + type + "', '" + category + "', '"+autofill_key+"') );\n");
-		}
+		}*/
 		result.append("</script>\n");
 		return result.toString();
 		

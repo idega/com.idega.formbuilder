@@ -22,6 +22,8 @@ public class FormbuilderViewManager implements Singleton  {
 	public static final String FORMBUILDER_CURRENT_FORM_ID = "FORMBUILDER_CURRENT_FORM_ID";
 	public static final String FORMBUILDER_CURRENT_LOCALE = "FORMBUILDER_CURRENT_LOCALE";
 	
+	public static final String FORMBUILDER_CSS = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formbuilder.css";
+	
 	private ViewNode rootNode;
 	private IWMainApplication iwma;
 	

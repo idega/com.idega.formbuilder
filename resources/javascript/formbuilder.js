@@ -27,6 +27,72 @@ var draggingButton = false;
 var draggingComponent = false;
 var draggingPage = false;
 
+var FBDraggable = Element.extend({
+	draggableTag: function(droppables, handle, type) {
+		type = type;
+		handle = handle || this;
+		this.makeDraggable({
+			'handle': handle,
+			'droppables': droppables,
+			'onStart': function() {
+				this.elementOrg = this.element;
+				var now = {'x': this.element.getLeft(), 'y': this.element.getTop()};
+				this.element = this.element.clone().setStyles({
+					'position': 'absolute',
+					'left': now.x + 'px',
+					'top':  now.y + 'px',
+					'opacity': '0.75'
+				}).injectInside(document.body);
+				this.value.now = now;
+			},
+			'onComplete': function(event) {
+				if(!event) event = window.event;
+				var now = {'x': this.element.getLeft(), 'y': this.element.getTop()};
+				this.element.remove();
+				this.element = this.elementOrg;
+				this.elementOrg = null;
+			}
+		});
+		this.setStyles({
+			'position': ''
+		});
+		return this;
+	}
+});
+Window.onDomReady(function() {
+	$('dropBox').addEvents({
+		'over': function(el){
+			if (!this.dragEffect) this.dragEffect = new Fx.Style(this, 'background-color');
+			this.dragEffect.stop().start('ffffff', 'dddddd');
+		},
+		'leave': function(el){
+			this.dragEffect.stop().start('dddddd', 'ffffff');
+		},
+		'drop': function(el, drag){
+			this.dragEffect.stop().start('ff8888', 'ffffff');
+			drag.element.clone().injectInside(this);
+		}
+	});
+	$('pageButtonArea').addEvents({
+		'over': function(el){
+			if (!this.dragEffect) this.dragEffect = new Fx.Style(this, 'background-color');
+			this.dragEffect.stop().start('ffffff', 'dddddd');
+		},
+		'leave': function(el){
+			this.dragEffect.stop().start('dddddd', 'ffffff');
+		},
+		'drop': function(el, drag){
+			this.dragEffect.stop().start('ff8888', 'ffffff');
+			drag.element.clone().injectInside(this);
+		}
+	});
+	$$('.fbcomp').each(function(el){
+		el.draggableTag($('dropBox'));
+	});
+	$$('.fbbutton').each(function(el){
+		el.draggableTag($('pageButtonArea'));
+	});
+});
 /*var FBDraggable = Class.create();
 
 FBDraggable.prototype = (new Rico.Draggable()).extend( {

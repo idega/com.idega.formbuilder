@@ -17,7 +17,7 @@ public class IWBundleStarter implements IWBundleStartable {
 	public void start(IWBundle starterBundle) {
 		FormbuilderViewManager cViewManager = FormbuilderViewManager.getInstance(starterBundle.getApplication());
 		cViewManager.initializeStandardNodes(starterBundle);
-		GlobalIncludeManager.getInstance().addBundleStyleSheet(IW_BUNDLE_IDENTIFIER, "/style/formbuilder.css");
+//		GlobalIncludeManager.getInstance().addBundleStyleSheet(IW_BUNDLE_IDENTIFIER, "/style/formbuilder.css");
 	}
 
 	/* (non-Javadoc)
