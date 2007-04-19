@@ -1,4 +1,4 @@
-dojo.require("dojo.html.*");
+//dojo.require("dojo.html.*");
 
 var PAGES_PANEL_ID = 'pagesPanel';
 var SP_PAGES_PANEL_ID = 'pagesPanelSpecial';
@@ -27,7 +27,7 @@ var draggingButton = false;
 var draggingComponent = false;
 var draggingPage = false;
 
-var FBDraggable = Class.create();
+/*var FBDraggable = Class.create();
 
 FBDraggable.prototype = (new Rico.Draggable()).extend( {
 
@@ -98,14 +98,14 @@ FBDraggable.prototype = (new Rico.Draggable()).extend( {
    	getDroppedGUI: function() {
    	}
 
-} );
+} );*/
 
 function PaletteComponentInfo(type,autofill) {
 	this.type = type;
 	this.autofill = autofill;
 }
 
-var FBDropzone = Class.create();
+/*var FBDropzone = Class.create();
 
 FBDropzone.prototype = (new Rico.Dropzone()).extend( {
 
@@ -238,7 +238,7 @@ FBDropzone.prototype = (new Rico.Dropzone()).extend( {
       	}
       	return true;
    	},
-} );
+} );*/
 
 function getEmptySpaceBox() {
 	var node = document.createElement('div');
@@ -812,7 +812,7 @@ function placePageInfo(parameter) {
 function setupPagesDragAndDrop(value1, value2) {
 	//Position.includeScrollOffsets = true;
 	//Sortable.create(value1,{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangePages,scroll:value1,constraint:false});
-	Droppables.add(value1);
+	//Droppables.add(value1);
 	FormPage.getId(markSelectedPage);
 }
 function rearrangePages() {
@@ -847,15 +847,15 @@ function rearrangeButtons() {
 function setupComponentDragAndDrop(value1,value2) {
 	//Position.includeScrollOffsets = true;
 	//Sortable.create(value1 + 'inner',{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangeComponents,scroll:value1,constraint:false});
-	dndMgr.registerDropZone(new FBDropzone('viewPanel', 'fbcomp'));
-	dndMgr.registerDropZone(new FBDropzone('dropBox', 'fbbutton'));
+	//dndMgr.registerDropZone(new FBDropzone('viewPanel', 'fbcomp'));
+	//dndMgr.registerDropZone(new FBDropzone('dropBox', 'fbbutton'));
 	FormComponent.getId(markSelectedComponent);
 }
 function markSelectedComponent(parameter) {
 	if(parameter != null) {
 		var element = $(parameter);
 		if(element != null) {
-			element.setAttribute('class','formElement selectedElement');
+			//element.setAttribute('class','formElement selectedElement');
 			CURRENT_ELEMENT_ID = parameter;
 		}
 	}

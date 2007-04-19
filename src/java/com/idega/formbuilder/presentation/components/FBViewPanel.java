@@ -8,11 +8,10 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
 
 import org.apache.myfaces.custom.tabbedpane.HtmlPanelTab;
-import org.apache.myfaces.custom.tabbedpane.HtmlPanelTabbedPane;
-import org.apache.myfaces.custom.tabbedpane.TabChangeEvent;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.Workspace;
+import com.idega.webface.WFTabbedPane;
 import com.idega.webface.WFUtil;
 
 public class FBViewPanel extends FBComponentBase {
@@ -39,15 +38,20 @@ public class FBViewPanel extends FBComponentBase {
 		Application application = context.getApplication();
 		getChildren().clear();
 		
-		HtmlPanelTabbedPane tabbedPane = (HtmlPanelTabbedPane) application.createComponent(HtmlPanelTabbedPane.COMPONENT_TYPE);
-		tabbedPane.setTabContentStyleClass("tabContent");
-		tabbedPane.setStyleClass("tabbedPane");
-		tabbedPane.setActiveTabStyleClass("activeTab");
-		tabbedPane.setInactiveTabStyleClass("inactiveTab");
-		tabbedPane.setServerSideTabSwitch(true);
-		tabbedPane.setActiveSubStyleClass("activeSub");
-		tabbedPane.setInactiveSubStyleClass("inactiveSub");
-		tabbedPane.setTabChangeListener(application.createMethodBinding("#{workspace.processTabChange}", new Class[] {TabChangeEvent.class}));
+		WFTabbedPane tabbedPane = new WFTabbedPane();
+		tabbedPane.setMenuStyleClass("fbViewTabBar");
+		tabbedPane.setSelectedMenuItemStyleClass("activeTab");
+		tabbedPane.setDeselectedMenuItemStyleClass("inactiveTab");
+		
+//		HtmlPanelTabbedPane tabbedPane = (HtmlPanelTabbedPane) application.createComponent(HtmlPanelTabbedPane.COMPONENT_TYPE);
+//		tabbedPane.setTabContentStyleClass("tabContent");
+//		tabbedPane.setStyleClass("tabbedPane");
+//		tabbedPane.setActiveTabStyleClass("activeTab");
+//		tabbedPane.setInactiveTabStyleClass("inactiveTab");
+//		tabbedPane.setServerSideTabSwitch(true);
+//		tabbedPane.setActiveSubStyleClass("activeSub");
+//		tabbedPane.setInactiveSubStyleClass("inactiveSub");
+//		tabbedPane.setTabChangeListener(application.createMethodBinding("#{workspace.processTabChange}", new Class[] {TabChangeEvent.class}));
 		
 		HtmlPanelTab tab1 = (HtmlPanelTab) application.createComponent(HtmlPanelTab.COMPONENT_TYPE);
 		tab1.setLabel("Design");
@@ -75,13 +79,18 @@ public class FBViewPanel extends FBComponentBase {
 		FBFormPreview previewView = (FBFormPreview) application.createComponent(FBFormPreview.COMPONENT_TYPE);
 		previewView.setId("previewView");
 		
-		tab1.getChildren().add(designView);
-		tab2.getChildren().add(previewView);
-		tab3.getChildren().add(sourceView);
+//		tab1.getChildren().add(designView);
+//		tab2.getChildren().add(previewView);
+//		tab3.getChildren().add(sourceView);
 
-		tabbedPane.getChildren().add(tab1);
-		tabbedPane.getChildren().add(tab2);
-		tabbedPane.getChildren().add(tab3);
+//		tabbedPane.getChildren().add(tab1);
+//		tabbedPane.getChildren().add(tab2);
+//		tabbedPane.getChildren().add(tab3);
+		
+		tabbedPane.addTab("tab1", "Design", designView, false);
+		tabbedPane.addTab("tab2", "Preview", previewView, false);
+		tabbedPane.addTab("tab3", "Source", sourceView, false);
+		tabbedPane.setSelectedMenuItemId("tab1");
 		
 		addFacet(SWITCHER_FACET, tabbedPane);
 	}
@@ -108,17 +117,18 @@ public class FBViewPanel extends FBComponentBase {
 		if(vb != null) {
 			view = (String) vb.getValue(context);
 		}
-		HtmlPanelTabbedPane viewSwitch = (HtmlPanelTabbedPane) getFacet(SWITCHER_FACET);
-		if(viewSwitch != null) {
-			if(view.equals(DESIGN_VIEW)) {
-				viewSwitch.setSelectedIndex(DESIGN_VIEW_INDEX);
-			} else if(view.equals(PREVIEW_VIEW)) {
-				viewSwitch.setSelectedIndex(PREVIEW_VIEW_INDEX);
-			} else if(view.equals(SOURCE_VIEW)) {
-				viewSwitch.setSelectedIndex(SOURCE_VIEW_INDEX);
-			}
-			renderChild(context, viewSwitch);
-		}
+//		HtmlPanelTabbedPane viewSwitch = (HtmlPanelTabbedPane) getFacet(SWITCHER_FACET);
+//		if(viewSwitch != null) {
+//			if(view.equals(DESIGN_VIEW)) {
+//				viewSwitch.setSelectedIndex(DESIGN_VIEW_INDEX);
+//			} else if(view.equals(PREVIEW_VIEW)) {
+//				viewSwitch.setSelectedIndex(PREVIEW_VIEW_INDEX);
+//			} else if(view.equals(SOURCE_VIEW)) {
+//				viewSwitch.setSelectedIndex(SOURCE_VIEW_INDEX);
+//			}
+//			renderChild(context, viewSwitch);
+//		}
+		renderChild(context, getFacet(SWITCHER_FACET));
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {

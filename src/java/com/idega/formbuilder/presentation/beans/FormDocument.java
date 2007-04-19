@@ -209,7 +209,7 @@ public class FormDocument implements Serializable {
 			workspace.setRenderedMenu(true);
 			
 			clearFormDocumentInfo();
-			
+			document.getProperties().setStepsVisualizationUsed(true);
 			loadFormInfo(document);
 			
 			Page page = document.getPage(document.getContainedPagesIdList().get(0));

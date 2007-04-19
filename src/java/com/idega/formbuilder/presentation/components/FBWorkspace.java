@@ -67,37 +67,37 @@ public class FBWorkspace extends FBComponentBase {
 		Application application = context.getApplication();
 		getChildren().clear();
 
-		try {
-			Web2Business business = (Web2Business) IBOLookup
-					.getServiceInstance(IWContext.getInstance(),
-							Web2Business.class);
-//			String prototypeURI = business.getBundleURIToPrototypeLib();
-			String dojoURI = business.getBundleURIToDojoLib();
-//			String ricoURI = business.getBundleURIToRicoLib();
-
-			AddResource resourceAdder = AddResourceFactory.getInstance(context);
-
-			// resourceAdder.addJavaScriptAtPosition(context,
-			// AddResource.HEADER_BEGIN, prototypeURI);
-			// resourceAdder.addJavaScriptAtPosition(context,
-			// AddResource.HEADER_BEGIN, ricoURI);
-			resourceAdder.addJavaScriptAtPosition(context,
-					AddResource.HEADER_BEGIN, dojoURI);
-			resourceAdder.addJavaScriptAtPosition(context,
-					AddResource.HEADER_BEGIN, FORMBUILDER_JS);
-			resourceAdder.addJavaScriptAtPosition(context,
-					AddResource.HEADER_BEGIN, DWR_ENGINE_JS);
-			resourceAdder.addJavaScriptAtPosition(context,
-					AddResource.HEADER_BEGIN, DWR_UTIL_JS);
-			resourceAdder.addJavaScriptAtPosition(context,
-					AddResource.HEADER_BEGIN, FORM_COMPONENT_JS);
-			resourceAdder.addJavaScriptAtPosition(context,
-					AddResource.HEADER_BEGIN, FORM_DOCUMENT_JS);
-			resourceAdder.addJavaScriptAtPosition(context,
-					AddResource.HEADER_BEGIN, FORM_PAGE_JS);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			Web2Business business = (Web2Business) IBOLookup
+//					.getServiceInstance(IWContext.getInstance(),
+//							Web2Business.class);
+////			String prototypeURI = business.getBundleURIToPrototypeLib();
+//			String dojoURI = business.getBundleURIToDojoLib();
+////			String ricoURI = business.getBundleURIToRicoLib();
+//
+//			AddResource resourceAdder = AddResourceFactory.getInstance(context);
+//
+//			// resourceAdder.addJavaScriptAtPosition(context,
+//			// AddResource.HEADER_BEGIN, prototypeURI);
+//			// resourceAdder.addJavaScriptAtPosition(context,
+//			// AddResource.HEADER_BEGIN, ricoURI);
+//			resourceAdder.addJavaScriptAtPosition(context,
+//					AddResource.HEADER_BEGIN, dojoURI);
+//			resourceAdder.addJavaScriptAtPosition(context,
+//					AddResource.HEADER_BEGIN, FORMBUILDER_JS);
+//			resourceAdder.addJavaScriptAtPosition(context,
+//					AddResource.HEADER_BEGIN, DWR_ENGINE_JS);
+//			resourceAdder.addJavaScriptAtPosition(context,
+//					AddResource.HEADER_BEGIN, DWR_UTIL_JS);
+//			resourceAdder.addJavaScriptAtPosition(context,
+//					AddResource.HEADER_BEGIN, FORM_COMPONENT_JS);
+//			resourceAdder.addJavaScriptAtPosition(context,
+//					AddResource.HEADER_BEGIN, FORM_DOCUMENT_JS);
+//			resourceAdder.addJavaScriptAtPosition(context,
+//					AddResource.HEADER_BEGIN, FORM_PAGE_JS);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 
 		ValueBinding vb = getValueBinding("view");
 		if (vb != null) {

@@ -12,7 +12,13 @@
 				 javascripturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax.js,
 								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/modal-message.js,
 								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax-dynamic-content.js,
-								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/categories-tabs.js">
+								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/categories-tabs.js,
+								/dwr/engine.js,
+								/dwr/util.js,
+								/dwr/interface/FormComponent.js,
+								/dwr/interface/FormDocument.js,
+								/dwr/interface/FormPage.js,
+								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js">
 			<h:form id="workspaceform1">
 				<t:div id="mainApplication" forceId="true">
 					<fb:workspace id="mainWorkspace" view="#{workspace.view}"/>
