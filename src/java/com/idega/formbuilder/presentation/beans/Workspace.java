@@ -5,12 +5,11 @@ import java.util.Locale;
 
 import javax.faces.event.ActionEvent;
 
-import org.apache.myfaces.custom.tabbedpane.TabChangeEvent;
-import org.apache.myfaces.custom.tabbedpane.TabChangeListener;
-
 import com.idega.formbuilder.presentation.components.FBViewPanel;
+import com.idega.webface.event.WFTabEvent;
+import com.idega.webface.event.WFTabListener;
 
-public class Workspace implements Serializable, TabChangeListener {
+public class Workspace implements Serializable, WFTabListener {
 	
 	private static final long serialVersionUID = -7539955904708793992L;
 	
@@ -39,9 +38,11 @@ public class Workspace implements Serializable, TabChangeListener {
 		this.locale = new Locale("en");
 	}
 	
-	public void processTabChange(TabChangeEvent tce) {
-		int index = tce.getNewTabIndex();
-		switch(index) {
+	public void tabPressed(WFTabEvent tce) {
+		String view = tce.getSource().toString();
+		view = FBViewPanel.DESIGN_VIEW;
+		renderedMenu = true;
+		/*switch(view) {
 		case FBViewPanel.DESIGN_VIEW_INDEX:
 			view = FBViewPanel.DESIGN_VIEW;
 			renderedMenu = true;
@@ -53,7 +54,7 @@ public class Workspace implements Serializable, TabChangeListener {
 		case FBViewPanel.SOURCE_VIEW_INDEX:
 			view = FBViewPanel.SOURCE_VIEW;
 			renderedMenu = false;
-		}
+		}*/
 	}
 	
 	public void togglePagesPanel(ActionEvent ae) {

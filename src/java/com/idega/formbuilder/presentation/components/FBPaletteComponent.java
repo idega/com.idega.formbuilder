@@ -73,7 +73,7 @@ public class FBPaletteComponent extends FBComponentBase {
 		writer.writeText(name, null);
 		writer.endElement("SPAN");
 		writer.endElement("DIV");
-		writer.write(getEmbededJavascript());
+//		writer.write(getEmbededJavascript());
 	}
 	
 	public String getEmbededJavascript() {

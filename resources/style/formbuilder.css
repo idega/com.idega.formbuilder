@@ -1077,6 +1077,7 @@ h1.title {
 }
 
 div#dropBoxinner {
+	min-height: 100px;
 	height: auto !important;
 	overflow: auto !important;
 }

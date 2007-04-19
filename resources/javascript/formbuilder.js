@@ -1,5 +1,3 @@
-//dojo.require("dojo.html.*");
-
 var PAGES_PANEL_ID = 'pagesPanel';
 var SP_PAGES_PANEL_ID = 'pagesPanelSpecial';
 var PAGE_ICON_STYLE = 'formPageIcon';
@@ -26,10 +24,81 @@ var pressedPageDelete = false;
 var draggingButton = false;
 var draggingComponent = false;
 var draggingPage = false;
+var insideDropzone = false;
+
+Sortables.implement({
+		initialize: function(elements, options){
+			this.setOptions(options);
+			this.options.handles = this.options.handles || elements;
+			var trash = new Element('div').injectInside($(document.body));
+			var sortable = $(elements);
+			//$(elements).(function(el, i){
+				var copy = sortable.clone().setStyles({
+					'position': 'absolute',
+					'opacity': '0',
+					'display': 'none'
+				}).injectInside(trash);
+				var elEffect = sortable.effect('opacity', {
+					duration: this.options.fxDuration,
+					wait: false,
+					transition: this.options.fxTransition
+				}).set(1);
+				var copyEffects = copy.effects({
+					duration: this.options.fxDuration,
+					wait: false,
+					transition: this.options.fxTransition,
+					onComplete: function(){
+						copy.setStyle('display', 'none');
+					}
+				});
+				var dragger = new Drag.Move(copy, {
+					xModifier: false,
+					onStart: function(){
+						copy.setHTML(sortable.innerHTML).setStyles({
+							'display': 'block',
+							'opacity': this.options.maxOpacity,
+							'top': sortable.getTop()+'px',
+							'left': sortable.getLeft()+'px'
+						});
+						elEffect.custom(elEffect.now, this.options.maxOpacity);
+					}.bind(this),
+					onComplete: function(){
+						copyEffects.custom({
+							'opacity': [this.options.maxOpacity, 0],
+							'top': [copy.getTop(), sortable.getTop()]
+						});
+						elEffect.custom(elEffect.now, 1);
+						//$('status').setHTML('Sorting complete!');
+						statusFade.custom(1,0);
+					}.bind(this),
+					onDrag: function(){
+						if (sortable.getPrevious() && copy.getTop() < (sortable.getPrevious().getTop()))
+							sortable.injectBefore(sortable.getPrevious());
+						else if (sortable.getNext() && copy.getTop() > (sortable.getNext().getTop()))
+							sortable.injectAfter(sortable.getNext());
+                                                statusFade.clearTimer();
+                                                //$('status').setOpacity(1).setHTML('Sorting in progress...');
+					}
+				});
+				sortable.onmousedown = dragger.start.bind(dragger);
+//			}, this);
+		}
+});
+
+Array.extend({
+	makeSortable: function(options){
+		var Sortable = new Sortables(this, options);
+		this.each(function(el){
+			el.style.cursor = 'move';
+			el.extend(Sortable);
+		})
+	}
+});
 
 var FBDraggable = Element.extend({
-	draggableTag: function(droppables, handle, type) {
+	draggableTag: function(droppables, handle, type, autofill) {
 		type = type;
+		autofill = autofill;
 		handle = handle || this;
 		this.makeDraggable({
 			'handle': handle,
@@ -37,13 +106,61 @@ var FBDraggable = Element.extend({
 			'onStart': function() {
 				this.elementOrg = this.element;
 				var now = {'x': this.element.getLeft(), 'y': this.element.getTop()};
+				console.log("x:" + now.x + "y:" + now.y);
 				this.element = this.element.clone().setStyles({
 					'position': 'absolute',
 					'left': now.x + 'px',
 					'top':  now.y + 'px',
 					'opacity': '0.75'
 				}).injectInside(document.body);
+				console.log("left:"+this.element.getStyle('left') + ":top:" + this.element.getStyle('top'));
 				this.value.now = now;
+				console.log("x:" + this.value.now.x + "y:" + this.value.now.y);
+				if(type == 'fbcomp') {
+					CURRENT_ELEMENT_UNDER = -1;
+		   			childBoxes = [];
+					var childNodes = $$('#dropBoxinner div.formElement');
+					for(var i = 0; i < childNodes.length; i++){
+						var child = childNodes[i];
+						var pos = child.getCoordinates();
+						console.log('Counting children: ' + pos);
+						childBoxes.push({top: pos.top, bottom: pos.bottom, left: pos.left, right: pos.right, height: pos.height, width: pos.width, node: child});
+					}
+					
+					var temp = childBoxes;
+					var dropBox = $('dropBoxinner');
+					this.element.addEvent('mousemove', function(e) {
+						if(!e) e = window.event;
+						for(var i = 0, child; i < childBoxes.length; i++){
+							with(childBoxes[i]){
+								if (e.pageX >= left && e.pageX <= right && e.pageY >= top && e.pageY <= bottom) {
+									CURRENT_ELEMENT_UNDER = i;
+									console.log('Hit: ' + i);var children;
+									if(CURRENT_ELEMENT_UNDER != LAST_ELEMENT_UNDER) {
+										LAST_ELEMENT_UNDER = CURRENT_ELEMENT_UNDER;
+										var marker = $('insertMarker');
+										if(marker != null && marker.parentNode == dropBox) {
+											dropBox.removeChild(marker);
+										}
+										var node = getEmptySpaceBox();
+										children = $$('#dropBoxinner div.formElement');
+										var count = children.length;
+										var beforeNode = children[CURRENT_ELEMENT_UNDER];
+										var ids = beforeNode.id;
+										console.log('Marker: '+ node.id + ' Before: '+ beforeNode.id);
+										dropBox.insertBefore(node, beforeNode);
+									}
+								}
+							}
+						}
+					});
+					console.log("Adding new component: " + this.elementOrg.id);
+					var info = new PaletteComponentInfo(this.elementOrg.id, this.autofill);// { type:this.name, name: "", iconPath: "", autofill_key: "" };
+   					FormComponent.addComponent(info, placeNewComponent);
+				} else if(type == 'fbbutton') {
+					console.log("Adding new button: " + this.elementOrg.id);
+					FormComponent.addButton(this.elementOrg.id, placeNewButton);
+				}
 			},
 			'onComplete': function(event) {
 				if(!event) event = window.event;
@@ -51,6 +168,10 @@ var FBDraggable = Element.extend({
 				this.element.remove();
 				this.element = this.elementOrg;
 				this.elementOrg = null;
+				if(type == 'fbcomp') {
+					var dropBox = $('dropBoxinner');
+					this.element.removeEvents('mousemove');
+				}
 			}
 		});
 		this.setStyles({
@@ -60,111 +181,110 @@ var FBDraggable = Element.extend({
 	}
 });
 Window.onDomReady(function() {
-	$('dropBox').addEvents({
+	$('dropBoxinner').addEvents({
 		'over': function(el){
 			if (!this.dragEffect) this.dragEffect = new Fx.Style(this, 'background-color');
 			this.dragEffect.stop().start('ffffff', 'dddddd');
+			var cont = $('dropBoxinner');
+			insideDropzone = true;
 		},
 		'leave': function(el){
 			this.dragEffect.stop().start('dddddd', 'ffffff');
+			insideDropzone = false;
+   			var cont = $('dropBoxinner');
+   			if(cont != null) {
+				var line = $('insertMarker');
+				if(line != null) {
+					cont.removeChild(line);
+				}
+			}
 		},
 		'drop': function(el, drag){
 			this.dragEffect.stop().start('ff8888', 'ffffff');
-			drag.element.clone().injectInside(this);
+			var currentId = currentElement.getAttribute('id');
+			if(insideDropzone == true) {
+				var index = CURRENT_ELEMENT_UNDER;
+		        if(index != null) {
+					console.log("Accepting: " + currentId + " in position: " + CURRENT_ELEMENT_UNDER);
+			    	FormComponent.moveComponent(currentId, index, insertNewComponent);
+		        }
+		        var cont = $('dropBoxinner');
+	   			if(cont != null) {
+					var line = $('insertMarker');
+					if(line != null) {
+						cont.removeChild(line);
+					}
+				}
+			} else {
+				console.log("Canceling: " + currentId);
+				FormComponent.removeComponent(currentId,nothing);
+			}
+			insideDropzone = false;
 		}
 	});
 	$('pageButtonArea').addEvents({
 		'over': function(el){
 			if (!this.dragEffect) this.dragEffect = new Fx.Style(this, 'background-color');
 			this.dragEffect.stop().start('ffffff', 'dddddd');
+			insideDropzone = true;
 		},
 		'leave': function(el){
 			this.dragEffect.stop().start('dddddd', 'ffffff');
+			insideDropzone = false;
 		},
 		'drop': function(el, drag){
 			this.dragEffect.stop().start('ff8888', 'ffffff');
-			drag.element.clone().injectInside(this);
+			if(insideDropzone == true) {
+				var cont = $('pageButtonArea');
+				if(cont == null) {
+					var buttonArea = document.createElement('div');
+					buttonArea.id = 'pageButtonArea';
+					buttonArea.style.position = 'relative';
+					buttonArea.setAttribute('class','formElement');
+					var dropBox = $('dropBox');
+					if(dropBox != null) {
+						dropBox.appendChild(buttonArea);
+						buttonArea.appendChild(currentButton);
+					}
+				} else {
+					cont.appendChild(currentButton);
+				}
+			} else {
+				FormComponent.removeButton(currentButton.getAttribute('id'),nothing);
+			}
+			insideDropzone = false;
 		}
 	});
 	$$('.fbcomp').each(function(el){
-		el.draggableTag($('dropBox'));
+		el.draggableTag($('dropBoxinner'), null, 'fbcomp', false);
 	});
 	$$('.fbbutton').each(function(el){
-		el.draggableTag($('pageButtonArea'));
+		el.draggableTag($('pageButtonArea'), null, 'fbbutton', false);
 	});
+	//$$('dropBoxinner').makeSortable();
+	//new Sortables('dropBoxinner');
+	//new Sortables('pagesPanel');
+	//new Sortables('pageButtonArea');
+	//var dragsort = ToolMan.dragsort();
+	//var junkdrawer = ToolMan.junkdrawer();
+	//junkdrawer.restoreListOrder("dropBoxinner");
+	//dragsort.makeListSortable(document.getElementById("dropBoxinner"),verticalOnly, saveOrder);
 });
-/*var FBDraggable = Class.create();
 
-FBDraggable.prototype = (new Rico.Draggable()).extend( {
+function verticalOnly(item) {
+		item.toolManDragGroup.verticalOnly()
+	}
 
-   	initialize: function(htmlElement, name, type, autofill) {
-      	this.type        = type;
-      	this.htmlElement = $(htmlElement);
-      	this.name        = name;
-      	this.autofill    = autofill;
-   	},
-
-   	select: function() {
-      	this.selected = true;
-      	var el = this.htmlElement;
-      	el.style.color           = "#ffffff";
-      	el.style.backgroundColor = "#08246b";
-      	el.style.border          = "1px solid blue";
-   	},
-
-   	deselect: function() {
-      	this.selected = false;
-      	var el = this.htmlElement;
-      	el.style.color           = "#2b2b2b";
-      	el.style.backgroundColor = "transparent";
-      	el.style.border = "1px solid #ffffee";
-   	},
-
-   	startDrag: function() {
-   		if(this.type == 'fbcomp') {
-   			CURRENT_ELEMENT_UNDER = -1;
-   			childBoxes = [];
-			var dropBox = $('dropBoxinner');
-			var child;
-			for(var i = 0; i < dropBox.childNodes.length; i++){
-				child = dropBox.childNodes[i];
-				if(child.nodeType != dojo.html.ELEMENT_NODE){ continue; }
-				var pos = dojo.html.getAbsolutePosition(child, true);
-				var inner = dojo.html.getBorderBox(child);
-				childBoxes.push({top: pos.y, bottom: pos.y+inner.height,left: pos.x, right: pos.x+inner.width, height: inner.height, width: inner.width, node: child});
-			}
-			var info = new PaletteComponentInfo(this.name, this.autofill);// { type:this.name, name: "", iconPath: "", autofill_key: "" };
-   			FormComponent.addComponent(info, placeNewComponent);
-   		} else if(this.type == 'fbbutton') {
-   			FormComponent.addButton(this.name, placeNewButton);
-   		}
-   	},
-
-   	cancelDrag: function() {
-   		if(this.type == 'fbcomp') {
-   			FormComponent.removeComponent(currentElement.getAttribute('id'),nothing);
-   		} else if(this.type == 'fbbutton') {
-   			FormComponent.removeButton(currentButton.getAttribute('id'),nothing);
-   		}
-   	},
-
-   	endDrag: function() {
-   	},
-
-   	getSingleObjectDragGUI: function() {
-      	var el = this.htmlElement;
-		var div = el.cloneNode(true);
-		div.onmousemove = currentMousePosition;
-      	return div;
-   	},
-
-   	getMultiObjectDragGUI: function( draggables ) {
-   	},
-
-   	getDroppedGUI: function() {
-   	}
-
-} );*/
+	function saveOrder(item) {
+		var group = item.toolManDragGroup
+		var list = group.element.parentNode
+		var id = list.getAttribute("id")
+		if (id == null) return
+		group.register('dragend', function() {
+			ToolMan.cookies().set("list-" + id, 
+					junkdrawer.serializeList(list), 365)
+		})
+	}
 
 function PaletteComponentInfo(type,autofill) {
 	this.type = type;
@@ -174,12 +294,6 @@ function PaletteComponentInfo(type,autofill) {
 /*var FBDropzone = Class.create();
 
 FBDropzone.prototype = (new Rico.Dropzone()).extend( {
-
-   	initialize: function(htmlElement, type) {
-    	this.htmlElement  = $(htmlElement);
-      	this.absoluteRect = null;
-      	this.type = type;
-   	},
 
    	activate: function() {
    		if(this.type == 'fbcomp') {
@@ -199,56 +313,6 @@ FBDropzone.prototype = (new Rico.Dropzone()).extend( {
 				}
 			} else {
 				cont.style.backgroundColor = 'Silver';
-			}
-   		}
-   	},
-
-   	deactivate: function() {
-   		if(this.type == 'fbcomp') {
-   			var cont = $('dropBoxinner');
-   			cont.style.backgroundColor = 'White';
-   		} else if(this.type == 'fbbutton') {
-   			var cont = $('pageButtonArea');
-			if(cont != null) {
-				cont.style.backgroundColor = 'White';
-			}
-   		}
-   	},
-
-	showHover: function() {
-		if(this.type == 'fbcomp') {
-			var children;
-			var index = CURRENT_ELEMENT_UNDER;
-			if(index != LAST_ELEMENT_UNDER && index != -1) {
-				LAST_ELEMENT_UNDER = index;
-				var cont = $('dropBoxinner');
-					if(cont != null) {
-						var marker = $('insertMarker');
-						if(marker != null && marker.parentNode == cont) {
-							cont.removeChild(marker);
-						}
-						var node = getEmptySpaceBox();
-						children = getPageComponents();
-						var count = children.length;
-						var beforeNode = children[index];
-						var ids = beforeNode.id;
-						//console.log('Marker: '+node.id + ' Before: '+beforeNode.id);
-						cont.insertBefore(node, beforeNode);
-					}
-			}
-		} else if(this.type == 'fbbutton') {
-			//TODO precise dropping of buttons
-		}
-   	},
-
-   	hideHover: function() {
-   		if(this.type == 'fbcomp') {
-   			var cont = $('dropBoxinner');
-   			if(cont != null) {
-				var line = $('insertMarker');
-				if(line != null) {
-					cont.removeChild(line);
-				}
 			}
    		}
    	},
@@ -297,27 +361,23 @@ FBDropzone.prototype = (new Rico.Dropzone()).extend( {
       	}
 	},
 
-   	canAccept: function(draggableObjects) {
-      	for (var i = 0 ; i < draggableObjects.length ; i++) {
-         	if (draggableObjects[i].type != this.type)
-            	return false;
-      	}
-      	return true;
-   	},
 } );*/
 
 function getEmptySpaceBox() {
 	var node = document.createElement('div');
 	node.id = 'insertMarker';
+	node.setAttribute('style', 'backgroundColor: Red');
 	return node;
 }
 
 function currentMousePosition(e) {
 	if(!e) e = window.event;
+	console.log('Getting mouse position');
 	for(var i = 0, child; i < childBoxes.length; i++){
 		with(childBoxes[i]){
 			if (e.pageX >= left && e.pageX <= right && e.pageY >= top && e.pageY <= bottom) {
 				CURRENT_ELEMENT_UNDER = i;
+				
 			}
 		}
 	}
@@ -522,7 +582,7 @@ function placeButtonInfo(parameter) {
 		if(localPr != null) {
 			localPr.setAttribute('style', 'display: none');
 		}
-		STATIC_ACCORDEON.showTabByIndex(1, true);
+		iwAccordionfbMenu.display(1);
 	}
 }
 function placeNewComponent(parameter) {
@@ -663,7 +723,7 @@ function placeFormInfo(parameter) {
 		DWRUtil.setValue('previewScreen', parameter.hasPreview);
 		DWRUtil.setValue('thankYouTitle', parameter.thankYouTitle);
 		DWRUtil.setValue('thankYouText', parameter.thankYouText);
-		STATIC_ACCORDEON.showTabByIndex(2, true);
+		iwAccordionfbMenu.display(2);
 	}
 }
 function saveFormTitle(parameter) {
@@ -777,7 +837,7 @@ function loadThxPage(parameter) {
 }
 function placeThxPageInfo(parameter) {
 	markSelectedPage(parameter.pageId);
-	STATIC_ACCORDEON.showTabByIndex(2, true);
+	iwAccordionfbMenu.display(2);
 	hideAllNotices();
 	DWRUtil.setValue('currentPageTitle', parameter.pageTitle);
 	clearDesignView();
@@ -787,17 +847,20 @@ function placeThxPageInfo(parameter) {
 function clearDesignView() {
 	var dropBoxinner = $('dropBoxinner');
 	if(dropBoxinner != null) {
-		var childCount = dropBoxinner.childNodes.length;
-		for(var i=0;i<childCount;i++) {
-			var child = dropBoxinner.childNodes[0]
-			dropBoxinner.removeChild(child);
+		//var childCount = dropBoxinner.childNodes.length;
+		var childCount = dropBoxinner.getChildren();
+		for(var i=0;i<childCount.length;i++) {
+			var child = childCount[0];
+			//dropBoxinner.removeChild(child);
+			child.remove();
 		}
 	}
 	var dropBox = $('dropBox');
 	if(dropBox != null) {
 		var area = $('pageButtonArea');
 		if(area != null) {
-			dropBox.removeChild(area);
+			//dropBox.removeChild(area);
+			area.remove();
 		}
 	}
 }
@@ -854,14 +917,13 @@ function placePageInfo(parameter) {
 				}
 		}
 		if(parameter.buttonAreaId != null) {
-			var dropBox = $('dropBox');
+			var dropBox = document.getElementById('dropBox');
 			if(dropBox != null) {
-				var area = $('pageButtonArea');
+				var area = document.getElementById('pageButtonArea');
 				if(area != null) {
 					dropBox.removeChild(area);
 				}
 				area = createButtonAreaNode();
-				//console.log(area.childNodes.length);
 				for(var i=0;i<parameter.buttons.length;i++) {
 					var buttonInfo = parameter.buttons[i];
 					var newNode = createButtonNode(buttonInfo);
@@ -948,7 +1010,6 @@ function rearrangeComponents() {
 }
 function loadComponentInfo(component) {
 	if(component != null) {
-		//console.log('loading component info: ' + component.id);
 		if(component.id) {
 			if(pressedComponentDelete == false && draggingComponent == false) {
 				FormComponent.getFormComponentInfo(component.id, placeComponentInfo);
@@ -962,17 +1023,16 @@ function placeComponentInfo(parameter) {
 	if(parameter != null) {
 		if(CURRENT_ELEMENT_ID != null) {
 			PREVIOUS_ELEMENT_ID = CURRENT_ELEMENT_ID;
-			$(PREVIOUS_ELEMENT_ID).setAttribute('class','formElement');
+			$(PREVIOUS_ELEMENT_ID).toggleClass('selectedElement');
 		}
 		CURRENT_ELEMENT_ID = parameter.id;
-		$(CURRENT_ELEMENT_ID).setAttribute('class','formElement selectedElement');
+		$(CURRENT_ELEMENT_ID).toggleClass('selectedElement');
 		
-		//console.log("Loading element: " + CURRENT_ELEMENT_ID + " instead of: " + PREVIOUS_ELEMENT_ID);
 		if(parameter.plain == true) {
 			var plainTxt = $('propertyPlaintext');
 			if(plainTxt != null) {
 				plainTxt.value = parameter.plainText;
-				plainTxt.focus();
+				//plainTxt.focus();
 			}
 			var plainPr = $('plainPropertiesPanel');
 			if(plainPr != null) {
@@ -1015,7 +1075,7 @@ function placeComponentInfo(parameter) {
 			var labelTxt = $('propertyTitle');
 			if(labelTxt != null) {
 				labelTxt.value = parameter.label;
-				labelTxt.focus();
+				//labelTxt.focus();
 			}
 			var compPr = $('basicPropertiesPanel');
 			if(compPr != null) {
@@ -1106,7 +1166,7 @@ function placeComponentInfo(parameter) {
 				}
 			}
 		}	
-		STATIC_ACCORDEON.showTabByIndex(1, true);
+		iwAccordionfbMenu.display(1);
 	}
 }
 function loadItemset(container,list) {
@@ -1526,10 +1586,6 @@ function createNewFormOnEnter(e) {
 	if(key == '13') {
 		createNewForm();
 	}
-}
-function switchToPreview() {
-	//new Rico.Effect.Size('pagesPanelMain', 0, null, 500, 10, {complete:closeLoadingMessage});
-	closeLoadingMessage();
 }
 messageObj = new DHTML_modalMessage();
 messageObj.setShadowOffset(5);

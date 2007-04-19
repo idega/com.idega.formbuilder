@@ -69,7 +69,7 @@ public class FBWorkspace extends FBComponentBase {
 //			Web2Business business = (Web2Business) IBOLookup
 //					.getServiceInstance(IWContext.getInstance(),
 //							Web2Business.class);
-////			String prototypeURI = business.getBundleURIToPrototypeLib();
+//			String prototypeURI = business.getBundleURIWithinLibsFolder(uriExtension);
 //			String dojoURI = business.getBundleURIToDojoLib();
 ////			String ricoURI = business.getBundleURIToRicoLib();
 //
@@ -81,7 +81,7 @@ public class FBWorkspace extends FBComponentBase {
 //			// resourceAdder.addJavaScriptAtPosition(context,
 //			// AddResource.HEADER_BEGIN, ricoURI);
 //			resourceAdder.addJavaScriptAtPosition(context,
-//					AddResource.HEADER_BEGIN, dojoURI);
+//					AddResource.HEADER_BEGIN, '/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/libs/yahoo/version.11.js');
 //			resourceAdder.addJavaScriptAtPosition(context,
 //					AddResource.HEADER_BEGIN, FORMBUILDER_JS);
 //			resourceAdder.addJavaScriptAtPosition(context,

@@ -7,8 +7,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
 
-import org.apache.myfaces.custom.tabbedpane.HtmlPanelTab;
-
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.webface.WFTabbedPane;
@@ -42,28 +40,7 @@ public class FBViewPanel extends FBComponentBase {
 		tabbedPane.setMenuStyleClass("fbViewTabBar");
 		tabbedPane.setSelectedMenuItemStyleClass("activeTab");
 		tabbedPane.setDeselectedMenuItemStyleClass("inactiveTab");
-		
-//		HtmlPanelTabbedPane tabbedPane = (HtmlPanelTabbedPane) application.createComponent(HtmlPanelTabbedPane.COMPONENT_TYPE);
-//		tabbedPane.setTabContentStyleClass("tabContent");
-//		tabbedPane.setStyleClass("tabbedPane");
-//		tabbedPane.setActiveTabStyleClass("activeTab");
-//		tabbedPane.setInactiveTabStyleClass("inactiveTab");
-//		tabbedPane.setServerSideTabSwitch(true);
-//		tabbedPane.setActiveSubStyleClass("activeSub");
-//		tabbedPane.setInactiveSubStyleClass("inactiveSub");
-//		tabbedPane.setTabChangeListener(application.createMethodBinding("#{workspace.processTabChange}", new Class[] {TabChangeEvent.class}));
-		
-		HtmlPanelTab tab1 = (HtmlPanelTab) application.createComponent(HtmlPanelTab.COMPONENT_TYPE);
-		tab1.setLabel("Design");
-		tab1.setId("designViewTab");
-		
-		HtmlPanelTab tab2 = (HtmlPanelTab) application.createComponent(HtmlPanelTab.COMPONENT_TYPE);
-		tab2.setLabel("Preview");
-		tab2.setId("previewViewTab");
-		
-		HtmlPanelTab tab3 = (HtmlPanelTab) application.createComponent(HtmlPanelTab.COMPONENT_TYPE);
-		tab3.setLabel("Source");
-		tab3.setId("sourceViewTab");
+//		tabbedPane.addTabListener((Workspace) WFUtil.getBeanInstance("workspace"));
 		
 		FBDesignView designView = (FBDesignView) application.createComponent(FBDesignView.COMPONENT_TYPE);
 		designView.setId("dropBox");
@@ -78,14 +55,6 @@ public class FBViewPanel extends FBComponentBase {
 		
 		FBFormPreview previewView = (FBFormPreview) application.createComponent(FBFormPreview.COMPONENT_TYPE);
 		previewView.setId("previewView");
-		
-//		tab1.getChildren().add(designView);
-//		tab2.getChildren().add(previewView);
-//		tab3.getChildren().add(sourceView);
-
-//		tabbedPane.getChildren().add(tab1);
-//		tabbedPane.getChildren().add(tab2);
-//		tabbedPane.getChildren().add(tab3);
 		
 		tabbedPane.addTab("tab1", "Design", designView, false);
 		tabbedPane.addTab("tab2", "Preview", previewView, false);

@@ -10,6 +10,7 @@
 		<ws:page id="formbuilder" 
 				 showFunctionMenu="false"
 				 javascripturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax.js,
+				 				/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/toolman.js,
 								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/modal-message.js,
 								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax-dynamic-content.js,
 								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/categories-tabs.js,

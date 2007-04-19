@@ -20,7 +20,7 @@ public class FBPalette extends FBComponentBase {
 	
 	private String itemStyleClass;
 	private Integer columns;
-	private List items = new LinkedList();
+	private Palette palette;
 	
 	private List<FBPaletteComponent> basic = new LinkedList<FBPaletteComponent>();
 	private List<FBPaletteComponent> buttons = new LinkedList<FBPaletteComponent>();
@@ -35,7 +35,7 @@ public class FBPalette extends FBComponentBase {
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
 		getChildren().clear();
-		Palette palette = (Palette) WFUtil.getBeanInstance("palette");
+		palette = (Palette) WFUtil.getBeanInstance("palette");
 		
 		Iterator it = palette.getBasic().iterator();
 		while(it.hasNext()) {
@@ -49,7 +49,6 @@ public class FBPalette extends FBComponentBase {
 			formComponent.setCategory("fbcomp");
 			basic.add(formComponent);
 		}
-		
 		it = palette.getButtons().iterator();
 		while(it.hasNext()) {
 			PaletteComponent current = (PaletteComponent) it.next();
@@ -185,14 +184,6 @@ public class FBPalette extends FBComponentBase {
 		this.columns = columns;
 	}
 
-	public List getItems() {
-		return items;
-	}
-
-	public void setItems(List items) {
-		this.items = items;
-	}
-
 	public String getItemStyleClass() {
 		return itemStyleClass;
 	}
@@ -206,7 +197,7 @@ public class FBPalette extends FBComponentBase {
 		values[0] = super.saveState(context);
 		values[1] = itemStyleClass;
 		values[2] = columns;
-		values[3] = items;
+		values[3] = palette;
 		return values;
 	}
 	
@@ -215,7 +206,15 @@ public class FBPalette extends FBComponentBase {
 		super.restoreState(context, values[0]);
 		itemStyleClass = (String) values[1];
 		columns = (Integer) values[2];
-		items = (List) values[3];
+		palette = (Palette) values[3];
+	}
+
+	public Palette getPalette() {
+		return palette;
+	}
+
+	public void setPalette(Palette palette) {
+		this.palette = palette;
 	}
 
 }
