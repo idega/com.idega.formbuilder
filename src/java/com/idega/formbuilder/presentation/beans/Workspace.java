@@ -8,13 +8,11 @@ import javax.faces.event.ActionEvent;
 import org.apache.myfaces.custom.tabbedpane.TabChangeEvent;
 import org.apache.myfaces.custom.tabbedpane.TabChangeListener;
 
+import com.idega.formbuilder.presentation.components.FBViewPanel;
+
 public class Workspace implements Serializable, TabChangeListener {
 	
 	private static final long serialVersionUID = -7539955904708793992L;
-	
-	public static final String CODE_VIEW = "source";
-	public static final String DESIGN_VIEW = "design";
-	public static final String PREVIEW_VIEW = "preview";
 	
 	private String selectedMenu;
 	private boolean renderedMenu;
@@ -35,27 +33,26 @@ public class Workspace implements Serializable, TabChangeListener {
 	public Workspace() {
 		this.renderedMenu = false;
 		this.selectedMenu = "0";
-		this.view = "design";
+		this.view = FBViewPanel.DESIGN_VIEW;
 		this.designViewStatus = "noform";
 		this.pagesPanelVisible = false;
 		this.locale = new Locale("en");
 	}
 	
 	public void processTabChange(TabChangeEvent tce) {
-		try {
-		String buttonId = tce.getComponent().getId();
-		if(buttonId.equals("designViewTab")) {
-			this.view = "design";
-			this.renderedMenu = true;
-		} else if(buttonId.equals("previewViewTab")) {
-			this.view = "preview";
-			this.renderedMenu = false;
-		} else if(buttonId.equals("sourceViewTab")) {
-			this.view = "source";
-			this.renderedMenu = false;
-		}
-		} catch (Throwable e) {
-			e.printStackTrace();
+		int index = tce.getNewTabIndex();
+		switch(index) {
+		case FBViewPanel.DESIGN_VIEW_INDEX:
+			view = FBViewPanel.DESIGN_VIEW;
+			renderedMenu = true;
+			break;
+		case FBViewPanel.PREVIEW_VIEW_INDEX:
+			view = FBViewPanel.PREVIEW_VIEW;
+			renderedMenu = false;
+			break;
+		case FBViewPanel.SOURCE_VIEW_INDEX:
+			view = FBViewPanel.SOURCE_VIEW;
+			renderedMenu = false;
 		}
 	}
 	

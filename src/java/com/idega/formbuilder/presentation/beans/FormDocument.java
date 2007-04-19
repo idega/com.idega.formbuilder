@@ -34,11 +34,13 @@ import com.idega.documentmanager.business.form.Document;
 import com.idega.documentmanager.business.form.DocumentManager;
 import com.idega.documentmanager.business.form.Page;
 import com.idega.documentmanager.business.form.PageThankYou;
+import com.idega.documentmanager.business.form.PropertiesDocument;
 import com.idega.documentmanager.business.form.PropertiesThankYouPage;
 import com.idega.documentmanager.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.egov.Application;
 import com.idega.formbuilder.business.egov.ApplicationBusiness;
 import com.idega.formbuilder.presentation.components.FBFormListItem;
+import com.idega.formbuilder.presentation.components.FBViewPanel;
 import com.idega.formbuilder.presentation.converters.FormDocumentInfo;
 import com.idega.formbuilder.presentation.converters.FormPageInfo;
 import com.idega.formbuilder.view.ActionManager;
@@ -56,11 +58,13 @@ public class FormDocument implements Serializable {
 	
 	private Document document;
 	private PropertiesThankYouPage properties;
+	private PropertiesDocument documentProperties;
 	
 	private ApplicationBusiness app_business_bean;
 	private String formTitle;
 	private String formId;
 	private boolean hasPreview;
+	private boolean enableBubbles;
 	private String thankYouTitle;
 	private String thankYouText;
 	private String tempValue;
@@ -410,7 +414,7 @@ public class FormDocument implements Serializable {
 //					getFormsService().unlockForm(getFormId());
 				
 				Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
-				workspace.setView(Workspace.CODE_VIEW);
+				workspace.setView(FBViewPanel.SOURCE_VIEW);
 				workspace.setRenderedMenu(false);
 				
 				String firstPage = getCommonPagesIdList().get(0);
@@ -532,6 +536,7 @@ public class FormDocument implements Serializable {
 		formTitle = "";
 		formTitleBean = null;
 		hasPreview = false;
+		enableBubbles = false;
 		
 		thankYouTitle = "";
 		thankYouTextBean = null;
@@ -544,6 +549,7 @@ public class FormDocument implements Serializable {
 		formTitle = "";
 		formTitleBean = null;
 		hasPreview = false;
+		enableBubbles = false;
 		
 		thankYouTitle = "";
 		thankYouTextBean = null;
@@ -624,6 +630,7 @@ public class FormDocument implements Serializable {
 		info.setHasPreview(hasPreview);
 		info.setThankYouTitle(thankYouTitle);
 		info.setThankYouText(thankYouText);
+		info.setEnableSwitcher(enableBubbles);
 		return info;
 	}
 	
@@ -636,6 +643,10 @@ public class FormDocument implements Serializable {
 			hasPreview = true;
 		} else {
 			hasPreview = false;
+		}
+		documentProperties = document.getProperties();
+		if(documentProperties != null) {
+			enableBubbles = documentProperties.isStepsVisualizationUsed();
 		}
 		PageThankYou thxPage = document.getThxPage();
 		if(thxPage != null) {
@@ -819,6 +830,17 @@ public class FormDocument implements Serializable {
 		} catch (FinderException e) {
 			logger.error(e);
 			return null;
+		}
+	}
+
+	public boolean isEnableBubbles() {
+		return enableBubbles;
+	}
+
+	public void setEnableBubbles(boolean enableBubbles) {
+		if(documentProperties != null) {
+			this.enableBubbles = enableBubbles;
+			documentProperties.setStepsVisualizationUsed(enableBubbles);
 		}
 	}
 }

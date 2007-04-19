@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.faces.application.Application;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.el.ValueBinding;
 
 import org.apache.myfaces.custom.tabbedpane.HtmlPanelTab;
 import org.apache.myfaces.custom.tabbedpane.HtmlPanelTabbedPane;
@@ -20,11 +21,14 @@ public class FBViewPanel extends FBComponentBase {
 	
 	private static final String SWITCHER_FACET = "SWITCHER_FACET";
 	
-//	private static final String DESIGN_VIEW = "design";
-//	private static final String SOURCE_VIEW = "source";
-//	private static final String PREVIEW_VIEW = "preview";
-	
 	private String view;
+
+	public static final int DESIGN_VIEW_INDEX = 0;
+	public static final int PREVIEW_VIEW_INDEX = 1;
+	public static final int SOURCE_VIEW_INDEX = 2;
+	public static final String PREVIEW_VIEW = "preview";
+	public static final String SOURCE_VIEW = "source";
+	public static final String DESIGN_VIEW = "design";
 
 	public FBViewPanel() {
 		super();
@@ -47,12 +51,15 @@ public class FBViewPanel extends FBComponentBase {
 		
 		HtmlPanelTab tab1 = (HtmlPanelTab) application.createComponent(HtmlPanelTab.COMPONENT_TYPE);
 		tab1.setLabel("Design");
+		tab1.setId("designViewTab");
 		
 		HtmlPanelTab tab2 = (HtmlPanelTab) application.createComponent(HtmlPanelTab.COMPONENT_TYPE);
 		tab2.setLabel("Preview");
+		tab2.setId("previewViewTab");
 		
 		HtmlPanelTab tab3 = (HtmlPanelTab) application.createComponent(HtmlPanelTab.COMPONENT_TYPE);
 		tab3.setLabel("Source");
+		tab3.setId("sourceViewTab");
 		
 		FBDesignView designView = (FBDesignView) application.createComponent(FBDesignView.COMPONENT_TYPE);
 		designView.setId("dropBox");
@@ -73,7 +80,7 @@ public class FBViewPanel extends FBComponentBase {
 		tab3.getChildren().add(sourceView);
 
 		tabbedPane.getChildren().add(tab1);
-//		tabbedPane.getChildren().add(tab2);
+		tabbedPane.getChildren().add(tab2);
 		tabbedPane.getChildren().add(tab3);
 		
 		addFacet(SWITCHER_FACET, tabbedPane);
@@ -96,50 +103,22 @@ public class FBViewPanel extends FBComponentBase {
 		writer.startElement("DIV", this);
 		writer.writeAttribute("id", getId(), "id");
 		writer.writeAttribute("class", getStyleClass(), "styleClass");
-		
-		HtmlPanelTabbedPane component = (HtmlPanelTabbedPane) getFacet(SWITCHER_FACET);
-		if(component != null) {
-			renderChild(context, component);
-		}
 
-//		ValueBinding vb = this.getValueBinding("view");
-//		String view = null;
-//		if(vb != null) {
-//			view = (String) vb.getValue(context);
-//		} else {
-//			view = getView();
-//		}
-//		UIComponent viewSwitch = getFacet(SWITCHER_FACET);
-//		if(viewSwitch != null) {
-//			if(view.equals(DESIGN_VIEW)) {
-//				UIComponent designView = getFacet(view);
-//				if(designView != null) {
-//					((WFDivision) viewSwitch.getChildren().get(0)).setStyleClass("selectedTab");
-//					((WFDivision) viewSwitch.getChildren().get(1)).setStyleClass("unselectedTab");
-//					((WFDivision) viewSwitch.getChildren().get(2)).setStyleClass("unselectedTab");
-//					renderChild(context, viewSwitch);
-//					renderChild(context, designView);
-//				}
-//			} else if(view.equals(PREVIEW_VIEW)) {
-//				UIComponent previewView = getFacet(view);
-//				if (previewView != null) {
-//					((WFDivision) viewSwitch.getChildren().get(1)).setStyleClass("selectedTab");
-//					((WFDivision) viewSwitch.getChildren().get(0)).setStyleClass("unselectedTab");
-//					((WFDivision) viewSwitch.getChildren().get(2)).setStyleClass("unselectedTab");
-//					renderChild(context, viewSwitch);
-//					renderChild(context, previewView);
-//				}
-//			} else if(view.equals(SOURCE_VIEW)) {
-//				UIComponent sourceView = getFacet(view);
-//				if (sourceView != null) {
-//					((WFDivision) viewSwitch.getChildren().get(2)).setStyleClass("selectedTab");
-//					((WFDivision) viewSwitch.getChildren().get(1)).setStyleClass("unselectedTab");
-//					((WFDivision) viewSwitch.getChildren().get(0)).setStyleClass("unselectedTab");
-//					renderChild(context, viewSwitch);
-//					renderChild(context, sourceView);
-//				}
-//			}
-//		}
+		ValueBinding vb = getValueBinding("view");
+		if(vb != null) {
+			view = (String) vb.getValue(context);
+		}
+		HtmlPanelTabbedPane viewSwitch = (HtmlPanelTabbedPane) getFacet(SWITCHER_FACET);
+		if(viewSwitch != null) {
+			if(view.equals(DESIGN_VIEW)) {
+				viewSwitch.setSelectedIndex(DESIGN_VIEW_INDEX);
+			} else if(view.equals(PREVIEW_VIEW)) {
+				viewSwitch.setSelectedIndex(PREVIEW_VIEW_INDEX);
+			} else if(view.equals(SOURCE_VIEW)) {
+				viewSwitch.setSelectedIndex(SOURCE_VIEW_INDEX);
+			}
+			renderChild(context, viewSwitch);
+		}
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {

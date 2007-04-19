@@ -13,7 +13,11 @@ import javax.faces.model.SelectItem;
 import org.apache.myfaces.component.html.ext.HtmlCommandLink;
 import org.apache.myfaces.component.html.ext.HtmlGraphicImage;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
+import org.apache.myfaces.renderkit.html.util.AddResource;
+import org.apache.myfaces.renderkit.html.util.AddResourceFactory;
 
+import com.idega.block.web2.business.Web2Business;
+import com.idega.business.IBOLookup;
 import com.idega.documentmanager.business.PersistenceManager;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.presentation.IWContext;
@@ -28,7 +32,10 @@ public class FBHomePage extends FBComponentBase {
 	private static final String HEADER_BLOCK_FACET = "HEADER_BLOCK_FACET";
 	private static final String GREETING_BLOCK_FACET = "GREETING_BLOCK_FACET";
 	private static final String FORM_LIST_FACET = "FORM_LIST_FACET";
-//	private static final String REFRESH_FACET_PROXY = "REFRESH_FACET_PROXY"; 
+	
+	private static final String HOMEPAGE_JS = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/homepage.js";
+	private static final String DWR_ENGINE_JS = "/dwr/engine.js";
+	private static final String DWR_FORM_DOCUMENT_JS = "/dwr/interface/FormDocument.js";
 	
 	public FBHomePage() {
 		super();
@@ -38,6 +45,22 @@ public class FBHomePage extends FBComponentBase {
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
 		getChildren().clear();
+		
+		try {
+			Web2Business business = (Web2Business) IBOLookup.getServiceInstance(IWContext.getInstance(), Web2Business.class);
+			String prototypeURI = business.getBundleURIToPrototypeLib();
+			String ricoURI = business.getBundleURIToRicoLib();
+			
+			AddResource resourceAdder = AddResourceFactory.getInstance(context);
+			
+			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, prototypeURI);
+			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, ricoURI);
+			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, DWR_ENGINE_JS);
+			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, DWR_FORM_DOCUMENT_JS);
+			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, HOMEPAGE_JS);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		
 		WFDivision header = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		header.setId("fbHomePageHeaderBlock");
@@ -213,16 +236,6 @@ public class FBHomePage extends FBComponentBase {
 		if(list != null) {
 			renderChild(context, list);
 		}
-		
-//		ResponseWriter writer = context.getResponseWriter();
-//		writer.startElement("DIV", this);
-//		writer.writeAttribute("id", "actionsProxy", null);
-//		writer.writeAttribute("style", "display: none;", null);
-//		UIComponent button = getFacet(REFRESH_FACET_PROXY);
-//		if(button != null) {
-//			renderChild(context, button);
-//		}
-//		writer.endElement("DIV");
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {

@@ -104,6 +104,21 @@ public class FBFormProperties extends FBComponentBase {
 		//cell = row.createCell();
 		cell.add(thankYouText);
 		
+		HtmlOutputText showFormStepsLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		showFormStepsLabel.setValue("Enable");
+		
+		row = group.createRow();
+		cell = row.createCell();
+		cell.setWidth("100");
+		cell.add(showFormStepsLabel);
+		
+		HtmlSelectBooleanCheckbox showFormStepsChbx = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
+		showFormStepsChbx.setId("visualization");
+		showFormStepsChbx.setValueBinding("value", application.createValueBinding("#{formDocument.enableBubbles}"));
+		showFormStepsChbx.setOnchange("saveEnableBubbles(this);");
+		
+		cell.add(showFormStepsChbx);
+		
 		addFacet(CONTENT_FACET, table);
 	}
 	

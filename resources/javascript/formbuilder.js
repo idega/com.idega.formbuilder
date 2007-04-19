@@ -27,9 +27,6 @@ var draggingButton = false;
 var draggingComponent = false;
 var draggingPage = false;
 
-$('statusContainer').style.visibility = 'hidden';
-Rico.Corner.round('statusContainer');
-
 var FBDraggable = Class.create();
 
 FBDraggable.prototype = (new Rico.Draggable()).extend( {
@@ -213,7 +210,7 @@ FBDropzone.prototype = (new Rico.Dropzone()).extend( {
       			//console.log("Canceling: " + currentElement);
       			FormComponent.removeComponent(currentElement.getAttribute('id'),nothing);
       		}
-      		Sortable.create('dropBoxinner',{dropOnEmpty:true,tag:'div',only:'formElement',onUpdate:rearrangeComponents,scroll:'dropBoxinner',constraint:false});
+      		//Sortable.create('dropBoxinner',{dropOnEmpty:true,tag:'div',only:'formElement',onUpdate:rearrangeComponents,scroll:'dropBoxinner',constraint:false});
       	} else if(this.type == 'fbbutton') {
       		var cont = $('pageButtonArea');
 			if(cont == null) {
@@ -229,8 +226,8 @@ FBDropzone.prototype = (new Rico.Dropzone()).extend( {
 			} else {
 				cont.appendChild(currentButton);
 			}
-			Position.includeScrollOffsets = true;
-			Sortable.create('pageButtonArea',{dropOnEmpty:true,tag:'div',only:'formButton',onUpdate:rearrangeButtons,scroll:'pageButtonArea',constraint:false});
+			//Position.includeScrollOffsets = true;
+			//Sortable.create('pageButtonArea',{dropOnEmpty:true,tag:'div',only:'formButton',onUpdate:rearrangeButtons,scroll:'pageButtonArea',constraint:false});
       	}
 	},
 
@@ -616,6 +613,14 @@ function saveThankYouTitle(parameter) {
 		FormDocument.setThankYouTitle(parameter, placeThankYouTitle);
 	}
 }
+function saveEnableBubbles(parameter) {
+	if(parameter != null) {
+		if(parameter.checked) {
+			//alert('Not implemented');
+			FormDocument.setEnableBubbles(parameter.checked, nothing);
+		}
+	}
+}
 function placeThankYouTitle(parameter) {
 	var container = $('pagesPanelSpecial');
 	if(container != null) {
@@ -800,19 +805,19 @@ function placePageInfo(parameter) {
 			}
 		}
 		closeLoadingMessage();
-		Sortable.create('dropBoxinner',{dropOnEmpty:true,tag:'div',only:'formElement',onUpdate:rearrangeComponents,scroll:'dropBoxinner',constraint:false});
-		Sortable.create('pageButtonArea',{dropOnEmpty:true,tag:'div',only:'formButton',onUpdate:rearrangeButtons,scroll:'pageButtonArea',constraint:false});
+		//Sortable.create('dropBoxinner',{dropOnEmpty:true,tag:'div',only:'formElement',onUpdate:rearrangeComponents,scroll:'dropBoxinner',constraint:false});
+		//Sortable.create('pageButtonArea',{dropOnEmpty:true,tag:'div',only:'formButton',onUpdate:rearrangeButtons,scroll:'pageButtonArea',constraint:false});
 	}
 }
 function setupPagesDragAndDrop(value1, value2) {
-	Position.includeScrollOffsets = true;
-	Sortable.create(value1,{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangePages,scroll:value1,constraint:false});
+	//Position.includeScrollOffsets = true;
+	//Sortable.create(value1,{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangePages,scroll:value1,constraint:false});
 	Droppables.add(value1);
 	FormPage.getId(markSelectedPage);
 }
 function rearrangePages() {
 	draggingPage = true;
-	var componentIDs = Sortable.serialize('pagesPanel',{tag:'div',name:'id'});
+	//var componentIDs = Sortable.serialize('pagesPanel',{tag:'div',name:'id'});
 	var delimiter = '&id[]=';
 	var idPrefix = 'fbcomp_';
 	FormDocument.updatePagesList(componentIDs,idPrefix,delimiter,nothing);
@@ -829,19 +834,19 @@ function placePageTitle(parameter) {
 	}
 }
 function setupButtonsDragAndDrop(value1, value2) {
-	Position.includeScrollOffsets = true;
-	Sortable.create(value1,{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangeButtons,scroll:value1,constraint:false});
+	//Position.includeScrollOffsets = true;
+	//Sortable.create(value1,{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangeButtons,scroll:value1,constraint:false});
 }
 function rearrangeButtons() {
 	draggingButton = true;
-	var componentIDs = Sortable.serialize('pageButtonArea',{tag:'div',name:'id'});
+	//var componentIDs = Sortable.serialize('pageButtonArea',{tag:'div',name:'id'});
 	var delimiter = '&id[]=';
 	var idPrefix = 'fbcomp_';
 	FormPage.updateButtonList(componentIDs,idPrefix,delimiter,nothing);
 }
 function setupComponentDragAndDrop(value1,value2) {
-	Position.includeScrollOffsets = true;
-	Sortable.create(value1 + 'inner',{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangeComponents,scroll:value1,constraint:false});
+	//Position.includeScrollOffsets = true;
+	//Sortable.create(value1 + 'inner',{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangeComponents,scroll:value1,constraint:false});
 	dndMgr.registerDropZone(new FBDropzone('viewPanel', 'fbcomp'));
 	dndMgr.registerDropZone(new FBDropzone('dropBox', 'fbbutton'));
 	FormComponent.getId(markSelectedComponent);
@@ -866,11 +871,11 @@ function insertNewComponent(parameter) {
 		$('dropBoxinner').insertBefore(currentElement, node);
 		currentElement = null;
 	}
-	Sortable.create('dropBoxinner',{dropOnEmpty:true,tag:'div',only:'formElement',onUpdate:rearrangeComponents,scroll:'dropBoxinner',constraint:false});
+	//Sortable.create('dropBoxinner',{dropOnEmpty:true,tag:'div',only:'formElement',onUpdate:rearrangeComponents,scroll:'dropBoxinner',constraint:false});
 }
 function rearrangeComponents() {
 	draggingComponent = true;
-	var componentIDs = Sortable.serialize('dropBoxinner',{tag:'div',name:'id'});
+	//var componentIDs = Sortable.serialize('dropBoxinner',{tag:'div',name:'id'});
 	var delimiter = '&id[]=';
 	var idPrefix = 'fbcomp_';
 	FormPage.updateComponentList(componentIDs,idPrefix,delimiter,nothing);
@@ -1268,19 +1273,19 @@ function getEmptySelect(index,lbl,vl) {
 	
 }
 function saveFormDocument() {
-	var saveButton = $('saveFormButton');
+	/*var saveButton = $('saveFormButton');
 	if(saveButton != null) {
 		saveButton.setAttribute('disabled','true');
-	}
+	}*/
 	showLoadingMessage('Saving document...');
 	FormDocument.save(savedFormDocument);
 }
 function savedFormDocument(parameter) {
 	closeLoadingMessage();
-	var saveButton = $('saveFormButton');
+	/*var saveButton = $('saveFormButton');
 	if(saveButton != null) {
 		saveButton.setAttribute('disabled','false');
-	}
+	}*/
 }
 function saveSourceCode(source_code) {
 	if(source_code != null) {

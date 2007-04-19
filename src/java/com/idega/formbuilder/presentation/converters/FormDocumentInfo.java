@@ -6,7 +6,14 @@ public class FormDocumentInfo {
 	private String thankYouTitle;
 	private String thankYouText;
 	private boolean hasPreview;
+	private boolean enableSwitcher;
 	
+	public boolean isEnableSwitcher() {
+		return enableSwitcher;
+	}
+	public void setEnableSwitcher(boolean enableSwitcher) {
+		this.enableSwitcher = enableSwitcher;
+	}
 	public boolean isHasPreview() {
 		return hasPreview;
 	}

@@ -9,13 +9,10 @@
 	<f:view>
 		<ws:page id="formbuilder" 
 				 showFunctionMenu="false"
-				 javascripturls="				
-				 								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax.js,
-												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/modal-message.js,
-												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax-dynamic-content.js,
-												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/categories-tabs.js,
-												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/scriptaculous/prototype.js,
-												/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/scriptaculous/scriptaculous.js">
+				 javascripturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax.js,
+								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/modal-message.js,
+								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax-dynamic-content.js,
+								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/categories-tabs.js">
 			<h:form id="workspaceform1">
 				<t:div id="mainApplication" forceId="true">
 					<fb:workspace id="mainWorkspace" view="#{workspace.view}"/>
