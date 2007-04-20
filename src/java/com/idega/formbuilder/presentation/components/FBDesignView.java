@@ -132,14 +132,14 @@ public class FBDesignView extends FBComponentBase {
 			if(selectedComponent != null) {
 				selectedComponentId = selectedComponent.getId();
 			}
-			ButtonArea barea = page.getButtonArea();
-			if(barea != null) {
+			//ButtonArea barea = page.getButtonArea();
+			//if(barea != null) {
 				FBButtonArea area = (FBButtonArea) application.createComponent(FBButtonArea.COMPONENT_TYPE);
 				area.setId("pageButtonArea");
 				area.setStyleClass(componentStyleClass);
 				area.setComponentStyleClass("formButton");
 				addFacet(BUTTON_AREA_FACET, area);
-			}
+			//}
 			if(page != null) {
 				List<String> ids = page.getContainedComponentsIdList();
 				Iterator it = ids.iterator();

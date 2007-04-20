@@ -73,8 +73,8 @@ public class FBWorkspace extends FBComponentBase {
 //			String dojoURI = business.getBundleURIToDojoLib();
 ////			String ricoURI = business.getBundleURIToRicoLib();
 //
-			AddResource resourceAdder = AddResourceFactory.getInstance(context);
-			resourceAdder.addStyleSheet(context, AddResource.HEADER_BEGIN, FormbuilderViewManager.FORMBUILDER_CSS);
+//			AddResource resourceAdder = AddResourceFactory.getInstance(context);
+//			resourceAdder.addStyleSheet(context, AddResource.HEADER_BEGIN, FormbuilderViewManager.FORMBUILDER_CSS);
 //
 //			// resourceAdder.addJavaScriptAtPosition(context,
 //			// AddResource.HEADER_BEGIN, prototypeURI);
@@ -144,6 +144,9 @@ public class FBWorkspace extends FBComponentBase {
 	public void encodeBegin(FacesContext context) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeBegin(context);
+		
+		AddResource resourceAdder = AddResourceFactory.getInstance(context);
+		resourceAdder.addStyleSheet(context, AddResource.HEADER_BEGIN, FormbuilderViewManager.FORMBUILDER_CSS);
 
 		writer.startElement("DIV", this);
 		writer.writeAttribute("id", getId(), "id");

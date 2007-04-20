@@ -40,7 +40,6 @@ public class FBViewPanel extends FBComponentBase {
 		tabbedPane.setMenuStyleClass("fbViewTabBar");
 		tabbedPane.setSelectedMenuItemStyleClass("activeTab");
 		tabbedPane.setDeselectedMenuItemStyleClass("inactiveTab");
-//		tabbedPane.addTabListener((Workspace) WFUtil.getBeanInstance("workspace"));
 		
 		FBDesignView designView = (FBDesignView) application.createComponent(FBDesignView.COMPONENT_TYPE);
 		designView.setId("dropBox");

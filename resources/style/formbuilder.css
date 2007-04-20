@@ -79,6 +79,9 @@
 .fbSingleLineProperty > * {
 	display: inline;
 }
+.fbSingleLineProperty > label, .fbTwoLineProperty > label {
+	width: 150px;
+}
 .fbTwoLineProperty {
 	display: block;
 }
@@ -436,7 +439,7 @@ a.okBt:hover {
 #previewView {
 	overflow-y: auto !important;
 	height: 100%;
-	margin-top: -15px;
+	margin-top: -35px;
 	border-top: 1px solid Grey;
 }
 
