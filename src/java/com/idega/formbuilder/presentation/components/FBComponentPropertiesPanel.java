@@ -1,8 +1,6 @@
 package com.idega.formbuilder.presentation.components;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
@@ -11,7 +9,7 @@ import javax.faces.context.FacesContext;
 
 import org.apache.myfaces.component.html.ext.HtmlInputText;
 import org.apache.myfaces.component.html.ext.HtmlInputTextarea;
-import org.apache.myfaces.component.html.ext.HtmlOutputText;
+import org.apache.myfaces.component.html.ext.HtmlOutputLabel;
 import org.apache.myfaces.component.html.ext.HtmlSelectBooleanCheckbox;
 import org.apache.myfaces.component.html.ext.HtmlSelectOneRadio;
 
@@ -33,11 +31,20 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 	private static final String LOCAL_PROPERTIES_FACET = "LOCAL_PROPERTIES_FACET";
 	private static final String PLAIN_PROPERTIES_FACET = "PLAIN_PROPERTIES_FACET";
 	
-	private static final String PROPERTIES_PANEL_SECTION_STYLE = "propertiesPanelSection";
+	private static final String PROPERTIES_PANEL_SECTION_STYLE = "fbPropertiesPanelSection";
+	private static final String SINGLE_LINE_PROPERTY = "fbSingleLineProperty";
+	private static final String TWO_LINE_PROPERTY = "fbTwoLineProperty";
 	
 	public FBComponentPropertiesPanel() {
 		super();
 		setRendererType(null);
+	}
+	
+	private WFDivision createPropertyContainer(String styleClass, Application application) {
+		WFDivision body = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		body.setStyleClass(styleClass);
+		
+		return body;
 	}
 	
 	private WFDivision createPanelSection(String id, Application application) {
@@ -51,7 +58,9 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 	private UIComponent createBasicProperties(Application application) {
 		WFDivision body = createPanelSection("basicPropertiesPanel", application);
 		
-		HtmlOutputText requiredLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		WFDivision line = createPropertyContainer(SINGLE_LINE_PROPERTY, application);
+		
+		HtmlOutputLabel requiredLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 		requiredLabel.setValue("Required field");
 		
 		HtmlSelectBooleanCheckbox required = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
@@ -59,10 +68,13 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		required.setValueBinding("value", application.createValueBinding("#{formComponent.required}"));
 		required.setOnclick("saveRequired(this.checked);");
 		
-		body.add(requiredLabel);
-		body.add(required);
+		line.add(requiredLabel);
+		line.add(required);
+		body.add(line);
 		
-		HtmlOutputText errorMsgLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		line = createPropertyContainer(TWO_LINE_PROPERTY, application);
+		
+		HtmlOutputLabel errorMsgLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 		errorMsgLabel.setValue("Error message");
 		
 		HtmlInputTextarea errorMsg = (HtmlInputTextarea) application.createComponent(HtmlInputTextarea.COMPONENT_TYPE);
@@ -71,10 +83,13 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		errorMsg.setOnblur("saveErrorMessage(this.value)");
 		errorMsg.setOnkeydown("savePropertyOnEnter(this.value,'compErr',event);");
 		
-		body.add(errorMsgLabel);
-		body.add(errorMsg);
+		line.add(errorMsgLabel);
+		line.add(errorMsg);
+		body.add(line);
 		
-		HtmlOutputText helpMsgLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		line = createPropertyContainer(TWO_LINE_PROPERTY, application);
+		
+		HtmlOutputLabel helpMsgLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 		helpMsgLabel.setValue("Help text");
 		
 		HtmlInputTextarea helpMsg = (HtmlInputTextarea) application.createComponent(HtmlInputTextarea.COMPONENT_TYPE);
@@ -83,10 +98,13 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		helpMsg.setOnblur("saveHelpMessage(this.value)");
 		helpMsg.setOnkeydown("savePropertyOnEnter(this.value,'compHelp',event);");
 		
-		body.add(helpMsgLabel);
-		body.add(helpMsg);
+		line.add(helpMsgLabel);
+		line.add(helpMsg);
+		body.add(line);
 		
-		HtmlOutputText hasAutofillLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		line = createPropertyContainer(TWO_LINE_PROPERTY, application);
+		
+		HtmlOutputLabel hasAutofillLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 		hasAutofillLabel.setValue("Autofill field");
 		
 		HtmlSelectBooleanCheckbox hasAutofill = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
@@ -94,8 +112,9 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		hasAutofill.setOnclick("toggleAutofill(this.checked);");
 		hasAutofill.setValueBinding("value", application.createValueBinding("#{formComponent.autofill}"));
 		
-		body.add(hasAutofillLabel);
-		body.add(hasAutofill);
+		line.add(hasAutofillLabel);
+		line.add(hasAutofill);
+		body.add(line);
 		
 		return body;
 	}
@@ -103,7 +122,9 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 	private UIComponent createAutofillProperties(Application application) {
 		WFDivision body = createPanelSection("autoPropertiesPanel", application);
 		
-		HtmlOutputText autofillLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		WFDivision line = createPropertyContainer(SINGLE_LINE_PROPERTY, application);
+		
+		HtmlOutputLabel autofillLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 		autofillLabel.setValue("");
 		
 		HtmlInputText autofillValue = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
@@ -112,8 +133,9 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		autofillValue.setOnblur("saveAutofill(this.value);");
 		autofillValue.setOnkeydown("savePropertyOnEnter(this.value,'compAuto',event);");
 		
-		body.add(autofillLabel);
-		body.add(autofillValue);
+		line.add(autofillLabel);
+		line.add(autofillValue);
+		body.add(line);
 		
 		return body;
 	}
@@ -121,7 +143,9 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 	private UIComponent createButtonProperties(Application application) {
 		WFDivision body = createPanelSection("labelPropertiesPanel", application);
 		
-		HtmlOutputText titleLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		WFDivision line = createPropertyContainer(SINGLE_LINE_PROPERTY, application);
+		
+		HtmlOutputLabel titleLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 		titleLabel.setValue("Field name");
 		
 		HtmlInputText title = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
@@ -130,8 +154,9 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		title.setOnblur("saveComponentLabel(this.value);");
 		title.setOnkeydown("savePropertyOnEnter(this.value,'compTitle',event);");
 		
-		body.add(titleLabel);
-		body.add(title);
+		line.add(titleLabel);
+		line.add(title);
+		body.add(line);
 		
 		return body;
 	}
@@ -139,7 +164,9 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 	private UIComponent createPlainProperties(Application application) {
 		WFDivision body = createPanelSection("plainPropertiesPanel", application);
 		
-		HtmlOutputText plainTextLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		WFDivision line = createPropertyContainer(TWO_LINE_PROPERTY, application);
+		
+		HtmlOutputLabel plainTextLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 		plainTextLabel.setValue("Text");
 		
 		HtmlInputTextarea plainTextValue = (HtmlInputTextarea) application.createComponent(HtmlInputTextarea.COMPONENT_TYPE);
@@ -148,8 +175,9 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		plainTextValue.setOnblur("savePlaintext(this.value);");
 		plainTextValue.setOnkeydown("savePropertyOnEnter(this.value,'compText',event);");
 		
-		body.add(plainTextLabel);
-		body.add(plainTextValue);
+		line.add(plainTextLabel);
+		line.add(plainTextValue);
+		body.add(line);
 		
 		return body;
 	}
@@ -157,7 +185,9 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 	private UIComponent createAdvancedProperties(Application application) {
 		WFDivision body = createPanelSection("advPropertiesPanel", application);
 		
-		HtmlOutputText advancedL = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		WFDivision line = createPropertyContainer(SINGLE_LINE_PROPERTY, application);
+		
+		HtmlOutputLabel advancedL = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 		advancedL.setValue("Select source");
 		
 		HtmlSelectOneRadio dataSrcSwitch = (HtmlSelectOneRadio) application.createComponent(HtmlSelectOneRadio.COMPONENT_TYPE);
@@ -170,8 +200,9 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		dataSrcs.setValueBinding("value", application.createValueBinding("#{dataSources.sources}"));
 		addChild(dataSrcs, dataSrcSwitch);
 		
-		body.add(advancedL);
-		body.add(dataSrcSwitch);
+		line.add(advancedL);
+		line.add(dataSrcSwitch);
+		body.add(line);
 		
 		return body;
 	}
@@ -179,7 +210,9 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 	private UIComponent createExternalProperties(Application application) {
 		WFDivision body = createPanelSection("extPropertiesPanel", application);
 		
-		HtmlOutputText externalSrcLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		WFDivision line = createPropertyContainer(SINGLE_LINE_PROPERTY, application);
+		
+		HtmlOutputLabel externalSrcLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 		externalSrcLabel.setValue("External data source");
 		
 		HtmlInputText external = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
@@ -189,8 +222,9 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		external.setOnkeydown("savePropertyOnEnter(this.value,'compExt',event);");
 		external.setDisabled(true);
 		
-		body.add(externalSrcLabel);
-		body.add(external);
+		line.add(externalSrcLabel);
+		line.add(external);
+		body.add(line);
 		
 		return body;
 	}
@@ -225,13 +259,6 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		Application application = context.getApplication();
 		super.encodeBegin(context);
 		
-		/*Table2 plain = (Table2) getFacet(PLAIN_PROPERTIES_FACET);
-		Table2 label = (Table2) getFacet(BUTTON_PROPERTIES_FACET);
-		Table2 basic = (Table2) getFacet(BASIC_PROPERTIES_FACET);
-		Table2 auto = (Table2) getFacet(AUTOFILL_PROPERTIES_FACET);
-		Table2 adv = (Table2) getFacet(ADVANCED_PROPERTIES_FACET);
-		Table2 ext = (Table2) getFacet(EXTERNAL_PROPERTIES_FACET);
-		Table2 local = (Table2) getFacet(LOCAL_PROPERTIES_FACET);*/
 		WFDivision plain = (WFDivision) getFacet(PLAIN_PROPERTIES_FACET);
 		if(plain == null) {
 			plain = (WFDivision) createPlainProperties(application);
@@ -260,10 +287,6 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		if(local == null) {
 			local = (WFDivision) createLocalProperties(application);
 		}
-
-		Map map = getFacets();
-		Set set = map.keySet();
-		Object array[] = set.toArray();
 		FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
 		if(formComponent.getPropertiesPlain() != null) {
 			plain.setStyleAttribute("display: block");

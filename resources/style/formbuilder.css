@@ -68,10 +68,22 @@
 	height: 50px;
 }
 
-.propertiesPanelSection {
+.fbPropertiesPanelSection {
 	width: 100%;
 	padding-left: 15px;
 	padding-top: 5px;
+}
+.fbSingleLineProperty {
+	display: block;
+}
+.fbSingleLineProperty > * {
+	display: inline;
+}
+.fbTwoLineProperty {
+	display: block;
+}
+.fbTwoLineProperty > * {
+	display: block;
 }
 
 .pagesPanelToolbar {

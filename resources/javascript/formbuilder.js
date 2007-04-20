@@ -26,75 +26,6 @@ var draggingComponent = false;
 var draggingPage = false;
 var insideDropzone = false;
 
-Sortables.implement({
-		initialize: function(elements, options){
-			this.setOptions(options);
-			this.options.handles = this.options.handles || elements;
-			var trash = new Element('div').injectInside($(document.body));
-			var sortable = $(elements);
-			//$(elements).(function(el, i){
-				var copy = sortable.clone().setStyles({
-					'position': 'absolute',
-					'opacity': '0',
-					'display': 'none'
-				}).injectInside(trash);
-				var elEffect = sortable.effect('opacity', {
-					duration: this.options.fxDuration,
-					wait: false,
-					transition: this.options.fxTransition
-				}).set(1);
-				var copyEffects = copy.effects({
-					duration: this.options.fxDuration,
-					wait: false,
-					transition: this.options.fxTransition,
-					onComplete: function(){
-						copy.setStyle('display', 'none');
-					}
-				});
-				var dragger = new Drag.Move(copy, {
-					xModifier: false,
-					onStart: function(){
-						copy.setHTML(sortable.innerHTML).setStyles({
-							'display': 'block',
-							'opacity': this.options.maxOpacity,
-							'top': sortable.getTop()+'px',
-							'left': sortable.getLeft()+'px'
-						});
-						elEffect.custom(elEffect.now, this.options.maxOpacity);
-					}.bind(this),
-					onComplete: function(){
-						copyEffects.custom({
-							'opacity': [this.options.maxOpacity, 0],
-							'top': [copy.getTop(), sortable.getTop()]
-						});
-						elEffect.custom(elEffect.now, 1);
-						//$('status').setHTML('Sorting complete!');
-						statusFade.custom(1,0);
-					}.bind(this),
-					onDrag: function(){
-						if (sortable.getPrevious() && copy.getTop() < (sortable.getPrevious().getTop()))
-							sortable.injectBefore(sortable.getPrevious());
-						else if (sortable.getNext() && copy.getTop() > (sortable.getNext().getTop()))
-							sortable.injectAfter(sortable.getNext());
-                                                statusFade.clearTimer();
-                                                //$('status').setOpacity(1).setHTML('Sorting in progress...');
-					}
-				});
-				sortable.onmousedown = dragger.start.bind(dragger);
-//			}, this);
-		}
-});
-
-Array.extend({
-	makeSortable: function(options){
-		var Sortable = new Sortables(this, options);
-		this.each(function(el){
-			el.style.cursor = 'move';
-			el.extend(Sortable);
-		})
-	}
-});
-
 var FBDraggable = Element.extend({
 	draggableTag: function(droppables, handle, type, autofill) {
 		type = type;
@@ -113,9 +44,7 @@ var FBDraggable = Element.extend({
 					'top':  now.y + 'px',
 					'opacity': '0.75'
 				}).injectInside(document.body);
-				console.log("left:"+this.element.getStyle('left') + ":top:" + this.element.getStyle('top'));
 				this.value.now = now;
-				console.log("x:" + this.value.now.x + "y:" + this.value.now.y);
 				if(type == 'fbcomp') {
 					CURRENT_ELEMENT_UNDER = -1;
 		   			childBoxes = [];
@@ -123,10 +52,8 @@ var FBDraggable = Element.extend({
 					for(var i = 0; i < childNodes.length; i++){
 						var child = childNodes[i];
 						var pos = child.getCoordinates();
-						console.log('Counting children: ' + pos);
 						childBoxes.push({top: pos.top, bottom: pos.bottom, left: pos.left, right: pos.right, height: pos.height, width: pos.width, node: child});
 					}
-					
 					var temp = childBoxes;
 					var dropBox = $('dropBoxinner');
 					this.element.addEvent('mousemove', function(e) {
@@ -135,12 +62,12 @@ var FBDraggable = Element.extend({
 							with(childBoxes[i]){
 								if (e.pageX >= left && e.pageX <= right && e.pageY >= top && e.pageY <= bottom) {
 									CURRENT_ELEMENT_UNDER = i;
-									console.log('Hit: ' + i);var children;
+									var children;
 									if(CURRENT_ELEMENT_UNDER != LAST_ELEMENT_UNDER) {
 										LAST_ELEMENT_UNDER = CURRENT_ELEMENT_UNDER;
 										var marker = $('insertMarker');
-										if(marker != null && marker.parentNode == dropBox) {
-											dropBox.removeChild(marker);
+										if(marker != false) {
+											marker.remove();
 										}
 										var node = getEmptySpaceBox();
 										children = $$('#dropBoxinner div.formElement');
@@ -154,11 +81,18 @@ var FBDraggable = Element.extend({
 							}
 						}
 					});
-					console.log("Adding new component: " + this.elementOrg.id);
-					var info = new PaletteComponentInfo(this.elementOrg.id, this.autofill);// { type:this.name, name: "", iconPath: "", autofill_key: "" };
+					var info = new PaletteComponentInfo(this.elementOrg.id, this.autofill);
    					FormComponent.addComponent(info, placeNewComponent);
 				} else if(type == 'fbbutton') {
-					console.log("Adding new button: " + this.elementOrg.id);
+					var cont = $('pageButtonArea');
+					if(cont == false) {
+						cont = document.createElement('div');
+						cont.id = 'pageButtonArea';
+						cont.style.position = 'relative';
+						cont.setAttribute('class','formElement');
+						cont.style.backgroundColor = 'Silver';
+						cont.injectInside($('dropBox'));
+					}
 					FormComponent.addButton(this.elementOrg.id, placeNewButton);
 				}
 			},
@@ -169,9 +103,20 @@ var FBDraggable = Element.extend({
 				this.element = this.elementOrg;
 				this.elementOrg = null;
 				if(type == 'fbcomp') {
+					var currentId = currentElement.getAttribute('id');
 					var dropBox = $('dropBoxinner');
 					this.element.removeEvents('mousemove');
+					if(insideDropzone == false) {
+						FormComponent.removeComponent(currentId,nothing);
+						var line = $('insertMarker');
+						if(line != false) line.remove();
+					}
+				} else if(type == 'fbbutton') {
+					if(insideDropzone == false) {
+						FormComponent.removeButton(currentButton.getAttribute('id'),nothing);
+					}
 				}
+				insideDropzone = false;
 			}
 		});
 		this.setStyles({
@@ -191,100 +136,64 @@ Window.onDomReady(function() {
 		'leave': function(el){
 			this.dragEffect.stop().start('dddddd', 'ffffff');
 			insideDropzone = false;
-   			var cont = $('dropBoxinner');
-   			if(cont != null) {
-				var line = $('insertMarker');
-				if(line != null) {
-					cont.removeChild(line);
-				}
-			}
+			var line = $('insertMarker');
+			if(line != false) line.remove();
 		},
 		'drop': function(el, drag){
 			this.dragEffect.stop().start('ff8888', 'ffffff');
 			var currentId = currentElement.getAttribute('id');
-			if(insideDropzone == true) {
-				var index = CURRENT_ELEMENT_UNDER;
-		        if(index != null) {
-					console.log("Accepting: " + currentId + " in position: " + CURRENT_ELEMENT_UNDER);
-			    	FormComponent.moveComponent(currentId, index, insertNewComponent);
-		        }
-		        var cont = $('dropBoxinner');
-	   			if(cont != null) {
-					var line = $('insertMarker');
-					if(line != null) {
-						cont.removeChild(line);
-					}
-				}
-			} else {
-				console.log("Canceling: " + currentId);
-				FormComponent.removeComponent(currentId,nothing);
-			}
+		    if(CURRENT_ELEMENT_UNDER != null) {
+				FormComponent.moveComponent(currentId, CURRENT_ELEMENT_UNDER, insertNewComponent);
+		    }
+			var line = $('insertMarker');
+			if(line != false) line.remove();
 			insideDropzone = false;
 		}
 	});
-	$('pageButtonArea').addEvents({
-		'over': function(el){
-			if (!this.dragEffect) this.dragEffect = new Fx.Style(this, 'background-color');
-			this.dragEffect.stop().start('ffffff', 'dddddd');
-			insideDropzone = true;
-		},
-		'leave': function(el){
-			this.dragEffect.stop().start('dddddd', 'ffffff');
-			insideDropzone = false;
-		},
-		'drop': function(el, drag){
-			this.dragEffect.stop().start('ff8888', 'ffffff');
-			if(insideDropzone == true) {
-				var cont = $('pageButtonArea');
-				if(cont == null) {
-					var buttonArea = document.createElement('div');
-					buttonArea.id = 'pageButtonArea';
-					buttonArea.style.position = 'relative';
-					buttonArea.setAttribute('class','formElement');
-					var dropBox = $('dropBox');
-					if(dropBox != null) {
-						dropBox.appendChild(buttonArea);
-						buttonArea.appendChild(currentButton);
+	var area = $('pageButtonArea');
+	if($('pageButtonArea') != false) {
+		$('pageButtonArea').addEvents({
+			'over': function(el){
+				if (!this.dragEffect) this.dragEffect = new Fx.Style(this, 'background-color');
+				this.dragEffect.stop().start('ffffff', 'dddddd');
+				insideDropzone = true;
+			},
+			'leave': function(el){
+				this.dragEffect.stop().start('dddddd', 'ffffff');
+				insideDropzone = false;
+			},
+			'drop': function(el, drag){
+				this.dragEffect.stop().start('ff8888', 'ffffff');
+				//if(insideDropzone == true) {
+					var cont = $('pageButtonArea');
+					if(cont == false) {
+						var buttonArea = document.createElement('div');
+						buttonArea.id = 'pageButtonArea';
+						buttonArea.style.position = 'relative';
+						buttonArea.setAttribute('class','formElement');
+						var dropBox = $('dropBox');
+						if(dropBox != null) {
+							dropBox.appendChild(buttonArea);
+							buttonArea.appendChild(currentButton);
+						}
+					} else {
+						cont.appendChild(currentButton);
 					}
-				} else {
-					cont.appendChild(currentButton);
-				}
-			} else {
-				FormComponent.removeButton(currentButton.getAttribute('id'),nothing);
+				//}
+				insideDropzone = false;
 			}
-			insideDropzone = false;
-		}
-	});
+		});
+	}
 	$$('.fbcomp').each(function(el){
 		el.draggableTag($('dropBoxinner'), null, 'fbcomp', false);
 	});
 	$$('.fbbutton').each(function(el){
 		el.draggableTag($('pageButtonArea'), null, 'fbbutton', false);
 	});
-	//$$('dropBoxinner').makeSortable();
 	//new Sortables('dropBoxinner');
 	//new Sortables('pagesPanel');
 	//new Sortables('pageButtonArea');
-	//var dragsort = ToolMan.dragsort();
-	//var junkdrawer = ToolMan.junkdrawer();
-	//junkdrawer.restoreListOrder("dropBoxinner");
-	//dragsort.makeListSortable(document.getElementById("dropBoxinner"),verticalOnly, saveOrder);
 });
-
-function verticalOnly(item) {
-		item.toolManDragGroup.verticalOnly()
-	}
-
-	function saveOrder(item) {
-		var group = item.toolManDragGroup
-		var list = group.element.parentNode
-		var id = list.getAttribute("id")
-		if (id == null) return
-		group.register('dragend', function() {
-			ToolMan.cookies().set("list-" + id, 
-					junkdrawer.serializeList(list), 365)
-		})
-	}
 
 function PaletteComponentInfo(type,autofill) {
 	this.type = type;
@@ -294,28 +203,6 @@ function PaletteComponentInfo(type,autofill) {
 /*var FBDropzone = Class.create();
 
 FBDropzone.prototype = (new Rico.Dropzone()).extend( {
-
-   	activate: function() {
-   		if(this.type == 'fbcomp') {
-   			var cont = $('dropBoxinner');
-   			cont.style.backgroundColor = 'Silver';
-   		} else if(this.type == 'fbbutton') {
-   			var cont = $('pageButtonArea');
-			if(cont == null) {
-				cont = document.createElement('div');
-				cont.id = 'pageButtonArea';
-				cont.style.position = 'relative';
-				cont.setAttribute('class','formElement');
-				cont.style.backgroundColor = 'Silver';
-				var dropBox = $('dropBox');
-				if(dropBox != null) {
-					dropBox.appendChild(cont);
-				}
-			} else {
-				cont.style.backgroundColor = 'Silver';
-			}
-   		}
-   	},
 
    	accept: function(draggableObjects) {
    		if(this.type == 'fbcomp') {
@@ -327,21 +214,7 @@ FBDropzone.prototype = (new Rico.Dropzone()).extend( {
 					empty.display = 'none';
 				}
 			}
-			var index = CURRENT_ELEMENT_UNDER;
-      		try {
-		         if(index != null) {
-		         	//console.log("Accepting: " + currentElement);
-		         	var currentId = currentElement.getAttribute('id');
-		         	if(currentId != null) {
-		         		FormComponent.moveComponent(currentId, index, insertNewComponent);
-		         	}
-		         }
-      		} catch(e) {
-      			//console.log("Canceling: " + currentElement);
-      			FormComponent.removeComponent(currentElement.getAttribute('id'),nothing);
-      		}
-      		//Sortable.create('dropBoxinner',{dropOnEmpty:true,tag:'div',only:'formElement',onUpdate:rearrangeComponents,scroll:'dropBoxinner',constraint:false});
-      	} else if(this.type == 'fbbutton') {
+		} else if(this.type == 'fbbutton') {
       		var cont = $('pageButtonArea');
 			if(cont == null) {
 				var buttonArea = document.createElement('div');
@@ -356,9 +229,7 @@ FBDropzone.prototype = (new Rico.Dropzone()).extend( {
 			} else {
 				cont.appendChild(currentButton);
 			}
-			//Position.includeScrollOffsets = true;
-			//Sortable.create('pageButtonArea',{dropOnEmpty:true,tag:'div',only:'formButton',onUpdate:rearrangeButtons,scroll:'pageButtonArea',constraint:false});
-      	}
+		}
 	},
 
 } );*/
@@ -369,20 +240,6 @@ function getEmptySpaceBox() {
 	node.setAttribute('style', 'backgroundColor: Red');
 	return node;
 }
-
-function currentMousePosition(e) {
-	if(!e) e = window.event;
-	console.log('Getting mouse position');
-	for(var i = 0, child; i < childBoxes.length; i++){
-		with(childBoxes[i]){
-			if (e.pageX >= left && e.pageX <= right && e.pageY >= top && e.pageY <= bottom) {
-				CURRENT_ELEMENT_UNDER = i;
-				
-			}
-		}
-	}
-}
-
 function getPageComponents() {
 	var dropBox = $('dropBoxinner');
 	var result = [];
@@ -397,7 +254,6 @@ function getPageComponents() {
 	}
 	return result;
 }
-
 function displayMessage(url) {
 	messageObj.setSource(url);
 	messageObj.setCssClassMessageBox(false);
@@ -408,20 +264,6 @@ function displayMessage(url) {
 function closeMessage() {
 	messageObj.close();
 }
-function setStatus(s,n) {
-	$('statusContainer').style.visibility = "visible";
-	$('statusMsg').innerHTML = s;
-	setTimeout( "$('statusContainer').style.visibility = 'hidden';", n );
-	closeMessage();
-}
-function showStatus(text) {
-	$('statusContainer').style.visibility = "visible";
-	$('statusMsg').innerHTML = text;
-}
-function closeStatus() {
-	$('statusContainer').style.visibility = 'hidden';
-}
-
 function savePropertyOnEnter(parameter,attribute,e) {
 	if (!e) e = window.event;
 	if (!e) return true;
@@ -813,21 +655,15 @@ function placeConfirmationPageInfo(parameter) {
 	clearDesignView();
 	showNotice('noFormNotice');
 	if(parameter.buttonAreaId != null) {
-		var dropBox = $('dropBox');
-		if(dropBox != null) {
-			var area = $('pageButtonArea');
-			if(area != null) {
-				dropBox.removeChild(area);
-			}
-			area = createButtonAreaNode();
-			//console.log(area.childNodes.length);
-			for(var i=0;i<parameter.buttons.length;i++) {
-				var buttonInfo = parameter.buttons[i];
-				var newNode = createButtonNode(buttonInfo);
-				area.appendChild(newNode);
-			}
-			dropBox.appendChild(area);
+		var area = $('pageButtonArea');
+		if(area != false) area.remove();
+		area = createButtonAreaNode();
+		for(var i=0;i<parameter.buttons.length;i++) {
+			var buttonInfo = parameter.buttons[i];
+			var newNode = createButtonNode(buttonInfo);
+			area.appendChild(newNode);
 		}
+		area.injectInside($('dropBox'));
 	}
 	closeLoadingMessage();
 }
@@ -846,23 +682,15 @@ function placeThxPageInfo(parameter) {
 }
 function clearDesignView() {
 	var dropBoxinner = $('dropBoxinner');
-	if(dropBoxinner != null) {
-		//var childCount = dropBoxinner.childNodes.length;
+	if(dropBoxinner != false) {
 		var childCount = dropBoxinner.getChildren();
 		for(var i=0;i<childCount.length;i++) {
-			var child = childCount[0];
-			//dropBoxinner.removeChild(child);
+			var child = childCount[i];
 			child.remove();
 		}
 	}
-	var dropBox = $('dropBox');
-	if(dropBox != null) {
-		var area = $('pageButtonArea');
-		if(area != null) {
-			//dropBox.removeChild(area);
-			area.remove();
-		}
-	}
+	var area = $('pageButtonArea');
+	if(area != false) area.remove();
 }
 function showNotice(notice) {
 	var empty = $(notice);
@@ -1020,6 +848,8 @@ function loadComponentInfo(component) {
 	}
 }
 function placeComponentInfo(parameter) {
+	var temp1 = CURRENT_ELEMENT_ID;
+	var temp2 = PREVIOUS_ELEMENT_ID;
 	if(parameter != null) {
 		if(CURRENT_ELEMENT_ID != null) {
 			PREVIOUS_ELEMENT_ID = CURRENT_ELEMENT_ID;
@@ -1030,67 +860,67 @@ function placeComponentInfo(parameter) {
 		
 		if(parameter.plain == true) {
 			var plainTxt = $('propertyPlaintext');
-			if(plainTxt != null) {
+			if(plainTxt != false) {
 				plainTxt.value = parameter.plainText;
-				//plainTxt.focus();
+				//plainTxt.fireEvent('focus');
 			}
 			var plainPr = $('plainPropertiesPanel');
-			if(plainPr != null) {
+			if(plainPr != false) {
 				plainPr.setAttribute('style', 'display: block');
 			}
 				var labelPr = $('labelPropertiesPanel');
-				if(labelPr != null) {
+				if(labelPr != false) {
 					labelPr.setAttribute('style', 'display: none');
 				}
 				var compPr = $('basicPropertiesPanel');
-				if(compPr != null) {
+				if(compPr != false) {
 					compPr.setAttribute('style', 'display: none');
 				}
 				var autoPr = $('autoPropertiesPanel');
-				if(autoPr != null) {
+				if(autoPr != false) {
 					autoPr.setAttribute('style', 'display: none');
 				}
 				var advPr = $('advPropertiesPanel');
-				if(advPr != null) {
+				if(advPr != false) {
 					advPr.setAttribute('style', 'display: none');
 				}
 				var extPr = $('extPropertiesPanel');
-				if(extPr != null) {
+				if(extPr != false) {
 					extPr.setAttribute('style', 'display: none');
 				}
 				var localPr = $('localPropertiesPanel');
-				if(localPr != null) {
+				if(localPr != false) {
 					localPr.setAttribute('style', 'display: none');
 				}
 		} else {
 			var plainPr = $('plainPropertiesPanel');
-			if(plainPr != null) {
+			if(plainPr != false) {
 				plainPr.setAttribute('style', 'display: none');
 			}
 			var labelPr = $('labelPropertiesPanel');
-			if(labelPr != null) {
+			if(labelPr != false) {
 				labelPr.setAttribute('style', 'display: block');
 			}
 			var x = parameter.required;
 			var labelTxt = $('propertyTitle');
-			if(labelTxt != null) {
+			if(labelTxt != false) {
 				labelTxt.value = parameter.label;
-				//labelTxt.focus();
+				//labelTxt.fireEvent('focus');
 			}
 			var compPr = $('basicPropertiesPanel');
-			if(compPr != null) {
+			if(compPr != false) {
 				compPr.setAttribute('style', 'display: block');
 			}
 			var requiredChk = $('propertyRequired');
-			if(requiredChk != null) {
+			if(requiredChk != false) {
 				requiredChk.checked = parameter.required;
 			}
 			var errorTxt = $('propertyErrorMessage');
-			if(errorTxt != null) {
+			if(errorTxt != false) {
 				errorTxt.value = parameter.errorMessage;
 			}
 			var helpTxt = $('propertyHelpText');
-			if(helpTxt != null) {
+			if(helpTxt != false) {
 				helpTxt.value = parameter.helpMessage;
 			}
 			if(parameter.autofill == true) {
@@ -1099,30 +929,30 @@ function placeComponentInfo(parameter) {
 					temp.checked = true;
 				}
 				var compPr = $('autoPropertiesPanel');
-				if(compPr != null) {
+				if(compPr != false) {
 					compPr.setAttribute('style', 'display: block');
 				}
 				var autoTxt = $('propertyAutofill');
-				if(autoTxt != null) {
+				if(autoTxt != false) {
 					autoTxt.value = parameter.autofillKey;
 				}
 			} else {
 				var temp = $('propertyHasAutofill');
-				if(temp != null) {
+				if(temp != false) {
 					temp.checked = false;
 				}
 				var compPr = $('autoPropertiesPanel');
-				if(compPr != null) {
+				if(compPr != false) {
 					compPr.setAttribute('style', 'display: none');
 				}
 			}
 			if(parameter.complex == true) {
 				var emptyTxt = $('propertyEmptyLabel');
-				if(emptyTxt != null) {
+				if(emptyTxt != false) {
 					emptyTxt.value = parameter.emptyLabel;
 				}
 				var advPr = $('advPropertiesPanel');
-				if(advPr != null) {
+				if(advPr != false) {
 					advPr.setAttribute('style', 'display: block');
 				}
 				if(parameter.local == true) {
@@ -1440,21 +1270,21 @@ function placeNewPage(parameter) {
 }
 function deletePage(parameter) {
 	var root = $(PAGES_PANEL_ID);
-	if(root != null) {
-		var nodes = root.getElementsByTagName('div');
+	if(root != false) {
+		var nodes = root.getChildren();
 		if(nodes.length == 1) {
 			pressedPageDelete = true;
-			setStatus('Cannot delete section',3000);
 			return;
 		}
 	}
 	if(parameter != null) {
 		var node = $(parameter);
-		if(node != null) {
+		if(node != false) {
+			//node.remove();
 			var parentNode = node.parentNode;
 			if(parentNode != null) {
 				pressedPageDelete = true;
-				FormPage.removePage($(parameter).parentNode.id,removePageNode);
+				FormPage.removePage(parentNode.id,removePageNode);
 			}
 		}
 	}
@@ -1462,18 +1292,10 @@ function deletePage(parameter) {
 function removePageNode(parameter) {
 	if(parameter != null) {
 		var node = $(parameter);
-		if(node != null) {
-			var parentNode = node.parentNode;
-			if(parentNode != null) {
-				showStatus('Loading section...');
-				parentNode.removeChild(node);
-			}
-		}
+		if(node != false) node.remove();
 	}
 	//TODO load previous page
-	closeStatus();
 }
-//Handles the closing of the loading indicator
 function closeLoadingMessage() {
  	var elem = document.getElementById('busybuddy');
  	if (elem) {
@@ -1484,7 +1306,6 @@ function closeLoadingMessage() {
      	}
  	}
 }
-//TODO redo the new form handling to get rid of a4j completely
 function createNewForm() {
 	var title = document.forms['newFormDialogForm'].elements['formName'].value;
 	if(title != '') {

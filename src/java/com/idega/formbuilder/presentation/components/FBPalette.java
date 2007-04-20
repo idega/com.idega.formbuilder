@@ -33,8 +33,15 @@ public class FBPalette extends FBComponentBase {
 	}
 	
 	protected void initializeComponent(FacesContext context) {
+		
+		
+	}
+	
+	public void encodeBegin(FacesContext context) throws IOException {
 		Application application = context.getApplication();
 		getChildren().clear();
+		super.encodeBegin(context);
+		
 		palette = (Palette) WFUtil.getBeanInstance("palette");
 		
 		Iterator it = palette.getBasic().iterator();
@@ -87,10 +94,6 @@ public class FBPalette extends FBComponentBase {
 			formComponent.setAutofillKey(current.getAutofillKey());
 			autofilled.add(formComponent);
 		}
-	}
-	
-	public void encodeBegin(FacesContext context) throws IOException {
-		super.encodeBegin(context);
 		
 		ResponseWriter writer = context.getResponseWriter();
 		writer.startElement("DIV", this);
