@@ -1,6 +1,7 @@
 package com.idega.formbuilder.presentation.components;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
@@ -53,6 +54,11 @@ public class FBWorkspace extends FBComponentBase {
 					.getBeanInstance(FormDocument.BEAN_ID);
 
 			try {
+				Map session_map = context.getExternalContext().getSessionMap();
+				fd.setAppId((String)session_map.get(FormDocument.APP_ID_PARAM));
+				fd.setPrimaryFormName((String)session_map.get(FormDocument.APP_FORM_NAME_PARAM));
+				session_map.remove(FormDocument.APP_ID_PARAM);
+				session_map.remove(FormDocument.APP_FORM_NAME_PARAM);
 				fd.createNewForm();
 
 			} catch (Exception e) {
