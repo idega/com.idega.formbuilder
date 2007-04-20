@@ -971,7 +971,7 @@ function placeComponentInfo(parameter) {
 					advPr.setAttribute('style', 'display: block');
 				}
 				if(parameter.local == true) {
-					document.workspaceform1.dataSrcSwitch[0].checked = true;
+					document.workspaceform1['workspaceform1:dataSrcSwitch'][0].checked = true;
 					var localPr = document.getElementById('localPropertiesPanel');
 					loadItemset('selectOptsInner',parameter.items);
 					if(localPr != null) {
@@ -982,7 +982,7 @@ function placeComponentInfo(parameter) {
 						extPr.setAttribute('style', 'display: none');
 					}
 				} else {
-					document.workspaceform1.dataSrcSwitch[1].checked = true;
+					document.workspaceform1['workspaceform1:dataSrcSwitch'][1].checked = true;
 					var localPr = document.getElementById('localPropertiesPanel');
 					if(localPr != null) {
 						localPr.setAttribute('style', 'display: none');
@@ -1011,7 +1011,6 @@ function placeComponentInfo(parameter) {
 				}
 			}
 		}	
-		//iwAccordionfbMenu.display(-1);
 		iwAccordionfbMenu.display(1);
 	}
 }
