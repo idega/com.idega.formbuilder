@@ -68,12 +68,15 @@ public class FormDocument implements Serializable {
 	private String thankYouTitle;
 	private String thankYouText;
 	private String tempValue;
+	private String primary_form_name;
+	private String app_id;
 	
 	private LocalizedStringBean formTitleBean;
 	private LocalizedStringBean thankYouTitleBean;
 	private LocalizedStringBean thankYouTextBean;
 	private static final String root_uri = "/pages/";
 	private static final String applications_forms_page_uri = "/pages/applications_forms/";
+	private static final String applications_forms_page_uri_db = "/applications_forms/";
 	private static final String applications_forms_page_name = "applications_forms";
 	private static final String egov_form_type = "egovform";
 	private static final String form_id_property_name = "formId";
@@ -169,17 +172,8 @@ public class FormDocument implements Serializable {
 		Map req_param_map = ctx.getExternalContext().getRequestParameterMap();
 		String name = (String)req_param_map.get("workspaceform1:newTxt");
 		
-		if(name == null || name.equals("")) {
-			
-			Map session_map = ctx.getExternalContext().getSessionMap();
-			
-			if(req_param_map.containsKey(FROM_APP_REQ_PARAM)) {
-				
-				System.out.println("contains req k -> new form");
-				
-				name = (String)session_map.get(APP_FORM_NAME_PARAM);
-			}
-		}
+		if(name == null || name.equals(""))
+			name = primary_form_name;
 		
 		if(name == null || name.equals(""))
 			throw new Exception("Form name not provided by the user");
@@ -229,17 +223,16 @@ public class FormDocument implements Serializable {
 	public void save() {
 		
 		try {
+			document.save();
 			
-			FacesContext ctx = FacesContext.getCurrentInstance();
-			Map session = ctx.getExternalContext().getSessionMap();
-			
-			if(session.containsKey(APP_ID_PARAM)) {
+			if(app_id != null) {
 				
-				document.save();
-				String app_id = (String)session.get(APP_ID_PARAM);
-				String name = (String)session.get(APP_FORM_NAME_PARAM);
-				session.remove(APP_ID_PARAM);
-				session.remove(APP_FORM_NAME_PARAM);
+				FacesContext ctx = FacesContext.getCurrentInstance();
+				
+				String name = primary_form_name;
+				String app_id = this.app_id;
+				this.app_id = null;
+				primary_form_name = null;
 				
 				if(app_id == null || name == null) {
 					logger.warn("Application id or name was not set when trying to save application form for the first time.");
@@ -265,38 +258,35 @@ public class FormDocument implements Serializable {
 				if(domain != null)
 					domain_id = domain.getID();
 				
-				String key = bservice.getPageKeyByURI(root_uri);
+//				String key = bservice.getPageKeyByURI(root_uri);
 				
 //				TODO: that's annoying, as I can't get the page key by uri. consult so called tosc guys ;]
 				
-//				String key = bservice.getPageKeyByURI(applications_forms_page_uri);
+				String key = bservice.getPageKeyByURI(applications_forms_page_uri);
 				
-				
-//				if(key == null) {
-//					
-//					key = bservice.getPageKeyByURI(root_uri);
-//					
-//					int created_page_key =
-//						//bservice.getCurrentDomain().getID()
-//						bservice.createNewPage(
-//								key, 
-//								applications_forms_page_name, 
-//								bservice.getPageKey(),
-//								null, 		//template id
-//								null,        //uri
-//								bservice.getTree(IWContext.getIWContext(ctx)), 
-//								IWContext.getIWContext(ctx), 
-//								null, //subtype 
-//								domain_id, 
-//								bservice.getIBXMLFormat(),
-//								null 		//source markup
-//						);
-//					
-//					key = String.valueOf(created_page_key); 
-//				}
+				if(key == null) {
+					
+					key = bservice.getPageKeyByURI(root_uri);
+					
+					int created_page_key =
+						bservice.createNewPage(
+								key, 
+								applications_forms_page_name, 
+								bservice.getPageKey(),
+								null, 		//template id
+								applications_forms_page_uri_db,        //uri
+								bservice.getTree(IWContext.getIWContext(ctx)), 
+								IWContext.getIWContext(ctx), 
+								null, //subtype 
+								domain_id, 
+								bservice.getIBXMLFormat(),
+								null 		//source markup
+						);
+					
+					key = String.valueOf(created_page_key); 
+				}
 				
 				int created_page_key =
-					//bservice.getCurrentDomain().getID()
 					bservice.createNewPage(
 							key, 
 							name, 
@@ -320,7 +310,6 @@ public class FormDocument implements Serializable {
 				
 				String page_uri = bservice.getPageURI(created_page_key);
 				
-//				TODO: create page with formviewer which points to xforms_file_reference form
 				Application app = getAppBusiness().getApplication(Integer.parseInt(app_id));
 				
 				if(app == null) {
@@ -343,8 +332,7 @@ public class FormDocument implements Serializable {
 				String formviewer_id = formviewer_ids.get(0);
 				bservice.setProperty(page_key_str, formviewer_id, form_id_property_name, new String[] {document.getId()}, iwma);
 				
-			} else
-				document.save();
+			}
 			
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -359,7 +347,15 @@ public class FormDocument implements Serializable {
 		return app_business_bean;
 	}
 	
+	private void clearAppsRelatedMetaData() {
+		
+		app_id = null;
+		primary_form_name = null;
+	}
+	
 	public String loadFormDocument() {
+		
+		clearAppsRelatedMetaData();
 		
 		try {
 			String buttonId = getCurrentFormId(FacesContext.getCurrentInstance());
@@ -403,6 +399,9 @@ public class FormDocument implements Serializable {
 	}
 	
 	public String loadFormDocumentCode() {
+		
+		clearAppsRelatedMetaData();
+		
 		try {
 			String buttonId = getCurrentFormId(FacesContext.getCurrentInstance());
 			String formId = buttonId.substring(15, buttonId.indexOf("_code"));
@@ -842,5 +841,13 @@ public class FormDocument implements Serializable {
 			this.enableBubbles = enableBubbles;
 			documentProperties.setStepsVisualizationUsed(enableBubbles);
 		}
+	}
+	
+	public void setPrimaryFormName(String primary_form_name) {
+		this.primary_form_name = primary_form_name;
+	}
+	
+	public void setAppId(String app_id) {
+		this.app_id = app_id;
 	}
 }
