@@ -2,8 +2,6 @@ package com.idega.formbuilder;
 
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWBundleStartable;
-import com.idega.idegaweb.include.GlobalIncludeManager;
-
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas Čivilis</a>
