@@ -81,7 +81,7 @@
     <dependency>
       <groupId>com.idega.block.platform</groupId>
       <artifactId>com.idega.content</artifactId>
-      <version>3.5.0</version>
+      <version>4.0-SNAPSHOT</version>
       <type>jar</type>
     </dependency>
   </dependencies>
