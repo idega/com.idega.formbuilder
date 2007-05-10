@@ -36,9 +36,6 @@ public class FBAdminPage extends FBComponentBase {
 		Application application = context.getApplication();
 		getChildren().clear();
 		
-		AddResource resourceAdder = AddResourceFactory.getInstance(context);
-		resourceAdder.addStyleSheet(context, AddResource.HEADER_BEGIN, FormbuilderViewManager.FORMBUILDER_CSS);
-		
 		WFDivision header = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		header.setId("fbHomePageHeaderBlock");
 		
@@ -88,6 +85,10 @@ public class FBAdminPage extends FBComponentBase {
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
+		
+		AddResource resourceAdder = AddResourceFactory.getInstance(context);
+		resourceAdder.addStyleSheet(context, AddResource.HEADER_BEGIN, FormbuilderViewManager.FORMBUILDER_CSS);
+		
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeBegin(context);
 		writer.startElement("DIV", this);
