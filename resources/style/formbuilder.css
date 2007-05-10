@@ -580,8 +580,8 @@ a.okBt:hover {
 #selectOpts {
 	width: 100%;
 	overflow: auto;
-	max-height: 180px;
-	min-height: 50px;
+	max-height: 200px;
+	min-height: 150px;
 	margin: 0px;
 }
 

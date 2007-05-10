@@ -10,7 +10,7 @@
 		<ws:page id="formbuilder" showFunctionMenu="false">
 			<h:form id="workspaceform1">
 				<fb:homePage id="fbHomePage" />
-				<t:commandButton style="display: none" id="newFormButton" forceId="true" type="button" action="#{formDocument.createNewForm}" value="#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"></t:commandButton>
+				<t:commandButton style="display: none" id="newFormButton" onclick="alert('done');" forceId="true" type="button" action="#{formDocument.createNewForm}" value="#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"></t:commandButton>
 			</h:form>
 		</ws:page>
 	</f:view>

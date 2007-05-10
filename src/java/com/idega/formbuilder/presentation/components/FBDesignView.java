@@ -151,11 +151,11 @@ public class FBDesignView extends FBComponentBase {
 					} else {
 						FBFormComponent formComponent = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
 						formComponent.setId(nextId);
-						if(nextId.equals(selectedComponentId)) {
-							formComponent.setStyleClass(getSelectedStyleClass());
-						} else {
+//						if(nextId.equals(selectedComponentId)) {
+//							formComponent.setStyleClass(getSelectedStyleClass());
+//						} else {
 							formComponent.setStyleClass(getComponentStyleClass());
-						}
+//						}
 						formComponent.setOnLoad("loadComponentInfo(this);");
 						formComponent.setOnDelete("removeComponent(this);");
 						formComponent.setSpeedButtonStyleClass("speedButton");
@@ -211,12 +211,9 @@ public class FBDesignView extends FBComponentBase {
 		
 		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
 		if(page != null) {
-			ButtonArea area = page.getButtonArea();
-			if(area != null) {
-				UIComponent buttonArea = getFacet(BUTTON_AREA_FACET);
-				if (buttonArea != null) {
-					renderChild(context, buttonArea);
-				}
+			UIComponent buttonArea = getFacet(BUTTON_AREA_FACET);
+			if (buttonArea != null) {
+				renderChild(context, buttonArea);
 			}
 		}
 		

@@ -216,7 +216,7 @@ function pressOk(e) {
 	if (!e) return true;
 	var key = (typeof e.keyCode != 'undefined' ? e.keyCode : e.charCode);
 	if(key == '13') {
-		$('newFormButton').click();
+		//$('newFormButton').click();
 		//clear_workspaceform1();
 		//document.forms['workspaceform1'].elements['workspaceform1:_link_hidden_'].value='workspaceform1:okBt';
 		//document.forms['workspaceform1'].elements['workspaceform1:okBt'].value='true';
