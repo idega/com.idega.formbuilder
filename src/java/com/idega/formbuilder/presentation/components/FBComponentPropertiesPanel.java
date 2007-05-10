@@ -102,7 +102,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 		line.add(helpMsg);
 		body.add(line);
 		
-		line = createPropertyContainer(TWO_LINE_PROPERTY, application);
+		line = createPropertyContainer(SINGLE_LINE_PROPERTY, application);
 		
 		HtmlOutputLabel hasAutofillLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 		hasAutofillLabel.setValue("Autofill field");
@@ -143,7 +143,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 	private UIComponent createButtonProperties(Application application) {
 		WFDivision body = createPanelSection("labelPropertiesPanel", application);
 		
-		WFDivision line = createPropertyContainer(SINGLE_LINE_PROPERTY, application);
+		WFDivision line = createPropertyContainer(TWO_LINE_PROPERTY, application);
 		
 		HtmlOutputLabel titleLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 		titleLabel.setValue("Field name");
@@ -210,7 +210,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 	private UIComponent createExternalProperties(Application application) {
 		WFDivision body = createPanelSection("extPropertiesPanel", application);
 		
-		WFDivision line = createPropertyContainer(SINGLE_LINE_PROPERTY, application);
+		WFDivision line = createPropertyContainer(TWO_LINE_PROPERTY, application);
 		
 		HtmlOutputLabel externalSrcLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 		externalSrcLabel.setValue("External data source");

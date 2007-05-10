@@ -8,43 +8,42 @@ import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 
 import org.apache.myfaces.component.html.ext.HtmlInputTextarea;
-import org.apache.myfaces.component.html.ext.HtmlOutputText;
+import org.apache.myfaces.component.html.ext.HtmlOutputLabel;
 import org.apache.myfaces.component.html.ext.HtmlSelectBooleanCheckbox;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
-import com.idega.presentation.Table2;
-import com.idega.presentation.TableCell2;
-import com.idega.presentation.TableRow;
-import com.idega.presentation.TableRowGroup;
+import com.idega.webface.WFDivision;
 
 public class FBFormProperties extends FBComponentBase {
 	
 	public static final String COMPONENT_TYPE = "FormProperties";
 	
 	private static final String CONTENT_FACET = "CONTENT_FACET";
+	private static final String PROPERTIES_PANEL_SECTION_STYLE = "fbPropertiesPanelSection";
+	private static final String SINGLE_LINE_PROPERTY = "fbSingleLineProperty";
+	private static final String TWO_LINE_PROPERTY = "fbTwoLineProperty";
 	
 	public FBFormProperties() {
 		super();
 		setRendererType(null);
 	}
 	
-	protected void initializeComponent(FacesContext context) {
-		Application application = context.getApplication();
+	private WFDivision createPropertyContainer(String styleClass, Application application) {
+		WFDivision body = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		body.setStyleClass(styleClass);
 		
-		Table2 table = new Table2();
-		table.setStyleAttribute("width: 280px;");
-		table.setCellpadding(0);
-		TableRowGroup group = table.createBodyRowGroup();
-		TableRow row = null;
-		TableCell2 cell = null;
+		return body;
+	}
+	
+	private UIComponent createFormProperties(Application application) {
+		WFDivision body = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		body.setId(getId());
+		body.setStyleClass(PROPERTIES_PANEL_SECTION_STYLE);
 		
-		HtmlOutputText titleLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		WFDivision line = createPropertyContainer(TWO_LINE_PROPERTY, application);
+		
+		HtmlOutputLabel titleLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 		titleLabel.setValue("Form title");
-		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.setWidth("100");
-		cell.add(titleLabel);
 		
 		HtmlInputText title = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		title.setId("formTitle");
@@ -52,31 +51,28 @@ public class FBFormProperties extends FBComponentBase {
 		title.setOnblur("saveFormTitle(this.value)");
 		title.setOnkeydown("savePropertyOnEnter(this.value,'formTitle',event);");
 		
-		//cell = row.createCell();
-		cell.add(title);
+		line.add(titleLabel);
+		line.add(title);
+		body.add(line);
 		
-		HtmlOutputText previewLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		line = createPropertyContainer(SINGLE_LINE_PROPERTY, application);
+		
+		HtmlOutputLabel previewLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 		previewLabel.setValue("Form contains preview");
-		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.add(previewLabel);
 		
 		HtmlSelectBooleanCheckbox preview = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
 		preview.setId("previewScreen");
 		preview.setValueBinding("value", application.createValueBinding("#{formDocument.hasPreview}"));
 		preview.setOnchange("saveHasPreview(this);");
 		
-		//cell = row.createCell();
-		cell.add(preview);
+		line.add(previewLabel);
+		line.add(preview);
+		body.add(line);
 		
-		HtmlOutputText thankYouTitleLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		line = createPropertyContainer(TWO_LINE_PROPERTY, application);
+		
+		HtmlOutputLabel thankYouTitleLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 		thankYouTitleLabel.setValue("Thank you title");
-		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.setWidth("100");
-		cell.add(thankYouTitleLabel);
 		
 		HtmlInputText thankYouTitle = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		thankYouTitle.setId("thankYouTitle");
@@ -84,16 +80,14 @@ public class FBFormProperties extends FBComponentBase {
 		thankYouTitle.setOnblur("saveThankYouTitle(this.value)");
 		thankYouTitle.setOnkeydown("savePropertyOnEnter(this.value,'formThxTitle',event);");
 		
-		//cell = row.createCell();
-		cell.add(thankYouTitle);
+		line.add(thankYouTitleLabel);
+		line.add(thankYouTitle);
+		body.add(line);
 		
-		HtmlOutputText thankYouTextLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		line = createPropertyContainer(TWO_LINE_PROPERTY, application);
+		
+		HtmlOutputLabel thankYouTextLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 		thankYouTextLabel.setValue("Thank You Text");
-		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.setWidth("100");
-		cell.add(thankYouTextLabel);
 		
 		HtmlInputTextarea thankYouText = (HtmlInputTextarea) application.createComponent(HtmlInputTextarea.COMPONENT_TYPE);
 		thankYouText.setId("thankYouText");
@@ -101,35 +95,43 @@ public class FBFormProperties extends FBComponentBase {
 		thankYouText.setOnblur("saveThankYouText(this.value)");
 		thankYouText.setOnkeydown("savePropertyOnEnter(this.value,'formThxText',event);");
 		
-		//cell = row.createCell();
-		cell.add(thankYouText);
+		line.add(thankYouTextLabel);
+		line.add(thankYouText);
+		body.add(line);
 		
-		HtmlOutputText showFormStepsLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		showFormStepsLabel.setValue("Enable");
+//		line = createPropertyContainer(SINGLE_LINE_PROPERTY, application);
+//		
+//		HtmlOutputLabel showFormStepsLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+//		showFormStepsLabel.setValue("Enable section visualization");
+//		
+//		HtmlSelectBooleanCheckbox showFormStepsChbx = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
+//		showFormStepsChbx.setId("visualization");
+//		showFormStepsChbx.setValueBinding("value", application.createValueBinding("#{formDocument.enableBubbles}"));
+//		showFormStepsChbx.setOnchange("saveEnableBubbles(this);");
+//		
+//		line.add(showFormStepsLabel);
+//		line.add(showFormStepsChbx);
+//		body.add(line);
 		
-		row = group.createRow();
-		cell = row.createCell();
-		cell.setWidth("100");
-		cell.add(showFormStepsLabel);
-		
-		HtmlSelectBooleanCheckbox showFormStepsChbx = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
-		showFormStepsChbx.setId("visualization");
-		showFormStepsChbx.setValueBinding("value", application.createValueBinding("#{formDocument.enableBubbles}"));
-		showFormStepsChbx.setOnchange("saveEnableBubbles(this);");
-		
-		cell.add(showFormStepsChbx);
-		
-		addFacet(CONTENT_FACET, table);
+		return body;
+	}
+	
+	protected void initializeComponent(FacesContext context) {
+		Application application = context.getApplication();
+		getChildren().clear();
+		addFacet(CONTENT_FACET, createFormProperties(application));
 	}
 	
 	public void encodeChildren(FacesContext context) throws IOException {
+		Application application = context.getApplication();
 		if (!isRendered()) {
 			return;
 		}
-		UIComponent body = getFacet(CONTENT_FACET);
-		if(body != null) {
-			renderChild(context, body);
+		WFDivision body = (WFDivision) getFacet(CONTENT_FACET);
+		if(body == null) {
+			body = (WFDivision) createFormProperties(application);
 		}
+		renderChild(context, body);
 	}
 	
 }

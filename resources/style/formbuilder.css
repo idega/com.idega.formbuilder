@@ -2,7 +2,22 @@
 .fbSelectListItem {
 	width: 95px;
 }
-
+div.label {
+	background:#FFFFFF url(images/header_tiler.gif) repeat-x scroll 0% 50%;
+	border-bottom:1px solid #B2B6B8;
+	border-top:1px solid #FFFFFF;
+	clear:both;
+	height:28px;
+	position:relative;
+}
+div.label span, div.label input {
+	color:#002243;
+	float:left;
+	font-size:13px;
+	margin:0pt;
+	padding:7px 0pt 0pt 14px;
+	text-transform:uppercase;
+}
 .fbViewTabBar {
 	background-color: #f5f5f5;
 	width: 500px;
@@ -719,23 +734,16 @@ div.info span,div.info input {
 	font-size: 22px;
 }
 
-div.label {
-	clear: both;
-	position: relative;
-	border-top: 1px #fff solid;
-	border-bottom: 1px #B2B6B8 solid;
-	height: 28px;
-	background: url(images/header_tiler.gif) repeat-x #fff;
-}
 
-div.label span,div.label input {
+
+/*legend.label span,legend.label input {
 	float: left;
 	color: #002243;
 	font-size: 13px;
 	text-transform: uppercase;
 	margin: 0;
 	padding: 7px 0 0 14px;
-}
+}*/
 body#formbuilder .toolbarButton {
 	text-decoration: none ! important;
 	color: #000;

@@ -4,15 +4,15 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:fb="http://xmlns.idega.com/com.idega.formbuilder"
 	xmlns:ws="http://xmlns.idega.com/com.idega.workspace" version="1.2"
-	xmlns:fa="http://xmlns.idega.com/com.idega.block.formadmin">
+	xmlns:t="http://myfaces.apache.org/tomahawk">
 	<jsp:directive.page contentType="text/html" />
 	<f:view>
 		<ws:page id="formbuilder" showFunctionMenu="false">
 			<h:form id="workspaceform1">
 				<fb:adminPage id="fbAdminPage" />
-				<!--
-				<fa:SDataViewer rendered="true" />
-				-->
+				<t:div styleClass="fbBottomButtonsContainer">
+					<t:commandButton id="homeButton" forceId="true" type="button" onclick="window.location.href = '/workspace/forms/';" value="#{localizedStrings['com.idega.formbuilder']['toolbar_home']}"></t:commandButton>
+				</t:div>
 			</h:form>
 		</ws:page>
 	</f:view>

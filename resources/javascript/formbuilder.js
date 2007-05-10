@@ -34,7 +34,7 @@ var FBDraggable = Element.extend({
 		this.makeDraggable({
 			'handle': handle,
 			'droppables': droppables,
-			'onStart': function() {
+			onStart: function() {
 				this.elementOrg = this.element;
 				var now = {'x': this.element.getLeft(), 'y': this.element.getTop()};
 				//console.log("x:" + now.x + "y:" + now.y);
@@ -82,7 +82,11 @@ var FBDraggable = Element.extend({
 						}
 					});
 					var info = new PaletteComponentInfo(this.elementOrg.id, this.autofill);
-   					FormComponent.addComponent(info, placeNewComponent);
+					if(draggingComponent == false) {
+   						FormComponent.addComponent(info, placeNewComponent);
+   						console.log('Adding new component on drag start');
+   						draggingComponent = true;
+					}
 				} else if(type == 'fbbutton') {
 					var cont = $('pageButtonArea');
 					if(cont == false) {
@@ -96,20 +100,24 @@ var FBDraggable = Element.extend({
 					FormComponent.addButton(this.elementOrg.id, placeNewButton);
 				}
 			},
-			'onComplete': function(event) {
+			onComplete: function(event) {
 				if(!event) event = window.event;
 				var now = {'x': this.element.getLeft(), 'y': this.element.getTop()};
 				this.element.remove();
 				this.element = this.elementOrg;
 				this.elementOrg = null;
 				if(type == 'fbcomp') {
-					var currentId = currentElement.getAttribute('id');
-					var dropBox = $('dropBoxinner');
-					this.element.removeEvents('mousemove');
-					if(insideDropzone == false) {
-						FormComponent.removeComponent(currentId,nothing);
-						var line = $('insertMarker');
-						if(line != false) line.remove();
+					if(draggingComponent == true) {
+						console.log('Completing dragging');
+						draggingComponent = false;
+						var currentId = currentElement.getAttribute('id');
+						var dropBox = $('dropBoxinner');
+						this.element.removeEvents('mousemove');
+						if(insideDropzone == false) {
+							FormComponent.removeComponent(currentId,nothing);
+							var line = $('insertMarker');
+							if(line != false) line.remove();
+						}
 					}
 				} else if(type == 'fbbutton') {
 					if(insideDropzone == false) {
@@ -126,32 +134,35 @@ var FBDraggable = Element.extend({
 	}
 });
 Window.onDomReady(function() {
-	$('dropBoxinner').addEvents({
-		'over': function(el){
-			if (!this.dragEffect) this.dragEffect = new Fx.Style(this, 'background-color');
-			this.dragEffect.stop().start('ffffff', 'dddddd');
-			var cont = $('dropBoxinner');
-			insideDropzone = true;
-		},
-		'leave': function(el){
-			this.dragEffect.stop().start('dddddd', 'ffffff');
-			insideDropzone = false;
-			var line = $('insertMarker');
-			if(line != false) line.remove();
-		},
-		'drop': function(el, drag){
-			this.dragEffect.stop().start('ff8888', 'ffffff');
-			var currentId = currentElement.getAttribute('id');
-		    if(CURRENT_ELEMENT_UNDER != null) {
-				FormComponent.moveComponent(currentId, CURRENT_ELEMENT_UNDER, insertNewComponent);
-		    }
-			var line = $('insertMarker');
-			if(line != false) line.remove();
-			insideDropzone = false;
-		}
-	});
-	var area = $('pageButtonArea');
-	if($('pageButtonArea') != false) {
+	if($('dropBoxinner') != null) {
+		$('dropBoxinner').addEvents({
+			'over': function(el){
+				console.log('Over a dropZone');
+				if (!this.dragEffect) this.dragEffect = new Fx.Style(this, 'background-color');
+				this.dragEffect.stop().start('ffffff', 'dddddd');
+				insideDropzone = true;
+			},
+			'leave': function(el){
+				console.log('Leaving a dropZone');
+				this.dragEffect.stop().start('dddddd', 'ffffff');
+				insideDropzone = false;
+				var line = $('insertMarker');
+				if(line != false) line.remove();
+			},
+			'drop': function(el, drag){
+				console.log('Dropping');
+				this.dragEffect.stop().start('ff8888', 'ffffff');
+				var currentId = currentElement.getAttribute('id');
+			    if(CURRENT_ELEMENT_UNDER != null) {
+					FormComponent.moveComponent(currentId, CURRENT_ELEMENT_UNDER, insertNewComponent);
+			    }
+				var line = $('insertMarker');
+				if(line != false) line.remove();
+				insideDropzone = false;
+			}
+		});
+	}
+	if($('pageButtonArea') != null) {
 		$('pageButtonArea').addEvents({
 			'over': function(el){
 				if (!this.dragEffect) this.dragEffect = new Fx.Style(this, 'background-color');
@@ -164,24 +175,7 @@ Window.onDomReady(function() {
 			},
 			'drop': function(el, drag){
 				this.dragEffect.stop().start('ff8888', 'ffffff');
-				//if(insideDropzone == true) {
-					//var cont = $('pageButtonArea');
-					currentButton.injectInside($('pageButtonArea'));
-					//$('pageButtonArea')
-					/*if(cont == false) {
-						var buttonArea = document.createElement('div');
-						buttonArea.id = 'pageButtonArea';
-						buttonArea.style.position = 'relative';
-						buttonArea.setAttribute('class','formElement');
-						var dropBox = $('dropBox');
-						if(dropBox != null) {
-							dropBox.appendChild(buttonArea);
-							buttonArea.appendChild(currentButton);
-						}
-					} else {
-						cont.appendChild(currentButton);
-					}*/
-				//}
+				currentButton.injectInside($('pageButtonArea'));
 				insideDropzone = false;
 			}
 		});
@@ -189,59 +183,22 @@ Window.onDomReady(function() {
 	$$('.fbcomp').each(function(el){
 		el.draggableTag($('dropBoxinner'), null, 'fbcomp', false);
 	});
+	$$('.fbauto').each(function(el){
+		el.draggableTag($('dropBoxinner'), null, 'fbcomp', false);
+	});
 	$$('.fbbutton').each(function(el){
 		el.draggableTag($('pageButtonArea'), null, 'fbbutton', false);
 	});
 	var mySort = new Sortables($('dropBoxinner'), {
-				//handles: $$('div.dragHandle'), limit: 100,
 				onComplete: function(el){
-					// Once the user has dropped the div, run our colorCorrection function
-					//alert('ok');
 				}
 			});
-	//new Sortables('dropBoxinner');
-	//new Sortables('pagesPanel');
-	//new Sortables('pageButtonArea');
 });
 
 function PaletteComponentInfo(type,autofill) {
 	this.type = type;
 	this.autofill = autofill;
 }
-
-/*var FBDropzone = Class.create();
-
-FBDropzone.prototype = (new Rico.Dropzone()).extend( {
-
-   	accept: function(draggableObjects) {
-   		if(this.type == 'fbcomp') {
-      		var empty = $('emptyForm');
-			if(empty != null) {
-				if(empty.style) {
-					empty.style.display = 'none';
-				} else {
-					empty.display = 'none';
-				}
-			}
-		} else if(this.type == 'fbbutton') {
-      		var cont = $('pageButtonArea');
-			if(cont == null) {
-				var buttonArea = document.createElement('div');
-				buttonArea.id = 'pageButtonArea';
-				buttonArea.style.position = 'relative';
-				buttonArea.setAttribute('class','formElement');
-				var dropBox = $('dropBox');
-				if(dropBox != null) {
-					dropBox.appendChild(buttonArea);
-					buttonArea.appendChild(currentButton);
-				}
-			} else {
-				cont.appendChild(currentButton);
-			}
-		}
-	},
-
-} );*/
 
 function getEmptySpaceBox() {
 	var node = document.createElement('div');
@@ -344,7 +301,6 @@ function createNewComponent(htmlNode) {
 	var node = document.createElement('div');
 	var nodeId = htmlNode.getAttribute('id');
 	node.setAttribute('id', nodeId);
-	//htmlNode.setAttribute('id', nodeId + '_i');
 	htmlNode.removeAttribute('id');
 	node.setAttribute('class', 'formElement');
 	node.setAttribute('onclick', 'loadComponentInfo(this);');
@@ -437,8 +393,10 @@ function placeButtonInfo(parameter) {
 	}
 }
 function placeNewComponent(parameter) {
+	console.log('Received from server: ' + parameter);
 	if(parameter != null) {
 		currentElement = createNewComponent(createTreeNode(parameter.documentElement));
+		console.log('Setting currentElement: ' + currentElement);
 	}
 }
 function createTreeNode(element) {

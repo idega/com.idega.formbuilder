@@ -34,9 +34,11 @@ public class FormComponentInfo {
 	}
 
 	public boolean isAutofill() {
-		if(!"".equals(autofillKey) && !"null".equals(autofillKey)) {
-			autofill = true;
-			return autofill;
+		if(autofillKey != null) {
+			if(!autofillKey.equals("") && !autofillKey.equals("null")) {
+				autofill = true;
+				return autofill;
+			}
 		}
 		autofill = false;
 		return autofill;

@@ -47,22 +47,7 @@ public class FBHomePage extends FBComponentBase {
 		Application application = context.getApplication();
 		getChildren().clear();
 		
-		try {
-			Web2Business business = (Web2Business) IBOLookup.getServiceInstance(IWContext.getInstance(), Web2Business.class);
-			String prototypeURI = business.getBundleURIToPrototypeLib();
-			String ricoURI = business.getBundleURIToRicoLib();
-			
-			AddResource resourceAdder = AddResourceFactory.getInstance(context);
-			
-			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, prototypeURI);
-			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, ricoURI);
-			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, DWR_ENGINE_JS);
-			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, DWR_FORM_DOCUMENT_JS);
-			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, HOMEPAGE_JS);
-			resourceAdder.addStyleSheet(context, AddResource.HEADER_BEGIN, FormbuilderViewManager.FORMBUILDER_CSS);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		
 		
 		WFDivision header = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		header.setId("fbHomePageHeaderBlock");
@@ -112,6 +97,24 @@ public class FBHomePage extends FBComponentBase {
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
+		try {
+			Web2Business business = (Web2Business) IBOLookup.getServiceInstance(IWContext.getInstance(), Web2Business.class);
+			String prototypeURI = business.getBundleURIToPrototypeLib();
+			String ricoURI = business.getBundleURIToRicoLib();
+			
+			AddResource resourceAdder = AddResourceFactory.getInstance(context);
+			resourceAdder.addStyleSheet(context, AddResource.HEADER_BEGIN, FormbuilderViewManager.FORMBUILDER_CSS);
+			
+			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, prototypeURI);
+			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, ricoURI);
+			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, DWR_ENGINE_JS);
+			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, DWR_FORM_DOCUMENT_JS);
+			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, HOMEPAGE_JS);
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 		Application application = context.getApplication();
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeBegin(context);

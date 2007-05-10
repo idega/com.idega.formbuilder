@@ -9,8 +9,11 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
+import org.apache.myfaces.renderkit.html.util.AddResource;
+import org.apache.myfaces.renderkit.html.util.AddResourceFactory;
 
 import com.idega.block.formadmin.presentation.SDataViewer;
+import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.text.Text;
@@ -33,6 +36,9 @@ public class FBAdminPage extends FBComponentBase {
 		Application application = context.getApplication();
 		getChildren().clear();
 		
+		AddResource resourceAdder = AddResourceFactory.getInstance(context);
+		resourceAdder.addStyleSheet(context, AddResource.HEADER_BEGIN, FormbuilderViewManager.FORMBUILDER_CSS);
+		
 		WFDivision header = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
 		header.setId("fbHomePageHeaderBlock");
 		
@@ -49,15 +55,7 @@ public class FBAdminPage extends FBComponentBase {
 		addChild(name, headerPartLeft);
 		addChild(slogan, headerPartLeft);
 		
-//		WFDivision headerPartRight = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
-//		headerPartRight.setId("fbHPRight");
-//		
-//		FBNewFormComponent newFormComponent = (FBNewFormComponent) application.createComponent(FBNewFormComponent.COMPONENT_TYPE);
-//		newFormComponent.setStyleClass("newFormComponentIdle");
-//		
-//		addChild(newFormComponent, headerPartRight);
 		addChild(headerPartLeft, header);
-//		addChild(headerPartRight, header);
 		
 		addFacet(HEADER_BLOCK_FACET, header);
 		
@@ -82,7 +80,6 @@ public class FBAdminPage extends FBComponentBase {
 		addChild(greetingText2, greeting);
 		
 		addFacet(GREETING_BLOCK_FACET, greeting);
-		
 
 		SDataViewer listContainer = (SDataViewer) application.createComponent("SDataViewer");
 		listContainer.setRendered(true);
@@ -124,7 +121,6 @@ public class FBAdminPage extends FBComponentBase {
 		ResponseWriter writer = context.getResponseWriter();
 		writer.endElement("DIV");
 		super.encodeEnd(context);
-//		writer.write(getEmbededJavascript());
 	}
 
 }
