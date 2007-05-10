@@ -84,7 +84,7 @@ var FBDraggable = Element.extend({
 					var info = new PaletteComponentInfo(this.elementOrg.id, this.autofill);
 					if(draggingComponent == false) {
    						FormComponent.addComponent(info, placeNewComponent);
-   						console.log('Adding new component on drag start');
+   						//console.log('Adding new component on drag start');
    						draggingComponent = true;
 					}
 				} else if(type == 'fbbutton') {
@@ -108,7 +108,7 @@ var FBDraggable = Element.extend({
 				this.elementOrg = null;
 				if(type == 'fbcomp') {
 					if(draggingComponent == true) {
-						console.log('Completing dragging');
+						//console.log('Completing dragging');
 						draggingComponent = false;
 						var currentId = currentElement.getAttribute('id');
 						var dropBox = $('dropBoxinner');
@@ -137,20 +137,20 @@ Window.onDomReady(function() {
 	if($('dropBoxinner') != null) {
 		$('dropBoxinner').addEvents({
 			'over': function(el){
-				console.log('Over a dropZone');
+				//console.log('Over a dropZone');
 				if (!this.dragEffect) this.dragEffect = new Fx.Style(this, 'background-color');
 				this.dragEffect.stop().start('ffffff', 'dddddd');
 				insideDropzone = true;
 			},
 			'leave': function(el){
-				console.log('Leaving a dropZone');
+				//console.log('Leaving a dropZone');
 				this.dragEffect.stop().start('dddddd', 'ffffff');
 				insideDropzone = false;
 				var line = $('insertMarker');
 				if(line != false) line.remove();
 			},
 			'drop': function(el, drag){
-				console.log('Dropping');
+				//console.log('Dropping');
 				this.dragEffect.stop().start('ff8888', 'ffffff');
 				var currentId = currentElement.getAttribute('id');
 			    if(CURRENT_ELEMENT_UNDER != null) {
@@ -396,7 +396,7 @@ function placeNewComponent(parameter) {
 	console.log('Received from server: ' + parameter);
 	if(parameter != null) {
 		currentElement = createNewComponent(createTreeNode(parameter.documentElement));
-		console.log('Setting currentElement: ' + currentElement);
+		//console.log('Setting currentElement: ' + currentElement);
 	}
 }
 function createTreeNode(element) {
