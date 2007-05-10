@@ -45,7 +45,7 @@ public class FBNewFormComponent extends FBComponentBase {
 		formName.setStyleClass("formNameInput");
 		formName.setStyle("display: none");
 		formName.setId("newTxt");
-		formName.setOnkeyup("pressOk(event);");
+		formName.setOnkeypress("if(isEnterEvent(event)) { pressOk(event); return false; }");
 		
 //		HtmlCommandLink newButton = (HtmlCommandLink) application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
 //		newButton.setValue("New Form");

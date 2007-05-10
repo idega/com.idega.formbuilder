@@ -212,11 +212,13 @@ function showDuplicateDialog(parameter) {
 	new Rico.Effect.Size(parameter, null, 100, 500, 10);
 }
 function pressOk(e) {
-	if (!e) e = window.event;
+	document.forms['workspaceform1'].elements['workspaceform1:okBt'].value='true';
+	document.forms['workspaceform1'].submit();
+	/*if (!e) e = window.event;
 	if (!e) return true;
 	if(isEnterEvent(e) == true) {
-		//alert('asdasdasdad');
-	}
+		alert('asdasdasdad');
+	}*/
 	/*var key = (typeof e.keyCode != 'undefined' ? e.keyCode : e.charCode);
 	if(key == '13') {
 		//$('newFormButton').click();
