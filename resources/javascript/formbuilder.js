@@ -26,6 +26,8 @@ var draggingComponent = false;
 var draggingPage = false;
 var insideDropzone = false;
 var existSelected = false;
+var isThxPage = false;
+var editButton = false;
 
 var FBDraggable = Element.extend({
 	draggableTag: function(droppables, handle, type, autofill) {
@@ -89,6 +91,7 @@ var FBDraggable = Element.extend({
    						draggingComponent = true;
 					}
 				} else if(type == 'fbbutton') {
+					
 					/*var cont = $('pageButtonArea');
 					if(cont == false) {
 						cont = document.createElement('div');
@@ -99,6 +102,7 @@ var FBDraggable = Element.extend({
 						cont.injectInside($('dropBox'));
 					}*/
 					if(draggingButton == false) {
+						//console.log('Dragging a button');
 						FormComponent.addButton(this.elementOrg.id, placeNewButton);
 						draggingButton = true;
 					}
@@ -113,7 +117,7 @@ var FBDraggable = Element.extend({
 				if(type == 'fbcomp') {
 					if(draggingComponent == true) {
 						//console.log('Completing dragging');
-						draggingComponent = false;
+						//draggingComponent = false;
 						var currentId = currentElement.getAttribute('id');
 						var dropBox = $('dropBoxinner');
 						this.element.removeEvents('mousemove');
@@ -125,7 +129,8 @@ var FBDraggable = Element.extend({
 					}
 				} else if(type == 'fbbutton') {
 					if(draggingButton == true) {
-						draggingButton = false;
+						//console.log('Stopepd Dragging a button');
+						//draggingButton = false;
 						if(insideDropzone == false) {
 							FormComponent.removeButton(currentButton.getAttribute('id'),nothing);
 						}
@@ -159,36 +164,43 @@ Window.onDomReady(function() {
 			'drop': function(el, drag){
 				//console.log('Dropping');
 				this.dragEffect.stop().start('ff8888', 'ffffff');
-				var currentId = currentElement.getAttribute('id');
-			    if(CURRENT_ELEMENT_UNDER != null) {
-					FormComponent.moveComponent(currentId, CURRENT_ELEMENT_UNDER, insertNewComponent);
-			    }
-				var line = $('insertMarker');
-				if(line != false) line.remove();
+				if(draggingComponent == true) {
+					draggingComponent = false;
+					var currentId = currentElement.getAttribute('id');
+				    if(CURRENT_ELEMENT_UNDER != null) {
+						FormComponent.moveComponent(currentId, CURRENT_ELEMENT_UNDER, insertNewComponent);
+				    }
+					var line = $('insertMarker');
+					if(line != false) line.remove();
+				} else if(draggingButton == true) {
+					draggingButton = false;
+					currentButton.injectInside($('pageButtonArea'));
+				}
 				insideDropzone = false;
 			}
 		});
 	}
-	if($('pageButtonArea') != null) {
+	/*if($('pageButtonArea') != null) {
 		$('pageButtonArea').addEvents({
 			'over': function(el){
-				//console.log('Over a dropZone');
+				console.log('Over a dropZone');
 				if (!this.dragEffect) this.dragEffect = new Fx.Style(this, 'background-color');
 				this.dragEffect.stop().start('ffffff', 'dddddd');
 				insideDropzone = true;
 			},
 			'leave': function(el){
-				//console.log('Leaving a dropZone');
+				console.log('Leaving a dropZone');
 				this.dragEffect.stop().start('dddddd', 'ffffff');
 				insideDropzone = false;
 			},
 			'drop': function(el, drag){
+				console.log('Dropped a button');
 				this.dragEffect.stop().start('ff8888', 'ffffff');
 				currentButton.injectInside($('pageButtonArea'));
 				insideDropzone = false;
 			}
 		});
-	}
+	}*/
 	$$('.fbcomp').each(function(el){
 		el.draggableTag($('dropBoxinner'), null, 'fbcomp', false);
 	});
@@ -196,7 +208,7 @@ Window.onDomReady(function() {
 		el.draggableTag($('dropBoxinner'), null, 'fbcomp', false);
 	});
 	$$('.fbbutton').each(function(el){
-		el.draggableTag($('pageButtonArea'), null, 'fbbutton', false);
+		el.draggableTag($('dropBoxinner'), null, 'fbbutton', false);
 	});
 	var mySort = new Sortables($('dropBoxinner'), {
 				onComplete: function(el){
@@ -301,7 +313,7 @@ function createButtonNode(parameter) {
 	var db = document.createElement('img');
 	db.setAttribute('class', 'fbSpeedBButton');
 	db.setAttribute('src', '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png');
-	db.setAttribute('onclick', 'removeButton(this);');
+	db.setAttribute('onclick', 'removeButton(this.parentNode.id);');
 	node.appendChild(db);
 	
 	return node;
@@ -327,15 +339,14 @@ function createNewComponent(htmlNode) {
 }
 function placeNewButton(parameter) {
 	if(parameter != null) {
+		//console.log('New button ' + parameter);
 		currentButton = createButtonNode(parameter);
 	}
 }
 function removeButton(parameter) {
 	if(parameter != null) {
-		if(parameter.parentNode) {
-			pressedButtonDelete = true;
-			FormComponent.removeButton(parameter.parentNode.id, removeButtonNode);
-		}
+		pressedButtonDelete = true;
+		FormComponent.removeButton(parameter, removeButtonNode);
 	}
 }
 function removeButtonNode(parameter) {
@@ -353,23 +364,27 @@ function loadButtonInfo(button) {
 	if(button != null) {
 		//console.log('loading button info: ' + button.id);
 		if(button.id) {
-			if(pressedButtonDelete == false && draggingButton == false) {
+			/*if(pressedButtonDelete == false && draggingButton == false) {
+				FormComponent.getFormButtonInfo(button.id, placeButtonInfo);
+			}*/
+			if(pressedButtonDelete == false) {
 				FormComponent.getFormButtonInfo(button.id, placeButtonInfo);
 			}
 		}
 	}
 	pressedButtonDelete = false;
-	draggingButton = false;
+	//draggingButton = false;
 }
 function placeButtonInfo(parameter) {
 	if(parameter != null) {
+		editButton = true;
 		/*if(CURRENT_ELEMENT_ID != null) {
 			PREVIOUS_ELEMENT_ID = CURRENT_ELEMENT_ID;
 			$(PREVIOUS_ELEMENT_ID).setAttribute('class','formButton');
 		}
 		CURRENT_ELEMENT_ID = parameter.id;
 		$(CURRENT_ELEMENT_ID).setAttribute('class','formButton selectedElement');*/
-		DWRUtil.setValue('propertyTitle',parameter.label);
+		DWRUtil.setValue('workspaceform1:propertyTitle',parameter.label);
 		var plainPr = $('plainPropertiesPanel');
 		if(plainPr != null) {
 			plainPr.setAttribute('style', 'display: none');
@@ -463,6 +478,9 @@ function savePageTitleOnBlur(e) {
 		}
 		FormPage.setTitle(text, disableInlineEdit);
 		TEMP_INLINE_VALUE = text;
+		if(isThxPage == true) {
+			$('workspaceform1:thankYouTitle').value = text;
+		}
 	}
 }
 function saveFormTitleOnBlur(e) {
@@ -492,7 +510,9 @@ function savePageTitleOnReturn(e) {
 			}
 			FormPage.setTitle(text, disableInlineEdit);
 			TEMP_INLINE_VALUE = text;
-			
+			if(isThxPage == true) {
+				$('workspaceform1:thankYouTitle').value = text;
+			}
 		}
 	}
 }
@@ -578,6 +598,11 @@ function placeThankYouTitle(parameter) {
 			var newTextNode = document.createTextNode(parameter.pageTitle);
 			parent.replaceChild(newTextNode, textNode);
 		}
+		if(isThxPage == true) {
+			//alert($('currentPageTitle').nodeValue);
+			//$('currentPageTitle').childNodes[0].value = parameter.pageTitle;
+		}
+		
 	}
 }
 function saveThankYouText(parameter) {
@@ -630,6 +655,7 @@ function loadConfirmationPage(parameter) {
 	FormPage.getConfirmationPageInfo(placeConfirmationPageInfo);
 }
 function placeConfirmationPageInfo(parameter) {
+	isThxPage = false;
 	markSelectedPage(parameter.pageId);
 	hideAllNotices();
 	DWRUtil.setValue('currentPageTitle', parameter.pageTitle);
@@ -653,6 +679,7 @@ function loadThxPage(parameter) {
 	FormPage.getThxPageInfo(placeThxPageInfo);
 }
 function placeThxPageInfo(parameter) {
+	isThxPage = true;
 	markSelectedPage(parameter.pageId);
 	iwAccordionfbMenu.display(2);
 	hideAllNotices();
@@ -702,6 +729,7 @@ function hideAllNotices() {
 	}
 }
 function placePageInfo(parameter) {
+	isThxPage = false;
 	if(parameter != null) {
 		markSelectedPage(parameter.pageId);
 		hideAllNotices();
@@ -779,7 +807,7 @@ function setupButtonsDragAndDrop(value1, value2) {
 	//Sortable.create(value1,{dropOnEmpty:true,tag:'div',only:value2,onUpdate:rearrangeButtons,scroll:value1,constraint:false});
 }
 function rearrangeButtons() {
-	draggingButton = true;
+	//draggingButton = true;
 	//var componentIDs = Sortable.serialize('pageButtonArea',{tag:'div',name:'id'});
 	var delimiter = '&id[]=';
 	var idPrefix = 'fbcomp_';
@@ -837,6 +865,7 @@ function placeComponentInfo(parameter) {
 	var temp2 = PREVIOUS_ELEMENT_ID;
 	var temp3 = parameter.id;
 	if(parameter != null) {
+		editButton = false;
 		//if(existSelected == true) {
 			if(CURRENT_ELEMENT_ID != null) {
 				PREVIOUS_ELEMENT_ID = CURRENT_ELEMENT_ID;
@@ -1050,9 +1079,7 @@ function replaceChangedButton(parameter) {
 }
 function saveComponentLabel(parameter) {
 	if(parameter != null) {
-		var node = $(CURRENT_ELEMENT_ID);
-		var buttonArea = node.parentNode.id;
-		if(node.parentNode.id == 'pageButtonArea') {
+		if(editButton == true) {
 			//console.log('Saving button label: ' + parameter);
 			FormComponent.saveButtonLabel(parameter, replaceChangedButton);
 		} else {
@@ -1349,7 +1376,7 @@ function createNewPageNode(parameter,special) {
 	page.appendChild(icon);
 	page.appendChild(label);
 	
-	if(special == false) {
+	if(special == true) {
 		return page;
 	}
 	var db = document.createElement('img');

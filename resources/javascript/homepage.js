@@ -15,7 +15,7 @@ function showInputField() {
 	new Rico.Effect.Size('newFormComp', 350, null, 500, 10, {complete:toggleControls});
 }
 function toggleControls() {
-	var newBt = $('workspaceform1:newBt');
+	var newBt = $('newBt');
 	var input = $('workspaceform1:newTxt');
 	var okBt = $('workspaceform1:okBt_div');
 	var cancelBt = $('workspaceform1:cancelBt_div');
@@ -119,7 +119,7 @@ function initGalleryScript() {
 	document.getElementById('workspaceform1:arrow_down_image').onmousemove = initSlide;
 	document.getElementById('workspaceform1:arrow_down_image').onmouseout = stopSlide;	
 	slidePreviewPane();
-	var newBt = $('workspaceform1:newBt');
+	var newBt = $('newBt');
 	var input = $('workspaceform1:newTxt');
 	var okBt = $('workspaceform1:okBt_div');
 	var cancelBt = $('workspaceform1:cancelBt_div');
@@ -214,7 +214,10 @@ function showDuplicateDialog(parameter) {
 function pressOk(e) {
 	if (!e) e = window.event;
 	if (!e) return true;
-	var key = (typeof e.keyCode != 'undefined' ? e.keyCode : e.charCode);
+	if(isEnterEvent(e) == true) {
+		//alert('asdasdasdad');
+	}
+	/*var key = (typeof e.keyCode != 'undefined' ? e.keyCode : e.charCode);
 	if(key == '13') {
 		//$('newFormButton').click();
 		//clear_workspaceform1();
@@ -223,7 +226,7 @@ function pressOk(e) {
 		//document.forms['workspaceform1'].submit();
 		//$('workspaceform1:okBt').click();
 		//document.forms['workspaceform1'].submit();
-	}
+	}*/
 }
 function createDuplicateDialog() {
 	var root = document.createElement('div');

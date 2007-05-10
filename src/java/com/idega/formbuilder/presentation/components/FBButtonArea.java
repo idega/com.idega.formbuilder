@@ -43,7 +43,7 @@ public class FBButtonArea extends FBComponentBase {
 					button.setId(nextId);
 					button.setStyleClass(componentStyleClass);
 					button.setOnSelect("loadButtonInfo(this);");
-					button.setOnDelete("removeButton(this.parentNode.id);");
+					button.setOnDelete("removeButton(this);");
 					add(button);
 				}
 			}

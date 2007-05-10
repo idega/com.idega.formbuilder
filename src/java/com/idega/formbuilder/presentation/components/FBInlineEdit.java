@@ -62,7 +62,9 @@ public class FBInlineEdit extends FBComponentBase {
 		if(!"".equals(onSelect)) {
 			writer.writeAttribute("onclick", onSelect, null);
 		}
-		writer.writeText(value, null);
+		if(value != null) {
+			writer.writeText(value, null);
+		}
 		writer.endElement("span");
 	}
 	

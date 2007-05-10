@@ -10,6 +10,7 @@ import org.apache.myfaces.component.html.ext.HtmlCommandLink;
 import org.apache.myfaces.component.html.ext.HtmlGraphicImage;
 import org.apache.myfaces.component.html.ext.HtmlInputText;
 
+import com.idega.presentation.text.Link;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.webface.WFDivision;
 
@@ -46,12 +47,19 @@ public class FBNewFormComponent extends FBComponentBase {
 		formName.setId("newTxt");
 		formName.setOnkeyup("pressOk(event);");
 		
-		HtmlCommandLink newButton = (HtmlCommandLink) application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
-		newButton.setValue("New Form");
-		newButton.setId("newBt");
+//		HtmlCommandLink newButton = (HtmlCommandLink) application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
+//		newButton.setValue("New Form");
+//		newButton.setId("newBt");
+//		newButton.setStyleClass("newBt");
+//		newButton.setStyle("display: inline");
+//		newButton.setOnclick("showInputField();return false;");
+		Link newButton = new Link("New Form");
 		newButton.setStyleClass("newBt");
+		newButton.setId("newBt");
 		newButton.setStyle("display: inline");
-		newButton.setOnclick("showInputField();return false;");
+		newButton.setOnClick("showInputField();return false;");
+//		newButton.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_SAVE_FOCAL));
+//		newButton.setToFormSubmit("workspaceform1");
 		
 		FBToolbarButton okButton = new FBToolbarButton();
 		okButton.setStyleClass("bottomButtonHidden");
