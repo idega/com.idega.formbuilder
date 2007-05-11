@@ -80,6 +80,9 @@ public class FormDocument implements Serializable {
 	private static final String applications_forms_page_name = "applications_forms";
 	private static final String egov_form_type = "egovform";
 	private static final String form_id_property_name = "formId";
+	private static final String region_id_property_name = "regionId";
+	private static final String form_template_id_property_key = "fb.form.template.id";
+	private static final String form_region_id_property_key = "fb.form.region.id";
 	
 	public static final String BEAN_ID = "formDocument";
 	public static final String APP_FORM_NAME_PARAM = "appform_name";
@@ -226,7 +229,6 @@ public class FormDocument implements Serializable {
 			document.save();
 			
 			if(app_id != null) {
-				
 				FacesContext ctx = FacesContext.getCurrentInstance();
 				
 				String name = primary_form_name;
@@ -258,10 +260,6 @@ public class FormDocument implements Serializable {
 				if(domain != null)
 					domain_id = domain.getID();
 				
-//				String key = bservice.getPageKeyByURI(root_uri);
-				
-//				TODO: that's annoying, as I can't get the page key by uri. consult so called tosc guys ;]
-				
 				String key = bservice.getPageKeyByURI(applications_forms_page_uri);
 				
 				if(key == null) {
@@ -274,7 +272,7 @@ public class FormDocument implements Serializable {
 								applications_forms_page_name, 
 								bservice.getPageKey(),
 								null, 		//template id
-								applications_forms_page_uri_db,        //uri
+								applications_forms_page_uri_db,				//uri
 								bservice.getTree(IWContext.getIWContext(ctx)), 
 								IWContext.getIWContext(ctx), 
 								null, //subtype 
@@ -286,19 +284,25 @@ public class FormDocument implements Serializable {
 					key = String.valueOf(created_page_key); 
 				}
 				
+				String template_id = (String)iwma.getSettings().getProperty(form_template_id_property_key);
+				String region_id = (String)iwma.getSettings().getProperty(form_region_id_property_key);
+				
+				template_id = "".equals(template_id) ? null : template_id;
+				region_id = "".equals(region_id) ? null : region_id;
+				
 				int created_page_key =
 					bservice.createNewPage(
 							key, 
 							name, 
 							bservice.getPageKey(),
-							null, 		//template id
-							null,        //uri
+							template_id,									//template id
+							null,											//uri
 							bservice.getTree(IWContext.getIWContext(ctx)), 
 							IWContext.getIWContext(ctx), 
-							egov_form_type, //subtype 
+							egov_form_type,									//subtype 
 							domain_id, 
 							bservice.getIBXMLFormat(),
-							null 		//source markup
+							null											//source markup
 					);
 				
 				ThemesHelper helper = ThemesHelper.getInstance();
@@ -332,6 +336,18 @@ public class FormDocument implements Serializable {
 				String formviewer_id = formviewer_ids.get(0);
 				bservice.setProperty(page_key_str, formviewer_id, form_id_property_name, new String[] {document.getId()}, iwma);
 				
+				if(region_id != null) {
+					
+					String current_region_id = bservice.getProperty(page_key_str, formviewer_id, region_id_property_name);
+					
+					if(current_region_id == null || !current_region_id.equals(region_id)) {
+						bservice.renameRegion(page_key_str, current_region_id, null, region_id, null);
+						bservice.setProperty(page_key_str, formviewer_id, region_id_property_name, new String[] {region_id}, iwma);
+					}
+				}
+				
+//				as it is not set when creating page (bug or what?) - add here
+				bservice.setTemplateId(page_key_str, template_id);
 			}
 			
 		} catch(Exception e) {
