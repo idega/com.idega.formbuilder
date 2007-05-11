@@ -71,7 +71,9 @@ public class FormComponent implements Serializable {
 	}
 	
 	public Element saveComponentExternalSrc(String value) {
-		setExternalSrc(value);
+	
+		if(value != null && !"".equals(value))
+			setExternalSrc(value);
 		return getComponentGUINode();
 	}
 	
@@ -347,7 +349,6 @@ public class FormComponent implements Serializable {
 				before = area.getId();
 			}
 			Component component = page.addComponent(info.getType(), before);
-			//System.out.println("Adding new component: " + component.getId());
 			if(component != null) {
 				if(info.getAutofill() != null) {
 					if(component.getProperties() != null)
@@ -362,10 +363,8 @@ public class FormComponent implements Serializable {
 	
 	public String moveComponent(String id, int before) throws Exception {
 		if(before == -1) {
-			//System.out.println("Appending component: " + id);
 			return "append";
 		} else {
-			//System.out.println("Moving component: " + id);
 			FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
 			Page page = formPage.getPage();
 			String beforeId = "";
@@ -409,7 +408,6 @@ public class FormComponent implements Serializable {
 		if(page != null) {
 			Component component = page.getComponent(id);
 			if(component != null) {
-				//System.out.println("Removing component: " + id);
 				component.remove();
 			}
 		}
@@ -571,6 +569,7 @@ public class FormComponent implements Serializable {
 
 	public void setExternalSrc(String externalSrc) {
 		this.externalSrc = externalSrc;
+		
 		if(propertiesSelect != null) {
 			if(!externalSrc.equals("")) {
 				propertiesSelect.setExternalDataSrc(externalSrc);

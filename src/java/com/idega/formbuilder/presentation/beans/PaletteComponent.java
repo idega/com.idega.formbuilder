@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.idega.formbuilder.IWBundleStarter;
 import com.idega.idegaweb.BundleLocalizationMap;
 import com.idega.webface.WFUtil;
 
@@ -11,7 +12,7 @@ public class PaletteComponent implements Serializable {
 	
 	private static final long serialVersionUID = -1462694114806788168L;
 	
-	private static Map localizedStrings = (BundleLocalizationMap) ((HashMap) WFUtil.getBeanInstance("localizedStrings")).get("com.idega.formbuilder");
+	private static Map localizedStrings = (BundleLocalizationMap) ((HashMap) WFUtil.getBeanInstance("localizedStrings")).get(IWBundleStarter.IW_BUNDLE_IDENTIFIER);
 	
 	private String type;
 	private String name;

@@ -11,6 +11,7 @@ import org.apache.myfaces.component.html.ext.HtmlInputText;
 import org.apache.myfaces.component.html.ext.HtmlInputTextarea;
 import org.apache.myfaces.component.html.ext.HtmlOutputLabel;
 import org.apache.myfaces.component.html.ext.HtmlSelectBooleanCheckbox;
+import org.apache.myfaces.component.html.ext.HtmlSelectOneListbox;
 import org.apache.myfaces.component.html.ext.HtmlSelectOneRadio;
 
 import com.idega.documentmanager.business.form.Component;
@@ -210,20 +211,23 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 	private UIComponent createExternalProperties(Application application) {
 		WFDivision body = createPanelSection("extPropertiesPanel", application);
 		
-		WFDivision line = createPropertyContainer(TWO_LINE_PROPERTY, application);
+		WFDivision line = createPropertyContainer(SINGLE_LINE_PROPERTY, application);
 		
 		HtmlOutputLabel externalSrcLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 		externalSrcLabel.setValue("External data source");
 		
-		HtmlInputText external = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
-		external.setId("propertyExternal");
-		external.setValueBinding("value", application.createValueBinding("#{formComponent.externalSrc}"));
-		external.setOnblur("saveExternalSrc(this.value);");
-		external.setOnkeydown("savePropertyOnEnter(this.value,'compExt',event);");
-		external.setDisabled(true);
+		HtmlSelectOneListbox select = (HtmlSelectOneListbox) application.createComponent(HtmlSelectOneListbox.COMPONENT_TYPE);
+		select.setId("propertyExternal");
+		select.setValueBinding("value", application.createValueBinding("#{formComponent.externalSrc}"));
+		select.setOnchange("saveExternalSrc(this.value);");
+		
+		UISelectItems data_srcs = (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
+		data_srcs.setValueBinding("value", application.createValueBinding("#{dataSources.externalDataSources}"));
+		
+		addChild(data_srcs, select);
 		
 		line.add(externalSrcLabel);
-		line.add(external);
+		line.add(select);
 		body.add(line);
 		
 		return body;
