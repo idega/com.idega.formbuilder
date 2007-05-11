@@ -8,4 +8,10 @@
     	<!-- text component autofilled with user's name -->
         <property name="fbcomp_text" value="loginSession.user.name" />
     </properties>
+    
+    <!-- external data sources map with direct links to xml files containing data for select components -->
+    <properties name="select-external_data_sources">
+    	<!-- cities, stored in the local webdav repository -->
+        <property name="webdav_cities" value="webdav:/files/forms/data_sources/webdav_cities.xml" />
+    </properties>
 </config>
