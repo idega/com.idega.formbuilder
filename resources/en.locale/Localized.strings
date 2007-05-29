@@ -20,6 +20,7 @@ fbcomp_separator=Separator
 
 fbcomp_text-loginSession.user.name=User name
 webdav_cities.label=Cities
+postnumer.label=Postal codes
 
 fbcomp_text_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield.png
 fbcomp_textarea_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/font.png
