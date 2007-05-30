@@ -7,6 +7,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
 
+import com.idega.formbuilder.IWBundleStarter;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.webface.WFTabbedPane;
@@ -55,9 +56,9 @@ public class FBViewPanel extends FBComponentBase {
 		FBFormPreview previewView = (FBFormPreview) application.createComponent(FBFormPreview.COMPONENT_TYPE);
 		previewView.setId("previewView");
 		
-		tabbedPane.addTab("tab1", "Design", designView, false);
-		tabbedPane.addTab("tab2", "Preview", previewView, false);
-		tabbedPane.addTab("tab3", "Source", sourceView, false);
+		tabbedPane.addTab("tab1", _("view_preview"), designView);
+		tabbedPane.addTab("tab2", _("view_preview"), previewView);
+		tabbedPane.addTab("tab3", _("view_preview"), sourceView);
 		tabbedPane.setSelectedMenuItemId("tab1");
 		
 		addFacet(SWITCHER_FACET, tabbedPane);
@@ -116,6 +117,10 @@ public class FBViewPanel extends FBComponentBase {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);
 		view = (String) values[1];
+	}
+
+	private static String _(String localizationKey) {
+		return WFUtil.getLocalizedStringExpr(IWBundleStarter.IW_BUNDLE_IDENTIFIER, localizationKey);
 	}
 
 }
