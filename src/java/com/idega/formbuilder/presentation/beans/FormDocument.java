@@ -19,7 +19,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.idega.block.form.presentation.FormViewer;
 import com.idega.block.formadmin.presentation.actions.GetAvailableFormsAction;
-import com.idega.content.TemplatesLoader;
+import com.idega.content.themes.business.TemplatesLoader;
 import com.idega.content.themes.helpers.ThemesHelper;
 import com.idega.content.tree.PageTemplate;
 import com.idega.core.builder.business.BuilderService;
@@ -243,7 +243,7 @@ public class FormDocument implements Serializable {
 				
 				IWMainApplication iwma = IWMainApplication.getIWMainApplication(ctx);
 				
-				Map<String, PageTemplate> p_templates = TemplatesLoader.getPageTemplates(iwma);
+				Map<String, PageTemplate> p_templates = TemplatesLoader.getInstance(iwma).getPageTemplates();
 				PageTemplate egov_form_template = p_templates.get(egov_form_type);
 				
 				
