@@ -17,7 +17,7 @@ import org.apache.myfaces.renderkit.html.util.AddResource;
 import org.apache.myfaces.renderkit.html.util.AddResourceFactory;
 
 import com.idega.block.web2.business.Web2Business;
-import com.idega.business.IBOLookup;
+import com.idega.business.SpringBeanLookup;
 import com.idega.documentmanager.business.PersistenceManager;
 import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.formbuilder.presentation.FBComponentBase;
@@ -98,7 +98,8 @@ public class FBHomePage extends FBComponentBase {
 	
 	public void encodeBegin(FacesContext context) throws IOException {
 		try {
-			Web2Business business = (Web2Business) IBOLookup.getServiceInstance(IWContext.getInstance(), Web2Business.class);
+			
+			Web2Business business = (Web2Business) SpringBeanLookup.getInstance().getSpringBean(IWContext.getInstance(), Web2Business.class);
 			String prototypeURI = business.getBundleURIToPrototypeLib();
 			String ricoURI = business.getBundleURIToRicoLib();
 			
