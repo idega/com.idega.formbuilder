@@ -2,13 +2,14 @@ package com.idega.formbuilder.presentation.components;
 
 import java.io.IOException;
 
-import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.Layer;
+import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
-import com.idega.webface.WFDivision;
 import com.idega.webface.WFToolbarButton;
 
 public class FBFormListItem extends FBComponentBase {
@@ -20,12 +21,6 @@ public class FBFormListItem extends FBComponentBase {
 	public static final String duplicate_button_postfix = "_duplicate";
 	public static final String edit_button_postfix = "_edit";
 	public static final String code_button_postfix = "_code";
-	
-	private static final String ENTRIES_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/application_view_list.png";
-	private static final String EDIT_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/application_form_edit.png";
-	private static final String CODE_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/page_white_code.png";
-	private static final String DUPLICATE_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/page_copy.png";
-	private static final String DELETE_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/bin_closed.png";
 	
 	private static final String CONTENT_DIV_FACET = "CONTENT_DIV_FACET";
 	
@@ -46,86 +41,66 @@ public class FBFormListItem extends FBComponentBase {
 	}
 	
 	protected void initializeComponent(FacesContext context) {
-		Application application = context.getApplication();
+		IWContext iwc = IWContext.getIWContext(context);
 		getChildren().clear();
 		
-		WFDivision body = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		Layer body = new Layer(Layer.DIV);
 		body.setStyleClass(getStyleClass());
 		body.setId("Item" + getId());
 		
 		String formName = WFToolbarButton.determineFormName(this);
 		
-		WFDivision bodyTop = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		Layer bodyTop = new Layer(Layer.DIV);
 		bodyTop.setStyleClass("formListItemTop");
-		bodyTop.setOnclick("document.forms['" + formName + "'].elements['" + formName + ":" + getId() + edit_button_postfix + "'].value='true';document.forms['" + formName + "'].submit();");
+//		bodyTop.setOnclick("document.forms['" + formName + "'].elements['" + formName + ":" + getId() + edit_button_postfix + "'].value='true';document.forms['" + formName + "'].submit();");
 		
-		WFDivision bodyTopLeft = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		Layer bodyTopLeft = new Layer(Layer.DIV);
 		bodyTopLeft.setStyleClass("formListItemTopLeft");
 		
-		WFDivision bodyTopRight = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		Layer bodyTopRight = new Layer(Layer.DIV);
 		bodyTopRight.setStyleClass("formListItemTopRight");
 		
-		WFDivision bodyBottom = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		Layer bodyBottom = new Layer(Layer.DIV);
 		bodyBottom.setStyleClass("formListItemBottom");
 		body.setId("ItemBottom" + getId());
 		
-		Text name = new Text();
-		name.setText(formTitle);
+		Text name = new Text(formTitle);
 		name.setStyleClass("formTitle");
 		
-		
-		Text created = new Text();
-		created.setText(createdDate);
+		Text created = new Text(createdDate);
 		created.setStyleClass("createdDate");
 		
-		FBToolbarButton entriesButton = new FBToolbarButton();
-		entriesButton.setStyleClass("bottomButton");
+		Link entriesButton = new Link(getLocalizedString(iwc, "fb_home_entries_link", "Entries"));
+		entriesButton.setStyleClass("bottomButton entriesButton");
 		entriesButton.setId(getId() + entries_button_postfix);
-		entriesButton.setDisplayText("Entries");
-		entriesButton.setDefaultImageURI(ENTRIES_BUTTON_ICON);
-		entriesButton.setAction(application.createMethodBinding("#{formDocument.loadFormDocumentEntries}", null));
 		
-		FBToolbarButton editButton = new FBToolbarButton();
-		editButton.setStyleClass("bottomButton");
-		editButton.setDisplayText("Edit");
+		Link editButton = new Link(getLocalizedString(iwc, "fb_home_edit_link", "Edit"));
+		editButton.setStyleClass("bottomButton editButton");
 		editButton.setId(getId() + edit_button_postfix);
-		editButton.setDefaultImageURI(EDIT_BUTTON_ICON);
-		editButton.setAction(application.createMethodBinding("#{formDocument.loadFormDocument}", null));
 		
-		FBToolbarButton codeButton = new FBToolbarButton();
-		codeButton.setStyleClass("bottomButton");
-		codeButton.setDisplayText("Code");
+		Link codeButton = new Link(getLocalizedString(iwc, "fb_home_code_link", "Code"));
+		codeButton.setStyleClass("bottomButton codeButton");
 		codeButton.setId(getId() + code_button_postfix);
-		codeButton.setDefaultImageURI(CODE_BUTTON_ICON);
-		codeButton.setAction(application.createMethodBinding("#{formDocument.loadFormDocumentCode}", null));
 		
-		FBToolbarButton duplicateButton = new FBToolbarButton();
-		duplicateButton.setStyleClass("bottomButton");
-		duplicateButton.setDisplayText("Duplicate");
+		Link duplicateButton = new Link(getLocalizedString(iwc, "fb_home_duplicate_link", "Duplicate"));
+		duplicateButton.setStyleClass("bottomButton duplicateButton");
 		duplicateButton.setId(getId() + duplicate_button_postfix);
-		duplicateButton.setDefaultImageURI(DUPLICATE_BUTTON_ICON);
-		//duplicateButton.setAction(application.createMethodBinding("#{formDocument.duplicateFormDocument}", null));
-		duplicateButton.setOnclick("duplicateForm('" + "ItemBottom" + getId() + "');");
 		
-		FBToolbarButton deleteButton = new FBToolbarButton();
-		deleteButton.setStyleClass("bottomButton");
-		deleteButton.setDisplayText("Delete");
+		Link deleteButton = new Link(getLocalizedString(iwc, "fb_home_delete_link", "Delete"));
+		deleteButton.setStyleClass("bottomButton deleteButton");
 		deleteButton.setId(getId() + delete_button_postfix);
-		deleteButton.setDefaultImageURI(DELETE_BUTTON_ICON);
-		//deleteButton.setAction(application.createMethodBinding("#{formDocument.deleteFormDocument}", null));
-		deleteButton.setOnclick("deleteForm('" + "ItemBottom" + getId() + "');");
 		
-		addChild(name, bodyTopLeft);
-		addChild(bodyTopLeft, bodyTop);
-		addChild(created, bodyTopRight);
-		addChild(bodyTopRight, bodyTop);
-		addChild(entriesButton, bodyBottom);
-		addChild(editButton, bodyBottom);
-		addChild(codeButton, bodyBottom);
-		addChild(duplicateButton, bodyBottom);
-		addChild(deleteButton, bodyBottom);
-		addChild(bodyTop, body);
-		addChild(bodyBottom, body);
+		bodyTopLeft.add(name);
+		bodyTop.add(bodyTopLeft);
+		bodyTopRight.add(created);
+		bodyTop.add(bodyTopRight);
+		bodyBottom.add(entriesButton);
+		bodyBottom.add(editButton);
+		bodyBottom.add(codeButton);
+		bodyBottom.add(duplicateButton);
+		bodyBottom.add(deleteButton);
+		body.add(bodyTop);
+		body.add(bodyBottom);
 		
 		addFacet(CONTENT_DIV_FACET, body);
 	}

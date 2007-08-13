@@ -1,0 +1,348 @@
+#fbHomePage {
+	margin: 15px;
+	background-color: White;
+	border: 1px solid LightGrey;
+	padding: 25px;
+	right: 0px;
+	left: 0px;
+	margin-bottom: 20px;
+	position: absolute;
+	bottom: 0px;
+	top: 50px;
+}
+
+#fbAdminPage {
+	margin: 15px;
+	background-color: White;
+	border: 1px solid LightGrey;
+	padding: 25px;
+	height: 100%;
+}
+
+.fbBottomRightButtonsContainer {
+	position: absolute;
+	right: 0px;
+	bottom: 0px;
+	z-index: 5;
+}
+
+.fbBottomButtonsContainer {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+	background-color: #E1E1E1;
+	border: 1px solid #D7D7D7;
+	z-index: 5;
+}
+
+#fbHomePageHeaderBlock {
+	height: 50px;
+	border-bottom: 2px solid Grey;
+	margin-bottom: 25px;
+	position: relative;
+}
+#fbHPLeft {
+	position: relative;
+	left: 0px;
+}
+#fbHPLeft span {
+	display: block;
+}
+#fbHPRight {
+	position: absolute;
+	right: 0px;
+	top: 0px;
+}
+.newFormComponentIdle {
+	background-color: LightGrey;
+	height: auto;
+	border: 1px solid #b2d7ff;
+	width: 120px;
+}
+.newFormComponentExpand {
+	background-color: LightGrey;
+	height: auto;
+	border: 1px solid #b2d7ff;
+	width: 300px;
+}
+.newFormComponentIdle > div, .newFormComponentExpand > div {
+	height: 45px;
+	position: relative;
+}
+.newFormComponentIdle #newIcon {
+	position: absolute;
+	left: 10px;
+	bottom: 13px;
+	cursor: pointer;
+}
+.newFormComponentExpand #newIcon {
+	display: none;
+}
+.newFormComponentIdle #newBt {
+	color: Black;
+	cursor: pointer;
+	font-weight: Bold;
+	font-size: 13px;
+	position: absolute;
+	left: 40px;
+	bottom: 13px;
+}
+.newFormComponentExpand #newBt {
+	display: none;
+}
+#newBt:hover {
+	color: Black;
+	text-decoration: none;
+}
+.newFormComponentIdle #cancelBt {
+	display: none;
+}
+.newFormComponentExpand #cancelBt {
+	background: url(images/button_cancel.png) no-repeat;
+	color: Black;
+	cursor: pointer;
+	font-weight: Bold;
+	font-size: 13px;
+	position: absolute;
+	left: 220px;
+	bottom: 13px;
+	width: 60px;
+	text-align: right;
+}
+.newFormComponentIdle #okBt {
+	display: none;
+}
+.newFormComponentExpand #okBt {
+	background: url(images/button_ok.png) no-repeat;
+	color: Black;
+	cursor: pointer;
+	font-weight: Bold;
+	font-size: 13px;
+	position: absolute;
+	left: 160px;
+	bottom: 13px;
+	width: 55px;
+	text-align: right;
+}
+#cancelBt:hover {
+	color: Black;
+	text-decoration: none;
+}
+#okBt:hover {
+	color: Black;
+	text-decoration: none;
+}
+.newFormComponentIdle #newTxt {
+	display: none;
+}
+.newFormComponentExpand #newTxt {
+	position: absolute;
+	left: 5px;
+	bottom: 10px;
+	width: 140px;
+}
+
+
+#fbHomePageWelcomeBlock {
+	padding-top: 15px;
+	padding-left: 50px;
+	padding-right: 50px;
+	padding-bottom: 15px;
+	font-size: 16px;
+	font-weight: bold;
+	align: center;
+	background-color: #e5f1ff;
+	height: auto;
+	border: 1px solid #b2d7ff;
+	margin-bottom: 25px;
+}
+
+#headerName {
+	font-size: 20px;
+	font-weight: bold;
+}
+
+#headerSlogan {
+	font-size: 14px;
+}
+
+.formListItem {
+	margin-bottom: 20px;
+	border: 1px groove #bdbdbd;
+	cursor: pointer;
+	background-color: #ddedd3;
+}
+
+.newFormButton {
+	background-color: Red;
+}
+
+.formListItem:hover {
+	border: 1px groove #aad192;
+	background-color: #E5F1FF;
+}
+
+.formListItem:hover .formListItemTop {
+	/*background-color: #ddedd3;
+	border-left: 1px solid White;
+	border-top: 1px solid White;*/
+}
+
+.formListItem:hover .formListItemBottom {
+	/*border-top: 1px groove LightBlue;*/
+}
+
+.formListItemTop {
+	padding-top: 0px;
+	height: 30px;
+	/*background-color: #e9e9e9;
+	border-left: 1px solid White;
+	border-top: 1px solid White;*/
+}
+
+.formListItemTopLeft {
+	margin-left: 10px;
+	display: inline;
+	top: 7px;
+	position: relative;
+}
+
+.formListItemTopRight {
+	right: 50px;
+	height: 100%;
+	position: absolute;
+	padding-top: 7px;
+	display: inline;
+}
+
+.formListItemBottom {
+	height: 30px;
+	/*border-top: 1px groove LightGrey;*/
+	padding-top: 5px;
+	padding-bottom: 5px;
+	position: relative;
+}
+
+.bottomButtonHidden {
+	display: none;
+	margin-left: 15px;
+	height: 20px;
+	padding-bottom: 5px;
+}
+
+.bottomButton {
+	margin-left: 15px;
+	height: 20px;
+	font-weight: Bold							!important;
+	padding-bottom: 4px;
+	padding-top: 2px;
+	color: #0096ff;
+	text-align: right;
+	position: absolute;
+	top: 5px;
+}
+
+.entriesButton {
+	left: 0px;
+	width: 55px;
+	background: url(images/application_view_list.png) no-repeat;
+}
+.editButton {
+	left: 80px;
+	width: 40px;
+	background: url(images/application_form_edit.png) no-repeat;
+}
+.codeButton {
+	left: 145px;
+	width: 47px;
+	background: url(images/page_white_code.png) no-repeat;
+}
+.duplicateButton {
+	left: 220px;
+	width: 70px;
+	background: url(images/page_copy.png) no-repeat;
+}
+.deleteButton {
+	left: 310px;
+	width: 52px;
+	background: url(images/bin_closed.png) no-repeat;
+}
+
+.bottomButton:hover {
+	text-decoration: none;
+	color: #ff2700;
+}
+
+.formTitle {
+	font-size: 16px;
+	height: 100%;
+	font-weight: bold;
+	align: left;
+}
+
+.createdDate {
+	font-size: 13px;
+	height: 100%;
+	width: 300px;
+}
+
+.deleteFormDialog {
+	height: 40px;
+	width: 250px;
+	position: relative;
+	left: 300px;
+}
+
+.duplicateFormDialog {
+	height: 40px;
+	width: 250px;
+	position: relative;
+	left: 210px;
+}
+
+.pagesGeneralContainer {
+	display: block;
+	height: 300px;
+	overflow: auto;
+}
+
+.pagesSpecialContainer {
+	display: block;
+	height: 150px;
+	overflow: auto;
+}
+#formListContainer {
+	height: 380px;
+	border: 1px solid #000;
+	padding: 1px;
+}
+#formListContainer #arrow_up {
+	
+}
+#formListContainer #arrow_down {
+	
+}
+.arrowUpImg {
+	height: 25px;
+	margin-left: 45%;
+	margin-top: 5px;
+}
+.arrowDownImg {
+	height: 25px;
+	margin-left: 45%;
+	margin-bottom: 5px;
+}
+#forms {
+	position: relative;
+	overflow: hidden;
+	height: 320px;
+}
+#forms .noname {
+	position: relative;
+	height: 600px;
+}
+#forms .formListItem {
+	position: relative;
+	height: 60px;
+}

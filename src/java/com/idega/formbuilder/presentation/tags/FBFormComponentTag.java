@@ -61,7 +61,7 @@ public class FBFormComponentTag extends UIComponentTagBase {
 	public void setProperties(UIComponent component) {
 	    super.setProperties(component);
 	    if (component != null) {
-	    	FBFormComponent field = (FBFormComponent)component;
+	    	FBFormComponent field = (FBFormComponent) component;
 			if(this.id != null) {
 				field.setId(this.id);
 			}

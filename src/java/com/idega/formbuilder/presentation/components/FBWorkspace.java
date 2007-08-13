@@ -59,7 +59,7 @@ public class FBWorkspace extends FBComponentBase {
 				fd.setPrimaryFormName((String)session_map.get(FormDocument.APP_FORM_NAME_PARAM));
 				session_map.remove(FormDocument.APP_ID_PARAM);
 				session_map.remove(FormDocument.APP_FORM_NAME_PARAM);
-				fd.createNewForm();
+//				fd.createNewForm();
 
 			} catch (Exception e) {
 				// TODO: use logger and redirect back to applications list if

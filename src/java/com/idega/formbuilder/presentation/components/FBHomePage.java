@@ -3,6 +3,7 @@ package com.idega.formbuilder.presentation.components;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
@@ -10,20 +11,19 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.model.SelectItem;
 
-import org.apache.myfaces.component.html.ext.HtmlCommandLink;
-import org.apache.myfaces.component.html.ext.HtmlGraphicImage;
-import org.apache.myfaces.component.html.ext.HtmlOutputText;
 import org.apache.myfaces.renderkit.html.util.AddResource;
 import org.apache.myfaces.renderkit.html.util.AddResourceFactory;
 
 import com.idega.block.web2.business.Web2Business;
 import com.idega.business.SpringBeanLookup;
 import com.idega.documentmanager.business.PersistenceManager;
-import com.idega.formbuilder.FormbuilderViewManager;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.presentation.IWContext;
+import com.idega.presentation.Image;
+import com.idega.presentation.Layer;
+import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
-import com.idega.webface.WFDivision;
+import com.idega.user.data.User;
 import com.idega.webface.WFUtil;
 
 public class FBHomePage extends FBComponentBase {
@@ -37,6 +37,9 @@ public class FBHomePage extends FBComponentBase {
 	private static final String HOMEPAGE_JS = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/homepage.js";
 	private static final String DWR_ENGINE_JS = "/dwr/engine.js";
 	private static final String DWR_FORM_DOCUMENT_JS = "/dwr/interface/FormDocument.js";
+	private static final String FORMS_HOME_CSS = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formshome.css";
+	private static final String ARROW_UP_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow-up.gif";
+	private static final String ARROW_DOWN_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow-down.gif";
 	
 	public FBHomePage() {
 		super();
@@ -46,45 +49,33 @@ public class FBHomePage extends FBComponentBase {
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
 		getChildren().clear();
+		IWContext iwc = IWContext.getIWContext(context);
 		
-		
-		
-		WFDivision header = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		Layer header = new Layer(Layer.DIV);
 		header.setId("fbHomePageHeaderBlock");
 		
-		WFDivision headerPartLeft = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		Layer headerPartLeft = new Layer(Layer.DIV);
 		headerPartLeft.setId("fbHPLeft");
 		
-		Text name = new Text();
-		name.setText("FormBuilder");
+		Text name = new Text(getLocalizedString(iwc, "fb_home_top_title", "Formbuilder"));
 		name.setId("headerName");
-		Text slogan = new Text();
-		slogan.setText("The easy way to build your forms");
+		Text slogan = new Text(getLocalizedString(iwc, "fb_home_top_slogan", "The easy way to build your forms"));
 		slogan.setId("headerSlogan");
 		
-		addChild(name, headerPartLeft);
-		addChild(slogan, headerPartLeft);
+		headerPartLeft.add(name);
+		headerPartLeft.add(slogan);
 		
-		WFDivision headerPartRight = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		Layer headerPartRight = new Layer(Layer.DIV);
 		headerPartRight.setId("fbHPRight");
 		
 		FBNewFormComponent newFormComponent = (FBNewFormComponent) application.createComponent(FBNewFormComponent.COMPONENT_TYPE);
 		newFormComponent.setStyleClass("newFormComponentIdle");
 		
-		addChild(newFormComponent, headerPartRight);
-		addChild(headerPartLeft, header);
-		addChild(headerPartRight, header);
+		headerPartRight.add(newFormComponent);
+		header.add(headerPartLeft);
+		header.add(headerPartRight);
 		
 		addFacet(HEADER_BLOCK_FACET, header);
-	}
-	
-	public String getEmbededJavascript() {
-		StringBuilder result = new StringBuilder();
-		result.append("<script language=\"JavaScript\">\n");
-		result.append("initGalleryScript();\n");
-		result.append("</script>\n");
-		return result.toString();
-		
 	}
 	
 	private String getCreatedDate(String formId) {
@@ -97,24 +88,24 @@ public class FBHomePage extends FBComponentBase {
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
-		try {
-			
-			Web2Business business = (Web2Business) SpringBeanLookup.getInstance().getSpringBean(IWContext.getInstance(), Web2Business.class);
-			String prototypeURI = business.getBundleURIToPrototypeLib();
-			String ricoURI = business.getBundleURIToRicoLib();
-			
-			AddResource resourceAdder = AddResourceFactory.getInstance(context);
-			resourceAdder.addStyleSheet(context, AddResource.HEADER_BEGIN, FormbuilderViewManager.FORMBUILDER_CSS);
-			
-			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, prototypeURI);
-			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, ricoURI);
-			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, DWR_ENGINE_JS);
-			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, DWR_FORM_DOCUMENT_JS);
-			resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, HOMEPAGE_JS);
-			
-		} catch(Exception e) {
-			e.printStackTrace();
+		IWContext iwc = IWContext.getIWContext(context);
+		Web2Business business = (Web2Business) SpringBeanLookup.getInstance().getSpringBean(iwc, Web2Business.class);
+		
+		if(business == null) {
+			logger.log(Level.SEVERE, "Exception while looking up Web2Business through SrpingBeanLookup");
+			return;
 		}
+		
+		String transcornersURI = business.getTranscornersScriptFilePath();
+		String mootoolsURI = business.getBundleURIToMootoolsLib(true);
+			
+		AddResource resourceAdder = AddResourceFactory.getInstance(context);
+		resourceAdder.addStyleSheet(context, AddResource.HEADER_BEGIN, FORMS_HOME_CSS);
+		resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, mootoolsURI);
+		resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, transcornersURI);
+		resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, DWR_ENGINE_JS);
+		resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, DWR_FORM_DOCUMENT_JS);
+		resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, HOMEPAGE_JS);
 		
 		Application application = context.getApplication();
 		ResponseWriter writer = context.getResponseWriter();
@@ -127,23 +118,24 @@ public class FBHomePage extends FBComponentBase {
 		PersistenceManager persistence_manager = (PersistenceManager) WFUtil.getBeanInstance("formbuilderPersistenceManager");
 		List<SelectItem> formsList = persistence_manager.getForms();
 		
-		WFDivision greeting = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		Layer greeting = new Layer(Layer.DIV);
 		greeting.setId("fbHomePageWelcomeBlock");
 		
-		HtmlOutputText greetingText1 = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		greetingText1.setValue("Good afternoon ");
+		Text greetingText1 = new Text(getLocalizedString(iwc, "fb_home_greeting1", "Good afternoon"));
 		greetingText1.setId("greetingText1");
 		
-		HtmlOutputText userName = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		userName.setValue(IWContext.getInstance().getCurrentUser().getName());
-		userName.setId("userName");
+		Text userName = new Text();
+		User currentUser = iwc.getCurrentUser();
+		if(currentUser != null) {
+			userName.setText(currentUser.getName());
+			userName.setId("userName");
+		}
 		
-		HtmlOutputText greetingText2 = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		greetingText2.setValue(" and welcome. I see you have created ");
+		Text greetingText2 = new Text(getLocalizedString(iwc, "fb_home_greeting2", " and welcome. I see you have created "));
 		greetingText2.setId("greetingText2");
 		
-		HtmlOutputText formCount = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		formCount.setValue(formsList.size());
+		Text formCount = new Text();
+		formCount.setText(new Integer(formsList.size()).toString());
 		formCount.setId("formCount");
 		
 		String form = "form";
@@ -151,60 +143,57 @@ public class FBHomePage extends FBComponentBase {
 			form += "s";
 		}
 		
-		HtmlOutputText greetingText3 = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		greetingText3.setValue(" " + form + ". You can manage them in the list below or create a new one ");
+		Text greetingText3 = new Text(" " + form + getLocalizedString(iwc, "fb_home_greeting3", ". You can manage them in the list below or create a new one "));
 		greetingText3.setId("greetingText3");
 		
-		HtmlCommandLink greetingTextL = (HtmlCommandLink) application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
-		greetingTextL.setValue("here");
-		greetingTextL.setOnclick("showInputField();return false");
+		Link greetingTextL = new Link();
+		greetingTextL.setText(getLocalizedString(iwc, "fb_home_greeting_link", "here"));
 		greetingTextL.setId("greetingTextL");
 		
-		addChild(greetingText1, greeting);
-		addChild(userName, greeting);
-		addChild(greetingText2, greeting);
-		addChild(formCount, greeting);
-		addChild(greetingText3, greeting);
-		addChild(greetingTextL, greeting);
+		greeting.add(greetingText1);
+		greeting.add(userName);
+		greeting.add(greetingText2);
+		greeting.add(formCount);
+		greeting.add(greetingText3);
+		greeting.add(greetingTextL);
 		
 		addFacet(GREETING_BLOCK_FACET, greeting);
 		
-		WFDivision listContainer = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		Layer listContainer = new Layer(Layer.DIV);
 		listContainer.setId("formListContainer");
 		
-		WFDivision arrowUp = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		Layer arrowUp = new Layer(Layer.DIV);
 		arrowUp.setId("arrow_up");
 		
-		WFDivision forms = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		Layer forms = new Layer(Layer.DIV);
 		forms.setId("forms");
 		
-		WFDivision arrowDown = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		Layer arrowDown = new Layer(Layer.DIV);
 		arrowDown.setId("arrow_down");
 		
-		HtmlGraphicImage arrowUpImg = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
-		arrowUpImg.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow-up.gif");
+		Image arrowUpImg = new Image();
+		arrowUpImg.setSrc(ARROW_UP_IMG);
 		arrowUpImg.setId("arrow_up_image");
 		arrowUpImg.setStyleClass("arrowUpImg");
 		
-		HtmlGraphicImage arrowDownImg = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
-		arrowDownImg.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow-down.gif");
+		Image arrowDownImg = new Image();
+		arrowDownImg.setSrc(ARROW_DOWN_IMG);
 		arrowDownImg.setId("arrow_down_image");
 		arrowDownImg.setStyleClass("arrowDownImg");
 		
-		WFDivision noname = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		Layer noname = new Layer(Layer.DIV);
 		noname.setStyleClass("noname");
 		noname.getChildren().clear();
 		
-		addChild(noname, forms);
-		addChild(arrowUpImg, arrowUp);
-		addChild(arrowDownImg, arrowDown);
-		addChild(arrowUp, listContainer);
-		addChild(forms, listContainer);
-		addChild(arrowDown, listContainer);
+		forms.add(noname);
+		arrowUp.add(arrowUpImg);
+		arrowDown.add(arrowDownImg);
+		listContainer.add(arrowUp);
+		listContainer.add(forms);
+		listContainer.add(arrowDown);
 		
-		WFDivision slideEnd = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		Layer slideEnd = new Layer(Layer.DIV);
 		slideEnd.setId("slideEnd");
-		
 		
 		Iterator it = formsList.iterator();
 		while(it.hasNext()) {
@@ -217,7 +206,7 @@ public class FBHomePage extends FBComponentBase {
 			formListItem.setCreatedDate("Created " + createdDate);
 			addChild(formListItem, noname);
 		}
-		addChild(slideEnd, noname);
+		noname.add(slideEnd);
 		
 		addFacet(FORM_LIST_FACET, listContainer);
 	}
@@ -248,6 +237,6 @@ public class FBHomePage extends FBComponentBase {
 		ResponseWriter writer = context.getResponseWriter();
 		writer.endElement("DIV");
 		super.encodeEnd(context);
-		writer.write(getEmbededJavascript());
 	}
+	
 }

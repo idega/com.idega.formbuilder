@@ -7,7 +7,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
 
-import com.idega.formbuilder.IWBundleStarter;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.webface.WFTabbedPane;
@@ -56,9 +55,9 @@ public class FBViewPanel extends FBComponentBase {
 		FBFormPreview previewView = (FBFormPreview) application.createComponent(FBFormPreview.COMPONENT_TYPE);
 		previewView.setId("previewView");
 		
-		tabbedPane.addTab("tab1", _("view_preview"), designView);
+		tabbedPane.addTab("tab1", _("view_design"), designView);
 		tabbedPane.addTab("tab2", _("view_preview"), previewView);
-		tabbedPane.addTab("tab3", _("view_preview"), sourceView);
+		tabbedPane.addTab("tab3", _("view_source"), sourceView);
 		tabbedPane.setSelectedMenuItemId("tab1");
 		
 		addFacet(SWITCHER_FACET, tabbedPane);
@@ -86,17 +85,6 @@ public class FBViewPanel extends FBComponentBase {
 		if(vb != null) {
 			view = (String) vb.getValue(context);
 		}
-//		HtmlPanelTabbedPane viewSwitch = (HtmlPanelTabbedPane) getFacet(SWITCHER_FACET);
-//		if(viewSwitch != null) {
-//			if(view.equals(DESIGN_VIEW)) {
-//				viewSwitch.setSelectedIndex(DESIGN_VIEW_INDEX);
-//			} else if(view.equals(PREVIEW_VIEW)) {
-//				viewSwitch.setSelectedIndex(PREVIEW_VIEW_INDEX);
-//			} else if(view.equals(SOURCE_VIEW)) {
-//				viewSwitch.setSelectedIndex(SOURCE_VIEW_INDEX);
-//			}
-//			renderChild(context, viewSwitch);
-//		}
 		renderChild(context, getFacet(SWITCHER_FACET));
 	}
 	
@@ -117,10 +105,6 @@ public class FBViewPanel extends FBComponentBase {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);
 		view = (String) values[1];
-	}
-
-	private static String _(String localizationKey) {
-		return WFUtil.getLocalizedStringExpr(IWBundleStarter.IW_BUNDLE_IDENTIFIER, localizationKey);
 	}
 
 }

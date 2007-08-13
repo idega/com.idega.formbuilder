@@ -1,15 +1,23 @@
 package com.idega.formbuilder.presentation;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
+import com.idega.formbuilder.IWBundleStarter;
+import com.idega.idegaweb.IWBundle;
+import com.idega.idegaweb.IWMainApplication;
 import com.idega.presentation.IWBaseComponent;
+import com.idega.presentation.IWContext;
+import com.idega.webface.WFUtil;
 
 public class FBComponentBase extends IWBaseComponent {
 	
 	public static final String COMPONENT_FAMILY = "formbuilder";
+	
+	protected Logger logger = Logger.getLogger(FBComponentBase.class.getName());
 	
 	private String id;
 	private String styleClass;
@@ -71,6 +79,16 @@ public class FBComponentBase extends IWBaseComponent {
 		super.restoreState(context, values[0]);
 		id = (String) values[1];
 		styleClass = (String) values[2];
+	}
+	
+	protected static String _(String localizationKey) {
+		return WFUtil.getLocalizedStringExpr(IWBundleStarter.IW_BUNDLE_IDENTIFIER, localizationKey);
+	}
+	
+	protected static String getLocalizedString(IWContext iwc, String localizationKey, String defaultString) {
+		IWMainApplication iwma = iwc.getApplicationContext().getIWMainApplication();
+		IWBundle bundle = iwma.getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER);
+		return bundle.getResourceBundle(iwc.getCurrentLocale()).getLocalizedString(localizationKey, defaultString);
 	}
 
 }

@@ -176,85 +176,116 @@ span.statusMsg {
 	height: 50px;
 	border-bottom: 2px solid Grey;
 	margin-bottom: 25px;
+	position: relative;
 }
-
 #fbHPLeft {
 	position: relative;
 	left: 0px;
 }
-
 #fbHPLeft span {
 	display: block;
 }
-
 #fbHPRight {
 	position: absolute;
-	right: 100px;
-	top: 100px;
+	right: 0px;
+	top: 0px;
+}
+.newFormComponentIdle {
+	background-color: LightGrey;
+	height: auto;
+	border: 1px solid #b2d7ff;
+	width: 120px;
+}
+.newFormComponentExpand {
+	background-color: LightGrey;
+	height: auto;
+	border: 1px solid #b2d7ff;
 	width: 300px;
 }
-
-.newFormComponentIdle {
-	width: 200px;
-	height: 34px;
-	background: LightGrey url(images/new_form_icon.gif) no-repeat 20px 5px;
-	padding-top: 5px;
-}
-
-.newIcon {
-	margin-top: 5px;
-	margin-left: 15px;
-	margin-right: 20px;
-	visibility: hidden;
-}
-
-.newBt {
-	margin-left: 20px;
+.newFormComponentIdle > div, .newFormComponentExpand > div {
+	height: 45px;
 	position: relative;
-	bottom: 4px;
-	color: Black;
-	font-weight: Bold;
-	font-size: 12px;
+}
+.newFormComponentIdle #newIcon {
+	position: absolute;
+	left: 10px;
+	bottom: 13px;
 	cursor: pointer;
 }
-
-.newBt:hover {
-	color: Blue;
+.newFormComponentExpand #newIcon {
+	display: none;
 }
-
-.cancelBt,.okBt {
-	margin-right: 5px;
-	margin-left: 5px;
-	position: relative;
-	bottom: 4px;
+.newFormComponentIdle #newBt {
 	color: Black;
-	font-weight: Bold;
-	font-size: 12px;
 	cursor: pointer;
+	font-weight: Bold;
+	font-size: 13px;
+	position: absolute;
+	left: 40px;
+	bottom: 13px;
 }
-
-.cancelBt:hover {
-	color: Blue;
+.newFormComponentExpand #newBt {
+	display: none;
 }
-
-a.okBt:hover {
-	margin-right: 4px;
+#newBt:hover {
+	color: Black;
 	text-decoration: none;
+}
+.newFormComponentIdle #cancelBt {
+	display: none;
+}
+.newFormComponentExpand #cancelBt {
+	background: url(images/button_cancel.png) no-repeat;
+	color: Black;
+	cursor: pointer;
 	font-weight: Bold;
-	color: Blue;
+	font-size: 13px;
+	position: absolute;
+	left: 220px;
+	bottom: 13px;
+	width: 60px;
+	text-align: right;
+}
+.newFormComponentIdle #okBt {
+	display: none;
+}
+.newFormComponentExpand #okBt {
+	background: url(images/button_ok.png) no-repeat;
+	color: Black;
+	cursor: pointer;
+	font-weight: Bold;
+	font-size: 13px;
+	position: absolute;
+	left: 160px;
+	bottom: 13px;
+	width: 55px;
+	text-align: right;
+}
+#cancelBt:hover {
+	color: Black;
+	text-decoration: none;
+}
+#okBt:hover {
+	color: Black;
+	text-decoration: none;
+}
+.newFormComponentIdle #newTxt {
+	display: none;
+}
+.newFormComponentExpand #newTxt {
+	position: absolute;
+	left: 5px;
+	bottom: 10px;
+	width: 140px;
 }
 
-.formNameInput {
-	position: relative;
-	bottom: 1px;
-}
 
 #fbHomePageWelcomeBlock {
-	padding-top: 20px;
-	padding-left: 80px;
-	padding-right: 80px;
-	padding-bottom: 20px;
-	font-size: 18px;
+	padding-top: 15px;
+	padding-left: 50px;
+	padding-right: 50px;
+	padding-bottom: 15px;
+	font-size: 16px;
 	font-weight: bold;
 	align: center;
 	background-color: #e5f1ff;

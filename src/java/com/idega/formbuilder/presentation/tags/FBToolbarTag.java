@@ -8,7 +8,7 @@ import com.idega.formbuilder.presentation.components.FBToolbar;
 
 /**
  * Copyright (C) idega software 2006
- * @author <a href="mailto:civilis@idega.com">Vytautas ‰ivilis</a>
+ * @author <a href="mailto:civilis@idega.com">Vytautas ï¿½ivilis</a>
  * @version 1.0
  */
 public class FBToolbarTag extends UIComponentTagBase {
@@ -54,7 +54,7 @@ public class FBToolbarTag extends UIComponentTagBase {
 	protected void setProperties(UIComponent component) {
 		
 		super.setProperties(component);
-		FBToolbar toolbar = (FBToolbar)component;
+		FBToolbar toolbar = (FBToolbar) component;
 		
 	    if(toolbar != null) {
 	        if(buttonsStyleClass != null)

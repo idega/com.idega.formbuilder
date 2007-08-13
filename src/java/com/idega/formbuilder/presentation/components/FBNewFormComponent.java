@@ -2,26 +2,28 @@ package com.idega.formbuilder.presentation.components;
 
 import java.io.IOException;
 
-import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
-import org.apache.myfaces.component.html.ext.HtmlCommandLink;
-import org.apache.myfaces.component.html.ext.HtmlGraphicImage;
-import org.apache.myfaces.component.html.ext.HtmlInputText;
-
-import com.idega.presentation.text.Link;
 import com.idega.formbuilder.presentation.FBComponentBase;
-import com.idega.webface.WFDivision;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.Image;
+import com.idega.presentation.Layer;
+import com.idega.presentation.text.Link;
+import com.idega.presentation.ui.TextInput;
 
 public class FBNewFormComponent extends FBComponentBase {
 	
 	public static final String COMPONENT_TYPE = "NewFormComponent";
 	
 	private static final String CONTENT_DIV_FACET = "CONTENT_DIV_FACET";
-	
-	private static final String CANCEL_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/cancel.png";
-	private static final String OK_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/accept.png";
+	private static final String COMPONENT_ID = "newFormComp";
+	private static final String NEW_ICON_ID = "newIcon";
+	private static final String NEW_INPUT_ID = "newTxt";
+	private static final String NEW_LINK_ID = "newBt";
+	private static final String OK_LINK_ID = "okBt";
+	private static final String CANCEL_LINK_ID = "cancelBt";
+	private static final String NEW_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/images/new_form_icon.gif";
 	
 	public FBNewFormComponent() {
 		super();
@@ -29,57 +31,36 @@ public class FBNewFormComponent extends FBComponentBase {
 	}
 	
 	protected void initializeComponent(FacesContext context) {
-		Application application = context.getApplication();
 		getChildren().clear();
-		
-		WFDivision body = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		IWContext iwc = IWContext.getIWContext(context);
+		Layer body = new Layer(Layer.DIV);
 		body.setStyleClass(getStyleClass());
-		body.setId("newFormComp");
+		body.setId(COMPONENT_ID);
 		
-		HtmlGraphicImage newIcon = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
-		newIcon.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/application_form_add.png");
-		newIcon.setId("newIcon");
-		newIcon.setStyleClass("newIcon");
+		Layer innerLayer = new Layer(Layer.DIV);
 		
-		HtmlInputText formName = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
-		formName.setStyleClass("formNameInput");
-		formName.setStyle("display: none");
-		formName.setId("newTxt");
-		formName.setOnkeypress("if(isEnterEvent(event)) { pressOk(event); return false; }");
+		Image newIcon = new Image();
+		newIcon.setSrc(NEW_ICON);
+		newIcon.setId(NEW_ICON_ID);
 		
-//		HtmlCommandLink newButton = (HtmlCommandLink) application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
-//		newButton.setValue("New Form");
-//		newButton.setId("newBt");
-//		newButton.setStyleClass("newBt");
-//		newButton.setStyle("display: inline");
-//		newButton.setOnclick("showInputField();return false;");
-		Link newButton = new Link("New Form");
-		newButton.setStyleClass("newBt");
-		newButton.setId("newBt");
-		newButton.setStyle("display: inline");
-		newButton.setOnClick("showInputField();return false;");
-//		newButton.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_SAVE_FOCAL));
-//		newButton.setToFormSubmit("workspaceform1");
+		TextInput formName = new TextInput();
+		formName.setId(NEW_INPUT_ID);
 		
-		FBToolbarButton okButton = new FBToolbarButton();
-		okButton.setStyleClass("bottomButtonHidden");
-		okButton.setId("okBt");
-		okButton.setDisplayText("OK");
-		okButton.setDefaultImageURI(OK_BUTTON_ICON);
-		okButton.setAction(application.createMethodBinding("#{formDocument.createNewForm}", null));
+		Link newButton = new Link(getLocalizedString(iwc, "fb_home_new_link", "New form"));
+		newButton.setId(NEW_LINK_ID);
 		
-		FBToolbarButton cancelButton = new FBToolbarButton();
-		cancelButton.setStyleClass("bottomButtonHidden");
-		cancelButton.setId("cancelBt");
-		cancelButton.setDisplayText("Cancel");
-		cancelButton.setDefaultImageURI(CANCEL_BUTTON_ICON);
-		cancelButton.setOnclick("hideInputField();return false;");
+		Link okButton = new Link(getLocalizedString(iwc, "fb_home_create_link", "Create"));
+		okButton.setId(OK_LINK_ID);
 		
-		addChild(newIcon, body);
-		addChild(formName, body);
-		addChild(newButton, body);
-		addChild(okButton, body);
-		addChild(cancelButton, body);
+		Link cancelButton = new Link(getLocalizedString(iwc, "fb_home_cancel_link", "Cancel"));
+		cancelButton.setId(CANCEL_LINK_ID);
+		
+		innerLayer.add(newIcon);
+		innerLayer.add(formName);
+		innerLayer.add(newButton);
+		innerLayer.add(okButton);
+		innerLayer.add(cancelButton);
+		body.add(innerLayer);
 		
 		addFacet(CONTENT_DIV_FACET, body);
 	}

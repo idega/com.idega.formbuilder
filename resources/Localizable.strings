@@ -1,3 +1,12 @@
+fb_home_new_link=New form
+fb_home_create_link=Create
+fb_home_cancel_link=Cancel
+fb_home_top_title=Formbuilder
+fb_home_top_slogan=The easy way to build your forms
+fb_home_greeting1=Good afternoon 
+fb_home_greeting2= and welcome. I see you have created 
+fb_home_greeting3=. You can manage them in the list below or create a new one 
+
 toolbar_new=New form
 toolbar_save=Save form
 toolbar_home=Form list

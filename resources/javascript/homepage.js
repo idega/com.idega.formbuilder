@@ -7,52 +7,133 @@ var previewImagePane = false;
 var slideEndMarker = false;
 var galleryContainer = false;
 var imageGalleryCaptions = new Array();
+var myMorph = null;
 
 var ITEM_ID_PREFIX = 'ItemBottom';
 var NEW_FORM_COMP_STATE = false;
 
-function showInputField() {
-	new Rico.Effect.Size('newFormComp', 350, null, 500, 10, {complete:toggleControls});
-}
-function toggleControls() {
-	var newBt = $('newBt');
-	var input = $('workspaceform1:newTxt');
-	var okBt = $('workspaceform1:okBt_div');
-	var cancelBt = $('workspaceform1:cancelBt_div');
-	if(NEW_FORM_COMP_STATE == false) {
-		if(newBt != null) {
-			newBt.style.display = 'none';
+Window.onDomReady(function() {
+	previewImageParent = $('forms');
+	var temp = previewImageParent;
+	previewImagePane = $('forms').getElementsByTagName('DIV')[0];
+	previewImagePane.style.top = '0px';
+	galleryContainer  = $('formListContainer');
+	slideEndMarker = $('slideEnd');
+	$('arrow_up_image').onmousemove = initSlide;
+	$('arrow_up_image').onmouseout = stopSlide;
+	$('arrow_down_image').onmousemove = initSlide;
+	$('arrow_down_image').onmouseout = stopSlide;	
+	
+	$('fbHomePageWelcomeBlock').makeRounded(false, {radius: 10});
+	$('newFormComp').makeRounded(false, {radius: 6});
+	slidePreviewPane();
+	
+	myMorph = new Fx.Morph('newFormComp', {wait: false});
+	$('newBt').addEvent('click', function(e){
+		new Event(e).stop();
+		myMorph.start('newFormComponentExpand');
+	});
+	$('greetingTextL').addEvent('click', function(e){
+		new Event(e).stop();
+		myMorph.start('newFormComponentExpand');
+	});
+	$('newIcon').addEvent('click', function(e){
+		new Event(e).stop();
+		myMorph.start('newFormComponentExpand');
+	});
+	$('cancelBt').addEvent('click', function(e){
+		new Event(e).stop();
+		myMorph.start('newFormComponentIdle');
+	});
+	$('newTxt').addEvent('keypress', function(e){
+		if(isEnterEvent(e)) {
+			new Event(e).stop();
+			var formName = $('newTxt').value;
+			createNewForm(formName);
 		}
-		if(okBt != null) {
-			okBt.style.display = 'inline';
-		}
-		if(cancelBt != null) {
-			cancelBt.style.display = 'inline';
-		}
-		if(input != null) {
-			input.style.display = 'inline';
-			input.focus();
-		}
-		NEW_FORM_COMP_STATE = true;
+	});
+	$('okBt').addEvent('click', function(e){
+		new Event(e).stop();
+		var formName = $('newTxt').value;
+		createNewForm(formName);
+	});
+	$ES("div.formListItem").each(function(item) {
+		item.makeRounded(false, {radius: 10});
+	});
+	$ES("a.entriesButton").each(function(item) {
+		item.addEvent('click', function(e){
+			new Event(e).stop();
+			showLoadingMessage('Loading');
+			FormDocument.loadFormDocumentEntries(item.id, {
+				callback: function(result) {
+					if(result == true) {
+						window.location="/workspace/forms/formadmin/";
+					} else {
+						
+						alert('error');
+					}
+				}
+			});
+		});
+	});
+	$ES("a.editButton").each(function(item) {
+		item.addEvent('click', function(e){
+			new Event(e).stop();
+			showLoadingMessage('Loading');
+			FormDocument.loadFormDocument(item.id, {
+				callback: function(result) {
+					if(result == true) {
+						window.location="/workspace/forms/formbuilder/";
+					} else {
+						alert('error');
+					}
+				}
+			});
+		});
+	});
+	$ES("a.codeButton").each(function(item) {
+		item.addEvent('click', function(e){
+			new Event(e).stop();
+			showLoadingMessage('Loading');
+			FormDocument.loadFormDocumentCode(item.id, {
+				callback: function(result) {
+					if(result == true) {
+						window.location="/workspace/forms/formbuilder/";
+					} else {
+						alert('error');
+					}
+				}
+			});
+		});
+	});
+	$ES("a.duplicateButton").each(function(item) {
+		item.addEvent('click', function(e){
+			new Event(e).stop();
+			//showLoadingMessage('Loading');
+			alert('duplicate');
+		});
+	});
+	$ES("a.deleteButton").each(function(item) {
+		item.addEvent('click', function(e){
+			new Event(e).stop();
+			//showLoadingMessage('Loading');
+			alert('delete');
+		});
+	});
+	$("formListContainer").makeRounded(false, {radius: 10});
+});
+function createNewForm(formName) {
+	if(formName.length < 1) {
+		
 	} else {
-		if(input != null) {
-			input.style.display = 'none';
-		}
-		if(newBt != null) {
-			newBt.style.display = 'inline';
-		}
-		if(okBt != null) {
-			okBt.style.display = 'none';
-		}
-		if(cancelBt != null) {
-			cancelBt.style.display = 'none';
-		}
-		NEW_FORM_COMP_STATE = false;
+		showLoadingMessage('Creating');
+		FormDocument.createFormDocument(formName, createdNewForm);
 	}
 }
-function hideInputField() {
-	toggleControls();
-	new Rico.Effect.Size('newFormComp', 200, null, 500, 10);
+function createdNewForm(result) {
+	if(result != null) {
+		window.location="/workspace/forms/formbuilder/";
+	}
 }
 function confirmFormDelete(parameter) {
 	var go = confirm("Do you really want to delete this form?");
@@ -108,39 +189,10 @@ function slidePreviewPane() {
 	}
 	setTimeout('slidePreviewPane()',30);
 }
-function initGalleryScript() {
-	previewImageParent = document.getElementById('forms');
-	previewImagePane = document.getElementById('forms').getElementsByTagName('DIV')[0];
-	previewImagePane.style.top = '0px';
-	galleryContainer  = document.getElementById('formListContainer');
-	slideEndMarker = document.getElementById('slideEnd');
-	document.getElementById('workspaceform1:arrow_up_image').onmousemove = initSlide;
-	document.getElementById('workspaceform1:arrow_up_image').onmouseout = stopSlide;
-	document.getElementById('workspaceform1:arrow_down_image').onmousemove = initSlide;
-	document.getElementById('workspaceform1:arrow_down_image').onmouseout = stopSlide;	
-	slidePreviewPane();
-	var newBt = $('newBt');
-	var input = $('workspaceform1:newTxt');
-	var okBt = $('workspaceform1:okBt_div');
-	var cancelBt = $('workspaceform1:cancelBt_div');
-	if(input != null) {
-			input.style.display = 'none';
-		}
-		if(newBt != null) {
-			newBt.style.display = 'inline';
-		}
-		if(okBt != null) {
-			okBt.style.display = 'none';
-		}
-		if(cancelBt != null) {
-			cancelBt.style.display = 'none';
-		}
-	Rico.Corner.round('newFormComp');
-}
 function duplicateForm(parameter) {
 	var container = $(parameter);
 	hideDialog(parameter);
-	new Rico.Effect.Size(parameter, null, 100, 500, 10, {complete:function() {showDialog(parameter,'duplicate')}});
+	//new Rico.Effect.Size(parameter, null, 100, 500, 10, {complete:function() {showDialog(parameter,'duplicate')}});
 }
 function duplicateFormDocument(parameter, newTitle) {
 	if(parameter.indexOf(ITEM_ID_PREFIX) == 0) {
@@ -153,7 +205,7 @@ function duplicateFormDocument(parameter, newTitle) {
 function deleteForm(parameter) {
 	var container = $(parameter);
 	hideDialog(parameter);
-	new Rico.Effect.Size(parameter, null, 100, 500, 10, {complete:function() {showDialog(parameter,'delete');}});
+	//new Rico.Effect.Size(parameter, null, 100, 500, 10, {complete:function() {showDialog(parameter,'delete');}});
 }
 function showDialog(parameter,type) {
 	if(type == 'delete') {
@@ -209,26 +261,7 @@ function refreshHomePageView(result) {
 	}
 }
 function showDuplicateDialog(parameter) {
-	new Rico.Effect.Size(parameter, null, 100, 500, 10);
-}
-function pressOk(e) {
-	document.forms['workspaceform1'].elements['workspaceform1:okBt'].value='true';
-	document.forms['workspaceform1'].submit();
-	/*if (!e) e = window.event;
-	if (!e) return true;
-	if(isEnterEvent(e) == true) {
-		alert('asdasdasdad');
-	}*/
-	/*var key = (typeof e.keyCode != 'undefined' ? e.keyCode : e.charCode);
-	if(key == '13') {
-		//$('newFormButton').click();
-		//clear_workspaceform1();
-		//document.forms['workspaceform1'].elements['workspaceform1:_link_hidden_'].value='workspaceform1:okBt';
-		//document.forms['workspaceform1'].elements['workspaceform1:okBt'].value='true';
-		//document.forms['workspaceform1'].submit();
-		//$('workspaceform1:okBt').click();
-		//document.forms['workspaceform1'].submit();
-	}*/
+	//new Rico.Effect.Size(parameter, null, 100, 500, 10);
 }
 function createDuplicateDialog() {
 	var root = document.createElement('div');
@@ -270,3 +303,18 @@ function createDeleteDialog() {
 	root.appendChild(cancelBtn);
 	return root;
 }
+Fx.Morph = Fx.Styles.extend({
+	start: function(className){
+		var to = {};
+		if(className == 'newFormComponentExpand') {
+			$('newFormComp').removeClass('newFormComponentIdle');
+			$('newFormComp').addClass('newFormComponentExpand');
+			$('newTxt').value = '';
+			$('newTxt').focus();
+		} else {
+			$('newFormComp').removeClass('newFormComponentExpand');
+			$('newFormComp').addClass('newFormComponentIdle');
+		}
+		return this.parent(to);
+	}
+});

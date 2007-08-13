@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.ejb.FinderException;
@@ -39,7 +38,6 @@ import com.idega.documentmanager.business.form.PropertiesThankYouPage;
 import com.idega.documentmanager.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.egov.Application;
 import com.idega.formbuilder.business.egov.ApplicationBusiness;
-import com.idega.formbuilder.presentation.components.FBFormListItem;
 import com.idega.formbuilder.presentation.components.FBViewPanel;
 import com.idega.formbuilder.presentation.converters.FormDocumentInfo;
 import com.idega.formbuilder.presentation.converters.FormPageInfo;
@@ -113,21 +111,6 @@ public class FormDocument implements Serializable {
 		return result;
 	}
 	
-	private String getCurrentFormId(FacesContext context) {
-		String result = "";
-		Map map = context.getExternalContext().getRequestParameterMap();
-		Set keys = map.keySet();
-		Iterator it = keys.iterator();
-		while(it.hasNext()) {
-			String key = (String) it.next();
-			String value = (String) map.get(key);
-			if(value.equals("true")) {
-				return key;
-			}
-		}
-		return result;
-	}
-	
 	public FormDocumentInfo createFormDocument(String parameter) throws Exception {
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 		if(workspace != null) {
@@ -169,59 +152,59 @@ public class FormDocument implements Serializable {
 		return getFormDocumentInfo();
 	}
 	
-	public String createNewForm() throws Exception {
-		
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		Map req_param_map = ctx.getExternalContext().getRequestParameterMap();
-		String name = (String)req_param_map.get("workspaceform1:newTxt");
-		
-		if(name == null || name.equals(""))
-			name = primary_form_name;
-		
-		if(name == null || name.equals(""))
-			throw new Exception("Form name not provided by the user");
-
-		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
-		
-		if(workspace != null) {
-			Locale locale = workspace.getLocale();
-			DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
-			Document document = null;
-			String id = getPersistenceManager().generateFormId(name);
-			LocalizedStringBean formName = new LocalizedStringBean();
-			formName.setString(locale, name);
-			
-			try {
-				document = formManagerInstance.createForm(id, formName);
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-			
-//			if(getFormId() != null)
-//				getFormsService().unlockForm(getFormId());
-			
-			workspace.setView("design");
-			workspace.setDesignViewStatus("empty");
-			workspace.setSelectedMenu("0");
-			workspace.setRenderedMenu(true);
-			
-			clearFormDocumentInfo();
-			document.getProperties().setStepsVisualizationUsed(true);
-			loadFormInfo(document);
-			
-			Page page = document.getPage(document.getContainedPagesIdList().get(0));
-			FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
-			if(formPage != null) {
-				formPage.loadPageInfo(page);
-			}
-			FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
-			if(formComponent != null) {
-				formComponent.clearFormComponentInfo();
-			}
-			return "newFormSuccess";
-		}
-		return null;
-	}
+//	public String createNewForm() throws Exception {
+//		
+//		FacesContext ctx = FacesContext.getCurrentInstance();
+//		Map req_param_map = ctx.getExternalContext().getRequestParameterMap();
+//		String name = (String)req_param_map.get("workspaceform1:newTxt");
+//		
+//		if(name == null || name.equals(""))
+//			name = primary_form_name;
+//		
+//		if(name == null || name.equals(""))
+//			throw new Exception("Form name not provided by the user");
+//
+//		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
+//		
+//		if(workspace != null) {
+//			Locale locale = workspace.getLocale();
+//			DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
+//			Document document = null;
+//			String id = getPersistenceManager().generateFormId(name);
+//			LocalizedStringBean formName = new LocalizedStringBean();
+//			formName.setString(locale, name);
+//			
+//			try {
+//				document = formManagerInstance.createForm(id, formName);
+//			} catch(Exception e) {
+//				e.printStackTrace();
+//			}
+//			
+////			if(getFormId() != null)
+////				getFormsService().unlockForm(getFormId());
+//			
+//			workspace.setView("design");
+//			workspace.setDesignViewStatus("empty");
+//			workspace.setSelectedMenu("0");
+//			workspace.setRenderedMenu(true);
+//			
+//			clearFormDocumentInfo();
+//			document.getProperties().setStepsVisualizationUsed(true);
+//			loadFormInfo(document);
+//			
+//			Page page = document.getPage(document.getContainedPagesIdList().get(0));
+//			FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+//			if(formPage != null) {
+//				formPage.loadPageInfo(page);
+//			}
+//			FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
+//			if(formComponent != null) {
+//				formComponent.clearFormComponentInfo();
+//			}
+//			return "newFormSuccess";
+//		}
+//		return null;
+//	}
 	
 	public void save() {
 		
@@ -369,14 +352,13 @@ public class FormDocument implements Serializable {
 		primary_form_name = null;
 	}
 	
-	public String loadFormDocument() {
+	public boolean loadFormDocument(String formId) {
 		
 		clearAppsRelatedMetaData();
 		
 		try {
-			String buttonId = getCurrentFormId(FacesContext.getCurrentInstance());
-			String formId = buttonId.substring(15, buttonId.indexOf("_edit"));
-			if(formId != "") {
+			formId = retrieveFormIdFormButtonId(formId, "_edit");
+			if(formId != null && !formId.equals("")) {
 				DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
 				document = formManagerInstance.openForm(formId);
 				
@@ -408,20 +390,21 @@ public class FormDocument implements Serializable {
 		} catch (FormLockException e) {
 			// TODO: inform about lock
 			logger.info("Form was locked when tried to open it", e);
+			return false;
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.info("Exception while trying to open a form document", e);
+			return false;
 		}
-		return "loadFormSuccess";
+		return true;
 	}
 	
-	public String loadFormDocumentCode() {
+	public boolean loadFormDocumentCode(String formId) {
 		
 		clearAppsRelatedMetaData();
 		
 		try {
-			String buttonId = getCurrentFormId(FacesContext.getCurrentInstance());
-			String formId = buttonId.substring(15, buttonId.indexOf("_code"));
-			if(formId != "") {
+			formId = retrieveFormIdFormButtonId(formId, "_code");
+			if(formId != null && !formId.equals("")) {
 				DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
 				document = formManagerInstance.openForm(formId);
 				
@@ -448,10 +431,12 @@ public class FormDocument implements Serializable {
 		} catch (FormLockException e) {
 			// TODO: inform about lock
 			logger.info("Form was locked when tried to open it", e);
+			return false;
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.info("Exception occured when trying to load form code", e);
+			return false;
 		}
-		return "loadCodeSuccess";
+		return true;
 	}
 	
 	protected String retrieveFormIdFormButtonId(String button_id, String button_postfix) {
@@ -482,15 +467,16 @@ public class FormDocument implements Serializable {
 		return documentId;
 	}
 	
-	public String loadFormDocumentEntries() {
-		String formId = retrieveFormIdFormButtonId(getCurrentFormId(FacesContext.getCurrentInstance()), FBFormListItem.entries_button_postfix);
-		
-		if(formId != "") {
+	public boolean loadFormDocumentEntries(String formId) {
+		formId = retrieveFormIdFormButtonId(formId, "_entries");
+		if(formId != null && !formId.equals("")) {
 			
 			GetAvailableFormsAction admin = (GetAvailableFormsAction) WFUtil.getBeanInstance("availableFormsAction");
 			admin.setSelectedRow(formId);
+			
+			return true;
 		}
-		return "loadEntriesSuccess";
+		return false;
 	}
 	
 	public String duplicateFormDocument(String documentId, String newTitle) {
