@@ -450,21 +450,21 @@ public class FormDocument implements Serializable {
 		}
 	}
 	
-	public String deleteFormDocument(String documentId) {
+	public boolean deleteFormDocument(String documentId) {
 		boolean delete_submitted_data = true;
 		
 		if(documentId == null)		
-			throw new NullPointerException("Form id not found");
-		
+			return false;
 		try {
 			getPersistenceManager().removeForm(documentId, delete_submitted_data);
 		} catch (FormLockException e) {
-			// TODO: inform about lock
 			logger.info("Form was locked when tried to delete it", e);
+			return false;
 		} catch (Exception e) {
 			logger.error("Exception while removing form", e);
+			return false;
 		}
-		return documentId;
+		return true;
 	}
 	
 	public boolean loadFormDocumentEntries(String formId) {

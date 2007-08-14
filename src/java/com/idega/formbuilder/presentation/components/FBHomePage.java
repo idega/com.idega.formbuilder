@@ -127,7 +127,7 @@ public class FBHomePage extends FBComponentBase {
 		Text userName = new Text();
 		User currentUser = iwc.getCurrentUser();
 		if(currentUser != null) {
-			userName.setText(currentUser.getName());
+			userName.setText(currentUser.getName() + " ");
 			userName.setId("userName");
 		}
 		
