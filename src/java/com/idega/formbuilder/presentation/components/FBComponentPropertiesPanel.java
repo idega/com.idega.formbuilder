@@ -1,344 +1,274 @@
 package com.idega.formbuilder.presentation.components;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UISelectItems;
 import javax.faces.context.FacesContext;
 
-import org.apache.myfaces.component.html.ext.HtmlInputText;
-import org.apache.myfaces.component.html.ext.HtmlInputTextarea;
-import org.apache.myfaces.component.html.ext.HtmlOutputLabel;
-import org.apache.myfaces.component.html.ext.HtmlSelectBooleanCheckbox;
-import org.apache.myfaces.component.html.ext.HtmlSelectOneListbox;
-import org.apache.myfaces.component.html.ext.HtmlSelectOneRadio;
-
-import com.idega.documentmanager.business.form.Component;
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.formbuilder.presentation.beans.DataSourceList;
 import com.idega.formbuilder.presentation.beans.FormComponent;
-import com.idega.webface.WFDivision;
+import com.idega.formbuilder.util.FBConstants;
+import com.idega.presentation.Layer;
+import com.idega.presentation.text.Text;
+import com.idega.presentation.ui.CheckBox;
+import com.idega.presentation.ui.RadioGroup;
+import com.idega.presentation.ui.SelectDropdown;
+import com.idega.presentation.ui.SelectOption;
+import com.idega.presentation.ui.TextArea;
+import com.idega.presentation.ui.TextInput;
+import com.idega.util.RenderUtils;
 import com.idega.webface.WFUtil;
 
 public class FBComponentPropertiesPanel extends FBComponentBase {
 
 	public static final String COMPONENT_TYPE = "ComponentPropertiesPanel";
 	
-	private static final String BUTTON_PROPERTIES_FACET = "BUTTON_PROPERTIES_FACET";
-	private static final String BASIC_PROPERTIES_FACET = "BASIC_PROPERTIES_FACET";
-	private static final String ADVANCED_PROPERTIES_FACET = "ADVANCED_PROPERTIES_FACET";
-	private static final String EXTERNAL_PROPERTIES_FACET = "EXTERNAL_PROPERTIES_FACET";
-	private static final String AUTOFILL_PROPERTIES_FACET = "AUTOFILL_PROPERTIES_FACET";
-	private static final String LOCAL_PROPERTIES_FACET = "LOCAL_PROPERTIES_FACET";
-	private static final String PLAIN_PROPERTIES_FACET = "PLAIN_PROPERTIES_FACET";
-	
 	private static final String PROPERTIES_PANEL_SECTION_STYLE = "fbPropertiesPanelSection";
-	private static final String SINGLE_LINE_PROPERTY = "fbSingleLineProperty";
-	private static final String TWO_LINE_PROPERTY = "fbTwoLineProperty";
+	private String componentId;
+	private String componentType;
 	
+	public String getComponentId() {
+		return componentId;
+	}
+
+	public void setComponentId(String componentId) {
+		this.componentId = componentId;
+	}
+
 	public FBComponentPropertiesPanel() {
 		super();
 		setRendererType(null);
 	}
 	
-	private WFDivision createPropertyContainer(String styleClass, Application application) {
-		WFDivision body = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+	public FBComponentPropertiesPanel(String componentId, String componentType) {
+		super();
+		setRendererType(null);
+		this.componentId = componentId;
+		this.componentType = componentType;
+	}
+	
+	private Layer createPropertyContainer(String styleClass) {
+		Layer body = new Layer(Layer.DIV);
 		body.setStyleClass(styleClass);
 		
 		return body;
 	}
 	
-	private WFDivision createPanelSection(String id, Application application) {
-		WFDivision body = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+	private Layer createPanelSection(String id) {
+		Layer body = new Layer(Layer.DIV);
 		body.setId(id);
 		body.setStyleClass(PROPERTIES_PANEL_SECTION_STYLE);
 		
 		return body;
 	}
 	
-	private UIComponent createBasicProperties(Application application) {
-		WFDivision body = createPanelSection("basicPropertiesPanel", application);
-		
-		WFDivision line = createPropertyContainer(SINGLE_LINE_PROPERTY, application);
-		
-		HtmlOutputLabel requiredLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-		requiredLabel.setValue("Required field");
-		
-		HtmlSelectBooleanCheckbox required = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
-		required.setId("propertyRequired");
-		required.setValueBinding("value", application.createValueBinding("#{formComponent.required}"));
-		required.setOnclick("saveRequired(this.checked);");
-		
-		line.add(requiredLabel);
-		line.add(required);
-		body.add(line);
-		
-		line = createPropertyContainer(TWO_LINE_PROPERTY, application);
-		
-		HtmlOutputLabel errorMsgLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-		errorMsgLabel.setValue("Error message");
-		
-		HtmlInputTextarea errorMsg = (HtmlInputTextarea) application.createComponent(HtmlInputTextarea.COMPONENT_TYPE);
-		errorMsg.setId("propertyErrorMessage");
-		errorMsg.setValueBinding("value", application.createValueBinding("#{formComponent.errorMessage}"));
-		errorMsg.setOnblur("saveErrorMessage(this.value)");
-		errorMsg.setOnkeydown("savePropertyOnEnter(this.value,'compErr',event);");
-		
-		line.add(errorMsgLabel);
-		line.add(errorMsg);
-		body.add(line);
-		
-		line = createPropertyContainer(TWO_LINE_PROPERTY, application);
-		
-		HtmlOutputLabel helpMsgLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-		helpMsgLabel.setValue("Help text");
-		
-		HtmlInputTextarea helpMsg = (HtmlInputTextarea) application.createComponent(HtmlInputTextarea.COMPONENT_TYPE);
-		helpMsg.setId("propertyHelpText");
-		helpMsg.setValueBinding("value", application.createValueBinding("#{formComponent.helpMessage}"));
-		helpMsg.setOnblur("saveHelpMessage(this.value)");
-		helpMsg.setOnkeydown("savePropertyOnEnter(this.value,'compHelp',event);");
-		
-		line.add(helpMsgLabel);
-		line.add(helpMsg);
-		body.add(line);
-		
-		line = createPropertyContainer(SINGLE_LINE_PROPERTY, application);
-		
-		HtmlOutputLabel hasAutofillLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-		hasAutofillLabel.setValue("Autofill field");
-		
-		HtmlSelectBooleanCheckbox hasAutofill = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
-		hasAutofill.setId("propertyHasAutofill");
-		hasAutofill.setOnclick("toggleAutofill(this.checked);");
-		hasAutofill.setValueBinding("value", application.createValueBinding("#{formComponent.autofill}"));
-		
-		line.add(hasAutofillLabel);
-		line.add(hasAutofill);
-		body.add(line);
-		
-		return body;
-	}
-	
-	private UIComponent createAutofillProperties(Application application) {
-		WFDivision body = createPanelSection("autoPropertiesPanel", application);
-		
-		WFDivision line = createPropertyContainer(SINGLE_LINE_PROPERTY, application);
-		
-		HtmlOutputLabel autofillLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-		autofillLabel.setValue("");
-		
-		HtmlInputText autofillValue = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
-		autofillValue.setId("propertyAutofill");
-		autofillValue.setValueBinding("value", application.createValueBinding("#{formComponent.autofillKey}"));
-		autofillValue.setOnblur("saveAutofill(this.value);");
-		autofillValue.setOnkeydown("savePropertyOnEnter(this.value,'compAuto',event);");
-		
-		line.add(autofillLabel);
-		line.add(autofillValue);
-		body.add(line);
-		
-		return body;
-	}
-	
-	private UIComponent createButtonProperties(Application application) {
-		WFDivision body = createPanelSection("labelPropertiesPanel", application);
-		
-		WFDivision line = createPropertyContainer(TWO_LINE_PROPERTY, application);
-		
-		HtmlOutputLabel titleLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-		titleLabel.setValue("Field name");
-		
-		HtmlInputText title = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
-		title.setId("propertyTitle");
-		title.setValueBinding("value", application.createValueBinding("#{formComponent.label}"));
-		title.setOnblur("saveComponentLabel(this.value);");
-		title.setOnkeydown("savePropertyOnEnter(this.value,'compTitle',event);");
-		
-		line.add(titleLabel);
-		line.add(title);
-		body.add(line);
-		
-		return body;
-	}
-	
-	private UIComponent createPlainProperties(Application application) {
-		WFDivision body = createPanelSection("plainPropertiesPanel", application);
-		
-		WFDivision line = createPropertyContainer(TWO_LINE_PROPERTY, application);
-		
-		HtmlOutputLabel plainTextLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-		plainTextLabel.setValue("Text");
-		
-		HtmlInputTextarea plainTextValue = (HtmlInputTextarea) application.createComponent(HtmlInputTextarea.COMPONENT_TYPE);
-		plainTextValue.setId("propertyPlaintext");
-		plainTextValue.setValueBinding("value", application.createValueBinding("#{formComponent.plainText}"));
-		plainTextValue.setOnblur("savePlaintext(this.value);");
-		plainTextValue.setOnkeydown("savePropertyOnEnter(this.value,'compText',event);");
-		
-		line.add(plainTextLabel);
-		line.add(plainTextValue);
-		body.add(line);
-		
-		return body;
-	}
-	
-	private UIComponent createAdvancedProperties(Application application) {
-		WFDivision body = createPanelSection("advPropertiesPanel", application);
-		
-		WFDivision line = createPropertyContainer(SINGLE_LINE_PROPERTY, application);
-		
-		HtmlOutputLabel advancedL = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-		advancedL.setValue("Select source");
-		
-		HtmlSelectOneRadio dataSrcSwitch = (HtmlSelectOneRadio) application.createComponent(HtmlSelectOneRadio.COMPONENT_TYPE);
-		dataSrcSwitch.setStyleClass("inlineRadioButton");
-		dataSrcSwitch.setId("dataSrcSwitch");
-		dataSrcSwitch.setOnchange("switchDataSource(this);");
-		dataSrcSwitch.setValueBinding("value", application.createValueBinding("#{formComponent.dataSrc}"));
-
-		UISelectItems dataSrcs = (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
-		dataSrcs.setValueBinding("value", application.createValueBinding("#{dataSources.sources}"));
-		addChild(dataSrcs, dataSrcSwitch);
-		
-		line.add(advancedL);
-		line.add(dataSrcSwitch);
-		body.add(line);
-		
-		return body;
-	}
-	
-	private UIComponent createExternalProperties(Application application) {
-		WFDivision body = createPanelSection("extPropertiesPanel", application);
-		
-		WFDivision line = createPropertyContainer(SINGLE_LINE_PROPERTY, application);
-		
-		HtmlOutputLabel externalSrcLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-		externalSrcLabel.setValue("External data source");
-		
-		HtmlSelectOneListbox select = (HtmlSelectOneListbox) application.createComponent(HtmlSelectOneListbox.COMPONENT_TYPE);
-		select.setId("propertyExternal");
-		select.setValueBinding("value", application.createValueBinding("#{formComponent.externalSrc}"));
-		select.setOnchange("saveExternalSrc(this.value);");
-		
-		UISelectItems data_srcs = (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
-		data_srcs.setValueBinding("value", application.createValueBinding("#{dataSources.externalDataSources}"));
-		
-		addChild(data_srcs, select);
-		
-		line.add(externalSrcLabel);
-		line.add(select);
-		body.add(line);
-		
-		return body;
-	}
-	
-	private UIComponent createLocalProperties(Application application) {
-		WFDivision body = createPanelSection("localPropertiesPanel", application);
-		
-		FBSelectValuesList selectValues = (FBSelectValuesList) application.createComponent(FBSelectValuesList.COMPONENT_TYPE);
-		selectValues.setValueBinding("itemSet", application.createValueBinding("#{formComponent.items}"));
-		selectValues.setId("selectOpts");
-		
-		body.add(selectValues);
-		
-		return body;
-	}
-
-	
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
 		getChildren().clear();
 		
-		addFacet(BUTTON_PROPERTIES_FACET, createButtonProperties(application));
-		addFacet(BASIC_PROPERTIES_FACET, createBasicProperties(application));
-		addFacet(AUTOFILL_PROPERTIES_FACET, createAutofillProperties(application));
-		addFacet(PLAIN_PROPERTIES_FACET, createPlainProperties(application));
-		addFacet(ADVANCED_PROPERTIES_FACET, createAdvancedProperties(application));
-		addFacet(EXTERNAL_PROPERTIES_FACET, createExternalProperties(application));
-		addFacet(LOCAL_PROPERTIES_FACET, createLocalProperties(application));
+		if(componentId == null) {
+			return;
+		}
+		
+		if(componentType == null) {
+			componentType = FBConstants.COMPONENT_TYPE;
+		}
+		
+		Layer layer = new Layer(Layer.DIV);
+		
+		if(componentType.equals(FBConstants.COMPONENT_TYPE)) {
+			
+			FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
+			formComponent.initializeBeanInstace(componentId);
+			
+			if(formComponent.getPlainComponent() != null) {
+				Layer body = createPanelSection("plainPropertiesPanel");
+				Layer line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
+				
+				TextArea plainTextValue = new TextArea("propertyPlaintext", formComponent.getPlainText());
+				
+				plainTextValue.setOnBlur("savePlaintext(this.value);");
+				plainTextValue.setOnKeyDown("savePropertyOnEnter(this.value,'compText',event);");
+				
+				line.add(new Text("Text"));
+				line.add(plainTextValue);
+				body.add(line);
+				
+				layer.add(body);
+			} else {
+//				PropertiesComponent properties = component.getProperties();
+				
+				Layer body = createPanelSection("labelPropertiesPanel");
+				Layer line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
+				
+				TextInput labelValue = new TextInput("propertyLabel", formComponent.getLabel());
+				
+				labelValue.setOnBlur("saveComponentLabel(this.value);");
+				labelValue.setOnKeyDown("savePropertyOnEnter(this.value,'compTitle',event);");
+				
+				line.add(new Text("Field name"));
+				line.add(labelValue);
+				body.add(line);
+				
+				line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
+				
+				CheckBox required = new CheckBox();
+				required.setId("propertyRequired");
+				required.setChecked(formComponent.getRequired());
+				required.setOnClick("saveRequired(this.checked);");
+				
+				line.add(new Text("Required field"));
+				line.add(required);
+				body.add(line);
+				
+				line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
+				
+				TextArea errorMsg = new TextArea("propertyErrorMessage", formComponent.getErrorMessage());
+				errorMsg.setOnBlur("saveErrorMessage(this.value)");
+				errorMsg.setOnKeyDown("savePropertyOnEnter(this.value,'compErr',event);");
+				
+				line.add(new Text("Error message"));
+				line.add(errorMsg);
+				body.add(line);
+				
+				line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
+				
+				TextArea helpMsg = new TextArea("propertyHelpText", formComponent.getHelpMessage());
+				helpMsg.setOnBlur("saveHelpMessage(this.value)");
+				helpMsg.setOnKeyDown("savePropertyOnEnter(this.value,'compHelp',event);");
+				
+				line.add(new Text("Help text"));
+				line.add(helpMsg);
+				body.add(line);
+				
+				line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
+				
+				CheckBox hasAutoFill = new CheckBox();
+				hasAutoFill.setId("propertyHasAutofill");
+				hasAutoFill.setOnClick("toggleAutofill(this.checked);");
+				hasAutoFill.setChecked(formComponent.getAutofillKey() != "" ? true : false);
+				
+				line.add(new Text("Autofill field"));
+				line.add(hasAutoFill);
+				body.add(line);
+				
+				layer.add(body);
+				
+				if(formComponent.getAutofillKey() != "") {
+					Layer body2 = createPanelSection("autoPropertiesPanel");
+					
+					Layer line2 = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
+					
+					TextInput autofillValue = new TextInput();
+					autofillValue.setValue(formComponent.getAutofillKey());
+					autofillValue.setId("propertyAutofill");
+					autofillValue.setOnBlur("saveAutofill(this.value);");
+					autofillValue.setOnKeyDown("savePropertyOnEnter(this.value,'compAuto',event);");
+					
+					line2.add(new Text(""));
+					line2.add(autofillValue);
+					body2.add(line2);
+					
+					layer.add(body2);
+				}
+				
+				if(formComponent.getSelectComponent() != null) {
+//					ComponentSelect selectComponent = (ComponentSelect) component;
+//					PropertiesSelect propertiesSelect = selectComponent.getProperties();
+					
+					Layer body3 = createPanelSection("advPropertiesPanel");
+					
+					Layer line3 = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
+					
+					boolean localDataSource = formComponent.getDataSrc().equals(DataSourceList.localDataSrc) ? true : false;
+					
+					RadioGroup dataSrcSwitch = new RadioGroup("dataSrcSwitch");
+					dataSrcSwitch.setStyleClass("inlineRadioButton");
+					dataSrcSwitch.setOnChange("switchDataSource(this);");
+					dataSrcSwitch.addRadioButton(DataSourceList.localDataSrc, new Text("List of value"), localDataSource);
+					dataSrcSwitch.addRadioButton(DataSourceList.externalDataSrc, new Text("External"), !localDataSource);
+					
+					line3.add(new Text("Select source"));
+					line3.add(dataSrcSwitch);
+					body3.add(line3);
+					
+					layer.add(body3);
+					
+					if(localDataSource) {
+						Layer localBody = createPanelSection("localPropertiesPanel");
+						
+						FBSelectValuesList selectValues = (FBSelectValuesList) application.createComponent(FBSelectValuesList.COMPONENT_TYPE);
+						selectValues.setValueBinding("itemSet", application.createValueBinding("#{formComponent.items}"));
+						selectValues.setId("selectOpts");
+						
+						localBody.add(selectValues);
+						
+						layer.add(localBody);
+					} else {
+						Layer externalBody = createPanelSection("extPropertiesPanel");
+						
+						Layer externalline = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
+						
+						SelectDropdown select = new SelectDropdown();
+						select.setId("propertyExternal");
+						select.setOnChange("saveExternalSrc(this.value);");
+						List<SelectOption> options = ((DataSourceList) WFUtil.getBeanInstance("dataSources")).getExternalDataSources();
+						for(Iterator it = options.iterator(); it.hasNext(); ) { 
+							select.addOption((SelectOption) it.next());
+						}
+						select.setSelectedOption(formComponent.getExternalSrc());
+						
+						externalline.add(new Text("External data source"));
+						externalline.add(select);
+						externalBody.add(externalline);
+						
+						layer.add(externalBody);
+					}
+				}
+			}
+		} else if(componentType.equals(FBConstants.BUTTON_TYPE)) {
+//			ButtonArea area = page.getButtonArea();
+//			if(area != null) {
+//				Component component = area.getComponent(componentId);
+//				if(component != null) {
+//					PropertiesComponent properties = component.getProperties();
+//					
+//					Layer body = createPanelSection("labelPropertiesPanel");
+//					
+//					Layer line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
+//					
+//					TextInput title = new TextInput("propertyTitle", properties.getLabel().getString(new Locale("en")));
+//					title.setOnBlur("saveComponentLabel(this.value);");
+//					title.setOnKeyDown("savePropertyOnEnter(this.value,'compTitle',event);");
+//					
+//					line.add(new Text("Button title"));
+//					line.add(title);
+//					body.add(line);
+//					
+//					layer.add(body);
+//				}
+//			}
+		}
+		
+		add(layer);
 	}
 	
-	public void encodeBegin(FacesContext context) throws IOException {
-		Application application = context.getApplication();
-		super.encodeBegin(context);
-		
-		WFDivision plain = (WFDivision) getFacet(PLAIN_PROPERTIES_FACET);
-		if(plain == null) {
-			plain = (WFDivision) createPlainProperties(application);
+	public String getComponentType() {
+		return componentType;
+	}
+
+	public void setComponentType(String componentType) {
+		this.componentType = componentType;
+	}
+	
+	public void encodeChildren(FacesContext context) throws IOException {
+		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
+			RenderUtils.renderChild(context, (UIComponent) it.next());
 		}
-		WFDivision label = (WFDivision) getFacet(BUTTON_PROPERTIES_FACET);
-		if(label == null) {
-			label = (WFDivision) createButtonProperties(application);
-		}
-		WFDivision basic = (WFDivision) getFacet(BASIC_PROPERTIES_FACET);
-		if(basic == null) {
-			basic = (WFDivision) createBasicProperties(application);
-		}
-		WFDivision auto = (WFDivision) getFacet(AUTOFILL_PROPERTIES_FACET);
-		if(auto == null) {
-			auto = (WFDivision) createAutofillProperties(application);
-		}
-		WFDivision adv = (WFDivision) getFacet(ADVANCED_PROPERTIES_FACET);
-		if(adv == null) {
-			adv = (WFDivision) createAdvancedProperties(application);
-		}
-		WFDivision ext = (WFDivision) getFacet(EXTERNAL_PROPERTIES_FACET);
-		if(ext == null) {
-			ext = (WFDivision) createExternalProperties(application);
-		}
-		WFDivision local = (WFDivision) getFacet(LOCAL_PROPERTIES_FACET);
-		if(local == null) {
-			local = (WFDivision) createLocalProperties(application);
-		}
-		FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
-		if(formComponent.getPropertiesPlain() != null) {
-			plain.setStyleAttribute("display: block");
-			label.setStyleAttribute("display: none");
-			basic.setStyleAttribute("display: none");
-			auto.setStyleAttribute("display: none");
-			adv.setStyleAttribute("display: none");
-			ext.setStyleAttribute("display: none");
-			local.setStyleAttribute("display: none");
-		} else {
-			Component component = formComponent.getComponent();
-			if(component == null) {
-				plain.setStyleAttribute("display: none");
-				basic.setStyleAttribute("display: block");
-				if(formComponent.getAutofillKey() != "") {
-					auto.setStyleAttribute("display: block");
-				} else {
-					auto.setStyleAttribute("display: none");
-				}
-				if(formComponent.getPropertiesSelect() != null) {
-					adv.setStyleAttribute("display: block");
-					if(formComponent.getDataSrc().equals("2")) {
-						ext.setStyleAttribute("display: block");
-						local.setStyleAttribute("display: none");
-					} else {
-						ext.setStyleAttribute("display: none");
-						local.setStyleAttribute("display: block");
-					}
-				} else {
-					adv.setStyleAttribute("display: none");
-					ext.setStyleAttribute("display: none");
-					local.setStyleAttribute("display: none");
-				}
-			} else {
-				basic.setStyleAttribute("display: none");
-				auto.setStyleAttribute("display: none");
-				adv.setStyleAttribute("display: none");
-				ext.setStyleAttribute("display: none");
-				local.setStyleAttribute("display: none");
-			}
-		}
-		renderChild(context, plain);
-		renderChild(context, label);
-		renderChild(context, basic);
-		renderChild(context, auto);
-		renderChild(context, adv);
-		renderChild(context, ext);
-		renderChild(context, local);
 	}
 	
 }

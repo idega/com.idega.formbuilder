@@ -22,6 +22,16 @@ public class FBComponentBase extends IWBaseComponent {
 	private String id;
 	private String styleClass;
 	
+	public FBComponentBase() {
+		super();
+	}
+	
+	public FBComponentBase(String id, String styleClass) {
+		super();
+		this.id = id;
+		this.styleClass = styleClass;
+	}
+	
 	public String getId() {
 		return id;
 	}
@@ -83,6 +93,12 @@ public class FBComponentBase extends IWBaseComponent {
 	
 	protected static String _(String localizationKey) {
 		return WFUtil.getLocalizedStringExpr(IWBundleStarter.IW_BUNDLE_IDENTIFIER, localizationKey);
+	}
+	
+	protected static String _(IWContext iwc, String localizationKey, String defaultString) {
+		IWMainApplication iwma = iwc.getApplicationContext().getIWMainApplication();
+		IWBundle bundle = iwma.getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER);
+		return bundle.getResourceBundle(iwc.getCurrentLocale()).getLocalizedString(localizationKey, defaultString);
 	}
 	
 	protected static String getLocalizedString(IWContext iwc, String localizationKey, String defaultString) {

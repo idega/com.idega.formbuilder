@@ -33,18 +33,19 @@ public class FBButtonArea extends FBComponentBase {
 		ButtonArea buttonArea = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage().getButtonArea();
 		if(buttonArea != null) {
 			List<String> ids = buttonArea.getContainedComponentsIdList();
-			Iterator it = ids.iterator();
-			while(it.hasNext()) {
-				String nextId = (String) it.next();
-				Button bt = (Button) buttonArea.getComponent(nextId);
-				if(bt != null) {
-					FBButton button = (FBButton) application.createComponent(FBButton.COMPONENT_TYPE);
-					button.setLabel(bt.getProperties().getLabel().getString(new Locale("en")));
-					button.setId(nextId);
-					button.setStyleClass(componentStyleClass);
-					button.setOnSelect("loadButtonInfo(this);");
-					button.setOnDelete("removeButton(this);");
-					add(button);
+			if(ids != null) {
+				for(Iterator it = ids.iterator(); it.hasNext(); ) {
+					String nextId = (String) it.next();
+					Button bt = (Button) buttonArea.getComponent(nextId);
+					if(bt != null) {
+						FBButton button = (FBButton) application.createComponent(FBButton.COMPONENT_TYPE);
+						button.setLabel(bt.getProperties().getLabel().getString(new Locale("en")));
+						button.setId(nextId);
+						button.setStyleClass(componentStyleClass);
+						button.setOnSelect("loadButtonInfo(this);");
+						button.setOnDelete("removeButton(this);");
+						add(button);
+					}
 				}
 			}
 		}
@@ -63,15 +64,14 @@ public class FBButtonArea extends FBComponentBase {
 		writer.endElement("DIV");
 		super.encodeEnd(context);
 		
-		writer.write(getEmbededJavascript());
+//		writer.write(getEmbededJavascript());
 	}
 	
 	public void encodeChildren(FacesContext context) throws IOException {
 		if (!isRendered()) {
 			return;
 		}
-		Iterator it = getChildren().iterator();
-		while(it.hasNext()) {
+		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
 			renderChild(context, (UIComponent) it.next());
 		}
 	}

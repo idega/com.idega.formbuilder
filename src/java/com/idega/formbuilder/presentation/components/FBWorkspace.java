@@ -27,18 +27,6 @@ public class FBWorkspace extends FBComponentBase {
 
 	private static final String WORKSPACE_PAGES_FACET = "pages";
 
-	private static final String FORMBUILDER_JS = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js";
-
-	private static final String DWR_ENGINE_JS = "/dwr/engine.js";
-
-	private static final String DWR_UTIL_JS = "/dwr/util.js";
-
-	private static final String FORM_COMPONENT_JS = "/dwr/interface/FormComponent.js";
-
-	private static final String FORM_DOCUMENT_JS = "/dwr/interface/FormDocument.js";
-
-	private static final String FORM_PAGE_JS = "/dwr/interface/FormPage.js";
-
 	private String view;
 
 	public FBWorkspace() {
@@ -48,19 +36,14 @@ public class FBWorkspace extends FBComponentBase {
 
 	protected void initializeComponent(FacesContext context) {
 
-		if (context.getExternalContext().getRequestParameterMap().containsKey(
-				FormDocument.FROM_APP_REQ_PARAM)) {
-			FormDocument fd = (FormDocument) WFUtil
-					.getBeanInstance(FormDocument.BEAN_ID);
-
+		if (context.getExternalContext().getRequestParameterMap().containsKey(FormDocument.FROM_APP_REQ_PARAM)) {
+			FormDocument fd = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
 			try {
 				Map session_map = context.getExternalContext().getSessionMap();
 				fd.setAppId((String)session_map.get(FormDocument.APP_ID_PARAM));
 				fd.setPrimaryFormName((String)session_map.get(FormDocument.APP_FORM_NAME_PARAM));
 				session_map.remove(FormDocument.APP_ID_PARAM);
 				session_map.remove(FormDocument.APP_FORM_NAME_PARAM);
-//				fd.createNewForm();
-
 			} catch (Exception e) {
 				// TODO: use logger and redirect back to applications list if
 				// possible
@@ -71,61 +54,23 @@ public class FBWorkspace extends FBComponentBase {
 		Application application = context.getApplication();
 		getChildren().clear();
 
-//		try {
-//			Web2Business business = (Web2Business) IBOLookup
-//					.getServiceInstance(IWContext.getInstance(),
-//							Web2Business.class);
-//			String prototypeURI = business.getBundleURIWithinLibsFolder(uriExtension);
-//			String dojoURI = business.getBundleURIToDojoLib();
-////			String ricoURI = business.getBundleURIToRicoLib();
-//
-//			AddResource resourceAdder = AddResourceFactory.getInstance(context);
-//			resourceAdder.addStyleSheet(context, AddResource.HEADER_BEGIN, FormbuilderViewManager.FORMBUILDER_CSS);
-//
-//			// resourceAdder.addJavaScriptAtPosition(context,
-//			// AddResource.HEADER_BEGIN, prototypeURI);
-//			// resourceAdder.addJavaScriptAtPosition(context,
-//			// AddResource.HEADER_BEGIN, ricoURI);
-//			resourceAdder.addJavaScriptAtPosition(context,
-//					AddResource.HEADER_BEGIN, '/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/libs/yahoo/version.11.js');
-//			resourceAdder.addJavaScriptAtPosition(context,
-//					AddResource.HEADER_BEGIN, FORMBUILDER_JS);
-//			resourceAdder.addJavaScriptAtPosition(context,
-//					AddResource.HEADER_BEGIN, DWR_ENGINE_JS);
-//			resourceAdder.addJavaScriptAtPosition(context,
-//					AddResource.HEADER_BEGIN, DWR_UTIL_JS);
-//			resourceAdder.addJavaScriptAtPosition(context,
-//					AddResource.HEADER_BEGIN, FORM_COMPONENT_JS);
-//			resourceAdder.addJavaScriptAtPosition(context,
-//					AddResource.HEADER_BEGIN, FORM_DOCUMENT_JS);
-//			resourceAdder.addJavaScriptAtPosition(context,
-//					AddResource.HEADER_BEGIN, FORM_PAGE_JS);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-
 		ValueBinding vb = getValueBinding("view");
 		if (vb != null) {
 			view = (String) vb.getValue(context);
 		}
 
-		FBMenu menu = (FBMenu) application
-				.createComponent(FBMenu.COMPONENT_TYPE);
+		FBMenu menu = (FBMenu) application.createComponent(FBMenu.COMPONENT_TYPE);
 		menu.setId("optionsPanel");
 		menu.setStyleClass("optionsContainer");
-		menu.setValueBinding("selectedMenu", application
-				.createValueBinding("#{workspace.selectedMenu}"));
-		menu.setValueBinding("show", application
-				.createValueBinding("#{workspace.renderedMenu}"));
+		menu.setValueBinding("selectedMenu", application.createValueBinding("#{workspace.selectedMenu}"));
+		menu.setValueBinding("show", application.createValueBinding("#{workspace.renderedMenu}"));
 
-		FBViewPanel views = (FBViewPanel) application
-				.createComponent(FBViewPanel.COMPONENT_TYPE);
+		FBViewPanel views = (FBViewPanel) application.createComponent(FBViewPanel.COMPONENT_TYPE);
 		views.setValueBinding("view", vb);
 		views.setId("viewPanel");
 		views.setStyleClass("formContainer");
 
-		FBPagesPanel pages = (FBPagesPanel) application
-				.createComponent(FBPagesPanel.COMPONENT_TYPE);
+		FBPagesPanel pages = (FBPagesPanel) application.createComponent(FBPagesPanel.COMPONENT_TYPE);
 		pages.setId("pagesPanel");
 		pages.setStyleClass("pagesPanel");
 		pages.setComponentStyleClass("formPageIcon");
@@ -151,8 +96,8 @@ public class FBWorkspace extends FBComponentBase {
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeBegin(context);
 		
-		AddResource resourceAdder = AddResourceFactory.getInstance(context);
-		resourceAdder.addStyleSheet(context, AddResource.HEADER_BEGIN, FormbuilderViewManager.FORMBUILDER_CSS);
+//		AddResource resourceAdder = AddResourceFactory.getInstance(context);
+//		resourceAdder.addStyleSheet(context, AddResource.HEADER_BEGIN, FormbuilderViewManager.FORMBUILDER_CSS);
 
 		writer.startElement("DIV", this);
 		writer.writeAttribute("id", getId(), "id");

@@ -677,10 +677,13 @@ span.statusMsg {
 
 .speedButton {
 	display: none;
-	float: right;
+	/*float: right;*/
 }
 
 .formElement:hover .speedButton {
+	position: absolute;
+	right: 25px;
+	top: 25px;
 	display: inline;
 	cursor: pointer;
 }
@@ -740,15 +743,23 @@ span.statusMsg {
 	display: block;
 }
 
+.sourceView {
+	position: relative;
+}
+
 .sourceView textarea {
+	position: absolute;
 	top: 20px;
 	bottom: 20px;
-	width: 80%;
+	left: 5px;
+	right: 5px;
 	height: 500px;
+	display: block;
 }
 
 .sourceView input {
 	align: center;
+	display: block;
 }
 
 .formHeading {
@@ -1167,4 +1178,23 @@ fieldset.group fieldset.group{
 	position: static !important;
 	left: auto !important;
 	right: auto !important;
+}
+.fbTabViewContent .taskNodeSelection {
+	float: left;
+	width: 50%;
+}
+.fbTabViewContent .taskNodeProperties {
+	float: right;
+	width: 50%;
+}
+.formItem {
+	margin-left: 25px;
+	padding-top: 30px;
+}
+.fbPanelHeader {
+	color:#222222;
+	float:left;
+	font-size:11px;
+	font-weight:bold;
+	width:160px;
 }

@@ -6,39 +6,44 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Element;
 
+import com.idega.builder.business.BuilderLogic;
 import com.idega.documentmanager.business.form.Button;
 import com.idega.documentmanager.business.form.ButtonArea;
 import com.idega.documentmanager.business.form.Document;
 import com.idega.documentmanager.business.form.Page;
-import com.idega.documentmanager.business.form.PropertiesPage;
-import com.idega.documentmanager.business.form.beans.LocalizedStringBean;
+import com.idega.formbuilder.presentation.components.FBDesignView;
 import com.idega.formbuilder.presentation.converters.FormButtonInfo;
 import com.idega.formbuilder.presentation.converters.FormPageInfo;
+import com.idega.formbuilder.util.FBUtil;
+import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
 
 public class FormPage implements Serializable {
 	
 	private static final long serialVersionUID = -1462694198346788168L;
 	
-	private Page page;
-	private PropertiesPage properties;
-	private String id;
-	private String title;
+	private static Log logger = LogFactory.getLog(FormDocument.class);
 	
+	private Page page;
+	private String id;
 	private boolean special;
 	
-	private LocalizedStringBean titleBean;
-	
-	public FormPage() {
-		properties = null;
-		page = null;
-		id = "";
-		title = "";
-		titleBean = null;
+	public Page initializeBeanInstance(Page page) {
+		if(page != null) {
+			this.page = page;
+			this.id = page.getId();
+			this.special = false;
+		} else {
+			this.page = null;
+			this.id = null;
+			this.special = false;
+		}
 		
-		special = false;
+		return page;
 	}
 	
 	public FormPageInfo getFirstPageInfo() throws Exception {
@@ -129,25 +134,24 @@ public class FormPage implements Serializable {
 		return null;
 	}
 	
-	public FormPageInfo getFormPageInfo(String id) throws Exception {
-		FormPageInfo result = null;
+	public org.jdom.Document getFormPageInfo(String id) {
+		String realId = null;
+		try {
+			String temp = id.substring(id.indexOf(":") + 1);
+			int k = temp.indexOf("_", temp.indexOf("_") + 1);
+			realId = temp.substring(0, k);
+			this.id = realId;
+		} catch(ArrayIndexOutOfBoundsException e) {
+			logger.error("Could not parse page ID", e);
+			return null;
+		}
+		
 		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
 		Document document = formDocument.getDocument();
 		if(document != null) {
-			String temp = id.substring(id.indexOf(":") + 1);
-			int k = temp.indexOf("_", temp.indexOf("_") + 1);
-			String temp2 = temp.substring(0, k);
-			Page page = document.getPage(temp2);
-			result = loadPageInfo(page);
-			special = false;
-			Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
-			if(workspace != null) {
-				workspace.setView("design");
-				workspace.setSelectedMenu("3");
-				workspace.setRenderedMenu(true);
-			}
+			initializeBeanInstance(document.getPage(realId));
 		}
-		return result;
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView("formElement"), false);
 	}
 	
 	public FormPageInfo getConfirmationPageInfo() throws Exception {
@@ -163,25 +167,13 @@ public class FormPage implements Serializable {
 		return null;
 	}
 	
-	public void clearPageInfo() {
-		properties = null;
-		page = null;
-		id = "";
-		title = "";
-		titleBean = null;
-	}
-	
 	public FormPageInfo loadPageInfo(Page page) throws Exception {
-		PropertiesPage pp = (PropertiesPage) page.getProperties();
 		this.page = page;
-		properties = pp;
 		id = page.getId();
-		titleBean = pp.getLabel();
-		title = titleBean.getString(new Locale("en"));
 		special = false;
 		
 		FormPageInfo result = new FormPageInfo();
-		result.setPageTitle(title);
+		result.setPageTitle(getTitle());
 		result.setPageId(id);
 		
 		String areaId = "";
@@ -228,8 +220,8 @@ public class FormPage implements Serializable {
 				if(page != null) {
 					special = false;
 					FormPageInfo result = loadPageInfo(page);
-					FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
-					formComponent.clearFormComponentInfo();
+//					FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
+//					formComponent.clearFormComponentInfo();
 					workspace.setView("design");
 					workspace.setRenderedMenu(true);
 					return result;
@@ -256,17 +248,18 @@ public class FormPage implements Serializable {
 	}
 
 	public String getTitle() {
-		return title;
+		return page.getProperties().getLabel().getString(FBUtil.getUILocale());
 	}
 
 	public FormPageInfo setTitle(String title) {
-		this.title = title;
-		if(titleBean != null) {
-			titleBean.setString(new Locale("en"), title);
-			if(properties != null) {
-				properties.setLabel(titleBean);
-			}
-		}
+		page.getProperties().getLabel().setString(FBUtil.getUILocale(), title);
+//		this.title = title;
+//		if(titleBean != null) {
+//			titleBean.setString(new Locale("en"), title);
+//			if(properties != null) {
+//				properties.setLabel(titleBean);
+//			}
+//		}
 		FormPageInfo result = new FormPageInfo();
 		result.setPageTitle(title);
 		result.setPageId(id);
@@ -278,21 +271,21 @@ public class FormPage implements Serializable {
 		return title;
 	}
 
-	public LocalizedStringBean getTitleBean() {
-		return titleBean;
-	}
+//	public LocalizedStringBean getTitleBean() {
+//		return titleBean;
+//	}
+//
+//	public void setTitleBean(LocalizedStringBean titleBean) {
+//		this.titleBean = titleBean;
+//	}
 
-	public void setTitleBean(LocalizedStringBean titleBean) {
-		this.titleBean = titleBean;
-	}
-
-	public PropertiesPage getProperties() {
-		return properties;
-	}
-
-	public void setProperties(PropertiesPage properties) {
-		this.properties = properties;
-	}
+//	public PropertiesPage getProperties() {
+//		return properties;
+//	}
+//
+//	public void setProperties(PropertiesPage properties) {
+//		this.properties = properties;
+//	}
 
 	public boolean isSpecial() {
 		return special;

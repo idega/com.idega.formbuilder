@@ -6,10 +6,8 @@ import java.util.Locale;
 import javax.faces.event.ActionEvent;
 
 import com.idega.formbuilder.presentation.components.FBViewPanel;
-import com.idega.webface.event.WFTabEvent;
-import com.idega.webface.event.WFTabListener;
 
-public class Workspace implements Serializable, WFTabListener {
+public class Workspace implements Serializable {
 	
 	private static final long serialVersionUID = -7539955904708793992L;
 	
@@ -24,7 +22,7 @@ public class Workspace implements Serializable, WFTabListener {
 	public Locale getLocale() {
 		return locale;
 	}
-
+	
 	public void setLocale(Locale locale) {
 		this.locale = locale;
 	}
@@ -36,25 +34,6 @@ public class Workspace implements Serializable, WFTabListener {
 		this.designViewStatus = "noform";
 		this.pagesPanelVisible = false;
 		this.locale = new Locale("en");
-	}
-	
-	public void tabPressed(WFTabEvent tce) {
-		String view = tce.getSource().toString();
-		view = FBViewPanel.DESIGN_VIEW;
-		renderedMenu = true;
-		/*switch(view) {
-		case FBViewPanel.DESIGN_VIEW_INDEX:
-			view = FBViewPanel.DESIGN_VIEW;
-			renderedMenu = true;
-			break;
-		case FBViewPanel.PREVIEW_VIEW_INDEX:
-			view = FBViewPanel.PREVIEW_VIEW;
-			renderedMenu = false;
-			break;
-		case FBViewPanel.SOURCE_VIEW_INDEX:
-			view = FBViewPanel.SOURCE_VIEW;
-			renderedMenu = false;
-		}*/
 	}
 	
 	public void togglePagesPanel(ActionEvent ae) {

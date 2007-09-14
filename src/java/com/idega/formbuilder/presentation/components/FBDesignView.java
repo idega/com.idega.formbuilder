@@ -6,21 +6,20 @@ import java.util.List;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
-import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
-import javax.faces.el.ValueBinding;
 
-import org.apache.myfaces.custom.htmlTag.HtmlTag;
-
-import com.idega.documentmanager.business.form.ButtonArea;
 import com.idega.documentmanager.business.form.Component;
 import com.idega.documentmanager.business.form.Container;
 import com.idega.documentmanager.business.form.Page;
+import com.idega.documentmanager.business.form.PageThankYou;
 import com.idega.formbuilder.presentation.FBComponentBase;
-import com.idega.formbuilder.presentation.beans.FormComponent;
+import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.presentation.beans.FormPage;
-import com.idega.webface.WFDivision;
+import com.idega.presentation.Layer;
+import com.idega.presentation.Script;
+import com.idega.presentation.text.Paragraph;
+import com.idega.presentation.text.Text;
+import com.idega.util.RenderUtils;
 import com.idega.webface.WFUtil;
 
 public class FBDesignView extends FBComponentBase {
@@ -43,196 +42,123 @@ public class FBDesignView extends FBComponentBase {
 	private String status;
 
 	public FBDesignView() {
-		super();
+		super("designView", "dropBox");
 		setRendererType(null);
+	}
+	
+	public FBDesignView(String componentClass) {
+		super("designView", "dropBox");
+		setRendererType(null);
+		this.componentStyleClass = componentClass;
 	}
 	
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
 		getChildren().clear();
 		
-		WFDivision noFormNotice = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
-		noFormNotice.setId("noFormNotice");
+		Layer component = new Layer(Layer.DIV);
+		component.setId("dropBox");
+		component.setStyleClass(getStyleClass());
 		
-		HtmlOutputText noFormNoticeHeader = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		noFormNoticeHeader.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['labels_noform_header']}"));
-		addChild(noFormNoticeHeader, noFormNotice);
-		
-		HtmlTag br = (HtmlTag) application.createComponent(HtmlTag.COMPONENT_TYPE);
-		br.setValue("br");
-		addChild(br, noFormNotice);
-		
-		HtmlOutputText noFormNoticeBody = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		noFormNoticeBody.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['labels_noform_body']}"));
-		addChild(noFormNoticeBody, noFormNotice);
-		
-		addFacet(DESIGN_VIEW_SPECIAL_FACET, noFormNotice);
-		
-		WFDivision formHeading = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		Layer formHeading = new Layer(Layer.DIV);
 		formHeading.setId("formHeading");
 		formHeading.setStyleClass("info");
 		
-		FBInlineEdit formHeadingHeader = (FBInlineEdit) application.createComponent(FBInlineEdit.COMPONENT_TYPE);
+		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
+		
+		Text formHeadingHeader = new Text(formDocument.getFormTitle());
 		formHeadingHeader.setId("formHeadingHeader");
-		formHeadingHeader.setValueBinding("value", application.createValueBinding("#{formDocument.formTitle}"));
-		formHeadingHeader.setOnSelect("loadFormInfo();");
-		formHeadingHeader.setOnBlur("saveFormTitleOnBlur");
-		formHeadingHeader.setOnReturn("saveFormTitleOnReturn");
-		addChild(formHeadingHeader, formHeading);
+		formHeading.add(formHeadingHeader);
 		
-		addFacet(DESIGN_VIEW_HEADER_FACET, formHeading);
+		component.add(formHeading);
 		
-		WFDivision pageNotice = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		Layer pageNotice = new Layer(Layer.DIV);
 		pageNotice.setId("pageNotice");
 		pageNotice.setStyleClass("label");
 		
-		FBInlineEdit currentPageTitle = (FBInlineEdit) application.createComponent(FBInlineEdit.COMPONENT_TYPE);
+		Text currentPageTitle = new Text(((FormPage) WFUtil.getBeanInstance("formPage")).getTitle());
 		currentPageTitle.setId("currentPageTitle");
-		currentPageTitle.setValueBinding("value", application.createValueBinding("#{formPage.title}"));
-		currentPageTitle.setOnBlur("savePageTitleOnBlur");
-		currentPageTitle.setOnReturn("savePageTitleOnReturn");
-//		currentPageTitle.setStyleClass("label");
-		addChild(currentPageTitle, pageNotice);
+		pageNotice.add(currentPageTitle);
 		
-		addFacet(DESIGN_VIEW_PAGE_FACET, pageNotice);
+		component.add(pageNotice);
 		
-		WFDivision emptyForm = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
-		emptyForm.setId("emptyForm");
-		emptyForm.setStyle("display: none;");
-		
-		HtmlOutputText emptyFormHeader = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		emptyFormHeader.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['labels_empty_form_header']}"));
-		addChild(emptyFormHeader, emptyForm);
-		
-		HtmlTag br2 = (HtmlTag) application.createComponent(HtmlTag.COMPONENT_TYPE);
-		br2.setValue("br");
-		addChild(br2, emptyForm);
-		
-		HtmlOutputText emptyFormBody = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		emptyFormBody.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['labels_empty_form_body']}"));
-		addChild(emptyFormBody, emptyForm);
-		
-		addFacet(DESIGN_VIEW_EMPTY_FACET, emptyForm);
-	}
-	
-	public void encodeBegin(FacesContext context) throws IOException {
-		Application application = context.getApplication();
-		getChildren().clear();
-		
-		ResponseWriter writer = context.getResponseWriter();
-		super.encodeBegin(context);
-		
-		ValueBinding vb;
+		Layer dropBoxInner = new Layer(Layer.DIV);
+		dropBoxInner.setId("dropBoxinner");
+		dropBoxInner.setStyleClass(getStyleClass() + "inner");
 		
 		FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
 		Page page = formPage.getPage();
 		if(page != null) {
-			String selectedComponentId = null;
-			Component selectedComponent = ((FormComponent) WFUtil.getBeanInstance("formComponent")).getComponent();
-			if(selectedComponent != null) {
-				selectedComponentId = selectedComponent.getId();
-			}
-			//ButtonArea barea = page.getButtonArea();
-			//if(barea != null) {
-				FBButtonArea area = (FBButtonArea) application.createComponent(FBButtonArea.COMPONENT_TYPE);
-				area.setId("pageButtonArea");
-				area.setStyleClass(componentStyleClass);
-				area.setComponentStyleClass("formButton");
-				addFacet(BUTTON_AREA_FACET, area);
-			//}
-			if(page != null) {
+			if(page instanceof PageThankYou || (formDocument.getOverviewPage() != null && page.getId().equals(formDocument.getOverviewPage().getId()))) {
+				Layer noFormNotice = new Layer(Layer.DIV);
+				noFormNotice.setId("noFormNotice");
+				
+				Text noFormNoticeHeader = new Text(_("labels_noform_header"));
+				noFormNotice.add(noFormNoticeHeader);
+				
+				Paragraph noFormNoticeBody = new Paragraph();
+				noFormNoticeBody.add(_("labels_noform_body"));
+				noFormNotice.add(noFormNoticeBody);
+				
+				component.add(noFormNotice);
+			} else {
 				List<String> ids = page.getContainedComponentsIdList();
-				Iterator it = ids.iterator();
-				while(it.hasNext()) {
-					String nextId = (String) it.next();
-					Component comp = page.getComponent(nextId);
-					if(comp instanceof Container) {
-						continue;
-					} else {
-						FBFormComponent formComponent = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
-						formComponent.setId(nextId);
-//						if(nextId.equals(selectedComponentId)) {
-//							formComponent.setStyleClass(getSelectedStyleClass());
-//						} else {
-							formComponent.setStyleClass(getComponentStyleClass());
-//						}
-						formComponent.setOnLoad("loadComponentInfo(this);");
-						formComponent.setOnDelete("removeComponent(this);");
-						formComponent.setSpeedButtonStyleClass("speedButton");
-					    add(formComponent);
+				if(ids.isEmpty()) {
+					Layer emptyForm = new Layer(Layer.DIV);
+					emptyForm.setId("emptyForm");
+					emptyForm.setStyleAttribute("display: none;");
+					
+					Text emptyFormHeader = new Text(_("labels_empty_form_header"));
+					emptyForm.add(emptyFormHeader);
+					
+					Paragraph emptyFormBody = new Paragraph();
+					emptyFormBody.add(_("labels_empty_form_body"));
+					emptyForm.add(emptyFormBody);
+					
+					component.add(emptyForm);
+				} else {
+					for(Iterator it = ids.iterator(); it.hasNext(); ) {
+						String nextId = (String) it.next();
+						Component comp = page.getComponent(nextId);
+						if(comp instanceof Container) {
+							continue;
+						} else {
+							FBFormComponent formComponent = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
+							formComponent.setId(nextId);
+							formComponent.setStyleClass(componentStyleClass);
+							formComponent.setOnLoad("loadComponentInfo(this);");
+							formComponent.setOnDelete("removeComponent(this);");
+							formComponent.setSpeedButtonStyleClass("speedButton");
+							dropBoxInner.add(formComponent);
+						}
 					}
 				}
 			}
 		}
-
-		writer.startElement("DIV", this);
-		writer.writeAttribute("id", getId(), "id");
-		writer.writeAttribute("class", getStyleClass(), "styleClass");
 		
-		vb = getValueBinding("status");
-		if(vb != null) {
-			status = (String) vb.getValue(context);
-		}
-		if(status != null) {
-			UIComponent formHeader = getFacet(DESIGN_VIEW_HEADER_FACET);
-			if (formHeader != null) {
-				renderChild(context, formHeader);
-			}
-			UIComponent pageHeader = getFacet(DESIGN_VIEW_PAGE_FACET);
-			if (pageHeader != null) {
-				renderChild(context, pageHeader);
-			}
-			WFDivision noFormNotice = (WFDivision) getFacet(DESIGN_VIEW_SPECIAL_FACET);
-			WFDivision emptyNotice = (WFDivision) getFacet(DESIGN_VIEW_EMPTY_FACET);
-			if(noFormNotice != null && emptyNotice != null) {
-				if(formPage.isSpecial()) {
-					noFormNotice.setStyle("display: block;");
-					emptyNotice.setStyle("display: none;");
-				} else if(page.getContainedComponentsIdList().size() == 0) {
-					emptyNotice.setStyle("display: block;");
-					noFormNotice.setStyle("display: none;");
-				} else {
-					noFormNotice.setStyle("display: none;");
-					emptyNotice.setStyle("display: none;");
-				}
-				renderChild(context, noFormNotice);
-				renderChild(context, emptyNotice);
-			}
-		}
-		writer.startElement("DIV", null);
-		writer.writeAttribute("id", getId() + "inner", null);
-		writer.writeAttribute("class", getStyleClass() + "inner", null);
-	}
-	
-	public void encodeEnd(FacesContext context) throws IOException {
-		ResponseWriter writer = context.getResponseWriter();
-		super.encodeEnd(context);
-		writer.endElement("DIV");
+		component.add(dropBoxInner);
 		
-		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
 		if(page != null) {
-			UIComponent buttonArea = getFacet(BUTTON_AREA_FACET);
-			if (buttonArea != null) {
-				renderChild(context, buttonArea);
-			}
+			FBButtonArea area = (FBButtonArea) application.createComponent(FBButtonArea.COMPONENT_TYPE);
+			area.setId("pageButtonArea");
+			area.setStyleClass(componentStyleClass);
+			area.setComponentStyleClass("formButton");
+			component.add(area);
 		}
 		
-		writer.endElement("DIV");
-		Object values[] = new Object[3];
-		values[0] = getId();
-		values[1] = componentStyleClass;
-		values[2] = getId() + "inner";
-		writer.write(getEmbededJavascript(values));
+		Script script = new Script("JavaScript");
+		script.addScriptLine("setupComponentDragAndDrop('dropBox','lalala')");
+		component.add(script);
+		
+		add(component);
 	}
 	
 	public void encodeChildren(FacesContext context) throws IOException {
 		if (!isRendered()) {
 			return;
 		}
-		Iterator it = getChildren().iterator();
-		while(it.hasNext()) {
-			UIComponent current = (UIComponent) it.next();
-			renderChild(context, current);
+		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
+			RenderUtils.renderChild(context, (UIComponent) it.next());
 		}
 	}
 	
@@ -249,14 +175,6 @@ public class FBDesignView extends FBComponentBase {
 		super.restoreState(context, values[0]);
 		componentStyleClass = (String) values[1];
 		status = (String) values[2];
-	}
-	
-	private String getEmbededJavascript(Object values[]) {
-		StringBuilder result = new StringBuilder();
-		result.append("<script language=\"JavaScript\">\n");
-		result.append("setupComponentDragAndDrop('" + values[0] + "','" + values[1] + "');\n");
-		result.append("</script>\n");
-		return 	result.toString();
 	}
 	
 	public String getStatus() {

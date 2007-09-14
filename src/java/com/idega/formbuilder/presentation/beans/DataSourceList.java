@@ -14,6 +14,7 @@ import javax.faces.model.SelectItem;
 import com.idega.documentmanager.business.form.PropertiesSelect;
 import com.idega.formbuilder.IWBundleStarter;
 import com.idega.idegaweb.BundleLocalizationMap;
+import com.idega.presentation.ui.SelectOption;
 import com.idega.util.config.Config;
 import com.idega.util.config.ConfigException;
 import com.idega.util.config.ConfigFactory;
@@ -29,7 +30,7 @@ public class DataSourceList implements Serializable {
 	public static String externalDataSrc = new Integer(PropertiesSelect.EXTERNAL_DATA_SRC).toString();
 	
 	private List<SelectItem> sources = new ArrayList<SelectItem>();
-	private List<SelectItem> ext_data_sources;
+	private List<SelectOption> ext_data_sources;
 
 	public DataSourceList() {
 		sources.clear();
@@ -45,12 +46,12 @@ public class DataSourceList implements Serializable {
 		this.sources = sources;
 	}
 	
-	public List<SelectItem> getExternalDataSources() {
+	public List<SelectOption> getExternalDataSources() {
 	
 		if(ext_data_sources == null) {
 			
-			ext_data_sources = new ArrayList<SelectItem>();
-			ext_data_sources.add(new SelectItem("", "Choose"));
+			ext_data_sources = new ArrayList<SelectOption>();
+			ext_data_sources.add(new SelectOption("", "Choose"));
 			
 			try {
 				Map loc_strings = (BundleLocalizationMap) ((HashMap) WFUtil.getBeanInstance("localizedStrings")).get(IWBundleStarter.IW_BUNDLE_IDENTIFIER);
@@ -62,7 +63,7 @@ public class DataSourceList implements Serializable {
 					
 					for (Iterator<String> iter = props.keySet().iterator(); iter.hasNext();) {
 						String src_key = iter.next();
-						ext_data_sources.add(new SelectItem(props.get(src_key), (String)loc_strings.get(src_key+".label")));
+						ext_data_sources.add(new SelectOption(props.get(src_key), (String)loc_strings.get(src_key+".label")));
 					}
 				}
 				

@@ -1,6 +1,7 @@
 package com.idega.formbuilder.presentation.components;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -12,7 +13,10 @@ import org.apache.commons.logging.LogFactory;
 import com.idega.block.form.presentation.FormViewer;
 import com.idega.documentmanager.business.form.Document;
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.view.ActionManager;
+import com.idega.util.RenderUtils;
+import com.idega.webface.WFUtil;
 
 /**
  * 
@@ -31,13 +35,10 @@ public class FBFormPreview extends FBComponentBase {
 	public void encodeBegin(FacesContext ctx) throws IOException {
 		super.encodeBegin(ctx);
 		ResponseWriter writer = ctx.getResponseWriter();
-//		super.encodeBegin(ctx);
-//		
 		writer.startElement(container_tag, this);
 		writer.writeAttribute("id", getId(), null);
 	}
 	
-	@Override
 	public void encodeEnd(FacesContext ctx) throws IOException {
 		ResponseWriter writer = ctx.getResponseWriter();
 //		
@@ -65,10 +66,7 @@ public class FBFormPreview extends FBComponentBase {
 		super.encodeEnd(ctx);
 	}
 	
-	@Override
 	protected void initializeComponent(FacesContext context) {
-		super.initializeComponent(context);
-		
 		Document xforms_document = ActionManager.getCurrentInstance().getDocumentManagerInstance().getCurrentDocument();
 		if(xforms_document == null) {
 			logger.error("Form document got form ActionManager was null");
@@ -76,20 +74,15 @@ public class FBFormPreview extends FBComponentBase {
 		}
 			
 		FormViewer form_viewer = new FormViewer();
+		form_viewer.setFormId(((FormDocument) WFUtil.getBeanInstance("formDocument")).getFormId());
 		form_viewer.setXFormsDocument((org.w3c.dom.Document)xforms_document.getXformsDocument().cloneNode(true));
-		addFacet(FORM_VIEWER, form_viewer);
+		
+		add(form_viewer);
 	}
 	
-	@Override
 	public void encodeChildren(FacesContext context) throws IOException {
-		super.encodeChildren(context);
-		
-		UIComponent form_viewer = getFacet(FORM_VIEWER);
-		
-		if(form_viewer != null) {
-			
-			form_viewer.setRendered(true);
-			renderChild(context, form_viewer);
+		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
+			RenderUtils.renderChild(context, (UIComponent) it.next());
 		}
 	}
 }

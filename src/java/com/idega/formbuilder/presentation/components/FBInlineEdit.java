@@ -55,13 +55,10 @@ public class FBInlineEdit extends FBComponentBase {
 			value = (String) vb.getValue(context);
 		}
 		
+		
 		writer.startElement("span", this);
 		writer.writeAttribute("id", getId(), null);
 		writer.writeAttribute("class", getStyleClass(), null);
-		writer.writeAttribute("ondblclick", "enableInlineEdit(this.id, " + onBlur + ", " + onReturn + ");", null);
-		if(!"".equals(onSelect)) {
-			writer.writeAttribute("onclick", onSelect, null);
-		}
 		if(value != null) {
 			writer.writeText(value, null);
 		}

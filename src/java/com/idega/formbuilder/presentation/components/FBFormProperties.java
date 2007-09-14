@@ -1,105 +1,125 @@
 package com.idega.formbuilder.presentation.components;
 
 import java.io.IOException;
+import java.util.Iterator;
 
-import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
-import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 
-import org.apache.myfaces.component.html.ext.HtmlInputTextarea;
-import org.apache.myfaces.component.html.ext.HtmlOutputLabel;
-import org.apache.myfaces.component.html.ext.HtmlSelectBooleanCheckbox;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
+import com.idega.documentmanager.business.form.Document;
+import com.idega.documentmanager.business.form.PageThankYou;
+import com.idega.documentmanager.business.form.manager.FormManager;
 import com.idega.formbuilder.presentation.FBComponentBase;
-import com.idega.webface.WFDivision;
+import com.idega.formbuilder.presentation.beans.FormDocument;
+import com.idega.formbuilder.util.FBConstants;
+import com.idega.presentation.Layer;
+import com.idega.presentation.text.Text;
+import com.idega.presentation.ui.CheckBox;
+import com.idega.presentation.ui.TextArea;
+import com.idega.presentation.ui.TextInput;
+import com.idega.util.CoreUtil;
+import com.idega.util.RenderUtils;
+import com.idega.webface.WFUtil;
 
 public class FBFormProperties extends FBComponentBase {
 	
+	private static Log logger = LogFactory.getLog(FormManager.class);
+	
 	public static final String COMPONENT_TYPE = "FormProperties";
 	
-	private static final String CONTENT_FACET = "CONTENT_FACET";
 	private static final String PROPERTIES_PANEL_SECTION_STYLE = "fbPropertiesPanelSection";
-	private static final String SINGLE_LINE_PROPERTY = "fbSingleLineProperty";
-	private static final String TWO_LINE_PROPERTY = "fbTwoLineProperty";
 	
 	public FBFormProperties() {
 		super();
 		setRendererType(null);
 	}
 	
-	private WFDivision createPropertyContainer(String styleClass, Application application) {
-		WFDivision body = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+	private Layer createPropertyContainer(String styleClass) {
+		Layer body = new Layer(Layer.DIV);
 		body.setStyleClass(styleClass);
-		
 		return body;
 	}
 	
-	private UIComponent createFormProperties(Application application) {
-		WFDivision body = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
-		body.setId(getId());
+	private Layer createPanelSection(String id) {
+		Layer body = new Layer(Layer.DIV);
+		body.setId(id);
 		body.setStyleClass(PROPERTIES_PANEL_SECTION_STYLE);
+		return body;
+	}
+	
+	protected void initializeComponent(FacesContext context) {
+		getChildren().clear();
 		
-		WFDivision line = createPropertyContainer(TWO_LINE_PROPERTY, application);
+		Layer body = createPanelSection("formPropertiesPanel");
+		Layer line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
 		
-		HtmlOutputLabel titleLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-		titleLabel.setValue("Form title");
+		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
+		Document document = formDocument.getDocument();
 		
-		HtmlInputText title = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+		try {
+			if(document == null) {
+				String formId = (String) CoreUtil.getIWContext().getExternalContext().getSessionMap().get(FBConstants.FORM_DOCUMENT_ID);
+				document = formDocument.initializeBeanInstance(formId);
+			}
+		} catch(Exception e) {
+			logger.error("Exception while initializing fresh instance of XForms document");
+			throw new IllegalStateException();
+		}
+		
+		TextInput title = new TextInput("formTitle", formDocument.getFormTitle());
 		title.setId("formTitle");
-		title.setValueBinding("value", application.createValueBinding("#{formDocument.formTitle}"));
-		title.setOnblur("saveFormTitle(this.value)");
-		title.setOnkeydown("savePropertyOnEnter(this.value,'formTitle',event);");
+		title.setOnBlur("saveFormTitle(this.value)");
+		title.setOnKeyDown("savePropertyOnEnter(this.value,'formTitle',event);");
 		
-		line.add(titleLabel);
+		line.add(new Text("Form title"));
 		line.add(title);
 		body.add(line);
 		
-		line = createPropertyContainer(SINGLE_LINE_PROPERTY, application);
+		line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
 		
-		HtmlOutputLabel previewLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-		previewLabel.setValue("Form contains preview");
-		
-		HtmlSelectBooleanCheckbox preview = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
+		CheckBox preview = new CheckBox();
 		preview.setId("previewScreen");
-		preview.setValueBinding("value", application.createValueBinding("#{formDocument.hasPreview}"));
-		preview.setOnchange("saveHasPreview(this);");
+		preview.setChecked(formDocument.isHasPreview());
+		preview.setOnChange("saveHasPreview(this);");
 		
-		line.add(previewLabel);
+		line.add(new Text("Form contains preview"));
 		line.add(preview);
 		body.add(line);
 		
-		line = createPropertyContainer(TWO_LINE_PROPERTY, application);
+		line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
 		
-		HtmlOutputLabel thankYouTitleLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-		thankYouTitleLabel.setValue("Thank you title");
+		PageThankYou submitPage = formDocument.getSubmitPage();
+		String submitPageTitle = null;
+		String submitPageText = null;
+		if(submitPage != null) {
+			submitPageTitle = formDocument.getThankYouTitle();
+			submitPageText = formDocument.getThankYouText();
+		}
 		
-		HtmlInputText thankYouTitle = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+		TextInput thankYouTitle = new TextInput("thankYouTitle", submitPageTitle);
 		thankYouTitle.setId("thankYouTitle");
-		thankYouTitle.setValueBinding("value", application.createValueBinding("#{formDocument.thankYouTitle}"));
-		thankYouTitle.setOnblur("saveThankYouTitle(this.value)");
-		thankYouTitle.setOnkeydown("savePropertyOnEnter(this.value,'formThxTitle',event);");
+		thankYouTitle.setOnBlur("saveThankYouTitle(this.value)");
+		thankYouTitle.setOnKeyDown("savePropertyOnEnter(this.value,'formThxTitle',event);");
 		
-		line.add(thankYouTitleLabel);
+		line.add(new Text("Thank you title"));
 		line.add(thankYouTitle);
 		body.add(line);
 		
-		line = createPropertyContainer(TWO_LINE_PROPERTY, application);
+		line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
 		
-		HtmlOutputLabel thankYouTextLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-		thankYouTextLabel.setValue("Thank You Text");
-		
-		HtmlInputTextarea thankYouText = (HtmlInputTextarea) application.createComponent(HtmlInputTextarea.COMPONENT_TYPE);
+		TextArea thankYouText = new TextArea("thankYouText", submitPageText);
 		thankYouText.setId("thankYouText");
-		thankYouText.setValueBinding("value", application.createValueBinding("#{formDocument.thankYouText}"));
-		thankYouText.setOnblur("saveThankYouText(this.value)");
-		thankYouText.setOnkeydown("savePropertyOnEnter(this.value,'formThxText',event);");
+		thankYouText.setOnBlur("saveThankYouText(this.value)");
+		thankYouText.setOnKeyDown("savePropertyOnEnter(this.value,'formThxText',event);");
 		
-		line.add(thankYouTextLabel);
+		line.add(new Text("Thank You Text"));
 		line.add(thankYouText);
 		body.add(line);
 		
-//		line = createPropertyContainer(SINGLE_LINE_PROPERTY, application);
+//		line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
 //		
 //		HtmlOutputLabel showFormStepsLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 //		showFormStepsLabel.setValue("Enable section visualization");
@@ -113,25 +133,12 @@ public class FBFormProperties extends FBComponentBase {
 //		line.add(showFormStepsChbx);
 //		body.add(line);
 		
-		return body;
-	}
-	
-	protected void initializeComponent(FacesContext context) {
-		Application application = context.getApplication();
-		getChildren().clear();
-		addFacet(CONTENT_FACET, createFormProperties(application));
+		add(body);
 	}
 	
 	public void encodeChildren(FacesContext context) throws IOException {
-		Application application = context.getApplication();
-		if (!isRendered()) {
-			return;
+		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
+			RenderUtils.renderChild(context, (UIComponent) it.next());
 		}
-		WFDivision body = (WFDivision) getFacet(CONTENT_FACET);
-		if(body == null) {
-			body = (WFDivision) createFormProperties(application);
-		}
-		renderChild(context, body);
 	}
-	
 }

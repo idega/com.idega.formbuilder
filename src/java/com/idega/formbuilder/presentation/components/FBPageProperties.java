@@ -4,16 +4,15 @@ import java.io.IOException;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
-import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
-
-import org.apache.myfaces.component.html.ext.HtmlOutputText;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.presentation.Table2;
 import com.idega.presentation.TableCell2;
 import com.idega.presentation.TableRow;
 import com.idega.presentation.TableRowGroup;
+import com.idega.presentation.text.Text;
+import com.idega.presentation.ui.TextInput;
 
 public class FBPageProperties extends FBComponentBase {
 	
@@ -36,19 +35,21 @@ public static final String COMPONENT_TYPE = "PageProperties";
 		TableRow row = null;
 		TableCell2 cell = null;
 		
-		HtmlOutputText titleLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		titleLabel.setValue("Section title");
+//		Text titleLabel = ;
+//		HtmlOutputText titleLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+//		titleLabel.setValue("Section title");
 		
 		row = group.createRow();
 		cell = row.createCell();
 		cell.setWidth("100");
-		cell.add(titleLabel);
+		cell.add(new Text("Section title"));
 		
-		HtmlInputText title = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+		TextInput title = new TextInput();
+//		HtmlInputText title = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		title.setId("pageTitle");
 		title.setValueBinding("value", application.createValueBinding("#{formPage.title}"));
-		title.setOnblur("savePageTitle(this.value);");
-		title.setOnkeydown("savePropertyOnEnter(this.value,'pageTitle',event);");
+		title.setOnBlur("savePageTitle(this.value);");
+		title.setOnKeyDown("savePropertyOnEnter(this.value,'pageTitle',event);");
 		
 		cell = row.createCell();
 		cell.add(title);

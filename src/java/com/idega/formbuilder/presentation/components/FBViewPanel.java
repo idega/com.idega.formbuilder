@@ -8,9 +8,7 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
-import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.webface.WFTabbedPane;
-import com.idega.webface.WFUtil;
 
 public class FBViewPanel extends FBComponentBase {
 	
@@ -42,7 +40,7 @@ public class FBViewPanel extends FBComponentBase {
 		tabbedPane.setDeselectedMenuItemStyleClass("inactiveTab");
 		
 		FBDesignView designView = (FBDesignView) application.createComponent(FBDesignView.COMPONENT_TYPE);
-		designView.setId("dropBox");
+		designView.setId("designView");
 		designView.setStyleClass("dropBox");
 		designView.setComponentStyleClass("formElement");
 		designView.setSelectedStyleClass("formElement selectedElement");
@@ -55,9 +53,12 @@ public class FBViewPanel extends FBComponentBase {
 		FBFormPreview previewView = (FBFormPreview) application.createComponent(FBFormPreview.COMPONENT_TYPE);
 		previewView.setId("previewView");
 		
-		tabbedPane.addTab("tab1", _("view_design"), designView);
-		tabbedPane.addTab("tab2", _("view_preview"), previewView);
-		tabbedPane.addTab("tab3", _("view_source"), sourceView);
+		FBProcessEditor workflowView = (FBProcessEditor) application.createComponent(FBProcessEditor.COMPONENT_TYPE);
+		
+		tabbedPane.addTab("tab1", "Design", designView);
+		tabbedPane.addTab("tab2", "Preview", previewView);
+		tabbedPane.addTab("tab3", "Source", sourceView);
+		tabbedPane.addTab("tab4", "Workflow", workflowView);
 		tabbedPane.setSelectedMenuItemId("tab1");
 		
 		addFacet(SWITCHER_FACET, tabbedPane);
@@ -72,7 +73,7 @@ public class FBViewPanel extends FBComponentBase {
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
-		((Workspace)WFUtil.getBeanInstance("workspace")).isPagesPanelVisible();
+//		((Workspace)WFUtil.getBeanInstance("workspace")).isPagesPanelVisible();
 		
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeBegin(context);
@@ -85,7 +86,8 @@ public class FBViewPanel extends FBComponentBase {
 		if(vb != null) {
 			view = (String) vb.getValue(context);
 		}
-		renderChild(context, getFacet(SWITCHER_FACET));
+		WFTabbedPane tabbedPane = (WFTabbedPane) getFacet(SWITCHER_FACET);
+		renderChild(context, tabbedPane);
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {

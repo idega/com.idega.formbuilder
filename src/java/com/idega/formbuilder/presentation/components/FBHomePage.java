@@ -34,12 +34,12 @@ public class FBHomePage extends FBComponentBase {
 	private static final String GREETING_BLOCK_FACET = "GREETING_BLOCK_FACET";
 	private static final String FORM_LIST_FACET = "FORM_LIST_FACET";
 	
-	private static final String HOMEPAGE_JS = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/homepage.js";
-	private static final String DWR_ENGINE_JS = "/dwr/engine.js";
-	private static final String DWR_FORM_DOCUMENT_JS = "/dwr/interface/FormDocument.js";
-	private static final String FORMS_HOME_CSS = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formshome.css";
-	private static final String ARROW_UP_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow-up.gif";
-	private static final String ARROW_DOWN_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow-down.gif";
+	private static final String HOMEPAGE_JS = "//idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/homepage.js";
+	private static final String DWR_ENGINE_JS = "//dwr/engine.js";
+	private static final String DWR_FORM_DOCUMENT_JS = "//dwr/interface/FormDocument.js";
+	private static final String FORMS_HOME_CSS = "//idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formshome.css";
+	private static final String ARROW_UP_IMG = "//idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow-up.gif";
+	private static final String ARROW_DOWN_IMG = "//idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow-down.gif";
 	
 	public FBHomePage() {
 		super();
@@ -100,12 +100,12 @@ public class FBHomePage extends FBComponentBase {
 		String mootoolsURI = business.getBundleURIToMootoolsLib(true);
 			
 		AddResource resourceAdder = AddResourceFactory.getInstance(context);
-		resourceAdder.addStyleSheet(context, AddResource.HEADER_BEGIN, FORMS_HOME_CSS);
-		resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, mootoolsURI);
-		resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, transcornersURI);
-		resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, DWR_ENGINE_JS);
-		resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, DWR_FORM_DOCUMENT_JS);
-		resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, HOMEPAGE_JS);
+//		resourceAdder.addStyleSheet(context, AddResource.HEADER_BEGIN, FORMS_HOME_CSS);
+//		resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, mootoolsURI);
+//		resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, transcornersURI);
+//		resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, DWR_ENGINE_JS);
+//		resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, DWR_FORM_DOCUMENT_JS);
+//		resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, HOMEPAGE_JS);
 		
 		Application application = context.getApplication();
 		ResponseWriter writer = context.getResponseWriter();

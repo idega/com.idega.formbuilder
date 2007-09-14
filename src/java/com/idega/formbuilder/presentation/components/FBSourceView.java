@@ -5,11 +5,17 @@ import java.io.IOException;
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+
 import org.apache.myfaces.component.html.ext.HtmlCommandButton;
 import org.apache.myfaces.component.html.ext.HtmlInputTextarea;
+import org.apache.myfaces.renderkit.html.util.AddResource;
+import org.apache.myfaces.renderkit.html.util.AddResourceFactory;
 
+import com.idega.block.web2.business.Web2Business;
+import com.idega.business.SpringBeanLookup;
 import com.idega.formbuilder.presentation.FBComponentBase;
-import com.idega.webface.WFDivision;
+import com.idega.presentation.Layer;
+import com.idega.util.CoreUtil;
 
 public class FBSourceView extends FBComponentBase {
 	
@@ -28,9 +34,9 @@ public class FBSourceView extends FBComponentBase {
 	
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
-		this.getChildren().clear();
+		getChildren().clear();
 		
-		WFDivision content = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		Layer content = new Layer(Layer.DIV);
 		content.setStyleClass(styleClass);
 		content.setId(id + "Div");
 		
@@ -39,20 +45,24 @@ public class FBSourceView extends FBComponentBase {
 		textarea.setValueBinding("value", application.createValueBinding("#{formDocument.sourceCode}"));
 		textarea.setWrap("false");
 		textarea.setId("sourceTextarea");
+		textarea.setStyleClass("codepress html linenumbers-on");
 		
 		HtmlCommandButton srcSubmit = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
 		srcSubmit.setId("saveSrcBtn");
 		srcSubmit.setOnclick("saveSourceCode($('"+textarea.getClientId(context)+"').value); return false;");
 		srcSubmit.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['change_source_code']}"));
 		
-		addChild(textarea, content);
-		addChild(srcSubmit, content);
+		content.add(textarea);
+		content.add(srcSubmit);
 		
 		addFacet(CONTENT_DIV_FACET, content);
-		
 	}
 	
 	public void encodeChildren(FacesContext context) throws IOException {
+		Web2Business web2 = (Web2Business) SpringBeanLookup.getInstance().getSpringBean(CoreUtil.getIWContext(), Web2Business.class);
+		AddResource resourceAdder = AddResourceFactory.getInstance(context);
+		resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, web2.getCodePressScriptFilePath());
+		
 		if (!this.isRendered()) {
 			return;
 		}

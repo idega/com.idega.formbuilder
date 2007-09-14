@@ -10,7 +10,6 @@ import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
-import com.idega.webface.WFToolbarButton;
 
 public class FBFormListItem extends FBComponentBase {
 	
@@ -48,7 +47,7 @@ public class FBFormListItem extends FBComponentBase {
 		body.setStyleClass(getStyleClass());
 		body.setId("Item" + getId());
 		
-		String formName = WFToolbarButton.determineFormName(this);
+//		String formName = WFToolbarButton.determineFormName(this);
 		
 		Layer bodyTop = new Layer(Layer.DIV);
 		bodyTop.setStyleClass("formListItemTop");

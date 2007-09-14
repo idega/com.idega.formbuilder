@@ -1,21 +1,20 @@
 package com.idega.formbuilder.presentation.components;
 
 import java.io.IOException;
+import java.util.Iterator;
 
-import javax.faces.application.Application;
-import javax.faces.component.html.HtmlGraphicImage;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
-import org.apache.myfaces.component.html.ext.HtmlOutputText;
-
 import com.idega.formbuilder.presentation.FBComponentBase;
-import com.idega.webface.WFDivision;
+import com.idega.presentation.Image;
+import com.idega.presentation.Layer;
+import com.idega.presentation.text.Text;
+import com.idega.util.RenderUtils;
 
 public class FBFormPage extends FBComponentBase {
 	
 	public static final String COMPONENT_TYPE = "FormPage";
-	
-	private static final String CONTENT_DIV_FACET = "CONTENT_DIV_FACET";
 	
 	private static final String PAGE_ICON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/document-new.png";
 	private static final String DELETE_ICON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png";
@@ -64,49 +63,43 @@ public class FBFormPage extends FBComponentBase {
 	}
 	
 	protected void initializeComponent(FacesContext context) {
-		Application application = context.getApplication();
 		getChildren().clear();
 		
-		WFDivision switcher = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
-		switcher.setId(getId() + "_page");
-		switcher.setStyleClass(getStyleClass());
-		switcher.setOnclick(onLoad);
+		Layer pageLayer = new Layer(Layer.DIV);
+		pageLayer.setId(getId() + "_page");
+		pageLayer.setStyleClass(getStyleClass());
+		pageLayer.setOnClick(onLoad);
 		
-		HtmlGraphicImage pageIconImg = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+		Image pageIconImg = new Image();
 		pageIconImg.setId(getId() + "_pi");
-		pageIconImg.setValue(PAGE_ICON_IMG);
+		pageIconImg.setSrc(PAGE_ICON_IMG);
 		pageIconImg.setStyleClass("pageIconIcon");
 		
-		HtmlOutputText pageIconLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		pageIconLabel.setValue(label);
+		Text pageIconLabel = new Text(label);
 		pageIconLabel.setStyleClass("pageIconLabel");
 		
-		addChild(pageIconImg, switcher);
-		addChild(pageIconLabel, switcher);
+		pageLayer.add(pageIconImg);
+		pageLayer.add(pageIconLabel);
 		
 		if(!"".equals(onDelete)) {
-			HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+			Image deleteButton = new Image();
 			deleteButton.setId(getId() + "_db");
-			deleteButton.setValue(DELETE_ICON_IMG);
-			deleteButton.setOnclick(onDelete);
+			deleteButton.setSrc(DELETE_ICON_IMG);
+			deleteButton.setOnClick(onDelete);
 			deleteButton.setStyleClass("speedButton");
-			addChild(deleteButton, switcher);
+			pageLayer.add(deleteButton);
 		}
-		addFacet(CONTENT_DIV_FACET, switcher);
+		add(pageLayer);
 	}
 	
 	public void encodeChildren(FacesContext context) throws IOException {
-		if(!isRendered()) {
-			return;
+		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
+			RenderUtils.renderChild(context, (UIComponent) it.next());
 		}
-		WFDivision content = (WFDivision) getFacet(CONTENT_DIV_FACET);
-		if(content != null) {
-			if(isActive()) {
-				content.setStyleClass(activeStyleClass);
-				content.getChildren().remove(2);
-			}
-			renderChild(context, content);
-		}
+//			if(isActive()) {
+//				content.setStyleClass(activeStyleClass);
+//				content.getChildren().remove(2);
+//			}
 	}
 	
 	public String getLabel() {

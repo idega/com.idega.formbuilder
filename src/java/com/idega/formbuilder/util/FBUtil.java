@@ -1,15 +1,18 @@
 package com.idega.formbuilder.util;
 
 import java.util.Date;
+import java.util.Locale;
 
 import javax.faces.context.FacesContext;
 
 import com.idega.formbuilder.IWBundleStarter;
+import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.slide.business.IWSlideServiceBean;
+import com.idega.webface.WFUtil;
 
 /**
  * <p>
@@ -64,5 +67,14 @@ public class FBUtil {
 			webdav_server_url = new IWSlideServiceBean().getWebdavServerURL().toString();
 		
 		return webdav_server_url;
+	}
+
+	public static Locale getUILocale() {
+		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
+		Locale locale = workspace.getLocale();
+		if(locale == null) {
+			locale = new Locale(FBConstants.FORMBUILDER_DEFAULT_LOCALE);
+		}
+		return locale;
 	}
 }

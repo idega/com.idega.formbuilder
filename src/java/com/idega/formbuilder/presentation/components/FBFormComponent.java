@@ -3,12 +3,12 @@ package com.idega.formbuilder.presentation.components;
 import java.io.IOException;
 import java.util.Locale;
 
-import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-import org.apache.myfaces.component.html.ext.HtmlGraphicImage;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Element;
 
 import com.idega.documentmanager.business.form.Component;
@@ -17,9 +17,12 @@ import com.idega.formbuilder.dom.DOMTransformer;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormPage;
 import com.idega.formbuilder.presentation.beans.Workspace;
+import com.idega.presentation.Image;
 import com.idega.webface.WFUtil;
 
 public class FBFormComponent extends FBComponentBase {
+	
+	private static Log logger = LogFactory.getLog(FBFormComponent.class);
 	
 	public static final String COMPONENT_TYPE = "FormComponent";
 	
@@ -53,8 +56,15 @@ public class FBFormComponent extends FBComponentBase {
 		setRendererType(null);
 	}
 	
+	public FBFormComponent(String componentId) {
+		super();
+		setRendererType(null);
+		setId(componentId);
+		setStyleClass("formElement");
+		this.speedButtonStyleClass = "speedButton";
+	}
+	
 	protected void initializeComponent(FacesContext context) {
-		Application application = context.getApplication();
 		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
 		if(page != null) {
 			Component component = page.getComponent(getId());
@@ -67,16 +77,16 @@ public class FBFormComponent extends FBComponentBase {
 						element.removeAttribute("id");
 						setElement(element);
 						
-						HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+						Image deleteButton = new Image();
 						deleteButton.setId("db" + getId());
-						deleteButton.setValue(DELETE_BUTTON_ICON);
-						deleteButton.setOnclick(onDelete);
+						deleteButton.setSrc(DELETE_BUTTON_ICON);
+						deleteButton.setOnClick(onDelete);
 						deleteButton.setStyleClass(speedButtonStyleClass);
 						
 						addFacet(DELETE_BUTTON_FACET, deleteButton);
 					}
 				} catch(Exception e) {
-					e.printStackTrace();
+					logger.error("Could not get HTML representation of component: " + getId(), e);
 				}
 			}
 		}
@@ -141,6 +151,6 @@ public class FBFormComponent extends FBComponentBase {
 
 	public void setSpeedButtonStyleClass(String speedButtonStyleClass) {
 		this.speedButtonStyleClass = speedButtonStyleClass;
-	}
+	}   
 
 }

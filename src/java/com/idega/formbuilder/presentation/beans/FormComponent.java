@@ -5,9 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.w3c.dom.Element;
+import org.jdom.Document;
 import org.w3c.dom.Node;
 
+import com.idega.builder.business.BuilderLogic;
 import com.idega.documentmanager.business.form.Button;
 import com.idega.documentmanager.business.form.ButtonArea;
 import com.idega.documentmanager.business.form.Component;
@@ -15,116 +16,145 @@ import com.idega.documentmanager.business.form.ComponentPlain;
 import com.idega.documentmanager.business.form.ComponentSelect;
 import com.idega.documentmanager.business.form.ConstButtonType;
 import com.idega.documentmanager.business.form.Page;
-import com.idega.documentmanager.business.form.PropertiesComponent;
-import com.idega.documentmanager.business.form.PropertiesPlain;
-import com.idega.documentmanager.business.form.PropertiesSelect;
-import com.idega.documentmanager.business.form.beans.ILocalizedItemset;
 import com.idega.documentmanager.business.form.beans.ItemBean;
 import com.idega.documentmanager.business.form.beans.LocalizedStringBean;
-import com.idega.formbuilder.presentation.converters.FormButtonInfo;
-import com.idega.formbuilder.presentation.converters.FormComponentInfo;
+import com.idega.formbuilder.presentation.components.FBButton;
+import com.idega.formbuilder.presentation.components.FBComponentPropertiesPanel;
+import com.idega.formbuilder.presentation.components.FBFormComponent;
 import com.idega.formbuilder.presentation.converters.PaletteComponentInfo;
+import com.idega.formbuilder.util.FBConstants;
+import com.idega.formbuilder.util.FBUtil;
+import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
 
 public class FormComponent implements Serializable {
 	
 	private static final long serialVersionUID = -1462694198346788168L;
 	
-	private PropertiesComponent properties;
-	private PropertiesSelect propertiesSelect;
-	private PropertiesPlain propertiesPlain;
-	
 	private Component component;
 	private ComponentSelect selectComponent;
 	private ComponentPlain plainComponent;
-	
 	private String id;
 	
-	private boolean required;
 	private boolean autofill;
 	private boolean button;
-	private String label;
-	private String errorMessage;
-	private String helpMessage;
-	private String autofillKey;
-	private String plainText;
 	
-	private String externalSrc;
-	private List<ItemBean> items = new ArrayList<ItemBean>();
-	
-	private LocalizedStringBean labelStringBean;
-	private LocalizedStringBean errorStringBean;
-	private LocalizedStringBean helpStringBean;
-	
-	private ILocalizedItemset itemset;
-	
-	private String dataSrc;
-	
-	public Element saveComponentLabel(String value) {
-		setLabel(value);
-		return getComponentGUINode();
+	public void initializeBeanInstace(Component component) {
+		if(component instanceof ComponentPlain) {
+			this.plainComponent = (ComponentPlain) component;
+			this.selectComponent = null;
+			this.component = null;
+			this.id = component.getId();
+		} else if(component instanceof ComponentSelect) {
+			this.selectComponent = (ComponentSelect) component;
+			this.component = null;
+			this.plainComponent = null;
+			this.id = component.getId();
+		} else if(component instanceof Component) {
+			this.component = component;
+			this.selectComponent = null;
+			this.plainComponent = null;
+			this.id = component.getId();
+		} else {
+			this.component = null;
+			this.selectComponent = null;
+			this.plainComponent = null;
+			this.id = null;
+		}
 	}
 	
-	public FormButtonInfo saveButtonLabel(String value) {
+	public void initializeBeanInstace(String id) {
+		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
+		if(page != null) {
+			Component component = page.getComponent(id);
+			if(component instanceof ComponentPlain) {
+				this.plainComponent = (ComponentPlain) component;
+				this.selectComponent = null;
+				this.component = null;
+				this.id = component.getId();
+			} else if(component instanceof ComponentSelect) {
+				this.selectComponent = (ComponentSelect) component;
+				this.component = null;
+				this.plainComponent = null;
+				this.id = component.getId();
+			} else if(component instanceof Component) {
+				this.component = component;
+				this.selectComponent = null;
+				this.plainComponent = null;
+				this.id = component.getId();
+			} else {
+				this.component = null;
+				this.selectComponent = null;
+				this.plainComponent = null;
+				this.id = null;
+			}
+		}
+	}
+	
+	public Document saveComponentLabel(String value) {
+		setLabel(value);
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(id), true);
+	}
+	
+	public Document saveButtonLabel(String value) {
 		setLabel(value);
 		return getFormButtonInfo(id);
 	}
 	
-	public Element saveComponentExternalSrc(String value) {
-	
+	public Document saveComponentExternalSrc(String value) {
 		if(value != null && !"".equals(value))
 			setExternalSrc(value);
-		return getComponentGUINode();
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(id), true);
 	}
 	
-	public Element saveComponentRequired(boolean value) {
+	public Document saveComponentRequired(boolean value) {
 		setRequired(value);
-		return getComponentGUINode();
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(id), true);
 	}
 	
-	public Element saveSelectOptionLabel(int index, String label) {
+	public Document saveSelectOptionLabel(int index, String label) {
 		saveLabel(index, label);
-		return getComponentGUINode();
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(id), true);
 	}
 	
-	public Element saveSelectOptionValue(int index, String value) {
+	public Document saveSelectOptionValue(int index, String value) {
 		saveValue(index, value);
-		return getComponentGUINode();
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(id), true);
 	}
 	
-	public Element saveComponentErrorMessage(String value) {
+	public Document saveComponentErrorMessage(String value) {
 		setErrorMessage(value);
-		return getComponentGUINode();
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(id), true);
 	}
 	
-	public Element saveComponentHelpMessage(String value) {
+	public Document saveComponentHelpMessage(String value) {
 		setHelpMessage(value);
-		return getComponentGUINode();
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(id), true);
 	}
 	
-	public Element saveComponentPlainText(String value) {
+	public Document saveComponentPlainText(String value) {
 		setPlainText(value);
-		return getComponentGUINode();
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(id), true);
 	}
 	
-	public Element saveComponentAutofillKey(String value) {
+	public Document saveComponentAutofillKey(String value) {
 		setAutofillKey(value);
-		return getComponentGUINode();
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(id), true);
 	}
 	
 	public String getDataSrc() {
-		if(propertiesSelect != null) {
-			if(propertiesSelect.getDataSrcUsed() != null) {
-				dataSrc = propertiesSelect.getDataSrcUsed().toString();
+		if(selectComponent != null) {
+			if(selectComponent.getProperties().getDataSrcUsed() != null) {
+				return selectComponent.getProperties().getDataSrcUsed().toString();
 			} else {
-				dataSrc = DataSourceList.localDataSrc;
+				return DataSourceList.localDataSrc;
 			}
 		}
-		return dataSrc;
+		return null;
 	}
 	
 	public boolean isSimple() {
-		if(propertiesSelect != null) {
+		if(selectComponent != null) {
 			return false;
 		} else {
 			return true;
@@ -132,135 +162,47 @@ public class FormComponent implements Serializable {
 	}
 
 	public void setDataSrc(String dataSrc) {
-		this.dataSrc = dataSrc;
-		if(propertiesSelect != null) {
-			propertiesSelect.setDataSrcUsed(Integer.parseInt(dataSrc));
+//		this.dataSrc = dataSrc;
+		if(selectComponent != null) {
+			selectComponent.getProperties().setDataSrcUsed(Integer.parseInt(dataSrc));
 		}
 	}
 
-	public LocalizedStringBean getErrorStringBean() {
-		return errorStringBean;
-	}
-
-	public void setErrorStringBean(LocalizedStringBean errorStringBean) {
-		this.errorStringBean = errorStringBean;
-	}
-
-	public LocalizedStringBean getLabelStringBean() {
-		return labelStringBean;
-	}
-
-	public void setLabelStringBean(LocalizedStringBean labelStringBean) {
-		this.labelStringBean = labelStringBean;
-	}
-
-	public FormComponent() {
-		this.id = "";
-		
-		this.label = "";
-		this.errorMessage = "";
-		this.required = false;
-		this.helpMessage = "";
-		this.autofillKey = "";
-		this.plainText = "";
-		
-		this.labelStringBean = null;
-		this.errorStringBean = null;
-		this.helpStringBean = null;
-		this.itemset = null;
-		
-		this.dataSrc = DataSourceList.localDataSrc;
-		
-		this.component = null;
-		this.selectComponent = null;
-		this.plainComponent = null;
-		
-		this.properties = null;
-		this.propertiesSelect = null;
-		this.propertiesPlain = null;
-	}
-	
-	public void clearFormComponentInfo() {
-		this.id = "";
-		
-		this.label = "";
-		this.labelStringBean = null;
-		
-		this.errorMessage = "";
-		this.errorStringBean = null;
-		
-		this.helpMessage = "";
-		this.helpStringBean = null;
-		
-		this.required = false;
-		
-		this.autofillKey = "";
-		
-		this.plainText = "";
-		
-		this.itemset = null;
-		
-		this.properties = null;
-		this.propertiesSelect = null;
-		this.propertiesPlain = null;
-		
-		this.component = null;
-		this.selectComponent = null;
-		this.plainComponent = null;
-	}
-	
-	public Element removeSelectOption(int index) {
+	public Document removeSelectOption(int index) {
 		removeItem(index);
-		return getComponentGUINode();
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(id), true);
 	}
 	
 	public void removeItem(int index) {
-		if(index < items.size()) {
-			items.remove(index);
-			setItems(items);
+		if(index < getItems().size()) {
+			getItems().remove(index);
+//			setItems(items);
 		}
 	}
 	
 	public void saveLabel(int index, String value) {
-		int size = items.size();
+		int size = getItems().size();
 		if(index >= size) {
 			ItemBean newItem = new ItemBean();
 			newItem.setLabel(value);
 			newItem.setValue(value);
-			items.add(newItem);
+			getItems().add(newItem);
 		} else {
-			items.get(index).setLabel(value);
-			items.get(index).setValue(value);
+			getItems().get(index).setLabel(value);
+			getItems().get(index).setValue(value);
 		}
-		setItems(items);
+//		setItems(items);
 	}
 	
 	public void saveValue(int index, String value) {
-		if(index >= items.size()) {
+		if(index >= getItems().size()) {
 			ItemBean newItem = new ItemBean();
 			newItem.setValue(value);
-			items.add(newItem);
+			getItems().add(newItem);
 		} else {
-			items.get(index).setValue(value);
+			getItems().get(index).setValue(value);
 		}
-		setItems(items);
-	}
-	
-	public Element getComponentGUINode() {
-		Locale current = ((Workspace) WFUtil.getBeanInstance("workspace")).getLocale();
-		Element element = null;
-		try {
-			if(component != null) {
-				element = (Element) component.getHtmlRepresentation(current).cloneNode(true);
-			} else if(selectComponent != null) {
-				element = (Element) selectComponent.getHtmlRepresentation(current).cloneNode(true);
-			} else if(plainComponent != null) {
-				element = (Element) plainComponent.getHtmlRepresentation(current).cloneNode(true);
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		return element;
+//		setItems(items);
 	}
 	
 	public void loadButton(String id) {
@@ -272,69 +214,31 @@ public class FormComponent implements Serializable {
 				if(component != null) {
 					this.id = id;
 					button = true;
-					properties = component.getProperties();
-					
-					labelStringBean = properties.getLabel();
-					label = labelStringBean.getString(new Locale("en"));
-					
 					selectComponent = null;
-					propertiesSelect = null;
-					
 					plainComponent = null;
-					propertiesPlain = null;
 				}
 			}
 		}
 	}
 	
-	public FormButtonInfo getFormButtonInfo(String id) {
-		loadButton(id);
-		FormButtonInfo info = new FormButtonInfo(id, label);
-		return info;
+	public Document getFormButtonInfo(String id) {
+		this.id = id;
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentPropertiesPanel(id, FBConstants.BUTTON_TYPE), true);
 	}
 	
-	public FormComponentInfo getFormComponentInfo(String id) {
-		loadProperties(id);
-		FormComponentInfo info = new FormComponentInfo();
-		info.setId(id);
-		if(propertiesPlain != null) {
-			info.setPlainText(plainText);
-			info.setPlain(true);
-		} else {
-			info.setLabel(label);
-			info.setRequired(required);
-			info.setErrorMessage(errorMessage);
-			info.setHelpMessage(helpMessage);
-			info.setAutofillKey(autofillKey);
-			
-			if(propertiesSelect != null) {
-				if(dataSrc.equals(DataSourceList.externalDataSrc)) {
-					info.setExternalSrc(externalSrc);
-					info.setLocal(false);
-					items.clear();
-					info.setItems(items);
-				} else {
-					info.setLocal(true);
-					info.setItems(items);
-					info.setExternalSrc("");
-				}
-				info.setComplex(true);
-			} else {
-				info.setComplex(false);
-			}
-			info.setPlain(false);
-		}
-		return info;
+	public Document getFormComponentInfo(String id) {
+		initializeBeanInstace(id);
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentPropertiesPanel(id, FBConstants.COMPONENT_TYPE), true);
 	}
 	
 	public boolean switchDataSource() {
-		if(dataSrc.equals(DataSourceList.externalDataSrc)) {
+		if(getDataSrc().equals(DataSourceList.externalDataSrc)) {
 			setDataSrc(DataSourceList.localDataSrc);
 			return true;
 		} else {
 			setDataSrc(DataSourceList.externalDataSrc);
-			items.clear();
-			setItems(items);
+			getItems().clear();
+//			setItems(items);
 			return false;
 		}
 	}
@@ -381,26 +285,20 @@ public class FormComponent implements Serializable {
 		}
 	}
 	
-	public FormButtonInfo addButton(String type) {
-		FormButtonInfo result = new FormButtonInfo();
+	public Document addButton(String type) {
 		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
 		if(page != null) {
 			ButtonArea area = page.getButtonArea();
 			Button button = null;
 			if(area != null) {
 				button = area.addButton(new ConstButtonType(type), null);
-				result.setType(type);
-				result.setId(button.getId());
-				result.setLabel(button.getProperties().getLabel().getString(new Locale("en")));
 			} else {
 				area = page.createButtonArea(null);
 				button = area.addButton(new ConstButtonType(type), null);
-				result.setType(type);
-				result.setId(button.getId());
-				result.setLabel(button.getProperties().getLabel().getString(new Locale("en")));
 			}
+			return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBButton(button.getId(), "loadButtonInfo", "removeButton"), true);
 		}
-		return result;
+		return null;
 	}
 	
 	public String removeComponent(String id) {
@@ -429,83 +327,6 @@ public class FormComponent implements Serializable {
 		return null;
 	}
 
-	public void loadProperties(String id) {
-		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
-		this.id = id;
-		button = false;
-		component = page.getComponent(id);
-		if(component instanceof ComponentPlain) {
-			plainComponent = (ComponentPlain) component;
-			propertiesPlain = plainComponent.getProperties();
-			
-			selectComponent = null;
-			propertiesSelect = null;
-			
-			component = null;
-			properties = null;
-			
-			plainText = propertiesPlain.getText();
-		} else if(component instanceof ComponentSelect) {
-			selectComponent = (ComponentSelect) component;
-			propertiesSelect = selectComponent.getProperties();
-			
-			component = null;
-			properties = null;
-			
-			plainComponent = null;
-			propertiesPlain = null;
-			
-			plainText = "";
-			
-			required = propertiesSelect.isRequired();
-			labelStringBean = propertiesSelect.getLabel();
-			label = labelStringBean.getString(new Locale("en"));
-			
-			errorStringBean = propertiesSelect.getErrorMsg();
-			errorMessage = errorStringBean.getString(new Locale("en"));
-			
-			autofillKey = propertiesSelect.getAutofillKey();
-			
-			helpStringBean = propertiesSelect.getHelpText();
-			helpMessage = helpStringBean.getString(new Locale("en"));
-			
-			if(propertiesSelect.getDataSrcUsed() != null) {
-				dataSrc = propertiesSelect.getDataSrcUsed().toString();
-			} else {
-				propertiesSelect.setDataSrcUsed(PropertiesSelect.LOCAL_DATA_SRC);
-				dataSrc = DataSourceList.localDataSrc;
-			}
-			
-			externalSrc = propertiesSelect.getExternalDataSrc();
-			
-			itemset = propertiesSelect.getItemset();
-			items = itemset.getItems(new Locale("en"));
-			if(items.size() == 0) {
-				items.add(new ItemBean("", ""));
-			}
-		} else {
-			selectComponent = null;
-			propertiesSelect = null;
-			plainComponent = null;
-			propertiesPlain = null;
-			plainText = "";
-			properties = component.getProperties();
-			
-			required = properties.isRequired();
-
-			labelStringBean = properties.getLabel();
-			label = labelStringBean.getString(new Locale("en"));
-			
-			errorStringBean = properties.getErrorMsg();
-			errorMessage = errorStringBean.getString(new Locale("en"));
-			
-			helpStringBean = properties.getHelpText();
-			helpMessage = helpStringBean.getString(new Locale("en"));
-			
-			autofillKey = properties.getAutofillKey();
-		}
-	}
-	
 	public String getId() {
 		return id;
 	}
@@ -515,85 +336,90 @@ public class FormComponent implements Serializable {
 	}
 
 	public String getErrorMessage() {
-		return errorMessage;
+		if(component != null) {
+			return component.getProperties().getErrorMsg().getString(FBUtil.getUILocale());
+		} else if(selectComponent != null) {
+			return selectComponent.getProperties().getErrorMsg().getString(FBUtil.getUILocale());
+		}
+		return null;
 	}
 
 	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
-		if(errorStringBean != null) {
-			errorStringBean.setString(new Locale("en"), errorMessage);
-			if(properties != null) {
-				properties.setErrorMsg(errorStringBean);
-			} else if(propertiesSelect != null) {
-				propertiesSelect.setErrorMsg(errorStringBean);
-			}
+		LocalizedStringBean bean = null;
+		if(component != null) {
+			bean = component.getProperties().getErrorMsg();
+			bean.setString(FBUtil.getUILocale(), errorMessage);
+			component.getProperties().setErrorMsg(bean);
+		} else if(selectComponent != null) {
+			bean = selectComponent.getProperties().getErrorMsg();
+			bean.setString(FBUtil.getUILocale(), errorMessage);
+			selectComponent.getProperties().setErrorMsg(bean);
 		}
 	}
 
 	public String getLabel() {
-		return label;
+		if(component != null) {
+			return component.getProperties().getLabel().getString(FBUtil.getUILocale());
+		} else if(selectComponent != null) {
+			return selectComponent.getProperties().getLabel().getString(FBUtil.getUILocale());
+		}
+		return null;
 	}
 
 	public void setLabel(String label) {
-		this.label = label;
-		if(labelStringBean != null) {
-			labelStringBean.setString(new Locale("en"), label);
-			if(properties != null) {
-				properties.setLabel(labelStringBean);
-			} else if(propertiesSelect != null) {
-				propertiesSelect.setLabel(labelStringBean);
-			}
+		LocalizedStringBean bean = null;
+		if(component != null) {
+			bean = component.getProperties().getLabel();
+			bean.setString(FBUtil.getUILocale(), label);
+			component.getProperties().setLabel(bean);
+		} else if(selectComponent != null) {
+			bean = selectComponent.getProperties().getLabel();
+			bean.setString(FBUtil.getUILocale(), label);
+			selectComponent.getProperties().setLabel(bean);
 		}
 	}
 
 	public boolean getRequired() {
-		return required;
+		if(component != null) {
+			return component.getProperties().isRequired();
+		} else if(selectComponent != null) {
+			return selectComponent.getProperties().isRequired();
+		}
+		return false;
 	}
 
 	public void setRequired(boolean required) {
-		this.required = required;
-		if(properties != null) {
-			properties.setRequired(required);
-		} else if(propertiesSelect != null) {
-			propertiesSelect.setRequired(required);
+		if(component != null) {
+			component.getProperties().setRequired(required);
+		} else if(selectComponent != null) {
+			selectComponent.getProperties().setRequired(required);
 		}
 	}
 
-	public PropertiesComponent getProperties() {
-		return properties;
-	}
-
 	public String getExternalSrc() {
-		return externalSrc;
+		if(selectComponent != null) {
+			return selectComponent.getProperties().getExternalDataSrc();
+		}
+		return null;
 	}
 
 	public void setExternalSrc(String externalSrc) {
-		this.externalSrc = externalSrc;
-		
-		if(propertiesSelect != null) {
-			if(!externalSrc.equals("")) {
-				propertiesSelect.setExternalDataSrc(externalSrc);
-			}
+		if(selectComponent != null) {
+			selectComponent.getProperties().setExternalDataSrc(externalSrc);
 		}
 	}
 
 	public List<ItemBean> getItems() {
-		return items;
+		if(selectComponent != null) {
+			return selectComponent.getProperties().getItemset().getItems(FBUtil.getUILocale());
+		}
+		return new ArrayList<ItemBean>();
 	}
 
 	public void setItems(List<ItemBean> items) {
-		this.items = items;
-		if(itemset != null) {
-			itemset.setItems(new Locale("en"), items);
+		if(selectComponent != null) {
+			selectComponent.getProperties().getItemset().setItems(FBUtil.getUILocale(), items);
 		}
-	}
-
-	public ILocalizedItemset getItemset() {
-		return itemset;
-	}
-
-	public void setItemset(ILocalizedItemset itemset) {
-		this.itemset = itemset;
 	}
 
 	public Component getComponent() {
@@ -602,18 +428,6 @@ public class FormComponent implements Serializable {
 
 	public void setComponent(Component component) {
 		this.component = component;
-	}
-
-	public void setProperties(PropertiesComponent properties) {
-		this.properties = properties;
-	}
-
-	public PropertiesSelect getPropertiesSelect() {
-		return propertiesSelect;
-	}
-
-	public void setPropertiesSelect(PropertiesSelect propertiesSelect) {
-		this.propertiesSelect = propertiesSelect;
 	}
 
 	public ComponentSelect getSelectComponent() {
@@ -625,39 +439,41 @@ public class FormComponent implements Serializable {
 	}
 
 	public String getHelpMessage() {
-		return helpMessage;
+		if(component != null) {
+			return component.getProperties().getHelpText().getString(FBUtil.getUILocale());
+		} else if(selectComponent != null) {
+			return selectComponent.getProperties().getHelpText().getString(FBUtil.getUILocale());
+		}
+		return null;
 	}
 
 	public void setHelpMessage(String helpMessage) {
-		this.helpMessage = helpMessage;
-		if(helpStringBean != null) {
-			helpStringBean.setString(new Locale("en"), helpMessage);
-			if(properties != null) {
-				properties.setHelpText(helpStringBean);
-			} else if(propertiesSelect != null) {
-				propertiesSelect.setHelpText(helpStringBean);
-			}
+		LocalizedStringBean bean = null;
+		if(component != null) {
+			bean = component.getProperties().getHelpText();
+			bean.setString(FBUtil.getUILocale(), helpMessage);
+			component.getProperties().setHelpText(bean);
+		} else if(selectComponent != null) {
+			bean = selectComponent.getProperties().getHelpText();
+			bean.setString(FBUtil.getUILocale(), helpMessage);
+			selectComponent.getProperties().setHelpText(bean);
 		}
 	}
 
-	public LocalizedStringBean getHelpStringBean() {
-		return helpStringBean;
-	}
-
-	public void setHelpStringBean(LocalizedStringBean helpStringBean) {
-		this.helpStringBean = helpStringBean;
-	}
-
 	public String getAutofillKey() {
-		return autofillKey;
+		if(component != null) {
+			return component.getProperties().getAutofillKey();
+		} else if(selectComponent != null) {
+			return selectComponent.getProperties().getAutofillKey();
+		}
+		return null;
 	}
 
 	public void setAutofillKey(String autofillKey) {
-		this.autofillKey = autofillKey;
-		if(properties != null) {
-			properties.setAutofillKey(autofillKey);
-		} else if(propertiesSelect != null) {
-			propertiesSelect.setAutofillKey(autofillKey);
+		if(component != null) {
+			component.getProperties().setAutofillKey(autofillKey);
+		} else if(selectComponent != null) {
+			selectComponent.getProperties().setAutofillKey(autofillKey);
 		}
 	}
 
@@ -670,13 +486,15 @@ public class FormComponent implements Serializable {
 	}
 
 	public String getPlainText() {
-		return plainText;
+		if(plainComponent != null) {
+			return plainComponent.getProperties().getText();
+		}
+		return null;
 	}
 
 	public void setPlainText(String plainText) {
-		this.plainText = plainText;
-		if(propertiesPlain != null) {
-			propertiesPlain.setText(plainText);
+		if(plainComponent != null) {
+			plainComponent.getProperties().setText(plainText);
 		}
 	}
 
@@ -686,14 +504,6 @@ public class FormComponent implements Serializable {
 
 	public void setPlainComponent(ComponentPlain plainComponent) {
 		this.plainComponent = plainComponent;
-	}
-
-	public PropertiesPlain getPropertiesPlain() {
-		return propertiesPlain;
-	}
-
-	public void setPropertiesPlain(PropertiesPlain propertiesPlain) {
-		this.propertiesPlain = propertiesPlain;
 	}
 
 	public boolean isButton() {

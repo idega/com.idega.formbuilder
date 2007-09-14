@@ -18,6 +18,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.idega.block.form.presentation.FormViewer;
 import com.idega.block.formadmin.presentation.actions.GetAvailableFormsAction;
+import com.idega.builder.business.BuilderLogic;
 import com.idega.content.themes.business.TemplatesLoader;
 import com.idega.content.themes.helpers.ThemesHelper;
 import com.idega.content.tree.PageTemplate;
@@ -33,17 +34,18 @@ import com.idega.documentmanager.business.form.Document;
 import com.idega.documentmanager.business.form.DocumentManager;
 import com.idega.documentmanager.business.form.Page;
 import com.idega.documentmanager.business.form.PageThankYou;
-import com.idega.documentmanager.business.form.PropertiesDocument;
-import com.idega.documentmanager.business.form.PropertiesThankYouPage;
 import com.idega.documentmanager.business.form.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.egov.Application;
 import com.idega.formbuilder.business.egov.ApplicationBusiness;
+import com.idega.formbuilder.presentation.components.FBFormProperties;
 import com.idega.formbuilder.presentation.components.FBViewPanel;
-import com.idega.formbuilder.presentation.converters.FormDocumentInfo;
 import com.idega.formbuilder.presentation.converters.FormPageInfo;
+import com.idega.formbuilder.util.FBConstants;
+import com.idega.formbuilder.util.FBUtil;
 import com.idega.formbuilder.view.ActionManager;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.presentation.IWContext;
+import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
 
 public class FormDocument implements Serializable {
@@ -54,24 +56,18 @@ public class FormDocument implements Serializable {
 	
 	private PersistenceManager persistence_manager;
 	
-	private Document document;
-	private PropertiesThankYouPage properties;
-	private PropertiesDocument documentProperties;
-	
-	private ApplicationBusiness app_business_bean;
-	private String formTitle;
 	private String formId;
 	private boolean hasPreview;
 	private boolean enableBubbles;
-	private String thankYouTitle;
-	private String thankYouText;
+	private Document document;
+	private Page overviewPage;
+	private PageThankYou submitPage;
+	
+	private ApplicationBusiness app_business_bean;
 	private String tempValue;
 	private String primary_form_name;
 	private String app_id;
 	
-	private LocalizedStringBean formTitleBean;
-	private LocalizedStringBean thankYouTitleBean;
-	private LocalizedStringBean thankYouTextBean;
 	private static final String root_uri = "/pages/";
 	private static final String applications_forms_page_uri = "/pages/applications_forms/";
 	private static final String applications_forms_page_uri_db = "/applications_forms/";
@@ -111,100 +107,54 @@ public class FormDocument implements Serializable {
 		return result;
 	}
 	
-	public FormDocumentInfo createFormDocument(String parameter) throws Exception {
-		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
-		if(workspace != null) {
-			Locale locale = workspace.getLocale();
-			DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
-			Document document = null;
-			String id = getPersistenceManager().generateFormId(parameter);
-			LocalizedStringBean formName = new LocalizedStringBean();
-			formName.setString(locale, parameter);
-			
-			try {
-				document = formManagerInstance.createForm(id, formName);
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-			
-//			if(getFormId() != null)
-//				getFormsService().unlockForm(getFormId());
-			
-			workspace.setView("design");
-			workspace.setDesignViewStatus("empty");
-			workspace.setSelectedMenu("0");
-			workspace.setRenderedMenu(true);
-			
-			clearFormDocumentInfo();
-			
-			loadFormInfo(document);
-			
-			Page page = document.getPage(document.getContainedPagesIdList().get(0));
-			FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
-			if(formPage != null) {
-				formPage.loadPageInfo(page);
-			}
-			FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
-			if(formComponent != null) {
-				formComponent.clearFormComponentInfo();
-			}
-		}
-		return getFormDocumentInfo();
+	public Document initializeBeanInstance(String formId) throws Exception {
+		DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
+		this.document = formManagerInstance.openForm(formId);
+		this.overviewPage = document.getConfirmationPage();
+		this.submitPage = document.getThxPage();
+		this.formId = document.getId();
+		this.hasPreview = overviewPage != null ? true : false;
+		
+		return document;
 	}
 	
-//	public String createNewForm() throws Exception {
-//		
-//		FacesContext ctx = FacesContext.getCurrentInstance();
-//		Map req_param_map = ctx.getExternalContext().getRequestParameterMap();
-//		String name = (String)req_param_map.get("workspaceform1:newTxt");
-//		
-//		if(name == null || name.equals(""))
-//			name = primary_form_name;
-//		
-//		if(name == null || name.equals(""))
-//			throw new Exception("Form name not provided by the user");
-//
-//		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
-//		
-//		if(workspace != null) {
-//			Locale locale = workspace.getLocale();
-//			DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
-//			Document document = null;
-//			String id = getPersistenceManager().generateFormId(name);
-//			LocalizedStringBean formName = new LocalizedStringBean();
-//			formName.setString(locale, name);
-//			
-//			try {
-//				document = formManagerInstance.createForm(id, formName);
-//			} catch(Exception e) {
-//				e.printStackTrace();
-//			}
-//			
-////			if(getFormId() != null)
-////				getFormsService().unlockForm(getFormId());
-//			
-//			workspace.setView("design");
-//			workspace.setDesignViewStatus("empty");
-//			workspace.setSelectedMenu("0");
-//			workspace.setRenderedMenu(true);
-//			
-//			clearFormDocumentInfo();
-//			document.getProperties().setStepsVisualizationUsed(true);
-//			loadFormInfo(document);
-//			
-//			Page page = document.getPage(document.getContainedPagesIdList().get(0));
-//			FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
-//			if(formPage != null) {
-//				formPage.loadPageInfo(page);
-//			}
-//			FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
-//			if(formComponent != null) {
-//				formComponent.clearFormComponentInfo();
-//			}
-//			return "newFormSuccess";
-//		}
-//		return null;
-//	}
+	public boolean createFormDocument(String parameter) throws Exception {
+		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
+		Locale locale = workspace.getLocale();
+		
+		DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
+		Document document = null;
+		
+		String id = getPersistenceManager().generateFormId(parameter);
+		LocalizedStringBean formName = new LocalizedStringBean();
+		formName.setString(locale, parameter);
+			
+		try {
+			document = formManagerInstance.createForm(id, formName);
+			CoreUtil.getIWContext().getExternalContext().getSessionMap().put(FBConstants.FORM_DOCUMENT_ID, id);
+		} catch(Exception e) {
+			logger.error("Could not crea XForms document");
+		}
+			
+//		if(getFormId() != null)
+//			getFormsService().unlockForm(getFormId());
+			
+		workspace.setView("design");
+		workspace.setDesignViewStatus("empty");
+		workspace.setSelectedMenu("0");
+		workspace.setRenderedMenu(true);
+		
+		initializeBeanInstance(document);
+			
+		Page page = document.getPage(document.getContainedPagesIdList().get(0));
+		FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+		formPage.loadPageInfo(page);
+		
+		FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
+//		formComponent.clearFormComponentInfo();
+		
+		return true;
+	}
 	
 	public void save() {
 		
@@ -361,7 +311,7 @@ public class FormDocument implements Serializable {
 			if(formId != null && !formId.equals("")) {
 				DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
 				document = formManagerInstance.openForm(formId);
-				
+				CoreUtil.getIWContext().getExternalContext().getSessionMap().put(FBConstants.FORM_DOCUMENT_ID, formId);
 //				if(getFormId() != null)
 //					getFormsService().unlockForm(getFormId());
 				
@@ -374,18 +324,15 @@ public class FormDocument implements Serializable {
 					workspace.setDesignViewStatus("empty");
 				}
 				FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
-				if(formPage != null) {
-					formPage.clearPageInfo();
-					formPage.loadPageInfo(firstP);
-				}
+				formPage.initializeBeanInstance(firstP);
+				
 				workspace.setView("design");
 				workspace.setRenderedMenu(true);
 				workspace.setSelectedMenu("0");
-				loadFormInfo(document);
-				FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
-				if(formComponent != null) {
-					formComponent.clearFormComponentInfo();
-				}
+				initializeBeanInstance(document);
+				
+//				FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
+//				formComponent.clearFormComponentInfo();
 			}
 		} catch (FormLockException e) {
 			// TODO: inform about lock
@@ -418,15 +365,11 @@ public class FormDocument implements Serializable {
 				String firstPage = getCommonPagesIdList().get(0);
 				Page firstP = document.getPage(firstPage);
 				FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
-				if(formPage != null) {
-					formPage.clearPageInfo();
-					formPage.setPage(firstP);
-				}
-				loadFormInfo(document);
-				FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
-				if(formComponent != null) {
-					formComponent.clearFormComponentInfo();
-				}
+				formPage.initializeBeanInstance(firstP);
+				
+				initializeBeanInstance(document);
+//				FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
+//				formComponent.clearFormComponentInfo();
 			}
 		} catch (FormLockException e) {
 			// TODO: inform about lock
@@ -452,6 +395,7 @@ public class FormDocument implements Serializable {
 	
 	public boolean deleteFormDocument(String documentId) {
 		boolean delete_submitted_data = true;
+		documentId = retrieveFormIdFormButtonId(documentId, "_delete");
 		
 		if(documentId == null)		
 			return false;
@@ -530,34 +474,6 @@ public class FormDocument implements Serializable {
 		this.document = document;
 	}
 
-	public FormDocument() {
-		document = null;
-		
-		formId = "";
-		formTitle = "";
-		formTitleBean = null;
-		hasPreview = false;
-		enableBubbles = false;
-		
-		thankYouTitle = "";
-		thankYouTextBean = null;
-		thankYouText = "";
-		thankYouTextBean = null;
-	}
-	
-	public void clearFormDocumentInfo() {
-		formId = "";
-		formTitle = "";
-		formTitleBean = null;
-		hasPreview = false;
-		enableBubbles = false;
-		
-		thankYouTitle = "";
-		thankYouTextBean = null;
-		thankYouText = "";
-		thankYouTextBean = null;
-	}
-	
 	public String getViewPreview() {
 		if(hasPreview) {
 			hasPreview = false;
@@ -594,26 +510,15 @@ public class FormDocument implements Serializable {
 	}
 	
 	public void saveSrc(String source_code) {
-		
 		if(source_code == null)
 			return;
 		try {
 			if(document != null) {
-				
 				document.setFormSourceCode(source_code);
-				
 				FormPage current_page = (FormPage) WFUtil.getBeanInstance("formPage");
-				
 				if(current_page != null) {
-					
-					current_page.clearPageInfo();
-					
-					if(!document.getContainedPagesIdList().isEmpty()) {
-					
-						current_page.loadPageInfo(document.getPage(document.getContainedPagesIdList().get(0)));
-						
-					} else
-						current_page.setPage(null);
+					Page page = document.getPage(document.getContainedPagesIdList().get(0));
+					current_page.initializeBeanInstance(page);
 				}
 			}
 		} catch (Exception e) {
@@ -622,45 +527,21 @@ public class FormDocument implements Serializable {
 	}
 	
 	public void loadFormProperties(ActionEvent ae) {
-		loadFormInfo(document);
+		initializeBeanInstance(document);
 	}
 	
-	public FormDocumentInfo getFormDocumentInfo() {
-		FormDocumentInfo info = new FormDocumentInfo();
-		info.setTitle(formTitle);
-		info.setHasPreview(hasPreview);
-		info.setThankYouTitle(thankYouTitle);
-		info.setThankYouText(thankYouText);
-		info.setEnableSwitcher(enableBubbles);
-		return info;
+	public org.jdom.Document getFormDocumentInfo() {
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormProperties(), true);
 	}
 	
-	public void loadFormInfo(Document document) {
+	public Document initializeBeanInstance(Document document) {
 		this.document = document;
-		setFormId(document.getId());
-		formTitleBean = document.getFormTitle();
-		formTitle = formTitleBean.getString(new Locale("en"));
-		if(document.getConfirmationPage() != null) {
-			hasPreview = true;
-		} else {
-			hasPreview = false;
-		}
-		documentProperties = document.getProperties();
-		if(documentProperties != null) {
-			enableBubbles = documentProperties.isStepsVisualizationUsed();
-		}
-		PageThankYou thxPage = document.getThxPage();
-		if(thxPage != null) {
-			properties = thxPage.getProperties();
-			if(properties != null) {
-				Locale locale = new Locale("en");
-				thankYouTitleBean = properties.getLabel();
-				thankYouTitle = thankYouTitleBean.getString(locale);
-				
-				thankYouTextBean = properties.getText();
-				thankYouText = thankYouTextBean.getString(locale);
-			}
-		}
+		this.formId = document.getId();
+		this.overviewPage = document.getConfirmationPage();
+		this.submitPage = document.getThxPage();
+		this.hasPreview = overviewPage != null ? true : false;
+		
+		return document;
 	}
 	
 	public String getFormId() {
@@ -672,33 +553,23 @@ public class FormDocument implements Serializable {
 	}
 	
 	public String getFormTitle() {
-		return formTitle;
+		return document.getFormTitle().getString(FBUtil.getUILocale());
 	}
 	
-	public void setFormTitle(String formTitle) {
-		this.formTitle = formTitle;
-		if(formTitleBean != null) {
-			formTitleBean.setString(new Locale("en"), formTitle);
-			try {
-				document.setFormTitle(formTitleBean);
-			} catch(Exception e) {
-				//TODO
-				e.printStackTrace();
-			}
-		}
+	public void setFormTitle(String formTitle) throws Exception {
+		LocalizedStringBean bean = document.getFormTitle();
+		bean.setString(FBUtil.getUILocale(), formTitle);
+		document.setFormTitle(bean);
 	}
 	
 	public String saveFormTitle(String formTitle) {
-		setFormTitle(formTitle);
-		return formTitle;
-	}
-
-	public LocalizedStringBean getFormTitleBean() {
-		return formTitleBean;
-	}
-
-	public void setFormTitleBean(LocalizedStringBean formTitleBean) {
-		this.formTitleBean = formTitleBean;
+		try {
+			setFormTitle(formTitle);
+			return formTitle;
+		} catch(Exception e) {
+			logger.error("Could not save form title: ", e);
+			return null;
+		}
 	}
 
 	public String getSourceCode() {
@@ -732,62 +603,29 @@ public class FormDocument implements Serializable {
 	}
 
 	public String getThankYouText() {
-		return thankYouText;
+		return submitPage.getProperties().getText().getString(FBUtil.getUILocale());
 	}
 
 	public void setThankYouText(String thankYouText) {
-		this.thankYouText = thankYouText;
-		if(thankYouTextBean != null) {
-			thankYouTextBean.setString(new Locale("en"), thankYouText);
-		}
-		if(properties != null) {
-			properties.setText(thankYouTextBean);
-		}
+		LocalizedStringBean bean = submitPage.getProperties().getText();
+		bean.setString(FBUtil.getUILocale(), thankYouText);
+		submitPage.getProperties().setText(bean);
 	}
 
 	public String getThankYouTitle() {
-		return thankYouTitle;
+		return submitPage.getProperties().getLabel().getString(FBUtil.getUILocale());
 	}
 
 	public FormPageInfo setThankYouTitle(String thankYouTitle) {
-		this.thankYouTitle = thankYouTitle;
-		if(thankYouTitleBean != null) {
-			thankYouTitleBean.setString(new Locale("en"), thankYouTitle);
-		}
-		if(properties != null) {
-			properties.setLabel(thankYouTitleBean);
-		}
-		Page page = document.getThxPage();
+		LocalizedStringBean bean = submitPage.getProperties().getLabel();
+		bean.setString(FBUtil.getUILocale(), thankYouTitle);
+		submitPage.getProperties().setLabel(bean);
 		FormPageInfo result = new FormPageInfo();
-		if(page != null) {
+		if(submitPage != null) {
 			result.setPageTitle(thankYouTitle);
-			result.setPageId(page.getId());
+			result.setPageId(submitPage.getId());
 		}
-		return result;
-	}
-
-	public PropertiesThankYouPage getProperties() {
-		return properties;
-	}
-
-	public void setProperties(PropertiesThankYouPage properties) {
-		this.properties = properties;
-	}
-
-	public LocalizedStringBean getThankYouTextBean() {
-		return thankYouTextBean;
-	}
-
-	public void setThankYouTextBean(LocalizedStringBean thankYouTextBean) {
-		this.thankYouTextBean = thankYouTextBean;
-	}
-
-	public LocalizedStringBean getThankYouTitleBean() {
-		return thankYouTitleBean;
-	}
-
-	public void setThankYouTitleBean(LocalizedStringBean thankYouTitleBean) {
-		this.thankYouTitleBean = thankYouTitleBean;
+		return result;		
 	}
 
 	public String getTempValue() {
@@ -838,12 +676,12 @@ public class FormDocument implements Serializable {
 		return enableBubbles;
 	}
 
-	public void setEnableBubbles(boolean enableBubbles) {
-		if(documentProperties != null) {
-			this.enableBubbles = enableBubbles;
-			documentProperties.setStepsVisualizationUsed(enableBubbles);
-		}
-	}
+//	public void setEnableBubbles(boolean enableBubbles) {
+//		if(documentProperties != null) {
+//			this.enableBubbles = enableBubbles;
+//			documentProperties.setStepsVisualizationUsed(enableBubbles);
+//		}
+//	}
 	
 	public void setPrimaryFormName(String primary_form_name) {
 		this.primary_form_name = primary_form_name;
@@ -851,5 +689,21 @@ public class FormDocument implements Serializable {
 	
 	public void setAppId(String app_id) {
 		this.app_id = app_id;
+	}
+
+	public Page getOverviewPage() {
+		return overviewPage;
+	}
+
+	public void setOverviewPage(Page overviewPage) {
+		this.overviewPage = overviewPage;
+	}
+
+	public PageThankYou getSubmitPage() {
+		return submitPage;
+	}
+
+	public void setSubmitPage(PageThankYou submitPage) {
+		this.submitPage = submitPage;
 	}
 }

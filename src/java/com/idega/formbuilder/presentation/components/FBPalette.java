@@ -32,11 +32,6 @@ public class FBPalette extends FBComponentBase {
 		setRendererType(null);
 	}
 	
-	protected void initializeComponent(FacesContext context) {
-		
-		
-	}
-	
 	public void encodeBegin(FacesContext context) throws IOException {
 		Application application = context.getApplication();
 		getChildren().clear();
@@ -145,8 +140,7 @@ public class FBPalette extends FBComponentBase {
 		int count = 1;
 		boolean inRow = false;
 		
-		Iterator it = components.iterator();
-		while(it.hasNext()) {
+		for(Iterator it = components.iterator(); it.hasNext(); ) {
 			if((count % columns) == 1 || columns == 1) {
 				writer.startElement("TR", null);
 				inRow = true;

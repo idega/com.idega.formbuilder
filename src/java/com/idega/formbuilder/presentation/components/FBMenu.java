@@ -48,6 +48,7 @@ public class FBMenu extends FBComponentBase {
 		
 		Accordion acc = new Accordion("fbMenu");
 		acc.setId("fbMenuAccordion");
+		acc.setUseSound(false);
 //		acc.setHeight("400");
 		
 		FBPalette palette = (FBPalette) application.createComponent(FBPalette.COMPONENT_TYPE);
@@ -71,6 +72,7 @@ public class FBMenu extends FBComponentBase {
 		acc.addPanel(tab2, simpleProperties);
 		
 		FBFormProperties formProperties = (FBFormProperties) application.createComponent(FBFormProperties.COMPONENT_TYPE);
+		formProperties.setId("fbFormPropertiesPanel");
 		
 		Text tab3 = new Text();
 		tab3.setText("Form properties");
@@ -101,17 +103,15 @@ public class FBMenu extends FBComponentBase {
 	}
 	
 	public void encodeChildren(FacesContext context) throws IOException {
+		if (!isRendered()) {
+			return;
+		}
 		ValueBinding showVB = getValueBinding("show");
 		if(showVB != null) {
 			show = (Boolean) showVB.getValue(context);
 		}
-		if (!isRendered()) {
-			return;
-		}
-		Iterator it = getChildren().iterator();
-		while(it.hasNext()) {
-			UIComponent current = (UIComponent) it.next();
-			renderChild(context, current);
+		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
+			renderChild(context, (UIComponent) it.next());
 		}
 	}
 	

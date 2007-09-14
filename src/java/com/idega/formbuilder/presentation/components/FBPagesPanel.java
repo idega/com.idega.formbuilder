@@ -10,8 +10,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-import org.apache.myfaces.component.html.ext.HtmlGraphicImage;
-
 import com.idega.documentmanager.business.form.Document;
 import com.idega.documentmanager.business.form.Page;
 import com.idega.documentmanager.business.form.PropertiesPage;
@@ -19,8 +17,9 @@ import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.presentation.beans.FormPage;
 import com.idega.formbuilder.presentation.beans.Workspace;
+import com.idega.presentation.Image;
+import com.idega.presentation.Layer;
 import com.idega.presentation.text.Text;
-import com.idega.webface.WFDivision;
 import com.idega.webface.WFUtil;
 
 public class FBPagesPanel extends FBComponentBase {
@@ -68,31 +67,27 @@ public class FBPagesPanel extends FBComponentBase {
 	}
 	
 	protected void initializeComponent(FacesContext context) {
-		Application application = context.getApplication();
-		
-		WFDivision topToolbar = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		Layer topToolbar = new Layer(Layer.DIV);
 		topToolbar.setStyleClass("pagesPanelToolbar");
-		HtmlGraphicImage newSectionBtn = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+		Image newSectionBtn = new Image();
 		newSectionBtn.setId("newPageButton");
-		newSectionBtn.setOnclick("createNewPage();");
-		newSectionBtn.setValue("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/list-add.png");
-		addChild(newSectionBtn, topToolbar);
+		newSectionBtn.setOnClick("createNewPage();");
+		newSectionBtn.setSrc("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/list-add.png");
+		topToolbar.add(newSectionBtn);
 		addFacet(TOOLBAR_FACET, topToolbar);
 		
-		WFDivision generalPagesHeader = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		Layer generalPagesHeader = new Layer(Layer.DIV);
 		generalPagesHeader.setStyleClass("pagesPanelToolbar");
-		Text generalPagesHeaderText = new Text();
-		generalPagesHeaderText.setText("General sections");
+		Text generalPagesHeaderText = new Text("General sections");
 		generalPagesHeaderText.setStyleClass("pagesPanelHeaderText");
-		addChild(generalPagesHeaderText, generalPagesHeader);
+		generalPagesHeader.add(generalPagesHeaderText);
 		addFacet(GENERAL_PAGES_HEADER, generalPagesHeader);
 		
-		WFDivision specialPagesHeader = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		Layer specialPagesHeader = new Layer(Layer.DIV);
 		specialPagesHeader.setStyleClass("pagesPanelToolbar");
-		Text specialPagesHeaderText = new Text();
-		specialPagesHeaderText.setText("Special sections");
+		Text specialPagesHeaderText = new Text("Special sections");
 		specialPagesHeaderText.setStyleClass("pagesPanelHeaderText");
-		addChild(specialPagesHeaderText, specialPagesHeader);
+		specialPagesHeader.add(specialPagesHeaderText);
 		addFacet(SPECIAL_PAGES_HEADER, specialPagesHeader);
 	}
 	
@@ -164,26 +159,25 @@ public class FBPagesPanel extends FBComponentBase {
 				addFacet(THANKYOU_PAGE, formPage);
 			}
 			List<String> ids = formDocument.getCommonPagesIdList();
-			Iterator it = ids.iterator();
-			
-			while(it.hasNext()) {
-				
-				String nextId = (String) it.next();
-				Page currentPage = document.getPage(nextId);
-				if(currentPage != null) {
-					FBFormPage formPage = (FBFormPage) application.createComponent(FBFormPage.COMPONENT_TYPE);
-					formPage.setId(nextId + "_P");
-					if(nextId.equals(selectedPageId)) {
-						formPage.setStyleClass(componentStyleClass + " " + selectedStyleClass);
-					} else {
-						formPage.setStyleClass(componentStyleClass);
+			if(ids != null) {
+				for(Iterator it = ids.iterator(); it.hasNext(); ) {
+					String nextId = (String) it.next();
+					Page currentPage = document.getPage(nextId);
+					if(currentPage != null) {
+						FBFormPage formPage = (FBFormPage) application.createComponent(FBFormPage.COMPONENT_TYPE);
+						formPage.setId(nextId + "_P");
+						if(nextId.equals(selectedPageId)) {
+							formPage.setStyleClass(componentStyleClass + " " + selectedStyleClass);
+						} else {
+							formPage.setStyleClass(componentStyleClass);
+						}
+						formPage.setOnDelete("deletePage(this.id);");
+						formPage.setOnLoad("loadPageInfo(event);");
+						String label = ((PropertiesPage)currentPage.getProperties()).getLabel().getString(locale);
+						formPage.setLabel(label);
+						formPage.setActive(false);
+						add(formPage);
 					}
-					formPage.setOnDelete("deletePage(this.id);");
-					formPage.setOnLoad("loadPageInfo(this.id);");
-					String label = ((PropertiesPage)currentPage.getProperties()).getLabel().getString(locale);
-					formPage.setLabel(label);
-					formPage.setActive(false);
-					add(formPage);
 				}
 			}
 		}

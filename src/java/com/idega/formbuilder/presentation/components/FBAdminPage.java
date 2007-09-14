@@ -78,7 +78,8 @@ public class FBAdminPage extends FBComponentBase {
 		
 		addFacet(GREETING_BLOCK_FACET, greeting);
 
-		SDataViewer listContainer = (SDataViewer) application.createComponent("SDataViewer");
+//		SDataViewer listContainer = (SDataViewer) application.createComponent("SDataViewer");
+		SDataViewer listContainer = new SDataViewer();
 		listContainer.setRendered(true);
 		
 		addFacet(FORM_LIST_FACET, listContainer);
