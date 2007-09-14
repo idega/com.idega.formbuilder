@@ -1,12 +1,6 @@
 package com.idega.formbuilder.tests.basic;
 
 
-import java.io.InputStream;
-import java.util.Iterator;
-
-import org.jbpm.JbpmConfiguration;
-import org.jbpm.JbpmContext;
-import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
@@ -14,11 +8,8 @@ import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Task;
-import org.jbpm.taskmgmt.exe.TaskInstance;
-import org.jbpm.util.ClassLoaderUtil;
 
 import com.idega.formbuilder.business.process.XFormsToTask;
-import com.idega.jbpm.ProcessManager;
 import com.idega.jbpm.def.DefaultViewImpl;
 import com.idega.jbpm.def.ViewToTask;
 
@@ -27,9 +18,9 @@ import junit.framework.TestCase;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
- * Last modified: $Date: 2007/09/14 02:59:41 $ by $Author: civilis $
+ * Last modified: $Date: 2007/09/14 03:52:05 $ by $Author: civilis $
  *
  */
 public class XFormsToTaskTest extends TestCase {
@@ -77,8 +68,7 @@ public class XFormsToTaskTest extends TestCase {
 		
 		assertSame(taskNode, token.getNode());
 		
-		ProcessManager pm = new ProcessManager(); 
-		ViewToTask v2t = pm.getViewToTask(XFormsToTask.IDENTIFIER);
+		ViewToTask v2t = new XFormsToTask();
 		
 		System.out.println("xsx: "+taskNode.getTasks().iterator().next());
 		System.out.println("v2t: "+v2t);
