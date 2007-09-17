@@ -18,9 +18,9 @@ import junit.framework.TestCase;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
- * Last modified: $Date: 2007/09/14 03:52:05 $ by $Author: civilis $
+ * Last modified: $Date: 2007/09/17 13:31:13 $ by $Author: civilis $
  *
  */
 public class XFormsToTaskTest extends TestCase {
@@ -75,7 +75,7 @@ public class XFormsToTaskTest extends TestCase {
 		DefaultViewImpl view = new DefaultViewImpl();
 		view.setViewId("view id");
 		
-		v2t.bind(view, (Task)taskNode.getTasks().iterator().next());
+		//v2t.bind(view, (Task)taskNode.getTasks().iterator().next());
 		
 		processInstance.getContextInstance().createVariable("somevar", "theval", token);
 		

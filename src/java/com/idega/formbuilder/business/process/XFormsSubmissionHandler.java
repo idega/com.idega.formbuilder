@@ -1,5 +1,6 @@
 package com.idega.formbuilder.business.process;
 
+import org.jbpm.JbpmConfiguration;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import com.idega.jbpm.exe.AbstractSubmissionHandler;
@@ -8,17 +9,23 @@ import org.w3c.dom.Node;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
- * Last modified: $Date: 2007/09/14 02:59:41 $ by $Author: civilis $
+ * Last modified: $Date: 2007/09/17 13:31:13 $ by $Author: civilis $
  */
 public class XFormsSubmissionHandler extends AbstractSubmissionHandler {
 	
-	public static String IDENTIFIER = "XFormsSubmissionHandler";
+	private String IDENTIFIER = "XFormsSubmissionHandler";
+	private JbpmConfiguration cfg;
 
     public String getIdentifier() {
     	
     	return IDENTIFIER;
+    }
+    
+    public void setIdentifier(String identifier) {
+    	
+    	IDENTIFIER = identifier;
     }
 
 	@Override
@@ -47,4 +54,12 @@ public class XFormsSubmissionHandler extends AbstractSubmissionHandler {
 		
 		taskinstance.getContextInstance().createVariable("", taskinstance, taskinstance.getToken());
     }
+	
+	public void setJbpmConfiguration(JbpmConfiguration cfg) {
+		this.cfg = cfg;
+	}
+	
+	public JbpmConfiguration getJbpmConfiguration() {
+		return cfg;
+	}
 }
