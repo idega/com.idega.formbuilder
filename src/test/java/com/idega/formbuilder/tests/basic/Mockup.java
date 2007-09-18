@@ -8,15 +8,14 @@ import org.jbpm.taskmgmt.def.Task;
 
 import com.idega.formbuilder.business.process.XFormsSubmissionHandler;
 import com.idega.formbuilder.business.process.XFormsToTask;
-import com.idega.jbpm.def.DefaultViewImpl;
-import com.idega.jbpm.def.ViewToTask;
+import com.idega.formbuilder.business.process.XFormsView;
 
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
- * Last modified: $Date: 2007/09/17 13:31:13 $ by $Author: civilis $
+ * Last modified: $Date: 2007/09/18 09:45:09 $ by $Author: civilis $
  *
  */
 public class Mockup {
@@ -39,23 +38,16 @@ public class Mockup {
 		JbpmContext ctx = getJbpmConfiguration().createJbpmContext();
 		
 		try {
-			
 			ProcessDefinition pd = ctx.getGraphSession().findLatestProcessDefinition("oneTask");
+			System.out.println("task mgmt: "+pd.getTaskMgmtDefinition().getStartTask());
 			
 			TaskNode taskNode = (TaskNode)pd.getNode("task");
 			
-			DefaultViewImpl view = new DefaultViewImpl();
+			XFormsView view = new XFormsView();
 			view.setViewId("XForms view id");
 			
-			System.out.println("wtf: "+getX2t());
-			System.out.println("wtf2: "+taskNode);
-			System.out.println("wtf3: "+taskNode.getTasks());
-			
 			getX2t().bind(view, (Task)taskNode.getTasks().iterator().next());
-			
-			org.hibernate.Session ses = ctx.getSessionFactory().openSession();
-			
-			System.out.println("doing stuff.."+ses.getClass().getName());
+			getX2t().getView(((Task)taskNode.getTasks().iterator().next()).getId());
 			
 		} finally {
 			ctx.close();

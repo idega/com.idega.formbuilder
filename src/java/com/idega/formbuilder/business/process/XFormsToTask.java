@@ -12,9 +12,9 @@ import com.idega.jbpm.def.ViewToTask;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
- * Last modified: $Date: 2007/09/17 13:31:13 $ by $Author: civilis $
+ * Last modified: $Date: 2007/09/18 09:45:09 $ by $Author: civilis $
  */
 public class XFormsToTask implements ViewToTask {
 	
@@ -24,6 +24,10 @@ public class XFormsToTask implements ViewToTask {
 
 	public void bind(View view, Task task) {
 
+//		TODO: view type and task id should be a alternate key. that means unique too.
+//		also catch when duplicate view type and task id pair is tried to be entered, and override
+//		views could be versioned
+		
 		JbpmContext ctx = cfg.createJbpmContext();
 		
 		Session session = null;
@@ -31,6 +35,7 @@ public class XFormsToTask implements ViewToTask {
 			ViewTaskBind bind = new ViewTaskBind();
 			bind.setTaskId(task.getId());
 			bind.setViewIdentifier(view.getViewId());
+			bind.setViewType(view.getViewType());
 			
 			session = getSessionFactory().openSession();
 			
@@ -44,11 +49,26 @@ public class XFormsToTask implements ViewToTask {
 				session.close();
 		}
 	}
-	public View getView(Task task) {
+	public View getView(long taskId) {
 		
-//		TODO: retrieve from db viewid
+		Session session = getSessionFactory().openSession();
 		
-		return null;
+		try {
+			ViewTaskBind vtb = ViewTaskBind.getViewTaskBind(session, taskId, XFormsView.VIEW_TYPE);
+			
+			if(vtb == null)
+				return null;
+			
+			XFormsView view = new XFormsView();
+			view.setViewId(vtb.getViewIdentifier());
+			
+			return view;
+			
+		} finally {
+			
+			if(session != null)
+				session.close();
+		}
 	}
 	public String getIdentifier() {
 	
