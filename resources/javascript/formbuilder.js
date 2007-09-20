@@ -119,7 +119,7 @@ var FBDraggable = Element.extend({
 						cont.injectInside($('dropBox'));
 					}*/
 					if(draggingButton == false) {
-						console.log('Dragging a button');
+						//console.log('Dragging a button');
 						FormComponent.addButton(this.elementOrg.id, placeNewButton);
 						draggingButton = true;
 					}
@@ -144,10 +144,10 @@ var FBDraggable = Element.extend({
 					}
 				} else if(type == 'fbbutton') {
 					if(draggingButton == true) {
-						console.log('Stopepd Dragging a button');
+						//console.log('Stopepd Dragging a button');
 						//draggingButton = false;
 						if(insideDropzone == false) {
-							console.log('Button not inside dropZone');
+							//console.log('Button not inside dropZone');
 							//FormComponent.removeButton(CURRENT_BUTTON.getAttribute('id'),nothing);
 						}
 					}
@@ -165,18 +165,18 @@ Window.onDomReady(function() {
 	if($('dropBoxinner') != null) {
 		$('dropBoxinner').addEvents({
 			'over': function(el){
-				console.log('Over a dropZone');
+				//console.log('Over a dropZone');
 				if (!this.dragEffect) this.dragEffect = new Fx.Style(this, 'background-color');
 				this.dragEffect.stop().start('ffffff', 'dddddd');
 				insideDropzone = true;
 			},
 			'leave': function(el){
-				console.log('Leaving a dropZone');
+				//console.log('Leaving a dropZone');
 				this.dragEffect.stop().start('dddddd', 'ffffff');
 				insideDropzone = false;
 			},
 			'drop': function(el, drag){
-				console.log('Dropping');
+				//console.log('Dropping');
 				this.dragEffect.stop().start('ff8888', 'ffffff');
 				if(draggingComponent == true) {
 					draggingComponent = false;
@@ -185,7 +185,7 @@ Window.onDomReady(function() {
 						FormComponent.moveComponent(currentId, CURRENT_ELEMENT_UNDER, insertNewComponent);
 				    }
 				} else if(draggingButton == true) {
-					console.log('Dropping button');
+					//console.log('Dropping button');
 					draggingButton = false;
 					insertNodesToContainer(CURRENT_BUTTON.documentElement, $('pageButtonArea'));
 				}
@@ -349,7 +349,7 @@ function createNewComponent(htmlNode) {
 }
 function placeNewButton(parameter) {
 	if(parameter != null) {
-		console.log('New button ' + parameter);
+		//console.log('New button ' + parameter);
 		CURRENT_BUTTON = parameter;
 	}
 }
@@ -483,6 +483,32 @@ function disableInlineEdit() {
 		}
 		INLINE_VALUE = null;
 		INLINE_ID = null;
+	}
+}
+
+function loadProcessTaskList(value) {
+	if(value != null && value != '') {
+		JbpmBusiness.getProcessDefinitionTasks(value, placeProcessTaskList);
+	}
+}
+function loadTaskProperties(value) {
+	if(value != null) {
+		JbpmBusiness.getTaskProperties(value, placeTaskProperties);
+	}
+}
+function placeProcessTaskList(values) {
+	if(values != null) {
+		DWRUtil.removeAllOptions('taskSelector');
+		DWRUtil.addOptions('taskSelector', values, 'id', 'value');
+	}
+}
+function placeTaskProperties(values) {
+	if(values != null) {
+		$('taskForm').setAttribute('disabled','false');
+		$('taskForm').setAttribute('disabled', 'false');
+		$('taskGroup').setAttribute('disabled', 'false');
+		//DWRUtil.setValue('taskForm', 'dfgdfgdfg');
+		//DWRUtil.setValue('taskGroup', 'dfgdfgdfg');
 	}
 }
 function loadFormInfo() {
