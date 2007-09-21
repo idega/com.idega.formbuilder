@@ -2,10 +2,6 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 
 <beans>
-	<bean id="process_xforms_submissionHandler" class="com.idega.formbuilder.business.process.XFormsSubmissionHandler" scope="singleton">
-		<property name="identifier" value="process.xforms.submissionHandler" />
-		<property name="jbpmConfiguration" ref="defaultJbpmConfiguration" />
-	</bean>
 	<bean id="process_xforms_viewToTask" class="com.idega.formbuilder.business.process.XFormsToTask" scope="singleton">
 		<property name="identifier" value="process.xforms.viewToTask" />
 		<property name="jbpmConfiguration" ref="defaultJbpmConfiguration" />

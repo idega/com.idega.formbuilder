@@ -9,17 +9,17 @@ import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 
 import com.idega.formbuilder.business.process.XFormsToTask;
-import com.idega.jbpm.def.DefaultViewImpl;
 import com.idega.jbpm.def.ViewToTask;
+import com.idega.jbpm.def.impl.DefaultViewImpl;
 
 import junit.framework.TestCase;
 
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
- * Last modified: $Date: 2007/09/18 09:45:09 $ by $Author: civilis $
+ * Last modified: $Date: 2007/09/21 11:30:29 $ by $Author: civilis $
  *
  */
 public class XFormsToTaskTest extends TestCase {
@@ -66,15 +66,6 @@ public class XFormsToTaskTest extends TestCase {
 		// moved to the auction state
 		
 		assertSame(taskNode, token.getNode());
-		
-		ViewToTask v2t = new XFormsToTask();
-		
-		System.out.println("xsx: "+taskNode.getTasks().iterator().next());
-		System.out.println("v2t: "+v2t);
-		DefaultViewImpl view = new DefaultViewImpl();
-		view.setViewId("view id");
-		
-		//v2t.bind(view, (Task)taskNode.getTasks().iterator().next());
 		
 		processInstance.getContextInstance().createVariable("somevar", "theval", token);
 		

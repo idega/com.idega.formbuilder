@@ -1,0 +1,23 @@
+<data>
+
+
+	<form_id>form id</form_id>
+	
+	
+	<dateInput1 mapping="string:start date">2007-12-12</dateInput1>
+	<durationInput1 mapping="string:duration">very long time</durationInput1>
+	<infoInput2 mapping="string:info">what info, forget that</infoInput2>
+	<decisionInput3 mapping="string:decision">my decision is positive</decisionInput3>
+	<xx mapping="list:theList">
+		<fakpak>value 1</fakpak>
+		<fakpak>and two </fakpak>
+		<fakpak>and three</fakpak>
+	</xx>
+	
+	<!--  
+			<variable name="date:start date"></variable>
+            <variable name="string:duration" access="read,write,required"></variable>
+            <variable name="string:info" access="read"></variable>
+            <variable name="string:decision" access="read"></variable>
+	-->
+</data>
