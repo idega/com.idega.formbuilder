@@ -1,0 +1,11 @@
+<data>
+
+
+	<form_id>form id</form_id>
+	
+	
+	<dateInput1 mapping="string:start date"></dateInput1>
+	<durationInput1 mapping="string:duration"></durationInput1>
+	<infoInput2 mapping="string:info"></infoInput2>
+	<xx mapping="list:theList" />
+</data>

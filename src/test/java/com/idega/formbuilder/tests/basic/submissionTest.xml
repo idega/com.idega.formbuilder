@@ -1,7 +1,7 @@
 <data>
 
 
-	<form_id>form id</form_id>
+	<form_id>form id x</form_id>
 	
 	
 	<dateInput1 mapping="string:start date">2007-12-12</dateInput1>

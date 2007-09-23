@@ -8,18 +8,14 @@ import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 
-import com.idega.formbuilder.business.process.XFormsToTask;
-import com.idega.jbpm.def.ViewToTask;
-import com.idega.jbpm.def.impl.DefaultViewImpl;
-
 import junit.framework.TestCase;
 
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
- * Last modified: $Date: 2007/09/21 11:30:29 $ by $Author: civilis $
+ * Last modified: $Date: 2007/09/23 06:58:59 $ by $Author: civilis $
  *
  */
 public class XFormsToTaskTest extends TestCase {

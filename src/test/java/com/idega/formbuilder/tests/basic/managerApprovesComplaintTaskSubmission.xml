@@ -1,0 +1,7 @@
+<data>
+	<form_id>form id 2</form_id>
+	<taskinstance_id>asadas</taskinstance_id>
+	
+	<xx1 mapping="string:approve comment">This is my comment</xx1>
+	<!--  <xx2 mapping="string:initiator name">Slim shady</xx2>-->
+</data>

@@ -20,6 +20,7 @@
       <task name="Approve">
          <controller>
             <variable name="string:approve comment"></variable>
+            <variable name="string:initiator name" access="read"></variable>
          </controller>
       </task>
       <transition name="" to="end"></transition>
