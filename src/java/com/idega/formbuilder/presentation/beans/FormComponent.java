@@ -182,27 +182,29 @@ public class FormComponent implements Serializable {
 	
 	public void saveLabel(int index, String value) {
 		int size = getItems().size();
+		List<ItemBean> itemSet = getItems();
 		if(index >= size) {
 			ItemBean newItem = new ItemBean();
 			newItem.setLabel(value);
 			newItem.setValue(value);
-			getItems().add(newItem);
+			itemSet.add(newItem);
 		} else {
-			getItems().get(index).setLabel(value);
-			getItems().get(index).setValue(value);
+			itemSet.get(index).setLabel(value);
+			itemSet.get(index).setValue(value);
 		}
-//		setItems(items);
+		setItems(itemSet);
 	}
 	
 	public void saveValue(int index, String value) {
-		if(index >= getItems().size()) {
+		List<ItemBean> itemSet = getItems();
+		if(index >= itemSet.size()) {
 			ItemBean newItem = new ItemBean();
 			newItem.setValue(value);
-			getItems().add(newItem);
+			itemSet.add(newItem);
 		} else {
-			getItems().get(index).setValue(value);
+			itemSet.get(index).setValue(value);
 		}
-//		setItems(items);
+		setItems(itemSet);
 	}
 	
 	public void loadButton(String id) {

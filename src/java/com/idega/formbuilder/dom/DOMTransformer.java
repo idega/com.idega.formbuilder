@@ -12,6 +12,9 @@ import org.w3c.dom.NodeList;
 public class DOMTransformer {
 	
 	public static void renderNode(Node node, UIComponent component, ResponseWriter writer) throws IOException {
+		if(node == null || component == null || writer == null) {
+			return;
+		}
 		String nodeName = node.getNodeName();
 		writer.startElement(node.getNodeName(), component);
 		if(nodeName.equalsIgnoreCase("input") || nodeName.equalsIgnoreCase("textarea") || nodeName.equalsIgnoreCase("select")) {

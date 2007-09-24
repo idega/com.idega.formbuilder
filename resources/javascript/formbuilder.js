@@ -1018,7 +1018,7 @@ function getEmptySelect(index,lbl,vl) {
 	remB.style.display = 'inline';
 	remB.setAttribute('onclick','deleteThisItem(this.parentNode.id);');
 	remB.id = 'delB_' + index;
-	remB.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png';
+	remB.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete-tiny.png';
 	var label = document.createElement('input');
 	label.id = 'labelF_' + index;
 	label.setAttribute('type','text');

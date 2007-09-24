@@ -3,18 +3,16 @@ package com.idega.formbuilder.presentation.components;
 import java.io.IOException;
 import java.util.List;
 
-import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
-import javax.faces.component.html.HtmlGraphicImage;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-
-import org.apache.myfaces.component.html.ext.HtmlInputText;
 
 import com.idega.documentmanager.business.form.beans.ItemBean;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormComponent;
-import com.idega.webface.WFDivision;
+import com.idega.presentation.Image;
+import com.idega.presentation.Layer;
+import com.idega.presentation.ui.TextInput;
 import com.idega.webface.WFUtil;
 
 public class FBSelectValuesList extends FBComponentBase {
@@ -30,8 +28,8 @@ public class FBSelectValuesList extends FBComponentBase {
 	private static final String LABEL_FIELD_PREFIX = "labelF_";
 	private static final String VALUE_FIELD_PREFIX = "valueF_";
 	
-	private static final String DELETE_BUTTON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png";
-	private static final String ADD_BUTTON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/add.png";
+	private static final String DELETE_BUTTON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete-tiny.png";
+	private static final String ADD_BUTTON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/add-tiny.png";
 	private static final String EXPAND_BUTTON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow_right.png";
 	private static final String COLLAPSE_BUTTON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow_left.png";
 
@@ -45,63 +43,60 @@ public class FBSelectValuesList extends FBComponentBase {
 	}
 	
 	protected void initializeComponent(FacesContext context) {
-		Application application = context.getApplication();
 		getChildren().clear();
 		
-		HtmlGraphicImage addButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+		Image addButton = new Image();
 		addButton.setId("addButton");
-		addButton.setValue(ADD_BUTTON_IMG);
-		addButton.setOnclick("addNewItem('" + getId() + "');");
+		addButton.setSrc(ADD_BUTTON_IMG);
+		addButton.setOnClick("addNewItem('" + getId() + "');");
 		addFacet(ADD_NEW_BUTTON, addButton);
 		
-		HtmlGraphicImage expandAllButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+		Image expandAllButton = new Image();
 		expandAllButton.setId("expandAllButton");
-		expandAllButton.setValue(EXPAND_BUTTON_IMG);
-		expandAllButton.setOnclick("expandAllItems();");
+		expandAllButton.setSrc(EXPAND_BUTTON_IMG);
+		expandAllButton.setOnClick("expandAllItems();");
 		addFacet(EXPAND_ALL_BUTTON, expandAllButton);
 		
-		HtmlGraphicImage collapseAllButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
+		Image collapseAllButton = new Image();
 		collapseAllButton.setId("collapseAllButton");
-		collapseAllButton.setValue(COLLAPSE_BUTTON_IMG);
-		collapseAllButton.setOnclick("collapseAllItems();");
+		collapseAllButton.setSrc(COLLAPSE_BUTTON_IMG);
+		collapseAllButton.setOnClick("collapseAllItems();");
 		addFacet(COLLAPSE_ALL_BUTTON, collapseAllButton);
 	}
 	
 	private UIComponent getNextSelectRow(String field, String value, int index, FacesContext context) {
-		Application application = context.getApplication();
-		
-		WFDivision row = (WFDivision) application.createComponent(WFDivision.COMPONENT_TYPE);
+		Layer row = new Layer(Layer.DIV);
 		row.setId(DIV_PREFIX + index);
 		
-		HtmlGraphicImage deleteButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
-		deleteButton.setValue(DELETE_BUTTON_IMG);
+		Image deleteButton = new Image();
+		deleteButton.setSrc(DELETE_BUTTON_IMG);
 		deleteButton.setId(DELETE_BUTTON_PREFIX + index);
-		deleteButton.setStyle(INLINE_DIV_STYLE);
-		deleteButton.setOnclick("deleteThisItem(this.parentNode.id)");
-		addChild(deleteButton, row);
+		deleteButton.setStyleClass(INLINE_DIV_STYLE);
+		deleteButton.setOnClick("deleteThisItem(this.parentNode.id)");
+		row.add(deleteButton);
 		
-		HtmlInputText labelF = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+		TextInput labelF = new TextInput();
 		labelF.setValue(field);
 		labelF.setId(LABEL_FIELD_PREFIX + index);
-		labelF.setStyle(INLINE_DIV_STYLE);
+		labelF.setStyleClass(INLINE_DIV_STYLE);
 		labelF.setStyleClass("fbSelectListItem");
-		labelF.setOnblur("saveLabel(this)");
-		addChild(labelF, row);
+		labelF.setOnBlur("saveLabel(this)");
+		row.add(labelF);
 		
-		HtmlInputText valueF = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+		TextInput valueF = new TextInput();
 		valueF.setValue(value);
 		valueF.setId(VALUE_FIELD_PREFIX + index);
-		valueF.setStyle(HIDDEN_DIV_STYLE);
+		valueF.setStyleClass(HIDDEN_DIV_STYLE);
 		valueF.setStyleClass("fbSelectListItem");
-		valueF.setOnblur("saveValue(this)");
-		addChild(valueF, row);
+		valueF.setOnBlur("saveValue(this)");
+		row.add(valueF);
 		
-		HtmlGraphicImage expandButton = (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
-		expandButton.setValue(EXPAND_BUTTON_IMG);
+		Image expandButton = new Image();
+		expandButton.setSrc(EXPAND_BUTTON_IMG);
 		expandButton.setId(EXPAND_BUTTON_PREFIX + index);
-		expandButton.setStyle(INLINE_DIV_STYLE);
-		expandButton.setOnclick("expandOrCollapse(this,true)");
-		addChild(expandButton, row);
+		expandButton.setStyleClass(INLINE_DIV_STYLE);
+		expandButton.setOnClick("expandOrCollapse(this,true)");
+		row.add(expandButton);
 		
 		return row;
 	}

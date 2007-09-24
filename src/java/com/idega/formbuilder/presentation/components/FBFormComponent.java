@@ -9,6 +9,7 @@ import javax.faces.context.ResponseWriter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Element;
 
 import com.idega.documentmanager.business.form.Component;
@@ -72,6 +73,7 @@ public class FBFormComponent extends FBComponentBase {
 				try {
 					Locale current = ((Workspace) WFUtil.getBeanInstance("workspace")).getLocale();
 					Element element = (Element) component.getHtmlRepresentation(current).cloneNode(true);
+					DOMUtil.prettyPrintDOM(element);
 					if(element != null) {
 						
 						element.removeAttribute("id");
