@@ -2,8 +2,6 @@ package com.idega.formbuilder.business.egov;
 
 import javax.ejb.FinderException;
 
-import com.idega.business.SpringBeanName;
-
 /**
  * 
  * @author <a href="mailto:civilis@idega.com">Vytautas Čivilis</a>

@@ -3,14 +3,20 @@ package com.idega.formbuilder.business.process;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jbpm.JbpmContext;
+import org.jbpm.graph.def.ProcessDefinition;
+import org.jbpm.taskmgmt.def.Task;
+import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
+
+import com.idega.builder.bean.AdvancedProperty;
+import com.idega.chiba.process.XFormsView;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
+import com.idega.jbpm.data.ActorTaskBind;
+import com.idega.jbpm.def.ActorTaskBinder;
 import com.idega.jbpm.def.View;
 import com.idega.jbpm.def.ViewToTask;
-import com.sun.jmx.snmp.tasks.Task;
-
 import com.idega.jbpm.presentation.beans.ActorBindingViewBean;
-import com.idega.jbpm.def.ActorTaskBinder;
-import com.idega.jbpm.data.ActorTaskBind;
+import com.idega.webface.WFUtil;
 
 public class XFormsProcessManager {
 	

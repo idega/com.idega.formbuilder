@@ -1,10 +1,8 @@
 package com.idega.formbuilder.presentation.converters;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Element;
 
 public class FormPageInfo {
