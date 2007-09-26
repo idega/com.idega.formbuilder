@@ -53,12 +53,9 @@ public class FBViewPanel extends FBComponentBase {
 		FBFormPreview previewView = (FBFormPreview) application.createComponent(FBFormPreview.COMPONENT_TYPE);
 		previewView.setId("previewView");
 		
-		FBProcessEditor workflowView = (FBProcessEditor) application.createComponent(FBProcessEditor.COMPONENT_TYPE);
-		
 		tabbedPane.addTab("tab1", "Design", designView);
 		tabbedPane.addTab("tab2", "Preview", previewView);
 		tabbedPane.addTab("tab3", "Source", sourceView);
-		tabbedPane.addTab("tab4", "Workflow", workflowView);
 		tabbedPane.setSelectedMenuItemId("tab1");
 		
 		addFacet(SWITCHER_FACET, tabbedPane);

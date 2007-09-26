@@ -19,6 +19,7 @@
 								/dwr/interface/FormComponent.js,
 								/dwr/interface/FormDocument.js,
 								/dwr/interface/FormPage.js,
+								/dwr/interface/JbpmBusiness.js,
 								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js"
 				stylesheeturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formbuilder.css">
 			<h:form id="workspaceform1">

@@ -2,6 +2,10 @@
 
 <dwr>
   	<allow>
+  		<create creator="jsf" javascript="XFormsProcess" scope="application">
+	    	<param name="managedBeanName" value="xformsProcessManager"/>
+	    	<param name="class" value="com.idega.formbuilder.business.process.XFormsProcessManager"/>
+    	</create>
     	<create creator="jsf" javascript="FormDocument" scope="session">
 	    	<param name="managedBeanName" value="formDocument"/>
 	    	<param name="class" value="com.idega.formbuilder.presentation.beans.FormDocument"/>

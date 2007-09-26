@@ -1,0 +1,30 @@
+.fbTabViewContent {
+	width: 1000px;
+}
+.fbTabViewContent .taskNodeSelection {
+	float: left;
+	width: 50%;
+}
+.fbTabViewContent .taskNodeProperties {
+	float: right;
+	width: 50%;
+}
+.formItem {
+	padding-top: 30px;
+}
+.wideItem select {
+	width: 300px							!important;
+}
+.changeButton {
+	width: 80px								!important;
+}
+.fbPanelHeader {
+	color:#222222;
+	float:left;
+	font-size:11px;
+	font-weight:bold;
+	width:160px;
+}
+.taskSelector, .actorSelector {
+	height: 140px;
+}

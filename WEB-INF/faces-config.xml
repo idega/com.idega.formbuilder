@@ -41,6 +41,23 @@
 		</managed-property>
 	</managed-bean>
 	<managed-bean>
+		<managed-bean-name>xformsProcessManager</managed-bean-name>
+		<managed-bean-class>com.idega.formbuilder.business.process.XFormsProcessManager</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+		<managed-property>
+		  	<property-name>jbpmProcessBusiness</property-name>
+		    <value>#{jbpmProcessBusiness}</value>
+		</managed-property>
+		<managed-property>
+		  	<property-name>viewToTaskBinder</property-name>
+		    <value>#{process_xforms_viewToTask}</value>
+		</managed-property>
+		<managed-property>
+		  	<property-name>actorToTaskBinder</property-name>
+		    <value>#{actorToTaskBinder}</value>
+		</managed-property>
+	</managed-bean>
+	<managed-bean>
 		<managed-bean-name>formPage</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.presentation.beans.FormPage</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
@@ -109,7 +126,7 @@
 		    <value>#{process_xforms_submissionHandler}</value>
 		</managed-property>
     </managed-bean>
-	
+    
 	<render-kit>
 	     <renderer>
 	          <component-family>webface</component-family>
@@ -238,9 +255,5 @@
 	<component>
 		<component-type>FormPreview</component-type>
 		<component-class>com.idega.formbuilder.presentation.components.FBFormPreview</component-class>
-	</component>
-	<component>
-		<component-type>TaskPropertiesPanel</component-type>
-		<component-class>com.idega.formbuilder.presentation.components.FBTaskPropertiesPanel</component-class>
 	</component>
 </faces-config>
