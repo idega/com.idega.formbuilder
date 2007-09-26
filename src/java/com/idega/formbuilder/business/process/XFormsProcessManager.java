@@ -3,20 +3,14 @@ package com.idega.formbuilder.business.process;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jbpm.JbpmContext;
-import org.jbpm.graph.def.ProcessDefinition;
-import org.jbpm.taskmgmt.def.Task;
-import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
-
-import com.idega.builder.bean.AdvancedProperty;
-import com.idega.chiba.process.XFormsView;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
-import com.idega.jbpm.data.ActorTaskBinding;
-import com.idega.jbpm.def.ActorToTaskBinder;
 import com.idega.jbpm.def.View;
 import com.idega.jbpm.def.ViewToTask;
-import com.idega.jbpm.identity.ActorBindingManager;
-import com.idega.webface.WFUtil;
+import com.sun.jmx.snmp.tasks.Task;
+
+import com.idega.jbpm.presentation.beans.ActorBindingViewBean;
+import com.idega.jbpm.def.ActorTaskBinder;
+import com.idega.jbpm.data.ActorTaskBind;
 
 public class XFormsProcessManager {
 	
@@ -51,7 +45,7 @@ public class XFormsProcessManager {
 			View view = getViewToTaskBinder().getView(task.getId());
 			AdvancedProperty taskForm = new AdvancedProperty(JBPM_XFORM_VIEW_NAME, view == null ? "" : view.getViewId());
 			result.add(taskForm);
-			ActorTaskBinding atb = getActorToTaskBinder().getActor(task.getId());
+			ActorTaskBind atb = getActorToTaskBinder().getActor(task.getId());
 			if(atb != null) {
 				AdvancedProperty taskActor = new AdvancedProperty(JBPM_XFORM_ACTOR_ID, atb == null ? "" : atb.getActorId());
 				AdvancedProperty actorType = new AdvancedProperty(JBPM_XFORM_ACTOR_TYPE, atb == null ? "" : atb.getActorType());
@@ -61,7 +55,7 @@ public class XFormsProcessManager {
 				AdvancedProperty name = new AdvancedProperty(JBPM_XFORM_ACTOR_NAME, actorName);
 				result.add(name);
 				
-				ActorBindingManager abm = (ActorBindingManager) WFUtil.getBeanInstance("actorBindingManager");
+				ActorBindingViewBean abm = (ActorBindingViewBean) WFUtil.getBeanInstance("actorBindingManager");
 				if(abm != null) {
 					abm.setActorType(atb.getActorType());
 					String[] actors = {atb.getActorId()};
@@ -78,7 +72,7 @@ public class XFormsProcessManager {
 	
 	private JbpmProcessBusinessBean jbpmProcessBusiness;
 	private ViewToTask viewToTaskBinder;
-	private ActorToTaskBinder actorToTaskBinder;
+	private ActorTaskBinder actorToTaskBinder;
 
 	public ViewToTask getViewToTaskBinder() {
 		return viewToTaskBinder;
@@ -96,11 +90,11 @@ public class XFormsProcessManager {
 		this.jbpmProcessBusiness = jbpmProcessBusiness;
 	}
 
-	public ActorToTaskBinder getActorToTaskBinder() {
+	public ActorTaskBinder getActorToTaskBinder() {
 		return actorToTaskBinder;
 	}
 
-	public void setActorToTaskBinder(ActorToTaskBinder actorToTaskBinder) {
+	public void setActorToTaskBinder(ActorTaskBinder actorToTaskBinder) {
 		this.actorToTaskBinder = actorToTaskBinder;
 	}
 
