@@ -73,11 +73,11 @@ public class FBFormPreview extends FBComponentBase {
 			return;
 		}
 			
-		FormViewer form_viewer = new FormViewer();
-		form_viewer.setFormId(((FormDocument) WFUtil.getBeanInstance("formDocument")).getFormId());
-		form_viewer.setXFormsDocument((org.w3c.dom.Document)xforms_document.getXformsDocument().cloneNode(true));
+		FormViewer formViewer = new FormViewer();
+		formViewer.setFormId(((FormDocument) WFUtil.getBeanInstance("formDocument")).getFormId());
+		formViewer.setXFormsDocument((org.w3c.dom.Document)xforms_document.getXformsDocument().cloneNode(true));
 		
-		add(form_viewer);
+		add(formViewer);
 	}
 	
 	public void encodeChildren(FacesContext context) throws IOException {
