@@ -45,7 +45,7 @@ public class FBSourceView extends FBComponentBase {
 		textarea.setValueBinding("value", application.createValueBinding("#{formDocument.sourceCode}"));
 		textarea.setWrap("false");
 		textarea.setId("sourceTextarea");
-		textarea.setStyleClass("codepress html linenumbers-on");
+		//textarea.setStyleClass("codepress html linenumbers-on");
 		
 		HtmlCommandButton srcSubmit = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
 		srcSubmit.setId("saveSrcBtn");
@@ -61,7 +61,7 @@ public class FBSourceView extends FBComponentBase {
 	public void encodeChildren(FacesContext context) throws IOException {
 		Web2Business web2 = (Web2Business) SpringBeanLookup.getInstance().getSpringBean(CoreUtil.getIWContext(), Web2Business.class);
 		AddResource resourceAdder = AddResourceFactory.getInstance(context);
-		resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, web2.getCodePressScriptFilePath());
+//		resourceAdder.addJavaScriptAtPosition(context, AddResource.HEADER_BEGIN, web2.getCodePressScriptFilePath());
 		
 		if (!this.isRendered()) {
 			return;

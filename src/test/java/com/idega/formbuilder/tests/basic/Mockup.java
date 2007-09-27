@@ -13,21 +13,19 @@ import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import com.idega.jbpm.def.ViewToTask;
-import com.idega.jbpm.exe.SubmissionHandler;
 
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
- * Last modified: $Date: 2007/09/23 06:58:59 $ by $Author: civilis $
+ * Last modified: $Date: 2007/09/27 16:24:36 $ by $Author: civilis $
  *
  */
 public class Mockup {
 	
 	private JbpmConfiguration cfg;
 	private ViewToTask x2t;
-	private SubmissionHandler subHandler;
 	
 	public void setJbpmConfiguration(JbpmConfiguration cfg) {
 		this.cfg = cfg;
@@ -96,7 +94,7 @@ public class Mockup {
 			
 			try {
 				//get task instance id from xforms submission element
-				getSubHandler().submit(ti, o);
+//				getSubHandler().submit(ti, o);
 				System.out.println("finished");
 				ti.end();
 				ctx.save(ti);
@@ -141,7 +139,7 @@ public class Mockup {
 			
 			try {
 				//get task instance id from xforms submission element
-				getSubHandler().submit(ti, o);
+				//getSubHandler().submit(ti, o);
 				System.out.println("manager finished");
 				System.out.println("vars: "+ti.getVariables());
 				ti.end();
@@ -175,13 +173,5 @@ public class Mockup {
 
 	public void setX2t(ViewToTask x2t) {
 		this.x2t = x2t;
-	}
-
-	public SubmissionHandler getSubHandler() {
-		return subHandler;
-	}
-
-	public void setSubHandler(SubmissionHandler subHandler) {
-		this.subHandler = subHandler;
 	}
 }

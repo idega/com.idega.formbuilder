@@ -33,7 +33,7 @@ public class XFormsProcessManager {
 			Task task = mgmt.getTask(taskId);
 			XFormsView view = new XFormsView();
 			view.setViewId(formId);
-			getJbpmProcessBusiness().getViewToTaskBinder().bind(view, task);
+			getViewToTaskBinder().bind(view, task);
 		} finally {
 			if(ctx != null) {
 				ctx.close();

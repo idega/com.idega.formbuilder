@@ -114,16 +114,8 @@
 		    <value>#{defaultJbpmConfiguration}</value>
 		</managed-property>
 		<managed-property>
-		  	<property-name>subHandler</property-name>
-		    <value>#{process_xforms_submissionHandler}</value>
-		</managed-property>
-		<managed-property>
 		  	<property-name>x2t</property-name>
 		    <value>#{process_xforms_viewToTask}</value>
-		</managed-property>
-		<managed-property>
-		  	<property-name>subHandler</property-name>
-		    <value>#{process_xforms_submissionHandler}</value>
 		</managed-property>
     </managed-bean>
     
