@@ -1,4 +1,4 @@
-package com.idega.formbuilder.tests.basic;
+package com.idega.formbuilder.business.process;
 
 import java.io.File;
 import java.util.Collection;
@@ -17,9 +17,9 @@ import com.idega.jbpm.def.ViewToTask;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.1 $
  *
- * Last modified: $Date: 2007/09/27 16:24:36 $ by $Author: civilis $
+ * Last modified: $Date: 2007/09/28 11:08:35 $ by $Author: civilis $
  *
  */
 public class Mockup {
