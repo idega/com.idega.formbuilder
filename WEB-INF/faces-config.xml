@@ -107,7 +107,7 @@
 	</managed-bean>
 	<managed-bean>
         <managed-bean-name>idegaSomeMockup</managed-bean-name>
-        <managed-bean-class>com.idega.formbuilder.tests.basic.Mockup</managed-bean-class>
+        <managed-bean-class>com.idega.formbuilder.business.process.Mockup</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
         <managed-property>
 		  	<property-name>jbpmConfiguration</property-name>
