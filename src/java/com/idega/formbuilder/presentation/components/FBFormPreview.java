@@ -75,7 +75,6 @@ public class FBFormPreview extends FBComponentBase {
 			
 		FormViewer formViewer = new FormViewer();
 		formViewer.setFormId(((FormDocument) WFUtil.getBeanInstance("formDocument")).getFormId());
-		formViewer.setTaskId("1234");
 		formViewer.setXFormsDocument((org.w3c.dom.Document)xforms_document.getXformsDocument().cloneNode(true));
 		
 		add(formViewer);
