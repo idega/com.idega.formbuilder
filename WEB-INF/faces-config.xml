@@ -36,8 +36,8 @@
 		<managed-bean-class>com.idega.formbuilder.view.ActionManager</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 		<managed-property>
-		  	<property-name>persistenceManager</property-name>
-		    <value>#{formbuilderPersistenceManager}</value>
+		  	<property-name>documentManagerFactory</property-name>
+		    <value>#{xformsDocumentManagerFact}</value>
 		</managed-property>
 	</managed-bean>
 	<managed-bean>
@@ -82,7 +82,7 @@
 		</managed-property>
 		<managed-property>
 		  	<property-name>persistenceManager</property-name>
-		    <value>#{formbuilderPersistenceManager}</value>
+		    <value>#{xformsPersistenceManager}</value>
 		</managed-property>
 	</managed-bean>
 	<managed-bean>

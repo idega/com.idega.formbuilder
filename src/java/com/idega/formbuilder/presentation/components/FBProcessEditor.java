@@ -93,7 +93,7 @@ public class FBProcessEditor extends FBComponentBase {
 		formItem.add(panelHeader);
 		rightDiv.add(formItem);
 		
-		PersistenceManager persistence_manager = (PersistenceManager) WFUtil.getBeanInstance("formbuilderPersistenceManager");
+		PersistenceManager persistence_manager = (PersistenceManager) WFUtil.getBeanInstance("xformsPersistenceManager");
 		List<SelectItem> forms = persistence_manager.getForms();
 		
 		formItem = new Layer(Layer.DIV);

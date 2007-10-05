@@ -11,10 +11,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.idega.block.form.presentation.FormViewer;
-import com.idega.documentmanager.business.form.Document;
+import com.idega.documentmanager.business.Document;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
-import com.idega.formbuilder.view.ActionManager;
 import com.idega.util.RenderUtils;
 import com.idega.webface.WFUtil;
 
@@ -67,15 +66,18 @@ public class FBFormPreview extends FBComponentBase {
 	}
 	
 	protected void initializeComponent(FacesContext context) {
-		Document xforms_document = ActionManager.getCurrentInstance().getDocumentManagerInstance().getCurrentDocument();
-		if(xforms_document == null) {
-			logger.error("Form document got form ActionManager was null");
+		
+		FormDocument formDocument = (FormDocument)WFUtil.getBeanInstance("formDocument");
+		Document xformsDocument = formDocument.getDocument();
+		
+		if(xformsDocument == null) {
+			logger.error("Form document got form "+FormDocument.class.getName()+" was null");
 			return;
 		}
 			
 		FormViewer formViewer = new FormViewer();
 		formViewer.setFormId(((FormDocument) WFUtil.getBeanInstance("formDocument")).getFormId());
-		formViewer.setXFormsDocument((org.w3c.dom.Document)xforms_document.getXformsDocument().cloneNode(true));
+		formViewer.setXFormsDocument((org.w3c.dom.Document)xformsDocument.getXformsDocument().cloneNode(true));
 		
 		add(formViewer);
 	}

@@ -7,7 +7,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-import com.idega.documentmanager.business.form.beans.ItemBean;
+import com.idega.documentmanager.component.beans.ItemBean;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormComponent;
 import com.idega.presentation.Image;

@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.idega.documentmanager.business.form.ConstComponentCategory;
-import com.idega.documentmanager.business.form.DocumentManager;
+import com.idega.documentmanager.business.DocumentManager;
+import com.idega.documentmanager.business.component.ConstComponentCategory;
 import com.idega.formbuilder.IWBundleStarter;
 import com.idega.formbuilder.view.ActionManager;
 import com.idega.util.config.Config;
@@ -27,6 +27,8 @@ public class Palette implements Serializable {
 		DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
 		if(formManagerInstance != null) {
 			List<String> temp = formManagerInstance.getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.BASIC));
+			
+			System.out.println("x: "+temp);
 			Iterator it = temp.iterator();
 			while(it.hasNext()) {
 				basic.add(new PaletteComponent((String) it.next()));

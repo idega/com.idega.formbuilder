@@ -8,7 +8,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-import com.idega.documentmanager.business.form.beans.LocalizedStringBean;
+import com.idega.documentmanager.component.beans.LocalizedStringBean;
 import com.idega.webface.WFContainer;
 
 /**

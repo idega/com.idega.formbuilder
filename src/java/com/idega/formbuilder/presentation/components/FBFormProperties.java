@@ -9,9 +9,9 @@ import javax.faces.context.FacesContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.idega.documentmanager.business.form.Document;
-import com.idega.documentmanager.business.form.PageThankYou;
-import com.idega.documentmanager.business.form.manager.FormManager;
+import com.idega.documentmanager.business.Document;
+import com.idega.documentmanager.business.component.PageThankYou;
+import com.idega.documentmanager.manager.impl.FormManager;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.util.FBConstants;
@@ -87,6 +87,16 @@ public class FBFormProperties extends FBComponentBase {
 		
 		line.add(new Text("Form contains preview"));
 		line.add(preview);
+		body.add(line);
+		
+		CheckBox taskForm = new CheckBox();
+		taskForm.setId("isTaskForm");
+		taskForm.setChecked(false);
+		taskForm.setOnChange("saveIsTaskForm(this);");
+		
+		line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
+		line.add(new Text("(Temporary) Represents process task"));
+		line.add(taskForm);
 		body.add(line);
 		
 		line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);

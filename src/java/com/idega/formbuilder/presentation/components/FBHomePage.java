@@ -115,7 +115,7 @@ public class FBHomePage extends FBComponentBase {
 		writer.writeAttribute("id", getId(), "id");
 		writer.writeAttribute("class", getStyleClass(), "styleClass");
 		
-		PersistenceManager persistence_manager = (PersistenceManager) WFUtil.getBeanInstance("formbuilderPersistenceManager");
+		PersistenceManager persistence_manager = (PersistenceManager) WFUtil.getBeanInstance("xformsPersistenceManager");
 		List<SelectItem> formsList = persistence_manager.getForms();
 		
 		Layer greeting = new Layer(Layer.DIV);

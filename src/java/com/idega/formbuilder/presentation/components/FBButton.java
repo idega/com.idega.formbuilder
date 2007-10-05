@@ -6,9 +6,9 @@ import java.util.Locale;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-import com.idega.documentmanager.business.form.Button;
-import com.idega.documentmanager.business.form.ButtonArea;
-import com.idega.documentmanager.business.form.Page;
+import com.idega.documentmanager.business.component.Button;
+import com.idega.documentmanager.business.component.ButtonArea;
+import com.idega.documentmanager.business.component.Page;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormPage;
 import com.idega.webface.WFUtil;

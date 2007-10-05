@@ -147,6 +147,17 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 				
 				line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
 				
+				TextInput processVarName = new TextInput("processVarName");
+				
+				processVarName.setOnBlur("saveComponentProcessVariableName(this.value);");
+				processVarName.setOnKeyDown("savePropertyOnEnter(this.value,'compProcVar',event);");
+				
+				line.add(new Text("(Temporary) Process variable name:"));
+				line.add(processVarName);
+				body.add(line);
+				
+				line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
+				
 				CheckBox hasAutoFill = new CheckBox();
 				hasAutoFill.setId("propertyHasAutofill");
 				hasAutoFill.setOnClick("toggleAutofill(this.checked);");

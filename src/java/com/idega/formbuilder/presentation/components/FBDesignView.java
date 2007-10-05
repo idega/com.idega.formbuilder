@@ -8,10 +8,10 @@ import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
-import com.idega.documentmanager.business.form.Component;
-import com.idega.documentmanager.business.form.Container;
-import com.idega.documentmanager.business.form.Page;
-import com.idega.documentmanager.business.form.PageThankYou;
+import com.idega.documentmanager.business.component.Component;
+import com.idega.documentmanager.business.component.Container;
+import com.idega.documentmanager.business.component.Page;
+import com.idega.documentmanager.business.component.PageThankYou;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.presentation.beans.FormPage;

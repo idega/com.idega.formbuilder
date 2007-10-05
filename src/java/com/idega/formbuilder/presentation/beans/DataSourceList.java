@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 import javax.faces.model.SelectItem;
 
-import com.idega.documentmanager.business.form.PropertiesSelect;
+import com.idega.documentmanager.business.component.properties.PropertiesSelect;
 import com.idega.formbuilder.IWBundleStarter;
 import com.idega.idegaweb.BundleLocalizationMap;
 import com.idega.presentation.ui.SelectOption;

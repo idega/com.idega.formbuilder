@@ -2,7 +2,7 @@ package com.idega.formbuilder.presentation.converters;
 
 import java.util.List;
 
-import com.idega.documentmanager.business.form.beans.ItemBean;
+import com.idega.documentmanager.component.beans.ItemBean;
 
 public class FormComponentInfo {
 	

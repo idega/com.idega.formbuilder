@@ -11,10 +11,10 @@ import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Element;
 
 import com.idega.builder.business.BuilderLogic;
-import com.idega.documentmanager.business.form.Button;
-import com.idega.documentmanager.business.form.ButtonArea;
-import com.idega.documentmanager.business.form.Document;
-import com.idega.documentmanager.business.form.Page;
+import com.idega.documentmanager.business.Document;
+import com.idega.documentmanager.business.component.Button;
+import com.idega.documentmanager.business.component.ButtonArea;
+import com.idega.documentmanager.business.component.Page;
 import com.idega.formbuilder.presentation.components.FBDesignView;
 import com.idega.formbuilder.presentation.converters.FormButtonInfo;
 import com.idega.formbuilder.presentation.converters.FormPageInfo;

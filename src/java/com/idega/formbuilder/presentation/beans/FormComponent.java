@@ -9,15 +9,15 @@ import org.jdom.Document;
 import org.w3c.dom.Node;
 
 import com.idega.builder.business.BuilderLogic;
-import com.idega.documentmanager.business.form.Button;
-import com.idega.documentmanager.business.form.ButtonArea;
-import com.idega.documentmanager.business.form.Component;
-import com.idega.documentmanager.business.form.ComponentPlain;
-import com.idega.documentmanager.business.form.ComponentSelect;
-import com.idega.documentmanager.business.form.ConstButtonType;
-import com.idega.documentmanager.business.form.Page;
-import com.idega.documentmanager.business.form.beans.ItemBean;
-import com.idega.documentmanager.business.form.beans.LocalizedStringBean;
+import com.idega.documentmanager.business.component.Button;
+import com.idega.documentmanager.business.component.ButtonArea;
+import com.idega.documentmanager.business.component.Component;
+import com.idega.documentmanager.business.component.ComponentPlain;
+import com.idega.documentmanager.business.component.ComponentSelect;
+import com.idega.documentmanager.business.component.ConstButtonType;
+import com.idega.documentmanager.business.component.Page;
+import com.idega.documentmanager.component.beans.ItemBean;
+import com.idega.documentmanager.component.beans.LocalizedStringBean;
 import com.idega.formbuilder.presentation.components.FBButton;
 import com.idega.formbuilder.presentation.components.FBComponentPropertiesPanel;
 import com.idega.formbuilder.presentation.components.FBFormComponent;
@@ -96,6 +96,10 @@ public class FormComponent implements Serializable {
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(id), true);
 	}
 	
+	public void saveComponentProcessVariableName(String value) {
+		System.out.println("saveComponentProcessVariableName");
+	}
+	
 	public Document saveButtonLabel(String value) {
 		setLabel(value);
 		return getFormButtonInfo(id);
@@ -162,7 +166,6 @@ public class FormComponent implements Serializable {
 	}
 
 	public void setDataSrc(String dataSrc) {
-//		this.dataSrc = dataSrc;
 		if(selectComponent != null) {
 			selectComponent.getProperties().setDataSrcUsed(Integer.parseInt(dataSrc));
 		}
@@ -246,9 +249,11 @@ public class FormComponent implements Serializable {
 	}
 	
 	public Node addComponent(PaletteComponentInfo info) throws Exception {
+		
 		FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
 		Page page = formPage.getPage();
 		if(page != null) {
+			
 			String before = null;
 			ButtonArea area = page.getButtonArea();
 			if(area != null) {
@@ -261,6 +266,7 @@ public class FormComponent implements Serializable {
 						component.getProperties().setAutofillKey(info.getAutofill());
 				}
 				Node element = component.getHtmlRepresentation(new Locale("en")).cloneNode(true);
+				
 				return element;
 			}
 		}

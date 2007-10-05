@@ -273,6 +273,9 @@ function savePropertyOnEnter(value,attribute,event) {
 		  	case 'compTitle':
 		  		saveComponentLabel(value);
 		    	break;
+		    case 'compProcVar':
+		  		saveComponentProcessVariableName(value);
+		    	break;	
 		  	case 'compErr':
 		    	saveErrorMessage(value);
 		    	break;
@@ -583,6 +586,20 @@ function saveHasPreview(parameter) {
 		}
 	}
 }
+
+function saveIsTaskForm(parameter) {
+	if(parameter != null)
+		FormDocument.toggleProcessTask(parameter.checked, nothing);
+}
+
+function save(parameter) {
+	if(parameter != null) {
+		if(parameter.checked) {
+			FormDocument.togglePreviewPage(parameter.checked, placePreviewPage);
+		}
+	}
+}
+
 function placePreviewPage(parameter) {
 	var container = $('pagesPanelSpecial');
 	if(container != null) {
@@ -887,6 +904,12 @@ function saveComponentLabel(value) {
 		}
 	}
 }
+
+function saveComponentProcessVariableName(value) {
+
+	FormComponent.saveComponentProcessVariableName(value, nothing);
+}
+
 function saveRequired(parameter) {
 	if(parameter != null) {
 		FormComponent.saveComponentRequired(parameter, replaceChangedComponent);

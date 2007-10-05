@@ -12,8 +12,8 @@ import org.apache.commons.logging.LogFactory;
 import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Element;
 
-import com.idega.documentmanager.business.form.Component;
-import com.idega.documentmanager.business.form.Page;
+import com.idega.documentmanager.business.component.Component;
+import com.idega.documentmanager.business.component.Page;
 import com.idega.formbuilder.dom.DOMTransformer;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormPage;

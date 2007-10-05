@@ -28,13 +28,13 @@ import com.idega.core.builder.data.ICDomain;
 import com.idega.core.builder.data.ICDomainHome;
 import com.idega.data.IDOLookup;
 import com.idega.data.IDOLookupException;
+import com.idega.documentmanager.business.Document;
+import com.idega.documentmanager.business.DocumentManager;
 import com.idega.documentmanager.business.FormLockException;
 import com.idega.documentmanager.business.PersistenceManager;
-import com.idega.documentmanager.business.form.Document;
-import com.idega.documentmanager.business.form.DocumentManager;
-import com.idega.documentmanager.business.form.Page;
-import com.idega.documentmanager.business.form.PageThankYou;
-import com.idega.documentmanager.business.form.beans.LocalizedStringBean;
+import com.idega.documentmanager.business.component.Page;
+import com.idega.documentmanager.business.component.PageThankYou;
+import com.idega.documentmanager.component.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.egov.Application;
 import com.idega.formbuilder.business.egov.ApplicationBusiness;
 import com.idega.formbuilder.presentation.components.FBFormProperties;
@@ -54,7 +54,7 @@ public class FormDocument implements Serializable {
 	
 	private static Log logger = LogFactory.getLog(FormDocument.class);
 	
-	private PersistenceManager persistence_manager;
+	private PersistenceManager persistenceManager;
 	
 	private String formId;
 	private boolean hasPreview;
@@ -483,6 +483,11 @@ public class FormDocument implements Serializable {
 		return "";
 	}
 	
+	public void toggleProcessTask(boolean value) {
+		
+		System.out.println("setting this is process task: "+value);
+	}
+	
 	public FormPageInfo togglePreviewPage(boolean value) throws Exception {
 		FormPageInfo result = new FormPageInfo();
 		hasPreview = value;
@@ -574,16 +579,11 @@ public class FormDocument implements Serializable {
 
 	public String getSourceCode() {
 		try {	
-			if(document != null) {	
-				return document.getFormSourceCode();
-			} else {
-				document = ActionManager.getCurrentInstance().getDocumentManagerInstance().getCurrentDocument();
-				return document.getFormSourceCode();
-			}
+			return document.getFormSourceCode();
 		} catch (Exception e) {
 			logger.error("Error when getting form source code", e);
+			return "";
 		}
-		return "";
 	}
 
 	public boolean isHasPreview() {
@@ -638,11 +638,11 @@ public class FormDocument implements Serializable {
 	
 	public PersistenceManager getPersistenceManager() {
 		
-		return persistence_manager;
+		return persistenceManager;
 	}
 	
-	public void setPersistenceManager(PersistenceManager persistence_manager) {
-		this.persistence_manager = persistence_manager;
+	public void setPersistenceManager(PersistenceManager persistenceManager) {
+		this.persistenceManager = persistenceManager;
 	}
 	
 	protected BuilderService getBuilderService() {
