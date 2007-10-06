@@ -482,10 +482,20 @@ public class FormDocument implements Serializable {
 		}
 		return "";
 	}
+
+//	TODO: this is temporary. remove.
+	public static final String webdavSubmissionAction = "webdav:/files/forms/submissions/";
+	public static final String processSubmissionAction = "process:/files/forms/submissions/";
 	
 	public void toggleProcessTask(boolean value) {
-		
-		System.out.println("setting this is process task: "+value);
+
+//		TODO: temporary. replace this method. should be possibility to choose from the actions list, 
+//		or retrieve default for each use case. e.g. for simple use case, use webdav submission action,
+//		for process, use jbpm ws
+		if(value)
+			document.getProperties().setSubmissionAction(processSubmissionAction);
+		else
+			document.getProperties().setSubmissionAction(webdavSubmissionAction);
 	}
 	
 	public FormPageInfo togglePreviewPage(boolean value) throws Exception {
@@ -588,6 +598,16 @@ public class FormDocument implements Serializable {
 
 	public boolean isHasPreview() {
 		return hasPreview;
+	}
+
+	public void setProcessForm(boolean procForm) {
+		
+		document.getProperties().setSubmissionAction(processSubmissionAction);
+	}
+	
+	public boolean isProcessForm() {
+
+		return processSubmissionAction.equals(document.getProperties().getSubmissionAction());
 	}
 
 	public void setHasPreview(boolean hasPreview) {

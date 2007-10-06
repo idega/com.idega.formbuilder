@@ -147,7 +147,8 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 				
 				line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
 				
-				TextInput processVarName = new TextInput("processVarName");
+				String variableName = formComponent.getVariableName();
+				TextInput processVarName = new TextInput("processVarName", variableName == null ? "" : variableName);
 				
 				processVarName.setOnBlur("saveComponentProcessVariableName(this.value);");
 				processVarName.setOnKeyDown("savePropertyOnEnter(this.value,'compProcVar',event);");

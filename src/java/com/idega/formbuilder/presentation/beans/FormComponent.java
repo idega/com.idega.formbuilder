@@ -97,7 +97,11 @@ public class FormComponent implements Serializable {
 	}
 	
 	public void saveComponentProcessVariableName(String value) {
-		System.out.println("saveComponentProcessVariableName");
+		
+		Component component = this.component != null ? this.component : this.selectComponent != null ? this.selectComponent : null;
+		
+		if(component != null)
+			component.getProperties().setVariableName(value);
 	}
 	
 	public Document saveButtonLabel(String value) {
@@ -451,6 +455,15 @@ public class FormComponent implements Serializable {
 			return component.getProperties().getHelpText().getString(FBUtil.getUILocale());
 		} else if(selectComponent != null) {
 			return selectComponent.getProperties().getHelpText().getString(FBUtil.getUILocale());
+		}
+		return null;
+	}
+	
+	public String getVariableName() {
+		if(component != null) {
+			return component.getProperties().getVariableName();
+		} else if(selectComponent != null) {
+			return selectComponent.getProperties().getVariableName();
 		}
 		return null;
 	}

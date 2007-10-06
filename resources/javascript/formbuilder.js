@@ -587,7 +587,7 @@ function saveHasPreview(parameter) {
 	}
 }
 
-function saveIsTaskForm(parameter) {
+function saveIsProcessForm(parameter) {
 	if(parameter != null)
 		FormDocument.toggleProcessTask(parameter.checked, nothing);
 }
