@@ -29,7 +29,12 @@
 			<from-outcome>redirectHome</from-outcome>
 			<to-view-id>/workspace/forms/</to-view-id>
 		</navigation-case>
+		<navigation-case>
+			<from-outcome>gotoFormbuilder</from-outcome>
+			<to-view-id>/workspace/forms/formbuilder/</to-view-id>
+		</navigation-case>
 	</navigation-rule>
+	
 	
 	<managed-bean>
 		<managed-bean-name>actionManager</managed-bean-name>
