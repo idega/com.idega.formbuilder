@@ -8,8 +8,8 @@ import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 
+import com.idega.block.form.process.XFormsView;
 import com.idega.builder.bean.AdvancedProperty;
-import com.idega.chiba.process.XFormsView;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
 import com.idega.jbpm.data.ActorTaskBind;
 import com.idega.jbpm.def.ActorTaskBinder;
