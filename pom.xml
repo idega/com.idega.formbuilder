@@ -76,13 +76,5 @@
       <groupId>com.idega.block.addon</groupId>
       <artifactId>org.jboss.jbpm</artifactId>
     </dependency>
-    <!-- TODO: remove -->
-    <dependency>
-      <groupId>jbpm</groupId>
-      <artifactId>jbpm-jpdl</artifactId>
-      <version>${jbpm-jbpm-jpdl-version}</version>
-      <type>jar</type>
-    </dependency>
-    <!--  -->
   </dependencies>
 </project>
