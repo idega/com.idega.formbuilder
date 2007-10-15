@@ -40,7 +40,7 @@
 				<div class="formItem wideItem">
 					<label for="taskForm">Select task form</label>
 					<h:selectOneMenu id="taskForm" disabled="true" onchange="assignViewToTask(this.value);">
-						<f:selectItems value="#{formbuilderPersistenceManager.forms}" />
+						<f:selectItems value="#{xformsPersistenceManager.forms}" />
 					</h:selectOneMenu>
 					<h:commandButton styleClass="changeButton" id="changeViewButton" value="Change" onclick="enableFormList();return false;" />
 				</div>
