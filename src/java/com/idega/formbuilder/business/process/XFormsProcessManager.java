@@ -8,12 +8,12 @@ import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 
-import com.idega.block.form.process.XFormsView;
 import com.idega.builder.bean.AdvancedProperty;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
 import com.idega.jbpm.data.ActorTaskBind;
 import com.idega.jbpm.def.ActorTaskBinder;
 import com.idega.jbpm.def.View;
+import com.idega.jbpm.def.ViewFactory;
 import com.idega.jbpm.def.ViewToTask;
 import com.idega.jbpm.presentation.beans.ActorBindingViewBean;
 import com.idega.webface.WFUtil;
@@ -25,25 +25,42 @@ public class XFormsProcessManager {
 	private static final String JBPM_XFORM_ACTOR_TYPE = "jbpm_actor_type";
 	private static final String JBPM_XFORM_ACTOR_ID = "jbpm_actor_id";
 	
+	private JbpmProcessBusinessBean jbpmProcessBusiness;
+	private ViewToTask viewToTaskBinder;
+	private ActorTaskBinder actorToTaskBinder;
+	private ViewFactory viewFactory;
+	
+	public ViewFactory getViewFactory() {
+		return viewFactory;
+	}
+
+	public void setViewFactory(ViewFactory viewFactory) {
+		this.viewFactory = viewFactory;
+	}
+
 	public void assignTaskForm(String processId, String taskId, String formId) {
+		
 		JbpmContext ctx = getJbpmProcessBusiness().getJbpmContext();
+		
 		try {
 			ProcessDefinition pd = getJbpmProcessBusiness().getProcessDefinition(processId, ctx);
 			TaskMgmtDefinition mgmt = pd.getTaskMgmtDefinition();
 			Task task = mgmt.getTask(taskId);
-			XFormsView view = new XFormsView();
+			View view = getViewFactory().createView();
 			view.setViewId(formId);
 			getViewToTaskBinder().bind(view, task);
+			
 		} finally {
-			if(ctx != null) {
-				ctx.close();
-			}
+			
+			ctx.close();
 		}
 	}
 	
-	public List getTaskProperties(String processId, String taskId) {
-		List result = new ArrayList();
+	public List<AdvancedProperty> getTaskProperties(String processId, String taskId) {
+		List<AdvancedProperty> result = new ArrayList<AdvancedProperty>();
+		
 		JbpmContext ctx = getJbpmProcessBusiness().getJbpmContext();
+		
 		try {
 			ProcessDefinition pd = getJbpmProcessBusiness().getProcessDefinition(processId, ctx);
 			TaskMgmtDefinition mgmt = pd.getTaskMgmtDefinition();
@@ -69,16 +86,12 @@ public class XFormsProcessManager {
 				}
 			}
 			return result;
+			
 		} finally {
-			if(ctx != null) {
-				ctx.close();
-			}
+			
+			ctx.close();
 		}
 	}
-	
-	private JbpmProcessBusinessBean jbpmProcessBusiness;
-	private ViewToTask viewToTaskBinder;
-	private ActorTaskBinder actorToTaskBinder;
 
 	public ViewToTask getViewToTaskBinder() {
 		return viewToTaskBinder;
@@ -103,5 +116,4 @@ public class XFormsProcessManager {
 	public void setActorToTaskBinder(ActorTaskBinder actorToTaskBinder) {
 		this.actorToTaskBinder = actorToTaskBinder;
 	}
-
 }
