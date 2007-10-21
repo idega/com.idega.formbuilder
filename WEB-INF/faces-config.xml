@@ -46,27 +46,6 @@
 		</managed-property>
 	</managed-bean>
 	<managed-bean>
-		<managed-bean-name>xformsProcessManager</managed-bean-name>
-		<managed-bean-class>com.idega.formbuilder.business.process.XFormsProcessManager</managed-bean-class>
-		<managed-bean-scope>session</managed-bean-scope>
-		<managed-property>
-		  	<property-name>jbpmProcessBusiness</property-name>
-		    <value>#{jbpmProcessBusiness}</value>
-		</managed-property>
-		<managed-property>
-		  	<property-name>viewToTaskBinder</property-name>
-		    <value>#{process_xforms_viewToTask}</value>
-		</managed-property>
-		<managed-property>
-		  	<property-name>actorToTaskBinder</property-name>
-		    <value>#{actorToTaskBinder}</value>
-		</managed-property>
-		<managed-property>
-		  	<property-name>viewFactory</property-name>
-		    <value>#{process_xforms_viewFactory}</value>
-		</managed-property>
-	</managed-bean>
-	<managed-bean>
 		<managed-bean-name>formPage</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.presentation.beans.FormPage</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
