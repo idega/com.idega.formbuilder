@@ -3,13 +3,15 @@ package com.idega.formbuilder.business.process;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.jbpm.JbpmConfiguration;
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 
 import com.idega.builder.bean.AdvancedProperty;
-import com.idega.jbpm.business.JbpmProcessBusinessBean;
 import com.idega.jbpm.data.ActorTaskBind;
 import com.idega.jbpm.def.ActorTaskBinder;
 import com.idega.jbpm.def.View;
@@ -25,7 +27,8 @@ public class XFormsProcessManager {
 	private static final String JBPM_XFORM_ACTOR_TYPE = "jbpm_actor_type";
 	private static final String JBPM_XFORM_ACTOR_ID = "jbpm_actor_id";
 	
-	private JbpmProcessBusinessBean jbpmProcessBusiness;
+	private SessionFactory sessionFactory;
+	private JbpmConfiguration jbpmConfiguration;
 	private ViewToTask viewToTaskBinder;
 	private ActorTaskBinder actorToTaskBinder;
 	private ViewFactory viewFactory;
@@ -34,16 +37,39 @@ public class XFormsProcessManager {
 		return viewFactory;
 	}
 
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+	public JbpmConfiguration getJbpmConfiguration() {
+		return jbpmConfiguration;
+	}
+
+	public void setJbpmConfiguration(JbpmConfiguration jbpmConfiguration) {
+		this.jbpmConfiguration = jbpmConfiguration;
+	}
+
 	public void setViewFactory(ViewFactory viewFactory) {
 		this.viewFactory = viewFactory;
 	}
 
 	public void assignTaskForm(String processId, String taskId, String formId) {
 		
-		JbpmContext ctx = getJbpmProcessBusiness().getJbpmContext();
+		Transaction transaction = getSessionFactory().getCurrentSession().getTransaction();
+		boolean transactionWasActive = transaction.isActive();
+		
+		if(!transactionWasActive)
+			transaction.begin();
+		
+		JbpmContext ctx = getJbpmConfiguration().createJbpmContext();
+		ctx.setSession(getSessionFactory().getCurrentSession());
 		
 		try {
-			ProcessDefinition pd = getJbpmProcessBusiness().getProcessDefinition(processId, ctx);
+			ProcessDefinition pd = ctx.getGraphSession().getProcessDefinition(Long.parseLong(processId));
 			TaskMgmtDefinition mgmt = pd.getTaskMgmtDefinition();
 			Task task = mgmt.getTask(taskId);
 			View view = getViewFactory().createView();
@@ -53,16 +79,26 @@ public class XFormsProcessManager {
 		} finally {
 			
 			ctx.close();
+			
+			if(!transactionWasActive)
+				transaction.commit();
 		}
 	}
 	
 	public List<AdvancedProperty> getTaskProperties(String processId, String taskId) {
 		List<AdvancedProperty> result = new ArrayList<AdvancedProperty>();
 		
-		JbpmContext ctx = getJbpmProcessBusiness().getJbpmContext();
+		Transaction transaction = getSessionFactory().getCurrentSession().getTransaction();
+		boolean transactionWasActive = transaction.isActive();
+		
+		if(!transactionWasActive)
+			transaction.begin();
+		
+		JbpmContext ctx = getJbpmConfiguration().createJbpmContext();
+		ctx.setSession(getSessionFactory().getCurrentSession());
 		
 		try {
-			ProcessDefinition pd = getJbpmProcessBusiness().getProcessDefinition(processId, ctx);
+			ProcessDefinition pd = ctx.getGraphSession().getProcessDefinition(Long.parseLong(processId));
 			TaskMgmtDefinition mgmt = pd.getTaskMgmtDefinition();
 			Task task = mgmt.getTask(taskId);
 			View view = getViewToTaskBinder().getView(task.getId());
@@ -90,6 +126,9 @@ public class XFormsProcessManager {
 		} finally {
 			
 			ctx.close();
+			
+			if(!transactionWasActive)
+				transaction.commit();
 		}
 	}
 
@@ -99,14 +138,6 @@ public class XFormsProcessManager {
 
 	public void setViewToTaskBinder(ViewToTask viewToTaskBinder) {
 		this.viewToTaskBinder = viewToTaskBinder;
-	}
-
-	public JbpmProcessBusinessBean getJbpmProcessBusiness() {
-		return jbpmProcessBusiness;
-	}
-
-	public void setJbpmProcessBusiness(JbpmProcessBusinessBean jbpmProcessBusiness) {
-		this.jbpmProcessBusiness = jbpmProcessBusiness;
 	}
 
 	public ActorTaskBinder getActorToTaskBinder() {
