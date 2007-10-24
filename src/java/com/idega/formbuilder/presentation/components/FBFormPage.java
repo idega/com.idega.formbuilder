@@ -17,7 +17,16 @@ public class FBFormPage extends FBComponentBase {
 	public static final String COMPONENT_TYPE = "FormPage";
 	
 	private static final String PAGE_ICON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/document-new.png";
-	private static final String DELETE_ICON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png";
+	private static final String DELETE_ICON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete-tiny.png";
+	private static final String DEFAULT_LOAD_ACTION = "loadPageInfo(this.id);";
+	private static final String DEFAULT_DELETE_ACTION = "deletePage(this.id);";
+	private static final String DEFAULT_STYLE_CLASS = "formPageIcon";
+	private static final String DEFAULT_ICON_STYLE_CLASS = "pageIconIcon";
+	private static final String DEFAULT_LABEL_STYLE_CLASS = "pageIconLabel";
+	private static final String DEFAULT_SPEED_BUTTON_STYLE_CLASS = "pageSpeedButton";
+	private static final String PAGE_ID_POSTFIX = "_page";
+	private static final String ICON_ID_POSTFIX = "_pi";
+	private static final String SPEED_BUTTON_ID_POSTFIX = "_db";
 	
 	private String label;
 	private boolean active;
@@ -62,44 +71,57 @@ public class FBFormPage extends FBComponentBase {
 		setRendererType(null);
 	}
 	
+	public FBFormPage(String id, String label, boolean special) {
+		this(id, label);
+		if(special) {
+			this.onDelete = "";
+		}
+	}
+	
+	public FBFormPage(String id, String label) {
+		setRendererType(null);
+		setId(id);
+		setStyleClass(DEFAULT_STYLE_CLASS);
+		this.label = label;
+		this.onDelete = DEFAULT_DELETE_ACTION;
+		this.onLoad = DEFAULT_LOAD_ACTION;
+	}
+	
 	protected void initializeComponent(FacesContext context) {
 		getChildren().clear();
 		
 		Layer pageLayer = new Layer(Layer.DIV);
-		pageLayer.setId(getId() + "_page");
+		pageLayer.setId(getId() + PAGE_ID_POSTFIX);
 		pageLayer.setStyleClass(getStyleClass());
 		pageLayer.setOnClick(onLoad);
 		
 		Image pageIconImg = new Image();
-		pageIconImg.setId(getId() + "_pi");
+		pageIconImg.setId(getId() + ICON_ID_POSTFIX);
 		pageIconImg.setSrc(PAGE_ICON_IMG);
-		pageIconImg.setStyleClass("pageIconIcon");
+		pageIconImg.setStyleClass(DEFAULT_ICON_STYLE_CLASS);
 		
 		Text pageIconLabel = new Text(label);
-		pageIconLabel.setStyleClass("pageIconLabel");
+		pageIconLabel.setStyleClass(DEFAULT_LABEL_STYLE_CLASS);
 		
 		pageLayer.add(pageIconImg);
 		pageLayer.add(pageIconLabel);
 		
 		if(!"".equals(onDelete)) {
 			Image deleteButton = new Image();
-			deleteButton.setId(getId() + "_db");
+			deleteButton.setId(getId() + SPEED_BUTTON_ID_POSTFIX);
 			deleteButton.setSrc(DELETE_ICON_IMG);
 			deleteButton.setOnClick(onDelete);
-			deleteButton.setStyleClass("speedButton");
+			deleteButton.setStyleClass(DEFAULT_SPEED_BUTTON_STYLE_CLASS);
 			pageLayer.add(deleteButton);
 		}
 		add(pageLayer);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void encodeChildren(FacesContext context) throws IOException {
 		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
 			RenderUtils.renderChild(context, (UIComponent) it.next());
 		}
-//			if(isActive()) {
-//				content.setStyleClass(activeStyleClass);
-//				content.getChildren().remove(2);
-//			}
 	}
 	
 	public String getLabel() {

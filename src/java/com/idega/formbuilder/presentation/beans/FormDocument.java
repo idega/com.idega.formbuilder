@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import javax.ejb.FinderException;
 import javax.faces.context.FacesContext;
@@ -37,6 +36,7 @@ import com.idega.documentmanager.business.component.PageThankYou;
 import com.idega.documentmanager.component.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.egov.Application;
 import com.idega.formbuilder.business.egov.ApplicationBusiness;
+import com.idega.formbuilder.presentation.components.FBFormPage;
 import com.idega.formbuilder.presentation.components.FBFormProperties;
 import com.idega.formbuilder.presentation.components.FBViewPanel;
 import com.idega.formbuilder.presentation.converters.FormPageInfo;
@@ -63,6 +63,7 @@ public class FormDocument implements Serializable {
 	private Page overviewPage;
 	private PageThankYou submitPage;
 	
+	private Workspace workspace;
 	private ApplicationBusiness app_business_bean;
 	private String tempValue;
 	private String primary_form_name;
@@ -96,9 +97,9 @@ public class FormDocument implements Serializable {
 		if(temp != null) {
 			tksId = temp.getId();
 		}
-		Iterator it = ids.iterator();
+		Iterator<String> it = ids.iterator();
 		while(it.hasNext()) {
-			String nextId = (String) it.next();
+			String nextId = it.next();
 			if(nextId.equals(confId) || nextId.equals(tksId)) {
 				continue;
 			}
@@ -118,8 +119,8 @@ public class FormDocument implements Serializable {
 		return document;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public boolean createFormDocument(String parameter) throws Exception {
-		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 		Locale locale = workspace.getLocale();
 		
 		DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
@@ -150,7 +151,7 @@ public class FormDocument implements Serializable {
 		FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
 		formPage.loadPageInfo(page);
 		
-		FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
+//		FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
 //		formComponent.clearFormComponentInfo();
 		
 		return true;
@@ -302,12 +303,23 @@ public class FormDocument implements Serializable {
 		primary_form_name = null;
 	}
 	
+	private boolean isProcessForm(String formId) {
+		if(formId.endsWith("_process")) 
+			return true;
+		return false;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public boolean loadFormDocument(String formId) {
 		
 		clearAppsRelatedMetaData();
 		
 		try {
-			formId = retrieveFormIdFormButtonId(formId, "_edit");
+			if(isProcessForm(formId)) {
+				formId = retrieveFormIdFormButtonId(formId, "_process");
+			} else {
+				formId = retrieveFormIdFormButtonId(formId, "_edit");
+			}
 			if(formId != null && !formId.equals("")) {
 				DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
 				document = formManagerInstance.openForm(formId);
@@ -317,7 +329,6 @@ public class FormDocument implements Serializable {
 				
 				String firstPage = getCommonPagesIdList().get(0);
 				Page firstP = document.getPage(firstPage);
-				Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 				if(firstP.getContainedComponentsIdList().size() > 0) {
 					workspace.setDesignViewStatus("active");
 				} else {
@@ -358,7 +369,6 @@ public class FormDocument implements Serializable {
 //				if(getFormId() != null)
 //					getFormsService().unlockForm(getFormId());
 				
-				Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 				workspace.setView(FBViewPanel.SOURCE_VIEW);
 				workspace.setRenderedMenu(false);
 				
@@ -437,7 +447,7 @@ public class FormDocument implements Serializable {
 		return documentId;
 	}
 	
-	public void updatePagesList(String idSequence, String idPrefix, String delimiter) throws Exception {
+	public void updatePagesList(List<String> idSequence) throws Exception {
 		String confirmId = "";
 		String thxId = "";
 		Page confPage = document.getConfirmationPage();
@@ -450,14 +460,12 @@ public class FormDocument implements Serializable {
 		}
 		List<String> ids = document.getContainedPagesIdList();
 		ids.clear();
-		String test = "&" + idSequence;
-		StringTokenizer tokenizer = new StringTokenizer(test, delimiter);
-		while(tokenizer.hasMoreTokens()) {
-			String currentId = tokenizer.nextToken();
+		for(Iterator<String> it = idSequence.iterator(); it.hasNext(); ) {
+			String currentId = it.next();
 			if(currentId.endsWith("_P_page")) {
 				currentId = currentId.substring(0, currentId.indexOf("_P_page"));
 			}
-			ids.add(idPrefix + currentId);
+			ids.add(currentId);
 		}
 		if(!confirmId.equals("")) {
 			ids.add(confirmId);
@@ -498,30 +506,28 @@ public class FormDocument implements Serializable {
 			document.getProperties().setSubmissionAction(webdavSubmissionAction);
 	}
 	
-	public FormPageInfo togglePreviewPage(boolean value) throws Exception {
-		FormPageInfo result = new FormPageInfo();
+	public org.jdom.Document togglePreviewPage(boolean value) throws Exception {
 		hasPreview = value;
+		Page page = null;
 		if(hasPreview) {
 			Page thxPage = document.getThxPage();
-			Page page = null;
 			if(thxPage != null) {
 				page = document.addConfirmationPage(thxPage.getId());
 			} else {
 				page = document.addConfirmationPage(null);
 			}
-			result.setPageTitle(page.getProperties().getLabel().getString(new Locale("en")));
-			result.setPageId(page.getId());
+			if(page == null) {
+				throw new Exception("Confirmation page does not exist in the document");
+			}
 		} else {
-			Page page = document.getConfirmationPage();
+			page = document.getConfirmationPage();
 			if(page != null) {
-				result.setPageId(page.getId());
-				result.setPageTitle(null);
 				page.remove();
 			} else {
 				throw new Exception("Confirmation page does not exist in the document");
 			}
 		}
-		return result;
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormPage(page.getId(), page.getProperties().getLabel().getString(new Locale("en")), true), true);
 	}
 	
 	public void saveSrc(String source_code) {
@@ -725,5 +731,13 @@ public class FormDocument implements Serializable {
 
 	public void setSubmitPage(PageThankYou submitPage) {
 		this.submitPage = submitPage;
+	}
+
+	public Workspace getWorkspace() {
+		return workspace;
+	}
+
+	public void setWorkspace(Workspace workspace) {
+		this.workspace = workspace;
 	}
 }

@@ -82,6 +82,7 @@ public class FBFormPreview extends FBComponentBase {
 		add(formViewer);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void encodeChildren(FacesContext context) throws IOException {
 		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
 			RenderUtils.renderChild(context, (UIComponent) it.next());

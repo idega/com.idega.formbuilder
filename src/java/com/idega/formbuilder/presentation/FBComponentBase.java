@@ -56,10 +56,12 @@ public class FBComponentBase extends IWBaseComponent {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void addFacet(String name, UIComponent component) {
 		getFacets().put(name, component);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void addChild(UIComponent child, UIComponent parent) {
 		parent.getChildren().add(child);
 	}

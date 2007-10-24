@@ -17,9 +17,11 @@ import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.presentation.beans.FormPage;
 import com.idega.formbuilder.presentation.beans.Workspace;
-import com.idega.presentation.Image;
+import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
+import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
+import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
 
 public class FBPagesPanel extends FBComponentBase {
@@ -67,12 +69,14 @@ public class FBPagesPanel extends FBComponentBase {
 	}
 	
 	protected void initializeComponent(FacesContext context) {
+		IWContext iwc = CoreUtil.getIWContext();
+		
 		Layer topToolbar = new Layer(Layer.DIV);
 		topToolbar.setStyleClass("pagesPanelToolbar");
-		Image newSectionBtn = new Image();
+		
+		Link newSectionBtn = new Link(getLocalizedString(iwc, "fb_add_page_link", "New section"));
 		newSectionBtn.setId("newPageButton");
-		newSectionBtn.setOnClick("createNewPage();");
-		newSectionBtn.setSrc("/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/list-add.png");
+		newSectionBtn.setOnClick("createNewPage();return false;");
 		topToolbar.add(newSectionBtn);
 		addFacet(TOOLBAR_FACET, topToolbar);
 		
@@ -160,8 +164,8 @@ public class FBPagesPanel extends FBComponentBase {
 			}
 			List<String> ids = formDocument.getCommonPagesIdList();
 			if(ids != null) {
-				for(Iterator it = ids.iterator(); it.hasNext(); ) {
-					String nextId = (String) it.next();
+				for(Iterator<String> it = ids.iterator(); it.hasNext(); ) {
+					String nextId = it.next();
 					Page currentPage = document.getPage(nextId);
 					if(currentPage != null) {
 						FBFormPage formPage = (FBFormPage) application.createComponent(FBFormPage.COMPONENT_TYPE);
@@ -172,7 +176,7 @@ public class FBPagesPanel extends FBComponentBase {
 							formPage.setStyleClass(componentStyleClass);
 						}
 						formPage.setOnDelete("deletePage(this.id);");
-						formPage.setOnLoad("loadPageInfo(event);");
+						formPage.setOnLoad("loadPageInfo(this.id);");
 						String label = ((PropertiesPage)currentPage.getProperties()).getLabel().getString(locale);
 						formPage.setLabel(label);
 						formPage.setActive(false);
@@ -215,6 +219,7 @@ public class FBPagesPanel extends FBComponentBase {
 		writer.write(getEmbededJavascript(values));
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void encodeChildren(FacesContext context) throws IOException {
 		if (!isRendered()) {
 			return;

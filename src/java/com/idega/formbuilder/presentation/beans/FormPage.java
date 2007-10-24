@@ -1,10 +1,10 @@
 package com.idega.formbuilder.presentation.beans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,12 +15,13 @@ import com.idega.documentmanager.business.Document;
 import com.idega.documentmanager.business.component.Button;
 import com.idega.documentmanager.business.component.ButtonArea;
 import com.idega.documentmanager.business.component.Page;
+import com.idega.documentmanager.component.beans.LocalizedStringBean;
 import com.idega.formbuilder.presentation.components.FBDesignView;
+import com.idega.formbuilder.presentation.components.FBFormPage;
 import com.idega.formbuilder.presentation.converters.FormButtonInfo;
 import com.idega.formbuilder.presentation.converters.FormPageInfo;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.util.CoreUtil;
-import com.idega.webface.WFUtil;
 
 public class FormPage implements Serializable {
 	
@@ -32,6 +33,25 @@ public class FormPage implements Serializable {
 	private String id;
 	private boolean special;
 	
+	private FormDocument formDocument;
+	private Workspace workspace;
+	
+	public Workspace getWorkspace() {
+		return workspace;
+	}
+
+	public void setWorkspace(Workspace workspace) {
+		this.workspace = workspace;
+	}
+
+	public FormDocument getFormDocument() {
+		return formDocument;
+	}
+
+	public void setFormDocument(FormDocument formDocument) {
+		this.formDocument = formDocument;
+	}
+
 	public Page initializeBeanInstance(Page page) {
 		if(page != null) {
 			this.page = page;
@@ -46,8 +66,15 @@ public class FormPage implements Serializable {
 		return page;
 	}
 	
+	public Page initializeBeanInstance(Page page, boolean special) {
+		initializeBeanInstance(page);
+		this.special = special;
+		
+		return page;
+	}
+	
 	public FormPageInfo getFirstPageInfo() throws Exception {
-		Document document = ((FormDocument) WFUtil.getBeanInstance("formDocument")).getDocument();
+		Document document = formDocument.getDocument();
 		if(document != null) {
 			Page page = document.getPage(document.getContainedPagesIdList().get(0));
 			if(page != null) {
@@ -57,49 +84,42 @@ public class FormPage implements Serializable {
 		return null;
 	}
 	
-	public FormPageInfo getThxPageInfo() throws Exception {
-		Document document = ((FormDocument) WFUtil.getBeanInstance("formDocument")).getDocument();
+	public org.jdom.Document getThxPageInfo() throws Exception {
+		Document document = formDocument.getDocument();
 		if(document != null) {
 			Page page = document.getThxPage();
 			if(page != null) {
 				special = true;
-				return loadPageInfo(page);
+				initializeBeanInstance(page, true);
 			}
 		}
-		return null;
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView("formElement"), false);
 	}
 	
-	public void updateComponentList(String idSequence, String idPrefix, String delimiter) throws Exception {
+	public void updateComponentList(List<String> idSequence) throws Exception {
 		if(page != null) {
 			List<String> ids = page.getContainedComponentsIdList();
 			ids.clear();
-			String test = "&" + idSequence;
-			StringTokenizer tokenizer = new StringTokenizer(test, delimiter);
-			while(tokenizer.hasMoreTokens()) {
-				ids.add(idPrefix + tokenizer.nextToken());
-			}
+			for(Iterator<String> it = idSequence.iterator(); it.hasNext(); )
+				ids.add(it.next());
 			page.rearrangeComponents();
 		} else {
 			throw new Exception("Page component missing");
 		}
 	}
 	
-	public void updateButtonList(String idSequence, String idPrefix, String delimiter) throws Exception {
+	public void updateButtonList(List<String> idSequence) throws Exception {
 		ButtonArea area = page.getButtonArea();
 		if(area != null) {
 			List<String> ids = area.getContainedComponentsIdList();
 			ids.clear();
-			String test = "&" + idSequence;
-			StringTokenizer tokenizer = new StringTokenizer(test, delimiter);
-			while(tokenizer.hasMoreTokens()) {
-				ids.add(idPrefix + tokenizer.nextToken());
-			}
+			for(Iterator<String> it = idSequence.iterator(); it.hasNext(); )
+				ids.add(it.next());
 			area.rearrangeComponents();
 		}
 	}
 	
 	public String removePage(String id) throws Exception {
-		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
 		Document document = formDocument.getDocument();
 		if(document != null) {
 			String temp = id.substring(id.indexOf(":") + 1);
@@ -123,11 +143,8 @@ public class FormPage implements Serializable {
 					page = document.getPage(newPageId);
 					loadPageInfo(page);
 				}
-				Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
-				if(workspace != null) {
-					workspace.setView("design");
-					workspace.setRenderedMenu(true);
-				}
+				workspace.setView("design");
+				workspace.setRenderedMenu(true);
 				return id;
 			}
 		}
@@ -135,6 +152,9 @@ public class FormPage implements Serializable {
 	}
 	
 	public org.jdom.Document getFormPageInfo(String id) {
+		if(id == null || id.equals("")) {
+			return null;
+		}
 		String realId = null;
 		try {
 			String temp = id.substring(id.indexOf(":") + 1);
@@ -146,7 +166,6 @@ public class FormPage implements Serializable {
 			return null;
 		}
 		
-		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
 		Document document = formDocument.getDocument();
 		if(document != null) {
 			initializeBeanInstance(document.getPage(realId));
@@ -154,17 +173,16 @@ public class FormPage implements Serializable {
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView("formElement"), false);
 	}
 	
-	public FormPageInfo getConfirmationPageInfo() throws Exception {
-		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
+	public org.jdom.Document getConfirmationPageInfo() throws Exception {
 		Document document = formDocument.getDocument();
 		if(document != null) {
 			Page page = document.getConfirmationPage();
 			if(page != null) {
 				special = true;
-				return loadPageInfo(page);
+				initializeBeanInstance(page, true);
 			}
 		}
-		return null;
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView("formElement"), false);
 	}
 	
 	public FormPageInfo loadPageInfo(Page page) throws Exception {
@@ -182,9 +200,9 @@ public class FormPage implements Serializable {
 			areaId = area.getId();
 			result.setButtonAreaId(areaId);
 			List<String> buttons = area.getContainedComponentsIdList();
-			Iterator it = buttons.iterator();
+			Iterator<String> it = buttons.iterator();
 			while(it.hasNext()) {
-				String nextId = (String) it.next();
+				String nextId = it.next();
 				Button button = (Button) area.getComponent(nextId);
 				if(button != null) {
 					result.getButtons().add(new FormButtonInfo(nextId, button.getProperties().getLabel().getString(new Locale("en"))));
@@ -192,9 +210,9 @@ public class FormPage implements Serializable {
 			}
 		}
 		List<String> components = page.getContainedComponentsIdList();
-		Iterator it = components.iterator();
+		Iterator<String> it = components.iterator();
 		while(it.hasNext()) {
-			String nextId = (String) it.next();
+			String nextId = it.next();
 			if(areaId.equals(nextId)) {
 				continue;
 			}
@@ -203,32 +221,27 @@ public class FormPage implements Serializable {
 		return result;
 	}
 	
-	public FormPageInfo createNewPage() throws Exception {
-		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
-		if(workspace != null) {
-			Document document = ((FormDocument) WFUtil.getBeanInstance("formDocument")).getDocument();
-			if(document != null) {
-				Page page = null;
-				String temp = "";
-				if(document.getConfirmationPage() != null) {
-					temp = document.getConfirmationPage().getId();
-				} else {
-					temp = document.getThxPage().getId();
-					
-				}
-				page = document.addPage(temp);
-				if(page != null) {
-					special = false;
-					FormPageInfo result = loadPageInfo(page);
-//					FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
-//					formComponent.clearFormComponentInfo();
-					workspace.setView("design");
-					workspace.setRenderedMenu(true);
-					return result;
-				}
+	public List<org.jdom.Document> createNewPage() throws Exception {
+		Document document = formDocument.getDocument();
+		List<org.jdom.Document> doms = new ArrayList<org.jdom.Document>();
+		if(document != null) {
+			String temp = null;
+			if(document.getConfirmationPage() != null) {
+				temp = document.getConfirmationPage().getId();
+			} else {
+				temp = document.getThxPage().getId();
+			}
+			Page page = document.addPage(temp);
+			if(page != null) {
+				special = false;
+				loadPageInfo(page);
+				workspace.setView("design");
+				workspace.setRenderedMenu(true);
+				doms.add(BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView("formElement"), false));
+				doms.add(BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormPage(id, page.getProperties().getLabel().getString(FBUtil.getUILocale())), true));
 			}
 		}
-		return null;
+		return doms;
 	}
 	
 	public String getId() {
@@ -251,41 +264,18 @@ public class FormPage implements Serializable {
 		return page.getProperties().getLabel().getString(FBUtil.getUILocale());
 	}
 
-	public FormPageInfo setTitle(String title) {
-		page.getProperties().getLabel().setString(FBUtil.getUILocale(), title);
-//		this.title = title;
-//		if(titleBean != null) {
-//			titleBean.setString(new Locale("en"), title);
-//			if(properties != null) {
-//				properties.setLabel(titleBean);
-//			}
-//		}
-		FormPageInfo result = new FormPageInfo();
-		result.setPageTitle(title);
-		result.setPageId(id);
-		return result;
+	public void setTitle(String title) {
+		if(page != null) {
+			LocalizedStringBean bean = page.getProperties().getLabel();
+			bean.setString(FBUtil.getUILocale(), title);
+			page.getProperties().setLabel(bean);
+		}
 	}
 	
 	public String saveTitle(String title) {
 		setTitle(title);
 		return title;
 	}
-
-//	public LocalizedStringBean getTitleBean() {
-//		return titleBean;
-//	}
-//
-//	public void setTitleBean(LocalizedStringBean titleBean) {
-//		this.titleBean = titleBean;
-//	}
-
-//	public PropertiesPage getProperties() {
-//		return properties;
-//	}
-//
-//	public void setProperties(PropertiesPage properties) {
-//		this.properties = properties;
-//	}
 
 	public boolean isSpecial() {
 		return special;

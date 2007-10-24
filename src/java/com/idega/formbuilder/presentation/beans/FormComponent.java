@@ -31,14 +31,28 @@ public class FormComponent implements Serializable {
 	
 	private static final long serialVersionUID = -1462694198346788168L;
 	
+	public static final String BUTTON_TYPE = "button";
+	public static final String COMPONENT_TYPE = "component";
+	
+	private Button button;
 	private Component component;
 	private ComponentSelect selectComponent;
 	private ComponentPlain plainComponent;
 	private String id;
 	
 	private boolean autofill;
-	private boolean button;
+//	private boolean button;
 	
+	private FormPage formPage;
+	
+	public FormPage getFormPage() {
+		return formPage;
+	}
+
+	public void setFormPage(FormPage formPage) {
+		this.formPage = formPage;
+	}
+
 	public void initializeBeanInstace(Component component) {
 		if(component instanceof ComponentPlain) {
 			this.plainComponent = (ComponentPlain) component;
@@ -63,37 +77,54 @@ public class FormComponent implements Serializable {
 		}
 	}
 	
-	public void initializeBeanInstace(String id) {
+	public void initializeBeanInstace(String id, String type) {
 		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
 		if(page != null) {
-			Component component = page.getComponent(id);
-			if(component instanceof ComponentPlain) {
-				this.plainComponent = (ComponentPlain) component;
-				this.selectComponent = null;
-				this.component = null;
-				this.id = component.getId();
-			} else if(component instanceof ComponentSelect) {
-				this.selectComponent = (ComponentSelect) component;
-				this.component = null;
-				this.plainComponent = null;
-				this.id = component.getId();
-			} else if(component instanceof Component) {
-				this.component = component;
-				this.selectComponent = null;
-				this.plainComponent = null;
-				this.id = component.getId();
-			} else {
-				this.component = null;
-				this.selectComponent = null;
-				this.plainComponent = null;
-				this.id = null;
+			if(BUTTON_TYPE.equals(type)) {
+				ButtonArea area = page.getButtonArea();
+				if(area != null) {
+					Button button = (Button) area.getComponent(id);
+					this.button = button;
+					this.id = button.getId();
+					this.selectComponent = null;
+					this.component = null;
+					this.plainComponent = null;
+				}
+			} else if(COMPONENT_TYPE.equals(type)) {
+				this.button = null;
+				Component component = page.getComponent(id);
+				if(component instanceof ComponentPlain) {
+					this.plainComponent = (ComponentPlain) component;
+					this.selectComponent = null;
+					this.component = null;
+					this.id = component.getId();
+				} else if(component instanceof ComponentSelect) {
+					this.selectComponent = (ComponentSelect) component;
+					this.component = null;
+					this.plainComponent = null;
+					this.id = component.getId();
+				} else if(component instanceof Component) {
+					this.component = component;
+					this.selectComponent = null;
+					this.plainComponent = null;
+					this.id = component.getId();
+				} else {
+					this.component = null;
+					this.selectComponent = null;
+					this.plainComponent = null;
+					this.id = null;
+				}
 			}
 		}
 	}
 	
 	public Document saveComponentLabel(String value) {
 		setLabel(value);
-		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(id), true);
+		if(button != null) {
+			return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBButton(id), true);
+		} else {
+			return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(id), true);
+		}
 	}
 	
 	public void saveComponentProcessVariableName(String value) {
@@ -102,11 +133,6 @@ public class FormComponent implements Serializable {
 		
 		if(component != null)
 			component.getProperties().setVariableName(value);
-	}
-	
-	public Document saveButtonLabel(String value) {
-		setLabel(value);
-		return getFormButtonInfo(id);
 	}
 	
 	public Document saveComponentExternalSrc(String value) {
@@ -214,50 +240,46 @@ public class FormComponent implements Serializable {
 		setItems(itemSet);
 	}
 	
-	public void loadButton(String id) {
-		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
-		if(page != null) {
-			ButtonArea area = page.getButtonArea();
-			if(area != null) {
-				component = area.getComponent(id);
-				if(component != null) {
-					this.id = id;
-					button = true;
-					selectComponent = null;
-					plainComponent = null;
-				}
-			}
-		}
-	}
+//	public void loadButton(String id) {
+//		Page page = formPage.getPage();
+//		if(page != null) {
+//			ButtonArea area = page.getButtonArea();
+//			if(area != null) {
+//				component = area.getComponent(id);
+//				if(component != null) {
+//					this.id = id;
+//					button = true;
+//					selectComponent = null;
+//					plainComponent = null;
+//				}
+//			}
+//		}
+//	}
 	
 	public Document getFormButtonInfo(String id) {
-		this.id = id;
+		initializeBeanInstace(id, BUTTON_TYPE);
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentPropertiesPanel(id, FBConstants.BUTTON_TYPE), true);
 	}
 	
 	public Document getFormComponentInfo(String id) {
-		initializeBeanInstace(id);
+		initializeBeanInstace(id, COMPONENT_TYPE);
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentPropertiesPanel(id, FBConstants.COMPONENT_TYPE), true);
 	}
 	
-	public boolean switchDataSource() {
+	public Document switchDataSource() {
 		if(getDataSrc().equals(DataSourceList.externalDataSrc)) {
 			setDataSrc(DataSourceList.localDataSrc);
-			return true;
 		} else {
 			setDataSrc(DataSourceList.externalDataSrc);
 			getItems().clear();
 //			setItems(items);
-			return false;
 		}
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentPropertiesPanel(id, FBConstants.COMPONENT_TYPE), true);
 	}
 	
 	public Node addComponent(PaletteComponentInfo info) throws Exception {
-		
-		FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
 		Page page = formPage.getPage();
 		if(page != null) {
-			
 			String before = null;
 			ButtonArea area = page.getButtonArea();
 			if(area != null) {
@@ -281,7 +303,6 @@ public class FormComponent implements Serializable {
 		if(before == -1) {
 			return "append";
 		} else {
-			FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
 			Page page = formPage.getPage();
 			String beforeId = "";
 			if(page != null) {
@@ -298,7 +319,7 @@ public class FormComponent implements Serializable {
 	}
 	
 	public Document addButton(String type) {
-		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
+		Page page = formPage.getPage();
 		if(page != null) {
 			ButtonArea area = page.getButtonArea();
 			Button button = null;
@@ -308,13 +329,13 @@ public class FormComponent implements Serializable {
 				area = page.createButtonArea(null);
 				button = area.addButton(new ConstButtonType(type), null);
 			}
-			return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBButton(button.getId(), "loadButtonInfo", "removeButton"), true);
+			return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBButton(button.getId(), "formButton", "loadButtonInfo(this);", "removeButton(this);"), true);
 		}
 		return null;
 	}
 	
 	public String removeComponent(String id) {
-		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
+		Page page = formPage.getPage();
 		if(page != null) {
 			Component component = page.getComponent(id);
 			if(component != null) {
@@ -325,7 +346,7 @@ public class FormComponent implements Serializable {
 	}
 	
 	public String removeButton(String id) {
-		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
+		Page page = formPage.getPage();
 		if(page != null) {
 			ButtonArea area = page.getButtonArea();
 			if(area != null) {
@@ -388,6 +409,10 @@ public class FormComponent implements Serializable {
 			bean = selectComponent.getProperties().getLabel();
 			bean.setString(FBUtil.getUILocale(), label);
 			selectComponent.getProperties().setLabel(bean);
+		} else if(button != null) {
+			bean = button.getProperties().getLabel();
+			bean.setString(FBUtil.getUILocale(), label);
+			button.getProperties().setLabel(bean);
 		}
 	}
 
@@ -505,6 +530,16 @@ public class FormComponent implements Serializable {
 	public void setAutofill(boolean autofill) {
 		this.autofill = autofill;
 	}
+	
+	public Document saveAutofill(boolean autofill) {
+		setAutofill(autofill);
+		if(autofill) {
+			setAutofillKey("example");
+		} else {
+			setAutofillKey("");
+		}
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentPropertiesPanel(id, FBConstants.COMPONENT_TYPE), true);
+	}
 
 	public String getPlainText() {
 		if(plainComponent != null) {
@@ -527,11 +562,11 @@ public class FormComponent implements Serializable {
 		this.plainComponent = plainComponent;
 	}
 
-	public boolean isButton() {
+	public Button getButton() {
 		return button;
 	}
 
-	public void setButton(boolean button) {
+	public void setButton(Button button) {
 		this.button = button;
 	}
 

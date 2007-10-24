@@ -30,6 +30,7 @@ public class FBWorkspace extends FBComponentBase {
 		setRendererType(null);
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void initializeComponent(FacesContext context) {
 
 		if (context.getExternalContext().getRequestParameterMap().containsKey(FormDocument.FROM_APP_REQ_PARAM)) {

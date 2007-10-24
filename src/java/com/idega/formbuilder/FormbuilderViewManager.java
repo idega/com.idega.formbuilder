@@ -69,7 +69,7 @@ public class FormbuilderViewManager implements Singleton  {
 		roles.add(StandardRoles.ROLE_KEY_BUILDER);
 		node.setAuthorizedRoles(roles);
 		
-		node.setJspUri(contentBundle.getJSPURI("homepage.jsp"));
+		node.setJspUri(contentBundle.getJSPURI("formshome.jsp"));
 		node.setKeyboardShortcut(new KeyboardShortcut("4"));
 		
 		this.rootNode = node;

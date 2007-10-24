@@ -39,9 +39,9 @@ public class FBPalette extends FBComponentBase {
 		
 		palette = (Palette) WFUtil.getBeanInstance("palette");
 		
-		Iterator it = palette.getBasic().iterator();
+		Iterator<PaletteComponent> it = palette.getBasic().iterator();
 		while(it.hasNext()) {
-			PaletteComponent current = (PaletteComponent) it.next();
+			PaletteComponent current = it.next();
 			FBPaletteComponent formComponent = (FBPaletteComponent) application.createComponent(FBPaletteComponent.COMPONENT_TYPE);
 			formComponent.setStyleClass(itemStyleClass);
 			formComponent.setName(current.getName());
@@ -53,7 +53,7 @@ public class FBPalette extends FBComponentBase {
 		}
 		it = palette.getButtons().iterator();
 		while(it.hasNext()) {
-			PaletteComponent current = (PaletteComponent) it.next();
+			PaletteComponent current = it.next();
 			FBPaletteComponent formComponent = (FBPaletteComponent) application.createComponent(FBPaletteComponent.COMPONENT_TYPE);
 			formComponent.setStyleClass(itemStyleClass + "Bt");
 			formComponent.setName(current.getName());
@@ -65,7 +65,7 @@ public class FBPalette extends FBComponentBase {
 		}
 		it = palette.getPlain().iterator();
 		while(it.hasNext()) {
-			PaletteComponent current = (PaletteComponent) it.next();
+			PaletteComponent current = it.next();
 			FBPaletteComponent formComponent = (FBPaletteComponent) application.createComponent(FBPaletteComponent.COMPONENT_TYPE);
 			formComponent.setStyleClass(itemStyleClass);
 			formComponent.setName(current.getName());
@@ -78,7 +78,7 @@ public class FBPalette extends FBComponentBase {
 		
 		it = palette.getAutofilled().iterator();
 		while(it.hasNext()) {
-			PaletteComponent current = (PaletteComponent) it.next();
+			PaletteComponent current = it.next();
 			FBPaletteComponent formComponent = (FBPaletteComponent) application.createComponent(FBPaletteComponent.COMPONENT_TYPE);
 			formComponent.setStyleClass(itemStyleClass);
 			formComponent.setName(current.getName());
@@ -140,12 +140,12 @@ public class FBPalette extends FBComponentBase {
 		int count = 1;
 		boolean inRow = false;
 		
-		for(Iterator it = components.iterator(); it.hasNext(); ) {
+		for(Iterator<FBPaletteComponent> it = components.iterator(); it.hasNext(); ) {
 			if((count % columns) == 1 || columns == 1) {
 				writer.startElement("TR", null);
 				inRow = true;
 			}
-			FBPaletteComponent current = (FBPaletteComponent) it.next();
+			FBPaletteComponent current = it.next();
 			if(current != null) {
 				writer.startElement("TD", null);
 				current.encodeEnd(context);

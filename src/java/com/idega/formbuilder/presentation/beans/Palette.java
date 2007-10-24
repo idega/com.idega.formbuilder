@@ -29,19 +29,19 @@ public class Palette implements Serializable {
 			List<String> temp = formManagerInstance.getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.BASIC));
 			
 			System.out.println("x: "+temp);
-			Iterator it = temp.iterator();
+			Iterator<String> it = temp.iterator();
 			while(it.hasNext()) {
-				basic.add(new PaletteComponent((String) it.next()));
+				basic.add(new PaletteComponent(it.next()));
 			}
 			temp = formManagerInstance.getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.BUTTONS));
-			Iterator it2 = temp.iterator();
+			Iterator<String> it2 = temp.iterator();
 			while(it2.hasNext()) {
-				buttons.add(new PaletteComponent((String) it2.next()));
+				buttons.add(new PaletteComponent(it2.next()));
 			}
 			temp = formManagerInstance.getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.PLAIN));
-			Iterator it3 = temp.iterator();
+			Iterator<String> it3 = temp.iterator();
 			while(it3.hasNext()) {
-				plain.add(new PaletteComponent((String) it3.next()));
+				plain.add(new PaletteComponent(it3.next()));
 			}
 			
 			Config cfg = ConfigFactory.getInstance().getConfig(IWBundleStarter.IW_BUNDLE_IDENTIFIER, IWBundleStarter.FB_CFG_FILE);

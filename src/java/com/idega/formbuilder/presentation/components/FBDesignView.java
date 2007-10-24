@@ -15,10 +15,11 @@ import com.idega.documentmanager.business.component.PageThankYou;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.presentation.beans.FormPage;
+import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
-import com.idega.presentation.Script;
 import com.idega.presentation.text.Paragraph;
 import com.idega.presentation.text.Text;
+import com.idega.util.CoreUtil;
 import com.idega.util.RenderUtils;
 import com.idega.webface.WFUtil;
 
@@ -35,6 +36,9 @@ public class FBDesignView extends FBComponentBase {
 	public static final String DESIGN_VIEW_HEADER_FACET = "formHeaderFacet";
 	public static final String DESIGN_VIEW_PAGE_FACET = "pageTitleFacet";
 	
+	public static final String DEFAULT_DESIGN_VIEW_CLASS = "designView";
+	public static final String DEFAULT_DROPBOX_CLASS = "dropBox";
+	
 	public static final String BUTTON_AREA_FACET = "BUTTON_AREA_FACET";
 	
 	private String componentStyleClass;
@@ -42,12 +46,12 @@ public class FBDesignView extends FBComponentBase {
 	private String status;
 
 	public FBDesignView() {
-		super("designView", "dropBox");
+		super(DEFAULT_DESIGN_VIEW_CLASS, DEFAULT_DROPBOX_CLASS);
 		setRendererType(null);
 	}
 	
 	public FBDesignView(String componentClass) {
-		super("designView", "dropBox");
+		super(DEFAULT_DESIGN_VIEW_CLASS, DEFAULT_DROPBOX_CLASS);
 		setRendererType(null);
 		this.componentStyleClass = componentClass;
 	}
@@ -55,9 +59,10 @@ public class FBDesignView extends FBComponentBase {
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
 		getChildren().clear();
+		IWContext iwc = CoreUtil.getIWContext();
 		
 		Layer component = new Layer(Layer.DIV);
-		component.setId("dropBox");
+		component.setId(DEFAULT_DROPBOX_CLASS);
 		component.setStyleClass(getStyleClass());
 		
 		Layer formHeading = new Layer(Layer.DIV);
@@ -93,11 +98,11 @@ public class FBDesignView extends FBComponentBase {
 				Layer noFormNotice = new Layer(Layer.DIV);
 				noFormNotice.setId("noFormNotice");
 				
-				Text noFormNoticeHeader = new Text(_("labels_noform_header"));
+				Text noFormNoticeHeader = new Text(getLocalizedString(iwc, "labels_noform_header", "This is a special page"));
 				noFormNotice.add(noFormNoticeHeader);
 				
 				Paragraph noFormNoticeBody = new Paragraph();
-				noFormNoticeBody.add(_("labels_noform_body"));
+				noFormNoticeBody.add(getLocalizedString(iwc, "labels_noform_body", ""));
 				noFormNotice.add(noFormNoticeBody);
 				
 				component.add(noFormNotice);
@@ -106,19 +111,18 @@ public class FBDesignView extends FBComponentBase {
 				if(ids.isEmpty()) {
 					Layer emptyForm = new Layer(Layer.DIV);
 					emptyForm.setId("emptyForm");
-					emptyForm.setStyleAttribute("display: none;");
 					
-					Text emptyFormHeader = new Text(_("labels_empty_form_header"));
+					Text emptyFormHeader = new Text(getLocalizedString(iwc, "labels_empty_form_header", "This page is empty right now"));
 					emptyForm.add(emptyFormHeader);
 					
 					Paragraph emptyFormBody = new Paragraph();
-					emptyFormBody.add(_("labels_empty_form_body"));
+					emptyFormBody.add(getLocalizedString(iwc, "labels_empty_form_body", "You can add components by draggin them from the palette"));
 					emptyForm.add(emptyFormBody);
 					
 					component.add(emptyForm);
 				} else {
-					for(Iterator it = ids.iterator(); it.hasNext(); ) {
-						String nextId = (String) it.next();
+					for(Iterator<String> it = ids.iterator(); it.hasNext(); ) {
+						String nextId = it.next();
 						Component comp = page.getComponent(nextId);
 						if(comp instanceof Container) {
 							continue;
@@ -146,13 +150,10 @@ public class FBDesignView extends FBComponentBase {
 			component.add(area);
 		}
 		
-		Script script = new Script("JavaScript");
-		script.addScriptLine("setupComponentDragAndDrop('dropBox','lalala')");
-		component.add(script);
-		
 		add(component);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void encodeChildren(FacesContext context) throws IOException {
 		if (!isRendered()) {
 			return;

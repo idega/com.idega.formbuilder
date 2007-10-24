@@ -89,15 +89,15 @@ public class FBFormProperties extends FBComponentBase {
 		line.add(preview);
 		body.add(line);
 		
-		CheckBox processForm = new CheckBox();
-		processForm.setId("isProcessForm");
-		processForm.setChecked(formDocument.isProcessForm());
-		processForm.setOnChange("saveIsProcessForm(this);");
-		
-		line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
-		line.add(new Text("(Temporary) Represents process task"));
-		line.add(processForm);
-		body.add(line);
+//		CheckBox processForm = new CheckBox();
+//		processForm.setId("isProcessForm");
+//		processForm.setChecked(formDocument.isProcessForm());
+//		processForm.setOnChange("saveIsProcessForm(this);");
+//		
+//		line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
+//		line.add(new Text("(Temporary) Represents process task"));
+//		line.add(processForm);
+//		body.add(line);
 		
 		line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
 		
@@ -146,6 +146,7 @@ public class FBFormProperties extends FBComponentBase {
 		add(body);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void encodeChildren(FacesContext context) throws IOException {
 		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
 			RenderUtils.renderChild(context, (UIComponent) it.next());

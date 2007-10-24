@@ -9,37 +9,23 @@ var galleryContainer = false;
 var imageGalleryCaptions = new Array();
 var myMorph = null;
 
-//var ITEM_ID_PREFIX = 'ItemBottom';
-//var NEW_FORM_COMP_STATE = false;
 var FORMBUILDER_PATH = "/workspace/forms/formbuilder/";
 var FORMADMIN_PATH = "/workspace/forms/formadmin/";
 var FORMSHOME_PATH = "/workspace/forms/";
 
 Window.onDomReady(function() {
-	previewImageParent = $('forms');
-	var temp = previewImageParent;
-	previewImagePane = $('forms').getElementsByTagName('DIV')[0];
-	previewImagePane.style.top = '0px';
-	galleryContainer  = $('formListContainer');
-	slideEndMarker = $('slideEnd');
-	$('arrow_up_image').onmousemove = initSlide;
-	$('arrow_up_image').onmouseout = stopSlide;
-	$('arrow_down_image').onmousemove = initSlide;
-	$('arrow_down_image').onmouseout = stopSlide;	
-	
-	$('fbHomePageWelcomeBlock').makeRounded(false, {radius: 10});
+	//$('fbHomePageWelcomeBlock').makeRounded(false, {radius: 10});
 	$('newFormComp').makeRounded(false, {radius: 6});
-	slidePreviewPane();
 	
 	myMorph = new Fx.Morph('newFormComp', {wait: false});
 	$('newBt').addEvent('click', function(e){
 		new Event(e).stop();
 		myMorph.start('newFormComponentExpand');
 	});
-	$('greetingTextL').addEvent('click', function(e){
+	/*$('greetingTextL').addEvent('click', function(e){
 		new Event(e).stop();
 		myMorph.start('newFormComponentExpand');
-	});
+	});*/
 	$('newIcon').addEvent('click', function(e){
 		new Event(e).stop();
 		myMorph.start('newFormComponentExpand');
@@ -152,7 +138,7 @@ function createdNewForm(result) {
 		window.location=FORMBUILDER_PATH;
 	}
 }
-function getTopPos(inputObj) {
+/*function getTopPos(inputObj) {
 	var returnValue = inputObj.offsetTop;
 	while((inputObj = inputObj.offsetParent) != null)
 		returnValue += inputObj.offsetTop;
@@ -191,7 +177,7 @@ function slidePreviewPane() {
 		previewImagePane.style.top = topPos + 'px';
 	}
 	setTimeout('slidePreviewPane()',30);
-}
+}*/
 /*function duplicateForm(parameter) {
 	var container = $(parameter);
 	hideDialog(parameter);

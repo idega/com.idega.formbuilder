@@ -14,10 +14,10 @@
 									/dwr/interface/FormDocument.js,
 									/dwr/engine.js,
 												
-									/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/homepage.js"
+									/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formshome.js"
 					stylesheeturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formshome.css">
 			<h:form id="workspaceform1">
-				<fb:homePage id="fbHomePage" />
+				<fb:homePage />
 				<t:commandButton style="display: none" id="newFormButton" onclick="alert('done');" forceId="true" type="button" action="#{formDocument.createNewForm}" value="#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"></t:commandButton>
 			</h:form>
 		</ws:page>

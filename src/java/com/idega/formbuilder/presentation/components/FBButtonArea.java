@@ -34,7 +34,7 @@ public class FBButtonArea extends FBComponentBase {
 		if(buttonArea != null) {
 			List<String> ids = buttonArea.getContainedComponentsIdList();
 			if(ids != null) {
-				for(Iterator it = ids.iterator(); it.hasNext(); ) {
+				for(Iterator<String> it = ids.iterator(); it.hasNext(); ) {
 					String nextId = (String) it.next();
 					Button bt = (Button) buttonArea.getComponent(nextId);
 					if(bt != null) {
@@ -67,6 +67,7 @@ public class FBButtonArea extends FBComponentBase {
 //		writer.write(getEmbededJavascript());
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void encodeChildren(FacesContext context) throws IOException {
 		if (!isRendered()) {
 			return;
@@ -76,13 +77,13 @@ public class FBButtonArea extends FBComponentBase {
 		}
 	}
 	
-	private String getEmbededJavascript() {
-		StringBuilder result = new StringBuilder();
-		result.append("<script language=\"JavaScript\">\n");
-		result.append("setupButtonsDragAndDrop('" + getId() + "','" + componentStyleClass + "');\n");
-		result.append("</script>\n");
-		return 	result.toString();
-	}
+//	private String getEmbededJavascript() {
+//		StringBuilder result = new StringBuilder();
+//		result.append("<script language=\"JavaScript\">\n");
+//		result.append("setupButtonsDragAndDrop('" + getId() + "','" + componentStyleClass + "');\n");
+//		result.append("</script>\n");
+//		return 	result.toString();
+//	}
 	
 	public Object saveState(FacesContext context) {
 		Object values[] = new Object[2];

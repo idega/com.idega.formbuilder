@@ -9,7 +9,6 @@ import javax.faces.context.ResponseWriter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.chiba.xml.dom.DOMUtil;
 import org.w3c.dom.Element;
 
 import com.idega.documentmanager.business.component.Component;
@@ -28,8 +27,9 @@ public class FBFormComponent extends FBComponentBase {
 	public static final String COMPONENT_TYPE = "FormComponent";
 	
 	private static final String DELETE_BUTTON_FACET = "DELETE_BUTTON_FACET";
-	
 	private static final String DELETE_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png";
+	private static final String DEFAULT_LOAD_ACTION = "loadComponentInfo(this);";
+	private static final String DEFAULT_DELETE_ACTION = "removeComponent(this);";
 	
 	private Element element;
 	private String onLoad;
@@ -63,6 +63,8 @@ public class FBFormComponent extends FBComponentBase {
 		setId(componentId);
 		setStyleClass("formElement");
 		this.speedButtonStyleClass = "speedButton";
+		this.onDelete = DEFAULT_DELETE_ACTION;
+		this.onLoad = DEFAULT_LOAD_ACTION;
 	}
 	
 	protected void initializeComponent(FacesContext context) {
@@ -73,7 +75,6 @@ public class FBFormComponent extends FBComponentBase {
 				try {
 					Locale current = ((Workspace) WFUtil.getBeanInstance("workspace")).getLocale();
 					Element element = (Element) component.getHtmlRepresentation(current).cloneNode(true);
-					DOMUtil.prettyPrintDOM(element);
 					if(element != null) {
 						
 						element.removeAttribute("id");

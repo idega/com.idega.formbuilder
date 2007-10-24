@@ -2,6 +2,10 @@
 .fbSelectListItem {
 	width: 95px;
 }
+.fbcomp_simple_text {
+	margin-right: 150px;
+	margin-left: 15px;
+}
 div.label {
 	background:#FFFFFF url(images/header_tiler.gif) repeat-x scroll 0% 50%;
 	border-bottom:1px solid #B2B6B8;
@@ -83,14 +87,21 @@ div.label span, div.label input {
 	width: 300px;
 	height: 50px;
 }
-
+#propertyExternal {
+	width: 250px;
+}
 .fbPropertiesPanelSection {
 	width: 100%;
 	padding-left: 15px;
 	padding-top: 5px;
 }
-.fbSingleLineProperty {
+#fbComponentPropertiesPanel {
+	height: 600px;
+	position: relative;
+}
+.fbSingleLineProperty, .fbTwoLineProperty {
 	display: block;
+	margin-top: 5px;
 }
 .fbSingleLineProperty > * {
 	display: inline;
@@ -98,27 +109,29 @@ div.label span, div.label input {
 .fbSingleLineProperty > label, .fbTwoLineProperty > label {
 	width: 150px;
 }
-.fbTwoLineProperty {
-	display: block;
-}
 .fbTwoLineProperty > * {
 	display: block;
 }
-
-.pagesPanelToolbar {
-	width: 98%;
-	height: 25px;
-	background-color: LightGrey;
-	border-top: 1px solid White;
-	border-left: 1px solid White;
-	border-right: 1px solid Grey;
-	border-bottom: 1px solid Grey;
+.fbTwoLineProperty textarea {
+	width: 80%;
 }
-
+.pagesPanelToolbar {
+	background: #f4f4f4;
+	height: 25px;
+	border-bottom: 1px solid #E4E4E4;
+	padding-top: 3px;
+}
+.pagesPanelToolbarSpec {
+	background: #f4f4f4;
+	height: 25px;
+	border-bottom: 1px solid #E4E4E4;
+	padding-top: 0px;
+}
 .pagesPanelHeaderText {
-	font-size: 12px;
-	font-weight: bold;
-	cursor: pointer;
+	font-size: 14px					!important;
+	font-weight: bold				!important;
+	margin-left: 10px				!important;
+	cursor: pointer					!important;
 }
 
 .statusContainer {
@@ -476,7 +489,7 @@ span.statusMsg {
 	position: absolute;
 	top: 90px;
 	left: 332px;
-	right: 185px;
+	right: 225px;
 	bottom: 0px;
 	padding-right: 0px;
 	background: #fff;
@@ -492,41 +505,64 @@ span.statusMsg {
 
 .pagesPanel {
 	position: absolute;
-	top: 92px !important;
-	right: 12px !important;
+	top: 90px !important;
+	right: 14px !important;
 	display: inline;
-	background-color: LightGrey;
-	width: 170px;
-	min-height: 500px;
+	background-color: #FFFFFF;
+	width: 210px;
+	height: 100%;
 	bottom: 28px !important;
 	z-index: 5;
+	border: 1px solid #AEAEAE;
 }
 
-.formPageIconSpecial {
+.formPageIcon, .formPageIconSpecial {
+	background-color: #F4F4F4;
 	cursor: pointer;
 	margin-top: 15px;
 	margin-right: 10px;
 	margin-left: 10px;
-	border: 2px solid LightGrey;
+	border: 1px solid #E4E4E4;
 	padding-top: 10px;
 	padding-left: 10px;
-	margin-bottom: 10px;
+	position: relative;
+	height: 35px;
 }
-
-.formPageIcon {
+#newPageButton {
+	margin-left: 5px;
 	cursor: pointer;
-	margin-top: 15px;
-	margin-right: 10px;
-	margin-left: 10px;
-	border: 2px solid LightGrey;
-	padding-top: 10px;
-	padding-left: 10px;
+}
+#newPageButton:hover {
+}
+.pageIconIcon {
+	position: absolute;
+	top: 6px;
+	left: 5px;
+}
+.pageIconLabel {
+	position: relative;
+	top: 6px;
+	left: 35px;
+	font-size: 12px 				!important;
+	font-weight: bold 				!important;
 }
 
 .formPageIcon:hover,.formPageIconSpecial:hover {
 	border-color: Black;
 }
-
+#newPageButton {
+	color:#0096FF;
+	font-weight:bold !important;
+	height:20px;
+	margin-left:15px;
+	padding-bottom:0px;
+	padding-top:6px;
+	position:absolute;
+	text-align:right;
+	top:5px;
+	background:transparent url(images/list-add.png) no-repeat scroll 0%;
+	width: 85px;
+}
 .formPageIconSelected,.formPageIconSelectedSpecial {
 	cursor: pointer;
 	margin-top: 15px;
@@ -537,10 +573,16 @@ span.statusMsg {
 	padding-left: 10px;
 	background-color: Grey;
 }
+.formPageIcon .pageSpeedButton, .formPageIconSpecial .pageSpeedButton {
+	visibility: hidden;
+	position: absolute;
+	right: 8px;
+	top: 14px;
+}
 
-.formPageIcon:hover .speedButton,.formPageIconSelected:hover .speedButton
+#pagesPanel .formPageIcon:hover .pageSpeedButton,#pagesPanel .formPageIconSelected:hover .pageSpeedButton
 	{
-	display: inline;
+	visibility: visible;
 	cursor: pointer;
 }
 
@@ -643,10 +685,12 @@ span.statusMsg {
 	padding-bottom: 10px;
 	padding-left: 10px;
 	position: relative;
+	min-height: 50px;
 }
 
 .selectedElement {
-	background-color: Silver;
+	background-color: #E4E4E4;
+	border: 1px solid #38485C;
 }
 
 .formButton {
@@ -682,8 +726,8 @@ span.statusMsg {
 
 .formElement:hover .speedButton {
 	position: absolute;
-	right: 25px;
-	top: 25px;
+	right: 20px;
+	top: 20px;
 	display: inline;
 	cursor: pointer;
 }
@@ -714,18 +758,19 @@ span.statusMsg {
 }
 
 #noFormNotice,#emptyForm {
-	background-color: LightGrey;
+	background-color: #F9FF9E;
 	padding-left: 30px;
 	padding-right: 30px;
-	padding-bottom: 40px;
-	padding-top: 35px;
+	padding-bottom: 25px;
+	padding-top: 20px;
 	text-align: center;
 	vertical-align: middle;
-	border: 2px dotted Black;
-	font-size: 20px;
+	border: 2px solid #FFFF00;
+	font-size: 18px;
 	margin: 20px;
-	height: 100px;
+	height: 50px;
 	display: block;
+	font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
 }
 
 .noMenuLabel {
@@ -1043,9 +1088,9 @@ body#formbuilder .acStretch{
 #pageButtonArea{
 	position: relative 		!important;
 	padding: 10px;
-	display: block;
-	height: auto 			!important;
-	width: auto 			!important;
+	/*display: block;*/
+	height: 60px; 			
+	width: auto; 			
 	border: 1px solid transparent;
 }
 .activeButtonArea {
@@ -1054,14 +1099,15 @@ body#formbuilder .acStretch{
 #pageButtonArea:hover{
 	border-color: #93b825;
 }
-#pageButtonArea .formButton{
-	display: inline 		!important;
-	height: 100% 			!important;
-	width: 100% 			!important;
-	padding: 10px 0 10px 15px !important;
-	position: relative 		!important;
-	margin-left: 0 			!important;
-	margin-right: 16px 		!important;
+.formButton {
+	min-width: 100px;		
+	width: auto ;			
+	padding: 10px 0 10px 15px ;
+	margin-left: 0; 			
+	margin-right: 16px;		
+}
+.formButton input {
+	height: 50px;
 }
 #pageButtonArea .formButton:hover {
 	margin-right: 0px 		!important;
@@ -1122,13 +1168,6 @@ h1.title {
 #pagesPanelSpecial span {
 	width: auto;
 }
-
-.formPageIcon span {
-	margin-left: 9px;
-	left: 0 !important;
-	width: 40px !important;
-}
-
 #dropBox {
 	bottom: 40px !important;
 	position: absolute;

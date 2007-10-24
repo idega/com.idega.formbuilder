@@ -97,6 +97,7 @@ public class FBAdminPage extends FBComponentBase {
 		writer.writeAttribute("class", getStyleClass(), "styleClass");
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void encodeChildren(FacesContext context) throws IOException {
 		if(!isRendered()) {
 			return;

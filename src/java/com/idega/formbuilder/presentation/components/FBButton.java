@@ -17,7 +17,12 @@ public class FBButton extends FBComponentBase {
 	
 	public static final String COMPONENT_TYPE = "Button";
 	
-	private static final String DELETE_BUTTON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png";
+	private static final String DELETE_BUTTON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete-tiny.png";
+	private static final String SPEED_BUTTON_STYLE = "fbSpeedBButton";
+	private static final String INLINE_STYLE = "display: inline;";
+//	private static final String DEFAULT_LOAD_ACTION = "loadButtonInfo(this);";
+//	private static final String DEFAULT_DELETE_ACTION = "removeComponent(this);";
+//	private static final String DEFAULT_STYLE_CLASS = "formButton";
 	
 	public String selectedStyleClass;
 	public String label;
@@ -59,19 +64,20 @@ public class FBButton extends FBComponentBase {
 	}
 
 	public FBButton() {
-		new FBButton(null, null, null);
+		new FBButton(null, null, null, null);
 	}
 	
 	public FBButton(String buttonId) {
-		new FBButton(buttonId, null, null);
+		new FBButton(buttonId, null, null, null);
 	}
 	
-	public FBButton(String buttonId, String onSelect, String onDelete) {
+	public FBButton(String buttonId, String styleClass, String onSelect, String onDelete) {
 		super();
 		setRendererType(null);
 		this.buttonId = buttonId;
 		this.onSelect = onSelect;
 		this.onDelete = onDelete;
+		this.setStyleClass(styleClass);
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
@@ -100,18 +106,18 @@ public class FBButton extends FBComponentBase {
 		}
 		
 		writer.writeAttribute("id", getId(), "id");
-		writer.writeAttribute("style", "display: inline;", null);
+		writer.writeAttribute("style", INLINE_STYLE, null);
 		writer.writeAttribute("onclick", onSelect, "onclick");
 		
 		writer.startElement("input", null);
 		writer.writeAttribute("type", "button", null);
 		writer.writeAttribute("value", label, null);
-		writer.writeAttribute("style", "display: inline;", null);
+		writer.writeAttribute("style", INLINE_STYLE, null);
 		writer.writeAttribute("enabled", "false", null);
 		writer.endElement("input");
 		
 		writer.startElement("img", null);
-		writer.writeAttribute("class", "fbSpeedBButton", null);
+		writer.writeAttribute("class", SPEED_BUTTON_STYLE, null);
 		writer.writeAttribute("src", DELETE_BUTTON_IMG, null);
 		writer.writeAttribute("onclick", onDelete, "onclick");
 		writer.endElement("img");
@@ -133,6 +139,23 @@ public class FBButton extends FBComponentBase {
 
 	public void setOnDelete(String onDelete) {
 		this.onDelete = onDelete;
+	}
+	
+	public Object saveState(FacesContext context) {
+		Object values[] = new Object[5];
+		values[0] = super.saveState(context);
+		values[1] = label;
+		values[2] = onSelect;
+		values[3] = onDelete;
+		return values;
+	}
+	
+	public void restoreState(FacesContext context, Object state) {
+		Object values[] = (Object[]) state;
+		super.restoreState(context, values[0]);
+		label = (String) values[1];
+		onSelect = (String) values[2];
+		onDelete = (String) values[3];
 	}
 	
 }

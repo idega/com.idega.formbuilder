@@ -102,6 +102,7 @@ public class FBMenu extends FBComponentBase {
 		super.encodeEnd(context);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void encodeChildren(FacesContext context) throws IOException {
 		if (!isRendered()) {
 			return;
