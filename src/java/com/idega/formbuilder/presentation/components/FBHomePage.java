@@ -142,11 +142,14 @@ public class FBHomePage extends FBComponentBase {
 //			ctx.close();
 //		}
 		
-		Iterator<SelectItem> it = viewToTaskBinnder.getAvailableForms().iterator();
-		while(it.hasNext()) {
-			SelectItem item = it.next();
-			listContainer.add(getListItem(context, item.getLabel(), "Created " + getCreatedDate(item.getValue().toString()), item.getValue().toString()));
-		}
+//		FIXME: wtf is that? no such method!!.
+//		and why the method returns available forms? what IF view isn't a form? call it getAllViewsForViewType. and return List of com.idega.jbpm.def.View, not some abstract SelectItem.
+		
+//		Iterator<SelectItem> it = viewToTaskBinnder.getAvailableForms().iterator();
+//		while(it.hasNext()) {
+//			SelectItem item = it.next();
+//			listContainer.add(getListItem(context, item.getLabel(), "Created " + getCreatedDate(item.getValue().toString()), item.getValue().toString()));
+//		}
 		
 		fbHomePage.add(listContainer);
 		
