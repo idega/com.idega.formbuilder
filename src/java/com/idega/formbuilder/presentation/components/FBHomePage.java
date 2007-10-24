@@ -9,14 +9,13 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import org.jbpm.JbpmContext;
-import org.jbpm.graph.def.ProcessDefinition;
-import org.jbpm.taskmgmt.def.Task;
-
+import com.idega.block.form.process.XFormsView;
+import com.idega.documentmanager.business.Document;
+import com.idega.documentmanager.business.DocumentManager;
 import com.idega.documentmanager.business.PersistenceManager;
 import com.idega.formbuilder.business.process.XFormsProcessManager;
 import com.idega.formbuilder.presentation.FBComponentBase;
-import com.idega.jbpm.business.JbpmProcessBusinessBean;
+import com.idega.formbuilder.view.ActionManager;
 import com.idega.jbpm.def.View;
 import com.idega.jbpm.def.ViewToTask;
 import com.idega.presentation.IWContext;
@@ -142,14 +141,16 @@ public class FBHomePage extends FBComponentBase {
 //			ctx.close();
 //		}
 		
-//		FIXME: wtf is that? no such method!!.
-//		and why the method returns available forms? what IF view isn't a form? call it getAllViewsForViewType. and return List of com.idega.jbpm.def.View, not some abstract SelectItem.
-		
-//		Iterator<SelectItem> it = viewToTaskBinnder.getAvailableForms().iterator();
-//		while(it.hasNext()) {
-//			SelectItem item = it.next();
-//			listContainer.add(getListItem(context, item.getLabel(), "Created " + getCreatedDate(item.getValue().toString()), item.getValue().toString()));
-//		}
+//		List<View> forms = viewToTaskBinnder.getAllViewsForViewType(XFormsView.VIEW_TYPE);
+//		Iterator<View> it = forms.iterator();
+//		DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
+//		Document document = null;
+		Iterator<SelectItem> it = formsList.iterator();
+		while(it.hasNext()) {
+			SelectItem item = it.next();
+//			document = formManagerInstance..openForm(view.getViewId());
+			listContainer.add(getListItem(context, item.getLabel(), "Created " + getCreatedDate(item.getValue().toString()), item.getValue().toString()));
+		}
 		
 		fbHomePage.add(listContainer);
 		
