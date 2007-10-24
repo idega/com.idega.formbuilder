@@ -27,7 +27,9 @@
 					<fb:workspace id="mainWorkspace" view="#{workspace.view}"/>
 				</t:div>
 				<t:div styleClass="fbBottomButtonsContainer">
+					<!-- 
 					<t:commandButton id="newFormButton" forceId="true" type="button" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/new-dialog.inc');return false" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}"></t:commandButton>
+					 -->
 					<t:commandButton id="saveFormButton" forceId="true" type="button" onclick="saveFormDocument();return false" value="#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"></t:commandButton>
 					<t:commandButton id="homeButton" forceId="true" type="button" onclick="window.location.href = '/workspace/forms/';" value="#{localizedStrings['com.idega.formbuilder']['toolbar_home']}"></t:commandButton>
 				</t:div>

@@ -186,7 +186,8 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 				autofillValue.setId("propertyAutofill");
 				autofillValue.setOnBlur("saveAutofill(this.value);");
 				autofillValue.setOnKeyDown("savePropertyOnEnter(this.value,'compAuto',event);");
-				autofillValue.setDisabled(autofillKey == null ? true : false);
+				if(autofillKey != null)
+					autofillValue.setStyleClass("activeAutofill");
 				
 				line2.add(new Text(""));
 				line2.add(autofillValue);

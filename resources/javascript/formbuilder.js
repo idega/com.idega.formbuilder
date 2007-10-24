@@ -76,9 +76,14 @@ var FBDraggable = Element.extend({
 							}
 						}
 					});
-					var info = new PaletteComponentInfo(this.elementOrg.id, this.autofill);
 					if(draggingComponent == false) {
-   						FormComponent.addComponent(info, placeNewComponent);
+   						FormComponent.addComponent(this.elementOrg.id, this.autofill, {
+							callback: function(resultDOM) {
+								if(resultDOM != null) {
+									currentElement = resultDOM;
+								}
+							}
+						});
    						draggingComponent = true;
 					}
 				} else if(type == 'fbbutton') {
@@ -97,8 +102,7 @@ var FBDraggable = Element.extend({
 				if(type == 'fbcomp') {
 					if(draggingComponent == true) {
 						//draggingComponent = false;
-						var currentId = currentElement.getAttribute('id');
-						var dropBox = $('dropBoxinner');
+						var currentId = currentElement.documentElement.getAttribute('id');
 						this.element.removeEvents('mousemove');
 						if(insideDropzone == false) {
 							FormComponent.removeComponent(currentId,nothing);
@@ -123,38 +127,6 @@ var FBDraggable = Element.extend({
 	}
 });
 Window.onDomReady(function() {
-	if($('dropBoxinner') != null) {
-		$('dropBoxinner').addEvents({
-			'over': function(el){
-				//console.log('Over a dropZone');
-				if (!this.dragEffect) this.dragEffect = new Fx.Style(this, 'background-color');
-				this.dragEffect.stop().start('ffffff', 'dddddd');
-				insideDropzone = true;
-			},
-			'leave': function(el){
-				//console.log('Leaving a dropZone');
-				this.dragEffect.stop().start('dddddd', 'ffffff');
-				insideDropzone = false;
-			},
-			'drop': function(el, drag){
-				//console.log('Dropping');
-				this.dragEffect.stop().start('ff8888', 'ffffff');
-				if(draggingComponent == true) {
-					draggingComponent = false;
-					var currentId = currentElement.getAttribute('id');
-				    if(CURRENT_ELEMENT_UNDER != null) {
-						FormComponent.moveComponent(currentId, CURRENT_ELEMENT_UNDER, insertNewComponent);
-				    }
-				} else if(draggingButton == true) {
-					draggingButton = false;
-					if(CURRENT_BUTTON != null) {
-						insertNodesToContainer(CURRENT_BUTTON, $('pageButtonArea'));
-					}
-				}
-				insideDropzone = false;
-			}
-		});
-	}
 	/*if($('pageButtonArea') != null) {
 		$('pageButtonArea').addEvents({
 			'over': function(el){
@@ -176,22 +148,9 @@ Window.onDomReady(function() {
 			}
 		});
 	}*/
-	$$('.fbcomp').each(function(el){
-		el.draggableTag($('dropBoxinner'), null, 'fbcomp', false);
-	});
-	$$('.fbauto').each(function(el){
-		el.draggableTag($('dropBoxinner'), null, 'fbcomp', false);
-	});
-	$$('.fbbutton').each(function(el){
-		el.draggableTag($('dropBoxinner'), null, 'fbbutton', false);
-	});
 	setupDesignView('dropBox', 'formElement', 'fgh', 'dfgdfg', PAGE_TITLE, FORM_TITLE);
 	setupPagesPanel();
 });
-function PaletteComponentInfo(type,autofill) {
-	this.type = type;
-	this.autofill = autofill;
-}
 function getPageComponents() {
 	var dropBox = $('dropBoxinner');
 	var result = [];
@@ -256,32 +215,6 @@ function savePropertyOnEnter(value,attribute,event) {
 		}
 	}
 }
-function createButtonAreaNode() {
-	var node = document.createElement('div');
-	node.id = 'pageButtonArea';
-	node.setAttribute('class', 'formElement');
-	
-	return node;
-}
-function createNewComponent(htmlNode) {
-	var node = document.createElement('div');
-	var nodeId = htmlNode.getAttribute('id');
-	node.setAttribute('id', nodeId);
-	htmlNode.removeAttribute('id');
-	node.setAttribute('class', 'formElement');
-	node.setAttribute('onclick', 'loadComponentInfo(this);');
-	
-	node.appendChild(htmlNode);
-	
-	var delImg = document.createElement('img');
-	delImg.id = 'db' + nodeId;
-	delImg.setAttribute('src', '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png');
-	delImg.setAttribute('onclick', 'removeComponent(this);');
-	delImg.setAttribute('class', 'speedButton');
-	node.appendChild(delImg);
-	
-	return node;
-}
 function placeNewButton(parameter) {
 	if(parameter != null) {
 		//console.log('New button ' + parameter);
@@ -325,31 +258,6 @@ function loadButtonInfo(button) {
 		}
 	}
 	pressedButtonDelete = false;
-}
-function placeNewComponent(parameter) {
-	//console.log('Received from server: ' + parameter);
-	if(parameter != null) {
-		currentElement = createNewComponent(createTreeNode(parameter.documentElement));
-		//console.log('Setting currentElement: ' + currentElement);
-	}
-}
-function createTreeNode(element) {
-	if(element.nodeName == '#text') {
-		var textNode = document.createTextNode(element.nodeValue);
-		return textNode;
-	} else {
-		var result = document.createElement(element.nodeName);
-		if(element.nodeName == 'input' || element.nodeName == 'textarea' || element.nodeName == 'select') {
-			result.setAttribute('disabled','true');
-		}
-		for(var i=0;i<element.attributes.length;i++) {
-			result.setAttribute(element.attributes[i].nodeName,element.attributes[i].nodeValue);
-		}
-		for(var j=0;j<element.childNodes.length;j++) {
-			result.appendChild(createTreeNode(element.childNodes[j]));
-		}
-		return result;
-	}
 }
 function enableInlineEdit(action, event) {
 	var event = new Event(event);
@@ -603,9 +511,6 @@ function loadPageInfo(event) {
 			}
 	}
 }
-function setupPagesDragAndDrop(value1, value2) {
-	FormPage.getId(markSelectedPage);
-}
 function placePageTitle(parameter) {
 	if(parameter != null) {
 		var node = $(parameter.pageId + '_P_page');
@@ -629,8 +534,18 @@ function setupPagesPanel() {
 			FormDocument.updatePagesList(orderList, nothing);
 		}
 	});
+	FormPage.getId(markSelectedPage);
 }
 function setupDesignView(componentArea, component, buttonArea, button, pageTitle, formTitle) {
+	$$('.fbcomp').each(function(el){
+		el.draggableTag($('dropBoxinner'), null, 'fbcomp', false);
+	});
+	$$('.fbauto').each(function(el){
+		el.draggableTag($('dropBoxinner'), null, 'fbcomp', false);
+	});
+	$$('.fbbutton').each(function(el){
+		el.draggableTag($('dropBoxinner'), null, 'fbbutton', false);
+	});
 	var formTitle = $(formTitle);
 	if(formTitle != null) {
 		formTitle.addEvent('dblclick', function(e){
@@ -672,23 +587,54 @@ function setupDesignView(componentArea, component, buttonArea, button, pageTitle
 			}
 		});
 	}*/
+	if($('dropBoxinner') != null) {
+		$('dropBoxinner').addEvents({
+			'over': function(el){
+				if (!this.dragEffect) this.dragEffect = new Fx.Style(this, 'background-color');
+				this.dragEffect.stop().start('ffffff', 'dddddd');
+				insideDropzone = true;
+			},
+			'leave': function(el){
+				this.dragEffect.stop().start('dddddd', 'ffffff');
+				insideDropzone = false;
+			},
+			'drop': function(el, drag){
+				this.dragEffect.stop().start('ff8888', 'ffffff');
+				if(draggingComponent == true) {
+					draggingComponent = false;
+					var currentId = currentElement.documentElement.getAttribute('id');
+				    if(CURRENT_ELEMENT_UNDER != null) {
+						FormComponent.moveComponent(currentId, CURRENT_ELEMENT_UNDER, insertNewComponent);
+				    }
+				} else if(draggingButton == true) {
+					draggingButton = false;
+					if(CURRENT_BUTTON != null) {
+						insertNodesToContainer(CURRENT_BUTTON, $('pageButtonArea'));
+					}
+				}
+				insideDropzone = false;
+			}
+		});
+	}
 }
 function markSelectedComponent(parameter) {
 	if(parameter != null) {
 		var element = $(parameter);
 		if(element != null) {
-			//element.setAttribute('class','formElement selectedElement');
 			CURRENT_ELEMENT_ID = parameter;
 		}
 	}
 }
 function insertNewComponent(parameter) {
+	if($('emptyForm') != null) {
+		$('emptyForm').remove();
+	}
 	if(parameter == 'append') {
-		$('dropBoxinner').appendChild(currentElement);
+		insertNodesToContainer(currentElement, $('dropBoxinner'));
 		currentElement = null;
 	} else {
 		var node = $(parameter);
-		$('dropBoxinner').insertBefore(currentElement, node);
+		insertNodesToContainerBefore(currentElement, $('dropBoxinner'), node);
 		currentElement = null;
 	}
 }
@@ -741,12 +687,12 @@ function loadItemset(container,list) {
 }
 function toggleAutofill(parameter) {
 	if(parameter != null) {
-		$('propertyAutofill').setAttribute('disabled', parameter);
-		/*FormComponent.saveAutofill(parameter, {
-			callback: function(result) {
-				
-			}
-		});*/
+		var node = $('propertyAutofill');
+		if(parameter == false) {
+			node.removeClass('activeAutofill');
+		} else {
+			node.addClass('activeAutofill');
+		}
 	}
 }
 function replaceChangedComponent(resultDOM) {
@@ -787,11 +733,9 @@ function saveComponentLabel(value) {
 		});
 	}
 }
-
 function saveComponentProcessVariableName(value) {
 	FormComponent.saveComponentProcessVariableName(value, nothing);
 }
-
 function saveRequired(parameter) {
 	if(parameter != null) {
 		FormComponent.saveComponentRequired(parameter, replaceChangedComponent);
@@ -1008,7 +952,7 @@ function createdNewForm(parameter) {
 function refreshWorkspace(parameter) {
 	if(parameter != null) {
 		placePageInfo(parameter);
-		var container = $('pagesPanel');
+		var container = $(PAGES_PANEL_ID);
 		if(container != null) {
 			var childCount = container.childNodes.length;
 			for(var i=0;i<childCount;i++) {

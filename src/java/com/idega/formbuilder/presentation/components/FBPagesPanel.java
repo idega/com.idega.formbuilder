@@ -212,11 +212,6 @@ public class FBPagesPanel extends FBComponentBase {
 		writer.endElement("DIV");
 		writer.endElement("DIV");
 		super.encodeEnd(context);
-		
-		Object values[] = new Object[2];
-		values[0] = getId();
-		values[1] = componentStyleClass;
-		writer.write(getEmbededJavascript(values));
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -228,14 +223,6 @@ public class FBPagesPanel extends FBComponentBase {
 		while(it.hasNext()) {
 			renderChild(context, (UIComponent) it.next());
 		}
-	}
-	
-	private String getEmbededJavascript(Object values[]) {
-		StringBuilder result = new StringBuilder();
-		result.append("<script language=\"JavaScript\">\n");
-		result.append("setupPagesDragAndDrop('" + values[0] + "','" + values[1] + "');\n");
-		result.append("</script>\n");
-		return 	result.toString();
 	}
 	
 	public Object saveState(FacesContext context) {

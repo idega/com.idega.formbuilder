@@ -3,10 +3,8 @@ package com.idega.formbuilder.presentation.beans;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.jdom.Document;
-import org.w3c.dom.Node;
 
 import com.idega.builder.business.BuilderLogic;
 import com.idega.documentmanager.business.component.Button;
@@ -21,7 +19,6 @@ import com.idega.documentmanager.component.beans.LocalizedStringBean;
 import com.idega.formbuilder.presentation.components.FBButton;
 import com.idega.formbuilder.presentation.components.FBComponentPropertiesPanel;
 import com.idega.formbuilder.presentation.components.FBFormComponent;
-import com.idega.formbuilder.presentation.converters.PaletteComponentInfo;
 import com.idega.formbuilder.util.FBConstants;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.util.CoreUtil;
@@ -277,7 +274,11 @@ public class FormComponent implements Serializable {
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentPropertiesPanel(id, FBConstants.COMPONENT_TYPE), true);
 	}
 	
-	public Node addComponent(PaletteComponentInfo info) throws Exception {
+	public Document addComponent(String type, String autofill) throws Exception {
+		if(type == null) {
+			return null;
+		}
+		
 		Page page = formPage.getPage();
 		if(page != null) {
 			String before = null;
@@ -285,15 +286,13 @@ public class FormComponent implements Serializable {
 			if(area != null) {
 				before = area.getId();
 			}
-			Component component = page.addComponent(info.getType(), before);
+			Component component = page.addComponent(type, before);
 			if(component != null) {
-				if(info.getAutofill() != null) {
+				if(autofill != null) {
 					if(component.getProperties() != null)
-						component.getProperties().setAutofillKey(info.getAutofill());
+						component.getProperties().setAutofillKey(autofill);
 				}
-				Node element = component.getHtmlRepresentation(new Locale("en")).cloneNode(true);
-				
-				return element;
+				return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component.getId()), true);
 			}
 		}
 		return null;
@@ -516,6 +515,9 @@ public class FormComponent implements Serializable {
 	}
 
 	public void setAutofillKey(String autofillKey) {
+		if(autofillKey == null || "".equals(autofillKey)) {
+			return;
+		}
 		if(component != null) {
 			component.getProperties().setAutofillKey(autofillKey);
 		} else if(selectComponent != null) {

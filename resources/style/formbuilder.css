@@ -6,6 +6,12 @@
 	margin-right: 150px;
 	margin-left: 15px;
 }
+#propertyAutofill {
+	display: none;
+}
+.activeAutofill {
+	display: block					!important;
+}
 div.label {
 	background:#FFFFFF url(images/header_tiler.gif) repeat-x scroll 0% 50%;
 	border-bottom:1px solid #B2B6B8;
