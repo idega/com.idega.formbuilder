@@ -5,7 +5,11 @@ import java.util.Locale;
 
 import javax.faces.event.ActionEvent;
 
+import org.jdom.Document;
+
+import com.idega.builder.business.BuilderLogic;
 import com.idega.formbuilder.presentation.components.FBViewPanel;
+import com.idega.util.CoreUtil;
 
 public class Workspace implements Serializable {
 	
@@ -70,6 +74,11 @@ public class Workspace implements Serializable {
 
 	public void setView(String view) {
 		this.view = view;
+	}
+	
+	public Document switchView(String view) {
+		setView(view);
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBViewPanel("viewPanel", "formContainer"), false);
 	}
 
 	public String getDesignViewStatus() {

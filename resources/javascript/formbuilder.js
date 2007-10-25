@@ -881,6 +881,25 @@ function getEmptySelect(index,lbl,vl) {
 	return result;
 	
 }
+function switchView(view, id) {
+	showLoadingMessage('Saving document...');
+	Workspace.switchView(view, {
+		callback: function(resultDOM) {
+				replaceNode(resultDOM, $('viewPanel'), $('mainWorkspace'));
+				closeLoadingMessage();
+			}
+		});
+}
+function fbsave() {
+	var node = $('sourceTextarea');
+	if(node != null) {
+		showLoadingMessage('Saving');
+		FormDocument.saveSrc(node.value, closeLoadingMessage);
+	} else {
+		showLoadingMessage('Saving document...');
+		FormDocument.save(closeLoadingMessage);
+	}
+}
 function saveFormDocument() {
 	showLoadingMessage('Saving document...');
 	FormDocument.save(closeLoadingMessage);

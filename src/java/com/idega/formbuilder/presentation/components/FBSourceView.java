@@ -53,7 +53,7 @@ public class FBSourceView extends FBComponentBase {
 		srcSubmit.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['change_source_code']}"));
 		
 		content.add(textarea);
-		content.add(srcSubmit);
+//		content.add(srcSubmit);
 		
 		addFacet(CONTENT_DIV_FACET, content);
 	}

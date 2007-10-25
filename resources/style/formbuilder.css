@@ -528,7 +528,7 @@ span.statusMsg {
 #previewView {
 	overflow-y: auto !important;
 	height: 100%;
-	margin-top: -34px;
+	margin-top: 0px;
 	border-top-width: 0 !important;
 	width: 100%;
 }
@@ -1154,6 +1154,13 @@ span.fbMenuTabBar {
 .fbBottomButtonsContainer a.leftButton {
 	margin-left: 24px;
 	float: left;
+}
+.fbBottomButtonsContainer a.currentView {
+	border: 1px solid #a1a1a1;
+}
+
+.fbBottomButtonsContainer a#designButton {
+	background: url(images/wiz_32.png) center top no-repeat;
 }
 
 .fbBottomButtonsContainer a#saveFormButton {

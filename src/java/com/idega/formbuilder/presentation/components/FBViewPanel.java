@@ -1,23 +1,26 @@
 package com.idega.formbuilder.presentation.components;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import javax.faces.application.Application;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.el.ValueBinding;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.presentation.ui.IFrame;
-import com.idega.webface.WFTabbedPane;
+import com.idega.util.RenderUtils;
+import com.idega.webface.WFUtil;
 
 public class FBViewPanel extends FBComponentBase {
 	
 	public static final String COMPONENT_TYPE = "ViewPanel";
 	
-	private static final String SWITCHER_FACET = "SWITCHER_FACET";
+//	private static final String SWITCHER_FACET = "SWITCHER_FACET";
 	
-	private String view;
+//	private String view;
 
 	public static final int DESIGN_VIEW_INDEX = 0;
 	public static final int PREVIEW_VIEW_INDEX = 1;
@@ -31,51 +34,54 @@ public class FBViewPanel extends FBComponentBase {
 		setRendererType(null);
 	}
 	
+	public FBViewPanel(String id, String styleClass) {
+		super(id, styleClass);
+		setRendererType(null);
+	}
+	
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
 		getChildren().clear();
 		
-		WFTabbedPane tabbedPane = new WFTabbedPane();
-		tabbedPane.setMenuStyleClass("fbViewTabBar");
-		tabbedPane.setSelectedMenuItemStyleClass("activeTab");
-		tabbedPane.setDeselectedMenuItemStyleClass("inactiveTab");
+//		ValueBinding vb = getValueBinding("view");
+//		if(vb != null) {
+//			view = (String) vb.getValue(context);
+//		}
 		
-		FBDesignView designView = (FBDesignView) application.createComponent(FBDesignView.COMPONENT_TYPE);
-		designView.setId("designView");
-		designView.setStyleClass("dropBox");
-		designView.setComponentStyleClass("formElement");
-		designView.setSelectedStyleClass("formElement selectedElement");
-		designView.setValueBinding("status", application.createValueBinding("#{workspace.designViewStatus}"));
-		
-		FBSourceView sourceView = (FBSourceView) application.createComponent(FBSourceView.COMPONENT_TYPE);
-		sourceView.setStyleClass("sourceView");
-		sourceView.setId("sourceView");
-		
-		IFrame frame = new IFrame("lalal", PreviewPage.class);
-		frame.setId("previewView");
-		
-//		FBFormPreview previewView = (FBFormPreview) application.createComponent(FBFormPreview.COMPONENT_TYPE);
-//		previewView.setId("previewView");
-		
-		tabbedPane.addTab("tab1", "Design", designView);
-		tabbedPane.addTab("tab2", "Preview", frame);
-		tabbedPane.addTab("tab3", "Source", sourceView);
-		tabbedPane.setSelectedMenuItemId("tab1");
-		
-		addFacet(SWITCHER_FACET, tabbedPane);
+		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
+		String view = workspace.getView();
+		if(PREVIEW_VIEW.equals(view)) {
+			IFrame frame = new IFrame("lalal", PreviewPage.class);
+			frame.setId("previewView");
+			
+			add(frame);
+		} else if(SOURCE_VIEW.equals(view)) {
+			FBSourceView sourceView = (FBSourceView) application.createComponent(FBSourceView.COMPONENT_TYPE);
+			sourceView.setStyleClass("sourceView");
+			sourceView.setId("sourceView");
+			
+			add(sourceView);
+		} else if(DESIGN_VIEW.equals(view)) {
+			FBDesignView designView = (FBDesignView) application.createComponent(FBDesignView.COMPONENT_TYPE);
+			designView.setId("designView");
+			designView.setStyleClass("dropBox");
+			designView.setComponentStyleClass("formElement");
+			designView.setSelectedStyleClass("formElement selectedElement");
+			designView.setValueBinding("status", application.createValueBinding("#{workspace.designViewStatus}"));
+			
+			add(designView);
+		}
 	}
 
-	public String getView() {
-		return view;
-	}
-
-	public void setView(String view) {
-		this.view = view;
-	}
+//	public String getView() {
+//		return view;
+//	}
+//
+//	public void setView(String view) {
+//		this.view = view;
+//	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
-//		((Workspace)WFUtil.getBeanInstance("workspace")).isPagesPanelVisible();
-		
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeBegin(context);
 		
@@ -83,31 +89,35 @@ public class FBViewPanel extends FBComponentBase {
 		writer.writeAttribute("id", getId(), "id");
 		writer.writeAttribute("class", getStyleClass(), "styleClass");
 
-		ValueBinding vb = getValueBinding("view");
-		if(vb != null) {
-			view = (String) vb.getValue(context);
-		}
-		WFTabbedPane tabbedPane = (WFTabbedPane) getFacet(SWITCHER_FACET);
-		renderChild(context, tabbedPane);
+		
+//		WFTabbedPane tabbedPane = (WFTabbedPane) getFacet(SWITCHER_FACET);
+//		renderChild(context, tabbedPane);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public void encodeChildren(FacesContext context) throws IOException {
+		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
+			RenderUtils.renderChild(context, (UIComponent) it.next());
+		}
+	}
+ 	
 	public void encodeEnd(FacesContext context) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		writer.endElement("DIV");
 		super.encodeEnd(context);
 	}
 	
-	public Object saveState(FacesContext context) {
-		Object values[] = new Object[2];
-		values[0] = super.saveState(context); 
-		values[1] = view;
-		return values;
-	}
-	
-	public void restoreState(FacesContext context, Object state) {
-		Object values[] = (Object[]) state;
-		super.restoreState(context, values[0]);
-		view = (String) values[1];
-	}
+//	public Object saveState(FacesContext context) {
+//		Object values[] = new Object[2];
+//		values[0] = super.saveState(context); 
+//		values[1] = view;
+//		return values;
+//	}
+//	
+//	public void restoreState(FacesContext context, Object state) {
+//		Object values[] = (Object[]) state;
+//		super.restoreState(context, values[0]);
+//		view = (String) values[1];
+//	}
 
 }
