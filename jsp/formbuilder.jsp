@@ -23,15 +23,30 @@
 								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js"
 				stylesheeturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formbuilder.css">
 			<h:form id="workspaceform1">
+				<f:verbatim>
+                	<script type="text/javascript">
+                		window.addEvent('domready', function() {
+							var errorHanlder = function() {
+								reloadPage();
+							}
+							DWREngine.setErrorHandler(errorHanlder);
+						});
+                	</script>
+                </f:verbatim>
 				<t:div id="mainApplication" forceId="true">
 					<fb:workspace id="mainWorkspace" view="#{workspace.view}"/>
 				</t:div>
 				<t:div styleClass="fbBottomButtonsContainer">
 					<!-- 
-					<t:commandButton id="newFormButton" forceId="true" type="button" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/new-dialog.inc');return false" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}"></t:commandButton>
-					 -->
-					<t:commandLink id="saveFormButton" forceId="true" onclick="saveFormDocument();return false" value="#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"></t:commandLink>
-					<t:commandLink id="homeButton" forceId="true" onclick="window.location.href = '/workspace/forms/';return false;" value="#{localizedStrings['com.idega.formbuilder']['toolbar_home']}"></t:commandLink>
+					<f:verbatim>
+	                	<a href="/servlet/ObjectInstanciator?idegaweb_instance_class=com.idega.formbuilder.presentation.components.FBSourceView" rel="moodalbox" >values</a>
+	                </f:verbatim>
+	                 -->
+					<t:commandLink id="previewButton" styleClass="leftButton" forceId="true" onclick="saveFormDocument();return false" value="Preview"></t:commandLink>
+					<t:commandLink id="sourceCodeButton" styleClass="leftButton" forceId="true" onclick="saveFormDocument();return false" value="Source"></t:commandLink>
+					<t:commandLink id="newFormButton" styleClass="rightButton" forceId="true" onclick="displayMessage('/idegaweb/bundles/com.idega.formbuilder.bundle/resources/includes/new-dialog.inc');return false" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}"></t:commandLink>
+					<t:commandLink id="saveFormButton" styleClass="rightButton" forceId="true" onclick="saveFormDocument();return false" value="#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"></t:commandLink>
+					<t:commandLink id="homeButton" styleClass="rightButton" forceId="true" onclick="window.location.href = '/workspace/forms/';return false;" value="#{localizedStrings['com.idega.formbuilder']['toolbar_home']}"></t:commandLink>
 				</t:div>
 			</h:form>
 		</ws:page>

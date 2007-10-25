@@ -90,55 +90,55 @@ public class FBHomePage extends FBComponentBase {
 		Layer listContainer = new Layer(Layer.DIV);
 		listContainer.setId("formListContainer");
 //		
-		XFormsProcessManager xformsProcessManager = (XFormsProcessManager) WFUtil.getBeanInstance("xformsProcessManager");
-		ViewToTask viewToTaskBinnder = xformsProcessManager.getViewToTaskBinder();
-		JbpmProcessBusinessBean jbpmProcessBusiness = (JbpmProcessBusinessBean) WFUtil.getBeanInstance("jbpmProcessBusiness");
+//		XFormsProcessManager xformsProcessManager = (XFormsProcessManager) WFUtil.getBeanInstance("xformsProcessManager");
+//		ViewToTask viewToTaskBinnder = xformsProcessManager.getViewToTaskBinder();
+//		JbpmProcessBusinessBean jbpmProcessBusiness = (JbpmProcessBusinessBean) WFUtil.getBeanInstance("jbpmProcessBusiness");
 //		JbpmContext ctx = jbpmProcessBusiness.getJbpmContext();
-		List<ProcessDefinition> processList = jbpmProcessBusiness.getProcessList();
+//		List<ProcessDefinition> processList = jbpmProcessBusiness.getProcessList();
 //		
 //		try {
-			for(Iterator<ProcessDefinition> processIterator = processList.iterator(); processIterator.hasNext(); ) {
-				ProcessDefinition definition = (ProcessDefinition) processIterator.next();
-				
-				
-				
-				Layer processItem = new Layer(Layer.DIV);
-				processItem.setStyleClass("processItem");
-				Layer processNameBox = new Layer(Layer.DIV);
-				processNameBox.setStyleClass("processNameBox");
-				Image processIcon = new Image();
-				processIcon.setSrc(PROCESS_ICON);
-				Text processName = new Text(definition.getName());
-				processName.setStyleClass("processName");
-				Link casesButton = new Link(getLocalizedString(iwc, "fb_home_view_cases_link", "View cases"));
-				Link newTaskFormButton = new Link(getLocalizedString(iwc, "fb_home_new_task_form_link", "Add task form"));
-				casesButton.setStyleClass("processButton casesButton");
-				newTaskFormButton.setStyleClass("processButton taskFormButton");
-				processNameBox.add(processIcon);
-				processNameBox.add(processName);
-				processNameBox.add(casesButton);
-				processNameBox.add(newTaskFormButton);
-				processItem.add(processNameBox);
-				
-				List<Task> tasks = jbpmProcessBusiness.getProcessDefinitionTasks(definition);
-				
-				String formTitle = null;
-				for(Iterator<Task> taskIterator = tasks.iterator(); taskIterator.hasNext(); ) {
-					Task task = (Task) taskIterator.next();
-					View view = viewToTaskBinnder.getView(task.getId());
-					if(view == null) 
-						continue;
-					for(Iterator<SelectItem> it = formsList.iterator(); it.hasNext(); ) {
-						SelectItem item = it.next();
-						if(item.getValue().equals(view.getViewId())) 
-							formTitle = (String) item.getLabel();
-					}
-					processItem.add(getProcessTaskFormItem(context, formTitle + " (" + task.getName() + ")", "Created " + getCreatedDate(view.getViewId()), view.getViewId()));
-				}
-				if(formTitle == null)
-					continue;
-				listContainer.add(processItem);
-			}
+//			for(Iterator<ProcessDefinition> processIterator = processList.iterator(); processIterator.hasNext(); ) {
+//				ProcessDefinition definition = (ProcessDefinition) processIterator.next();
+//				
+//				
+//				
+//				Layer processItem = new Layer(Layer.DIV);
+//				processItem.setStyleClass("processItem");
+//				Layer processNameBox = new Layer(Layer.DIV);
+//				processNameBox.setStyleClass("processNameBox");
+//				Image processIcon = new Image();
+//				processIcon.setSrc(PROCESS_ICON);
+//				Text processName = new Text(definition.getName());
+//				processName.setStyleClass("processName");
+//				Link casesButton = new Link(getLocalizedString(iwc, "fb_home_view_cases_link", "View cases"));
+//				Link newTaskFormButton = new Link(getLocalizedString(iwc, "fb_home_new_task_form_link", "Add task form"));
+//				casesButton.setStyleClass("processButton casesButton");
+//				newTaskFormButton.setStyleClass("processButton taskFormButton");
+//				processNameBox.add(processIcon);
+//				processNameBox.add(processName);
+//				processNameBox.add(casesButton);
+//				processNameBox.add(newTaskFormButton);
+//				processItem.add(processNameBox);
+//				
+//				List<Task> tasks = jbpmProcessBusiness.getProcessDefinitionTasks(definition);
+//				
+//				String formTitle = null;
+//				for(Iterator<Task> taskIterator = tasks.iterator(); taskIterator.hasNext(); ) {
+//					Task task = (Task) taskIterator.next();
+//					View view = viewToTaskBinnder.getView(task.getId());
+//					if(view == null) 
+//						continue;
+//					for(Iterator<SelectItem> it = formsList.iterator(); it.hasNext(); ) {
+//						SelectItem item = it.next();
+//						if(item.getValue().equals(view.getViewId())) 
+//							formTitle = (String) item.getLabel();
+//					}
+//					processItem.add(getProcessTaskFormItem(context, formTitle + " (" + task.getName() + ")", "Created " + getCreatedDate(view.getViewId()), view.getViewId()));
+//				}
+//				if(formTitle == null)
+//					continue;
+//				listContainer.add(processItem);
+//			}
 //		} finally {
 //			ctx.close();
 //		}

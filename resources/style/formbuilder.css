@@ -528,8 +528,9 @@ span.statusMsg {
 #previewView {
 	overflow-y: auto !important;
 	height: 100%;
-	margin-top: -37px;
+	margin-top: -34px;
 	border-top-width: 0 !important;
+	width: 100%;
 }
 
 .pagesPanel {
@@ -1138,21 +1139,41 @@ span.fbMenuTabBar {
 }
 
 .fbBottomButtonsContainer a {
-	float: right;
 	display: block;	
 	padding-top: 35px;
 	text-align: center;
-	margin-right: 24px;
 	margin-top: 7px;
 	color: #666;
 }
 
+.fbBottomButtonsContainer a.rightButton {
+	margin-right: 24px;
+	float: right;
+}
+
+.fbBottomButtonsContainer a.leftButton {
+	margin-left: 24px;
+	float: left;
+}
+
 .fbBottomButtonsContainer a#saveFormButton {
-background: url(images/save_32.png) center top no-repeat;
+	background: url(images/save_32.png) center top no-repeat;
+}
+
+.fbBottomButtonsContainer a#newFormButton {
+	background: url(images/new_32.png) center top no-repeat;
 }
 
 .fbBottomButtonsContainer a#homeButton {
-background: url(images/notep_32.png) center top no-repeat;
+	background: url(images/notep_32.png) center top no-repeat;
+}
+
+.fbBottomButtonsContainer a#previewButton {
+	background: url(images/smicn_32.png) center top no-repeat;
+}
+
+.fbBottomButtonsContainer a#sourceCodeButton {
+	background: url(images/editscript_32.png) center top no-repeat;
 }
 
 .fbBottomButtonsContainer input:active {

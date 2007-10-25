@@ -8,6 +8,7 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.presentation.ui.IFrame;
 import com.idega.webface.WFTabbedPane;
 
 public class FBViewPanel extends FBComponentBase {
@@ -50,11 +51,14 @@ public class FBViewPanel extends FBComponentBase {
 		sourceView.setStyleClass("sourceView");
 		sourceView.setId("sourceView");
 		
-		FBFormPreview previewView = (FBFormPreview) application.createComponent(FBFormPreview.COMPONENT_TYPE);
-		previewView.setId("previewView");
+		IFrame frame = new IFrame("lalal", PreviewPage.class);
+		frame.setId("previewView");
+		
+//		FBFormPreview previewView = (FBFormPreview) application.createComponent(FBFormPreview.COMPONENT_TYPE);
+//		previewView.setId("previewView");
 		
 		tabbedPane.addTab("tab1", "Design", designView);
-		tabbedPane.addTab("tab2", "Preview", previewView);
+		tabbedPane.addTab("tab2", "Preview", frame);
 		tabbedPane.addTab("tab3", "Source", sourceView);
 		tabbedPane.setSelectedMenuItemId("tab1");
 		
