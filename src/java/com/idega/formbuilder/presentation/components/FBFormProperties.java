@@ -18,6 +18,7 @@ import com.idega.formbuilder.util.FBConstants;
 import com.idega.presentation.Layer;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.CheckBox;
+import com.idega.presentation.ui.Label;
 import com.idega.presentation.ui.TextArea;
 import com.idega.presentation.ui.TextInput;
 import com.idega.util.CoreUtil;
@@ -40,6 +41,7 @@ public class FBFormProperties extends FBComponentBase {
 	private Layer createPropertyContainer(String styleClass) {
 		Layer body = new Layer(Layer.DIV);
 		body.setStyleClass(styleClass);
+		body.setStyleClass("fbProperty");
 		return body;
 	}
 	
@@ -74,7 +76,7 @@ public class FBFormProperties extends FBComponentBase {
 		title.setOnBlur("saveFormTitle(this.value)");
 		title.setOnKeyDown("savePropertyOnEnter(this.value,'formTitle',event);");
 		
-		line.add(new Text("Form title"));
+		line.add(new Label("Form title", title));
 		line.add(title);
 		body.add(line);
 		
@@ -85,8 +87,8 @@ public class FBFormProperties extends FBComponentBase {
 		preview.setChecked(formDocument.isHasPreview());
 		preview.setOnChange("saveHasPreview(this);");
 		
-		line.add(new Text("Form contains preview"));
 		line.add(preview);
+		line.add(new Label("Form contains preview", preview));
 		body.add(line);
 		
 //		CheckBox processForm = new CheckBox();
@@ -114,7 +116,7 @@ public class FBFormProperties extends FBComponentBase {
 		thankYouTitle.setOnBlur("saveThankYouTitle(this.value)");
 		thankYouTitle.setOnKeyDown("savePropertyOnEnter(this.value,'formThxTitle',event);");
 		
-		line.add(new Text("Thank you title"));
+		line.add(new Label("Thank you title", thankYouTitle));
 		line.add(thankYouTitle);
 		body.add(line);
 		
@@ -125,7 +127,7 @@ public class FBFormProperties extends FBComponentBase {
 		thankYouText.setOnBlur("saveThankYouText(this.value)");
 		thankYouText.setOnKeyDown("savePropertyOnEnter(this.value,'formThxText',event);");
 		
-		line.add(new Text("Thank You Text"));
+		line.add(new Label("Thank You Text", thankYouText));
 		line.add(thankYouText);
 		body.add(line);
 		

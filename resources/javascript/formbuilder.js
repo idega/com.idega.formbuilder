@@ -101,6 +101,7 @@ var FBDraggable = Element.extend({
 				this.elementOrg = null;
 				if(type == 'fbcomp') {
 					if(draggingComponent == true) {
+						//console.log('complete drag ' + insideDropzone);
 						//draggingComponent = false;
 						var currentId = currentElement.documentElement.getAttribute('id');
 						this.element.removeEvents('mousemove');
@@ -537,15 +538,6 @@ function setupPagesPanel() {
 	FormPage.getId(markSelectedPage);
 }
 function setupDesignView(componentArea, component, buttonArea, button, pageTitle, formTitle) {
-	$$('.fbcomp').each(function(el){
-		el.draggableTag($('dropBoxinner'), null, 'fbcomp', false);
-	});
-	$$('.fbauto').each(function(el){
-		el.draggableTag($('dropBoxinner'), null, 'fbcomp', false);
-	});
-	$$('.fbbutton').each(function(el){
-		el.draggableTag($('dropBoxinner'), null, 'fbbutton', false);
-	});
 	var formTitle = $(formTitle);
 	if(formTitle != null) {
 		formTitle.addEvent('dblclick', function(e){
@@ -593,12 +585,14 @@ function setupDesignView(componentArea, component, buttonArea, button, pageTitle
 				if (!this.dragEffect) this.dragEffect = new Fx.Style(this, 'background-color');
 				this.dragEffect.stop().start('ffffff', 'dddddd');
 				insideDropzone = true;
+				//console.log('over dropzone ' + insideDropzone);
 			},
 			'leave': function(el){
 				this.dragEffect.stop().start('dddddd', 'ffffff');
 				insideDropzone = false;
 			},
 			'drop': function(el, drag){
+				//console.log('dropping over dropzone ' + insideDropzone);
 				this.dragEffect.stop().start('ff8888', 'ffffff');
 				if(draggingComponent == true) {
 					draggingComponent = false;
@@ -616,6 +610,15 @@ function setupDesignView(componentArea, component, buttonArea, button, pageTitle
 			}
 		});
 	}
+	$$('.fbcomp').each(function(el){
+		el.draggableTag($('dropBoxinner'), null, 'fbcomp', false);
+	});
+	$$('.fbauto').each(function(el){
+		el.draggableTag($('dropBoxinner'), null, 'fbcomp', false);
+	});
+	$$('.fbbutton').each(function(el){
+		el.draggableTag($('dropBoxinner'), null, 'fbbutton', false);
+	});
 }
 function markSelectedComponent(parameter) {
 	if(parameter != null) {

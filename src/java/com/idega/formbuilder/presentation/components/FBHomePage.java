@@ -9,19 +9,21 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import com.idega.block.form.process.XFormsView;
-import com.idega.documentmanager.business.Document;
-import com.idega.documentmanager.business.DocumentManager;
+import org.jbpm.graph.def.ProcessDefinition;
+import org.jbpm.taskmgmt.def.Task;
+
 import com.idega.documentmanager.business.PersistenceManager;
 import com.idega.formbuilder.business.process.XFormsProcessManager;
 import com.idega.formbuilder.presentation.FBComponentBase;
-import com.idega.formbuilder.view.ActionManager;
+import com.idega.jbpm.business.JbpmProcessBusinessBean;
 import com.idega.jbpm.def.View;
 import com.idega.jbpm.def.ViewToTask;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
 import com.idega.presentation.text.Link;
+import com.idega.presentation.text.ListItem;
+import com.idega.presentation.text.Lists;
 import com.idega.presentation.text.Text;
 import com.idega.util.RenderUtils;
 import com.idega.webface.WFUtil;
@@ -90,53 +92,53 @@ public class FBHomePage extends FBComponentBase {
 //		
 		XFormsProcessManager xformsProcessManager = (XFormsProcessManager) WFUtil.getBeanInstance("xformsProcessManager");
 		ViewToTask viewToTaskBinnder = xformsProcessManager.getViewToTaskBinder();
-//		JbpmProcessBusinessBean jbpmProcessBusiness = xformsProcessManager.getJbpmProcessBusiness();
+		JbpmProcessBusinessBean jbpmProcessBusiness = (JbpmProcessBusinessBean) WFUtil.getBeanInstance("jbpmProcessBusiness");
 //		JbpmContext ctx = jbpmProcessBusiness.getJbpmContext();
-//		List<ProcessDefinition> processList = jbpmProcessBusiness.getProcessList(ctx);
+		List<ProcessDefinition> processList = jbpmProcessBusiness.getProcessList();
 //		
 //		try {
-//			for(Iterator<ProcessDefinition> processIterator = processList.iterator(); processIterator.hasNext(); ) {
-//				ProcessDefinition definition = (ProcessDefinition) processIterator.next();
-//				
-//				
-//				
-//				Layer processItem = new Layer(Layer.DIV);
-//				processItem.setStyleClass("processItem");
-//				Layer processNameBox = new Layer(Layer.DIV);
-//				processNameBox.setStyleClass("processNameBox");
-//				Image processIcon = new Image();
-//				processIcon.setSrc(PROCESS_ICON);
-//				Text processName = new Text(definition.getName());
-//				processName.setStyleClass("processName");
-//				Link casesButton = new Link(getLocalizedString(iwc, "fb_home_view_cases_link", "View cases"));
-//				Link newTaskFormButton = new Link(getLocalizedString(iwc, "fb_home_new_task_form_link", "Add task form"));
-//				casesButton.setStyleClass("processButton casesButton");
-//				newTaskFormButton.setStyleClass("processButton taskFormButton");
-//				processNameBox.add(processIcon);
-//				processNameBox.add(processName);
-//				processNameBox.add(casesButton);
-//				processNameBox.add(newTaskFormButton);
-//				processItem.add(processNameBox);
-//				
-//				List<Task> tasks = jbpmProcessBusiness.getProcessDefinitionTasks(ctx, definition);
-//				
-//				String formTitle = null;
-//				for(Iterator<Task> taskIterator = tasks.iterator(); taskIterator.hasNext(); ) {
-//					Task task = (Task) taskIterator.next();
-//					View view = viewToTaskBinnder.getView(task.getId());
-//					if(view == null) 
-//						continue;
-//					for(Iterator<SelectItem> it = formsList.iterator(); it.hasNext(); ) {
-//						SelectItem item = it.next();
-//						if(item.getValue().equals(view.getViewId())) 
-//							formTitle = (String) item.getLabel();
-//					}
-//					processItem.add(getProcessTaskFormItem(context, formTitle + " (" + task.getName() + ")", "Created " + getCreatedDate(view.getViewId()), view.getViewId()));
-//				}
-//				if(formTitle == null)
-//					continue;
-//				listContainer.add(processItem);
-//			}
+			for(Iterator<ProcessDefinition> processIterator = processList.iterator(); processIterator.hasNext(); ) {
+				ProcessDefinition definition = (ProcessDefinition) processIterator.next();
+				
+				
+				
+				Layer processItem = new Layer(Layer.DIV);
+				processItem.setStyleClass("processItem");
+				Layer processNameBox = new Layer(Layer.DIV);
+				processNameBox.setStyleClass("processNameBox");
+				Image processIcon = new Image();
+				processIcon.setSrc(PROCESS_ICON);
+				Text processName = new Text(definition.getName());
+				processName.setStyleClass("processName");
+				Link casesButton = new Link(getLocalizedString(iwc, "fb_home_view_cases_link", "View cases"));
+				Link newTaskFormButton = new Link(getLocalizedString(iwc, "fb_home_new_task_form_link", "Add task form"));
+				casesButton.setStyleClass("processButton casesButton");
+				newTaskFormButton.setStyleClass("processButton taskFormButton");
+				processNameBox.add(processIcon);
+				processNameBox.add(processName);
+				processNameBox.add(casesButton);
+				processNameBox.add(newTaskFormButton);
+				processItem.add(processNameBox);
+				
+				List<Task> tasks = jbpmProcessBusiness.getProcessDefinitionTasks(definition);
+				
+				String formTitle = null;
+				for(Iterator<Task> taskIterator = tasks.iterator(); taskIterator.hasNext(); ) {
+					Task task = (Task) taskIterator.next();
+					View view = viewToTaskBinnder.getView(task.getId());
+					if(view == null) 
+						continue;
+					for(Iterator<SelectItem> it = formsList.iterator(); it.hasNext(); ) {
+						SelectItem item = it.next();
+						if(item.getValue().equals(view.getViewId())) 
+							formTitle = (String) item.getLabel();
+					}
+					processItem.add(getProcessTaskFormItem(context, formTitle + " (" + task.getName() + ")", "Created " + getCreatedDate(view.getViewId()), view.getViewId()));
+				}
+				if(formTitle == null)
+					continue;
+				listContainer.add(processItem);
+			}
 //		} finally {
 //			ctx.close();
 //		}
@@ -201,8 +203,8 @@ public class FBHomePage extends FBComponentBase {
 		body.setStyleClass("formListItem");
 		body.setId(formId);
 		
-		Layer buttonContainer = new Layer(Layer.DIV);
-		buttonContainer.setStyleClass("buttonContainer");
+		Lists list = new Lists();
+		list.setStyleClass("buttonList");
 		
 //		Layer bodyTopLeft = new Layer(Layer.DIV);
 //		bodyTopLeft.setStyleClass("formListItemTopLeft");
@@ -216,6 +218,7 @@ public class FBHomePage extends FBComponentBase {
 		
 		Image formIcon = new Image();
 		formIcon.setSrc(STANDALONE_FORM_ICON);
+		formIcon.setStyleClass("formListIcon");
 		
 		Text name = new Text(title);
 		name.setStyleClass("formTitle");
@@ -227,32 +230,47 @@ public class FBHomePage extends FBComponentBase {
 		body.add(name);
 		body.add(created);
 		
-		body.add(buttonContainer);
+		body.add(list);
 		
+		ListItem item = new ListItem();
+		item.setStyleClass("entriesButton");
 		Link entriesButton = new Link(getLocalizedString(iwc, "fb_home_entries_link", "Entries"));
-		entriesButton.setStyleClass("bottomButton entriesButton");
 		entriesButton.setId(formId + entries_button_postfix);
-		buttonContainer.add(entriesButton);
+		entriesButton.setStyleClass("entriesButton");
+		item.add(entriesButton);
+		list.add(item);
 		
+		item = new ListItem();
+		item.setStyleClass("editButton");
 		Link editButton = new Link(getLocalizedString(iwc, "fb_home_edit_link", "Edit"));
-		editButton.setStyleClass("bottomButton editButton");
 		editButton.setId(formId + edit_button_postfix);
-		buttonContainer.add(editButton);
+		editButton.setStyleClass("editButton");
+		item.add(editButton);
+		list.add(item);
 		
+		item = new ListItem();
+		item.setStyleClass("codeButton");
 		Link codeButton = new Link(getLocalizedString(iwc, "fb_home_code_link", "Code"));
-		codeButton.setStyleClass("bottomButton codeButton");
 		codeButton.setId(formId + code_button_postfix);
-		buttonContainer.add(codeButton);
+		codeButton.setStyleClass("codeButton");
+		item.add(codeButton);
+		list.add(item);
 		
+		item = new ListItem();
+		item.setStyleClass("duplicateButton");
 		Link duplicateButton = new Link(getLocalizedString(iwc, "fb_home_duplicate_link", "Duplicate"));
-		duplicateButton.setStyleClass("bottomButton duplicateButton");
 		duplicateButton.setId(formId + duplicate_button_postfix);
-		buttonContainer.add(duplicateButton);
+		duplicateButton.setStyleClass("duplicateButton");
+		item.add(duplicateButton);
+		list.add(item);
 		
+		item = new ListItem();
+		item.setStyleClass("deleteButton");
 		Link deleteButton = new Link(getLocalizedString(iwc, "fb_home_delete_link", "Delete"));
-		deleteButton.setStyleClass("bottomButton deleteButton");
 		deleteButton.setId(formId + delete_button_postfix);
-		buttonContainer.add(deleteButton);
+		deleteButton.setStyleClass("deleteButton");
+		item.add(deleteButton);
+		list.add(item);
 		
 		return body;
 	}

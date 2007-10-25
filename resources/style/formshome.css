@@ -168,21 +168,38 @@
 }
 
 .formListItem, .processItem {
-	height: 50px;
-	position: relative;
-	margin-bottom: 20px;
-	border: 1px groove #bdbdbd;
-	cursor: pointer;
-	background-color: #ddedd3;
+	background-color:#DDEDD3;
+	border:1px groove #BDBDBD;
+	cursor:pointer;
+	height:50px;
+	margin-bottom:8px;
+	position:relative;
 }
+
 .formListItem > div {
 	background: #f4f4f4;
 }
-.buttonContainer {
+.buttonList {
 	position: absolute;
-	right: 400px;
-	top: 0px;
-	background: #f4f4f4;
+	right: 0px;
+	top: 15px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.buttonList li {
+	float: left;
+	padding-left: 20px;
+	height: 20px;
+	margin-right: 16px;
+}
+
+.buttonList li a {
+	display: block;
+	line-height: 20px;
+	font-weight: bold;
+	font-size: 12px;
 }
 
 .newFormButton {
@@ -190,7 +207,7 @@
 }
 
 .formListItem:hover {
-	border: 1px groove #aad192;
+	border: 1px groove #0096ff;
 	background-color: #E5F1FF;
 }
 .formListItemSub:hover {
@@ -262,15 +279,12 @@
 	top: 5px;
 }
 
-.formListItem .entriesButton {
-	left: 0px;
-	width: 55px;
-	background: url(images/application_view_list.png) no-repeat;
+.buttonList li.entriesButton {
+	background: url(images/application_view_list.png) left no-repeat;
 }
-.formListItem .editButton {
-	left: 80px;
-	width: 40px;
-	background: url(images/application_form_edit.png) no-repeat;
+
+.buttonList li.editButton {
+	background: url(images/application_form_edit.png) left no-repeat;
 }
 .editButton.processForm {
 	right: 90px;
@@ -278,10 +292,8 @@
 	width: 40px;
 	background: url(images/application_form_edit.png) no-repeat;
 }
-.formListItem .codeButton {
-	left: 145px;
-	width: 47px;
-	background: url(images/page_white_code.png) no-repeat;
+.buttonList li.codeButton {
+	background: url(images/page_white_code.png) left no-repeat;
 }
 .codeButton.processForm {
 	right: 20px;
@@ -289,10 +301,8 @@
 	top: 10px;
 	background: url(images/page_white_code.png) no-repeat;
 }
-.formListItem .duplicateButton {
-	left: 220px;
-	width: 70px;
-	background: url(images/page_copy.png) no-repeat;
+.buttonList li.duplicateButton {
+	background: url(images/page_copy.png) left no-repeat;
 }
 .deleteButton.processForm {
 	right: 150px;
@@ -300,10 +310,8 @@
 	top: 10px;
 	background: url(images/bin_closed.png) no-repeat;
 }
-.formListItem .deleteButton {
-	left: 310px;
-	width: 52px;
-	background: url(images/bin_closed.png) no-repeat;
+.buttonList li.deleteButton {
+	background: url(images/bin_closed.png) left no-repeat;
 }
 
 .bottomButton:hover {
@@ -312,16 +320,27 @@
 }
 
 .formTitle {
-	font-size: 16px;
-	height: 100%;
-	font-weight: bold;
-	align: left;
+	display:block;
+	float:left;
+	font-size:16px;
+	font-weight:bold;
+	margin-top: 6px;
+	margin-left: 8px;
+	margin-bottom: 3px;
 }
 
 .createdDate {
-	font-size: 13px;
-	height: 100%;
-	width: 300px;
+	clear:both;
+	display:block;
+	font-size:11px;
+	color: #a1a1a1;
+	margin-left: 33px;
+}
+
+.formListIcon {
+	float: left;
+	margin-left: 3px;
+	margin-top: 3px;
 }
 
 .deleteFormDialog {
@@ -350,15 +369,16 @@
 	overflow: auto;
 }
 #formListContainer {
-	position: absolute;
-	bottom: 25px;
-	top: 120px;
-	right: 25px;
-	left: 25px;
-	border: 1px solid #000;
-	padding: 1px;
-	overflow-y: scroll;
+	border:1px solid #BDBDBD;
+	bottom:25px;
+	left:25px;
+	overflow-y:scroll;
+	padding:8px;
+	position:absolute;
+	right:25px;
+	top:100px;
 }
+
 #forms {
 	position: relative;
 	overflow: hidden;

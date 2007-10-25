@@ -21,6 +21,7 @@ import com.idega.formbuilder.util.FBConstants;
 import com.idega.presentation.Layer;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.CheckBox;
+import com.idega.presentation.ui.Label;
 import com.idega.presentation.ui.RadioButton;
 import com.idega.presentation.ui.RadioGroup;
 import com.idega.presentation.ui.SelectDropdown;
@@ -61,6 +62,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 	private Layer createPropertyContainer(String styleClass) {
 		Layer body = new Layer(Layer.DIV);
 		body.setStyleClass(styleClass);
+		body.setStyleClass("fbProperty");
 		
 		return body;
 	}
@@ -102,7 +104,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 				plainTextValue.setOnBlur("savePlaintext(this.value);");
 				plainTextValue.setOnKeyDown("savePropertyOnEnter(this.value,'compText',event);");
 				
-				line.add(new Text("Text"));
+				line.add(new Label("Text", plainTextValue));
 				line.add(plainTextValue);
 				body.add(line);
 				
@@ -116,7 +118,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 				labelValue.setOnBlur("saveComponentLabel(this.value);");
 				labelValue.setOnKeyDown("savePropertyOnEnter(this.value,'compTitle',event);");
 				
-				line.add(new Text("Field name"));
+				line.add(new Label("Field name", labelValue));
 				line.add(labelValue);
 				body.add(line);
 				
@@ -127,8 +129,8 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 				required.setChecked(formComponent.getRequired());
 				required.setOnClick("saveRequired(this.checked);");
 				
-				line.add(new Text("Required field"));
 				line.add(required);
+				line.add(new Label("Required field", required));
 				body.add(line);
 				
 				line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
@@ -137,7 +139,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 				errorMsg.setOnBlur("saveErrorMessage(this.value)");
 				errorMsg.setOnKeyDown("savePropertyOnEnter(this.value,'compErr',event);");
 				
-				line.add(new Text("Error message"));
+				line.add(new Label("Error message", errorMsg));
 				line.add(errorMsg);
 				body.add(line);
 				
@@ -147,7 +149,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 				helpMsg.setOnBlur("saveHelpMessage(this.value)");
 				helpMsg.setOnKeyDown("savePropertyOnEnter(this.value,'compHelp',event);");
 				
-				line.add(new Text("Help text"));
+				line.add(new Label("Help text", helpMsg));
 				line.add(helpMsg);
 				body.add(line);
 				
@@ -171,8 +173,8 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 				String autofillKey = formComponent.getAutofillKey();
 				hasAutoFill.setChecked(autofillKey != null ? true : false);
 				
-				line.add(new Text("Autofill field"));
 				line.add(hasAutoFill);
+				line.add(new Label("Autofill field", hasAutoFill));
 				body.add(line);
 				
 				layer.add(body);
@@ -279,7 +281,7 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 					title.setOnBlur("saveButtonLabel(this.value);");
 					title.setOnKeyDown("savePropertyOnEnter(this.value,'btnTitle',event);");
 					
-					line.add(new Text("Button title"));
+					line.add(new Label("Button title", title));
 					line.add(title);
 					body.add(line);
 					
