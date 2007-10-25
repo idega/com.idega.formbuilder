@@ -6,7 +6,6 @@ import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
-import org.apache.myfaces.component.html.ext.HtmlCommandButton;
 import org.apache.myfaces.component.html.ext.HtmlInputTextarea;
 import org.apache.myfaces.renderkit.html.util.AddResource;
 import org.apache.myfaces.renderkit.html.util.AddResourceFactory;
@@ -45,12 +44,12 @@ public class FBSourceView extends FBComponentBase {
 		textarea.setValueBinding("value", application.createValueBinding("#{formDocument.sourceCode}"));
 		textarea.setWrap("false");
 		textarea.setId("sourceTextarea");
-		//textarea.setStyleClass("codepress html linenumbers-on");
+		textarea.setStyleClass("codepress html linenumbers-on");
 		
-		HtmlCommandButton srcSubmit = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
-		srcSubmit.setId("saveSrcBtn");
-		srcSubmit.setOnclick("saveSourceCode($('"+textarea.getClientId(context)+"').value); return false;");
-		srcSubmit.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['change_source_code']}"));
+//		HtmlCommandButton srcSubmit = (HtmlCommandButton) application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
+//		srcSubmit.setId("saveSrcBtn");
+//		srcSubmit.setOnclick("saveSourceCode($('"+textarea.getClientId(context)+"').value); return false;");
+//		srcSubmit.setValueBinding("value", application.createValueBinding("#{localizedStrings['com.idega.formbuilder']['change_source_code']}"));
 		
 		content.add(textarea);
 //		content.add(srcSubmit);

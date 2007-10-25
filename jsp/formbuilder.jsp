@@ -10,6 +10,7 @@
 		<ws:page id="formbuilder" 
 				 showFunctionMenu="false"
 				 javascripturls="/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/mootools/1.11/mootools-all.js,
+				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/codepress/codepress.js,
 				 				/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax.js,
 								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/modal-message.js,
 								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax-dynamic-content.js,

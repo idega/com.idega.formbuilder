@@ -882,7 +882,7 @@ function getEmptySelect(index,lbl,vl) {
 	
 }
 function switchView(view, id) {
-	showLoadingMessage('Saving document...');
+	showLoadingMessage('Switching...');
 	Workspace.switchView(view, {
 		callback: function(resultDOM) {
 				replaceNode(resultDOM, $('viewPanel'), $('mainWorkspace'));
