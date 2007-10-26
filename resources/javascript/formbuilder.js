@@ -218,7 +218,6 @@ function savePropertyOnEnter(value,attribute,event) {
 }
 function placeNewButton(parameter) {
 	if(parameter != null) {
-		//console.log('New button ' + parameter);
 		CURRENT_BUTTON = parameter;
 	}
 }
@@ -295,7 +294,7 @@ function savePageTitleAction(event) {
 			FormPage.setTitle(text, disableInlineEdit);
 			INLINE_VALUE = text;
 			if(isThxPage == true) {
-				$('workspaceform1:thankYouTitle').value = text;
+				$('thankYouTitle').value = text;
 			}
 		}
 	}
@@ -533,7 +532,8 @@ function setupPagesPanel() {
 				orderList.push(element.id);
 			}
 			FormDocument.updatePagesList(orderList, nothing);
-		}
+		},
+		handles: '.fbPageHandler'
 	});
 	FormPage.getId(markSelectedPage);
 }
@@ -563,7 +563,8 @@ function setupDesignView(componentArea, component, buttonArea, button, pageTitle
 				orderList.push(element.id);
 			}
 			FormPage.updateComponentList(orderList, nothing);
-		}
+		},
+		handles: '.fbCompHandler'
 	});
 	/*if($(BUTTON_AREA_ID) != null) {
 		var myButtonsSort = new Sortables($(BUTTON_AREA_ID), {
@@ -891,10 +892,13 @@ function switchView(view, id) {
 		});
 }
 function fbsave() {
-	var node = $('sourceTextarea');
+	var node = $('sourceViewDiv');
 	if(node != null) {
 		showLoadingMessage('Saving');
-		FormDocument.saveSrc(node.value, closeLoadingMessage);
+		var textNode = $('workspaceform1:sourceTextarea_cp');
+		if(textNode != null) {
+			FormDocument.saveSrc(textNode.value, closeLoadingMessage);
+		}
 	} else {
 		showLoadingMessage('Saving document...');
 		FormDocument.save(closeLoadingMessage);
@@ -1041,12 +1045,24 @@ function removeComponent(parameter) {
 function removeComponentNode(parameter) {
 	var node = $(parameter);
 	if(node != null) {
-		var parentNode = node.parentNode;
-		if(parentNode != null) {
-			parentNode.removeChild(node);
-			if(parentNode.getElementsByTagName('div').length == 0) {
-				showNotice('emptyForm');
-			}
+		node.remove();
+		var nodes = getElementsByClassName($('dropBoxinner'), 'div', 'formElement');
+		if(nodes.length == 0) {
+			Workspace.getDesignView({
+				callback: function(resultDOM) {
+					if(resultDOM != null) {
+						var dropBox = $('dropBox');
+						if(dropBox != null) {
+							var parentNode = dropBox.parentNode;
+							var node2 = parentNode.getLast();
+							node2.remove();
+							insertNodesToContainer(resultDOM, parentNode);
+							setupDesignView('dropBox', 'formElement', 'fgh', 'dfgdfg', PAGE_TITLE, FORM_TITLE);
+							setupPagesPanel();
+						}
+					}
+				}
+			});
 		}
 	}
 }

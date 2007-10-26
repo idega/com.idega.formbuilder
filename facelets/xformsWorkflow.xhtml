@@ -22,6 +22,7 @@
 
 	<h:form enctype="multipart/form-data" id="xformsProcess">
 		<div class="fbTabViewContent">
+			<h1>XForms Workflow</h1>
 			<div class="taskNodeSelection">
 				<div class="formItem wideItem">
 					<label for="processSelector">Select process</label>
@@ -40,27 +41,30 @@
 				<div class="formItem wideItem">
 					<label for="taskForm">Select task form</label>
 					<h:selectOneMenu id="taskForm" disabled="true" onchange="assignViewToTask(this.value);">
-						<!-- 
-						<f:selectItems value="#{process_xforms_viewToTask.availableForms}" />
-						 -->
 						 <f:selectItems value="#{xformsPersistenceManager.forms}" />
 					</h:selectOneMenu>
 					<h:commandButton styleClass="changeButton" id="changeViewButton" value="Change" onclick="enableFormList();return false;" />
 				</div>
 				<div class="formItem wideItem">
 					<label for="taskGroup">Assigned actor</label>
-					<h:outputText styleClass="ass" id="actorNameLabel" value="#{actorBindingManager.actorLabel}" />
+					<h:outputText styleClass="ass" id="actorNameLabel" value="#{c.actorLabel}" />
 					<h:commandButton styleClass="changeButton" id="changeActorButton" value="Change" action="#{actorBindingManager.changeActor}" />
-					<t:div rendered="#{actorBindingManager.actorValueEdit}">
-						<label for="taskGroup">Type</label>
-						<h:selectOneMenu id="actorTypes" value="#{actorBindingManager.actorType}" disabled="false" onchange="setActorType(this.value);">
-							<f:selectItems value="#{actorBindingManager.actorTypes}" />
-						</h:selectOneMenu>
-						<h:selectManyMenu id="actorSelector" value="#{actorBindingManager.actorId}" styleClass="actorSelector">
-							<f:selectItems value="#{actorBindingManager.actors}" />
-						</h:selectManyMenu>
-						<h:commandButton styleClass="changeButton" id="cancelActorButton" value="Cancel" action="#{actorBindingManager.cancelActor}" />
-						<h:commandButton styleClass="changeButton" id="saveActorButton" value="OK" action="#{actorBindingManager.saveActor}" />
+					<t:div styleClass="subFormItems" rendered="#{actorBindingManager.actorValueEdit}">
+						<t:div styleClass="subFormItem">
+							<label for="taskGroup">Type</label>
+							<h:selectOneMenu id="actorTypes" value="#{actorBindingManager.actorType}" disabled="false" onchange="setActorType(this.value);">
+								<f:selectItems value="#{actorBindingManager.actorTypes}" />
+							</h:selectOneMenu>
+						</t:div>
+						<t:div styleClass="subFormItem noLabel">
+							<h:selectManyMenu id="actorSelector" value="#{actorBindingManager.actorId}" styleClass="actorSelector">
+								<f:selectItems value="#{actorBindingManager.actors}" />
+							</h:selectManyMenu>
+						</t:div>
+						<t:div styleClass="subFormItem noLabel">
+							<h:commandButton styleClass="changeButton" id="cancelActorButton" value="Cancel" action="#{actorBindingManager.cancelActor}" />
+							<h:commandButton styleClass="changeButton noMarginButton" id="saveActorButton" value="OK" action="#{actorBindingManager.saveActor}" />
+						</t:div>
 					</t:div>
 				</div>
 			</div>

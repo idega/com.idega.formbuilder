@@ -8,6 +8,7 @@ import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
+import com.idega.documentmanager.business.component.ButtonArea;
 import com.idega.documentmanager.business.component.Component;
 import com.idega.documentmanager.business.component.Container;
 import com.idega.documentmanager.business.component.Page;
@@ -54,6 +55,21 @@ public class FBDesignView extends FBComponentBase {
 		super(DEFAULT_DESIGN_VIEW_CLASS, DEFAULT_DROPBOX_CLASS);
 		setRendererType(null);
 		this.componentStyleClass = componentClass;
+	}
+	
+	private boolean hasComponents(List<String> ids, Page page) {
+		if(ids == null || page == null)
+			return false;
+		
+		for(Iterator<String> it = ids.iterator(); it.hasNext(); ) {
+			Component component = page.getComponent(it.next());
+			if(component instanceof ButtonArea) {
+				continue;
+			} else {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	protected void initializeComponent(FacesContext context) {
@@ -108,7 +124,7 @@ public class FBDesignView extends FBComponentBase {
 				component.add(noFormNotice);
 			} else {
 				List<String> ids = page.getContainedComponentsIdList();
-				if(ids.isEmpty()) {
+				if(!hasComponents(ids, page)) {
 					Layer emptyForm = new Layer(Layer.DIV);
 					emptyForm.setId("emptyForm");
 					

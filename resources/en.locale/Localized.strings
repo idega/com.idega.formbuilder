@@ -28,6 +28,7 @@ fbcomp_button_submit=Submit
 fbcomp_simple_text=Paragraph
 fbcomp_header_text=Header
 fbcomp_separator=Separator
+fbcomp_text-loginSession.user.name=User name
 
 fbcomp_text_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield.png
 fbcomp_textarea_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/font.png

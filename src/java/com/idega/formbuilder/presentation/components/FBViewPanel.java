@@ -18,10 +18,6 @@ public class FBViewPanel extends FBComponentBase {
 	
 	public static final String COMPONENT_TYPE = "ViewPanel";
 	
-//	private static final String SWITCHER_FACET = "SWITCHER_FACET";
-	
-//	private String view;
-
 	public static final int DESIGN_VIEW_INDEX = 0;
 	public static final int PREVIEW_VIEW_INDEX = 1;
 	public static final int SOURCE_VIEW_INDEX = 2;
@@ -42,11 +38,6 @@ public class FBViewPanel extends FBComponentBase {
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
 		getChildren().clear();
-		
-//		ValueBinding vb = getValueBinding("view");
-//		if(vb != null) {
-//			view = (String) vb.getValue(context);
-//		}
 		
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
 		String view = workspace.getView();
@@ -73,14 +64,6 @@ public class FBViewPanel extends FBComponentBase {
 		}
 	}
 
-//	public String getView() {
-//		return view;
-//	}
-//
-//	public void setView(String view) {
-//		this.view = view;
-//	}
-	
 	public void encodeBegin(FacesContext context) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeBegin(context);
@@ -88,10 +71,6 @@ public class FBViewPanel extends FBComponentBase {
 		writer.startElement("DIV", this);
 		writer.writeAttribute("id", getId(), "id");
 		writer.writeAttribute("class", getStyleClass(), "styleClass");
-
-		
-//		WFTabbedPane tabbedPane = (WFTabbedPane) getFacet(SWITCHER_FACET);
-//		renderChild(context, tabbedPane);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -107,17 +86,4 @@ public class FBViewPanel extends FBComponentBase {
 		super.encodeEnd(context);
 	}
 	
-//	public Object saveState(FacesContext context) {
-//		Object values[] = new Object[2];
-//		values[0] = super.saveState(context); 
-//		values[1] = view;
-//		return values;
-//	}
-//	
-//	public void restoreState(FacesContext context, Object state) {
-//		Object values[] = (Object[]) state;
-//		super.restoreState(context, values[0]);
-//		view = (String) values[1];
-//	}
-
 }

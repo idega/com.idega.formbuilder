@@ -18,6 +18,7 @@ import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormPage;
 import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.presentation.Image;
+import com.idega.presentation.Layer;
 import com.idega.webface.WFUtil;
 
 public class FBFormComponent extends FBComponentBase {
@@ -27,6 +28,7 @@ public class FBFormComponent extends FBComponentBase {
 	public static final String COMPONENT_TYPE = "FormComponent";
 	
 	private static final String DELETE_BUTTON_FACET = "DELETE_BUTTON_FACET";
+	private static final String HANDLE_LAYER_FACET = "HANDLE_LAYER_FACET";
 	private static final String DELETE_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png";
 	private static final String DEFAULT_LOAD_ACTION = "loadComponentInfo(this);";
 	private static final String DEFAULT_DELETE_ACTION = "removeComponent(this);";
@@ -80,6 +82,9 @@ public class FBFormComponent extends FBComponentBase {
 						element.removeAttribute("id");
 						setElement(element);
 						
+						Layer handleLayer = new Layer(Layer.DIV);
+						handleLayer.setStyleClass("fbCompHandler");
+						
 						Image deleteButton = new Image();
 						deleteButton.setId("db" + getId());
 						deleteButton.setSrc(DELETE_BUTTON_ICON);
@@ -87,6 +92,7 @@ public class FBFormComponent extends FBComponentBase {
 						deleteButton.setStyleClass(speedButtonStyleClass);
 						
 						addFacet(DELETE_BUTTON_FACET, deleteButton);
+						addFacet(HANDLE_LAYER_FACET, handleLayer);
 					}
 				} catch(Exception e) {
 					logger.error("Could not get HTML representation of component: " + getId(), e);
@@ -102,6 +108,10 @@ public class FBFormComponent extends FBComponentBase {
 		writer.writeAttribute("class", getStyleClass(), "styleClass");
 		writer.writeAttribute("id", getId(), "id");
 		writer.writeAttribute("onclick", onLoad, "onclick");
+		UIComponent handleLayer = getFacet(HANDLE_LAYER_FACET);
+		if(handleLayer != null) {
+			renderChild(context, handleLayer);
+		}
 		DOMTransformer.renderNode(element, this, writer);
 	}
 	

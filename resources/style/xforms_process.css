@@ -1,17 +1,50 @@
 .fbTabViewContent {
-	width: 1000px;
+	background-color: #FFFFFF;
+	border: 1px solid #CDCDCD;
+	bottom: 5px;
+	height: auto;
+	left: 202px;
+	overflow: auto;
+	padding: 15px;
+	position: absolute;
+	right: 5px;
+	top: 55px;
+	width: auto;
 }
+
+.fbTabViewContent h1 {
+	margin-top: 0;	
+}
+
 .fbTabViewContent .taskNodeSelection {
-	float: left;
-	width: 50%;
 }
 .fbTabViewContent .taskNodeProperties {
-	float: right;
-	width: 50%;
 }
-.formItem {
-	padding-top: 30px;
+
+.fbTabViewContent .formItem {
+	padding-top: 12px;
+	display: block;
+	float: none;
 }
+
+.fbTabViewContent .formItem div {
+	clear: both;
+	float: none;	
+}
+
+.fbTabViewContent div.subFormItem.noLabel select, .fbTabViewContent div.subFormItem.noLabel input {
+	margin-left: 163px;
+}
+
+.fbTabViewContent div.subFormItem.noLabel input.noMarginButton {
+	margin-left: 8px;	
+}
+
+.fbTabViewContent input.changeButton {
+	width: auto !important;
+	margin-right: 0 !important;	
+}
+
 .wideItem select {
 	width: 300px							!important;
 }

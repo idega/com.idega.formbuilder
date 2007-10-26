@@ -38,7 +38,6 @@ public class FormComponent implements Serializable {
 	private String id;
 	
 	private boolean autofill;
-//	private boolean button;
 	
 	private FormPage formPage;
 	
@@ -236,22 +235,6 @@ public class FormComponent implements Serializable {
 		}
 		setItems(itemSet);
 	}
-	
-//	public void loadButton(String id) {
-//		Page page = formPage.getPage();
-//		if(page != null) {
-//			ButtonArea area = page.getButtonArea();
-//			if(area != null) {
-//				component = area.getComponent(id);
-//				if(component != null) {
-//					this.id = id;
-//					button = true;
-//					selectComponent = null;
-//					plainComponent = null;
-//				}
-//			}
-//		}
-//	}
 	
 	public Document getFormButtonInfo(String id) {
 		initializeBeanInstace(id, BUTTON_TYPE);

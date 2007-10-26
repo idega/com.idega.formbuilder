@@ -95,6 +95,12 @@ public class FBFormPage extends FBComponentBase {
 		pageLayer.setStyleClass(getStyleClass());
 		pageLayer.setOnClick(onLoad);
 		
+		if(!"".equals(onDelete)) {
+			Layer handleLayer = new Layer(Layer.DIV);
+			handleLayer.setStyleClass("fbPageHandler");
+			pageLayer.add(handleLayer);
+		}
+		
 		Image pageIconImg = new Image();
 		pageIconImg.setId(getId() + ICON_ID_POSTFIX);
 		pageIconImg.setSrc(PAGE_ICON_IMG);

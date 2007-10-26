@@ -9,15 +9,8 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import org.jbpm.graph.def.ProcessDefinition;
-import org.jbpm.taskmgmt.def.Task;
-
 import com.idega.documentmanager.business.PersistenceManager;
-import com.idega.formbuilder.business.process.XFormsProcessManager;
 import com.idega.formbuilder.presentation.FBComponentBase;
-import com.idega.jbpm.business.JbpmProcessBusinessBean;
-import com.idega.jbpm.def.View;
-import com.idega.jbpm.def.ViewToTask;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
@@ -93,7 +86,7 @@ public class FBHomePage extends FBComponentBase {
 //		XFormsProcessManager xformsProcessManager = (XFormsProcessManager) WFUtil.getBeanInstance("xformsProcessManager");
 //		ViewToTask viewToTaskBinnder = xformsProcessManager.getViewToTaskBinder();
 //		JbpmProcessBusinessBean jbpmProcessBusiness = (JbpmProcessBusinessBean) WFUtil.getBeanInstance("jbpmProcessBusiness");
-//		JbpmContext ctx = jbpmProcessBusiness.getJbpmContext();
+////		JbpmContext ctx = jbpmProcessBusiness.getJbpmContext();
 //		List<ProcessDefinition> processList = jbpmProcessBusiness.getProcessList();
 //		
 //		try {
