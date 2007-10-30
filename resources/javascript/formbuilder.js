@@ -6,6 +6,7 @@ var PAGE_ICON_SELECTED = 'formPageIconSelected';
 var CURRENT_ELEMENT_UNDER = -1;
 var LAST_ELEMENT_UNDER = -1;
 var childBoxes = [];
+var COMPONENT_DRAG_STATUS = 'none';
 
 var CURRENT_PAGE_ID;
 var PREVIOUS_PAGE_ID;
@@ -80,6 +81,7 @@ var FBDraggable = Element.extend({
    						FormComponent.addComponent(this.elementOrg.id, this.autofill, {
 							callback: function(resultDOM) {
 								if(resultDOM != null) {
+									COMPONENT_DRAG_STATUS = 'created';
 									currentElement = resultDOM;
 								}
 							}
@@ -103,10 +105,12 @@ var FBDraggable = Element.extend({
 					if(draggingComponent == true) {
 						//console.log('complete drag ' + insideDropzone);
 						//draggingComponent = false;
-						var currentId = currentElement.documentElement.getAttribute('id');
-						this.element.removeEvents('mousemove');
-						if(insideDropzone == false) {
+						if(COMPONENT_DRAG_STATUS == 'created') {
+							var currentId = currentElement.documentElement.getAttribute('id');
+							this.element.removeEvents('mousemove');
 							FormComponent.removeComponent(currentId,nothing);
+							//currentElement = null;
+							COMPONENT_DRAG_STATUS = 'none';
 						}
 					}
 				} else if(type == 'fbbutton') {
@@ -127,28 +131,91 @@ var FBDraggable = Element.extend({
 		return this;
 	}
 });
-Window.onDomReady(function() {
-	/*if($('pageButtonArea') != null) {
-		$('pageButtonArea').addEvents({
+function setupDesignView(componentArea, component, buttonArea, button, pageTitle, formTitle) {
+	var formTitle = $(formTitle);
+	if(formTitle != null) {
+		formTitle.addEvent('dblclick', function(e){
+			enableInlineEdit(saveFormTitleAction, e);
+		});
+		formTitle.addEvent('click', function(e){
+			loadFormInfo();
+		});
+	}
+	var pageTitle = $(pageTitle);
+	if(pageTitle != null) {
+		pageTitle.addEvent('dblclick', function(e){
+			enableInlineEdit(savePageTitleAction, e);
+		});
+	}
+	FormComponent.getId(markSelectedComponent);
+	var myComponentSort = new Sortables($('dropBoxinner'), {
+		onComplete: function(el){
+			var children = $('dropBoxinner').getChildren();
+			var orderList = [];
+			for(var i = 0; i < children.length; i++) {
+				var element = children[i];
+				orderList.push(element.id);
+			}
+			FormPage.updateComponentList(orderList, nothing);
+		},
+		handles: '.fbCompHandler'
+	});
+	/*if($(BUTTON_AREA_ID) != null) {
+		var myButtonsSort = new Sortables($(BUTTON_AREA_ID), {
+			onComplete: function(el){
+				console.log('button drag');
+				var children = $(BUTTON_AREA_ID).getChildren();
+				var orderList = [];
+				for(var i = 0; i < children.length; i++) {
+					var element = children[i];
+					orderList.push(element.id);
+				}
+				FormPage.updateButtonList(orderList, nothing);
+			}
+		});
+	}*/
+	if($('dropBoxinner') != null) {
+		$('dropBoxinner').addEvents({
 			'over': function(el){
-				console.log('Over a dropZone');
 				if (!this.dragEffect) this.dragEffect = new Fx.Style(this, 'background-color');
 				this.dragEffect.stop().start('ffffff', 'dddddd');
 				insideDropzone = true;
 			},
 			'leave': function(el){
-				console.log('Leaving a dropZone');
 				this.dragEffect.stop().start('dddddd', 'ffffff');
 				insideDropzone = false;
 			},
 			'drop': function(el, drag){
-				console.log('Dropped a button');
 				this.dragEffect.stop().start('ff8888', 'ffffff');
-				CURRENT_BUTTON.injectInside($('pageButtonArea'));
+				if(draggingComponent == true) {
+					draggingComponent = false;
+					var currentId = currentElement.documentElement.getAttribute('id');
+				    if(CURRENT_ELEMENT_UNDER != null) {
+						FormComponent.moveComponent(currentId, CURRENT_ELEMENT_UNDER, insertNewComponent);
+				    }
+				} else if(draggingButton == true) {
+					draggingButton = false;
+					if(CURRENT_BUTTON != null) {
+						insertNodesToContainer(CURRENT_BUTTON, $('pageButtonArea'));
+					}
+				}
 				insideDropzone = false;
+				currentElement = null;
+				COMPONENT_DRAG_STATUS = 'none';
 			}
 		});
-	}*/
+	}
+	$$('.fbcomp').each(function(el){
+		el.draggableTag($('dropBoxinner'), null, 'fbcomp', false);
+	});
+	$$('.fbauto').each(function(el){
+		el.draggableTag($('dropBoxinner'), null, 'fbcomp', false);
+	});
+	$$('.fbbutton').each(function(el){
+		el.draggableTag($('dropBoxinner'), null, 'fbbutton', false);
+	});
+}
+Window.onDomReady(function() {
 	setupDesignView('dropBox', 'formElement', 'fgh', 'dfgdfg', PAGE_TITLE, FORM_TITLE);
 	setupPagesPanel();
 });
@@ -537,90 +604,6 @@ function setupPagesPanel() {
 	});
 	FormPage.getId(markSelectedPage);
 }
-function setupDesignView(componentArea, component, buttonArea, button, pageTitle, formTitle) {
-	var formTitle = $(formTitle);
-	if(formTitle != null) {
-		formTitle.addEvent('dblclick', function(e){
-			enableInlineEdit(saveFormTitleAction, e);
-		});
-		formTitle.addEvent('click', function(e){
-			loadFormInfo();
-		});
-	}
-	var pageTitle = $(pageTitle);
-	if(pageTitle != null) {
-		pageTitle.addEvent('dblclick', function(e){
-			enableInlineEdit(savePageTitleAction, e);
-		});
-	}
-	FormComponent.getId(markSelectedComponent);
-	var myComponentSort = new Sortables($('dropBoxinner'), {
-		onComplete: function(el){
-			var children = $('dropBoxinner').getChildren();
-			var orderList = [];
-			for(var i = 0; i < children.length; i++) {
-				var element = children[i];
-				orderList.push(element.id);
-			}
-			FormPage.updateComponentList(orderList, nothing);
-		},
-		handles: '.fbCompHandler'
-	});
-	/*if($(BUTTON_AREA_ID) != null) {
-		var myButtonsSort = new Sortables($(BUTTON_AREA_ID), {
-			onComplete: function(el){
-				console.log('button drag');
-				var children = $(BUTTON_AREA_ID).getChildren();
-				var orderList = [];
-				for(var i = 0; i < children.length; i++) {
-					var element = children[i];
-					orderList.push(element.id);
-				}
-				FormPage.updateButtonList(orderList, nothing);
-			}
-		});
-	}*/
-	if($('dropBoxinner') != null) {
-		$('dropBoxinner').addEvents({
-			'over': function(el){
-				if (!this.dragEffect) this.dragEffect = new Fx.Style(this, 'background-color');
-				this.dragEffect.stop().start('ffffff', 'dddddd');
-				insideDropzone = true;
-				//console.log('over dropzone ' + insideDropzone);
-			},
-			'leave': function(el){
-				this.dragEffect.stop().start('dddddd', 'ffffff');
-				insideDropzone = false;
-			},
-			'drop': function(el, drag){
-				//console.log('dropping over dropzone ' + insideDropzone);
-				this.dragEffect.stop().start('ff8888', 'ffffff');
-				if(draggingComponent == true) {
-					draggingComponent = false;
-					var currentId = currentElement.documentElement.getAttribute('id');
-				    if(CURRENT_ELEMENT_UNDER != null) {
-						FormComponent.moveComponent(currentId, CURRENT_ELEMENT_UNDER, insertNewComponent);
-				    }
-				} else if(draggingButton == true) {
-					draggingButton = false;
-					if(CURRENT_BUTTON != null) {
-						insertNodesToContainer(CURRENT_BUTTON, $('pageButtonArea'));
-					}
-				}
-				insideDropzone = false;
-			}
-		});
-	}
-	$$('.fbcomp').each(function(el){
-		el.draggableTag($('dropBoxinner'), null, 'fbcomp', false);
-	});
-	$$('.fbauto').each(function(el){
-		el.draggableTag($('dropBoxinner'), null, 'fbcomp', false);
-	});
-	$$('.fbbutton').each(function(el){
-		el.draggableTag($('dropBoxinner'), null, 'fbbutton', false);
-	});
-}
 function markSelectedComponent(parameter) {
 	if(parameter != null) {
 		var element = $(parameter);
@@ -895,7 +878,7 @@ function fbsave() {
 	var node = $('sourceViewDiv');
 	if(node != null) {
 		showLoadingMessage('Saving');
-		var textNode = $('workspaceform1:sourceTextarea_cp');
+		var textNode = $('workspaceform1:sourceTextarea');
 		if(textNode != null) {
 			FormDocument.saveSrc(textNode.value, closeLoadingMessage);
 		}
@@ -960,7 +943,7 @@ function deletePage(parameter) {
 		setupPagesPanel();
 	}
 }
-function createNewForm() {
+/*function createNewForm() {
 	var title = document.forms['newFormDialogForm'].elements['formName'].value;
 	if(title != '') {
 		closeMessage();
@@ -1034,7 +1017,7 @@ function placeThxPage(parameter) {
 		container.appendChild(page);
 		FormPage.getFirstPageInfo(refreshWorkspace);
 	}
-}
+}*/
 function removeComponent(parameter) {
 	var node = parameter.parentNode;
 	if(node != null) {
