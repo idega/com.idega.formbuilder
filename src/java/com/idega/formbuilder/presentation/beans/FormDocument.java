@@ -530,18 +530,20 @@ public class FormDocument implements Serializable {
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormPage(page.getId(), page.getProperties().getLabel().getString(new Locale("en")), true), true);
 	}
 	
-	public void saveSrc(String source_code) {
-		if(source_code == null)
+	public void saveSrc(String sourceCode) {
+		if(sourceCode == null)
 			return;
+		
 		try {
 			if(document != null) {
-				document.setFormSourceCode(source_code);
-				FormPage current_page = (FormPage) WFUtil.getBeanInstance("formPage");
-				if(current_page != null) {
+				document.setFormSourceCode(sourceCode);
+				FormPage currentPage = (FormPage) WFUtil.getBeanInstance("formPage");
+				if(currentPage != null) {
 					Page page = document.getPage(document.getContainedPagesIdList().get(0));
-					current_page.initializeBeanInstance(page);
+					currentPage.initializeBeanInstance(page);
 				}
 			}
+			
 		} catch (Exception e) {
 			logger.error("Error when setting form source code", e);
 		}

@@ -306,10 +306,10 @@ public class FormComponent implements Serializable {
 			ButtonArea area = page.getButtonArea();
 			Button button = null;
 			if(area != null) {
-				button = area.addButton(new ConstButtonType(type), null);
+				button = area.addButton(ConstButtonType.getByStringType(type), null);
 			} else {
 				area = page.createButtonArea(null);
-				button = area.addButton(new ConstButtonType(type), null);
+				button = area.addButton(ConstButtonType.getByStringType(type), null);
 			}
 			return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBButton(button.getId(), "formButton", "loadButtonInfo(this);", "removeButton(this);"), true);
 		}
