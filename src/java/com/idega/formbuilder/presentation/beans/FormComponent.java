@@ -123,6 +123,12 @@ public class FormComponent implements Serializable {
 		}
 	}
 	
+	public void saveComponentAction(String value) {
+
+		if(button != null)
+			button.getProperties().setReferAction(value);
+	}
+	
 	public void saveComponentProcessVariableName(String value) {
 		
 		Component component = this.component != null ? this.component : this.selectComponent != null ? this.selectComponent : null;

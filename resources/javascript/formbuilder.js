@@ -711,6 +711,11 @@ function saveButtonLabel(value) {
 		});
 	}
 }
+function saveButtonAction(value) {
+    if(value != null) {
+        FormComponent.saveComponentAction(value, nothing);
+    }
+}
 function saveComponentLabel(value) {
 	if(value != null) {
 		FormComponent.saveComponentLabel(value, {

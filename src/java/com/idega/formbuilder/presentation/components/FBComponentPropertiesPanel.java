@@ -9,9 +9,11 @@ import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
+import com.idega.documentmanager.business.component.Button;
 import com.idega.documentmanager.business.component.ButtonArea;
 import com.idega.documentmanager.business.component.Component;
 import com.idega.documentmanager.business.component.Page;
+import com.idega.documentmanager.business.component.properties.PropertiesButton;
 import com.idega.documentmanager.business.component.properties.PropertiesComponent;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.DataSourceList;
@@ -269,9 +271,9 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 				return;
 			ButtonArea area = page.getButtonArea();
 			if(area != null) {
-				Component component = area.getComponent(componentId);
-				if(component != null) {
-					PropertiesComponent properties = component.getProperties();
+				Button button = (Button)area.getComponent(componentId);
+				if(button != null) {
+					PropertiesButton properties = button.getProperties();
 					
 					Layer body = createPanelSection("labelPropertiesPanel");
 					
@@ -282,6 +284,16 @@ public class FBComponentPropertiesPanel extends FBComponentBase {
 					title.setOnKeyDown("savePropertyOnEnter(this.value,'btnTitle',event);");
 					
 					line.add(new Label("Button title", title));
+					line.add(title);
+					body.add(line);
+					
+					line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
+					
+					title = new TextInput("propertyAction", properties.getReferAction());
+					title.setOnBlur("saveButtonAction(this.value);");
+					title.setOnKeyDown("savePropertyOnEnter(this.value,'btnAction',event);");
+					
+					line.add(new Label("Button action", title));
 					line.add(title);
 					body.add(line);
 					
