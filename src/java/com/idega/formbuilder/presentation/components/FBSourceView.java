@@ -39,7 +39,7 @@ public class FBSourceView extends FBComponentBase {
 		textarea.setValueBinding("value", application.createValueBinding("#{formDocument.sourceCode}"));
 		textarea.setWrap("false");
 		textarea.setId("sourceTextarea");
-//		textarea.setStyleClass("codepress html linenumbers-on");
+		textarea.setStyleClass("codepress html linenumbers-on");
 		
 		content.add(textarea);
 		

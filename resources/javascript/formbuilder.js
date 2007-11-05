@@ -915,9 +915,22 @@ function deletePage(parameter) {
 				FormPage.removePage(parentNode.id,{
 					callback: function(parameter) {
 						if(parameter != null) {
-							var node = $(parameter);
-							if(node != null) node.remove();
-							//TODO load previous page
+							showLoadingMessage('Loading section...');
+							var currentPage = parameter[0];
+							var node = $(currentPage);
+							if(node != null) 
+								node.remove();
+							markSelectedPage(parameter[1])
+							var designViewDOM = parameter[2];
+							var dropBox = $('dropBox');
+							if(dropBox != null) {
+								var parentNode = dropBox.parentNode;
+								var node = parentNode.getLast();
+								node.remove();
+								insertNodesToContainer(designViewDOM, parentNode);
+								setupDesignView('dropBox', 'formElement', PAGE_TITLE, FORM_TITLE);
+							}
+							closeLoadingMessage();
 						}
 					}
 				});

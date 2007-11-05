@@ -12,7 +12,6 @@ import javax.faces.context.FacesContext;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.Palette;
 import com.idega.formbuilder.presentation.beans.PaletteComponent;
-import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
 import com.idega.presentation.text.Link;
@@ -121,19 +120,19 @@ public class FBPalette extends FBComponentBase {
 		paletteBody.setId("paletteBody");
 		body.add(paletteBody);
 		
-		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
-		boolean processMode = workspace.isProcessMode();
+//		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
+//		boolean processMode = workspace.isProcessMode();
 		
-		if(processMode) {
-			
-		} else {
+//		if(processMode) {
+//			
+//		} else {
 			paletteBody.add(getTab("paletteBody_1", context, basic));
-		}
+//		}
 		paletteBody.add(getTab("paletteBody_2", context, buttons));
 		paletteBody.add(getTab("paletteBody_3", context, plain));
-		if(!processMode) {
+//		if(!processMode) {
 			paletteBody.add(getTab("paletteBody_4", context, autofilled));
-		}
+//		}
 		
 		add(body);
 	}

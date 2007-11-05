@@ -213,6 +213,7 @@
 .formListItem > div {
 	background: #f4f4f4;
 }
+
 .buttonList {
 	position: absolute;
 	right: 0px;
@@ -221,10 +222,17 @@
 	margin: 0;
 	padding: 0;
 }
+
+.processItem {
+	overflow: hidden;
+}
+
+.processItem .formTitle {
+	margin-bottom: 18px;
+}
+
 .taskFormList {
-	position: absolute;
 	right: 0px;
-	top: 30px;
 	list-style: none;
 	margin: 0;
 	padding: 0;
@@ -232,7 +240,6 @@
 }
 
 .taskFormList > li {
-	float: right;
 	padding-left: 20px;
 	height: 50px;
 	margin-right: 16px;
@@ -240,9 +247,16 @@
 
 .taskFormList > li > div {
 	display: block;
-	line-height: 20px;
+	line-height: 19px;
 	font-weight: bold;
 	font-size: 12px;
+	border: 1px #3396ff solid;
+	margin: 0;
+}
+
+.taskFormList > li > div .formTitle {
+	line-height: 20px;
+	margin: 0;
 }
 
 .buttonList li {
@@ -392,8 +406,8 @@
 	font-size:11px;
 	color: #a1a1a1;
 	margin-left: 33px;
+	font-weight:normal					!important;
 }
-
 .formListIcon {
 	float: left;
 	margin-left: 3px;
@@ -450,7 +464,7 @@
 	padding-top: 10px;
 	background: #e5f1ee;
 	position: relative;
-	height: 30px;
+	height: auto;
 }
 .processNameBox {
 	margin-left: 20px;

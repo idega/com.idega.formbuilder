@@ -22,7 +22,7 @@ public class FBButtonArea extends FBComponentBase {
 	public static final String COMPONENT_TYPE = "ButtonArea";
 	
 	private static final String DEFAULT_LOAD_ACTION = "loadButtonInfo(this);";
-	private static final String DEFAULT_DELETE_ACTION = "removeComponent(this);";
+	private static final String DEFAULT_DELETE_ACTION = "removeButton(this);";
 	
 	public String componentStyleClass;
 	

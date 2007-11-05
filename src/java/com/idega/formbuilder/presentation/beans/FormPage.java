@@ -119,7 +119,8 @@ public class FormPage implements Serializable {
 		}
 	}
 	
-	public String removePage(String id) throws Exception {
+	public List removePage(String id) throws Exception {
+		List properties = new ArrayList();
 		Document document = formDocument.getDocument();
 		if(document != null) {
 			String temp = id.substring(id.indexOf(":") + 1);
@@ -143,11 +144,13 @@ public class FormPage implements Serializable {
 					page = document.getPage(newPageId);
 					loadPageInfo(page);
 				}
+				properties.add(id);
+				properties.add(newPageId);
+				properties.add(BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView("formElement"), false));
 				workspace.setView("design");
-				return id;
 			}
 		}
-		return null;
+		return properties;
 	}
 	
 	public org.jdom.Document getFormPageInfo(String id) {
