@@ -122,9 +122,11 @@ public class FBHomePage extends FBComponentBase {
 		JbpmProcessBusinessBean jbpmProcessBusiness = (JbpmProcessBusinessBean) WFUtil.getBeanInstance("jbpmProcessBusiness");
 		List<ProcessDefinition> processList = jbpmProcessBusiness.getProcessList();
 		
+		System.out.println("Process list: " + processList.size());	
+		
 		for(Iterator<ProcessDefinition> processIterator = processList.iterator(); processIterator.hasNext(); ) {
 			ProcessDefinition definition = (ProcessDefinition) processIterator.next();
-				
+			System.out.println("Process: " + definition.getName());	
 			Layer processItem = new Layer(Layer.DIV);
 			processItem.setStyleClass(PROCESS_ITEM_CLASS);
 			Link casesButton = new Link(getLocalizedString(iwc, "fb_home_view_cases_link", "View cases"));
@@ -168,6 +170,7 @@ public class FBHomePage extends FBComponentBase {
 						it.remove();
 					}
 				}
+				System.out.println("Process task: " + task.getName());
 				list.add(getProcessTaskFormItem(context, formTitle + " (" + task.getName() + ")", getLocalizedString(iwc, "fb_home_created_label", "Created") + getCreatedDate(view.getViewId()), view.getViewId()));
 			}
 			if(formTitle == null)
