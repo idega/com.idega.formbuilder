@@ -62,7 +62,6 @@ var FBDraggable = Element.extend({
 						var pos = child.getCoordinates();
 						childBoxes.push({top: pos.top, bottom: pos.bottom, left: pos.left, right: pos.right, height: pos.height, width: pos.width, node: child});
 					}
-					var temp = childBoxes;
 					var dropBox = $('dropBoxinner');
 					this.element.addEvent('mousemove', function(e) {
 						if(!e) e = window.event;
@@ -81,12 +80,13 @@ var FBDraggable = Element.extend({
    						FormComponent.addComponent(this.elementOrg.id, this.autofill, {
 							callback: function(resultDOM) {
 								if(resultDOM != null) {
-									COMPONENT_DRAG_STATUS = 'created';
 									currentElement = resultDOM;
+									//console.log('Setting currentElement: '  + currentElement);
 								}
 							}
 						});
    						draggingComponent = true;
+   						//console.log('Draggin component onStart: '  + draggingComponent);
 					}
 				} else if(type == 'fbbutton') {
 					if(draggingButton == false) {
@@ -102,15 +102,15 @@ var FBDraggable = Element.extend({
 				this.element = this.elementOrg;
 				this.elementOrg = null;
 				if(type == 'fbcomp') {
+					//console.log('Draggin component onComplete: '  + draggingComponent);
 					if(draggingComponent == true) {
-						//console.log('complete drag ' + insideDropzone);
+						//console.log('onComplete drag ' + insideDropzone);
 						//draggingComponent = false;
-						if(COMPONENT_DRAG_STATUS == 'created') {
+						if(insideDropzone == false) {
 							var currentId = currentElement.documentElement.getAttribute('id');
 							this.element.removeEvents('mousemove');
 							FormComponent.removeComponent(currentId,nothing);
 							//currentElement = null;
-							COMPONENT_DRAG_STATUS = 'none';
 						}
 					}
 				} else if(type == 'fbbutton') {
@@ -131,7 +131,7 @@ var FBDraggable = Element.extend({
 		return this;
 	}
 });
-function setupDesignView(componentArea, component, buttonArea, button, pageTitle, formTitle) {
+function setupDesignView(componentArea, component, pageTitle, formTitle) {
 	var formTitle = $(formTitle);
 	if(formTitle != null) {
 		formTitle.addEvent('dblclick', function(e){
@@ -180,13 +180,16 @@ function setupDesignView(componentArea, component, buttonArea, button, pageTitle
 				if (!this.dragEffect) this.dragEffect = new Fx.Style(this, 'background-color');
 				this.dragEffect.stop().start('ffffff', 'dddddd');
 				insideDropzone = true;
+				//console.log('over: '  + insideDropzone);
 			},
 			'leave': function(el){
 				this.dragEffect.stop().start('dddddd', 'ffffff');
 				insideDropzone = false;
+				//console.log('leave: '  + insideDropzone);
 			},
 			'drop': function(el, drag){
 				this.dragEffect.stop().start('ff8888', 'ffffff');
+				//console.log('drop: '  + draggingComponent);
 				if(draggingComponent == true) {
 					draggingComponent = false;
 					var currentId = currentElement.documentElement.getAttribute('id');
@@ -200,8 +203,6 @@ function setupDesignView(componentArea, component, buttonArea, button, pageTitle
 					}
 				}
 				insideDropzone = false;
-				currentElement = null;
-				COMPONENT_DRAG_STATUS = 'none';
 			}
 		});
 	}
@@ -216,7 +217,8 @@ function setupDesignView(componentArea, component, buttonArea, button, pageTitle
 	});
 }
 Window.onDomReady(function() {
-	setupDesignView('dropBox', 'formElement', 'fgh', 'dfgdfg', PAGE_TITLE, FORM_TITLE);
+	initMenu();
+	setupDesignView('dropBox', 'formElement', PAGE_TITLE, FORM_TITLE);
 	setupPagesPanel();
 });
 function getPageComponents() {
@@ -353,7 +355,7 @@ function savePageTitleAction(event) {
 		if(text != '') {
 			var node = $(CURRENT_PAGE_ID);
 			if(node != null) {
-				var parent = node.childNodes[1];
+				var parent = node.childNodes[3];
 				var textNode = parent.childNodes[0];
 				var newTextNode = document.createTextNode(text);
 				parent.replaceChild(newTextNode, textNode);
@@ -391,32 +393,6 @@ function disableInlineEdit() {
 		}
 		INLINE_VALUE = null;
 		INLINE_ID = null;
-	}
-}
-
-function loadProcessTaskList(value) {
-	if(value != null && value != '') {
-		JbpmBusiness.getProcessDefinitionTasks(value, placeProcessTaskList);
-	}
-}
-function loadTaskProperties(value) {
-	if(value != null) {
-		JbpmBusiness.getTaskProperties(value, placeTaskProperties);
-	}
-}
-function placeProcessTaskList(values) {
-	if(values != null) {
-		DWRUtil.removeAllOptions('taskSelector');
-		DWRUtil.addOptions('taskSelector', values, 'id', 'value');
-	}
-}
-function placeTaskProperties(values) {
-	if(values != null) {
-		$('taskForm').setAttribute('disabled','false');
-		$('taskForm').setAttribute('disabled', 'false');
-		$('taskGroup').setAttribute('disabled', 'false');
-		//DWRUtil.setValue('taskForm', 'dfgdfgdfg');
-		//DWRUtil.setValue('taskGroup', 'dfgdfgdfg');
 	}
 }
 function loadFormInfo() {
@@ -527,7 +503,7 @@ function loadConfirmationPage(parameter) {
 					var node = parentNode.getLast();
 					node.remove();
 					insertNodesToContainer(resultDOM, parentNode);
-					setupDesignView('dropBox', 'formElement', 'fgh', 'dfgdfg', PAGE_TITLE, FORM_TITLE);
+					setupDesignView('dropBox', 'formElement', PAGE_TITLE, FORM_TITLE);
 				}
 				closeLoadingMessage();
 			}
@@ -547,7 +523,7 @@ function loadThxPage(parameter) {
 					var node = parentNode.getLast();
 					node.remove();
 					insertNodesToContainer(resultDOM, parentNode);
-					setupDesignView('dropBox', 'formElement', 'fgh', 'dfgdfg', PAGE_TITLE, FORM_TITLE);
+					setupDesignView('dropBox', 'formElement', PAGE_TITLE, FORM_TITLE);
 				}
 				closeLoadingMessage();
 			}
@@ -556,26 +532,26 @@ function loadThxPage(parameter) {
 }
 function loadPageInfo(event) {
 	if(event != null) {
-			if(pressedPageDelete == false && draggingPage == false) {
-				showLoadingMessage('Loading section...');
-				FormPage.getFormPageInfo(event, {
-					callback: function(resultDOM) {
-						isThxPage = false;
-						if(resultDOM != null) {
-							markSelectedPage(event);
-							var dropBox = $('dropBox');
-							if(dropBox != null) {
-								var parentNode = dropBox.parentNode;
-								var node = parentNode.getLast();
-								node.remove();
-								insertNodesToContainer(resultDOM, parentNode);
-								setupDesignView('dropBox', 'formElement', 'fgh', 'dfgdfg', PAGE_TITLE, FORM_TITLE);
-							}
-							closeLoadingMessage();
+		if(pressedPageDelete == false && draggingPage == false) {
+			showLoadingMessage('Loading section...');
+			FormPage.getFormPageInfo(event, {
+				callback: function(resultDOM) {
+					isThxPage = false;
+					if(resultDOM != null) {
+						markSelectedPage(event);
+						var dropBox = $('dropBox');
+						if(dropBox != null) {
+							var parentNode = dropBox.parentNode;
+							var node = parentNode.getLast();
+							node.remove();
+							insertNodesToContainer(resultDOM, parentNode);
+							setupDesignView('dropBox', 'formElement', PAGE_TITLE, FORM_TITLE);
 						}
+						closeLoadingMessage();
 					}
-				});
-			}
+				}
+			});
+		}
 	}
 }
 function placePageTitle(parameter) {
@@ -616,6 +592,7 @@ function insertNewComponent(parameter) {
 	if($('emptyForm') != null) {
 		$('emptyForm').remove();
 	}
+	//console.log('Getting currentElement: '  + currentElement);
 	if(parameter == 'append') {
 		insertNodesToContainer(currentElement, $('dropBoxinner'));
 		currentElement = null;
@@ -624,6 +601,7 @@ function insertNewComponent(parameter) {
 		insertNodesToContainerBefore(currentElement, $('dropBoxinner'), node);
 		currentElement = null;
 	}
+	setupDesignView('dropBox', 'formElement', PAGE_TITLE, FORM_TITLE);
 }
 function loadComponentInfo(component) {
 	if(component != null) {
@@ -913,7 +891,7 @@ function createNewPage() {
 				var node = parentNode.getLast();
 				node.remove();
 				insertNodesToContainer(resultDOMs[0], parentNode);
-				setupDesignView('dropBox', 'formElement', 'fgh', 'dfgdfg', PAGE_TITLE, FORM_TITLE);
+				setupDesignView('dropBox', 'formElement', PAGE_TITLE, FORM_TITLE);
 				setupPagesPanel();
 			}
 		}
@@ -1045,7 +1023,7 @@ function removeComponentNode(parameter) {
 							var node2 = parentNode.getLast();
 							node2.remove();
 							insertNodesToContainer(resultDOM, parentNode);
-							setupDesignView('dropBox', 'formElement', 'fgh', 'dfgdfg', PAGE_TITLE, FORM_TITLE);
+							setupDesignView('dropBox', 'formElement', PAGE_TITLE, FORM_TITLE);
 							setupPagesPanel();
 						}
 					}

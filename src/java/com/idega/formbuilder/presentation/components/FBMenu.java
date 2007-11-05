@@ -7,42 +7,25 @@ import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.el.ValueBinding;
 
 import com.idega.block.web2.presentation.Accordion;
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.presentation.IWContext;
 import com.idega.presentation.text.Text;
+import com.idega.util.CoreUtil;
 
 
 public class FBMenu extends FBComponentBase {
 
 	public static final String COMPONENT_TYPE = "Menu";
 	
-	private String selectedMenu;
-	private boolean show;
-	
-	public boolean getShow() {
-		return show;
-	}
-
-	public void setShow(boolean show) {
-		this.show = show;
-	}
-
-	public String getSelectedMenu() {
-		return selectedMenu;
-	}
-
-	public void setSelectedMenu(String selectedMenu) {
-		this.selectedMenu = selectedMenu;
-	}
-
 	public FBMenu() {
 		super();
 		setRendererType(null);
 	}
 	
-	protected void initializeComponent(FacesContext context) {		
+	protected void initializeComponent(FacesContext context) {	
+		IWContext iwc = CoreUtil.getIWContext();
 		Application application = context.getApplication();
 		getChildren().clear();
 		
@@ -52,21 +35,19 @@ public class FBMenu extends FBComponentBase {
 		acc.setHeight("600");
 		
 		FBPalette palette = (FBPalette) application.createComponent(FBPalette.COMPONENT_TYPE);
-		palette.setColumns(2);
-		palette.setId("firstlist");
 		palette.setItemStyleClass("paletteComponent");
 		palette.setStyleClass("componentsList");
 		
 		Text tab1 = new Text();
-		tab1.setText("Component palette");
+		tab1.setText(getLocalizedString(iwc, "fb_acc_comp_palette", "Component palette"));
 		tab1.setStyleClass("fbMenuTabBar");
 		
 		acc.addPanel(tab1, palette);
 		
-		FBComponentPropertiesPanel simpleProperties = (FBComponentPropertiesPanel) application.createComponent(FBComponentPropertiesPanel.COMPONENT_TYPE);
+		FBComponentProperties simpleProperties = (FBComponentProperties) application.createComponent(FBComponentProperties.COMPONENT_TYPE);
 		
 		Text tab2 = new Text();
-		tab2.setText("Component properties");
+		tab2.setText(getLocalizedString(iwc, "fb_acc_comp_properties", "Component properties"));
 		tab2.setStyleClass("fbMenuTabBar");
 		
 		acc.addPanel(tab2, simpleProperties);
@@ -75,7 +56,7 @@ public class FBMenu extends FBComponentBase {
 		formProperties.setId("fbFormPropertiesPanel");
 		
 		Text tab3 = new Text();
-		tab3.setText("Form properties");
+		tab3.setText(getLocalizedString(iwc, "fb_acc_form_properties", "Form properties"));
 		tab3.setStyleClass("fbMenuTabBar");
 		
 		acc.addPanel(tab3, formProperties);
@@ -89,11 +70,6 @@ public class FBMenu extends FBComponentBase {
 		writer.startElement("DIV", this);
 		writer.writeAttribute("id", getId(), "id");
 		writer.writeAttribute("style", "width: 300px;", null);
-		
-		ValueBinding showVB = getValueBinding("show");
-		if(showVB != null) {
-			show = (Boolean) showVB.getValue(context);
-		}
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {
@@ -107,28 +83,9 @@ public class FBMenu extends FBComponentBase {
 		if (!isRendered()) {
 			return;
 		}
-		ValueBinding showVB = getValueBinding("show");
-		if(showVB != null) {
-			show = (Boolean) showVB.getValue(context);
-		}
 		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
 			renderChild(context, (UIComponent) it.next());
 		}
-	}
-	
-	public Object saveState(FacesContext context) {
-		Object values[] = new Object[3];
-		values[0] = super.saveState(context);
-		values[1] = selectedMenu;
-		values[2] = show;
-		return values;
-	}
-	
-	public void restoreState(FacesContext context, Object state) {
-		Object values[] = (Object[]) state;
-		super.restoreState(context, values[0]);
-		selectedMenu = (String) values[1];
-		show = (Boolean) values[2];
 	}
 	
 }

@@ -7,6 +7,7 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.presentation.Layer;
 
 public class FBPaletteComponent extends FBComponentBase {
 	
@@ -50,7 +51,7 @@ public class FBPaletteComponent extends FBComponentBase {
 	
 	public void encodeEnd(FacesContext context) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
-		writer.startElement("DIV", this);
+		writer.startElement(Layer.DIV, this);
 		writer.writeAttribute("class", getStyleClass() + " " + category, "styleClass");
 		ValueBinding vb = getValueBinding("type");
 		if(vb != null) {
@@ -72,7 +73,7 @@ public class FBPaletteComponent extends FBComponentBase {
 		}
 		writer.writeText(name, null);
 		writer.endElement("SPAN");
-		writer.endElement("DIV");
+		writer.endElement(Layer.DIV);
 		writer.write(getEmbededJavascript());
 	}
 	

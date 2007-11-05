@@ -104,7 +104,7 @@ public class FBFormComponent extends FBComponentBase {
 	public void encodeBegin(FacesContext context) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeBegin(context);
-		writer.startElement("DIV", this);
+		writer.startElement(Layer.DIV, this);
 		writer.writeAttribute("class", getStyleClass(), "styleClass");
 		writer.writeAttribute("id", getId(), "id");
 		writer.writeAttribute("onclick", onLoad, "onclick");
@@ -117,7 +117,7 @@ public class FBFormComponent extends FBComponentBase {
 	
 	public void encodeEnd(FacesContext context) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
-		writer.endElement("DIV");
+		writer.endElement(Layer.DIV);
 		super.encodeEnd(context);
 	}
 	

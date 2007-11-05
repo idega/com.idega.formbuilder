@@ -17,7 +17,7 @@ import com.idega.documentmanager.business.component.Page;
 import com.idega.documentmanager.component.beans.ItemBean;
 import com.idega.documentmanager.component.beans.LocalizedStringBean;
 import com.idega.formbuilder.presentation.components.FBButton;
-import com.idega.formbuilder.presentation.components.FBComponentPropertiesPanel;
+import com.idega.formbuilder.presentation.components.FBComponentProperties;
 import com.idega.formbuilder.presentation.components.FBFormComponent;
 import com.idega.formbuilder.util.FBConstants;
 import com.idega.formbuilder.util.FBUtil;
@@ -244,12 +244,12 @@ public class FormComponent implements Serializable {
 	
 	public Document getFormButtonInfo(String id) {
 		initializeBeanInstace(id, BUTTON_TYPE);
-		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentPropertiesPanel(id, FBConstants.BUTTON_TYPE), true);
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentProperties(id, FBConstants.BUTTON_TYPE), true);
 	}
 	
 	public Document getFormComponentInfo(String id) {
 		initializeBeanInstace(id, COMPONENT_TYPE);
-		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentPropertiesPanel(id, FBConstants.COMPONENT_TYPE), true);
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentProperties(id, FBConstants.COMPONENT_TYPE), true);
 	}
 	
 	public Document switchDataSource() {
@@ -260,7 +260,7 @@ public class FormComponent implements Serializable {
 			getItems().clear();
 //			setItems(items);
 		}
-		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentPropertiesPanel(id, FBConstants.COMPONENT_TYPE), true);
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentProperties(id, FBConstants.COMPONENT_TYPE), true);
 	}
 	
 	public Document addComponent(String type, String autofill) throws Exception {
@@ -529,7 +529,7 @@ public class FormComponent implements Serializable {
 		} else {
 			setAutofillKey("");
 		}
-		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentPropertiesPanel(id, FBConstants.COMPONENT_TYPE), true);
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentProperties(id, FBConstants.COMPONENT_TYPE), true);
 	}
 
 	public String getPlainText() {

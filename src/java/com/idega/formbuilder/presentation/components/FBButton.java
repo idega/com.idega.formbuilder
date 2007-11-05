@@ -1,7 +1,6 @@
 package com.idega.formbuilder.presentation.components;
 
 import java.io.IOException;
-import java.util.Locale;
 
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -11,6 +10,8 @@ import com.idega.documentmanager.business.component.ButtonArea;
 import com.idega.documentmanager.business.component.Page;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormPage;
+import com.idega.formbuilder.util.FBUtil;
+import com.idega.presentation.Layer;
 import com.idega.webface.WFUtil;
 
 public class FBButton extends FBComponentBase {
@@ -20,9 +21,6 @@ public class FBButton extends FBComponentBase {
 	private static final String DELETE_BUTTON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete-tiny.png";
 	private static final String SPEED_BUTTON_STYLE = "fbSpeedBButton";
 	private static final String INLINE_STYLE = "display: inline;";
-//	private static final String DEFAULT_LOAD_ACTION = "loadButtonInfo(this);";
-//	private static final String DEFAULT_DELETE_ACTION = "removeComponent(this);";
-//	private static final String DEFAULT_STYLE_CLASS = "formButton";
 	
 	public String selectedStyleClass;
 	public String label;
@@ -92,13 +90,13 @@ public class FBButton extends FBComponentBase {
 					Button button = (Button) area.getComponent(buttonId);
 					if(button != null) {
 						setId(button.getId());
-						this.label = button.getProperties().getLabel().getString(new Locale("en"));
+						this.label = button.getProperties().getLabel().getString(FBUtil.getUILocale());
 					}
 				}
 			}
 		}
 		
-		writer.startElement("div", this);
+		writer.startElement(Layer.DIV, this);
 		if(!isSelected()) {
 			writer.writeAttribute("class", getStyleClass(), "styleClass");
 		} else {
@@ -122,7 +120,7 @@ public class FBButton extends FBComponentBase {
 		writer.writeAttribute("onclick", onDelete, "onclick");
 		writer.endElement("img");
 		
-		writer.endElement("div");
+		writer.endElement(Layer.DIV);
 	}
 
 	public String getLabel() {

@@ -3,7 +3,6 @@ package com.idega.formbuilder.presentation.components;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
@@ -14,11 +13,16 @@ import com.idega.documentmanager.business.component.Button;
 import com.idega.documentmanager.business.component.ButtonArea;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormPage;
+import com.idega.formbuilder.util.FBUtil;
+import com.idega.presentation.Layer;
 import com.idega.webface.WFUtil;
 
 public class FBButtonArea extends FBComponentBase {
 
 	public static final String COMPONENT_TYPE = "ButtonArea";
+	
+	private static final String DEFAULT_LOAD_ACTION = "loadButtonInfo(this);";
+	private static final String DEFAULT_DELETE_ACTION = "removeComponent(this);";
 	
 	public String componentStyleClass;
 	
@@ -39,11 +43,11 @@ public class FBButtonArea extends FBComponentBase {
 					Button bt = (Button) buttonArea.getComponent(nextId);
 					if(bt != null) {
 						FBButton button = (FBButton) application.createComponent(FBButton.COMPONENT_TYPE);
-						button.setLabel(bt.getProperties().getLabel().getString(new Locale("en")));
+						button.setLabel(bt.getProperties().getLabel().getString(FBUtil.getUILocale()));
 						button.setId(nextId);
 						button.setStyleClass(componentStyleClass);
-						button.setOnSelect("loadButtonInfo(this);");
-						button.setOnDelete("removeButton(this);");
+						button.setOnSelect(DEFAULT_LOAD_ACTION);
+						button.setOnDelete(DEFAULT_DELETE_ACTION);
 						add(button);
 					}
 				}
@@ -54,17 +58,15 @@ public class FBButtonArea extends FBComponentBase {
 	public void encodeBegin(FacesContext context) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeBegin(context);
-		writer.startElement("DIV", this);
+		writer.startElement(Layer.DIV, this);
 		writer.writeAttribute("id", getId(), "id");
 		writer.writeAttribute("class", getStyleClass(), "styleClass");
 	}
 	
 	public void encodeEnd(FacesContext context) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
-		writer.endElement("DIV");
+		writer.endElement(Layer.DIV);
 		super.encodeEnd(context);
-		
-//		writer.write(getEmbededJavascript());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -76,14 +78,6 @@ public class FBButtonArea extends FBComponentBase {
 			renderChild(context, (UIComponent) it.next());
 		}
 	}
-	
-//	private String getEmbededJavascript() {
-//		StringBuilder result = new StringBuilder();
-//		result.append("<script language=\"JavaScript\">\n");
-//		result.append("setupButtonsDragAndDrop('" + getId() + "','" + componentStyleClass + "');\n");
-//		result.append("</script>\n");
-//		return 	result.toString();
-//	}
 	
 	public Object saveState(FacesContext context) {
 		Object values[] = new Object[2];

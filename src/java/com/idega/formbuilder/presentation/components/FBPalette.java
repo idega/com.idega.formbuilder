@@ -6,12 +6,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.faces.application.Application;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.Palette;
 import com.idega.formbuilder.presentation.beans.PaletteComponent;
+import com.idega.formbuilder.presentation.beans.Workspace;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.Layer;
+import com.idega.presentation.text.Link;
+import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
 
 public class FBPalette extends FBComponentBase {
@@ -19,25 +24,26 @@ public class FBPalette extends FBComponentBase {
 	public static final String COMPONENT_TYPE = "Palette";
 	
 	private String itemStyleClass;
-	private Integer columns;
-	private Palette palette;
 	
 	private List<FBPaletteComponent> basic = new LinkedList<FBPaletteComponent>();
 	private List<FBPaletteComponent> buttons = new LinkedList<FBPaletteComponent>();
 	private List<FBPaletteComponent> plain = new LinkedList<FBPaletteComponent>();
 	private List<FBPaletteComponent> autofilled = new LinkedList<FBPaletteComponent>();
+	
+	private static final String DEFAULT_COMPONENT_DRAG_ACTION = "handleComponentDrag";
+	private static final String DEFAULT_BUTTON_DRAG_ACTION = "handleButtonDrag";
+	private static final String COMPONENT_CATEGORY = "fbcomp";
+	private static final String BUTTON_CATEGORY = "fbbutton";
 
 	public FBPalette() {
 		super();
 		setRendererType(null);
 	}
 	
-	public void encodeBegin(FacesContext context) throws IOException {
+	protected void initializeComponent(FacesContext context) {
+		IWContext iwc = CoreUtil.getIWContext();
 		Application application = context.getApplication();
-		getChildren().clear();
-		super.encodeBegin(context);
-		
-		palette = (Palette) WFUtil.getBeanInstance("palette");
+		Palette palette = (Palette) WFUtil.getBeanInstance("palette");
 		
 		Iterator<PaletteComponent> it = palette.getBasic().iterator();
 		while(it.hasNext()) {
@@ -47,8 +53,8 @@ public class FBPalette extends FBComponentBase {
 			formComponent.setName(current.getName());
 			formComponent.setType(current.getType());
 			formComponent.setIcon(current.getIconPath());
-			formComponent.setOnDrag("handleComponentDrag");
-			formComponent.setCategory("fbcomp");
+			formComponent.setOnDrag(DEFAULT_COMPONENT_DRAG_ACTION);
+			formComponent.setCategory(COMPONENT_CATEGORY);
 			basic.add(formComponent);
 		}
 		it = palette.getButtons().iterator();
@@ -59,8 +65,8 @@ public class FBPalette extends FBComponentBase {
 			formComponent.setName(current.getName());
 			formComponent.setType(current.getType());
 			formComponent.setIcon(current.getIconPath());
-			formComponent.setOnDrag("handleButtonDrag");
-			formComponent.setCategory("fbbutton");
+			formComponent.setOnDrag(DEFAULT_BUTTON_DRAG_ACTION);
+			formComponent.setCategory(BUTTON_CATEGORY);
 			buttons.add(formComponent);
 		}
 		it = palette.getPlain().iterator();
@@ -71,8 +77,8 @@ public class FBPalette extends FBComponentBase {
 			formComponent.setName(current.getName());
 			formComponent.setType(current.getType());
 			formComponent.setIcon(current.getIconPath());
-			formComponent.setOnDrag("handleComponentDrag");
-			formComponent.setCategory("fbcomp");
+			formComponent.setOnDrag(DEFAULT_COMPONENT_DRAG_ACTION);
+			formComponent.setCategory(COMPONENT_CATEGORY);
 			plain.add(formComponent);
 		}
 		
@@ -84,103 +90,92 @@ public class FBPalette extends FBComponentBase {
 			formComponent.setName(current.getName());
 			formComponent.setType(current.getType());
 			formComponent.setIcon(current.getIconPath());
-			formComponent.setOnDrag("handleComponentDrag");
-			formComponent.setCategory("fbcomp");
+			formComponent.setOnDrag(DEFAULT_COMPONENT_DRAG_ACTION);
+			formComponent.setCategory(COMPONENT_CATEGORY);
 			formComponent.setAutofillKey(current.getAutofillKey());
 			autofilled.add(formComponent);
 		}
 		
-		ResponseWriter writer = context.getResponseWriter();
-		writer.startElement("DIV", this);
-		writer.writeAttribute("id", getId(), "id");
-		writer.writeAttribute("class", getStyleClass(), "styleClass");
+		Layer body = new Layer(Layer.DIV);
+		body.setId("firstList");
+		body.setStyleClass(getStyleClass());
 		
-		writer.startElement("DIV", null);
-		writer.writeAttribute("id", "mainPalette", null);
-		writer.startElement("A", null);
-		writer.writeText("Basic", null);
-		writer.endElement("A");
-		writer.startElement("A", null);
-		writer.writeText("Buttons", null);
-		writer.endElement("A");
-		writer.startElement("A", null);
-		writer.writeText("Text", null);
-		writer.endElement("A");
-		writer.startElement("A", null);
-		writer.writeText("Custom", null);
-		writer.endElement("A");
-		writer.endElement("DIV");	
+		Layer mainPalette = new Layer(Layer.DIV);
+		mainPalette.setId("mainPalette");
+		body.add(mainPalette);
+		
+		Link tab = new Link(getLocalizedString(iwc, "fb_palette_basic", "Basic"));
+		tab.setNoURL();
+		mainPalette.add(tab);
+		tab = new Link(getLocalizedString(iwc, "fb_palette_buttons", "Buttons"));
+		tab.setNoURL();
+		mainPalette.add(tab);
+		tab = new Link(getLocalizedString(iwc, "fb_palette_text", "Text"));
+		tab.setNoURL();
+		mainPalette.add(tab);
+		tab = new Link(getLocalizedString(iwc, "fb_palette_custom", "Custom"));
+		tab.setNoURL();
+		mainPalette.add(tab);
+		
+		Layer paletteBody = new Layer(Layer.DIV);
+		paletteBody.setId("paletteBody");
+		body.add(paletteBody);
+		
+		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
+		boolean processMode = workspace.isProcessMode();
+		
+		if(processMode) {
+			
+		} else {
+			paletteBody.add(getTab("paletteBody_1", context, basic));
+		}
+		paletteBody.add(getTab("paletteBody_2", context, buttons));
+		paletteBody.add(getTab("paletteBody_3", context, plain));
+		if(!processMode) {
+			paletteBody.add(getTab("paletteBody_4", context, autofilled));
+		}
+		
+		add(body);
 	}
 	
+	
+	@SuppressWarnings("unchecked")
 	public void encodeChildren(FacesContext context) throws IOException {
-		ResponseWriter writer = context.getResponseWriter();
-		
-		writer.startElement("DIV", null);
-		writer.writeAttribute("id", "paletteBody", null);
-		
-		addTab("paletteBody_1", context, basic);
-		addTab("paletteBody_2", context, buttons);
-		addTab("paletteBody_3", context, plain);
-		addTab("paletteBody_4", context, autofilled);
-		
-		writer.endElement("DIV");
-		writer.endElement("DIV");
-		writer.write(getEmbededJavascript());
+		if (!isRendered()) {
+			return;
+		}
+		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
+			renderChild(context, (UIComponent) it.next());
+		}
 	}
 	
-	private void addTab(String tab_id, FacesContext context, List<FBPaletteComponent> components) throws IOException {
-		
-		ResponseWriter writer = context.getResponseWriter();
-		
-		writer.startElement("DIV", null);
-		writer.writeAttribute("id", tab_id, null);
-		
-		writer.startElement("TABLE", null);
-		
-		int count = 1;
-		boolean inRow = false;
-		
+	private Layer addProcessVariablesTab(String tab_id, FacesContext context) {
+		Layer tab = new Layer(Layer.DIV);
+		tab.setId(tab_id);
+		return tab;
+	}
+	
+	private Layer getTab(String tab_id, FacesContext context, List<FBPaletteComponent> components) {
+		Layer tab = new Layer(Layer.DIV);
+		tab.setId(tab_id);
 		for(Iterator<FBPaletteComponent> it = components.iterator(); it.hasNext(); ) {
-			if((count % columns) == 1 || columns == 1) {
-				writer.startElement("TR", null);
-				inRow = true;
+			Layer row = new Layer(Layer.DIV);
+			row.setStyleClass("paletteRow");
+			if(it.hasNext()) {
+				FBPaletteComponent left = it.next();
+				left.setStyleClass(left.getStyleClass() + " left");
+				row.add(left);
 			}
-			FBPaletteComponent current = it.next();
-			if(current != null) {
-				writer.startElement("TD", null);
-				current.encodeEnd(context);
-				writer.endElement("TD");
+			if(it.hasNext()) {
+				FBPaletteComponent right = it.next();
+				right.setStyleClass(right.getStyleClass() + " right");
+				row.add(right);
 			}
-			if((count % columns) == 0 || columns == 1) {
-				writer.endElement("TR");
-				inRow = false;
-			}
-			count++;
+			tab.add(row);
 		}
-		if(inRow) {
-			writer.endElement("TR");
-		}
-		writer.endElement("TABLE");
-		writer.endElement("DIV");
+		return tab;
 	}
 	
-	private String getEmbededJavascript() {
-		StringBuilder result = new StringBuilder();
-		result.append("<script language=\"JavaScript\">\n");
-		result.append("initMenu();\n");
-		result.append("</script>\n");
-		return result.toString();
-		
-	}
-
-	public int getColumns() {
-		return columns;
-	}
-
-	public void setColumns(int columns) {
-		this.columns = columns;
-	}
-
 	public String getItemStyleClass() {
 		return itemStyleClass;
 	}
@@ -190,11 +185,9 @@ public class FBPalette extends FBComponentBase {
 	}
 	
 	public Object saveState(FacesContext context) {
-		Object values[] = new Object[4];
+		Object values[] = new Object[2];
 		values[0] = super.saveState(context);
 		values[1] = itemStyleClass;
-		values[2] = columns;
-		values[3] = palette;
 		return values;
 	}
 	
@@ -202,16 +195,6 @@ public class FBPalette extends FBComponentBase {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);
 		itemStyleClass = (String) values[1];
-		columns = (Integer) values[2];
-		palette = (Palette) values[3];
-	}
-
-	public Palette getPalette() {
-		return palette;
-	}
-
-	public void setPalette(Palette palette) {
-		this.palette = palette;
 	}
 
 }

@@ -27,8 +27,6 @@ public class Palette implements Serializable {
 		DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
 		if(formManagerInstance != null) {
 			List<String> temp = formManagerInstance.getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.BASIC));
-			
-			System.out.println("x: "+temp);
 			Iterator<String> it = temp.iterator();
 			while(it.hasNext()) {
 				basic.add(new PaletteComponent(it.next()));

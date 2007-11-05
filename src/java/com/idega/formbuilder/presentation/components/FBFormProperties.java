@@ -15,8 +15,8 @@ import com.idega.documentmanager.manager.impl.FormManager;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.util.FBConstants;
+import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
-import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.CheckBox;
 import com.idega.presentation.ui.Label;
 import com.idega.presentation.ui.TextArea;
@@ -32,6 +32,8 @@ public class FBFormProperties extends FBComponentBase {
 	public static final String COMPONENT_TYPE = "FormProperties";
 	
 	private static final String PROPERTIES_PANEL_SECTION_STYLE = "fbPropertiesPanelSection";
+	private static final String PROPERTY_CLASS = "fbProperty";
+	private static final String PANEL_ID = "formPropertiesPanel";
 	
 	public FBFormProperties() {
 		super();
@@ -41,7 +43,7 @@ public class FBFormProperties extends FBComponentBase {
 	private Layer createPropertyContainer(String styleClass) {
 		Layer body = new Layer(Layer.DIV);
 		body.setStyleClass(styleClass);
-		body.setStyleClass("fbProperty");
+		body.setStyleClass(PROPERTY_CLASS);
 		return body;
 	}
 	
@@ -54,8 +56,9 @@ public class FBFormProperties extends FBComponentBase {
 	
 	protected void initializeComponent(FacesContext context) {
 		getChildren().clear();
+		IWContext iwc = CoreUtil.getIWContext();
 		
-		Layer body = createPanelSection("formPropertiesPanel");
+		Layer body = createPanelSection(PANEL_ID);
 		Layer line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
 		
 		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
@@ -76,7 +79,7 @@ public class FBFormProperties extends FBComponentBase {
 		title.setOnBlur("saveFormTitle(this.value)");
 		title.setOnKeyDown("savePropertyOnEnter(this.value,'formTitle',event);");
 		
-		line.add(new Label("Form title", title));
+		line.add(new Label(getLocalizedString(iwc, "fb_form_property_title", "Form title"), title));
 		line.add(title);
 		body.add(line);
 		
@@ -88,7 +91,7 @@ public class FBFormProperties extends FBComponentBase {
 		preview.setOnChange("saveHasPreview(this);");
 		
 		line.add(preview);
-		line.add(new Label("Form contains preview", preview));
+		line.add(new Label(getLocalizedString(iwc, "fb_form_property_has_preview", "Form contains preview"), preview));
 		body.add(line);
 		
 //		CheckBox processForm = new CheckBox();
@@ -116,7 +119,7 @@ public class FBFormProperties extends FBComponentBase {
 		thankYouTitle.setOnBlur("saveThankYouTitle(this.value)");
 		thankYouTitle.setOnKeyDown("savePropertyOnEnter(this.value,'formThxTitle',event);");
 		
-		line.add(new Label("Thank you title", thankYouTitle));
+		line.add(new Label(getLocalizedString(iwc, "fb_form_property_thx_title", "Thank you title"), thankYouTitle));
 		line.add(thankYouTitle);
 		body.add(line);
 		
@@ -127,23 +130,9 @@ public class FBFormProperties extends FBComponentBase {
 		thankYouText.setOnBlur("saveThankYouText(this.value)");
 		thankYouText.setOnKeyDown("savePropertyOnEnter(this.value,'formThxText',event);");
 		
-		line.add(new Label("Thank You Text", thankYouText));
+		line.add(new Label(getLocalizedString(iwc, "fb_form_property_thx_text", "Thank You Text"), thankYouText));
 		line.add(thankYouText);
 		body.add(line);
-		
-//		line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
-//		
-//		HtmlOutputLabel showFormStepsLabel = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-//		showFormStepsLabel.setValue("Enable section visualization");
-//		
-//		HtmlSelectBooleanCheckbox showFormStepsChbx = (HtmlSelectBooleanCheckbox) application.createComponent(HtmlSelectBooleanCheckbox.COMPONENT_TYPE);
-//		showFormStepsChbx.setId("visualization");
-//		showFormStepsChbx.setValueBinding("value", application.createValueBinding("#{formDocument.enableBubbles}"));
-//		showFormStepsChbx.setOnchange("saveEnableBubbles(this);");
-//		
-//		line.add(showFormStepsLabel);
-//		line.add(showFormStepsChbx);
-//		body.add(line);
 		
 		add(body);
 	}

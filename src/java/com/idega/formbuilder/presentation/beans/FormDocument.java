@@ -141,18 +141,12 @@ public class FormDocument implements Serializable {
 //			getFormsService().unlockForm(getFormId());
 			
 		workspace.setView("design");
-		workspace.setDesignViewStatus("empty");
-		workspace.setSelectedMenu("0");
-		workspace.setRenderedMenu(true);
 		
 		initializeBeanInstance(document);
 			
 		Page page = document.getPage(document.getContainedPagesIdList().get(0));
 		FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
 		formPage.loadPageInfo(page);
-		
-//		FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
-//		formComponent.clearFormComponentInfo();
 		
 		return true;
 	}
@@ -317,6 +311,7 @@ public class FormDocument implements Serializable {
 		try {
 			if(isProcessForm(formId)) {
 				formId = retrieveFormIdFormButtonId(formId, "_process");
+				workspace.setProcessMode(true);
 			} else {
 				formId = retrieveFormIdFormButtonId(formId, "_edit");
 			}
@@ -329,21 +324,11 @@ public class FormDocument implements Serializable {
 				
 				String firstPage = getCommonPagesIdList().get(0);
 				Page firstP = document.getPage(firstPage);
-				if(firstP.getContainedComponentsIdList().size() > 0) {
-					workspace.setDesignViewStatus("active");
-				} else {
-					workspace.setDesignViewStatus("empty");
-				}
 				FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
 				formPage.initializeBeanInstance(firstP);
 				
 				workspace.setView("design");
-				workspace.setRenderedMenu(true);
-				workspace.setSelectedMenu("0");
 				initializeBeanInstance(document);
-				
-//				FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
-//				formComponent.clearFormComponentInfo();
 			}
 		} catch (FormLockException e) {
 			// TODO: inform about lock
@@ -370,7 +355,6 @@ public class FormDocument implements Serializable {
 //					getFormsService().unlockForm(getFormId());
 				
 				workspace.setView(FBViewPanel.SOURCE_VIEW);
-				workspace.setRenderedMenu(false);
 				
 				String firstPage = getCommonPagesIdList().get(0);
 				Page firstP = document.getPage(firstPage);
@@ -378,8 +362,6 @@ public class FormDocument implements Serializable {
 				formPage.initializeBeanInstance(firstP);
 				
 				initializeBeanInstance(document);
-//				FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
-//				formComponent.clearFormComponentInfo();
 			}
 		} catch (FormLockException e) {
 			// TODO: inform about lock
@@ -704,13 +686,6 @@ public class FormDocument implements Serializable {
 		return enableBubbles;
 	}
 
-//	public void setEnableBubbles(boolean enableBubbles) {
-//		if(documentProperties != null) {
-//			this.enableBubbles = enableBubbles;
-//			documentProperties.setStepsVisualizationUsed(enableBubbles);
-//		}
-//	}
-	
 	public void setPrimaryFormName(String primary_form_name) {
 		this.primary_form_name = primary_form_name;
 	}

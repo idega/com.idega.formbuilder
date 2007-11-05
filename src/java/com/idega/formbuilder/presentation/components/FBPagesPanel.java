@@ -33,6 +33,14 @@ public class FBPagesPanel extends FBComponentBase {
 	private static final String GENERAL_PAGES_HEADER = "GENERAL_PAGES_HEADER";
 	private static final String SPECIAL_PAGES_HEADER = "SPECIAL_PAGES_HEADER";
 	private static final String TOOLBAR_FACET = "TOOLBAR_FACET";
+	private static final String DEFAULT_PAGE_LOAD_ACTION = "loadPageInfo(this.id);";
+	private static final String DEFAULT_PAGE_REMOVE_ACTION = "deletePage(this.id);";
+	private static final String DEFAULT_CONFIRM_LOAD_ACTION = "loadConfirmationPage(this.id);";
+	private static final String DEFAULT_THX_LOAD_ACTION = "loadThxPage(this.id);";
+	private static final String SPECIAL = "Special";
+	private static final String P = "_P";
+	private static final String PAGES_PANEL_TOOLBAR_CLASS = "pagesPanelToolbar";
+	private static final String PAGES_PANEL_HEADER_CLASS = "pagesPanelHeaderText";
 	
 	private String componentStyleClass;
 	private String generalPartStyleClass;
@@ -72,7 +80,7 @@ public class FBPagesPanel extends FBComponentBase {
 		IWContext iwc = CoreUtil.getIWContext();
 		
 		Layer topToolbar = new Layer(Layer.DIV);
-		topToolbar.setStyleClass("pagesPanelToolbar");
+		topToolbar.setStyleClass(PAGES_PANEL_TOOLBAR_CLASS);
 		
 		Link newSectionBtn = new Link(getLocalizedString(iwc, "fb_add_page_link", "New section"));
 		newSectionBtn.setId("newPageButton");
@@ -81,16 +89,16 @@ public class FBPagesPanel extends FBComponentBase {
 		addFacet(TOOLBAR_FACET, topToolbar);
 		
 		Layer generalPagesHeader = new Layer(Layer.DIV);
-		generalPagesHeader.setStyleClass("pagesPanelToolbar");
-		Text generalPagesHeaderText = new Text("General sections");
-		generalPagesHeaderText.setStyleClass("pagesPanelHeaderText");
+		generalPagesHeader.setStyleClass(PAGES_PANEL_TOOLBAR_CLASS);
+		Text generalPagesHeaderText = new Text(getLocalizedString(iwc, "fb_pages_general_section", "General sections"));
+		generalPagesHeaderText.setStyleClass(PAGES_PANEL_HEADER_CLASS);
 		generalPagesHeader.add(generalPagesHeaderText);
 		addFacet(GENERAL_PAGES_HEADER, generalPagesHeader);
 		
 		Layer specialPagesHeader = new Layer(Layer.DIV);
-		specialPagesHeader.setStyleClass("pagesPanelToolbar");
-		Text specialPagesHeaderText = new Text("Special sections");
-		specialPagesHeaderText.setStyleClass("pagesPanelHeaderText");
+		specialPagesHeader.setStyleClass(PAGES_PANEL_TOOLBAR_CLASS);
+		Text specialPagesHeaderText = new Text(getLocalizedString(iwc, "fb_pages_special_section", "Special sections"));
+		specialPagesHeaderText.setStyleClass(PAGES_PANEL_HEADER_CLASS);
 		specialPagesHeader.add(specialPagesHeaderText);
 		addFacet(SPECIAL_PAGES_HEADER, specialPagesHeader);
 	}
@@ -102,7 +110,7 @@ public class FBPagesPanel extends FBComponentBase {
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeBegin(context);
 		
-		writer.startElement("DIV", this);
+		writer.startElement(Layer.DIV, this);
 		writer.writeAttribute("id", getId() + "Main", "id");
 		writer.writeAttribute("class", getStyleClass(), "styleClass");
 		
@@ -116,7 +124,7 @@ public class FBPagesPanel extends FBComponentBase {
 			renderChild(context, component);
 		}
 		
-		writer.startElement("DIV", null);
+		writer.startElement(Layer.DIV, null);
 		writer.writeAttribute("id", getId(), "id");
 		writer.writeAttribute("class", generalPartStyleClass, null);
 		
@@ -134,32 +142,32 @@ public class FBPagesPanel extends FBComponentBase {
 				Page confirmation = document.getConfirmationPage();
 				if(confirmation != null) {
 					FBFormPage formPage = (FBFormPage) application.createComponent(FBFormPage.COMPONENT_TYPE);
-					formPage.setId(confirmation.getId() + "_P");
+					formPage.setId(confirmation.getId() + P);
 					if(confirmation.getId().equals(selectedPageId)) {
-						formPage.setStyleClass(componentStyleClass + "Special " + selectedStyleClass);
+						formPage.setStyleClass(componentStyleClass + SPECIAL + " " + selectedStyleClass);
 					} else {
-						formPage.setStyleClass(componentStyleClass + "Special");
+						formPage.setStyleClass(componentStyleClass + SPECIAL);
 					}
 					String label = ((PropertiesPage)confirmation.getProperties()).getLabel().getString(locale);
 					formPage.setLabel(label);
 					formPage.setActive(false);
-					formPage.setOnLoad("loadConfirmationPage(this.id);");
+					formPage.setOnLoad(DEFAULT_CONFIRM_LOAD_ACTION);
 					addFacet(CONFIRMATION_PAGE, formPage);
 				}
 			}
 			Page thanks = document.getThxPage();
 			if(thanks != null) {
 				FBFormPage formPage = (FBFormPage) application.createComponent(FBFormPage.COMPONENT_TYPE);
-				formPage.setId(thanks.getId() + "_P");
+				formPage.setId(thanks.getId() + P);
 				if(thanks.getId().equals(selectedPageId)) {
-					formPage.setStyleClass(componentStyleClass + "Special " + selectedStyleClass);
+					formPage.setStyleClass(componentStyleClass + SPECIAL + " " + selectedStyleClass);
 				} else {
-					formPage.setStyleClass(componentStyleClass + "Special");
+					formPage.setStyleClass(componentStyleClass + SPECIAL);
 				}
 				String label = ((PropertiesPage)thanks.getProperties()).getLabel().getString(locale);
 				formPage.setLabel(label);
 				formPage.setActive(false);
-				formPage.setOnLoad("loadThxPage(this.id);");
+				formPage.setOnLoad(DEFAULT_THX_LOAD_ACTION);
 				addFacet(THANKYOU_PAGE, formPage);
 			}
 			List<String> ids = formDocument.getCommonPagesIdList();
@@ -169,14 +177,14 @@ public class FBPagesPanel extends FBComponentBase {
 					Page currentPage = document.getPage(nextId);
 					if(currentPage != null) {
 						FBFormPage formPage = (FBFormPage) application.createComponent(FBFormPage.COMPONENT_TYPE);
-						formPage.setId(nextId + "_P");
+						formPage.setId(nextId + P);
 						if(nextId.equals(selectedPageId)) {
 							formPage.setStyleClass(componentStyleClass + " " + selectedStyleClass);
 						} else {
 							formPage.setStyleClass(componentStyleClass);
 						}
-						formPage.setOnDelete("deletePage(this.id);");
-						formPage.setOnLoad("loadPageInfo(this.id);");
+						formPage.setOnDelete(DEFAULT_PAGE_REMOVE_ACTION);
+						formPage.setOnLoad(DEFAULT_PAGE_LOAD_ACTION);
 						String label = ((PropertiesPage)currentPage.getProperties()).getLabel().getString(locale);
 						formPage.setLabel(label);
 						formPage.setActive(false);
@@ -190,15 +198,15 @@ public class FBPagesPanel extends FBComponentBase {
 	public void encodeEnd(FacesContext context) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		
-		writer.endElement("DIV");
+		writer.endElement(Layer.DIV);
 		
 		UIComponent component = getFacet(SPECIAL_PAGES_HEADER);
 		if(component != null) {
 			renderChild(context, component);
 		}
 		
-		writer.startElement("DIV", null);
-		writer.writeAttribute("id", getId() + "Special", null);
+		writer.startElement(Layer.DIV, null);
+		writer.writeAttribute("id", getId() + SPECIAL, null);
 		writer.writeAttribute("class", specialPartStyleClass, null);
 		
 		component = getFacet(CONFIRMATION_PAGE);
@@ -209,8 +217,8 @@ public class FBPagesPanel extends FBComponentBase {
 		if(component != null) {
 			renderChild(context, component);
 		}
-		writer.endElement("DIV");
-		writer.endElement("DIV");
+		writer.endElement(Layer.DIV);
+		writer.endElement(Layer.DIV);
 		super.encodeEnd(context);
 	}
 	

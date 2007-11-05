@@ -144,7 +144,6 @@ public class FormPage implements Serializable {
 					loadPageInfo(page);
 				}
 				workspace.setView("design");
-				workspace.setRenderedMenu(true);
 				return id;
 			}
 		}
@@ -236,7 +235,6 @@ public class FormPage implements Serializable {
 				special = false;
 				loadPageInfo(page);
 				workspace.setView("design");
-				workspace.setRenderedMenu(true);
 				doms.add(BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView("formElement"), false));
 				doms.add(BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormPage(id, page.getProperties().getLabel().getString(FBUtil.getUILocale())), true));
 			}

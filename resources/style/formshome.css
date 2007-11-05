@@ -143,6 +143,39 @@
 	width: 140px;
 }
 
+.fbTwoLineProperty label {
+	display: block;
+}
+
+.fbTwoLineProperty textarea {
+	width: 268px;
+	height: 80px;
+}
+
+.fbProperty {
+	display: block;
+	overflow: hidden;
+	margin-bottom: 12px;	
+}
+
+.fbSingleLineProperty label {
+	margin-left: 4px;	
+}
+
+.fbProperty input, .fbProperty textarea {
+	margin: 0;	
+}
+
+.fbProperty label {
+	font-weight: bold;
+	margin-bottom: 3px;
+}
+
+.fbFullPanel {
+	height: 300px;
+	position: relative;
+	padding: 15px;
+}
 
 #fbHomePageWelcomeBlock {
 	padding-top: 15px;
@@ -171,9 +204,10 @@
 	background-color:#DDEDD3;
 	border:1px groove #BDBDBD;
 	cursor:pointer;
-	height:50px;
+	height:auto;
 	margin-bottom:8px;
 	position:relative;
+	padding: 5px;
 }
 
 .formListItem > div {
@@ -186,6 +220,29 @@
 	list-style: none;
 	margin: 0;
 	padding: 0;
+}
+.taskFormList {
+	position: absolute;
+	right: 0px;
+	top: 30px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: block;
+}
+
+.taskFormList > li {
+	float: right;
+	padding-left: 20px;
+	height: 50px;
+	margin-right: 16px;
+}
+
+.taskFormList > li > div {
+	display: block;
+	line-height: 20px;
+	font-weight: bold;
+	font-size: 12px;
 }
 
 .buttonList li {
@@ -384,13 +441,11 @@
 	overflow: hidden;
 	height: 320px;
 }
-.processItem {
-	
-}
 .formListItemSub {
 	margin-right: 15px;
 	margin-left: 15px;
-	margin-bottom: 15px;
+	margin-bottom: 5px;
+	margin-top: 15px;
 	padding-left: 20px;
 	padding-top: 10px;
 	background: #e5f1ee;

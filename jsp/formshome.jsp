@@ -10,12 +10,14 @@
 		<ws:page id="formbuilder" showFunctionMenu="false"
 					javascripturls="/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/mootools/1.11/mootools-all.js,
 									/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/transcorners/Transcorners.js,
+									/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/moodalbox/1.2.1/js/moodalbox.js,
 												
 									/dwr/interface/FormDocument.js,
 									/dwr/engine.js,
 												
 									/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formshome.js"
-					stylesheeturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formshome.css">
+					stylesheeturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formshome.css,
+									/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/moodalbox/1.2.1/css/moodalbox.css">
 			<h:form id="workspaceform1">
 				<fb:homePage />
 				<t:commandButton style="display: none" id="newFormButton" onclick="alert('done');" forceId="true" type="button" action="#{formDocument.createNewForm}" value="#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"></t:commandButton>

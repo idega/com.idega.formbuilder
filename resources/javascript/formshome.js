@@ -9,23 +9,19 @@ var galleryContainer = false;
 var imageGalleryCaptions = new Array();
 var myMorph = null;
 
+var NEW_FORM_COMPACT = 'newFormCompBox';
 var FORMBUILDER_PATH = "/workspace/forms/formbuilder/";
 var FORMADMIN_PATH = "/workspace/forms/formadmin/";
 var FORMSHOME_PATH = "/workspace/forms/";
 
 Window.onDomReady(function() {
-	//$('fbHomePageWelcomeBlock').makeRounded(false, {radius: 10});
-	$('newFormComp').makeRounded(false, {radius: 6});
+	$(NEW_FORM_COMPACT).makeRounded(false, {radius: 6});
 	
-	myMorph = new Fx.Morph('newFormComp', {wait: false});
+	myMorph = new Fx.Morph(NEW_FORM_COMPACT, {wait: false});
 	$('newBt').addEvent('click', function(e){
 		new Event(e).stop();
 		myMorph.start('newFormComponentExpand');
 	});
-	/*$('greetingTextL').addEvent('click', function(e){
-		new Event(e).stop();
-		myMorph.start('newFormComponentExpand');
-	});*/
 	$('newIcon').addEvent('click', function(e){
 		new Event(e).stop();
 		myMorph.start('newFormComponentExpand');
@@ -46,9 +42,6 @@ Window.onDomReady(function() {
 		var formName = $('newTxt').value;
 		createNewForm(formName);
 	});
-	/*$ES("div.formListItem").each(function(item) {
-		item.makeRounded(false, {radius: 10});
-	});*/
 	$ES("a.entriesButton").each(function(item) {
 		item.addEvent('click', function(e){
 			new Event(e).stop();
@@ -123,7 +116,6 @@ Window.onDomReady(function() {
 			}
 		});
 	});
-	//$("formListContainer").makeRounded(false, {radius: 10});
 });
 function createNewForm(formName) {
 	if(formName.length < 1) {
@@ -138,46 +130,6 @@ function createdNewForm(result) {
 		window.location=FORMBUILDER_PATH;
 	}
 }
-/*function getTopPos(inputObj) {
-	var returnValue = inputObj.offsetTop;
-	while((inputObj = inputObj.offsetParent) != null)
-		returnValue += inputObj.offsetTop;
-	return returnValue;
-}
-function initSlide(e) {
-	if(document.all) {
-		e = event;
-	}
-	if(this.src.indexOf('over')<0) {
-		this.src = this.src.replace('.gif','-over.gif');
-	}
-	slideSpeed = e.clientY + Math.max(document.body.scrollTop,document.documentElement.scrollTop) - getTopPos(this);
-	if(this.src.indexOf('down')>=0) {
-		slideSpeed = (slideSpeed)*-1;	
-	} else {
-		slideSpeed = arrowImageHeight - slideSpeed;
-	}
-	slideSpeed = Math.round(slideSpeed * 10 / arrowImageHeight);
-	slideSpeed = slideSpeed * 2;
-}
-function stopSlide() {
-	slideSpeed = 0;
-	this.src = this.src.replace('-over','');
-}
-function slidePreviewPane() {
-	if(slideSpeed!=0) {
-		var topPos = previewImagePane.style.top.replace(/[^\-0-9]/g,'')/1;	
-		if(slideSpeed<0 && slideEndMarker.offsetTop<(previewImageParent.offsetHeight - topPos)) {
-			slideSpeed=0;
-		}
-		topPos = topPos + slideSpeed;
-		if(topPos>0) {
-			topPos=0;
-		}
-		previewImagePane.style.top = topPos + 'px';
-	}
-	setTimeout('slidePreviewPane()',30);
-}*/
 /*function duplicateForm(parameter) {
 	var container = $(parameter);
 	hideDialog(parameter);
@@ -297,13 +249,13 @@ Fx.Morph = Fx.Styles.extend({
 	start: function(className){
 		var to = {};
 		if(className == 'newFormComponentExpand') {
-			$('newFormComp').removeClass('newFormComponentIdle');
-			$('newFormComp').addClass('newFormComponentExpand');
+			$(NEW_FORM_COMPACT).removeClass('newFormComponentIdle');
+			$(NEW_FORM_COMPACT).addClass('newFormComponentExpand');
 			$('newTxt').value = '';
 			$('newTxt').focus();
 		} else {
-			$('newFormComp').removeClass('newFormComponentExpand');
-			$('newFormComp').addClass('newFormComponentIdle');
+			$(NEW_FORM_COMPACT).removeClass('newFormComponentExpand');
+			$(NEW_FORM_COMPACT).addClass('newFormComponentIdle');
 		}
 		return this.parent(to);
 	}

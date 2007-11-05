@@ -40,27 +40,6 @@ public class FBFormPreview extends FBComponentBase {
 	
 	public void encodeEnd(FacesContext ctx) throws IOException {
 		ResponseWriter writer = ctx.getResponseWriter();
-//		
-//		try {
-//			
-//			Document document = ActionManager.getDocumentManagerInstance().getCurrentDocument();
-//			
-//			if(document != null) {
-//				
-//				org.w3c.dom.Document x = document.getXformsDocument();
-//				
-//				FormReader form_reader = new FormReader();
-//				
-//				form_reader.setBaseFormURI(FBUtil.getWebdavServerUrl(ctx)+"/files/public/");
-//				form_reader.setFormDocument(x);
-//				
-//				form_reader.setOutput(writer);
-//				form_reader.generate();
-//			}
-//			
-//		} catch (Exception e) {
-//			logger.error("Error when parsing form to response writer", e);
-//		}
 		writer.endElement(container_tag);
 		super.encodeEnd(ctx);
 	}
@@ -76,7 +55,7 @@ public class FBFormPreview extends FBComponentBase {
 		}
 			
 		FormViewer formViewer = new FormViewer();
-		formViewer.setFormId(((FormDocument) WFUtil.getBeanInstance("formDocument")).getFormId());
+		formViewer.setFormId(formDocument.getFormId());
 		formViewer.setXFormsDocument((org.w3c.dom.Document)xformsDocument.getXformsDocument().cloneNode(true));
 		
 		add(formViewer);

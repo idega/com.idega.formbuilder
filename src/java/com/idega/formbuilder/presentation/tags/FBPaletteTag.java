@@ -11,14 +11,12 @@ public class FBPaletteTag extends UIComponentTagBase {
 	
 	private String styleClass;
 	private String itemStyleClass;
-	private String columns;
 	private String items;
 	
 	public FBPaletteTag() {
 		super();
 		this.styleClass = "";
 		this.itemStyleClass = "";
-		this.columns = "";
 		this.items = "";
 	}
 
@@ -40,9 +38,6 @@ public class FBPaletteTag extends UIComponentTagBase {
 			if(this.itemStyleClass != null) {
 				palette.setItemStyleClass(this.itemStyleClass);
 			}
-			if(this.columns != null) {
-				palette.setColumns(Integer.parseInt(this.columns));
-			}
 			if(this.items != null) {
 				if (isValueReference(this.items)) {
 	                ValueBinding vb = getFacesContext().getApplication().createValueBinding(this.items);
@@ -52,14 +47,6 @@ public class FBPaletteTag extends UIComponentTagBase {
 	            }
 			}
 		}
-	}
-
-	public String getColumns() {
-		return columns;
-	}
-
-	public void setColumns(String columns) {
-		this.columns = columns;
 	}
 
 	public String getItems() {
