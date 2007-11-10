@@ -28,6 +28,8 @@ public class FormComponent implements Serializable {
 	
 	private static final long serialVersionUID = -1462694198346788168L;
 	
+	public static final String BEAN_ID = "formComponent";
+	
 	public static final String BUTTON_TYPE = "button";
 	public static final String COMPONENT_TYPE = "component";
 	

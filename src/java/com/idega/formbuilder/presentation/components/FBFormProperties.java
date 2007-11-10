@@ -20,7 +20,6 @@ import com.idega.presentation.Layer;
 import com.idega.presentation.ui.CheckBox;
 import com.idega.presentation.ui.Label;
 import com.idega.presentation.ui.TextArea;
-import com.idega.presentation.ui.TextInput;
 import com.idega.util.CoreUtil;
 import com.idega.util.RenderUtils;
 import com.idega.webface.WFUtil;
@@ -59,7 +58,7 @@ public class FBFormProperties extends FBComponentBase {
 		IWContext iwc = CoreUtil.getIWContext();
 		
 		Layer body = createPanelSection(PANEL_ID);
-		Layer line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
+//		Layer line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
 		
 		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
 		Document document = formDocument.getDocument();
@@ -74,16 +73,16 @@ public class FBFormProperties extends FBComponentBase {
 			throw new IllegalStateException();
 		}
 		
-		TextInput title = new TextInput("formTitle", formDocument.getFormTitle());
-		title.setId("formTitle");
-		title.setOnBlur("saveFormTitle(this.value)");
-		title.setOnKeyDown("savePropertyOnEnter(this.value,'formTitle',event);");
+//		TextInput title = new TextInput("formTitle", formDocument.getFormTitle());
+//		title.setId("formTitle");
+//		title.setOnBlur("saveFormTitle(this.value)");
+//		title.setOnKeyDown("savePropertyOnEnter(this.value,'formTitle',event);");
+//		
+//		line.add(new Label(getLocalizedString(iwc, "fb_form_property_title", "Form title"), title));
+//		line.add(title);
+//		body.add(line);
 		
-		line.add(new Label(getLocalizedString(iwc, "fb_form_property_title", "Form title"), title));
-		line.add(title);
-		body.add(line);
-		
-		line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
+		Layer line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
 		
 		CheckBox preview = new CheckBox();
 		preview.setId("previewScreen");
@@ -94,34 +93,24 @@ public class FBFormProperties extends FBComponentBase {
 		line.add(new Label(getLocalizedString(iwc, "fb_form_property_has_preview", "Form contains preview"), preview));
 		body.add(line);
 		
-//		CheckBox processForm = new CheckBox();
-//		processForm.setId("isProcessForm");
-//		processForm.setChecked(formDocument.isProcessForm());
-//		processForm.setOnChange("saveIsProcessForm(this);");
+//		line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
 //		
-//		line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
-//		line.add(new Text("(Temporary) Represents process task"));
-//		line.add(processForm);
-//		body.add(line);
-		
-		line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
-		
 		PageThankYou submitPage = formDocument.getSubmitPage();
-		String submitPageTitle = null;
+//		String submitPageTitle = null;
 		String submitPageText = null;
 		if(submitPage != null) {
-			submitPageTitle = formDocument.getThankYouTitle();
+//			submitPageTitle = formDocument.getThankYouTitle();
 			submitPageText = formDocument.getThankYouText();
 		}
-		
-		TextInput thankYouTitle = new TextInput("thankYouTitle", submitPageTitle);
-		thankYouTitle.setId("thankYouTitle");
-		thankYouTitle.setOnBlur("saveThankYouTitle(this.value)");
-		thankYouTitle.setOnKeyDown("savePropertyOnEnter(this.value,'formThxTitle',event);");
-		
-		line.add(new Label(getLocalizedString(iwc, "fb_form_property_thx_title", "Thank you title"), thankYouTitle));
-		line.add(thankYouTitle);
-		body.add(line);
+//		
+//		TextInput thankYouTitle = new TextInput("thankYouTitle", submitPageTitle);
+//		thankYouTitle.setId("thankYouTitle");
+//		thankYouTitle.setOnBlur("saveThankYouTitle(this.value)");
+//		thankYouTitle.setOnKeyDown("savePropertyOnEnter(this.value,'formThxTitle',event);");
+//		
+//		line.add(new Label(getLocalizedString(iwc, "fb_form_property_thx_title", "Thank you title"), thankYouTitle));
+//		line.add(thankYouTitle);
+//		body.add(line);
 		
 		line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
 		

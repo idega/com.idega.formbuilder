@@ -2,6 +2,10 @@
 
 <dwr>
   	<allow>
+  		<create creator="jsf" javascript="ProcessPalette" scope="session">
+	    	<param name="managedBeanName" value="processPalette"/>
+	    	<param name="class" value="com.idega.formbuilder.presentation.beans.ProcessPalette"/>
+    	</create>
   		<create creator="jsf" javascript="XFormsProcess" scope="application">
 	    	<param name="managedBeanName" value="xformsProcessManager"/>
 	    	<param name="class" value="com.idega.formbuilder.business.process.XFormsProcessManager"/>
@@ -9,6 +13,10 @@
     	<create creator="jsf" javascript="FormDocument" scope="session">
 	    	<param name="managedBeanName" value="formDocument"/>
 	    	<param name="class" value="com.idega.formbuilder.presentation.beans.FormDocument"/>
+    	</create>
+    	<create creator="jsf" javascript="TaskFormDocument" scope="session">
+	    	<param name="managedBeanName" value="taskFormDocument"/>
+	    	<param name="class" value="com.idega.formbuilder.presentation.beans.TaskFormDocument"/>
     	</create>
     	<create creator="jsf" javascript="Workspace" scope="session">
 	    	<param name="managedBeanName" value="workspace"/>
@@ -41,6 +49,7 @@
   			import com.idega.formbuilder.presentation.converters.FormButtonInfo;
   			import com.idega.formbuilder.presentation.converters.PaletteComponentInfo;
   			import com.idega.documentmanager.business.form.beans.ItemBean;
+  			import com.idega.formbuilder.presentation.beans.ProcessPalette;
 			
 			FormComponent.addComponent(PaletteComponentInfo);
 			FormComponent.getFormButtonInfo();
@@ -48,6 +57,7 @@
 			FormDocument.getFormDocumentInfo();
 			FormPage.getFormPageInfo();
 			FormComponent.getFormComponentInfo();
+			ProcessPalette.getAddVariableBox(boolean, String);
   		]]>
 	</signatures>
 </dwr>

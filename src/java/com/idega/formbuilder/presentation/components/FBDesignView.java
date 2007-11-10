@@ -44,7 +44,6 @@ public class FBDesignView extends FBComponentBase {
 	
 	private String componentStyleClass;
 	private String selectedStyleClass;
-	private String status;
 
 	public FBDesignView() {
 		super(DEFAULT_DESIGN_VIEW_CLASS, DEFAULT_DROPBOX_CLASS);
@@ -183,7 +182,6 @@ public class FBDesignView extends FBComponentBase {
 		Object values[] = new Object[3];
 		values[0] = super.saveState(context);
 		values[1] = componentStyleClass;
-		values[2] = status;
 		return values;
 	}
 	
@@ -191,17 +189,8 @@ public class FBDesignView extends FBComponentBase {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);
 		componentStyleClass = (String) values[1];
-		status = (String) values[2];
 	}
 	
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
 	public String getComponentStyleClass() {
 		return componentStyleClass;
 	}

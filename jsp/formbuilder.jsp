@@ -22,6 +22,8 @@
 								/dwr/interface/FormDocument.js,
 								/dwr/interface/FormPage.js,
 								/dwr/interface/JbpmBusiness.js,
+								/dwr/interface/ProcessPalette.js,
+								/dwr/interface/TaskFormDocument.js,
 								/dwr/interface/Workspace.js,
 								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js"
 				stylesheeturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formbuilder.css,

@@ -42,7 +42,7 @@ Window.onDomReady(function() {
 		var formName = $('newTxt').value;
 		createNewForm(formName);
 	});
-	$ES("a.entriesButton").each(function(item) {
+	/*$ES("a.entriesButton").each(function(item) {
 		item.addEvent('click', function(e){
 			new Event(e).stop();
 			showLoadingMessage('Loading');
@@ -57,23 +57,7 @@ Window.onDomReady(function() {
 				}
 			});
 		});
-	});
-	$ES("a.editButton").each(function(item) {
-		item.addEvent('click', function(e){
-			new Event(e).stop();
-			showLoadingMessage('Loading');
-			FormDocument.loadFormDocument(item.id, {
-				callback: function(result) {
-					if(result == true) {
-						window.location=FORMBUILDER_PATH;
-					} else {
-						alert('Error occured trying to load editing mode');
-						closeLoadingMessage();
-					}
-				}
-			});
-		});
-	});
+	});*/
 	$ES("a.codeButton").each(function(item) {
 		item.addEvent('click', function(e){
 			new Event(e).stop();
@@ -117,6 +101,20 @@ Window.onDomReady(function() {
 		});
 	});
 });
+function loadTaskFormDocument(processName, processId, taskName, formId) {
+	showLoadingMessage('Loading');
+	TaskFormDocument.loadTaskFormDocument(processName, processId, taskName, formId, {
+		callback: function(result) {
+			if(result == true) {
+				window.location=FORMBUILDER_PATH;
+			} else {
+				alert('Error occured trying to load editing mode');
+			}
+		}
+	});
+	closeLoadingMessage();
+	return false;
+}
 function createNewForm(formName) {
 	if(formName.length < 1) {
 		
@@ -128,6 +126,47 @@ function createNewForm(formName) {
 function createdNewForm(result) {
 	if(result != null) {
 		window.location=FORMBUILDER_PATH;
+	}
+}
+function addTaskForm(event) {
+	if((event.type == 'keypress' && (typeof event.keyCode != 'undefined' ? event.keyCode : event.charCode) == '13') || event.type == 'change' || event.type == 'click') {
+		var target = event.target;
+		var divBox = target.parentNode;
+		var targetId = divBox.id;
+		var parent = divBox.parentNode;
+		var tokens = targetId.split('_');
+		if(tokens[3] == '1') {
+			TaskFormDocument.getRenderedAddTaskFormComponent(tokens[1], null, null, false, {
+				callback: function(resultDOM) {
+					replaceNode(resultDOM, divBox, parent);
+					$('newTF_' + tokens[1] + '_chooser').focus();
+				}
+			});
+		} else if(tokens[3] == '2') {
+			TaskFormDocument.getRenderedAddTaskFormComponent(tokens[1], target.value, null, false, {
+				callback: function(resultDOM) {
+					replaceNode(resultDOM, divBox, parent);
+					$('newTF_' + tokens[1] + '_input').focus();
+				}
+			});
+		} else if(tokens[3] == '3') {
+			TaskFormDocument.getRenderedAddTaskFormComponent(tokens[1], null, null, true, {
+				callback: function(resultDOM) {
+					replaceNode(resultDOM, divBox, parent);
+				}
+			});
+		}
+	} else if(event.type == 'blur') {
+		var target = event.target;
+		var divBox = target.parentNode;
+		var targetId = divBox.id;
+		var parent = divBox.parentNode;
+		var tokens = targetId.split('_');
+		TaskFormDocument.getRenderedAddTaskFormComponent(tokens[1], null, null, true, {
+			callback: function(resultDOM) {
+				replaceNode(resultDOM, divBox, parent);
+			}
+		});
 	}
 }
 /*function duplicateForm(parameter) {

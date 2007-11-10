@@ -4,61 +4,39 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import com.idega.documentmanager.business.DocumentManager;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.idega.documentmanager.business.component.ConstComponentCategory;
-import com.idega.formbuilder.IWBundleStarter;
-import com.idega.formbuilder.view.ActionManager;
-import com.idega.util.config.Config;
-import com.idega.util.config.ConfigFactory;
 
 public class Palette implements Serializable {
 	
 	private static final long serialVersionUID = -753995857658793992L;
-	private static final String af_components = "autofill-components";
+	
+	private static Log logger = LogFactory.getLog(Palette.class);
+	
+	public static final String BEAN_ID = "palette";
 	
 	private List<PaletteComponent> basic = new ArrayList<PaletteComponent>();
 	private List<PaletteComponent> buttons = new ArrayList<PaletteComponent>();
 	private List<PaletteComponent> plain = new ArrayList<PaletteComponent>();
-	private List<PaletteComponent> autofilled = new ArrayList<PaletteComponent>();
 	
-	public Palette() throws Exception {
-		DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
-		if(formManagerInstance != null) {
-			List<String> temp = formManagerInstance.getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.BASIC));
-			Iterator<String> it = temp.iterator();
-			while(it.hasNext()) {
-				basic.add(new PaletteComponent(it.next()));
-			}
-			temp = formManagerInstance.getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.BUTTONS));
-			Iterator<String> it2 = temp.iterator();
-			while(it2.hasNext()) {
-				buttons.add(new PaletteComponent(it2.next()));
-			}
-			temp = formManagerInstance.getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.PLAIN));
-			Iterator<String> it3 = temp.iterator();
-			while(it3.hasNext()) {
-				plain.add(new PaletteComponent(it3.next()));
-			}
-			
-			Config cfg = ConfigFactory.getInstance().getConfig(IWBundleStarter.IW_BUNDLE_IDENTIFIER, IWBundleStarter.FB_CFG_FILE);
-			Map<String, String > props = cfg.getProperies(af_components);
-			
-			if(props != null) {
-				
-				for (Iterator<String> iter = props.keySet().iterator(); iter.hasNext();) {
-					String component_type = iter.next();
-					
-					PaletteComponent af_comp = new PaletteComponent(component_type);
-					af_comp.setAutofillKey(props.get(component_type));
-					autofilled.add(af_comp);
-				}
-			}
-		}
+	private InstanceManager instanceManager;
+	
+	public InstanceManager getInstanceManager() {
+		return instanceManager;
+	}
+
+	public void setInstanceManager(InstanceManager instanceManager) {
+		this.instanceManager = instanceManager;
 	}
 
 	public List<PaletteComponent> getBasic() {
+		if(basic == null || basic.isEmpty()) {
+			List<String> basics = instanceManager.getDocumentManagerInstance().getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.BASIC));
+			basic = populatePaletteComponentList(basics);
+		}
 		return basic;
 	}
 
@@ -66,16 +44,26 @@ public class Palette implements Serializable {
 		this.basic = basic;
 	}
 	
-	public List<PaletteComponent> getAutofilled() {
-		return autofilled;
-	}
-
-	public void setAutofilled(List<PaletteComponent> autofilled) {
-		this.autofilled = autofilled;
-	}
-
 	public List<PaletteComponent> getButtons() {
+		if(buttons == null || buttons.isEmpty()) {
+			List<String> btns = instanceManager.getDocumentManagerInstance().getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.BUTTONS));
+			buttons = populatePaletteComponentList(btns);
+		}
 		return buttons;
+	}
+	
+	private List<PaletteComponent> populatePaletteComponentList(List<String> components) {
+		List<PaletteComponent> list = new ArrayList<PaletteComponent>();
+		Iterator<String> it = components.iterator();
+		while(it.hasNext()) {
+			String nextComp = it.next();
+			try {
+				list.add(new PaletteComponent(nextComp));
+			} catch(Exception e) {
+				logger.error("Could not retrieve component: " + nextComp);
+			}
+		}
+		return list;
 	}
 
 	public void setButtons(List<PaletteComponent> buttons) {
@@ -83,6 +71,10 @@ public class Palette implements Serializable {
 	}
 
 	public List<PaletteComponent> getPlain() {
+		if(plain == null || plain.isEmpty()) {
+			List<String> plains = instanceManager.getDocumentManagerInstance().getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.PLAIN));
+			plain = populatePaletteComponentList(plains);
+		}
 		return plain;
 	}
 

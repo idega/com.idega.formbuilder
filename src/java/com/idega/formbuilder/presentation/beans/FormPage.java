@@ -29,6 +29,8 @@ public class FormPage implements Serializable {
 	
 	private static Log logger = LogFactory.getLog(FormDocument.class);
 	
+	public static final String BEAN_ID = "formPage";
+	
 	private Page page;
 	private String id;
 	private boolean special;
@@ -119,8 +121,8 @@ public class FormPage implements Serializable {
 		}
 	}
 	
-	public List removePage(String id) throws Exception {
-		List properties = new ArrayList();
+	public List<Object> removePage(String id) throws Exception {
+		List<Object> properties = new ArrayList<Object>();
 		Document document = formDocument.getDocument();
 		if(document != null) {
 			String temp = id.substring(id.indexOf(":") + 1);

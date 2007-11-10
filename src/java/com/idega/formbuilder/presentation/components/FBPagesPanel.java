@@ -32,7 +32,7 @@ public class FBPagesPanel extends FBComponentBase {
 	private static final String THANKYOU_PAGE = "THANKYOU_PAGE";
 	private static final String GENERAL_PAGES_HEADER = "GENERAL_PAGES_HEADER";
 	private static final String SPECIAL_PAGES_HEADER = "SPECIAL_PAGES_HEADER";
-	private static final String TOOLBAR_FACET = "TOOLBAR_FACET";
+//	private static final String TOOLBAR_FACET = "TOOLBAR_FACET";
 	private static final String DEFAULT_PAGE_LOAD_ACTION = "loadPageInfo(this.id);";
 	private static final String DEFAULT_PAGE_REMOVE_ACTION = "deletePage(this.id);";
 	private static final String DEFAULT_CONFIRM_LOAD_ACTION = "loadConfirmationPage(this.id);";
@@ -79,20 +79,22 @@ public class FBPagesPanel extends FBComponentBase {
 	protected void initializeComponent(FacesContext context) {
 		IWContext iwc = CoreUtil.getIWContext();
 		
-		Layer topToolbar = new Layer(Layer.DIV);
-		topToolbar.setStyleClass(PAGES_PANEL_TOOLBAR_CLASS);
-		
-		Link newSectionBtn = new Link(getLocalizedString(iwc, "fb_add_page_link", "New section"));
-		newSectionBtn.setId("newPageButton");
-		newSectionBtn.setOnClick("createNewPage();return false;");
-		topToolbar.add(newSectionBtn);
-		addFacet(TOOLBAR_FACET, topToolbar);
+//		Layer topToolbar = new Layer(Layer.DIV);
+//		topToolbar.setStyleClass(PAGES_PANEL_TOOLBAR_CLASS);
+//		
+//		
+//		topToolbar.add(newSectionBtn);
+//		addFacet(TOOLBAR_FACET, topToolbar);
 		
 		Layer generalPagesHeader = new Layer(Layer.DIV);
 		generalPagesHeader.setStyleClass(PAGES_PANEL_TOOLBAR_CLASS);
 		Text generalPagesHeaderText = new Text(getLocalizedString(iwc, "fb_pages_general_section", "General sections"));
 		generalPagesHeaderText.setStyleClass(PAGES_PANEL_HEADER_CLASS);
+		Link newSectionBtn = new Link(getLocalizedString(iwc, "fb_add_page_link", "New section"));
+		newSectionBtn.setId("newPageButton");
+		newSectionBtn.setOnClick("createNewPage();return false;");
 		generalPagesHeader.add(generalPagesHeaderText);
+		generalPagesHeader.add(newSectionBtn);
 		addFacet(GENERAL_PAGES_HEADER, generalPagesHeader);
 		
 		Layer specialPagesHeader = new Layer(Layer.DIV);
@@ -114,12 +116,12 @@ public class FBPagesPanel extends FBComponentBase {
 		writer.writeAttribute("id", getId() + "Main", "id");
 		writer.writeAttribute("class", getStyleClass(), "styleClass");
 		
-		UIComponent component = getFacet(TOOLBAR_FACET);
-		if(component != null) {
-			renderChild(context, component);
-		}
+//		UIComponent component = getFacet(TOOLBAR_FACET);
+//		if(component != null) {
+//			renderChild(context, component);
+//		}
 		
-		component = getFacet(GENERAL_PAGES_HEADER);
+		UIComponent component = getFacet(GENERAL_PAGES_HEADER);
 		if(component != null) {
 			renderChild(context, component);
 		}

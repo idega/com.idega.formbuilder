@@ -14,6 +14,8 @@ public class Workspace implements Serializable {
 	
 	private static final long serialVersionUID = -7539955904708793992L;
 	
+	public static final String BEAN_ID = "workspace";
+	
 	private String view;
 	private Locale locale;
 	private boolean processMode;

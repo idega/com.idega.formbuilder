@@ -1,22 +1,21 @@
-package com.idega.formbuilder.view;
+package com.idega.formbuilder.presentation.beans;
 
 import java.io.Serializable;
 
 import javax.faces.context.FacesContext;
 
-import com.idega.webface.WFUtil;
 import com.idega.documentmanager.business.DocumentManager;
 import com.idega.documentmanager.business.DocumentManagerFactory;
+import com.idega.webface.WFUtil;
 
-public class ActionManager implements Serializable {
+public class InstanceManager implements Serializable {
 	
 	private static final long serialVersionUID = -753995343458793992L;
-	public static final String ACTION_MANAGER_MANAGED_BEAN = "actionManager";
+	
+	public static final String BEAN_ID = "actionManager";
 	
 	private DocumentManager documentManagerInstance;
 	private DocumentManagerFactory documentManagerFactory;
-	
-	public ActionManager() { }
 	
 	public DocumentManager getDocumentManagerInstance() {
 		
@@ -28,9 +27,9 @@ public class ActionManager implements Serializable {
 		return documentManagerInstance;
 	}
 	
-	public static ActionManager getCurrentInstance() {
+	public static InstanceManager getCurrentInstance() {
 		
-		return (ActionManager)WFUtil.getBeanInstance(ACTION_MANAGER_MANAGED_BEAN);
+		return (InstanceManager)WFUtil.getBeanInstance(BEAN_ID);
 	}
 	
 	public DocumentManagerFactory getDocumentManagerFactory() {

@@ -362,9 +362,6 @@ function savePageTitleAction(event) {
 			}
 			FormPage.setTitle(text, disableInlineEdit);
 			INLINE_VALUE = text;
-			if(isThxPage == true) {
-				$('thankYouTitle').value = text;
-			}
 		}
 	}
 }
@@ -372,7 +369,6 @@ function saveFormTitleAction(event) {
 	if(event.type == 'blur' || (event.type == 'keydown' && (typeof event.keyCode != 'undefined' ? event.keyCode : event.charCode) == '13')) {
 		var text = event.target.value;
 		if(text != '') {
-			$('formTitle').value = text;
 			FormDocument.setFormTitle(text, disableInlineEdit);
 			INLINE_VALUE = text;
 		}
@@ -878,6 +874,55 @@ function saveSourceCode(source_code) {
 	if(source_code != null) {
 		showLoadingMessage('Saving');
 		FormDocument.saveSrc(source_code, closeLoadingMessage);
+	}
+}
+function showNewVariableDialog(parameter) {
+	if(parameter != null) {
+		var index = parameter.indexOf('_');
+		if(index != -1) {
+			var datatype = parameter.substring(index + 1);
+			if(datatype != null) {
+				ProcessPalette.getAddVariableBox(false, datatype, {
+					callback: function(resultDOM) {
+						replaceNode(resultDOM, $(datatype + '_box'), $(datatype + '_vContainer'));
+						$(datatype + '_box').getFirst().focus();
+					}
+				});
+			}
+		}
+	}
+}
+function hideNewVariableDialog(parameter) {
+	if(parameter != null) {
+		var index = parameter.indexOf('_');
+		if(index != -1) {
+			var datatype = parameter.substring(index + 1);
+			if(datatype != null) {
+				ProcessPalette.getAddVariableBox(true, datatype, {
+					callback: function(resultDOM) {
+						replaceNode(resultDOM, $(datatype + '_box'), $(datatype + '_vContainer'));
+					}
+				});
+			}
+		}
+	}
+}
+function addNewVariable(event) {
+	if(event.type == 'keydown' && (typeof event.keyCode != 'undefined' ? event.keyCode : event.charCode) == '13') {
+		var target = event.target;
+		var value = target.value;
+		var id = target.id
+		var index = id.indexOf('_');
+		if(index != -1) {
+			var datatype = id.substring(index + 1);
+			if(datatype != null) {
+				TaskFormDocument.addNewVariable(value, datatype, {
+					callback: function(resultDOM) {
+						replaceNode(resultDOM, $(datatype + '_vContainer'), $(datatype + '_datatypeGroup'));
+					}
+				});
+			}
+		}
 	}
 }
 function nothing(parameter) {}

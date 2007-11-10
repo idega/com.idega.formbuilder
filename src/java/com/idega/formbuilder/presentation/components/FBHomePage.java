@@ -122,11 +122,8 @@ public class FBHomePage extends FBComponentBase {
 		JbpmProcessBusinessBean jbpmProcessBusiness = (JbpmProcessBusinessBean) WFUtil.getBeanInstance("jbpmProcessBusiness");
 		List<ProcessDefinition> processList = jbpmProcessBusiness.getProcessList();
 		
-		System.out.println("Process list: " + processList.size());	
-		
 		for(Iterator<ProcessDefinition> processIterator = processList.iterator(); processIterator.hasNext(); ) {
 			ProcessDefinition definition = (ProcessDefinition) processIterator.next();
-			System.out.println("Process: " + definition.getName());	
 			Layer processItem = new Layer(Layer.DIV);
 			processItem.setStyleClass(PROCESS_ITEM_CLASS);
 			Lists topList = new Lists();
@@ -137,18 +134,15 @@ public class FBHomePage extends FBComponentBase {
 			item2.add(casesButton);
 			topList.add(item2);
 			item2 = new ListItem();
-			Link newTaskFormButton = new Link(getLocalizedString(iwc, "fb_home_new_task_form_link", "Add task form"));
+			FBAddTaskForm newTaskFormButton = new FBAddTaskForm();
 			
 			item2.add(newTaskFormButton);
 			topList.add(item2);
 //			casesButton.setStyleClass(PROCESS_BUTTON_CLASS + " " + CASES_BUTTON_CLASS);
 			casesButton.setStyleClass(ENTRIES_BUTTON_CLASS);
-			casesButton.setStyleAttribute("display", "none");
 //			newTaskFormButton.setStyleClass(PROCESS_BUTTON_CLASS + " " + TASK_FORM_BUTTON_CLASS);
 			newTaskFormButton.setStyleClass(ENTRIES_BUTTON_CLASS);
-			newTaskFormButton.setStyleAttribute("display", "none");
-//			newTaskFormButton.setMarkupAttribute("rel", "moodalbox");
-//			newTaskFormButton.setURL("/servlet/ObjectInstanciator?idegaweb_instance_class=com.idega.formbuilder.presentation.components.FBNewFormComponent");
+			newTaskFormButton.setId(new Long(definition.getId()).toString());
 			
 			Image processIcon = new Image();
 			processIcon.setSrc(PROCESS_ICON);
@@ -164,7 +158,6 @@ public class FBHomePage extends FBComponentBase {
 			processItem.add(processName);
 			processItem.add(created);
 			processItem.add(topList);
-//			processItem.add(newTaskFormButton);
 			
 			Lists list = new Lists();
 			list.setStyleClass(TASK_FORM_LIST_CLASS);
@@ -184,8 +177,7 @@ public class FBHomePage extends FBComponentBase {
 						it.remove();
 					}
 				}
-				System.out.println("Process task: " + task.getName());
-				list.add(getProcessTaskFormItem(context, formTitle,  task.getName(), getLocalizedString(iwc, "fb_home_created_label", "Created") + ": " + getCreatedDate(view.getViewId()), view.getViewId()));
+				list.add(getProcessTaskFormItem(context, definition.getName(), definition.getId(), formTitle,  task.getName(), getLocalizedString(iwc, "fb_home_created_label", "Created") + ": " + getCreatedDate(view.getViewId()), view.getViewId()));
 			}
 			if(formTitle == null)
 				continue;
@@ -193,14 +185,9 @@ public class FBHomePage extends FBComponentBase {
 			listContainer.add(processItem);
 			}
 		
-//		List<View> forms = viewToTaskBinnder.getAllViewsForViewType(XFormsView.VIEW_TYPE);
-//		Iterator<View> it = forms.iterator();
-//		DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
-//		Document document = null;
 		Iterator<SelectItem> it = formsList.iterator();
 		while(it.hasNext()) {
 			SelectItem item = it.next();
-//			document = formManagerInstance.openForm(item.getViewId());
 			listContainer.add(getListItem(context, item.getLabel(), getLocalizedString(iwc, "fb_home_created_label", "Created") + ": " + getCreatedDate(item.getValue().toString()), item.getValue().toString()));
 		}
 		
@@ -209,7 +196,7 @@ public class FBHomePage extends FBComponentBase {
 		add(fbHomePage);
 	}
 	
-	private ListItem getProcessTaskFormItem(FacesContext context, String title, String taskName, String date, String formId) {
+	private ListItem getProcessTaskFormItem(FacesContext context, String processName, long processId, String title, String taskName, String date, String formId) {
 		IWContext iwc = IWContext.getIWContext(context);
 		
 		ListItem item = new ListItem();
@@ -227,11 +214,7 @@ public class FBHomePage extends FBComponentBase {
 		Text created = new Text(date + "    Task: " + taskName);
 		created.setStyleClass(CREATED_DATE_CLASS);
 		
-		Text task = new Text(taskName);
-		task.setStyleClass(CREATED_DATE_CLASS);
-		
 		body.add(name);
-//		body.add(task);
 		body.add(created);
 		
 		Lists list = new Lists();
@@ -242,6 +225,8 @@ public class FBHomePage extends FBComponentBase {
 		Link editButton = new Link(getLocalizedString(iwc, "fb_home_edit_link", "Edit"));
 		editButton.setStyleClass(EDIT_BUTTON_CLASS);
 		editButton.setId(formId + edit_process_mode_button_postfix);
+		editButton.setOnClick("loadTaskFormDocument('" + processName + "', '" + processId + "', '" + taskName + "', '" + formId + "')");
+		editButton.setNoURL();
 		item2.add(editButton);
 		list.add(item2);
 		
@@ -284,10 +269,6 @@ public class FBHomePage extends FBComponentBase {
 		Link newTaskFormButton = new Link(getLocalizedString(iwc, "fb_home_new_task_form_link", "Add task form"));
 		casesButton.setStyleClass(PROCESS_BUTTON_CLASS + " " + CASES_BUTTON_CLASS);
 		newTaskFormButton.setStyleClass(PROCESS_BUTTON_CLASS + " " + TASK_FORM_BUTTON_CLASS);
-//		body.add(processIcon);
-//		body.add(processName);
-//		body.add(casesButton);
-//		body.add(newTaskFormButton);
 		
 		Lists list = new Lists();
 		list.setStyleClass(BUTTON_LIST_CLASS);

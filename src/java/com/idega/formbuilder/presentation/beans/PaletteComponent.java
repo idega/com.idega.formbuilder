@@ -12,12 +12,13 @@ public class PaletteComponent implements Serializable {
 	
 	private static final long serialVersionUID = -1462694114806788168L;
 	
+	public static final String BEAN_ID = "paletteComponent";
+	
 	private static Map localizedStrings = (BundleLocalizationMap) ((HashMap) WFUtil.getBeanInstance("localizedStrings")).get(IWBundleStarter.IW_BUNDLE_IDENTIFIER);
 	
 	private String type;
 	private String name;
 	private String iconPath;
-	private String autofill_key;
 	
 	public String getIconPath() {
 		return iconPath;
@@ -46,14 +47,8 @@ public class PaletteComponent implements Serializable {
 	public String getName() {
 		
 		if(name == null) {
-			
 			if(type != null) {
-				
-				if(autofill_key != null)
-					name = (String) localizedStrings.get(type+'-'+autofill_key);
-				else
-					name = (String) localizedStrings.get(type);
-				
+				name = (String) localizedStrings.get(type);
 			} else
 				name = "";
 		}
@@ -63,11 +58,4 @@ public class PaletteComponent implements Serializable {
 		this.name = name;
 	}
 
-	public String getAutofillKey() {
-		return autofill_key;
-	}
-
-	public void setAutofillKey(String autofill_key) {
-		this.autofill_key = autofill_key;
-	}
 }

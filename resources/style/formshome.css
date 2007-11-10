@@ -240,9 +240,8 @@
 }
 
 .taskFormList > li {
-	padding-left: 20px;
 	height: 50px;
-	margin-right: 16px;
+	margin: 0 10px 10px 10px;
 }
 
 .taskFormList > li > div {
@@ -250,13 +249,18 @@
 	line-height: 19px;
 	font-weight: bold;
 	font-size: 12px;
-	border: 1px #3396ff solid;
+	border: 1px #bdbdbd solid;
 	margin: 0;
 }
 
 .taskFormList > li > div .formTitle {
 	line-height: 20px;
 	margin: 0;
+}
+
+.taskFormList > li > div .createdDate {
+	margin: 0;
+	margin-bottom: 5px;
 }
 
 .buttonList li {
@@ -283,6 +287,7 @@
 }
 .formListItemSub:hover {
 	background-color: #E5F1FF;
+	border-color: #0096ff;
 }
 
 .formListItemTop {

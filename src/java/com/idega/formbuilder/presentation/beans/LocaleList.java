@@ -10,6 +10,8 @@ public class LocaleList implements Serializable {
 	
 	private static final long serialVersionUID = -1462694112346788168L;
 	
+	public static final String BEAN_ID = "localeList";
+	
 	private List<SelectItem> locales = new ArrayList<SelectItem>();
 
 	public LocaleList() {

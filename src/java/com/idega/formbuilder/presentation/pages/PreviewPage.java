@@ -1,5 +1,6 @@
-package com.idega.formbuilder.presentation.components;
+package com.idega.formbuilder.presentation.pages;
 
+import com.idega.formbuilder.presentation.components.FBFormPreview;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Page;
 

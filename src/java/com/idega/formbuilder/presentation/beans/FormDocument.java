@@ -42,7 +42,6 @@ import com.idega.formbuilder.presentation.components.FBViewPanel;
 import com.idega.formbuilder.presentation.converters.FormPageInfo;
 import com.idega.formbuilder.util.FBConstants;
 import com.idega.formbuilder.util.FBUtil;
-import com.idega.formbuilder.view.ActionManager;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.presentation.IWContext;
 import com.idega.util.CoreUtil;
@@ -109,7 +108,7 @@ public class FormDocument implements Serializable {
 	}
 	
 	public Document initializeBeanInstance(String formId) throws Exception {
-		DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
+		DocumentManager formManagerInstance = InstanceManager.getCurrentInstance().getDocumentManagerInstance();
 		this.document = formManagerInstance.openForm(formId);
 		this.overviewPage = document.getConfirmationPage();
 		this.submitPage = document.getThxPage();
@@ -123,7 +122,7 @@ public class FormDocument implements Serializable {
 	public boolean createFormDocument(String parameter) throws Exception {
 		Locale locale = workspace.getLocale();
 		
-		DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
+		DocumentManager formManagerInstance = InstanceManager.getCurrentInstance().getDocumentManagerInstance();
 		Document document = null;
 		
 		String id = getPersistenceManager().generateFormId(parameter);
@@ -291,7 +290,7 @@ public class FormDocument implements Serializable {
 		return app_business_bean;
 	}
 	
-	private void clearAppsRelatedMetaData() {
+	protected void clearAppsRelatedMetaData() {
 		
 		app_id = null;
 		primary_form_name = null;
@@ -316,7 +315,7 @@ public class FormDocument implements Serializable {
 				formId = retrieveFormIdFormButtonId(formId, "_edit");
 			}
 			if(formId != null && !formId.equals("")) {
-				DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
+				DocumentManager formManagerInstance = InstanceManager.getCurrentInstance().getDocumentManagerInstance();
 				document = formManagerInstance.openForm(formId);
 				CoreUtil.getIWContext().getExternalContext().getSessionMap().put(FBConstants.FORM_DOCUMENT_ID, formId);
 //				if(getFormId() != null)
@@ -348,7 +347,7 @@ public class FormDocument implements Serializable {
 		try {
 			formId = retrieveFormIdFormButtonId(formId, "_code");
 			if(formId != null && !formId.equals("")) {
-				DocumentManager formManagerInstance = ActionManager.getCurrentInstance().getDocumentManagerInstance();
+				DocumentManager formManagerInstance = InstanceManager.getCurrentInstance().getDocumentManagerInstance();
 				document = formManagerInstance.openForm(formId);
 				
 //				if(getFormId() != null)
