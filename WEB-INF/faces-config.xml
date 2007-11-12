@@ -73,27 +73,6 @@
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
-		<managed-bean-name>taskFormDocument</managed-bean-name>
-		<managed-bean-class>com.idega.formbuilder.presentation.beans.TaskFormDocument</managed-bean-class>
-		<managed-bean-scope>session</managed-bean-scope>
-		<managed-property>
-	    	<property-name>viewToTaskBinder</property-name>
-		    <value>#{process_xforms_viewToTask}</value>
-		</managed-property>
-		<managed-property>
-	    	<property-name>jbpmProcessBusiness</property-name>
-		    <value>#{jbpmProcessBusiness}</value>
-		</managed-property>
-		<managed-property>
-		  	<property-name>workspace</property-name>
-		    <value>#{workspace}</value>
-		</managed-property>
-		<managed-property>
-		  	<property-name>instanceManager</property-name>
-		    <value>#{actionManager}</value>
-		</managed-property>
-	</managed-bean>
-	<managed-bean>
 		<managed-bean-name>formDocument</managed-bean-name>
 		<managed-bean-class>com.idega.formbuilder.presentation.beans.FormDocument</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
@@ -108,6 +87,22 @@
 		<managed-property>
 		  	<property-name>workspace</property-name>
 		    <value>#{workspace}</value>
+		</managed-property>
+		<managed-property>
+	    	<property-name>viewToTaskBinder</property-name>
+		    <value>#{process_xforms_viewToTask}</value>
+		</managed-property>
+		<managed-property>
+	    	<property-name>jbpmProcessBusiness</property-name>
+		    <value>#{jbpmProcessBusiness}</value>
+		</managed-property>
+		<managed-property>
+		  	<property-name>instanceManager</property-name>
+		    <value>#{actionManager}</value>
+		</managed-property>
+		<managed-property>
+		  	<property-name>xformsProcessManager</property-name>
+		    <value>#{xformsProcessManager}</value>
 		</managed-property>
 	</managed-bean>
 	<managed-bean>

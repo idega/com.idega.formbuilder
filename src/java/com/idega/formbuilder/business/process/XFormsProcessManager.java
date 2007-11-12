@@ -57,7 +57,7 @@ public class XFormsProcessManager {
 		this.viewFactory = viewFactory;
 	}
 
-	public void assignTaskForm(String processId, String taskId, String formId) {
+	public void assignTaskForm(String processId, String taskName, String formId) {
 		
 		Transaction transaction = getSessionFactory().getCurrentSession().getTransaction();
 		boolean transactionWasActive = transaction.isActive();
@@ -71,7 +71,7 @@ public class XFormsProcessManager {
 		try {
 			ProcessDefinition pd = ctx.getGraphSession().getProcessDefinition(Long.parseLong(processId));
 			TaskMgmtDefinition mgmt = pd.getTaskMgmtDefinition();
-			Task task = mgmt.getTask(taskId);
+			Task task = mgmt.getTask(taskName);
 			View view = getViewFactory().createView();
 			view.setViewId(formId);
 			getViewToTaskBinder().bind(view, task);

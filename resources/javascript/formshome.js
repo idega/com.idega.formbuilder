@@ -103,7 +103,7 @@ Window.onDomReady(function() {
 });
 function loadTaskFormDocument(processName, processId, taskName, formId) {
 	showLoadingMessage('Loading');
-	TaskFormDocument.loadTaskFormDocument(processName, processId, taskName, formId, {
+	FormDocument.loadTaskFormDocument(processName, processId, taskName, formId, {
 		callback: function(result) {
 			if(result == true) {
 				window.location=FORMBUILDER_PATH;
@@ -129,20 +129,67 @@ function createdNewForm(result) {
 	}
 }
 function resetAddTaskForm(event) {
-	if(event.type == 'blur') {
-		var target = event.target;
-		var divBox = target.parentNode;
-		var targetId = divBox.id;
-		var parent = divBox.parentNode;
-		var tokens = targetId.split('_');
-		TaskFormDocument.getRenderedAddTaskFormComponent(tokens[1], null, null, true, {
+	new Event(event).stop();
+	var target = event.target;
+	var divBox = target.parentNode;
+	var targetId = divBox.id;
+	var parent = divBox.parentNode;
+	var tokens = targetId.split('_');
+	FormDocument.getRenderedAddTaskFormComponent(tokens[1], null, null, true, {
+		callback: function(resultDOM) {
+			replaceNode(resultDOM, divBox, parent);
+		}
+	});
+}
+function reloadAddTaskForm2(event) {
+	new Event(event).stop();
+	var target = event.target;
+	var divBox = target.parentNode;
+	var targetId = divBox.id;
+	var parent = divBox.parentNode;
+	var tokens = targetId.split('_');
+	if(tokens[3] == '2') {
+		FormDocument.getRenderedAddTaskFormComponent(tokens[1], target.value, null, false, {
 			callback: function(resultDOM) {
 				replaceNode(resultDOM, divBox, parent);
+				$('newTF_' + tokens[1] + '_input').focus();
+				$('newTF_' + tokens[1] + '_input').addEvent('keypress', function(e){
+					if(isEnterEvent(e)) {
+						new Event(e).stop();
+						var target = e.target;
+						var divBox = target.parentNode;
+						var targetId = divBox.id;
+						var parent = divBox.parentNode;
+						var tokens = targetId.split('_');
+						if(tokens[3] == '3') {
+							FormDocument.createTaskFormDocument(target.value, {
+								callback: function(result) {
+									window.location=FORMBUILDER_PATH;
+								}
+							});
+						}
+					}
+				});
 			}
 		});
 	}
 }
-function reloadAddTaskForm(event) {
+function reloadAddTaskForm1(event) {
+	var target = event.target;
+	var divBox = target.parentNode;
+	var targetId = divBox.id;
+	var parent = divBox.parentNode;
+	var tokens = targetId.split('_');
+	if(tokens[3] == '1') {
+		FormDocument.getRenderedAddTaskFormComponent(tokens[1], null, null, false, {
+			callback: function(resultDOM) {
+				replaceNode(resultDOM, divBox, parent);
+				$('newTF_' + tokens[1] + '_chooser').focus();
+			}
+		});
+	}
+}
+/*function reloadAddTaskForm(event) {
 	var ev = new Event(event);
 	if((event.type == 'keypress' && (typeof event.keyCode != 'undefined' ? event.keyCode : event.charCode) == '13') || event.type == 'change' || event.type == 'click') {
 		var target = event.target;
@@ -151,21 +198,21 @@ function reloadAddTaskForm(event) {
 		var parent = divBox.parentNode;
 		var tokens = targetId.split('_');
 		if(tokens[3] == '1') {
-			TaskFormDocument.getRenderedAddTaskFormComponent(tokens[1], null, null, false, {
+			FormDocument.getRenderedAddTaskFormComponent(tokens[1], null, null, false, {
 				callback: function(resultDOM) {
 					replaceNode(resultDOM, divBox, parent);
 					$('newTF_' + tokens[1] + '_chooser').focus();
 				}
 			});
 		} else if(tokens[3] == '2') {
-			TaskFormDocument.getRenderedAddTaskFormComponent(tokens[1], target.value, null, false, {
+			FormDocument.getRenderedAddTaskFormComponent(tokens[1], target.value, null, false, {
 				callback: function(resultDOM) {
 					replaceNode(resultDOM, divBox, parent);
 					$('newTF_' + tokens[1] + '_input').focus();
 				}
 			});
 		} else if(tokens[3] == '3') {
-			TaskFormDocument.getRenderedAddTaskFormComponent(tokens[1], null, null, true, {
+			FormDocument.getRenderedAddTaskFormComponent(tokens[1], null, null, true, {
 				callback: function(resultDOM) {
 					replaceNode(resultDOM, divBox, parent);
 				}
@@ -173,7 +220,7 @@ function reloadAddTaskForm(event) {
 		}
 	}
 }
-/*function duplicateForm(parameter) {
+function duplicateForm(parameter) {
 	var container = $(parameter);
 	hideDialog(parameter);
 	//new Rico.Effect.Size(parameter, null, 100, 500, 10, {complete:function() {showDialog(parameter,'duplicate')}});

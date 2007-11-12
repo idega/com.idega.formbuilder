@@ -11,7 +11,7 @@ import org.jbpm.taskmgmt.def.Task;
 
 import com.idega.block.form.process.XFormsToTask;
 import com.idega.formbuilder.presentation.FBComponentBase;
-import com.idega.formbuilder.presentation.beans.TaskFormDocument;
+import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
@@ -26,12 +26,6 @@ public class FBAddTaskForm extends FBComponentBase {
 	
 	public static final String COMPONENT_TYPE = "AddTaskForm";
 	
-//	private static final String ADD_VARIABLE_BUTTON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/add-tiny.png";
-//	private static final String SHOW_DIALOG_ACTION = "showNewVariableDialog(this.id);";
-//	private static final String HIDE_DIALOG_ACTION = "hideNewVariableDialog(this.id);";
-//	private static final String ADD_VARIABLE_ACTION = "addNewVariable(event);";
-//	private static final String ADD_PREFIX = "add_";
-//	private static final String BOX_POSTFIX = "_box";
 	private static final String DEFAULT_LINK_CLASS = "processButton taskFormButton";
 	
 	private String status;
@@ -52,19 +46,19 @@ public class FBAddTaskForm extends FBComponentBase {
 		
 		Layer body = new Layer(Layer.DIV);
 		
-		TaskFormDocument taskFormDocument = (TaskFormDocument) WFUtil.getBeanInstance(TaskFormDocument.BEAN_ID);
+		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
 		
 		XFormsToTask viewToTaskbinder = (XFormsToTask) WFUtil.getBeanInstance("process_xforms_viewToTask");
 		JbpmProcessBusinessBean jbpmProcessBean = viewToTaskbinder.getJbpmProcessBusiness();
-		List<Task> tasks = jbpmProcessBean.getProcessDefinitionTasks(new Long(taskFormDocument.getProcessId()).toString());
+		List<Task> tasks = jbpmProcessBean.getProcessDefinitionTasks(new Long(formDocument.getProcessId()).toString());
 
-		String processId = getId() == null ? new Long(taskFormDocument.getProcessId()).toString() : getId();
+		String processId = getId() == null ? new Long(formDocument.getProcessId()).toString() : getId();
 		
 		if(status.equals("idle")) {
 			body.setId("newTF_" + processId + "_box_1");
 			Link newTaskFormButton = new Link(getLocalizedString(iwc, "fb_home_new_task_form_link", "Add task form"));
 			newTaskFormButton.setStyleClass(DEFAULT_LINK_CLASS);
-			newTaskFormButton.setOnClick("reloadAddTaskForm(event);return false;");
+			newTaskFormButton.setOnClick("reloadAddTaskForm1(event);return false;");
 			body.add(newTaskFormButton);
 		} else if(status.equals("task")) {
 			
@@ -80,14 +74,13 @@ public class FBAddTaskForm extends FBComponentBase {
 				}
 			}
 			
-			taskChooser.setOnChange("reloadAddTaskForm(event);return false;");
+			taskChooser.setOnChange("reloadAddTaskForm2(event);return false;");
 			taskChooser.setOnBlur("resetAddTaskForm(event);return false;");
 			body.add(new Label("Choose a task", taskChooser));
 			body.add(taskChooser);
 		} else if(status.equals("name")) {
 			body.setId("newTF_" + processId + "_box_3");
 			TextInput name = new TextInput();
-			name.setOnKeyPress("reloadAddTaskForm(event);return false;");
 			name.setOnBlur("resetAddTaskForm(event);return false;");
 			name.setId("newTF_" + processId + "_input");
 			body.add(new Label("Form name", name));

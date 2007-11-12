@@ -84,7 +84,7 @@ public class FBDesignView extends FBComponentBase {
 		formHeading.setId("formHeading");
 		formHeading.setStyleClass("info");
 		
-		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
+		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
 		
 		Text formHeadingHeader = new Text(formDocument.getFormTitle());
 		formHeadingHeader.setId("formHeadingHeader");

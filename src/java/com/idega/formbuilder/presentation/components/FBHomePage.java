@@ -177,8 +177,7 @@ public class FBHomePage extends FBComponentBase {
 				}
 				list.add(getProcessTaskFormItem(context, definition.getName(), definition.getId(), formTitle,  task.getName(), getLocalizedString(iwc, "fb_home_created_label", "Created") + ": " + getCreatedDate(view.getViewId()), view.getViewId()));
 			}
-			if(formTitle == null)
-				continue;
+
 			processItem.add(list);
 			listContainer.add(processItem);
 			}

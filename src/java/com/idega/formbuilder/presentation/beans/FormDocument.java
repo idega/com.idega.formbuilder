@@ -14,8 +14,10 @@ import javax.faces.event.ActionEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jbpm.taskmgmt.def.Task;
 
 import com.idega.block.form.presentation.FormViewer;
+import com.idega.block.form.process.XFormsToTask;
 import com.idega.block.formadmin.presentation.actions.GetAvailableFormsAction;
 import com.idega.builder.business.BuilderLogic;
 import com.idega.content.themes.business.TemplatesLoader;
@@ -36,6 +38,9 @@ import com.idega.documentmanager.business.component.PageThankYou;
 import com.idega.documentmanager.component.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.egov.Application;
 import com.idega.formbuilder.business.egov.ApplicationBusiness;
+import com.idega.formbuilder.business.process.XFormsProcessManager;
+import com.idega.formbuilder.presentation.components.FBAddTaskForm;
+import com.idega.formbuilder.presentation.components.FBDatatypeVariables;
 import com.idega.formbuilder.presentation.components.FBFormPage;
 import com.idega.formbuilder.presentation.components.FBFormProperties;
 import com.idega.formbuilder.presentation.components.FBViewPanel;
@@ -43,6 +48,7 @@ import com.idega.formbuilder.presentation.converters.FormPageInfo;
 import com.idega.formbuilder.util.FBConstants;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.idegaweb.IWMainApplication;
+import com.idega.jbpm.business.JbpmProcessBusinessBean;
 import com.idega.presentation.IWContext;
 import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
@@ -54,6 +60,10 @@ public class FormDocument implements Serializable {
 	private static Log logger = LogFactory.getLog(FormDocument.class);
 	
 	private PersistenceManager persistenceManager;
+	private JbpmProcessBusinessBean jbpmProcessBusiness;
+	private XFormsToTask viewToTaskBinder;
+	private InstanceManager instanceManager;
+	private XFormsProcessManager xformsProcessManager;
 	
 	private String formId;
 	private boolean hasPreview;
@@ -61,6 +71,11 @@ public class FormDocument implements Serializable {
 	private Document document;
 	private Page overviewPage;
 	private PageThankYou submitPage;
+	
+	private String taskName;
+	private long taskId;
+	private String processName;
+	private long processId;
 	
 	private Workspace workspace;
 	private ApplicationBusiness app_business_bean;
@@ -108,7 +123,7 @@ public class FormDocument implements Serializable {
 	}
 	
 	public Document initializeBeanInstance(String formId) throws Exception {
-		DocumentManager formManagerInstance = InstanceManager.getCurrentInstance().getDocumentManagerInstance();
+		DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
 		this.document = formManagerInstance.openForm(formId);
 		this.overviewPage = document.getConfirmationPage();
 		this.submitPage = document.getThxPage();
@@ -116,6 +131,107 @@ public class FormDocument implements Serializable {
 		this.hasPreview = overviewPage != null ? true : false;
 		
 		return document;
+	}
+	
+	public boolean createTaskFormDocument(String parameter) throws Exception {
+		Locale locale = workspace.getLocale();
+		
+		DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
+		
+		String id = getPersistenceManager().generateFormId(parameter);
+		LocalizedStringBean formName = new LocalizedStringBean();
+		formName.setString(locale, parameter);
+			
+		try {
+			setDocument(formManagerInstance.createForm(id, formName));
+			CoreUtil.getIWContext().getExternalContext().getSessionMap().put(FBConstants.FORM_DOCUMENT_ID, id);
+		} catch(Exception e) {
+			logger.error("Could not create XForms document");
+		}
+			
+//		if(getFormId() != null)
+//			getFormsService().unlockForm(getFormId());
+			
+		workspace.setView("design");
+		
+		initializeBeanInstance(getDocument(), processName, processId, taskName);
+		xformsProcessManager.assignTaskForm(new Long(processId).toString(), taskName, formId);
+			
+		Page page = getDocument().getPage(getDocument().getContainedPagesIdList().get(0));
+		FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
+		formPage.loadPageInfo(page);
+		
+		return true;
+	}
+	
+	public org.jdom.Document addNewVariable(String name, String datatype) {
+		jbpmProcessBusiness.addTaskVariable(new Long(processId).toString(), taskName, datatype, name);
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDatatypeVariables(datatype), true);
+	}
+	
+	public org.jdom.Document getRenderedAddTaskFormComponent(String processId, String taskName, String formName, boolean idle) {
+		if(idle) {
+			return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBAddTaskForm("idle"), true);
+		} else {
+			if(processId == null) 
+				return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBAddTaskForm("idle"), true);
+			
+			this.processId = new Long(processId).longValue();
+			if(formName != null && !formName.equals("")) {
+//				this.formName = formName;
+				return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBAddTaskForm("idle"), true);
+			} else if(taskName != null && !taskName.equals("")) {
+				this.taskName = taskName;
+				return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBAddTaskForm("name"), true);
+			} else {
+				return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBAddTaskForm("task"), true);
+			}
+		}
+	}
+	
+	public Document initializeBeanInstance(Document document, String processName, long processId, String taskName) {
+		initializeBeanInstance(document);
+		Task task = jbpmProcessBusiness.getProcessTask(new Long(processId).toString(), taskName);
+		this.taskId = task == null ? 0 : task.getId();
+		this.processName = processName;
+		this.taskName = taskName;
+		this.processId = processId;
+		return document;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean loadTaskFormDocument(String processName, long processId, String taskName, String formId) {
+		
+		if(processName == null || taskName == null || formId == null)
+			return false;
+		
+		clearAppsRelatedMetaData();
+		
+		try {
+			getWorkspace().setProcessMode(true);
+				
+			DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
+			setDocument(formManagerInstance.openForm(formId));
+			CoreUtil.getIWContext().getExternalContext().getSessionMap().put(FBConstants.FORM_DOCUMENT_ID, formId);
+//				if(getFormId() != null)
+//					getFormsService().unlockForm(getFormId());
+				
+			String firstPage = getCommonPagesIdList().get(0);
+			Page firstP = getDocument().getPage(firstPage);
+			FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+			formPage.initializeBeanInstance(firstP);
+				
+			getWorkspace().setView("design");
+			initializeBeanInstance(getDocument(), processName, processId, taskName);
+		} catch (FormLockException e) {
+			// TODO: inform about lock
+			logger.info("Form was locked when tried to open it", e);
+			return false;
+		} catch(Exception e) {
+			logger.info("Exception while trying to open a form document", e);
+			return false;
+		}
+		return true;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -715,5 +831,69 @@ public class FormDocument implements Serializable {
 
 	public void setWorkspace(Workspace workspace) {
 		this.workspace = workspace;
+	}
+
+	public String getTaskName() {
+		return taskName;
+	}
+
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
+	}
+
+	public long getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(long taskId) {
+		this.taskId = taskId;
+	}
+
+	public String getProcessName() {
+		return processName;
+	}
+
+	public void setProcessName(String processName) {
+		this.processName = processName;
+	}
+
+	public long getProcessId() {
+		return processId;
+	}
+
+	public void setProcessId(long processId) {
+		this.processId = processId;
+	}
+
+	public JbpmProcessBusinessBean getJbpmProcessBusiness() {
+		return jbpmProcessBusiness;
+	}
+
+	public void setJbpmProcessBusiness(JbpmProcessBusinessBean jbpmProcessBusiness) {
+		this.jbpmProcessBusiness = jbpmProcessBusiness;
+	}
+
+	public XFormsToTask getViewToTaskBinder() {
+		return viewToTaskBinder;
+	}
+
+	public void setViewToTaskBinder(XFormsToTask viewToTaskBinder) {
+		this.viewToTaskBinder = viewToTaskBinder;
+	}
+
+	public InstanceManager getInstanceManager() {
+		return instanceManager;
+	}
+
+	public void setInstanceManager(InstanceManager instanceManager) {
+		this.instanceManager = instanceManager;
+	}
+
+	public XFormsProcessManager getXformsProcessManager() {
+		return xformsProcessManager;
+	}
+
+	public void setXformsProcessManager(XFormsProcessManager xformsProcessManager) {
+		this.xformsProcessManager = xformsProcessManager;
 	}
 }

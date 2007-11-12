@@ -8,7 +8,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
-import com.idega.formbuilder.presentation.beans.TaskFormDocument;
+import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
@@ -48,7 +48,7 @@ public class FBDatatypeVariables extends FBComponentBase {
 		variableContainer.setId(datatype + datatype_variable_container_id_postfix);
 		
 		JbpmProcessBusinessBean jbpmBusiness = (JbpmProcessBusinessBean) WFUtil.getBeanInstance(JbpmProcessBusinessBean.BEAN_ID);
-		TaskFormDocument taskFormDocument = (TaskFormDocument) WFUtil.getBeanInstance(TaskFormDocument.BEAN_ID);
+		FormDocument taskFormDocument = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
 		List<String> variables = jbpmBusiness.getTaskVariablesByDatatype(new Long(taskFormDocument.getProcessId()).toString(), taskFormDocument.getTaskName(), datatype);
 		
 		if(variables != null && !variables.isEmpty()) {

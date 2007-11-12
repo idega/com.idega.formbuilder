@@ -13,7 +13,6 @@
 									/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/moodalbox/1.2.1/js/moodalbox.js,
 												
 									/dwr/interface/FormDocument.js,
-									/dwr/interface/TaskFormDocument.js,
 									/dwr/engine.js,
 												
 									/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formshome.js"

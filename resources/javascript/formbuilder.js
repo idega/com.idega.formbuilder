@@ -916,7 +916,7 @@ function addNewVariable(event) {
 		if(index != -1) {
 			var datatype = id.substring(index + 1);
 			if(datatype != null) {
-				TaskFormDocument.addNewVariable(value, datatype, {
+				FormDocument.addNewVariable(value, datatype, {
 					callback: function(resultDOM) {
 						replaceNode(resultDOM, $(datatype + '_vContainer'), $(datatype + '_datatypeGroup'));
 					}

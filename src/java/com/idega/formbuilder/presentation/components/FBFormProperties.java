@@ -6,12 +6,7 @@ import java.util.Iterator;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.idega.documentmanager.business.Document;
 import com.idega.documentmanager.business.component.PageThankYou;
-import com.idega.documentmanager.manager.impl.FormManager;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.util.FBConstants;
@@ -25,8 +20,6 @@ import com.idega.util.RenderUtils;
 import com.idega.webface.WFUtil;
 
 public class FBFormProperties extends FBComponentBase {
-	
-	private static Log logger = LogFactory.getLog(FormManager.class);
 	
 	public static final String COMPONENT_TYPE = "FormProperties";
 	
@@ -58,29 +51,8 @@ public class FBFormProperties extends FBComponentBase {
 		IWContext iwc = CoreUtil.getIWContext();
 		
 		Layer body = createPanelSection(PANEL_ID);
-//		Layer line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
 		
-		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance("formDocument");
-		Document document = formDocument.getDocument();
-		
-		try {
-			if(document == null) {
-				String formId = (String) CoreUtil.getIWContext().getExternalContext().getSessionMap().get(FBConstants.FORM_DOCUMENT_ID);
-				document = formDocument.initializeBeanInstance(formId);
-			}
-		} catch(Exception e) {
-			logger.error("Exception while initializing fresh instance of XForms document");
-			throw new IllegalStateException();
-		}
-		
-//		TextInput title = new TextInput("formTitle", formDocument.getFormTitle());
-//		title.setId("formTitle");
-//		title.setOnBlur("saveFormTitle(this.value)");
-//		title.setOnKeyDown("savePropertyOnEnter(this.value,'formTitle',event);");
-//		
-//		line.add(new Label(getLocalizedString(iwc, "fb_form_property_title", "Form title"), title));
-//		line.add(title);
-//		body.add(line);
+		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
 		
 		Layer line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
 		
@@ -93,24 +65,11 @@ public class FBFormProperties extends FBComponentBase {
 		line.add(new Label(getLocalizedString(iwc, "fb_form_property_has_preview", "Form contains preview"), preview));
 		body.add(line);
 		
-//		line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
-//		
 		PageThankYou submitPage = formDocument.getSubmitPage();
-//		String submitPageTitle = null;
 		String submitPageText = null;
 		if(submitPage != null) {
-//			submitPageTitle = formDocument.getThankYouTitle();
 			submitPageText = formDocument.getThankYouText();
 		}
-//		
-//		TextInput thankYouTitle = new TextInput("thankYouTitle", submitPageTitle);
-//		thankYouTitle.setId("thankYouTitle");
-//		thankYouTitle.setOnBlur("saveThankYouTitle(this.value)");
-//		thankYouTitle.setOnKeyDown("savePropertyOnEnter(this.value,'formThxTitle',event);");
-//		
-//		line.add(new Label(getLocalizedString(iwc, "fb_form_property_thx_title", "Thank you title"), thankYouTitle));
-//		line.add(thankYouTitle);
-//		body.add(line);
 		
 		line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
 		
