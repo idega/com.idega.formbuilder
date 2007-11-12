@@ -32,6 +32,7 @@ public class FBAddTaskForm extends FBComponentBase {
 //	private static final String ADD_VARIABLE_ACTION = "addNewVariable(event);";
 //	private static final String ADD_PREFIX = "add_";
 //	private static final String BOX_POSTFIX = "_box";
+	private static final String DEFAULT_LINK_CLASS = "processButton taskFormButton";
 	
 	private String status;
 	
@@ -62,14 +63,13 @@ public class FBAddTaskForm extends FBComponentBase {
 		if(status.equals("idle")) {
 			body.setId("newTF_" + processId + "_box_1");
 			Link newTaskFormButton = new Link(getLocalizedString(iwc, "fb_home_new_task_form_link", "Add task form"));
-			newTaskFormButton.setStyleClass(getStyleClass());
-			newTaskFormButton.setOnClick("addTaskForm(event);return false;");
+			newTaskFormButton.setStyleClass(DEFAULT_LINK_CLASS);
+			newTaskFormButton.setOnClick("reloadAddTaskForm(event);return false;");
 			body.add(newTaskFormButton);
 		} else if(status.equals("task")) {
 			
 			body.setId("newTF_" + processId + "_box_2");
 			DropdownMenu taskChooser = new DropdownMenu();
-			taskChooser.setOnChange("addTaskForm(event);return false;");
 			taskChooser.setId("newTF_" + processId + "_chooser");
 			taskChooser.addMenuElementFirst("", "---------");
 			
@@ -80,15 +80,15 @@ public class FBAddTaskForm extends FBComponentBase {
 				}
 			}
 			
-			taskChooser.setOnChange("addTaskForm(event);return false;");
-			taskChooser.setOnBlur("addTaskForm(event);return false;");
+			taskChooser.setOnChange("reloadAddTaskForm(event);return false;");
+			taskChooser.setOnBlur("resetAddTaskForm(event);return false;");
 			body.add(new Label("Choose a task", taskChooser));
 			body.add(taskChooser);
 		} else if(status.equals("name")) {
 			body.setId("newTF_" + processId + "_box_3");
 			TextInput name = new TextInput();
-			name.setOnKeyPress("addTaskForm(event);return false;");
-			name.setOnBlur("addTaskForm(event);return false;");
+			name.setOnKeyPress("reloadAddTaskForm(event);return false;");
+			name.setOnBlur("resetAddTaskForm(event);return false;");
 			name.setId("newTF_" + processId + "_input");
 			body.add(new Label("Form name", name));
 			body.add(name);

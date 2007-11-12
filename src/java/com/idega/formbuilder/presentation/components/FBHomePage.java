@@ -138,10 +138,8 @@ public class FBHomePage extends FBComponentBase {
 			
 			item2.add(newTaskFormButton);
 			topList.add(item2);
-//			casesButton.setStyleClass(PROCESS_BUTTON_CLASS + " " + CASES_BUTTON_CLASS);
-			casesButton.setStyleClass(ENTRIES_BUTTON_CLASS);
-//			newTaskFormButton.setStyleClass(PROCESS_BUTTON_CLASS + " " + TASK_FORM_BUTTON_CLASS);
-			newTaskFormButton.setStyleClass(ENTRIES_BUTTON_CLASS);
+			casesButton.setStyleClass(PROCESS_BUTTON_CLASS + " " + CASES_BUTTON_CLASS);
+			newTaskFormButton.setStyleClass(PROCESS_BUTTON_CLASS + " " + TASK_FORM_BUTTON_CLASS);
 			newTaskFormButton.setId(new Long(definition.getId()).toString());
 			
 			Image processIcon = new Image();

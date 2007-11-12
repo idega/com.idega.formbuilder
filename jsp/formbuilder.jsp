@@ -32,8 +32,9 @@
 				<f:verbatim>
                 	<script type="text/javascript">
                 		window.addEvent('domready', function() {
-							var errorHanlder = function() {
+							var errorHanlder = function(errorString, exception) {
 								reloadPage();
+								//alert('DWR Error: ' + errorString + ' : ' + exception);
 							}
 							DWREngine.setErrorHandler(errorHanlder);
 						});

@@ -42,7 +42,7 @@ Window.onDomReady(function() {
 		var formName = $('newTxt').value;
 		createNewForm(formName);
 	});
-	/*$ES("a.entriesButton").each(function(item) {
+	$ES("a.entriesButton").each(function(item) {
 		item.addEvent('click', function(e){
 			new Event(e).stop();
 			showLoadingMessage('Loading');
@@ -57,7 +57,7 @@ Window.onDomReady(function() {
 				}
 			});
 		});
-	});*/
+	});
 	$ES("a.codeButton").each(function(item) {
 		item.addEvent('click', function(e){
 			new Event(e).stop();
@@ -128,7 +128,22 @@ function createdNewForm(result) {
 		window.location=FORMBUILDER_PATH;
 	}
 }
-function addTaskForm(event) {
+function resetAddTaskForm(event) {
+	if(event.type == 'blur') {
+		var target = event.target;
+		var divBox = target.parentNode;
+		var targetId = divBox.id;
+		var parent = divBox.parentNode;
+		var tokens = targetId.split('_');
+		TaskFormDocument.getRenderedAddTaskFormComponent(tokens[1], null, null, true, {
+			callback: function(resultDOM) {
+				replaceNode(resultDOM, divBox, parent);
+			}
+		});
+	}
+}
+function reloadAddTaskForm(event) {
+	var ev = new Event(event);
 	if((event.type == 'keypress' && (typeof event.keyCode != 'undefined' ? event.keyCode : event.charCode) == '13') || event.type == 'change' || event.type == 'click') {
 		var target = event.target;
 		var divBox = target.parentNode;
@@ -156,17 +171,6 @@ function addTaskForm(event) {
 				}
 			});
 		}
-	} else if(event.type == 'blur') {
-		var target = event.target;
-		var divBox = target.parentNode;
-		var targetId = divBox.id;
-		var parent = divBox.parentNode;
-		var tokens = targetId.split('_');
-		TaskFormDocument.getRenderedAddTaskFormComponent(tokens[1], null, null, true, {
-			callback: function(resultDOM) {
-				replaceNode(resultDOM, divBox, parent);
-			}
-		});
 	}
 }
 /*function duplicateForm(parameter) {

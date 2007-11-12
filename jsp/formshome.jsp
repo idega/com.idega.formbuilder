@@ -20,6 +20,16 @@
 					stylesheeturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formshome.css,
 									/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/moodalbox/1.2.1/css/moodalbox.css">
 			<h:form id="workspaceform1">
+				<f:verbatim>
+                	<script type="text/javascript">
+                		window.addEvent('domready', function() {
+							var errorHanlder = function() {
+								reloadPage();
+							}
+							DWREngine.setErrorHandler(errorHanlder);
+						});
+                	</script>
+                </f:verbatim>
 				<fb:homePage />
 				<t:commandButton style="display: none" id="newFormButton" onclick="alert('done');" forceId="true" type="button" action="#{formDocument.createNewForm}" value="#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"></t:commandButton>
 			</h:form>

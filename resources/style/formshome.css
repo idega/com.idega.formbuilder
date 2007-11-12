@@ -337,11 +337,13 @@
 	top: 0px;
 	
 }
-.casesButton {
+.buttonList li a.casesButton {
 	right: 25px;
+	background: url(images/application_view_list.png) left no-repeat;
 }
-.taskFormButton {
+.buttonList li a.taskFormButton {
 	right: 125px;
+	background: url(images/list-add.png) left no-repeat;
 }	
 .bottomButton {
 	margin-left: 15px;
