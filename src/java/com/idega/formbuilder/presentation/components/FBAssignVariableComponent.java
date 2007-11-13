@@ -67,6 +67,7 @@ public class FBAssignVariableComponent extends FBComponentBase {
 		IWContext iwc = IWContext.getIWContext(context);
 		
 		Layer body = new Layer(Layer.DIV);
+		body.setStyleClass("assignVariableBox");
 		
 		if(status.equals("idle")) {
 			body.setId("assignV-" + getId());

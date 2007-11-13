@@ -19,7 +19,7 @@ public class FBFormPage extends FBComponentBase {
 	private static final String PAGE_ICON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/document-new.png";
 	private static final String DELETE_ICON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete-tiny.png";
 	private static final String DEFAULT_LOAD_ACTION = "loadPageInfo(this.id);";
-	private static final String DEFAULT_DELETE_ACTION = "deletePage(this.id);";
+	private static final String DEFAULT_DELETE_ACTION = "deletePage(event);";
 	private static final String DEFAULT_STYLE_CLASS = "formPageIcon";
 	private static final String DEFAULT_ICON_STYLE_CLASS = "pageIconIcon";
 	private static final String DEFAULT_LABEL_STYLE_CLASS = "pageIconLabel";

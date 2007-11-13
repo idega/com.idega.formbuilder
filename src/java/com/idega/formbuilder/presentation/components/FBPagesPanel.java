@@ -34,7 +34,7 @@ public class FBPagesPanel extends FBComponentBase {
 	private static final String SPECIAL_PAGES_HEADER = "SPECIAL_PAGES_HEADER";
 //	private static final String TOOLBAR_FACET = "TOOLBAR_FACET";
 	private static final String DEFAULT_PAGE_LOAD_ACTION = "loadPageInfo(this.id);";
-	private static final String DEFAULT_PAGE_REMOVE_ACTION = "deletePage(this.id);";
+	private static final String DEFAULT_PAGE_REMOVE_ACTION = "deletePage(event);";
 	private static final String DEFAULT_CONFIRM_LOAD_ACTION = "loadConfirmationPage(this.id);";
 	private static final String DEFAULT_THX_LOAD_ACTION = "loadThxPage(this.id);";
 	private static final String SPECIAL = "Special";

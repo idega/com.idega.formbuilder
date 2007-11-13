@@ -3,15 +3,15 @@ package com.idega.formbuilder.presentation.components;
 import java.io.IOException;
 import java.util.Iterator;
 
-import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
-import org.apache.myfaces.component.html.ext.HtmlInputTextarea;
-
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.presentation.Layer;
+import com.idega.presentation.ui.TextArea;
 import com.idega.util.RenderUtils;
+import com.idega.webface.WFUtil;
 
 public class FBSourceView extends FBComponentBase {
 	
@@ -27,19 +27,19 @@ public class FBSourceView extends FBComponentBase {
 	}
 	
 	protected void initializeComponent(FacesContext context) {
-		Application application = context.getApplication();
 		getChildren().clear();
 		
 		Layer content = new Layer(Layer.DIV);
 		content.setStyleClass(styleClass);
 		content.setId(id + "Div");
 		
-		HtmlInputTextarea textarea = new HtmlInputTextarea();
+		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
+		
+		TextArea textarea = new TextArea();
 		textarea.setRendered(true);
-		textarea.setValueBinding("value", application.createValueBinding("#{formDocument.sourceCode}"));
-		textarea.setWrap("false");
+		textarea.setValue(formDocument.getSourceCode());
 		textarea.setId("sourceTextarea");
-//		textarea.setStyleClass("codepress html linenumbers-on");
+		textarea.setStyleClass("codepress html linenumbers-on");
 		
 		content.add(textarea);
 		

@@ -323,28 +323,6 @@
 	height: 20px;
 	padding-bottom: 5px;
 }
-.processButton {
-	margin-right: 15px;
-	height: 20px;
-	font-weight: Bold							!important;
-	padding-bottom: 4px;
-	padding-top: 2px;
-	color: #0096ff;
-	text-align: right;
-	top: 0px;
-	float: right;
-	position: absolute;
-	top: 0px;
-	
-}
-.buttonList li a.casesButton {
-	right: 25px;
-	background: url(images/application_view_list.png) left no-repeat;
-}
-.buttonList li a.taskFormButton {
-	right: 125px;
-	background: url(images/list-add.png) left no-repeat;
-}	
 .bottomButton {
 	margin-left: 15px;
 	height: 20px;
@@ -494,4 +472,42 @@
 	margin-left: 10px;
 	position: absolute;
 	top: -8px;
+}
+
+.processButton {
+	margin-right: 15px;
+	height: 20px;
+	font-weight: Bold							!important;
+	padding-bottom: 4px;
+	padding-top: 2px;
+	color: #0096ff;
+	text-align: right;
+	top: 0px;
+	
+}
+.buttonList li a.casesButton {
+	background: url(images/application_view_list.png) left no-repeat;
+}
+.buttonList li a.taskFormButton {
+	background: url(images/list-add.png) left no-repeat;
+}
+
+.processButtonList li div {
+	line-height: 20px;
+}
+
+.processButtonList li label {
+	font-weight: bold;
+	font-size: 12px;
+	line-height: 20px;
+	padding-right: 6px;
+	display: block;
+	float: left;
+	color: #2d2d2d;
+	margin-top: 2px;
+}
+
+.processButtonList li select {
+	margin: 0;
+	margin-top: 2px;
 }

@@ -129,19 +129,24 @@ public class FBHomePage extends FBComponentBase {
 			Lists topList = new Lists();
 			topList.setStyleClass("buttonList processButtonList");
 			ListItem item2 = new ListItem();
-			Link casesButton = new Link(getLocalizedString(iwc, "fb_home_view_cases_link", "View cases"));
 			
-			item2.add(casesButton);
-			topList.add(item2);
-			item2 = new ListItem();
-			Link newTaskFormButton = new Link("Add task form");
-//			FBAddTaskForm newTaskFormButton = new FBAddTaskForm();
+			
+			
+//			Link newTaskFormButton = new Link("Add task form");
+			FBAddTaskForm newTaskFormButton = new FBAddTaskForm();
+			newTaskFormButton.setStyleClass(PROCESS_BUTTON_CLASS + " " + TASK_FORM_BUTTON_CLASS);
+			newTaskFormButton.setId(new Long(definition.getId()).toString());
 			
 			item2.add(newTaskFormButton);
 			topList.add(item2);
+			
+			Link casesButton = new Link(getLocalizedString(iwc, "fb_home_view_cases_link", "View cases"));
 			casesButton.setStyleClass(PROCESS_BUTTON_CLASS + " " + CASES_BUTTON_CLASS);
-			newTaskFormButton.setStyleClass(PROCESS_BUTTON_CLASS + " " + TASK_FORM_BUTTON_CLASS);
-			newTaskFormButton.setId(new Long(definition.getId()).toString());
+			
+			
+			item2 = new ListItem();
+			item2.add(casesButton);
+			topList.add(item2);
 			
 			Image processIcon = new Image();
 			processIcon.setSrc(PROCESS_ICON);
@@ -156,7 +161,7 @@ public class FBHomePage extends FBComponentBase {
 			processItem.add(processIcon);
 			processItem.add(processName);
 			processItem.add(created);
-			processItem.add(topList);
+//			processItem.add(topList);
 			
 			Lists list = new Lists();
 			list.setStyleClass(TASK_FORM_LIST_CLASS);

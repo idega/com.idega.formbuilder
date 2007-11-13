@@ -434,12 +434,12 @@ public class FormDocument implements Serializable {
 		clearAppsRelatedMetaData();
 		
 		try {
-//			if(isProcessForm(formId)) {
-//				formId = retrieveFormIdFormButtonId(formId, "_process");
+			if(isProcessForm(formId)) {
+				formId = retrieveFormIdFormButtonId(formId, "_process");
 //				workspace.setProcessMode(true);
-//			} else {
+			} else {
 				formId = retrieveFormIdFormButtonId(formId, "_edit");
-//			}
+			}
 			if(formId != null && !formId.equals("")) {
 				DocumentManager formManagerInstance = InstanceManager.getCurrentInstance().getDocumentManagerInstance();
 				document = formManagerInstance.openForm(formId);
