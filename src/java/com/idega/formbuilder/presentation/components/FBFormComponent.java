@@ -13,10 +13,11 @@ import org.w3c.dom.Element;
 
 import com.idega.documentmanager.business.component.Component;
 import com.idega.documentmanager.business.component.Page;
+import com.idega.documentmanager.business.component.properties.PropertiesComponent;
 import com.idega.formbuilder.dom.DOMTransformer;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormPage;
-import com.idega.formbuilder.presentation.beans.Workspace;
+import com.idega.formbuilder.util.FBUtil;
 import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
 import com.idega.webface.WFUtil;
@@ -29,6 +30,7 @@ public class FBFormComponent extends FBComponentBase {
 	
 	private static final String DELETE_BUTTON_FACET = "DELETE_BUTTON_FACET";
 	private static final String HANDLE_LAYER_FACET = "HANDLE_LAYER_FACET";
+	private static final String VARIABLE_NAME_FACET = "VARIABLE_NAME_FACET";
 	private static final String DELETE_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png";
 	private static final String DEFAULT_LOAD_ACTION = "loadComponentInfo(this);";
 	private static final String DEFAULT_DELETE_ACTION = "removeComponent(this);";
@@ -70,12 +72,12 @@ public class FBFormComponent extends FBComponentBase {
 	}
 	
 	protected void initializeComponent(FacesContext context) {
-		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
+		Page page = ((FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID)).getPage();
 		if(page != null) {
 			Component component = page.getComponent(getId());
 			if(component != null) {
 				try {
-					Locale current = ((Workspace) WFUtil.getBeanInstance("workspace")).getLocale();
+					Locale current = FBUtil.getUILocale();
 					Element element = (Element) component.getHtmlRepresentation(current).cloneNode(true);
 					if(element != null) {
 						
@@ -85,12 +87,22 @@ public class FBFormComponent extends FBComponentBase {
 						Layer handleLayer = new Layer(Layer.DIV);
 						handleLayer.setStyleClass("fbCompHandler");
 						
+						FBAssignVariableComponent assignVariable = new FBAssignVariableComponent();
+						PropertiesComponent properties = component.getProperties();
+						String type = component.getType();
+						type = type.substring(3);
+						assignVariable.setId(component.getId() + "-fbcomp_" + type);
+						if(properties.getVariableName() != null) {
+							assignVariable.setValue(properties.getVariableName().substring(properties.getVariableName().indexOf(":") + 1));
+						}						
+						
 						Image deleteButton = new Image();
 						deleteButton.setId("db" + getId());
 						deleteButton.setSrc(DELETE_BUTTON_ICON);
 						deleteButton.setOnClick(onDelete);
 						deleteButton.setStyleClass(speedButtonStyleClass);
 						
+						addFacet(VARIABLE_NAME_FACET, assignVariable);
 						addFacet(DELETE_BUTTON_FACET, deleteButton);
 						addFacet(HANDLE_LAYER_FACET, handleLayer);
 					}
@@ -125,9 +137,13 @@ public class FBFormComponent extends FBComponentBase {
 		if (!isRendered()) {
 			return;
 		}
-		UIComponent deleteButton = getFacet(DELETE_BUTTON_FACET);
-		if(deleteButton != null) {
-			renderChild(context, deleteButton);
+		UIComponent facet = getFacet(VARIABLE_NAME_FACET);
+		if(facet != null) {
+			renderChild(context, facet);
+		}
+		facet = getFacet(DELETE_BUTTON_FACET);
+		if(facet != null) {
+			renderChild(context, facet);
 		}
 	}
 	

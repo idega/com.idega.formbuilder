@@ -24,6 +24,7 @@ public class FBDatatypeVariables extends FBComponentBase {
 	private static final String fb_proc_palette_no_variables = "fb_proc_palette_no_variables";
 	private static final String datatype_group_variables_class = "datatypeGroupVariables";
 	private static final String datatype_group_variable_class = "datatypeGroupVariable";
+	private static final String datatype_group_ass_variable_class = "datatypeGroupAssVariable";
 	private static final String datatype_variable_container_id_postfix = "_vContainer";
 	
 	private String datatype;
@@ -54,8 +55,13 @@ public class FBDatatypeVariables extends FBComponentBase {
 		if(variables != null && !variables.isEmpty()) {
 			Iterator<String> it = variables.iterator();
 			while(it.hasNext()) {
-				Text variable = new Text(it.next());
-				variable.setStyleClass(datatype_group_variable_class);
+				String name = it.next();
+				Text variable = new Text(name);
+				if(taskFormDocument.isVariableAssigned(datatype + ":" + name)) {
+					variable.setStyleClass(datatype_group_ass_variable_class);
+				} else {
+					variable.setStyleClass(datatype_group_variable_class);
+				}
 				variableContainer.add(variable);
 			}
 		} else {

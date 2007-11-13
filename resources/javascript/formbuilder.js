@@ -876,6 +876,48 @@ function saveSourceCode(source_code) {
 		FormDocument.saveSrc(source_code, closeLoadingMessage);
 	}
 }
+function reloadAssignVariable(event) {
+	new Event(event).stop();
+	var target = event.target;
+	var container = target.parentNode;
+	var containerId = container.id;
+	var tokens = containerId.split('-');
+	FormComponent.getAvailableComponentVariables(null, tokens[1], tokens[2], {
+		callback: function(resultDOM) {
+			replaceNode(resultDOM, container, container.parentNode);
+			var token1 = tokens[1];
+			var token2 = tokens[2];
+			var chooser = $('assignV-' + tokens[1] + '-' + tokens[2]);
+			chooser.getLast().focus();
+			chooser.getLast().addEvent('change', function(e){
+				new Event(e).stop();
+				var target = e.target;
+				var value = target.value;
+				var container = target.parentNode;
+				var containerId = container.id;
+				var tokens = containerId.split('-');
+				FormComponent.assignComponentToVariable(value, tokens[1], tokens[2], {
+					callback: function(resultDOM) {
+						replaceNode(resultDOM, container, container.parentNode);
+					}
+				});
+			});
+			chooser.getLast().addEvent('blur', function(e){
+				new Event(e).stop();
+				var target = e.target;
+				var value = target.value;
+				var container = target.parentNode;
+				var containerId = container.id;
+				var tokens = containerId.split('-');
+				FormComponent.assignComponentToVariable(null, tokens[1], tokens[2], {
+					callback: function(resultDOM) {
+						replaceNode(resultDOM, container, container.parentNode);
+					}
+				});
+			});
+		}
+	});
+}
 function showNewVariableDialog(parameter) {
 	if(parameter != null) {
 		var index = parameter.indexOf('_');
@@ -886,6 +928,41 @@ function showNewVariableDialog(parameter) {
 					callback: function(resultDOM) {
 						replaceNode(resultDOM, $(datatype + '_box'), $(datatype + '_vContainer'));
 						$(datatype + '_box').getFirst().focus();
+						$('add_' + datatype).addEvent('keypress', function(e){
+							if(isEnterEvent(e)) {
+								new Event(e).stop();
+								var target = e.target;
+								var value = target.value;
+								var id = target.id
+								var index = id.indexOf('_');
+								if(index != -1) {
+									var datatype = id.substring(index + 1);
+									if(datatype != null) {
+										FormDocument.addNewVariable(value, datatype, {
+											callback: function(resultDOM) {
+												replaceNode(resultDOM, $(datatype + '_vContainer'), $(datatype + '_datatypeGroup'));
+											}
+										});
+									}
+								}
+							}
+						});
+						$('add_' + datatype).addEvent('blur', function(e){
+							new Event(e).stop();
+							var target = e.target;
+							var id = target.id
+							var index = id.indexOf('_');
+							if(index != -1) {
+								var datatype = id.substring(index + 1);
+								if(datatype != null) {
+									ProcessPalette.getAddVariableBox(true, datatype, {
+										callback: function(resultDOM) {
+											replaceNode(resultDOM, $(datatype + '_box'), $(datatype + '_vContainer'));
+										}
+									});
+								}
+							}
+						});
 					}
 				});
 			}
@@ -908,7 +985,8 @@ function hideNewVariableDialog(parameter) {
 	}
 }
 function addNewVariable(event) {
-	if(event.type == 'keydown' && (typeof event.keyCode != 'undefined' ? event.keyCode : event.charCode) == '13') {
+	if(isEnterEvent(event)) {
+		new Event(event).stop();
 		var target = event.target;
 		var value = target.value;
 		var id = target.id

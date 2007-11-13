@@ -14,6 +14,7 @@ import com.idega.builder.business.BuilderLogic;
 import com.idega.documentmanager.business.Document;
 import com.idega.documentmanager.business.component.Button;
 import com.idega.documentmanager.business.component.ButtonArea;
+import com.idega.documentmanager.business.component.Component;
 import com.idega.documentmanager.business.component.Page;
 import com.idega.documentmanager.component.beans.LocalizedStringBean;
 import com.idega.formbuilder.presentation.components.FBDesignView;
@@ -245,6 +246,22 @@ public class FormPage implements Serializable {
 			}
 		}
 		return doms;
+	}
+	
+	public List<String> getAssignedVariables(Page page) {
+		List<String> list = new ArrayList<String>();
+		if(page != null) {
+			List<String> components = page.getContainedComponentsIdList();
+			for(Iterator<String> it = components.iterator(); it.hasNext(); ) {
+				String componentId = it.next();
+				Component component = page.getComponent(componentId);
+				String variableName = component.getProperties().getVariableName();
+				if(variableName != null) {
+					list.add(variableName);
+				}
+			}
+		}
+		return list;
 	}
 	
 	public String getId() {

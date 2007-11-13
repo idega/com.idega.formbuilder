@@ -119,7 +119,7 @@ public class FBHomePage extends FBComponentBase {
 		
 		XFormsProcessManager xformsProcessManager = (XFormsProcessManager) WFUtil.getBeanInstance("xformsProcessManager");
 		ViewToTask viewToTaskBinnder = xformsProcessManager.getViewToTaskBinder();
-		JbpmProcessBusinessBean jbpmProcessBusiness = (JbpmProcessBusinessBean) WFUtil.getBeanInstance("jbpmProcessBusiness");
+		JbpmProcessBusinessBean jbpmProcessBusiness = (JbpmProcessBusinessBean) WFUtil.getBeanInstance(JbpmProcessBusinessBean.BEAN_ID);
 		List<ProcessDefinition> processList = jbpmProcessBusiness.getProcessList();
 		
 		for(Iterator<ProcessDefinition> processIterator = processList.iterator(); processIterator.hasNext(); ) {
@@ -127,7 +127,7 @@ public class FBHomePage extends FBComponentBase {
 			Layer processItem = new Layer(Layer.DIV);
 			processItem.setStyleClass(PROCESS_ITEM_CLASS);
 			Lists topList = new Lists();
-			topList.setStyleClass("buttonList");
+			topList.setStyleClass("buttonList processButtonList");
 			ListItem item2 = new ListItem();
 			Link casesButton = new Link(getLocalizedString(iwc, "fb_home_view_cases_link", "View cases"));
 			

@@ -2,6 +2,7 @@ package com.idega.formbuilder.presentation.beans;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,8 +34,10 @@ import com.idega.documentmanager.business.Document;
 import com.idega.documentmanager.business.DocumentManager;
 import com.idega.documentmanager.business.FormLockException;
 import com.idega.documentmanager.business.PersistenceManager;
+import com.idega.documentmanager.business.component.Component;
 import com.idega.documentmanager.business.component.Page;
 import com.idega.documentmanager.business.component.PageThankYou;
+import com.idega.documentmanager.business.component.properties.PropertiesComponent;
 import com.idega.documentmanager.component.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.egov.Application;
 import com.idega.formbuilder.business.egov.ApplicationBusiness;
@@ -45,7 +48,6 @@ import com.idega.formbuilder.presentation.components.FBFormPage;
 import com.idega.formbuilder.presentation.components.FBFormProperties;
 import com.idega.formbuilder.presentation.components.FBViewPanel;
 import com.idega.formbuilder.presentation.converters.FormPageInfo;
-import com.idega.formbuilder.util.FBConstants;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
@@ -76,6 +78,7 @@ public class FormDocument implements Serializable {
 	private long taskId;
 	private String processName;
 	private long processId;
+	private List<String> variables = new ArrayList<String>();
 	
 	private Workspace workspace;
 	private ApplicationBusiness app_business_bean;
@@ -122,6 +125,14 @@ public class FormDocument implements Serializable {
 		return result;
 	}
 	
+	public boolean isVariableAssigned(String variableName) {
+		if(getVariables().contains(variableName)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public Document initializeBeanInstance(String formId) throws Exception {
 		DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
 		this.document = formManagerInstance.openForm(formId);
@@ -144,7 +155,7 @@ public class FormDocument implements Serializable {
 			
 		try {
 			setDocument(formManagerInstance.createForm(id, formName));
-			CoreUtil.getIWContext().getExternalContext().getSessionMap().put(FBConstants.FORM_DOCUMENT_ID, id);
+//			CoreUtil.getIWContext().getExternalContext().getSessionMap().put(FBConstants.FORM_DOCUMENT_ID, id);
 		} catch(Exception e) {
 			logger.error("Could not create XForms document");
 		}
@@ -178,7 +189,6 @@ public class FormDocument implements Serializable {
 			
 			this.processId = new Long(processId).longValue();
 			if(formName != null && !formName.equals("")) {
-//				this.formName = formName;
 				return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBAddTaskForm("idle"), true);
 			} else if(taskName != null && !taskName.equals("")) {
 				this.taskName = taskName;
@@ -212,7 +222,7 @@ public class FormDocument implements Serializable {
 				
 			DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
 			setDocument(formManagerInstance.openForm(formId));
-			CoreUtil.getIWContext().getExternalContext().getSessionMap().put(FBConstants.FORM_DOCUMENT_ID, formId);
+//			CoreUtil.getIWContext().getExternalContext().getSessionMap().put(FBConstants.FORM_DOCUMENT_ID, formId);
 //				if(getFormId() != null)
 //					getFormsService().unlockForm(getFormId());
 				
@@ -247,7 +257,7 @@ public class FormDocument implements Serializable {
 			
 		try {
 			document = formManagerInstance.createForm(id, formName);
-			CoreUtil.getIWContext().getExternalContext().getSessionMap().put(FBConstants.FORM_DOCUMENT_ID, id);
+//			CoreUtil.getIWContext().getExternalContext().getSessionMap().put(FBConstants.FORM_DOCUMENT_ID, id);
 		} catch(Exception e) {
 			logger.error("Could not crea XForms document");
 		}
@@ -433,7 +443,7 @@ public class FormDocument implements Serializable {
 			if(formId != null && !formId.equals("")) {
 				DocumentManager formManagerInstance = InstanceManager.getCurrentInstance().getDocumentManagerInstance();
 				document = formManagerInstance.openForm(formId);
-				CoreUtil.getIWContext().getExternalContext().getSessionMap().put(FBConstants.FORM_DOCUMENT_ID, formId);
+//				CoreUtil.getIWContext().getExternalContext().getSessionMap().put(FBConstants.FORM_DOCUMENT_ID, formId);
 //				if(getFormId() != null)
 //					getFormsService().unlockForm(getFormId());
 				
@@ -463,7 +473,7 @@ public class FormDocument implements Serializable {
 		try {
 			formId = retrieveFormIdFormButtonId(formId, "_code");
 			if(formId != null && !formId.equals("")) {
-				DocumentManager formManagerInstance = InstanceManager.getCurrentInstance().getDocumentManagerInstance();
+				DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
 				document = formManagerInstance.openForm(formId);
 				
 //				if(getFormId() != null)
@@ -895,5 +905,32 @@ public class FormDocument implements Serializable {
 
 	public void setXformsProcessManager(XFormsProcessManager xformsProcessManager) {
 		this.xformsProcessManager = xformsProcessManager;
+	}
+
+	public List<String> getVariables() {
+		if(variables == null || variables.isEmpty()) {
+			if(document != null) {
+				List<String> pages = document.getContainedPagesIdList();
+				for(Iterator<String> it = pages.iterator(); it.hasNext(); ) {
+					Page page = document.getPage(it.next());
+					List<String> components = page.getContainedComponentsIdList();
+					for(Iterator<String> it2 = components.iterator(); it2.hasNext(); ) {
+						Component component = page.getComponent(it2.next());
+						PropertiesComponent properties = component.getProperties();
+						if(properties != null) {
+							String variableProperty = component.getProperties().getVariableName();
+							if(variableProperty != null) {
+								variables.add(variableProperty);
+							}
+						}
+					}
+				}
+			}
+		}
+		return variables;
+	}
+
+	public void setVariables(List<String> variables) {
+		this.variables = variables;
 	}
 }

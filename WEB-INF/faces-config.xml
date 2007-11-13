@@ -153,6 +153,10 @@
     </managed-bean>
     
     <component>
+		<component-type>AssignVariableComponent</component-type>
+		<component-class>com.idega.formbuilder.presentation.components.FBAssignVariableComponent</component-class>
+	</component>
+    <component>
 		<component-type>AddTaskForm</component-type>
 		<component-class>com.idega.formbuilder.presentation.components.FBAddTaskForm</component-class>
 	</component>

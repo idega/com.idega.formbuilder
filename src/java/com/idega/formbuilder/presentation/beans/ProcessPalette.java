@@ -60,6 +60,21 @@ public class ProcessPalette extends Palette implements Serializable {
 		return components.get(datatype);
 	}
 	
+	public String getComponentDatatype(String componentType) {
+		Set<String> datatypesSet = getDatatypes();
+		for(Iterator<String> it = datatypesSet.iterator(); it.hasNext(); ) {
+			String datatype = it.next();
+			List<PaletteComponent> comps = getComponents(datatype);
+			for(Iterator<PaletteComponent> it2 = comps.iterator(); it2.hasNext(); ) {
+				PaletteComponent comp = it2.next();
+				if(comp.getType().equals(componentType)) {
+					return datatype;
+				}
+			}
+		}
+		return null;
+	}
+	
 	private void populateComponentMap() {
 		List<ComponentType> compTypes = getInstanceManager().getDocumentManagerInstance().getComponentsByDatatype(new ConstComponentDatatype(ConstComponentDatatype.STRING));
 		List<PaletteComponent> paletteComps = populatePaletteComponentList(compTypes);

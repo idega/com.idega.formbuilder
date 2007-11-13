@@ -19,8 +19,6 @@ public class FBAddVariableComponent extends FBComponentBase {
 	private static final String FULL_PANEL_CLASS = "addVariableBox";
 	private static final String ADD_VARIABLE_BUTTON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/add-tiny.png";
 	private static final String SHOW_DIALOG_ACTION = "showNewVariableDialog(this.id);";
-	private static final String HIDE_DIALOG_ACTION = "hideNewVariableDialog(this.id);";
-	private static final String ADD_VARIABLE_ACTION = "addNewVariable(event);";
 	private static final String ADD_PREFIX = "add_";
 	private static final String BOX_POSTFIX = "_box";
 	
@@ -56,8 +54,6 @@ public class FBAddVariableComponent extends FBComponentBase {
 		} else {
 			TextInput name = new TextInput();
 			name.setId(ADD_PREFIX + datatype);
-			name.setOnKeyDown(ADD_VARIABLE_ACTION);
-			name.setOnBlur(HIDE_DIALOG_ACTION);
 			body.add(name);
 		}
 		

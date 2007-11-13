@@ -14,8 +14,10 @@ import com.idega.documentmanager.business.component.ComponentPlain;
 import com.idega.documentmanager.business.component.ComponentSelect;
 import com.idega.documentmanager.business.component.ConstButtonType;
 import com.idega.documentmanager.business.component.Page;
+import com.idega.documentmanager.business.component.properties.PropertiesComponent;
 import com.idega.documentmanager.component.beans.ItemBean;
 import com.idega.documentmanager.component.beans.LocalizedStringBean;
+import com.idega.formbuilder.presentation.components.FBAssignVariableComponent;
 import com.idega.formbuilder.presentation.components.FBButton;
 import com.idega.formbuilder.presentation.components.FBComponentProperties;
 import com.idega.formbuilder.presentation.components.FBFormComponent;
@@ -178,6 +180,32 @@ public class FormComponent implements Serializable {
 	public Document saveComponentAutofillKey(String value) {
 		setAutofillKey(value);
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(id), true);
+	}
+	
+	public Document getAvailableComponentVariables(String variable, String componentId, String type) {
+		FBAssignVariableComponent newAssign = new FBAssignVariableComponent();
+		newAssign.setId(componentId + "-" + type);
+		newAssign.setStatus("assign");
+		newAssign.setType(type);
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), newAssign, true);
+	}
+	
+	public Document assignComponentToVariable(String variable, String componentId, String type) {
+		FBAssignVariableComponent newAssign = new FBAssignVariableComponent();
+		newAssign.setId(componentId + "-" + type);
+		newAssign.setStatus("idle");
+		if(variable != null) {
+			Page page = formPage.getPage();
+			if(page != null) {
+				Component component = page.getComponent(componentId);
+				PropertiesComponent properties = component.getProperties();
+				if(properties != null) {
+					properties.setVariableName(variable);
+				}
+			}
+			newAssign.setValue(variable.substring(variable.indexOf(":") + 1));
+		}
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), newAssign, true);
 	}
 	
 	public String getDataSrc() {
