@@ -134,7 +134,8 @@ public class FBHomePage extends FBComponentBase {
 			item2.add(casesButton);
 			topList.add(item2);
 			item2 = new ListItem();
-			FBAddTaskForm newTaskFormButton = new FBAddTaskForm();
+			Link newTaskFormButton = new Link("Add task form");
+//			FBAddTaskForm newTaskFormButton = new FBAddTaskForm();
 			
 			item2.add(newTaskFormButton);
 			topList.add(item2);
@@ -222,8 +223,8 @@ public class FBHomePage extends FBComponentBase {
 		Link editButton = new Link(getLocalizedString(iwc, "fb_home_edit_link", "Edit"));
 		editButton.setStyleClass(EDIT_BUTTON_CLASS);
 		editButton.setId(formId + edit_process_mode_button_postfix);
-		editButton.setOnClick("loadTaskFormDocument('" + processName + "', '" + processId + "', '" + taskName + "', '" + formId + "')");
-		editButton.setNoURL();
+//		editButton.setOnClick("loadTaskFormDocument('" + processName + "', '" + processId + "', '" + taskName + "', '" + formId + "')");
+//		editButton.setNoURL();
 		item2.add(editButton);
 		list.add(item2);
 		

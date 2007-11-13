@@ -66,6 +66,14 @@
 		  	<property-name>formPage</property-name>
 		    <value>#{formPage}</value>
 		</managed-property>
+		<managed-property>
+		  	<property-name>processPalette</property-name>
+		    <value>#{processPalette}</value>
+		</managed-property>
+		<managed-property>
+	    	<property-name>jbpmProcessBusiness</property-name>
+		    <value>#{jbpmProcessBusiness}</value>
+		</managed-property>
 	</managed-bean>
 	<managed-bean>
 		<managed-bean-name>workspace</managed-bean-name>

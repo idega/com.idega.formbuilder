@@ -58,6 +58,22 @@ Window.onDomReady(function() {
 			});
 		});
 	});
+	$ES("a.editButton").each(function(item) {
+		item.addEvent('click', function(e){
+			new Event(e).stop();
+			showLoadingMessage('Loading');
+			FormDocument.loadFormDocument(item.id, {
+				callback: function(result) {
+					if(result == true) {
+						window.location=FORMBUILDER_PATH;
+					} else {
+						alert('Error occured trying to load editing mode');
+						closeLoadingMessage();
+					}
+				}
+			});
+		});
+	});
 	$ES("a.codeButton").each(function(item) {
 		item.addEvent('click', function(e){
 			new Event(e).stop();

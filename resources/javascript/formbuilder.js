@@ -36,9 +36,8 @@ var isThxPage = false;
 var editButton = false;
 
 var FBDraggable = Element.extend({
-	draggableTag: function(droppables, handle, type, autofill) {
+	draggableTag: function(droppables, handle, type) {
 		type = type;
-		autofill = autofill;
 		handle = handle || this;
 		this.makeDraggable({
 			'handle': handle,
@@ -77,7 +76,7 @@ var FBDraggable = Element.extend({
 						}
 					});
 					if(draggingComponent == false) {
-   						FormComponent.addComponent(this.elementOrg.id, this.autofill, {
+   						FormComponent.addComponent(this.elementOrg.id, {
 							callback: function(resultDOM) {
 								if(resultDOM != null) {
 									currentElement = resultDOM;
@@ -92,6 +91,41 @@ var FBDraggable = Element.extend({
 					if(draggingButton == false) {
 						FormComponent.addButton(this.elementOrg.id, placeNewButton);
 						draggingButton = true;
+					}
+				} else if(type == 'fbprocess') {
+					CURRENT_ELEMENT_UNDER = -1;
+		   			childBoxes = [];
+					var childNodes = $$('#dropBoxinner div.formElement');
+					for(var i = 0; i < childNodes.length; i++){
+						var child = childNodes[i];
+						var pos = child.getCoordinates();
+						childBoxes.push({top: pos.top, bottom: pos.bottom, left: pos.left, right: pos.right, height: pos.height, width: pos.width, node: child});
+					}
+					var dropBox = $('dropBoxinner');
+					this.element.addEvent('mousemove', function(e) {
+						if(!e) e = window.event;
+						for(var i = 0, child; i < childBoxes.length; i++){
+							with(childBoxes[i]){
+								if (e.pageX >= left && e.pageX <= right && e.pageY >= top && e.pageY <= bottom) {
+									CURRENT_ELEMENT_UNDER = i;
+									if(CURRENT_ELEMENT_UNDER != LAST_ELEMENT_UNDER) {
+										LAST_ELEMENT_UNDER = CURRENT_ELEMENT_UNDER;
+									}
+								}
+							}
+						}
+					});
+					if(draggingComponent == false) {
+   						FormComponent.addComponentWithVariable(this.elementOrg.id, {
+							callback: function(resultDOM) {
+								if(resultDOM != null) {
+									currentElement = resultDOM;
+									//console.log('Setting currentElement: '  + currentElement);
+								}
+							}
+						});
+   						draggingComponent = true;
+   						//console.log('Draggin component onStart: '  + draggingComponent);
 					}
 				}
 			},
@@ -119,6 +153,18 @@ var FBDraggable = Element.extend({
 						if(insideDropzone == false) {
 							//console.log('Button not inside dropZone');
 							//FormComponent.removeButton(CURRENT_BUTTON.getAttribute('id'),nothing);
+						}
+					}
+				} else if(type == 'fbprocess') {
+					//console.log('Draggin component onComplete: '  + draggingComponent);
+					if(draggingComponent == true) {
+						//console.log('onComplete drag ' + insideDropzone);
+						//draggingComponent = false;
+						if(insideDropzone == false) {
+							var currentId = currentElement.documentElement.getAttribute('id');
+							this.element.removeEvents('mousemove');
+							FormComponent.removeComponent(currentId,nothing);
+							//currentElement = null;
 						}
 					}
 				}
@@ -207,13 +253,13 @@ function setupDesignView(componentArea, component, pageTitle, formTitle) {
 		});
 	}
 	$$('.fbcomp').each(function(el){
-		el.draggableTag($('dropBoxinner'), null, 'fbcomp', false);
+		el.draggableTag($('dropBoxinner'), null, 'fbcomp');
 	});
-	$$('.fbauto').each(function(el){
-		el.draggableTag($('dropBoxinner'), null, 'fbcomp', false);
+	$$('.fbprocess').each(function(el){
+		el.draggableTag($('dropBoxinner'), null, 'fbprocess');
 	});
 	$$('.fbbutton').each(function(el){
-		el.draggableTag($('dropBoxinner'), null, 'fbbutton', false);
+		el.draggableTag($('dropBoxinner'), null, 'fbbutton');
 	});
 }
 Window.onDomReady(function() {

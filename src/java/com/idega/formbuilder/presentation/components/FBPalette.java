@@ -26,10 +26,11 @@ public class FBPalette extends FBComponentBase {
 	
 	private String itemStyleClass;
 	
-	private static final String DEFAULT_COMPONENT_DRAG_ACTION = "handleComponentDrag";
+//	private static final String DEFAULT_COMPONENT_DRAG_ACTION = "handleComponentDrag";
 //	private static final String DEFAULT_BUTTON_DRAG_ACTION = "handleButtonDrag";
 	private static final String COMPONENT_CATEGORY = "fbcomp";
-//	private static final String BUTTON_CATEGORY = "fbbutton";
+	private static final String BUTTON_CATEGORY = "fbbutton";
+	private static final String PROCESS_CATEGORY = "fbprocess";
 	private static final String BODY_ID = "firstList";
 	private static final String MAIN_PALETTE_ID = "mainPalette";
 	private static final String PALETTE_BODY_ID = "paletteBody";
@@ -69,7 +70,7 @@ public class FBPalette extends FBComponentBase {
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
 		boolean processMode = workspace.isProcessMode();
 		
-		if(processMode) {
+		if(false) {
 			
 			ProcessPalette processPalette = (ProcessPalette) WFUtil.getBeanInstance(ProcessPalette.BEAN_ID);
 			
@@ -88,8 +89,8 @@ public class FBPalette extends FBComponentBase {
 			body.add(paletteBody);
 			
 			paletteBody.add(getProcessComponentsTab(TAB1_ID, context, processPalette));
-			paletteBody.add(getTab(TAB2_ID, context, processPalette.getButtons()));
-			paletteBody.add(getTab(TAB3_ID, context, processPalette.getPlain()));
+			paletteBody.add(getTab(TAB2_ID, context, processPalette.getButtons(), BUTTON_CATEGORY));
+			paletteBody.add(getTab(TAB3_ID, context, processPalette.getPlain(), COMPONENT_CATEGORY));
 		} else {
 			Palette palette = (Palette) WFUtil.getBeanInstance(Palette.BEAN_ID);
 			
@@ -107,9 +108,9 @@ public class FBPalette extends FBComponentBase {
 			paletteBody.setId(PALETTE_BODY_ID);
 			body.add(paletteBody);
 			
-			paletteBody.add(getTab(TAB1_ID, context, palette.getBasic()));
-			paletteBody.add(getTab(TAB2_ID, context, palette.getButtons()));
-			paletteBody.add(getTab(TAB3_ID, context, palette.getPlain()));
+			paletteBody.add(getTab(TAB1_ID, context, palette.getBasic(), COMPONENT_CATEGORY));
+			paletteBody.add(getTab(TAB2_ID, context, palette.getButtons(), BUTTON_CATEGORY));
+			paletteBody.add(getTab(TAB3_ID, context, palette.getPlain(), COMPONENT_CATEGORY));
 		}
 		
 		add(body);
@@ -172,8 +173,8 @@ public class FBPalette extends FBComponentBase {
 				formComponent.setName(current.getName());
 				formComponent.setType(current.getType());
 				formComponent.setIcon(current.getIconPath());
-				formComponent.setOnDrag(DEFAULT_COMPONENT_DRAG_ACTION);
-				formComponent.setCategory(COMPONENT_CATEGORY);
+//				formComponent.setOnDrag(DEFAULT_COMPONENT_DRAG_ACTION);
+				formComponent.setCategory(PROCESS_CATEGORY);
 				
 				formComponent.setStyleClass(itemStyleClass + " " + palette_row_left_class);
 				row.add(formComponent);
@@ -185,8 +186,8 @@ public class FBPalette extends FBComponentBase {
 				formComponent.setName(current.getName());
 				formComponent.setType(current.getType());
 				formComponent.setIcon(current.getIconPath());
-				formComponent.setOnDrag(DEFAULT_COMPONENT_DRAG_ACTION);
-				formComponent.setCategory(COMPONENT_CATEGORY);
+//				formComponent.setOnDrag(DEFAULT_COMPONENT_DRAG_ACTION);
+				formComponent.setCategory(PROCESS_CATEGORY);
 				
 				formComponent.setStyleClass(itemStyleClass + " " + palette_row_right_class);
 				row.add(formComponent);
@@ -201,7 +202,7 @@ public class FBPalette extends FBComponentBase {
 		return tab;
 	}
 	
-	private Layer getTab(String tab_id, FacesContext context, List<PaletteComponent> components) {
+	private Layer getTab(String tab_id, FacesContext context, List<PaletteComponent> components, String category) {
 		Layer tab = new Layer(Layer.DIV);
 		tab.setId(tab_id);
 		
@@ -215,8 +216,12 @@ public class FBPalette extends FBComponentBase {
 				formComponent.setName(current.getName());
 				formComponent.setType(current.getType());
 				formComponent.setIcon(current.getIconPath());
-				formComponent.setOnDrag(DEFAULT_COMPONENT_DRAG_ACTION);
-				formComponent.setCategory(COMPONENT_CATEGORY);
+				formComponent.setCategory(category);
+//				if(category.equals(BUTTON_CATEGORY)) {
+//					formComponent.setOnDrag(DEFAULT_BUTTON_DRAG_ACTION);
+//				} else {
+//					formComponent.setOnDrag(DEFAULT_COMPONENT_DRAG_ACTION);
+//				}
 				
 				formComponent.setStyleClass(itemStyleClass + " " + palette_row_left_class);
 				row.add(formComponent);
@@ -228,8 +233,12 @@ public class FBPalette extends FBComponentBase {
 				formComponent.setName(current.getName());
 				formComponent.setType(current.getType());
 				formComponent.setIcon(current.getIconPath());
-				formComponent.setOnDrag(DEFAULT_COMPONENT_DRAG_ACTION);
-				formComponent.setCategory(COMPONENT_CATEGORY);
+				formComponent.setCategory(category);
+//				if(category.equals(BUTTON_CATEGORY)) {
+//					formComponent.setOnDrag(DEFAULT_BUTTON_DRAG_ACTION);
+//				} else {
+//					formComponent.setOnDrag(DEFAULT_COMPONENT_DRAG_ACTION);
+//				}
 				
 				formComponent.setStyleClass(itemStyleClass + " " + palette_row_right_class);
 				row.add(formComponent);

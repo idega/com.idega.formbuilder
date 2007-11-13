@@ -74,21 +74,6 @@ public class FBPaletteComponent extends FBComponentBase {
 		writer.writeText(name, null);
 		writer.endElement("SPAN");
 		writer.endElement(Layer.DIV);
-		writer.write(getEmbededJavascript());
-	}
-	
-	public String getEmbededJavascript() {
-		StringBuilder result = new StringBuilder();
-		result.append("<script language=\"JavaScript\">\n");
-		result.append("$('" + type + "').draggableTag($$('.dropBox'), null, '" + category + "');\n");
-		/*if(autofill_key == null) {
-			result.append("dndMgr.registerDraggable( new FBDraggable($('" + type + "'), '" + type + "', '" + category + "', null) );\n");
-		} else {
-			result.append("dndMgr.registerDraggable( new FBDraggable($('" + type + "'), '" + type + "', '" + category + "', '"+autofill_key+"') );\n");
-		}*/
-		result.append("</script>\n");
-		return result.toString();
-		
 	}
 	
 	public Object saveState(FacesContext context) {

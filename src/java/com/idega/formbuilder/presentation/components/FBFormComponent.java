@@ -137,11 +137,11 @@ public class FBFormComponent extends FBComponentBase {
 		if (!isRendered()) {
 			return;
 		}
-		UIComponent facet = getFacet(VARIABLE_NAME_FACET);
-		if(facet != null) {
-			renderChild(context, facet);
-		}
-		facet = getFacet(DELETE_BUTTON_FACET);
+//		UIComponent facet = getFacet(VARIABLE_NAME_FACET);
+//		if(facet != null) {
+//			renderChild(context, facet);
+//		}
+		UIComponent facet = getFacet(DELETE_BUTTON_FACET);
 		if(facet != null) {
 			renderChild(context, facet);
 		}
