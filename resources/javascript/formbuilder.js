@@ -45,14 +45,12 @@ var FBDraggable = Element.extend({
 			onStart: function() {
 				this.elementOrg = this.element;
 				var now = {'x': this.element.getLeft(), 'y': this.element.getTop()};
-				//console.log('getting coords: ' + now.x + ':' + now.y);
 				this.element = this.element.clone().setStyles({
 					'position': 'absolute',
 					'left': now.x + 'px',
 					'top':  now.y + 'px',
 					'opacity': '0.75'
 				}).injectInside(document.body);
-				//console.log('getting coords: ' + this.element.getStyles().left + ':' + this.element.getStyles().top);
 				this.value.now = now;
 				if(type == 'fbcomp') {
 					CURRENT_ELEMENT_UNDER = -1;
@@ -82,15 +80,17 @@ var FBDraggable = Element.extend({
 							callback: function(resultDOM) {
 								if(resultDOM != null) {
 									currentElement = resultDOM;
-									//console.log('Setting currentElement: '  + currentElement);
+									////console.log('Setting currentElement: '  + currentElement);
 								}
 							}
 						});
    						draggingComponent = true;
-   						//console.log('Draggin component onStart: '  + draggingComponent);
+   						//console.log('attempting add component: '  + draggingComponent);
+   						////console.log('Draggin component onStart: '  + draggingComponent);
 					}
 				} else if(type == 'fbbutton') {
 					if(draggingButton == false) {
+						//console.log('trying to add button');
 						FormComponent.addButton(this.elementOrg.id, placeNewButton);
 						draggingButton = true;
 					}
@@ -122,12 +122,12 @@ var FBDraggable = Element.extend({
 							callback: function(resultDOM) {
 								if(resultDOM != null) {
 									currentElement = resultDOM;
-									////console.log('Setting currentElement: '  + currentElement);
+									//////console.log('Setting currentElement: '  + currentElement);
 								}
 							}
 						});
    						draggingComponent = true;
-   						////console.log('Draggin component onStart: '  + draggingComponent);
+   						//////console.log('Draggin component onStart: '  + draggingComponent);
 					}
 				}
 			},
@@ -138,30 +138,35 @@ var FBDraggable = Element.extend({
 				this.element = this.elementOrg;
 				this.elementOrg = null;
 				if(type == 'fbcomp') {
-					//console.log('Draggin component onComplete: '  + draggingComponent);
+					////console.log('Draggin component onComplete: '  + draggingComponent);
+					//console.log('onComplete drag ' + draggingComponent);
 					if(draggingComponent == true) {
-						//console.log('onComplete drag ' + insideDropzone);
+						////console.log('onComplete drag ' + draggingComponent);
 						//draggingComponent = false;
 						if(insideDropzone == false) {
 							var currentId = currentElement.documentElement.getAttribute('id');
 							this.element.removeEvents('mousemove');
 							FormComponent.removeComponent(currentId,nothing);
 							//currentElement = null;
+							draggingComponent = false;
 						}
 					}
+					
 				} else if(type == 'fbbutton') {
 					if(draggingButton == true) {
 						//draggingButton = false;
 						if(insideDropzone == false) {
-							////console.log('Button not inside dropZone');
+							//console.log('trying to remove button');
 							FormComponent.removeButton(CURRENT_BUTTON.documentElement.getAttribute('id'),nothing);
 							//CURRENT_BUTTON = null;
+							draggingButton = false;
 						}
 					}
+					
 				} else if(type == 'fbprocess') {
-					////console.log('Draggin component onComplete: '  + draggingComponent);
+					//////console.log('Draggin component onComplete: '  + draggingComponent);
 					if(draggingComponent == true) {
-						////console.log('onComplete drag ' + insideDropzone);
+						//////console.log('onComplete drag ' + insideDropzone);
 						//draggingComponent = false;
 						if(insideDropzone == false) {
 							var currentId = currentElement.documentElement.getAttribute('id');
@@ -171,7 +176,7 @@ var FBDraggable = Element.extend({
 						}
 					}
 				}
-				insideDropzone = false;
+				//insideDropzone = false;
 			}
 		});
 		this.setStyles({
@@ -209,41 +214,28 @@ function setupDesignView(componentArea, component, pageTitle, formTitle) {
 		},
 		handles: '.fbCompHandler'
 	});
-	/*if($(BUTTON_AREA_ID) != null) {
-		var myButtonsSort = new Sortables($(BUTTON_AREA_ID), {
-			onComplete: function(el){
-				//console.log('button drag');
-				var children = $(BUTTON_AREA_ID).getChildren();
-				var orderList = [];
-				for(var i = 0; i < children.length; i++) {
-					var element = children[i];
-					orderList.push(element.id);
-				}
-				FormPage.updateButtonList(orderList, nothing);
-			}
-		});
-	}*/
 	if($('dropBoxinner') != null) {
 		$('dropBoxinner').addEvents({
 			'over': function(el){
 				if (!this.dragEffect) this.dragEffect = new Fx.Style(this, 'background-color');
 				this.dragEffect.stop().start('ffffff', 'dddddd');
 				insideDropzone = true;
-				//console.log('over: '  + insideDropzone);
+				////console.log('over: '  + insideDropzone);
 			},
 			'leave': function(el){
 				this.dragEffect.stop().start('dddddd', 'ffffff');
 				insideDropzone = false;
-				//console.log('leave: '  + insideDropzone);
+				////console.log('leave: '  + insideDropzone);
 			},
 			'drop': function(el, drag){
 				this.dragEffect.stop().start('ff8888', 'ffffff');
-				//console.log('drop: '  + draggingComponent);
+				////console.log('attempting drop component: '  + draggingComponent);
+				////console.log('attempting drop button: '  + draggingButton);
 				if(draggingComponent == true) {
 					draggingComponent = false;
 					var currentId = currentElement.documentElement.getAttribute('id');
 				    if(CURRENT_ELEMENT_UNDER != null) {
-				    	//console.log('moving component: ');
+				    	////console.log('moving component: ');
 						FormComponent.moveComponent(currentId, CURRENT_ELEMENT_UNDER, insertNewComponent);
 				    }
 				} else if(draggingButton == true) {
@@ -327,7 +319,7 @@ function savePropertyOnEnter(value,attribute,event) {
 }
 function placeNewButton(parameter) {
 	if(parameter != null) {
-	//console.log('setting current button');
+	////console.log('setting current button');
 		CURRENT_BUTTON = parameter;
 	}
 }
@@ -627,7 +619,7 @@ function insertNewComponent(parameter) {
 	if($('emptyForm') != null) {
 		$('emptyForm').remove();
 	}
-	////console.log('Getting currentElement: '  + currentElement);
+	//////console.log('Getting currentElement: '  + currentElement);
 	if(parameter == 'append') {
 		insertNodesToContainer(currentElement, $('dropBoxinner'));
 		currentElement = null;
