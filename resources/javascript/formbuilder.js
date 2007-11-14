@@ -178,12 +178,12 @@ function setupDesignView(componentArea, component, pageTitle, formTitle) {
 			loadFormInfo();
 		});
 	}
-	/*var pageTitle = $(pageTitle);
+	var pageTitle = $(pageTitle);
 	if(pageTitle != null) {
 		pageTitle.addEvent('dblclick', function(e){
 			enableInlineEdit(savePageTitleAction, e);
 		});
-	}*/
+	}
 	FormComponent.getId(markSelectedComponent);
 	var myComponentSort = new Sortables($('dropBoxinner'), {
 		onComplete: function(el){
