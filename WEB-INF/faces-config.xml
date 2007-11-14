@@ -161,6 +161,10 @@
     </managed-bean>
     
     <component>
+		<component-type>InlineEdit</component-type>
+		<component-class>com.idega.formbuilder.presentation.components.FBInlineEdit</component-class>
+	</component>
+    <component>
 		<component-type>AssignVariableComponent</component-type>
 		<component-class>com.idega.formbuilder.presentation.components.FBAssignVariableComponent</component-class>
 	</component>

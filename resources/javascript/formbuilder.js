@@ -178,12 +178,12 @@ function setupDesignView(componentArea, component, pageTitle, formTitle) {
 			loadFormInfo();
 		});
 	}
-	var pageTitle = $(pageTitle);
+	/*var pageTitle = $(pageTitle);
 	if(pageTitle != null) {
 		pageTitle.addEvent('dblclick', function(e){
 			enableInlineEdit(savePageTitleAction, e);
 		});
-	}
+	}*/
 	FormComponent.getId(markSelectedComponent);
 	var myComponentSort = new Sortables($('dropBoxinner'), {
 		onComplete: function(el){
@@ -333,6 +333,15 @@ function loadButtonInfo(button) {
 	}
 	pressedButtonDelete = false;
 }
+function reloadInlineEdit(idle, event) {
+	var target = event.target;
+	var box = target.parentNode;
+	Workspace.getRenderedInlineEdit(idle, {
+		callback: function(resultDOM) {
+			replaceNode(resultDOM, box, box.parentNode);
+		}
+	});
+}
 function enableInlineEdit(action, event) {
 	var event = new Event(event);
 	var node = event.target;
@@ -355,7 +364,7 @@ function enableInlineEdit(action, event) {
 	}
 }
 function savePageTitleAction(event) {
-	if(event.type == 'blur' || (event.type == 'keydown' && (typeof event.keyCode != 'undefined' ? event.keyCode : event.charCode) == '13')) {
+	if(event.type == 'blur' || isEnterEvent(event)) {
 		var text = event.target.value;
 		if(text != '') {
 			var node = $(CURRENT_PAGE_ID);
@@ -371,7 +380,7 @@ function savePageTitleAction(event) {
 	}
 }
 function saveFormTitleAction(event) {
-	if(event.type == 'blur' || (event.type == 'keydown' && (typeof event.keyCode != 'undefined' ? event.keyCode : event.charCode) == '13')) {
+	if(event.type == 'blur' || isEnterEvent(event)) {
 		var text = event.target.value;
 		if(text != '') {
 			FormDocument.setFormTitle(text, disableInlineEdit);
@@ -772,7 +781,6 @@ function expandOrCollapse(node,expand) {
 		node.setAttribute('onclick','expandOrCollapse(this,true);');
 	}
 }
-
 function addNewItem(parameter) {
 	var par = $(parameter).lastChild;
 	var newInd = getNextRowIndex(par);
@@ -1061,30 +1069,31 @@ function removeComponent(parameter) {
 	var node = parameter.parentNode;
 	if(node != null) {
 		pressedComponentDelete = true;
-		FormComponent.removeComponent(node.id, removeComponentNode);
-	}
-}
-function removeComponentNode(parameter) {
-	var node = $(parameter);
-	if(node != null) {
-		node.remove();
-		var nodes = getElementsByClassName($('dropBoxinner'), 'div', 'formElement');
-		if(nodes.length == 0) {
-			Workspace.getDesignView({
-				callback: function(resultDOM) {
-					if(resultDOM != null) {
-						var dropBox = $('dropBox');
-						if(dropBox != null) {
-							var parentNode = dropBox.parentNode;
-							var node2 = parentNode.getLast();
-							node2.remove();
-							insertNodesToContainer(resultDOM, parentNode);
-							setupDesignView('dropBox', 'formElement', PAGE_TITLE, FORM_TITLE);
-							setupPagesPanel();
-						}
+		FormComponent.removeComponent(node.id, {
+			callback: function(result) {
+				var node = $(result);
+				if(node != null) {
+					node.remove();
+					var nodes = getElementsByClassName($('dropBoxinner'), 'div', 'formElement');
+					if(nodes.length == 0) {
+						Workspace.getDesignView({
+							callback: function(resultDOM) {
+								if(resultDOM != null) {
+									var dropBox = $('dropBox');
+									if(dropBox != null) {
+										var parentNode = dropBox.parentNode;
+										var node2 = parentNode.getLast();
+										node2.remove();
+										insertNodesToContainer(resultDOM, parentNode);
+										setupDesignView('dropBox', 'formElement', PAGE_TITLE, FORM_TITLE);
+										setupPagesPanel();
+									}
+								}
+							}
+						});
 					}
 				}
-			});
-		}
+			}
+		});
 	}
 }

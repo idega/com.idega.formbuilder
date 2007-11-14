@@ -92,24 +92,42 @@ public class FBDesignView extends FBComponentBase {
 		
 		component.add(formHeading);
 		
+//		FBInlineEdit pageTitle = new FBInlineEdit();
+//		pageTitle.setStyleClass("label");
+//		pageTitle.setId("pageNotice");
+//		pageTitle.setText("sdfsdfsdfsdf");
+		
 		Layer pageNotice = new Layer(Layer.DIV);
 		pageNotice.setId("pageNotice");
 		pageNotice.setStyleClass("label");
-		
-		Text currentPageTitle = new Text(((FormPage) WFUtil.getBeanInstance("formPage")).getTitle());
+//		
+		FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
+//		
+		Text currentPageTitle = new Text(formPage.getTitle());
 		currentPageTitle.setId("currentPageTitle");
 		pageNotice.add(currentPageTitle);
-		
+//		
 		component.add(pageNotice);
 		
 		Layer dropBoxInner = new Layer(Layer.DIV);
 		dropBoxInner.setId("dropBoxinner");
 		dropBoxInner.setStyleClass(getStyleClass() + "inner");
 		
-		FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
 		Page page = formPage.getPage();
 		if(page != null) {
-			if(page instanceof PageThankYou || (formDocument.getOverviewPage() != null && page.getId().equals(formDocument.getOverviewPage().getId()))) {
+			if(page instanceof PageThankYou) {
+				Layer noFormNotice = new Layer(Layer.DIV);
+				noFormNotice.setId("noFormNotice");
+				
+				Text noFormNoticeHeader = new Text(getLocalizedString(iwc, "labels_noform_header", "This is a special page"));
+				noFormNotice.add(noFormNoticeHeader);
+				
+				Paragraph noFormNoticeBody = new Paragraph();
+				noFormNoticeBody.add(getLocalizedString(iwc, "labels_noform_body", ""));
+				noFormNotice.add(noFormNoticeBody);
+				
+				component.add(noFormNotice);
+			} else if (formDocument.getOverviewPage() != null && page.getId().equals(formDocument.getOverviewPage().getId())) {
 				Layer noFormNotice = new Layer(Layer.DIV);
 				noFormNotice.setId("noFormNotice");
 				

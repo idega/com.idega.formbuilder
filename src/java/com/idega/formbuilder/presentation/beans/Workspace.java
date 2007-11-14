@@ -7,6 +7,7 @@ import org.jdom.Document;
 
 import com.idega.builder.business.BuilderLogic;
 import com.idega.formbuilder.presentation.components.FBDesignView;
+import com.idega.formbuilder.presentation.components.FBInlineEdit;
 import com.idega.formbuilder.presentation.components.FBViewPanel;
 import com.idega.util.CoreUtil;
 
@@ -61,6 +62,10 @@ public class Workspace implements Serializable {
 	
 	public Document getDesignView() {
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView("formElement"), false);
+	}
+	
+	public Document getRenderedInlineEdit(boolean idle) {
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBInlineEdit(idle, "formElement"), false);
 	}
 
 }

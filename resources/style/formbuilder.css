@@ -571,6 +571,10 @@ span.statusMsg {
 	top:5px;
 	padding-left: 24px;
 }
+#previewPageButton {
+ 	top: 433px;
+ 	right: 5px;
+}
 #newPageButton, .addPreviewPageBtn {
 	background:transparent url(images/add_16.png) no-repeat scroll 0%;
 }
@@ -1363,7 +1367,7 @@ div#sourceViewDiv iframe {
 	display: block !important;
 	position: absolute !important;
 	width: auto !important;
-	top: 0;
+	top: 81px;
 	left: 0;
 	right: 0;
 	bottom: 0;
