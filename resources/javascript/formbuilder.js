@@ -6,7 +6,6 @@ var PAGE_ICON_SELECTED = 'formPageIconSelected';
 var CURRENT_ELEMENT_UNDER = -1;
 var LAST_ELEMENT_UNDER = -1;
 var childBoxes = [];
-var COMPONENT_DRAG_STATUS = 'none';
 
 var CURRENT_PAGE_ID;
 var PREVIOUS_PAGE_ID;
@@ -31,9 +30,7 @@ var draggingButton = false;
 var draggingComponent = false;
 var draggingPage = false;
 var insideDropzone = false;
-var existSelected = false;
 var isThxPage = false;
-var editButton = false;
 
 var FBDraggable = Element.extend({
 	draggableTag: function(droppables, handle, type) {
@@ -80,18 +77,20 @@ var FBDraggable = Element.extend({
 							callback: function(resultDOM) {
 								if(resultDOM != null) {
 									currentElement = resultDOM;
-									////console.log('Setting currentElement: '  + currentElement);
 								}
 							}
 						});
    						draggingComponent = true;
-   						//console.log('attempting add component: '  + draggingComponent);
-   						////console.log('Draggin component onStart: '  + draggingComponent);
 					}
 				} else if(type == 'fbbutton') {
 					if(draggingButton == false) {
-						//console.log('trying to add button');
-						FormComponent.addButton(this.elementOrg.id, placeNewButton);
+						FormComponent.addButton(this.elementOrg.id, {
+							callback: function(resultDOM) {
+								if(resultDOM != null) {
+									CURRENT_BUTTON = resultDOM;
+								}
+							}
+						});
 						draggingButton = true;
 					}
 				} else if(type == 'fbprocess') {
@@ -122,12 +121,10 @@ var FBDraggable = Element.extend({
 							callback: function(resultDOM) {
 								if(resultDOM != null) {
 									currentElement = resultDOM;
-									//////console.log('Setting currentElement: '  + currentElement);
 								}
 							}
 						});
    						draggingComponent = true;
-   						//////console.log('Draggin component onStart: '  + draggingComponent);
 					}
 				}
 			},
@@ -138,45 +135,31 @@ var FBDraggable = Element.extend({
 				this.element = this.elementOrg;
 				this.elementOrg = null;
 				if(type == 'fbcomp') {
-					////console.log('Draggin component onComplete: '  + draggingComponent);
-					//console.log('onComplete drag ' + draggingComponent);
 					if(draggingComponent == true) {
-						////console.log('onComplete drag ' + draggingComponent);
-						//draggingComponent = false;
 						if(insideDropzone == false) {
 							var currentId = currentElement.documentElement.getAttribute('id');
 							this.element.removeEvents('mousemove');
 							FormComponent.removeComponent(currentId,nothing);
-							//currentElement = null;
 							draggingComponent = false;
 						}
 					}
-					
 				} else if(type == 'fbbutton') {
 					if(draggingButton == true) {
-						//draggingButton = false;
 						if(insideDropzone == false) {
-							//console.log('trying to remove button');
 							FormComponent.removeButton(CURRENT_BUTTON.documentElement.getAttribute('id'),nothing);
-							//CURRENT_BUTTON = null;
 							draggingButton = false;
 						}
 					}
 					
 				} else if(type == 'fbprocess') {
-					//////console.log('Draggin component onComplete: '  + draggingComponent);
 					if(draggingComponent == true) {
-						//////console.log('onComplete drag ' + insideDropzone);
-						//draggingComponent = false;
 						if(insideDropzone == false) {
 							var currentId = currentElement.documentElement.getAttribute('id');
 							this.element.removeEvents('mousemove');
 							FormComponent.removeComponent(currentId,nothing);
-							//currentElement = null;
 						}
 					}
 				}
-				//insideDropzone = false;
 			}
 		});
 		this.setStyles({
@@ -220,22 +203,17 @@ function setupDesignView(componentArea, component, pageTitle, formTitle) {
 				if (!this.dragEffect) this.dragEffect = new Fx.Style(this, 'background-color');
 				this.dragEffect.stop().start('ffffff', 'dddddd');
 				insideDropzone = true;
-				////console.log('over: '  + insideDropzone);
 			},
 			'leave': function(el){
 				this.dragEffect.stop().start('dddddd', 'ffffff');
 				insideDropzone = false;
-				////console.log('leave: '  + insideDropzone);
 			},
 			'drop': function(el, drag){
 				this.dragEffect.stop().start('ff8888', 'ffffff');
-				////console.log('attempting drop component: '  + draggingComponent);
-				////console.log('attempting drop button: '  + draggingButton);
 				if(draggingComponent == true) {
 					draggingComponent = false;
 					var currentId = currentElement.documentElement.getAttribute('id');
 				    if(CURRENT_ELEMENT_UNDER != null) {
-				    	////console.log('moving component: ');
 						FormComponent.moveComponent(currentId, CURRENT_ELEMENT_UNDER, insertNewComponent);
 				    }
 				} else if(draggingButton == true) {
@@ -278,7 +256,7 @@ function getPageComponents() {
 	return result;
 }
 function savePropertyOnEnter(value,attribute,event) {
-	if(event.type == 'blur' || (event.type == 'keydown' && (typeof event.keyCode != 'undefined' ? event.keyCode : event.charCode) == '13')) {
+	if(event.type == 'blur' || isEnterEvent(event)) {
 		switch(attribute) {
 			case 'compText':
 				savePlaintext(value);
@@ -315,12 +293,6 @@ function savePropertyOnEnter(value,attribute,event) {
 		 		break;
 		  	default:
 		}
-	}
-}
-function placeNewButton(parameter) {
-	if(parameter != null) {
-	////console.log('setting current button');
-		CURRENT_BUTTON = parameter;
 	}
 }
 function removeButton(parameter) {
@@ -481,26 +453,28 @@ function saveThankYouText(parameter) {
 		FormDocument.setThankYouText(parameter, nothing);
 	}
 }
-function saveHasPreview(parameter) {
-	if(parameter != null)  {
-		var temp = parameter.id;
-		FormDocument.togglePreviewPage(parameter.checked, {
-			callback: function(resultDOM) {
-				if(resultDOM != null) {
-					if(parameter.checked == true) {
-						insertNodesToContainerBefore(resultDOM, $('pagesPanelSpecial'), $('pagesPanelSpecial').childNodes[0]);
-					} else {
-						$('pagesPanelSpecial').getFirst().remove();
-					}
+function saveHasPreview(event) {
+	new Event(event).stop();
+	var target = event.target;
+	var checked;
+	if(target.hasClass('addPreviewPageBtn')) {
+		checked = true;
+	} else {
+		checked = false;
+	}
+	FormDocument.togglePreviewPage(checked, {
+		callback: function(resultDOM) {
+			if(resultDOM != null) {
+				if(checked == true) {
+					$('previewPageButton').removeClass('addPreviewPageBtn').addClass('removePreviewPageBtn');
+					insertNodesToContainerBefore(resultDOM, $('pagesPanelSpecial'), $('pagesPanelSpecial').childNodes[0]);
+				} else {
+					$('previewPageButton').removeClass('removePreviewPageBtn').addClass('addPreviewPageBtn');
+					$('pagesPanelSpecial').getFirst().remove();
 				}
 			}
-		});
-	}
-}
-
-function saveIsProcessForm(parameter) {
-	if(parameter != null)
-		FormDocument.toggleProcessTask(parameter.checked, nothing);
+		}
+	});
 }
 function markSelectedPage(parameter) {
 	if(CURRENT_PAGE_ID != null) {
@@ -619,7 +593,6 @@ function insertNewComponent(parameter) {
 	if($('emptyForm') != null) {
 		$('emptyForm').remove();
 	}
-	//////console.log('Getting currentElement: '  + currentElement);
 	if(parameter == 'append') {
 		insertNodesToContainer(currentElement, $('dropBoxinner'));
 		currentElement = null;
@@ -711,7 +684,7 @@ function saveButtonLabel(value) {
 				var btn = $(CURRENT_ELEMENT);
 				if(btn != null)
 					var nodes = btn.getChildren();
-					nodes[0].value = value;
+				nodes[0].value = value;
 			}
 		});
 	}
@@ -873,25 +846,21 @@ function getEmptySelect(index,lbl,vl) {
 	result.appendChild(value);
 	result.appendChild(expB);
 	return result;
-	
 }
 function switchView(view, id) {
 	showLoadingMessage('Switching...');
 	Workspace.switchView(view, {
 		callback: function(resultDOM) {
-				replaceNode(resultDOM, $('viewPanel'), $('mainWorkspace'));
-				closeLoadingMessage();
-			}
-		});
+			replaceNode(resultDOM, $('viewPanel'), $('mainWorkspace'));
+			closeLoadingMessage();
+		}
+	});
 }
 function fbsave() {
 	var node = $('sourceViewDiv');
 	if(node != null) {
 		showLoadingMessage('Saving');
-		//var textNode = $('workspaceform1:sourceTextarea_cp');
-		//if(textNode != null) {
-			FormDocument.saveSrc(sourceTextarea.getCode(), closeLoadingMessage);
-		//}
+		FormDocument.saveSrc(sourceTextarea.getCode(), closeLoadingMessage);
 	} else {
 		showLoadingMessage('Saving document...');
 		FormDocument.save(closeLoadingMessage);
@@ -1057,14 +1026,12 @@ function deletePage(event) {
 	if(root != null) {
 		var nodes = root.getChildren();
 		if(nodes.length == 1) {
-			//pressedPageDelete = true;
 			return;
 		}
 	}
 	var node = event.target;
 	var parentNode = node.parentNode;
 	if(parentNode != null) {
-		//pressedPageDelete = true;
 		FormPage.removePage(parentNode.id, {
 			callback: function(result) {
 				if(result != null) {

@@ -12,7 +12,6 @@ import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.util.FBConstants;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
-import com.idega.presentation.ui.CheckBox;
 import com.idega.presentation.ui.Label;
 import com.idega.presentation.ui.TextArea;
 import com.idega.util.CoreUtil;
@@ -54,24 +53,13 @@ public class FBFormProperties extends FBComponentBase {
 		
 		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
 		
-		Layer line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
-		
-		CheckBox preview = new CheckBox();
-		preview.setId("previewScreen");
-		preview.setChecked(formDocument.isHasPreview());
-		preview.setOnChange("saveHasPreview(this);");
-		
-		line.add(preview);
-		line.add(new Label(getLocalizedString(iwc, "fb_form_property_has_preview", "Form contains preview"), preview));
-		body.add(line);
-		
 		PageThankYou submitPage = formDocument.getSubmitPage();
 		String submitPageText = null;
 		if(submitPage != null) {
 			submitPageText = formDocument.getThankYouText();
 		}
 		
-		line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
+		Layer line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
 		
 		TextArea thankYouText = new TextArea("thankYouText", submitPageText);
 		thankYouText.setId("thankYouText");

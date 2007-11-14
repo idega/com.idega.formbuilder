@@ -32,7 +32,6 @@ public class FBPagesPanel extends FBComponentBase {
 	private static final String THANKYOU_PAGE = "THANKYOU_PAGE";
 	private static final String GENERAL_PAGES_HEADER = "GENERAL_PAGES_HEADER";
 	private static final String SPECIAL_PAGES_HEADER = "SPECIAL_PAGES_HEADER";
-//	private static final String TOOLBAR_FACET = "TOOLBAR_FACET";
 	private static final String DEFAULT_PAGE_LOAD_ACTION = "loadPageInfo(this.id);";
 	private static final String DEFAULT_PAGE_REMOVE_ACTION = "deletePage(event);";
 	private static final String DEFAULT_CONFIRM_LOAD_ACTION = "loadConfirmationPage(this.id);";
@@ -79,19 +78,13 @@ public class FBPagesPanel extends FBComponentBase {
 	protected void initializeComponent(FacesContext context) {
 		IWContext iwc = CoreUtil.getIWContext();
 		
-//		Layer topToolbar = new Layer(Layer.DIV);
-//		topToolbar.setStyleClass(PAGES_PANEL_TOOLBAR_CLASS);
-//		
-//		
-//		topToolbar.add(newSectionBtn);
-//		addFacet(TOOLBAR_FACET, topToolbar);
-		
 		Layer generalPagesHeader = new Layer(Layer.DIV);
 		generalPagesHeader.setStyleClass(PAGES_PANEL_TOOLBAR_CLASS);
 		Text generalPagesHeaderText = new Text(getLocalizedString(iwc, "fb_pages_general_section", "General sections"));
 		generalPagesHeaderText.setStyleClass(PAGES_PANEL_HEADER_CLASS);
 		Link newSectionBtn = new Link(getLocalizedString(iwc, "fb_add_page_link", "New section"));
 		newSectionBtn.setId("newPageButton");
+		newSectionBtn.setStyleClass("toolbarBtn");
 		newSectionBtn.setOnClick("createNewPage();return false;");
 		generalPagesHeader.add(generalPagesHeaderText);
 		generalPagesHeader.add(newSectionBtn);
@@ -102,6 +95,16 @@ public class FBPagesPanel extends FBComponentBase {
 		Text specialPagesHeaderText = new Text(getLocalizedString(iwc, "fb_pages_special_section", "Special sections"));
 		specialPagesHeaderText.setStyleClass(PAGES_PANEL_HEADER_CLASS);
 		specialPagesHeader.add(specialPagesHeaderText);
+		Link previewSectionBtn = new Link(getLocalizedString(iwc, "fb_preview_page_link", "Preview"));
+		previewSectionBtn.setId("previewPageButton");
+		previewSectionBtn.setOnClick("saveHasPreview(event);return false;");
+		FormDocument formDocument = ((FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID));
+		if(formDocument.isHasPreview()) {
+			previewSectionBtn.setStyleClass("toolbarBtn removePreviewPageBtn");
+		} else {
+			previewSectionBtn.setStyleClass("toolbarBtn addPreviewPageBtn");
+		}
+		specialPagesHeader.add(previewSectionBtn);
 		addFacet(SPECIAL_PAGES_HEADER, specialPagesHeader);
 	}
 	
@@ -116,11 +119,6 @@ public class FBPagesPanel extends FBComponentBase {
 		writer.writeAttribute("id", getId() + "Main", "id");
 		writer.writeAttribute("class", getStyleClass(), "styleClass");
 		
-//		UIComponent component = getFacet(TOOLBAR_FACET);
-//		if(component != null) {
-//			renderChild(context, component);
-//		}
-		
 		UIComponent component = getFacet(GENERAL_PAGES_HEADER);
 		if(component != null) {
 			renderChild(context, component);
@@ -130,12 +128,12 @@ public class FBPagesPanel extends FBComponentBase {
 		writer.writeAttribute("id", getId(), "id");
 		writer.writeAttribute("class", generalPartStyleClass, null);
 		
-		Locale locale = ((Workspace) WFUtil.getBeanInstance("workspace")).getLocale();
-		FormDocument formDocument = ((FormDocument) WFUtil.getBeanInstance("formDocument"));
+		Locale locale = ((Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID)).getLocale();
+		FormDocument formDocument = ((FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID));
 		Document document = formDocument.getDocument();
 		if(document != null) {
 			String selectedPageId = null;
-			Page selectedPage = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
+			Page selectedPage = ((FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID)).getPage();
 			if(selectedPage != null) {
 				selectedPageId = selectedPage.getId();
 			}

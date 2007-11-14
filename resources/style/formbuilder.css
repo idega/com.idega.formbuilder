@@ -100,7 +100,7 @@ div.label span, div.label input {
 	padding: 15px;
 }
 #fbComponentPropertiesPanel {
-	height: 600px;
+	height: 550px;
 	position: relative;
 }
 
@@ -193,14 +193,14 @@ span.statusMsg {
 }
 
 .fbBottomButtonsContainer {
+	border-top: 1px #959494 solid;
 	position: absolute;
-	bottom: 0px;
-	left: 0px;
-	width: 100%;
-	background-color: #E1E1E1;
-	border: 1px solid #D7D7D7;
-	z-index: 5;
-	height: 60px;
+	bottom: 0;
+	height: 55px;
+	right: 0;
+	left: 0;
+	width: auto;
+	background: url(images/bottom_tiler.gif) top left repeat-x #c7c6c6;
 }
 
 #fbHomePageHeaderBlock {
@@ -448,7 +448,7 @@ span.statusMsg {
 
 .pagesGeneralContainer {
 	display: block;
-	height: 300px;
+	height: 400px;
 	overflow: auto;
 }
 
@@ -504,9 +504,9 @@ span.statusMsg {
 }
 
 #optionsPanel {
-	left: 10px;
-	top: 62px;
-	bottom: 72px;
+	left: 5px;
+	top: 85px;
+	bottom: 61px;
 	position: absolute;
 	background: #fff;
 	overflow: auto;
@@ -516,10 +516,10 @@ span.statusMsg {
 
 #viewPanel {
 	position: absolute;
-	top: 62px;
-	left: 311px;
-	right: 221px;
-	bottom: 72px;
+	top: 85px;
+	left: 306px;
+	right: 216px;
+	bottom: 61px;
 	padding-right: 0px;
 	background: #fff;
 	border: 1px solid #aeaeae;
@@ -535,13 +535,13 @@ span.statusMsg {
 
 .pagesPanel {
 	position: absolute;
-	top: 62px !important;
-	right: 10px !important;
+	top: 85px !important;
+	right: 5px !important;
 	display: inline;
 	background-color: #FFFFFF;
 	width: 210px;
 	height: auto;
-	bottom: 72px !important;
+	bottom: 61px !important;
 	z-index: 5;
 	border: 1px solid #AEAEAE;
 	overflow: auto;
@@ -559,11 +559,23 @@ span.statusMsg {
 	position: relative;
 	height: 35px;
 }
-#newPageButton {
-	margin-left: 5px;
+.toolbarBtn {
 	cursor: pointer;
+	color:#0096FF;
+	font-weight:bold !important;
+	height:20px;
+	line-height: 20px;
+	margin-left:8px;
+	position:absolute;
+	text-align:right;
+	top:5px;
+	padding-left: 24px;
 }
-#newPageButton:hover {
+#newPageButton, .addPreviewPageBtn {
+	background:transparent url(images/add_16.png) no-repeat scroll 0%;
+}
+.removePreviewPageBtn  {
+	background:transparent url(images/remov_16.png) no-repeat scroll 0%;
 }
 .pageIconIcon {
 	position: absolute;
@@ -577,21 +589,8 @@ span.statusMsg {
 	font-size: 12px 				!important;
 	font-weight: bold 				!important;
 }
-
 .formPageIcon:hover,.formPageIconSpecial:hover {
 	border-color: Black;
-}
-#newPageButton {
-	color:#0096FF;
-	font-weight:bold !important;
-	height:20px;
-	line-height: 20px;
-	margin-left:8px;
-	position:absolute;
-	text-align:right;
-	top:5px;
-	background:transparent url(images/list-add.png) no-repeat scroll 0%;
-	padding-left: 24px;
 }
 .formPageIconSelected,.formPageIconSelectedSpecial {
 	cursor: pointer;
@@ -652,7 +651,7 @@ span.statusMsg {
 }
 
 #paletteBody {
-	height: 600px;
+	height: 588px;
 	font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
 	/* Font  of sub menu items */
 	background: #FFF !important; /* Background color of sub menu items */
@@ -1183,11 +1182,19 @@ span.fbMenuTabBar {
 }
 
 .fbBottomButtonsContainer a {
-	display: block;	
-	padding-top: 35px;
-	text-align: center;
+	padding-top: 30px;
 	margin-top: 7px;
-	color: #666;
+	font-family: "Lucida Grande", "Lucida Sans", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #131313;
+	margin-left: 13px;
+	margin-right: 13px;
+	width: 24px;
+}
+
+html>body .fbBottomButtonsContainer a {
+	min-width: 24px;
+	width: auto;
 }
 
 .fbBottomButtonsContainer a.rightButton {

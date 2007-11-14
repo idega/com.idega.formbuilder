@@ -1,14 +1,13 @@
 #fbHomePage {
-	margin: 15px;
+	margin: 5px;
 	background-color: White;
 	border: 1px solid LightGrey;
 	padding: 25px;
 	right: 0px;
 	left: 0px;
-	margin-bottom: 20px;
 	position: absolute;
 	bottom: 0px;
-	top: 50px;
+	top: 80px;
 }
 
 #fbAdminPage {

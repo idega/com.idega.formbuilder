@@ -32,7 +32,7 @@ public class FBMenu extends FBComponentBase {
 		Accordion acc = new Accordion("fbMenu");
 		acc.setId("fbMenuAccordion");
 		acc.setUseSound(false);
-		acc.setHeight("600");
+		acc.setHeight("500");
 		
 		FBPalette palette = (FBPalette) application.createComponent(FBPalette.COMPONENT_TYPE);
 		palette.setItemStyleClass("paletteComponent");

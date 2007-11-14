@@ -11,9 +11,6 @@
 				 showFunctionMenu="false"
 				 javascripturls="/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/mootools/1.11/mootools-all.js,
 				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/codepress/codepress.js,
-				 				/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax.js,
-								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/modal-message.js,
-								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/ajax-dynamic-content.js,
 								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/categories-tabs.js,
 								/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/moodalbox/1.2.1/js/moodalbox.js,
 								/dwr/engine.js,
