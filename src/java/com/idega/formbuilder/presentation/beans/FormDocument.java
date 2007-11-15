@@ -918,7 +918,7 @@ public class FormDocument implements Serializable {
 						Component component = page.getComponent(it2.next());
 						PropertiesComponent properties = component.getProperties();
 						if(properties != null) {
-							String variableProperty = component.getProperties().getVariableName();
+							String variableProperty = component.getProperties().getVariable().getDefaultStringRepresentation();
 							if(variableProperty != null) {
 								variables.add(variableProperty);
 							}

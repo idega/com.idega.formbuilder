@@ -24,6 +24,7 @@ import com.idega.formbuilder.presentation.components.FBFormComponent;
 import com.idega.formbuilder.util.FBConstants;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
+import com.idega.jbpm.def.Variable;
 import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
 
@@ -139,10 +140,10 @@ public class FormComponent implements Serializable {
 	
 	public void saveComponentProcessVariableName(String value) {
 		
-		Component component = this.component != null ? this.component : this.selectComponent != null ? this.selectComponent : null;
+		Component component = this.component != null ? this.component : this.selectComponent != null ? this.selectComponent : this.plainComponent != null ? this.plainComponent : null;
 		
 		if(component != null)
-			component.getProperties().setVariableName(value);
+			component.getProperties().setVariable(value);
 	}
 	
 	public Document saveComponentExternalSrc(String value) {
@@ -204,7 +205,7 @@ public class FormComponent implements Serializable {
 				Component component = page.getComponent(componentId);
 				PropertiesComponent properties = component.getProperties();
 				if(properties != null) {
-					properties.setVariableName(variable);
+					properties.setVariable(Variable.parseDefaultStringRepresentation(variable));
 				}
 			}
 			newAssign.setValue(variable.substring(variable.indexOf(":") + 1));
@@ -454,6 +455,14 @@ public class FormComponent implements Serializable {
 			bean = button.getProperties().getLabel();
 			bean.setString(FBUtil.getUILocale(), label);
 			button.getProperties().setLabel(bean);
+		} else if(plainComponent != null) {
+			bean = plainComponent.getProperties().getLabel();
+			
+			if(bean == null)
+				bean = new LocalizedStringBean();
+			
+			bean.setString(FBUtil.getUILocale(), label);
+			plainComponent.getProperties().setLabel(bean);
 		}
 	}
 
@@ -527,9 +536,9 @@ public class FormComponent implements Serializable {
 	
 	public String getVariableName() {
 		if(component != null) {
-			return component.getProperties().getVariableName();
+			return component.getProperties().getVariable() == null ? null : component.getProperties().getVariable().getDefaultStringRepresentation();
 		} else if(selectComponent != null) {
-			return selectComponent.getProperties().getVariableName();
+			return selectComponent.getProperties().getVariable() == null ? null : selectComponent.getProperties().getVariable().getDefaultStringRepresentation();
 		}
 		return null;
 	}
@@ -587,14 +596,21 @@ public class FormComponent implements Serializable {
 
 	public String getPlainText() {
 		if(plainComponent != null) {
-			return plainComponent.getProperties().getText();
+			return plainComponent.getProperties().getText() == null ? null : plainComponent.getProperties().getText().getString(FBUtil.getUILocale());
 		}
 		return null;
 	}
 
 	public void setPlainText(String plainText) {
 		if(plainComponent != null) {
-			plainComponent.getProperties().setText(plainText);
+			
+			LocalizedStringBean text = plainComponent.getProperties().getText();
+			
+			if(text == null)
+				text = new LocalizedStringBean();
+			
+			text.setString(FBUtil.getUILocale(), plainText);
+			plainComponent.getProperties().setText(text);
 		}
 	}
 

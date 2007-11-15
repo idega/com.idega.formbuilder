@@ -79,6 +79,7 @@ public class FBFormComponent extends FBComponentBase {
 				try {
 					Locale current = FBUtil.getUILocale();
 					Element element = (Element) component.getHtmlRepresentation(current).cloneNode(true);
+					
 					if(element != null) {
 						
 						element.removeAttribute("id");
@@ -92,9 +93,9 @@ public class FBFormComponent extends FBComponentBase {
 						String type = component.getType();
 						type = type.substring(3);
 						assignVariable.setId(component.getId() + "-fbcomp_" + type);
-						if(properties.getVariableName() != null) {
-							assignVariable.setValue(properties.getVariableName().substring(properties.getVariableName().indexOf(":") + 1));
-						}						
+						if(properties.getVariable() != null) {
+							assignVariable.setValue(properties.getVariable().getName());
+						}
 						
 						Image deleteButton = new Image();
 						deleteButton.setId("db" + getId());

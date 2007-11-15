@@ -255,7 +255,7 @@ public class FormPage implements Serializable {
 			for(Iterator<String> it = components.iterator(); it.hasNext(); ) {
 				String componentId = it.next();
 				Component component = page.getComponent(componentId);
-				String variableName = component.getProperties().getVariableName();
+				String variableName = component.getProperties().getVariable().getDefaultStringRepresentation();
 				if(variableName != null) {
 					list.add(variableName);
 				}
