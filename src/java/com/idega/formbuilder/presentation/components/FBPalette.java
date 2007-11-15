@@ -28,7 +28,7 @@ public class FBPalette extends FBComponentBase {
 	
 //	private static final String DEFAULT_COMPONENT_DRAG_ACTION = "handleComponentDrag";
 //	private static final String DEFAULT_BUTTON_DRAG_ACTION = "handleButtonDrag";
-	private static final String COMPONENT_CATEGORY = "fbcomp";
+	private static final String COMPONENT_CATEGORY = "fbc";
 	private static final String BUTTON_CATEGORY = "fbbutton";
 	private static final String PROCESS_CATEGORY = "fbprocess";
 	private static final String BODY_ID = "firstList";

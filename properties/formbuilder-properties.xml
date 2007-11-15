@@ -6,9 +6,9 @@
 	<!-- autofill components are any component type bind to jsf value binding expression -->    
     <properties name="autofill-components">
     	<!-- text component autofilled with user's name -->
-        <property name="fbcomp_text" value="loginSession.user.name" />
-        <property name="fbcomp_text" value="loginSession.user.name" />
-        <property name="fbcomp_text" value="loginSession.user.name" />
+        <property name="fbc_text" value="loginSession.user.name" />
+        <property name="fbc_text" value="loginSession.user.name" />
+        <property name="fbc_text" value="loginSession.user.name" />
     </properties>
     
     <!-- external data sources map with direct links to xml files containing data for select components -->

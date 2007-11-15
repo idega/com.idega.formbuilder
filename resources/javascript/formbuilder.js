@@ -49,7 +49,7 @@ var FBDraggable = Element.extend({
 					'opacity': '0.75'
 				}).injectInside(document.body);
 				this.value.now = now;
-				if(type == 'fbcomp') {
+				if(type == 'fbc') {
 					CURRENT_ELEMENT_UNDER = -1;
 		   			childBoxes = [];
 					var childNodes = $$('#dropBoxinner div.formElement');
@@ -134,7 +134,7 @@ var FBDraggable = Element.extend({
 				this.element.remove();
 				this.element = this.elementOrg;
 				this.elementOrg = null;
-				if(type == 'fbcomp') {
+				if(type == 'fbc') {
 					if(draggingComponent == true) {
 						if(insideDropzone == false) {
 							var currentId = currentElement.documentElement.getAttribute('id');
@@ -226,8 +226,8 @@ function setupDesignView(componentArea, component, pageTitle, formTitle) {
 			}
 		});
 	}
-	$$('.fbcomp').each(function(el){
-		el.draggableTag($('dropBoxinner'), null, 'fbcomp');
+	$$('.fbc').each(function(el){
+		el.draggableTag($('dropBoxinner'), null, 'fbc');
 	});
 	$$('.fbprocess').each(function(el){
 		el.draggableTag($('dropBoxinner'), null, 'fbprocess');
