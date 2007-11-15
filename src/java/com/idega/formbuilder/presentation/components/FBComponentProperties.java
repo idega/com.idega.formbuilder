@@ -9,10 +9,10 @@ import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
+import com.idega.documentmanager.business.component.Button;
 import com.idega.documentmanager.business.component.ButtonArea;
-import com.idega.documentmanager.business.component.Component;
 import com.idega.documentmanager.business.component.Page;
-import com.idega.documentmanager.business.component.properties.PropertiesComponent;
+import com.idega.documentmanager.business.component.properties.PropertiesButton;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.DataSourceList;
 import com.idega.formbuilder.presentation.beans.FormComponent;
@@ -108,6 +108,29 @@ public class FBComponentProperties extends FBComponentBase {
 				line.add(plainTextValue);
 				body.add(line);
 				
+				line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
+				
+				TextInput labelValue = new TextInput("propertyLabel", formComponent.getLabel());
+				
+				labelValue.setOnBlur("saveComponentLabel(this.value);");
+				labelValue.setOnKeyDown("savePropertyOnEnter(this.value,'compTitle',event);");
+				
+				line.add(new Label("Field name", labelValue));
+				line.add(labelValue);
+				body.add(line);
+				
+				line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
+				
+				String variableName = formComponent.getVariableName();
+				TextInput processVarName = new TextInput("processVarName", variableName == null ? "" : variableName);
+				
+				processVarName.setOnBlur("saveComponentProcessVariableName(this.value);");
+				processVarName.setOnKeyDown("savePropertyOnEnter(this.value,'compProcVar',event);");
+				
+				line.add(new Text("(Temporary) Process variable name:"));
+				line.add(processVarName);
+				body.add(line);
+				
 				layer.add(body);
 			} else {
 				Layer body = createPanelSection("labelPropertiesPanel");
@@ -153,17 +176,17 @@ public class FBComponentProperties extends FBComponentBase {
 				line.add(helpMsg);
 				body.add(line);
 				
-//				line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
-//				
-//				String variableName = formComponent.getVariableName();
-//				TextInput processVarName = new TextInput("processVarName", variableName == null ? "" : variableName);
-//				
-//				processVarName.setOnBlur("saveComponentProcessVariableName(this.value);");
-//				processVarName.setOnKeyDown("savePropertyOnEnter(this.value,'compProcVar',event);");
-//				
-//				line.add(new Text("(Temporary) Process variable name:"));
-//				line.add(processVarName);
-//				body.add(line);
+				line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
+				
+				String variableName = formComponent.getVariableName();
+				TextInput processVarName = new TextInput("processVarName", variableName == null ? "" : variableName);
+				
+				processVarName.setOnBlur("saveComponentProcessVariableName(this.value);");
+				processVarName.setOnKeyDown("savePropertyOnEnter(this.value,'compProcVar',event);");
+				
+				line.add(new Text("(Temporary) Process variable name:"));
+				line.add(processVarName);
+				body.add(line);
 				
 				line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
 				
@@ -269,9 +292,9 @@ public class FBComponentProperties extends FBComponentBase {
 				return;
 			ButtonArea area = page.getButtonArea();
 			if(area != null) {
-				Component component = area.getComponent(componentId);
-				if(component != null) {
-					PropertiesComponent properties = component.getProperties();
+				Button button = (Button)area.getComponent(componentId);
+				if(button != null) {
+					PropertiesButton properties = button.getProperties();
 					
 					Layer body = createPanelSection("labelPropertiesPanel");
 					
@@ -282,6 +305,16 @@ public class FBComponentProperties extends FBComponentBase {
 					title.setOnKeyDown("savePropertyOnEnter(this.value,'btnTitle',event);");
 					
 					line.add(new Label("Button title", title));
+					line.add(title);
+					body.add(line);
+					
+					line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
+					
+					title = new TextInput("propertyAction", properties.getReferAction());
+					title.setOnBlur("saveButtonAction(this.value);");
+					title.setOnKeyDown("savePropertyOnEnter(this.value,'btnAction',event);");
+					
+					line.add(new Label("Button action", title));
 					line.add(title);
 					body.add(line);
 					
