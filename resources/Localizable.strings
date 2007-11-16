@@ -70,3 +70,5 @@ form_steps_panel=Section Properties
 no_menu_label=No menu available for this view
 
 change_source_code=Save changes
+
+casesStatuses.label=Cases statuses

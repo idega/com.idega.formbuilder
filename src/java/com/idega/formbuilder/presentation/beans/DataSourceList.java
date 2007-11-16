@@ -30,7 +30,7 @@ public class DataSourceList implements Serializable {
 	public static String externalDataSrc = new Integer(PropertiesSelect.EXTERNAL_DATA_SRC).toString();
 	
 	private List<SelectItem> sources = new ArrayList<SelectItem>();
-	private List<SelectOption> ext_data_sources;
+	private List<SelectOption> extDataSources;
 
 	public DataSourceList() {
 		sources.clear();
@@ -48,30 +48,30 @@ public class DataSourceList implements Serializable {
 	
 	public List<SelectOption> getExternalDataSources() {
 	
-		if(ext_data_sources == null) {
+		if(extDataSources == null) {
 			
-			ext_data_sources = new ArrayList<SelectOption>();
-			ext_data_sources.add(new SelectOption("", "Choose"));
+			extDataSources = new ArrayList<SelectOption>();
+			extDataSources.add(new SelectOption("Choose", ""));
 			
 			try {
-				Map loc_strings = (BundleLocalizationMap) ((HashMap) WFUtil.getBeanInstance("localizedStrings")).get(IWBundleStarter.IW_BUNDLE_IDENTIFIER);
+				@SuppressWarnings("unchecked")
+				Map<String, String> localizedStrings = (BundleLocalizationMap) ((HashMap) WFUtil.getBeanInstance("localizedStrings")).get(IWBundleStarter.IW_BUNDLE_IDENTIFIER);
 				
 				Config cfg = ConfigFactory.getInstance().getConfig(IWBundleStarter.IW_BUNDLE_IDENTIFIER, IWBundleStarter.FB_CFG_FILE);
-				Map<String, String > props = cfg.getProperies(select_sources);
+				Map<String, String > properties = cfg.getProperies(select_sources);
 				
-				if(props != null) {
+				if(properties != null) {
 					
-					for (Iterator<String> iter = props.keySet().iterator(); iter.hasNext();) {
-						String src_key = iter.next();
-						ext_data_sources.add(new SelectOption(props.get(src_key), (String)loc_strings.get(src_key+".label")));
-					}
+					for (String srcKey : properties.keySet())
+						extDataSources.add(new SelectOption((String)localizedStrings.get(srcKey+".label"), properties.get(srcKey)));
 				}
+					
 				
 			} catch (ConfigException e) {
 				logger.log(Level.SEVERE, "Unable to load select external data sources list. Config key provided: "+select_sources, e);
 			}
 		}
 		
-		return ext_data_sources;
+		return extDataSources;
 	}
 }
