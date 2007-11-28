@@ -48,6 +48,11 @@ span.multipleLegend {
 .multiple {
 	background-color: Red;
 }
+.actionBox {
+	height: 30px;
+	position: relative;
+	border-bottom: 1px solid #E4E4E4;
+}
 .variablePopupList {
 	list-style: none;
 	margin-left: 0px;
@@ -686,8 +691,8 @@ span.statusMsg {
 	padding-left: 24px;
 }
 #previewPageButton {
- 	top: 433px;
- 	right: 5px;
+	position: absolute;
+ 	left: 110px;
 }
 #newPageButton, .addPreviewPageBtn {
 	background:transparent url(images/add_16.png) no-repeat scroll 0%;

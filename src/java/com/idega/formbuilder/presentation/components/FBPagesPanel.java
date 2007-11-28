@@ -65,6 +65,8 @@ public class FBPagesPanel extends FBComponentBase {
 	protected void initializeComponent(FacesContext context) {
 		IWContext iwc = CoreUtil.getIWContext();
 		
+		FormDocument formDocument = ((FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID));
+		
 		Layer body = new Layer(Layer.DIV);
 		body.setId("pagesPanelMain");
 		body.setStyleClass("pagesPanel");
@@ -73,20 +75,40 @@ public class FBPagesPanel extends FBComponentBase {
 		generalPagesHeader.setStyleClass(PAGES_PANEL_TOOLBAR_CLASS);
 		Text generalPagesHeaderText = new Text(getLocalizedString(iwc, "fb_pages_general_section", "General sections"));
 		generalPagesHeaderText.setStyleClass(PAGES_PANEL_HEADER_CLASS);
+		
+		generalPagesHeader.add(generalPagesHeaderText);
+		
+		body.add(generalPagesHeader);
+		
+		Layer actionBox = new Layer(Layer.DIV);
+		actionBox.setStyleClass("actionBox");
+		
 		Link newSectionBtn = new Link(getLocalizedString(iwc, "fb_add_page_link", "New section"));
 		newSectionBtn.setId("newPageButton");
 		newSectionBtn.setStyleClass("toolbarBtn");
 		newSectionBtn.setOnClick("createNewPage();return false;");
-		generalPagesHeader.add(generalPagesHeaderText);
-		generalPagesHeader.add(newSectionBtn);
-		body.add(generalPagesHeader);
+		
+		Link previewSectionBtn = new Link(getLocalizedString(iwc, "fb_preview_page_link", "Preview"));
+		previewSectionBtn.setId("previewPageButton");
+		previewSectionBtn.setOnClick("saveHasPreview(event);return false;");
+		if(formDocument.isHasPreview()) {
+			previewSectionBtn.setStyleClass("toolbarBtn removePreviewPageBtn");
+		} else {
+			previewSectionBtn.setStyleClass("toolbarBtn addPreviewPageBtn");
+		}
+		
+		
+		actionBox.add(newSectionBtn);
+		actionBox.add(previewSectionBtn);
+		
+		body.add(actionBox);
 		
 		Layer general = new Layer(Layer.DIV);
 		general.setId("pagesPanel");
 		general.setStyleClass("pagesGeneralContainer");
 		
 		Locale locale = FBUtil.getUILocale();
-		FormDocument formDocument = ((FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID));
+		
 		String selectedPageId = null;
 		Page selectedPage = ((FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID)).getPage();
 		if(selectedPage != null) {
@@ -125,15 +147,7 @@ public class FBPagesPanel extends FBComponentBase {
 		Text specialPagesHeaderText = new Text(getLocalizedString(iwc, "fb_pages_special_section", "Special sections"));
 		specialPagesHeaderText.setStyleClass(PAGES_PANEL_HEADER_CLASS);
 		specialPagesHeader.add(specialPagesHeaderText);
-		Link previewSectionBtn = new Link(getLocalizedString(iwc, "fb_preview_page_link", "Preview"));
-		previewSectionBtn.setId("previewPageButton");
-		previewSectionBtn.setOnClick("saveHasPreview(event);return false;");
-		if(formDocument.isHasPreview()) {
-			previewSectionBtn.setStyleClass("toolbarBtn removePreviewPageBtn");
-		} else {
-			previewSectionBtn.setStyleClass("toolbarBtn addPreviewPageBtn");
-		}
-		specialPagesHeader.add(previewSectionBtn);
+		
 		body.add(specialPagesHeader);
 		
 		Layer special = new Layer(Layer.DIV);
