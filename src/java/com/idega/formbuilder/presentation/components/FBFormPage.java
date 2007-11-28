@@ -1,16 +1,11 @@
 package com.idega.formbuilder.presentation.components;
 
-import java.io.IOException;
-import java.util.Iterator;
-
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
 import com.idega.presentation.text.Text;
-import com.idega.util.RenderUtils;
 
 public class FBFormPage extends FBComponentBase {
 	
@@ -88,8 +83,6 @@ public class FBFormPage extends FBComponentBase {
 	}
 	
 	protected void initializeComponent(FacesContext context) {
-		getChildren().clear();
-		
 		Layer pageLayer = new Layer(Layer.DIV);
 		pageLayer.setId(getId() + PAGE_ID_POSTFIX);
 		pageLayer.setStyleClass(getStyleClass());
@@ -121,13 +114,6 @@ public class FBFormPage extends FBComponentBase {
 			pageLayer.add(deleteButton);
 		}
 		add(pageLayer);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public void encodeChildren(FacesContext context) throws IOException {
-		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
-			RenderUtils.renderChild(context, (UIComponent) it.next());
-		}
 	}
 	
 	public String getLabel() {

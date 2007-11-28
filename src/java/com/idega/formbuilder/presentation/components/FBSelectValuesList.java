@@ -37,14 +37,7 @@ public class FBSelectValuesList extends FBComponentBase {
 	private static final String EXPAND_ALL_BUTTON = "EXPAND_ALL_BUTTON";
 	private static final String COLLAPSE_ALL_BUTTON = "COLLAPSE_ALL_BUTTON";
 	
-	public FBSelectValuesList() {
-		super();
-		setRendererType(null);
-	}
-	
 	protected void initializeComponent(FacesContext context) {
-		getChildren().clear();
-		
 		Image addButton = new Image();
 		addButton.setId("addButton");
 		addButton.setSrc(ADD_BUTTON_IMG);
@@ -139,7 +132,7 @@ public class FBSelectValuesList extends FBComponentBase {
 		if (!isRendered()) {
 			return;
 		}
-		List<ItemBean> itemSet = (List<ItemBean>) ((FormComponent) WFUtil.getBeanInstance("formComponent")).getItems();
+		List<ItemBean> itemSet = (List<ItemBean>) ((FormComponent) WFUtil.getBeanInstance(FormComponent.BEAN_ID)).getItems();
 		for(int i = 0; i < itemSet.size(); i++) {
 			String label = itemSet.get(i).getLabel();
 			String value = itemSet.get(i).getValue();

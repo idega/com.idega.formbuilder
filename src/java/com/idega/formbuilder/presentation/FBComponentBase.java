@@ -1,6 +1,7 @@
 package com.idega.formbuilder.presentation;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.logging.Logger;
 
 import javax.faces.component.UIComponent;
@@ -11,6 +12,7 @@ import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.presentation.IWBaseComponent;
 import com.idega.presentation.IWContext;
+import com.idega.util.RenderUtils;
 import com.idega.webface.WFUtil;
 
 public class FBComponentBase extends IWBaseComponent {
@@ -23,11 +25,12 @@ public class FBComponentBase extends IWBaseComponent {
 	private String styleClass;
 	
 	public FBComponentBase() {
-		super();
+		this(null, null);
 	}
 	
 	public FBComponentBase(String id, String styleClass) {
 		super();
+		setRendererType(null);
 		this.id = id;
 		this.styleClass = styleClass;
 	}
@@ -107,6 +110,13 @@ public class FBComponentBase extends IWBaseComponent {
 		IWMainApplication iwma = iwc.getApplicationContext().getIWMainApplication();
 		IWBundle bundle = iwma.getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER);
 		return bundle.getResourceBundle(iwc.getCurrentLocale()).getLocalizedString(localizationKey, defaultString);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void encodeChildren(FacesContext context) throws IOException {
+		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
+			RenderUtils.renderChild(context, (UIComponent) it.next());
+		}
 	}
 
 }

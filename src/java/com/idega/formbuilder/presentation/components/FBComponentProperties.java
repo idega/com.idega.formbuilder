@@ -1,12 +1,9 @@
 package com.idega.formbuilder.presentation.components;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import javax.faces.application.Application;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
 import com.idega.documentmanager.business.component.Button;
@@ -28,7 +25,6 @@ import com.idega.presentation.ui.SelectDropdown;
 import com.idega.presentation.ui.SelectOption;
 import com.idega.presentation.ui.TextArea;
 import com.idega.presentation.ui.TextInput;
-import com.idega.util.RenderUtils;
 import com.idega.webface.WFUtil;
 
 public class FBComponentProperties extends FBComponentBase {
@@ -48,13 +44,11 @@ public class FBComponentProperties extends FBComponentBase {
 	}
 
 	public FBComponentProperties() {
-		super();
-		setRendererType(null);
+		this(null, null);
 	}
 	
 	public FBComponentProperties(String componentId, String componentType) {
 		super();
-		setRendererType(null);
 		this.componentId = componentId;
 		this.componentType = componentType;
 	}
@@ -76,8 +70,7 @@ public class FBComponentProperties extends FBComponentBase {
 	}
 	
 	protected void initializeComponent(FacesContext context) {
-		Application application = context.getApplication();
-		getChildren().clear();
+//		Application application = context.getApplication();
 		
 		if(componentId == null) {
 			return;
@@ -92,7 +85,7 @@ public class FBComponentProperties extends FBComponentBase {
 		
 		if(componentType.equals(FBConstants.COMPONENT_TYPE)) {
 			
-			FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance("formComponent");
+			FormComponent formComponent = (FormComponent) WFUtil.getBeanInstance(FormComponent.BEAN_ID);
 			formComponent.initializeBeanInstace(componentId, "component");
 			
 			if(formComponent.getPlainComponent() != null) {
@@ -256,8 +249,7 @@ public class FBComponentProperties extends FBComponentBase {
 					if(localDataSource) {
 						Layer localBody = createPanelSection("localPropertiesPanel");
 						
-						FBSelectValuesList selectValues = (FBSelectValuesList) application.createComponent(FBSelectValuesList.COMPONENT_TYPE);
-						selectValues.setValueBinding("itemSet", application.createValueBinding("#{formComponent.items}"));
+						FBSelectValuesList selectValues = new FBSelectValuesList();
 						selectValues.setId("selectOpts");
 						
 						localBody.add(selectValues);
@@ -286,7 +278,7 @@ public class FBComponentProperties extends FBComponentBase {
 				}
 			}
 		} else if(componentType.equals(FBConstants.BUTTON_TYPE)) {
-			FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+			FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 			Page page = formPage.getPage();
 			if(page == null)
 				return;
@@ -332,13 +324,6 @@ public class FBComponentProperties extends FBComponentBase {
 
 	public void setComponentType(String componentType) {
 		this.componentType = componentType;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public void encodeChildren(FacesContext context) throws IOException {
-		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
-			RenderUtils.renderChild(context, (UIComponent) it.next());
-		}
 	}
 	
 }

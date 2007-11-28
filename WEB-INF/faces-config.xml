@@ -74,6 +74,19 @@
 	    	<property-name>jbpmProcessBusiness</property-name>
 		    <value>#{jbpmProcessBusiness}</value>
 		</managed-property>
+		<managed-property>
+		  	<property-name>processData</property-name>
+		    <value>#{processData}</value>
+		</managed-property>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>processData</managed-bean-name>
+		<managed-bean-class>com.idega.formbuilder.presentation.beans.ProcessData</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+		<managed-property>
+	    	<property-name>jbpmProcessBusiness</property-name>
+		    <value>#{jbpmProcessBusiness}</value>
+		</managed-property>
 	</managed-bean>
 	<managed-bean>
 		<managed-bean-name>workspace</managed-bean-name>
@@ -111,6 +124,10 @@
 		<managed-property>
 		  	<property-name>xformsProcessManager</property-name>
 		    <value>#{xformsProcessManager}</value>
+		</managed-property>
+		<managed-property>
+		  	<property-name>processData</property-name>
+		    <value>#{processData}</value>
 		</managed-property>
 	</managed-bean>
 	<managed-bean>
@@ -161,8 +178,8 @@
     </managed-bean>
     
     <component>
-		<component-type>InlineEdit</component-type>
-		<component-class>com.idega.formbuilder.presentation.components.FBInlineEdit</component-class>
+		<component-type>VariableViewer</component-type>
+		<component-class>com.idega.formbuilder.presentation.components.FBVariableViewer</component-class>
 	</component>
     <component>
 		<component-type>AssignVariableComponent</component-type>
@@ -171,18 +188,6 @@
     <component>
 		<component-type>AddTaskForm</component-type>
 		<component-class>com.idega.formbuilder.presentation.components.FBAddTaskForm</component-class>
-	</component>
-	<component>
-		<component-type>DatatypeVariables</component-type>
-		<component-class>com.idega.formbuilder.presentation.components.FBDatatypeVariables</component-class>
-	</component>
-	<component>
-		<component-type>AddVariableComponent</component-type>
-		<component-class>com.idega.formbuilder.presentation.components.FBAddVariableComponent</component-class>
-	</component>
-	<component>
-		<component-type>NewFormComponent</component-type>
-		<component-class>com.idega.formbuilder.presentation.components.FBNewFormComponent</component-class>
 	</component>
 	<component>
 		<component-type>AdminPage</component-type>
@@ -219,10 +224,6 @@
 	<component>
 		<component-type>Workspace</component-type>
 		<component-class>com.idega.formbuilder.presentation.components.FBWorkspace</component-class>
-	</component>
-	<component>
-		<component-type>FormProperties</component-type>
-		<component-class>com.idega.formbuilder.presentation.components.FBFormProperties</component-class>
 	</component>
 	<component>
 		<component-type>SelectValuesList</component-type>

@@ -70,7 +70,7 @@ public class FBUtil {
 	}
 
 	public static Locale getUILocale() {
-		Workspace workspace = (Workspace) WFUtil.getBeanInstance("workspace");
+		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
 		Locale locale = workspace.getLocale();
 		if(locale == null) {
 			locale = new Locale(FBConstants.FORMBUILDER_DEFAULT_LOCALE);

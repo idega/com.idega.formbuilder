@@ -2,7 +2,6 @@ package com.idega.formbuilder.presentation.beans;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,11 +10,9 @@ import java.util.Map;
 
 import javax.ejb.FinderException;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jbpm.taskmgmt.def.Task;
 
 import com.idega.block.form.presentation.FormViewer;
 import com.idega.block.form.process.XFormsToTask;
@@ -34,20 +31,14 @@ import com.idega.documentmanager.business.Document;
 import com.idega.documentmanager.business.DocumentManager;
 import com.idega.documentmanager.business.FormLockException;
 import com.idega.documentmanager.business.PersistenceManager;
-import com.idega.documentmanager.business.component.Component;
 import com.idega.documentmanager.business.component.Page;
 import com.idega.documentmanager.business.component.PageThankYou;
-import com.idega.documentmanager.business.component.properties.PropertiesComponent;
 import com.idega.documentmanager.component.beans.LocalizedStringBean;
 import com.idega.formbuilder.business.egov.Application;
 import com.idega.formbuilder.business.egov.ApplicationBusiness;
 import com.idega.formbuilder.business.process.XFormsProcessManager;
-import com.idega.formbuilder.presentation.components.FBAddTaskForm;
-import com.idega.formbuilder.presentation.components.FBDatatypeVariables;
 import com.idega.formbuilder.presentation.components.FBFormPage;
-import com.idega.formbuilder.presentation.components.FBFormProperties;
 import com.idega.formbuilder.presentation.components.FBViewPanel;
-import com.idega.formbuilder.presentation.converters.FormPageInfo;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
@@ -66,6 +57,7 @@ public class FormDocument implements Serializable {
 	private XFormsToTask viewToTaskBinder;
 	private InstanceManager instanceManager;
 	private XFormsProcessManager xformsProcessManager;
+	private ProcessData processData;
 	
 	private String formId;
 	private boolean hasPreview;
@@ -73,12 +65,6 @@ public class FormDocument implements Serializable {
 	private Document document;
 	private Page overviewPage;
 	private PageThankYou submitPage;
-	
-	private String taskName;
-	private long taskId;
-	private String processName;
-	private long processId;
-	private List<String> variables = new ArrayList<String>();
 	
 	private Workspace workspace;
 	private ApplicationBusiness app_business_bean;
@@ -125,14 +111,6 @@ public class FormDocument implements Serializable {
 		return result;
 	}
 	
-	public boolean isVariableAssigned(String variableName) {
-		if(getVariables().contains(variableName)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
 	public Document initializeBeanInstance(String formId) throws Exception {
 		DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
 		this.document = formManagerInstance.openForm(formId);
@@ -144,7 +122,7 @@ public class FormDocument implements Serializable {
 		return document;
 	}
 	
-	public boolean createTaskFormDocument(String parameter) throws Exception {
+	public boolean createTaskFormDocument(String parameter, String processId, String taskName) throws Exception {
 		Locale locale = workspace.getLocale();
 		
 		DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
@@ -165,61 +143,45 @@ public class FormDocument implements Serializable {
 			
 		workspace.setView("design");
 		
-		initializeBeanInstance(getDocument(), processName, processId, taskName);
+		initializeBeanInstance(getDocument());
+		processData.initializeBeanInstance(getDocument(), new Long(processId), taskName);
 		xformsProcessManager.assignTaskForm(new Long(processId).toString(), taskName, formId);
 			
 		Page page = getDocument().getPage(getDocument().getContainedPagesIdList().get(0));
 		FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
-		formPage.loadPageInfo(page);
+		formPage.initializeBeanInstance(page);
 		
 		return true;
 	}
 	
-	public org.jdom.Document addNewVariable(String name, String datatype) {
-		jbpmProcessBusiness.addTaskVariable(new Long(processId).toString(), taskName, datatype, name);
-		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDatatypeVariables(datatype), true);
-	}
-	
-	public org.jdom.Document getRenderedAddTaskFormComponent(String processId, String taskName, String formName, boolean idle) {
-		if(idle) {
-			return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBAddTaskForm("idle"), true);
-		} else {
-			if(processId == null) 
-				return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBAddTaskForm("idle"), true);
-			
-			this.processId = new Long(processId).longValue();
-			if(formName != null && !formName.equals("")) {
-				return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBAddTaskForm("idle"), true);
-			} else if(taskName != null && !taskName.equals("")) {
-				this.taskName = taskName;
-				return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBAddTaskForm("name"), true);
-			} else {
-				return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBAddTaskForm("task"), true);
-			}
-		}
-	}
-	
-	public Document initializeBeanInstance(Document document, String processName, long processId, String taskName) {
-		initializeBeanInstance(document);
-		Task task = jbpmProcessBusiness.getProcessTask(new Long(processId).toString(), taskName);
-		this.taskId = task == null ? 0 : task.getId();
-		this.processName = processName;
-		this.taskName = taskName;
-		this.processId = processId;
-		return document;
-	}
+//	public org.jdom.Document getRenderedAddTaskFormComponent(String processId, String taskName, String formName, boolean idle) {
+//		if(idle) {
+//			return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBAddTaskForm("idle"), true);
+//		} else {
+//			if(processId == null) 
+//				return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBAddTaskForm("idle"), true);
+//			
+//			this.processId = new Long(processId).longValue();
+//			if(formName != null && !formName.equals("")) {
+//				return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBAddTaskForm("idle"), true);
+//			} else if(taskName != null && !taskName.equals("")) {
+//				this.taskName = taskName;
+//				return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBAddTaskForm("name"), true);
+//			} else {
+//				return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBAddTaskForm("task"), true);
+//			}
+//		}
+//	}
 	
 	@SuppressWarnings("unchecked")
-	public boolean loadTaskFormDocument(String processName, long processId, String taskName, String formId) {
+	public boolean loadTaskFormDocument(String processId, String taskName, String formId) {
 		
-		if(processName == null || taskName == null || formId == null)
+		if(processId == null || taskName == null || formId == null)
 			return false;
 		
 		clearAppsRelatedMetaData();
 		
 		try {
-			getWorkspace().setProcessMode(true);
-				
 			DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
 			setDocument(formManagerInstance.openForm(formId));
 //			CoreUtil.getIWContext().getExternalContext().getSessionMap().put(FBConstants.FORM_DOCUMENT_ID, formId);
@@ -232,7 +194,9 @@ public class FormDocument implements Serializable {
 			formPage.initializeBeanInstance(firstP);
 				
 			getWorkspace().setView("design");
-			initializeBeanInstance(getDocument(), processName, processId, taskName);
+			getWorkspace().setProcessMode(true);
+			initializeBeanInstance(getDocument());
+			processData.initializeBeanInstance(getDocument(), new Long(processId), taskName);
 		} catch (FormLockException e) {
 			// TODO: inform about lock
 			logger.info("Form was locked when tried to open it", e);
@@ -271,7 +235,7 @@ public class FormDocument implements Serializable {
 			
 		Page page = document.getPage(document.getContainedPagesIdList().get(0));
 		FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
-		formPage.loadPageInfo(page);
+		formPage.initializeBeanInstance(page);
 		
 		return true;
 	}
@@ -436,7 +400,6 @@ public class FormDocument implements Serializable {
 		try {
 			if(isProcessForm(formId)) {
 				formId = retrieveFormIdFormButtonId(formId, "_process");
-//				workspace.setProcessMode(true);
 			} else {
 				formId = retrieveFormIdFormButtonId(formId, "_edit");
 			}
@@ -453,6 +416,7 @@ public class FormDocument implements Serializable {
 				formPage.initializeBeanInstance(firstP);
 				
 				workspace.setView("design");
+				getWorkspace().setProcessMode(false);
 				initializeBeanInstance(document);
 			}
 		} catch (FormLockException e) {
@@ -499,6 +463,39 @@ public class FormDocument implements Serializable {
 		return true;
 	}
 	
+	public boolean loadFormDocumentPreview(String formId) {
+		
+		clearAppsRelatedMetaData();
+		
+		try {
+			formId = retrieveFormIdFormButtonId(formId, "_try");
+			if(formId != null && !formId.equals("")) {
+				DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
+				document = formManagerInstance.openForm(formId);
+				
+//				if(getFormId() != null)
+//					getFormsService().unlockForm(getFormId());
+				
+				workspace.setView(FBViewPanel.PREVIEW_VIEW);
+				
+				String firstPage = getCommonPagesIdList().get(0);
+				Page firstP = document.getPage(firstPage);
+				FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+				formPage.initializeBeanInstance(firstP);
+				
+				initializeBeanInstance(document);
+			}
+		} catch (FormLockException e) {
+			// TODO: inform about lock
+			logger.info("Form was locked when tried to open it", e);
+			return false;
+		} catch(Exception e) {
+			logger.info("Exception occured when trying to load form code", e);
+			return false;
+		}
+		return true;
+	}
+	
 	protected String retrieveFormIdFormButtonId(String button_id, String button_postfix) {
 		
 		try {
@@ -518,6 +515,25 @@ public class FormDocument implements Serializable {
 			return false;
 		try {
 			getPersistenceManager().removeForm(documentId, delete_submitted_data);
+		} catch (FormLockException e) {
+			logger.info("Form was locked when tried to delete it", e);
+			return false;
+		} catch (Exception e) {
+			logger.error("Exception while removing form", e);
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean deleteTaskFormDocument(String documentId) {
+		boolean delete_submitted_data = true;
+		documentId = retrieveFormIdFormButtonId(documentId, "_delete");
+		
+		if(documentId == null)		
+			return false;
+		try {
+			getPersistenceManager().removeForm(documentId, delete_submitted_data);
+			viewToTaskBinder.unbind(documentId);
 		} catch (FormLockException e) {
 			logger.info("Form was locked when tried to delete it", e);
 			return false;
@@ -656,13 +672,9 @@ public class FormDocument implements Serializable {
 		}
 	}
 	
-	public void loadFormProperties(ActionEvent ae) {
-		initializeBeanInstance(document);
-	}
-	
-	public org.jdom.Document getFormDocumentInfo() {
-		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormProperties(), true);
-	}
+//	public void loadFormProperties(ActionEvent ae) {
+//		initializeBeanInstance(document);
+//	}
 	
 	public Document initializeBeanInstance(Document document) {
 		this.document = document;
@@ -751,16 +763,10 @@ public class FormDocument implements Serializable {
 		return submitPage.getProperties().getLabel().getString(FBUtil.getUILocale());
 	}
 
-	public FormPageInfo setThankYouTitle(String thankYouTitle) {
+	public void setThankYouTitle(String thankYouTitle) {
 		LocalizedStringBean bean = submitPage.getProperties().getLabel();
 		bean.setString(FBUtil.getUILocale(), thankYouTitle);
 		submitPage.getProperties().setLabel(bean);
-		FormPageInfo result = new FormPageInfo();
-		if(submitPage != null) {
-			result.setPageTitle(thankYouTitle);
-			result.setPageId(submitPage.getId());
-		}
-		return result;		
 	}
 
 	public String getTempValue() {
@@ -843,38 +849,6 @@ public class FormDocument implements Serializable {
 		this.workspace = workspace;
 	}
 
-	public String getTaskName() {
-		return taskName;
-	}
-
-	public void setTaskName(String taskName) {
-		this.taskName = taskName;
-	}
-
-	public long getTaskId() {
-		return taskId;
-	}
-
-	public void setTaskId(long taskId) {
-		this.taskId = taskId;
-	}
-
-	public String getProcessName() {
-		return processName;
-	}
-
-	public void setProcessName(String processName) {
-		this.processName = processName;
-	}
-
-	public long getProcessId() {
-		return processId;
-	}
-
-	public void setProcessId(long processId) {
-		this.processId = processId;
-	}
-
 	public JbpmProcessBusinessBean getJbpmProcessBusiness() {
 		return jbpmProcessBusiness;
 	}
@@ -907,30 +881,11 @@ public class FormDocument implements Serializable {
 		this.xformsProcessManager = xformsProcessManager;
 	}
 
-	public List<String> getVariables() {
-		if(variables == null || variables.isEmpty()) {
-			if(document != null) {
-				List<String> pages = document.getContainedPagesIdList();
-				for(Iterator<String> it = pages.iterator(); it.hasNext(); ) {
-					Page page = document.getPage(it.next());
-					List<String> components = page.getContainedComponentsIdList();
-					for(Iterator<String> it2 = components.iterator(); it2.hasNext(); ) {
-						Component component = page.getComponent(it2.next());
-						PropertiesComponent properties = component.getProperties();
-						if(properties != null) {
-							String variableProperty = component.getProperties().getVariable().getDefaultStringRepresentation();
-							if(variableProperty != null) {
-								variables.add(variableProperty);
-							}
-						}
-					}
-				}
-			}
-		}
-		return variables;
+	public ProcessData getProcessData() {
+		return processData;
 	}
 
-	public void setVariables(List<String> variables) {
-		this.variables = variables;
+	public void setProcessData(ProcessData processData) {
+		this.processData = processData;
 	}
 }

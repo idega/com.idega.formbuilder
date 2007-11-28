@@ -62,16 +62,15 @@ public class FBButton extends FBComponentBase {
 	}
 
 	public FBButton() {
-		new FBButton(null, null, null, null);
+		this(null, null, null, null);
 	}
 	
 	public FBButton(String buttonId) {
-		new FBButton(buttonId, null, null, null);
+		this(buttonId, null, null, null);
 	}
 	
 	public FBButton(String buttonId, String styleClass, String onSelect, String onDelete) {
 		super();
-		setRendererType(null);
 		this.buttonId = buttonId;
 		this.onSelect = onSelect;
 		this.onDelete = onDelete;

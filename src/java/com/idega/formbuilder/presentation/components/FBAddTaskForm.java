@@ -1,17 +1,15 @@
 package com.idega.formbuilder.presentation.components;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
 import org.jbpm.taskmgmt.def.Task;
 
 import com.idega.block.form.process.XFormsToTask;
 import com.idega.formbuilder.presentation.FBComponentBase;
-import com.idega.formbuilder.presentation.beans.FormDocument;
+import com.idega.formbuilder.presentation.beans.ProcessData;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
@@ -19,7 +17,6 @@ import com.idega.presentation.text.Link;
 import com.idega.presentation.ui.DropdownMenu;
 import com.idega.presentation.ui.Label;
 import com.idega.presentation.ui.TextInput;
-import com.idega.util.RenderUtils;
 import com.idega.webface.WFUtil;
 
 public class FBAddTaskForm extends FBComponentBase {
@@ -41,18 +38,19 @@ public class FBAddTaskForm extends FBComponentBase {
 	}
 	
 	protected void initializeComponent(FacesContext context) {
-		getChildren().clear();
+//		getChildren().clear();
 		IWContext iwc = IWContext.getIWContext(context);
 		
 		Layer body = new Layer(Layer.DIV);
 		
-		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
+//		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
+		ProcessData processData = (ProcessData) WFUtil.getBeanInstance(ProcessData.BEAN_ID);
 		
 		XFormsToTask viewToTaskbinder = (XFormsToTask) WFUtil.getBeanInstance("process_xforms_viewToTask");
 		JbpmProcessBusinessBean jbpmProcessBean = viewToTaskbinder.getJbpmProcessBusiness();
-		List<Task> tasks = jbpmProcessBean.getProcessDefinitionTasks(new Long(formDocument.getProcessId()).toString());
+		List<Task> tasks = jbpmProcessBean.getProcessDefinitionTasks(processData.getProcessId());
 
-		String processId = getId() == null ? new Long(formDocument.getProcessId()).toString() : getId();
+		Long processId = processData.getProcessId();
 		
 		if(status.equals("idle")) {
 			body.setId("newTF_" + processId + "_box_1");
@@ -90,16 +88,6 @@ public class FBAddTaskForm extends FBComponentBase {
 		add(body);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public void encodeChildren(FacesContext context) throws IOException {
-		if(!isRendered()) {
-			return;
-		}
-		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
-			RenderUtils.renderChild(context, (UIComponent) it.next());
-		}
-	}
-
 	public String getStatus() {
 		return status;
 	}

@@ -9,6 +9,7 @@ import javax.faces.context.FacesContext;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
+import com.idega.formbuilder.presentation.beans.ProcessData;
 import com.idega.formbuilder.presentation.beans.ProcessPalette;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
 import com.idega.presentation.IWContext;
@@ -56,7 +57,6 @@ public class FBAssignVariableComponent extends FBComponentBase {
 	
 	public FBAssignVariableComponent(String status, String type, String value) {
 		super();
-		setRendererType(null);
 		this.status = status;
 		this.value = value;
 		this.type = type;
@@ -97,7 +97,8 @@ public class FBAssignVariableComponent extends FBComponentBase {
 				String datatype = processPalette.getComponentDatatype(type);
 				JbpmProcessBusinessBean jbpmProcessBean = (JbpmProcessBusinessBean) WFUtil.getBeanInstance(JbpmProcessBusinessBean.BEAN_ID);
 				FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
-				List<String> variables = jbpmProcessBean.getTaskVariablesByDatatype(new Long(formDocument.getProcessId()).toString(), formDocument.getTaskName(), datatype);
+				ProcessData processData = (ProcessData) WFUtil.getBeanInstance(ProcessData.BEAN_ID);
+				List<String> variables = jbpmProcessBean.getTaskVariablesByDatatype(processData.getProcessId(), processData.getTaskName(), datatype);
 				
 				for(Iterator<String> it = variables.iterator(); it.hasNext(); ) {
 					String variable = it.next();
@@ -106,8 +107,6 @@ public class FBAssignVariableComponent extends FBComponentBase {
 				
 			}
 			
-//			taskChooser.setOnChange("reloadAddTaskForm2(event);return false;");
-//			taskChooser.setOnBlur("resetAddTaskForm(event);return false;");
 			body.add(new Label("Assign to:", taskChooser));
 			body.add(taskChooser);
 		}

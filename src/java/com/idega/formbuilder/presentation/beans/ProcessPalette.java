@@ -10,13 +10,9 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jdom.Document;
 
-import com.idega.builder.business.BuilderLogic;
 import com.idega.documentmanager.component.datatypes.ComponentType;
 import com.idega.documentmanager.component.datatypes.ConstComponentDatatype;
-import com.idega.formbuilder.presentation.components.FBAddVariableComponent;
-import com.idega.util.CoreUtil;
 
 public class ProcessPalette extends Palette implements Serializable {
 	
@@ -34,16 +30,12 @@ public class ProcessPalette extends Palette implements Serializable {
 		while(it.hasNext()) {
 			ComponentType nextComp = it.next();
 			try {
-				list.add(new PaletteComponent(nextComp.getType()));
+				list.add(new PaletteComponent(nextComp.getType(), "fbv"));
 			} catch(Exception e) {
 				logger.error("Could not retrieve component: " + nextComp);
 			}
 		}
 		return list;
-	}
-	
-	public Document getAddVariableBox(boolean idle, String datatype) {
-		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBAddVariableComponent(idle, datatype), true);
 	}
 	
 	public Set<String> getDatatypes() {

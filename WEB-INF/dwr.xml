@@ -6,6 +6,10 @@
 	    	<param name="managedBeanName" value="processPalette"/>
 	    	<param name="class" value="com.idega.formbuilder.presentation.beans.ProcessPalette"/>
     	</create>
+    	<create creator="jsf" javascript="ProcessData" scope="session">
+	    	<param name="managedBeanName" value="processData"/>
+	    	<param name="class" value="com.idega.formbuilder.presentation.beans.ProcessData"/>
+    	</create>
   		<create creator="jsf" javascript="XFormsProcess" scope="application">
 	    	<param name="managedBeanName" value="xformsProcessManager"/>
 	    	<param name="class" value="com.idega.formbuilder.business.process.XFormsProcessManager"/>
@@ -18,42 +22,13 @@
 	    	<param name="managedBeanName" value="workspace"/>
 	    	<param name="class" value="com.idega.formbuilder.presentation.beans.Workspace"/>
     	</create>
-    	<convert converter="bean" match="com.idega.formbuilder.presentation.converters.FormDocumentInfo" />
     	<create creator="jsf" javascript="FormPage" scope="session">
 	    	<param name="managedBeanName" value="formPage"/>
 	    	<param name="class" value="com.idega.formbuilder.presentation.beans.FormPage"/>
     	</create>
-    	<convert converter="bean" match="com.idega.formbuilder.presentation.converters.FormPageInfo" />
     	<create creator="jsf" javascript="FormComponent" scope="session">
 	    	<param name="managedBeanName" value="formComponent"/>
 	    	<param name="class" value="com.idega.formbuilder.presentation.beans.FormComponent"/>
     	</create>
-    	<convert converter="bean" match="com.idega.formbuilder.presentation.converters.FormComponentInfo" />
-    	<convert converter="bean" match="com.idega.formbuilder.presentation.converters.FormButtonInfo" />
-    	<convert converter="bean" match="com.idega.documentmanager.business.form.beans.ItemBean" />
-    	<convert converter="bean" match="com.idega.formbuilder.presentation.converters.PaletteComponentInfo" />
   	</allow>
-  
-  	<signatures>
-		<![CDATA[
-  			import com.idega.formbuilder.presentation.converters.FormDocumentInfo;
-  			import com.idega.formbuilder.presentation.beans.FormDocument;
-  			import com.idega.formbuilder.presentation.converters.FormPageInfo;
-  			import com.idega.formbuilder.presentation.beans.FormPage;
-  			import com.idega.formbuilder.presentation.converters.FormComponentInfo;
-  			import com.idega.formbuilder.presentation.beans.FormComponent;
-  			import com.idega.formbuilder.presentation.converters.FormButtonInfo;
-  			import com.idega.formbuilder.presentation.converters.PaletteComponentInfo;
-  			import com.idega.documentmanager.business.form.beans.ItemBean;
-  			import com.idega.formbuilder.presentation.beans.ProcessPalette;
-			
-			FormComponent.addComponent(PaletteComponentInfo);
-			FormComponent.getFormButtonInfo();
-			FormComponent.addButton();
-			FormDocument.getFormDocumentInfo();
-			FormPage.getFormPageInfo();
-			FormComponent.getFormComponentInfo();
-			ProcessPalette.getAddVariableBox(boolean, String);
-  		]]>
-	</signatures>
 </dwr>

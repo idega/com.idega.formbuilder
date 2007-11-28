@@ -15,12 +15,10 @@ var CURRENT_ELEMENT = null;
 
 var FORM_TITLE = 'formHeadingHeader';
 var PAGE_TITLE = 'currentPageTitle';
-var CURRENT_ACTIVE_INLINE = null;
-var INLINE_ACTION = null;
-var INLINE_VALUE = null;
-var INLINE_ID = null;
 
 var CURRENT_BUTTON = null;
+var VARIABLE_LIST;
+var COMPONENT_DATATYPE;
 
 var currentElement = null;
 var pressedComponentDelete = false;
@@ -31,6 +29,9 @@ var draggingComponent = false;
 var draggingPage = false;
 var insideDropzone = false;
 var isThxPage = false;
+
+var SHOW_ELEMENT_TRANSITION_DURATION = 250;
+var SET_DISPLAY_PROPERTY_ID = 0;
 
 var FBDraggable = Element.extend({
 	draggableTag: function(droppables, handle, type) {
@@ -73,7 +74,8 @@ var FBDraggable = Element.extend({
 						}
 					});
 					if(draggingComponent == false) {
-   						FormComponent.addComponent(this.elementOrg.id, {
+						var componentType = this.elementOrg.id;
+   						FormComponent.addComponent(componentType, {
 							callback: function(resultDOM) {
 								if(resultDOM != null) {
 									currentElement = resultDOM;
@@ -82,7 +84,7 @@ var FBDraggable = Element.extend({
 						});
    						draggingComponent = true;
 					}
-				} else if(type == 'fbbutton') {
+				} else if(type == 'fbb') {
 					if(draggingButton == false) {
 						FormComponent.addButton(this.elementOrg.id, {
 							callback: function(resultDOM) {
@@ -93,7 +95,27 @@ var FBDraggable = Element.extend({
 						});
 						draggingButton = true;
 					}
-				} else if(type == 'fbprocess') {
+				} else if(type == 'fbbp') {
+					if(draggingButton == false) {
+						var componentType = this.elementOrg.id;
+						dwr.engine.beginBatch();
+						FormComponent.addButton(componentType, {
+							callback: function(resultDOM) {
+								if(resultDOM != null) {
+									CURRENT_BUTTON = resultDOM;
+								}
+							}
+						});
+						ProcessData.getAvailableTransitions(componentType, {
+							callback: function(list) {
+								console.log('Variable list ' + list);
+								VARIABLE_LIST = list;
+							}
+						});
+						dwr.engine.endBatch();
+						draggingButton = true;
+					}
+				} else if(type == 'fbcp') {
 					CURRENT_ELEMENT_UNDER = -1;
 		   			childBoxes = [];
 					var childNodes = $$('#dropBoxinner div.formElement');
@@ -117,13 +139,29 @@ var FBDraggable = Element.extend({
 						}
 					});
 					if(draggingComponent == false) {
-   						FormComponent.addComponentWithVariable(this.elementOrg.id, {
+						var componentType = this.elementOrg.id;
+						dwr.engine.beginBatch();
+   						FormComponent.addComponent(componentType, {
 							callback: function(resultDOM) {
 								if(resultDOM != null) {
 									currentElement = resultDOM;
 								}
 							}
 						});
+						ProcessPalette.getComponentDatatype(componentType, {
+							callback: function(datatype) {
+								if(datatype != null) {
+									COMPONENT_DATATYPE = datatype;
+								}
+							}
+						});
+						ProcessData.getComponentTypeVariables(componentType, {
+							callback: function(list) {
+								console.log('Variable list ' + list);
+								VARIABLE_LIST = list;
+							}
+						});
+						dwr.engine.endBatch();
    						draggingComponent = true;
 					}
 				}
@@ -139,26 +177,34 @@ var FBDraggable = Element.extend({
 						if(insideDropzone == false) {
 							var currentId = currentElement.documentElement.getAttribute('id');
 							this.element.removeEvents('mousemove');
-							FormComponent.removeComponent(currentId,nothing);
+							FormComponent.removeComponent(currentId);
 							draggingComponent = false;
 						}
 					}
-				} else if(type == 'fbbutton') {
+				} else if(type == 'fbb') {
 					if(draggingButton == true) {
 						if(insideDropzone == false) {
-							FormComponent.removeButton(CURRENT_BUTTON.documentElement.getAttribute('id'),nothing);
+							FormComponent.removeButton(CURRENT_BUTTON.documentElement.getAttribute('id'));
 							draggingButton = false;
 						}
 					}
 					
-				} else if(type == 'fbprocess') {
+				} else if(type == 'fbcp') {
 					if(draggingComponent == true) {
 						if(insideDropzone == false) {
 							var currentId = currentElement.documentElement.getAttribute('id');
 							this.element.removeEvents('mousemove');
-							FormComponent.removeComponent(currentId,nothing);
+							FormComponent.removeComponent(currentId);
 						}
 					}
+				} else if(type == 'fbbp') {
+					if(draggingButton == true) {
+						if(insideDropzone == false) {
+							FormComponent.removeButton(CURRENT_BUTTON.documentElement.getAttribute('id'));
+							draggingButton = false;
+						}
+					}
+					
 				}
 			}
 		});
@@ -168,22 +214,264 @@ var FBDraggable = Element.extend({
 		return this;
 	}
 });
-function setupDesignView(componentArea, component, pageTitle, formTitle) {
-	var formTitle = $(formTitle);
-	if(formTitle != null) {
-		formTitle.addEvent('dblclick', function(e){
-			enableInlineEdit(saveFormTitleAction, e);
-		});
-		formTitle.addEvent('click', function(e){
-			loadFormInfo();
+function registerFormbuilderActions() {
+	var newFormButton = $('newFormButton');
+	setHrefToVoidFunction(newFormButton);
+	newFormButton.addEvent('click', function() {
+		showNewFormDialog('newFormDialog', 'newFormButton', "New form", newFormButton.getLeft());
+	});
+	var newFormInput = $('newFormDialogInput');
+	newFormInput.addEvent('keydown', function(e) {
+		var event = new Event(e);
+		if(isEnterEvent(e)) {
+			createNewForm(event.target.value);
+		}
+	});
+	$('createFormBtn').addEvent('click', function(e) {
+		createNewForm(newFormInput.value);
+	});
+	var formListButton = $('homeButton');
+	setHrefToVoidFunction(formListButton);
+	formListButton.addEvent('click', function() {
+		showNewFormDialog('formListDialog', 'homeButton', "Form list", newFormButton.getLeft());
+	});
+	$('yesSaveFormBtn').addEvent('click', function(e) {
+		fbsave();
+		window.location.href = '/workspace/forms/';
+	});
+	$('noSaveFormBtn').addEvent('click', function(e) {
+		window.location.href = '/workspace/forms/';
+	});
+	var languageChooser = $('languageChooser');
+	if(languageChooser != null) {
+		languageChooser.addEvent('change', function(e) {
+			var locale = e.target.value;
+			if(locale != '') {
+				reloadWorkspace(locale);
+			}
 		});
 	}
-	var pageTitle = $(pageTitle);
-	if(pageTitle != null) {
-		pageTitle.addEvent('dblclick', function(e){
-			enableInlineEdit(savePageTitleAction, e);
+	var noVariableBtn = $('noVariableBtn');
+	setHrefToVoidFunction(noVariableBtn);
+	noVariableBtn.addEvent('click', function(e) {
+		closeVariableListDialog($('selectVariableDialog'));
+	});
+	var cancelVariableBtn = $('cancelVariableBtn');
+	setHrefToVoidFunction(cancelVariableBtn);
+	cancelVariableBtn.addEvent('click', function(e) {
+		closeVariableListDialog($('selectVariableDialog'));
+	});
+}
+function setupVariableViewer() {
+	$$('.addVariableIcon').each(function(el){
+		el.addEvent('click', function(e) {
+			var id = el.getProperty('id');
+			var datatype = id.substring(0, id.indexOf('_'));
+			var input = new Element('input');
+			input.setProperty('type', 'text');
+			input.addEvent('keypress', function(event) {
+				if(isEnterEvent(event)) {
+					var value = event.target.value;
+					createVariable(datatype, value, input, el);
+				}
+			});
+			input.addEvent('blur', function(event) {	
+				input.replaceWith(el);
+			});
+			el.replaceWith(input);
+			input.focus();
 		});
+	});
+}
+function createVariable(datatype, value, element, image) {
+	ProcessData.createVariable(value, datatype, {
+		callback: function(result) {
+			var span = new Element('span');
+			span.setProperty('id', value + '_var');
+			span.addClass('varEntry');
+			span.addClass('unused');
+			span.setText(value);
+			span.injectBefore(element);
+			element.replaceWith(image);
+		}
+	});
+}
+function reloadWorkspace(locale) {
+	showLoadingMessage('Changing locale...');
+	Workspace.getWorkspace(locale, {
+		callback: function(resultDOM) {
+			if(resultDOM != null) {
+				replaceNode(resultDOM, $('mainWorkspace'), $('mainApplication'));
+			}
+			closeLoadingMessage();
+		}
+	});
+}
+function setHrefToVoidFunction(element) {
+	element.setProperty('href', 'javascript:void(0)');
+}
+function showVariableList(containerId, positionLeft, positionTop, list, transition) {
+	var container = $(containerId);
+	if (container == null) {
+		return false;
 	}
+	
+	container.setStyle('visibility', 'visible');
+	container.setStyle('left', positionLeft);
+	container.setStyle('top', positionTop);
+	container.setStyle('position', 'fixed');
+	
+	var vlist = container.getFirst().getNext();
+	vlist.empty();
+	for(var i = 0; i < list.length; i++) {
+		var variable = list[i];
+		var li = new Element('li');
+		var link = new Element('a');
+		link.setText(variable);
+		link.injectInside(li);
+		link.addEvent('click', function(e) {
+			new Event(e).stop();
+			var target = e.target;
+			var variableName = target.getText();
+			if(transition == true) {
+				if(CURRENT_BUTTON != null) {
+					if(CURRENT_BUTTON.documentElement) {
+						var buttonId = CURRENT_BUTTON.documentElement.getAttribute('id');
+						if(buttonId != null) {
+							FormComponent.assignTransition(buttonId, variableName, {
+								callback: function(result) {
+									if(result != null) {
+										toggleVariableStatus(variableName + '_trans', result);
+									}
+								}
+							});
+							insertNodesToContainer(CURRENT_BUTTON, $('pageButtonArea'));
+						}
+					}
+				}
+			} else {
+				if(currentElement != null) {
+					if(currentElement.documentElement) {
+						var componentId = currentElement.documentElement.getAttribute('id');
+						if(componentId != null && CURRENT_ELEMENT_UNDER != null) {
+							dwr.engine.beginBatch();
+							FormComponent.assignVariable(componentId, variableName, COMPONENT_DATATYPE, {
+								callback: function(result) {
+									if(result != null) {
+										 var componentDOM = currentElement.documentElement;
+										 var varName = componentDOM.childNodes[2];
+										 if(varName != null) {
+										 	varName.textContent = variableName;
+										 }
+										 toggleVariableStatus(variableName + '_var', result);
+									}
+								}
+							});
+							FormComponent.moveComponent(componentId, CURRENT_ELEMENT_UNDER, {
+								callback: function(result) {
+									if($('emptyForm') != null) {
+										$('emptyForm').remove();
+									}
+									if(result == 'append') {
+										insertNodesToContainer(currentElement, $('dropBoxinner'));
+										currentElement = null;
+									} else {
+										var node = $(result);
+										insertNodesToContainerBefore(currentElement, $('dropBoxinner'), node);
+										currentElement = null;
+									}
+									setupDesignView();
+								}
+							});
+							dwr.engine.endBatch();
+						}
+					}
+				}
+			}
+			closeVariableListDialog(container);
+		});
+		li.injectInside(vlist);
+	}
+}
+function toggleVariableStatus(componentId, status) {
+	if(componentId == null) 
+		return;
+		
+	var node = $(componentId);
+	if(node != null) {
+		switch(status) {
+			case 'unused':
+				node.removeClass('single');
+				node.removeClass('multiple');
+				node.addClass(status);
+				break;
+			case 'single':
+				node.removeClass('unused');
+				node.removeClass('multiple');
+				node.addClass(status);
+				break;
+			case 'multiple':
+				node.removeClass('single');
+				node.removeClass('unused');
+				node.addClass(status);
+				break;
+		}
+	}
+}
+function showNewFormDialog(containerId, buttonId, buttonText, positionFromLeft) {
+	var container = $(containerId);
+	if (container == null) {
+		return false;
+	}
+	
+	var containerOpen = buttonText != $(buttonId).getText();
+	if (containerOpen) {
+		setButtonText(buttonId, buttonText);
+		closeNewPage(container);
+	}
+	else {
+		container.setStyle('left', positionFromLeft-140);
+		setButtonText(buttonId, "Cancel");
+		var showNewPage = new Fx.Style(container, 'opacity', {duration: SHOW_ELEMENT_TRANSITION_DURATION});
+		showNewPage.start(0, 1);
+		SET_DISPLAY_PROPERTY_ID = window.setTimeout("setDisplayPropertyToElement('"+container.id+"', 'block', null)", SHOW_ELEMENT_TRANSITION_DURATION);
+	}
+}
+function setButtonText(id, text) {
+	var button = $(id);
+	if (button != null) {
+		button.setText(text);
+	}
+}
+function closeNewPage(container) {
+	if (container != null) {
+		var hideNewPage = new Fx.Style(container, 'opacity', {duration: SHOW_ELEMENT_TRANSITION_DURATION});
+		hideNewPage.start(1, 0);
+		SET_DISPLAY_PROPERTY_ID = window.setTimeout("setDisplayPropertyToElement('"+container.id+"', 'none', null)", SHOW_ELEMENT_TRANSITION_DURATION);
+	}
+}
+function closeVariableListDialog(container) {
+	if (container != null) {
+		container.setStyle('visibility', 'hidden');
+	}
+}
+function setDisplayPropertyToElement(id, property, frameChange) {
+	if (id == null || property == null) {
+		return false;
+	}
+	var element = $(id);
+	if (element == null) {
+		return false;;
+	}
+	
+	element.setStyle('display', property);
+	window.clearTimeout(SET_DISPLAY_PROPERTY_ID);
+	
+	if (frameChange != null) {
+		changeFrameHeight(frameChange);
+	}
+}
+function setupDesignView() {
 	FormComponent.getId(markSelectedComponent);
 	var myComponentSort = new Sortables($('dropBoxinner'), {
 		onComplete: function(el){
@@ -193,7 +481,7 @@ function setupDesignView(componentArea, component, pageTitle, formTitle) {
 				var element = children[i];
 				orderList.push(element.id);
 			}
-			FormPage.updateComponentList(orderList, nothing);
+			FormPage.updateComponentList(orderList);
 		},
 		handles: '.fbCompHandler'
 	});
@@ -212,15 +500,43 @@ function setupDesignView(componentArea, component, pageTitle, formTitle) {
 				this.dragEffect.stop().start('ff8888', 'ffffff');
 				if(draggingComponent == true) {
 					draggingComponent = false;
-					var currentId = currentElement.documentElement.getAttribute('id');
-				    if(CURRENT_ELEMENT_UNDER != null) {
-						FormComponent.moveComponent(currentId, CURRENT_ELEMENT_UNDER, insertNewComponent);
-				    }
+					if(el.hasClass('fbc')) {
+						if(currentElement != null) {
+							if(currentElement.documentElement) {
+								var currentId = currentElement.documentElement.getAttribute('id');
+							    if(CURRENT_ELEMENT_UNDER != null) {
+									FormComponent.moveComponent(currentId, CURRENT_ELEMENT_UNDER, {
+										callback: function(result) {
+											if($('emptyForm') != null) {
+												$('emptyForm').remove();
+											}
+											if(result == 'append') {
+												insertNodesToContainer(currentElement, $('dropBoxinner'));
+												currentElement = null;
+											} else {
+												var node = $(result);
+												insertNodesToContainerBefore(currentElement, $('dropBoxinner'), node);
+												currentElement = null;
+											}
+											setupDesignView();
+										}
+									});
+							    }
+							}
+						}
+					} else if(el.hasClass('fbcp')) {
+						showVariableList('selectVariableDialog', el.getLeft(), el.getTop(), VARIABLE_LIST, false);
+					}
 				} else if(draggingButton == true) {
 					draggingButton = false;
-					if(CURRENT_BUTTON != null) {
-						insertNodesToContainer(CURRENT_BUTTON, $('pageButtonArea'));
+					if(el.hasClass('fbb')) {
+						if(CURRENT_BUTTON != null) {
+							insertNodesToContainer(CURRENT_BUTTON, $('pageButtonArea'));
+						}
+					} else if(el.hasClass('fbbp')) {
+						showVariableList('selectVariableDialog', el.getLeft(), el.getTop(), VARIABLE_LIST, true);
 					}
+					
 				}
 				insideDropzone = false;
 			}
@@ -229,18 +545,16 @@ function setupDesignView(componentArea, component, pageTitle, formTitle) {
 	$$('.fbc').each(function(el){
 		el.draggableTag($('dropBoxinner'), null, 'fbc');
 	});
-	$$('.fbprocess').each(function(el){
-		el.draggableTag($('dropBoxinner'), null, 'fbprocess');
+	$$('.fbcp').each(function(el){
+		el.draggableTag($('dropBoxinner'), null, 'fbcp');
 	});
-	$$('.fbbutton').each(function(el){
-		el.draggableTag($('dropBoxinner'), null, 'fbbutton');
+	$$('.fbb').each(function(el){
+		el.draggableTag($('dropBoxinner'), null, 'fbb');
+	});
+	$$('.fbbp').each(function(el){
+		el.draggableTag($('dropBoxinner'), null, 'fbbp');
 	});
 }
-Window.onDomReady(function() {
-	initMenu();
-	setupDesignView('dropBox', 'formElement', PAGE_TITLE, FORM_TITLE);
-	setupPagesPanel();
-});
 function getPageComponents() {
 	var dropBox = $('dropBoxinner');
 	var result = [];
@@ -282,15 +596,6 @@ function savePropertyOnEnter(value,attribute,event) {
 		 	case 'compExt':
 		  		saveExternalSrc(value);
 		  		break;
-		  	case 'formTitle':
-		 		saveFormTitle(value);
-		 		break;
-		 	case 'formThxTitle':
-		 		saveThankYouTitle(value);
-		 		break;
-		 	case 'formThxText':
-		 		saveThankYouText(value);
-		 		break;
 		  	default:
 		}
 	}
@@ -333,78 +638,6 @@ function loadButtonInfo(button) {
 	}
 	pressedButtonDelete = false;
 }
-function reloadInlineEdit(idle, event) {
-	var target = event.target;
-	var box = target.parentNode;
-	Workspace.getRenderedInlineEdit(idle, {
-		callback: function(resultDOM) {
-			replaceNode(resultDOM, box, box.parentNode);
-		}
-	});
-}
-function enableInlineEdit(action, event) {
-	var event = new Event(event);
-	var node = event.target;
-	if(node != null) {
-		var text = node.childNodes[0].nodeValue;
-		var parentNode = node.parentNode;
-		INLINE_ID = node.id;
-		INLINE_VALUE = text;
-		CURRENT_ACTIVE_INLINE = node;
-		parentNode.removeChild(node);
-		var input = document.createElement('input');
-		input.setAttribute('type', 'text');
-		input.value = text;
-		input.id = INLINE_ID;
-		input.onblur = action;
-		input.onkeydown = action;
-		parentNode.appendChild(input);
-		INLINE_ACTION = action;
-		input.focus();
-	}
-}
-function savePageTitleAction(event) {
-	if(event.type == 'blur' || isEnterEvent(event)) {
-		var text = event.target.value;
-		if(text != '') {
-			var node = $(CURRENT_PAGE_ID);
-			if(node != null) {
-				var parent = node.childNodes[3];
-				var textNode = parent.childNodes[0];
-				var newTextNode = document.createTextNode(text);
-				parent.replaceChild(newTextNode, textNode);
-			}
-			FormPage.setTitle(text, disableInlineEdit);
-			INLINE_VALUE = text;
-		}
-	}
-}
-function saveFormTitleAction(event) {
-	if(event.type == 'blur' || isEnterEvent(event)) {
-		var text = event.target.value;
-		if(text != '') {
-			FormDocument.setFormTitle(text, disableInlineEdit);
-			INLINE_VALUE = text;
-		}
-		DWRUtil.setValue('formTitle', text);
-	}
-}
-function disableInlineEdit() {
-	var node = $(INLINE_ID);
-	if(node != null) {
-		var text = node.value;
-		var parentNode = node.parentNode;
-		parentNode.removeChild(node);
-		if(CURRENT_ACTIVE_INLINE != null) {
-			var span = CURRENT_ACTIVE_INLINE;
-			span.childNodes[0].nodeValue = text;
-			parentNode.appendChild(span);
-			CURRENT_ACTIVE_INLINE = null;
-		}
-		INLINE_VALUE = null;
-		INLINE_ID = null;
-	}
-}
 function loadFormInfo() {
 	FormDocument.getFormDocumentInfo({
 		callback: function(resultDOM) {
@@ -436,7 +669,7 @@ function saveThankYouTitle(parameter) {
 function saveEnableBubbles(parameter) {
 	if(parameter != null) {
 		if(parameter.checked) {
-			FormDocument.setEnableBubbles(parameter.checked, nothing);
+			FormDocument.setEnableBubbles(parameter.checked);
 		}
 	}
 }
@@ -450,16 +683,11 @@ function placeThankYouTitle(parameter) {
 			var newTextNode = document.createTextNode(parameter.pageTitle);
 			parent.replaceChild(newTextNode, textNode);
 		}
-		if(isThxPage == true) {
-			//alert($('currentPageTitle').nodeValue);
-			//$('currentPageTitle').childNodes[0].value = parameter.pageTitle;
-		}
-		
 	}
 }
 function saveThankYouText(parameter) {
 	if(parameter != null) {
-		FormDocument.setThankYouText(parameter, nothing);
+		FormDocument.setThankYouText(parameter);
 	}
 }
 function saveHasPreview(event) {
@@ -515,7 +743,7 @@ function loadConfirmationPage(parameter) {
 					var node = parentNode.getLast();
 					node.remove();
 					insertNodesToContainer(resultDOM, parentNode);
-					setupDesignView('dropBox', 'formElement', PAGE_TITLE, FORM_TITLE);
+					setupDesignView();
 				}
 				closeLoadingMessage();
 			}
@@ -535,7 +763,7 @@ function loadThxPage(parameter) {
 					var node = parentNode.getLast();
 					node.remove();
 					insertNodesToContainer(resultDOM, parentNode);
-					setupDesignView('dropBox', 'formElement', PAGE_TITLE, FORM_TITLE);
+					setupDesignView();
 				}
 				closeLoadingMessage();
 			}
@@ -556,7 +784,7 @@ function loadPageInfo(targetId) {
 						var node = parentNode.getLast();
 						node.remove();
 						insertNodesToContainer(resultDOM, parentNode);
-						setupDesignView('dropBox', 'formElement', PAGE_TITLE, FORM_TITLE);
+						setupDesignView();
 					}
 					closeLoadingMessage();
 				}
@@ -584,7 +812,7 @@ function setupPagesPanel() {
 				var element = children[i];
 				orderList.push(element.id);
 			}
-			FormDocument.updatePagesList(orderList, nothing);
+			FormDocument.updatePagesList(orderList);
 		},
 		handles: '.fbPageHandler'
 	});
@@ -597,20 +825,6 @@ function markSelectedComponent(parameter) {
 			CURRENT_ELEMENT_ID = parameter;
 		}
 	}
-}
-function insertNewComponent(parameter) {
-	if($('emptyForm') != null) {
-		$('emptyForm').remove();
-	}
-	if(parameter == 'append') {
-		insertNodesToContainer(currentElement, $('dropBoxinner'));
-		currentElement = null;
-	} else {
-		var node = $(parameter);
-		insertNodesToContainerBefore(currentElement, $('dropBoxinner'), node);
-		currentElement = null;
-	}
-	setupDesignView('dropBox', 'formElement', PAGE_TITLE, FORM_TITLE);
 }
 function loadComponentInfo(component) {
 	if(component != null) {
@@ -700,7 +914,7 @@ function saveButtonLabel(value) {
 }
 function saveButtonAction(value) {
     if(value != null) {
-        FormComponent.saveComponentAction(value, nothing);
+        FormComponent.saveComponentAction(value);
     }
 }
 function saveComponentLabel(value) {
@@ -713,7 +927,7 @@ function saveComponentLabel(value) {
 	}
 }
 function saveComponentProcessVariableName(value) {
-	FormComponent.saveComponentProcessVariableName(value, nothing);
+	FormComponent.saveComponentProcessVariableName(value);
 }
 function saveRequired(parameter) {
 	if(parameter != null) {
@@ -884,6 +1098,93 @@ function saveSourceCode(source_code) {
 		FormDocument.saveSrc(source_code, closeLoadingMessage);
 	}
 }
+
+/*Functions for inline edit widget*/
+function activeInlineEdit(element, action, textarea) {
+	var spanElement = element.getFirst();
+	spanElement.setStyle('display', 'none');
+	var text = spanElement.getText();
+	element.getFirst().getNext().remove();
+	var inputElement;
+	if(textarea == true) {
+		inputElement = new Element('textarea');
+	} else {
+		inputElement = new Element('input');
+		inputElement.setProperty('type', 'text');
+	}
+	inputElement.setProperty('value', text);
+	inputElement.injectInside(element);
+	inputElement.focus();
+	
+	inputElement.addEvent('blur', function() {
+		inputElement.removeEvents();
+		var value = getInlineEditValue(element, null);
+		executeInlineAction(action, value, element);
+	});
+	inputElement.addEvent('keypress', function(e) {
+		if(isEnterEvent(e)) {
+			inputElement.removeEvents();
+			var value = getInlineEditValue(element, e);
+			executeInlineAction(action, value, element);
+		}
+	});
+}
+function getInlineEditValue(element, event) {
+	if(event != null) {
+		return event.target.value;
+	} else {
+		var input = element.getFirst().getNext();
+		return input.value;
+	}
+}
+function executeInlineAction(action, parameter, element) {
+	action += "('" + parameter + "', {" +
+				"callback: function(result) {" +
+				"deactiveInlineEdit(element,'" + parameter + "');" +
+				"}" +
+				"})";
+	var customFunction = function() {
+		window.eval(action);
+	}
+	customFunction();
+}
+function deactiveInlineEdit(element, text) {
+	var spanElement = element.getFirst();
+	spanElement.setStyle('display', 'inline');
+	spanElement.setText(text);
+	
+	var input = element.getFirst().getNext();	
+	input.remove();
+		
+	injectEditIcon(element);
+}
+function initializeInlineEdits() {
+	$$('div.inlineEdit').each(
+		function(element) {
+			var action = element.getProperty('rel');
+			injectEditIcon(element);
+			element.addEvent('dblclick', function() {
+				activeInlineEdit(element, action, false);
+			});
+    	}
+    );
+    $$('div.inlineTextarea').each(
+		function(element) {
+			var action = element.getProperty('rel');
+			injectEditIcon(element);
+			element.addEvent('dblclick', function() {
+				activeInlineEdit(element, action, true);
+			});
+    	}
+    );
+}
+function injectEditIcon(element) {
+	var editIcon = new Element('img');
+	editIcon.addClass('inlineEditIcon');
+	editIcon.setProperty('src', '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit_16.png');
+	editIcon.injectInside(element);
+}
+/*--------------------*/
 function reloadAssignVariable(event) {
 	new Event(event).stop();
 	var target = event.target;
@@ -977,21 +1278,6 @@ function showNewVariableDialog(parameter) {
 		}
 	}
 }
-function hideNewVariableDialog(parameter) {
-	if(parameter != null) {
-		var index = parameter.indexOf('_');
-		if(index != -1) {
-			var datatype = parameter.substring(index + 1);
-			if(datatype != null) {
-				ProcessPalette.getAddVariableBox(true, datatype, {
-					callback: function(resultDOM) {
-						replaceNode(resultDOM, $(datatype + '_box'), $(datatype + '_vContainer'));
-					}
-				});
-			}
-		}
-	}
-}
 function addNewVariable(event) {
 	if(isEnterEvent(event)) {
 		new Event(event).stop();
@@ -1011,7 +1297,6 @@ function addNewVariable(event) {
 		}
 	}
 }
-function nothing(parameter) {}
 function createNewPage() {
 	FormPage.createNewPage({
 		callback: function(resultDOMs) {
@@ -1022,7 +1307,7 @@ function createNewPage() {
 				var node = parentNode.getLast();
 				node.remove();
 				insertNodesToContainer(resultDOMs[0], parentNode);
-				setupDesignView('dropBox', 'formElement', PAGE_TITLE, FORM_TITLE);
+				setupDesignView();
 				setupPagesPanel();
 			}
 		}
@@ -1056,7 +1341,7 @@ function deletePage(event) {
 						var node = parentNode.getLast();
 						node.remove();
 						insertNodesToContainer(designViewDOM, parentNode);
-						setupDesignView('dropBox', 'formElement', PAGE_TITLE, FORM_TITLE);
+						setupDesignView();
 					}
 					closeLoadingMessage();
 				}
@@ -1085,7 +1370,7 @@ function removeComponent(parameter) {
 										var node2 = parentNode.getLast();
 										node2.remove();
 										insertNodesToContainer(resultDOM, parentNode);
-										setupDesignView('dropBox', 'formElement', PAGE_TITLE, FORM_TITLE);
+										setupDesignView();
 										setupPagesPanel();
 									}
 								}

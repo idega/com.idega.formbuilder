@@ -19,7 +19,16 @@ public class PaletteComponent implements Serializable {
 	private String type;
 	private String name;
 	private String iconPath;
+	private String category;
 	
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
 	public String getIconPath() {
 		return iconPath;
 	}
@@ -31,11 +40,13 @@ public class PaletteComponent implements Serializable {
 	public PaletteComponent() {
 		this.type = "";
 		this.iconPath = "";
+		this.category = "";
 	}
 	
-	public PaletteComponent(String type) throws Exception {
+	public PaletteComponent(String type, String category) throws Exception {
 		this.type = type;
 		this.iconPath = (String) localizedStrings.get(type + "_icon");
+		this.category = category;
 	}
 	
 	public String getType() {

@@ -1,14 +1,10 @@
 package com.idega.formbuilder.presentation.components;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import javax.faces.application.Application;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
 
 import com.idega.documentmanager.business.Document;
 import com.idega.documentmanager.business.component.Page;
@@ -16,7 +12,7 @@ import com.idega.documentmanager.business.component.properties.PropertiesPage;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.presentation.beans.FormPage;
-import com.idega.formbuilder.presentation.beans.Workspace;
+import com.idega.formbuilder.util.FBUtil;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
 import com.idega.presentation.text.Link;
@@ -28,10 +24,6 @@ public class FBPagesPanel extends FBComponentBase {
 	
 	public static final String COMPONENT_TYPE = "PagesPanel";
 	
-	private static final String CONFIRMATION_PAGE = "CONFIRMATION_PAGE";
-	private static final String THANKYOU_PAGE = "THANKYOU_PAGE";
-	private static final String GENERAL_PAGES_HEADER = "GENERAL_PAGES_HEADER";
-	private static final String SPECIAL_PAGES_HEADER = "SPECIAL_PAGES_HEADER";
 	private static final String DEFAULT_PAGE_LOAD_ACTION = "loadPageInfo(this.id);";
 	private static final String DEFAULT_PAGE_REMOVE_ACTION = "deletePage(event);";
 	private static final String DEFAULT_CONFIRM_LOAD_ACTION = "loadConfirmationPage(this.id);";
@@ -70,13 +62,12 @@ public class FBPagesPanel extends FBComponentBase {
 		this.specialPartStyleClass = specialPartStyleClass;
 	}
 
-	public FBPagesPanel() {
-		super();
-		setRendererType(null);
-	}
-	
 	protected void initializeComponent(FacesContext context) {
 		IWContext iwc = CoreUtil.getIWContext();
+		
+		Layer body = new Layer(Layer.DIV);
+		body.setId("pagesPanelMain");
+		body.setStyleClass("pagesPanel");
 		
 		Layer generalPagesHeader = new Layer(Layer.DIV);
 		generalPagesHeader.setStyleClass(PAGES_PANEL_TOOLBAR_CLASS);
@@ -88,95 +79,28 @@ public class FBPagesPanel extends FBComponentBase {
 		newSectionBtn.setOnClick("createNewPage();return false;");
 		generalPagesHeader.add(generalPagesHeaderText);
 		generalPagesHeader.add(newSectionBtn);
-		addFacet(GENERAL_PAGES_HEADER, generalPagesHeader);
+		body.add(generalPagesHeader);
 		
-		Layer specialPagesHeader = new Layer(Layer.DIV);
-		specialPagesHeader.setStyleClass(PAGES_PANEL_TOOLBAR_CLASS);
-		Text specialPagesHeaderText = new Text(getLocalizedString(iwc, "fb_pages_special_section", "Special sections"));
-		specialPagesHeaderText.setStyleClass(PAGES_PANEL_HEADER_CLASS);
-		specialPagesHeader.add(specialPagesHeaderText);
-		Link previewSectionBtn = new Link(getLocalizedString(iwc, "fb_preview_page_link", "Preview"));
-		previewSectionBtn.setId("previewPageButton");
-		previewSectionBtn.setOnClick("saveHasPreview(event);return false;");
+		Layer general = new Layer(Layer.DIV);
+		general.setId("pagesPanel");
+		general.setStyleClass("pagesGeneralContainer");
+		
+		Locale locale = FBUtil.getUILocale();
 		FormDocument formDocument = ((FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID));
-		if(formDocument.isHasPreview()) {
-			previewSectionBtn.setStyleClass("toolbarBtn removePreviewPageBtn");
-		} else {
-			previewSectionBtn.setStyleClass("toolbarBtn addPreviewPageBtn");
+		String selectedPageId = null;
+		Page selectedPage = ((FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID)).getPage();
+		if(selectedPage != null) {
+			selectedPageId = selectedPage.getId();
 		}
-		specialPagesHeader.add(previewSectionBtn);
-		addFacet(SPECIAL_PAGES_HEADER, specialPagesHeader);
-	}
-	
-	public void encodeBegin(FacesContext context) throws IOException {
-		Application application = context.getApplication();
-		getChildren().clear();
-		
-		ResponseWriter writer = context.getResponseWriter();
-		super.encodeBegin(context);
-		
-		writer.startElement(Layer.DIV, this);
-		writer.writeAttribute("id", getId() + "Main", "id");
-		writer.writeAttribute("class", getStyleClass(), "styleClass");
-		
-		UIComponent component = getFacet(GENERAL_PAGES_HEADER);
-		if(component != null) {
-			renderChild(context, component);
-		}
-		
-		writer.startElement(Layer.DIV, null);
-		writer.writeAttribute("id", getId(), "id");
-		writer.writeAttribute("class", generalPartStyleClass, null);
-		
-		Locale locale = ((Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID)).getLocale();
-		FormDocument formDocument = ((FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID));
 		Document document = formDocument.getDocument();
 		if(document != null) {
-			String selectedPageId = null;
-			Page selectedPage = ((FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID)).getPage();
-			if(selectedPage != null) {
-				selectedPageId = selectedPage.getId();
-			}
-			
-			if(formDocument.isHasPreview()) {
-				Page confirmation = document.getConfirmationPage();
-				if(confirmation != null) {
-					FBFormPage formPage = (FBFormPage) application.createComponent(FBFormPage.COMPONENT_TYPE);
-					formPage.setId(confirmation.getId() + P);
-					if(confirmation.getId().equals(selectedPageId)) {
-						formPage.setStyleClass(componentStyleClass + SPECIAL + " " + selectedStyleClass);
-					} else {
-						formPage.setStyleClass(componentStyleClass + SPECIAL);
-					}
-					String label = ((PropertiesPage)confirmation.getProperties()).getLabel().getString(locale);
-					formPage.setLabel(label);
-					formPage.setActive(false);
-					formPage.setOnLoad(DEFAULT_CONFIRM_LOAD_ACTION);
-					addFacet(CONFIRMATION_PAGE, formPage);
-				}
-			}
-			Page thanks = document.getThxPage();
-			if(thanks != null) {
-				FBFormPage formPage = (FBFormPage) application.createComponent(FBFormPage.COMPONENT_TYPE);
-				formPage.setId(thanks.getId() + P);
-				if(thanks.getId().equals(selectedPageId)) {
-					formPage.setStyleClass(componentStyleClass + SPECIAL + " " + selectedStyleClass);
-				} else {
-					formPage.setStyleClass(componentStyleClass + SPECIAL);
-				}
-				String label = ((PropertiesPage)thanks.getProperties()).getLabel().getString(locale);
-				formPage.setLabel(label);
-				formPage.setActive(false);
-				formPage.setOnLoad(DEFAULT_THX_LOAD_ACTION);
-				addFacet(THANKYOU_PAGE, formPage);
-			}
 			List<String> ids = formDocument.getCommonPagesIdList();
 			if(ids != null) {
 				for(Iterator<String> it = ids.iterator(); it.hasNext(); ) {
 					String nextId = it.next();
 					Page currentPage = document.getPage(nextId);
 					if(currentPage != null) {
-						FBFormPage formPage = (FBFormPage) application.createComponent(FBFormPage.COMPONENT_TYPE);
+						FBFormPage formPage = new FBFormPage();
 						formPage.setId(nextId + P);
 						if(nextId.equals(selectedPageId)) {
 							formPage.setStyleClass(componentStyleClass + " " + selectedStyleClass);
@@ -188,49 +112,70 @@ public class FBPagesPanel extends FBComponentBase {
 						String label = ((PropertiesPage)currentPage.getProperties()).getLabel().getString(locale);
 						formPage.setLabel(label);
 						formPage.setActive(false);
-						add(formPage);
+						general.add(formPage);
 					}
 				}
 			}
 		}
-	}
-	
-	public void encodeEnd(FacesContext context) throws IOException {
-		ResponseWriter writer = context.getResponseWriter();
 		
-		writer.endElement(Layer.DIV);
+		body.add(general);
 		
-		UIComponent component = getFacet(SPECIAL_PAGES_HEADER);
-		if(component != null) {
-			renderChild(context, component);
+		Layer specialPagesHeader = new Layer(Layer.DIV);
+		specialPagesHeader.setStyleClass(PAGES_PANEL_TOOLBAR_CLASS);
+		Text specialPagesHeaderText = new Text(getLocalizedString(iwc, "fb_pages_special_section", "Special sections"));
+		specialPagesHeaderText.setStyleClass(PAGES_PANEL_HEADER_CLASS);
+		specialPagesHeader.add(specialPagesHeaderText);
+		Link previewSectionBtn = new Link(getLocalizedString(iwc, "fb_preview_page_link", "Preview"));
+		previewSectionBtn.setId("previewPageButton");
+		previewSectionBtn.setOnClick("saveHasPreview(event);return false;");
+		if(formDocument.isHasPreview()) {
+			previewSectionBtn.setStyleClass("toolbarBtn removePreviewPageBtn");
+		} else {
+			previewSectionBtn.setStyleClass("toolbarBtn addPreviewPageBtn");
+		}
+		specialPagesHeader.add(previewSectionBtn);
+		body.add(specialPagesHeader);
+		
+		Layer special = new Layer(Layer.DIV);
+		special.setId("pagesPanelSpecial");
+		special.setStyleClass("pagesSpecialContainer");
+		
+		if(formDocument.isHasPreview()) {
+			Page confirmation = document.getConfirmationPage();
+			if(confirmation != null) {
+				FBFormPage formPage = new FBFormPage();
+				formPage.setId(confirmation.getId() + P);
+				if(confirmation.getId().equals(selectedPageId)) {
+					formPage.setStyleClass(componentStyleClass + SPECIAL + " " + selectedStyleClass);
+				} else {
+					formPage.setStyleClass(componentStyleClass + SPECIAL);
+				}
+				String label = ((PropertiesPage)confirmation.getProperties()).getLabel().getString(locale);
+				formPage.setLabel(label);
+				formPage.setActive(false);
+				formPage.setOnLoad(DEFAULT_CONFIRM_LOAD_ACTION);
+				special.add(formPage);
+			}
+		}
+		Page thanks = document.getThxPage();
+		if(thanks != null) {
+			FBFormPage formPage = new FBFormPage();
+			formPage.setId(thanks.getId() + P);
+			if(thanks.getId().equals(selectedPageId)) {
+				formPage.setStyleClass(componentStyleClass + SPECIAL + " " + selectedStyleClass);
+			} else {
+				formPage.setStyleClass(componentStyleClass + SPECIAL);
+			}
+			String label = ((PropertiesPage)thanks.getProperties()).getLabel().getString(locale);
+			formPage.setLabel(label);
+			formPage.setActive(false);
+			formPage.setOnLoad(DEFAULT_THX_LOAD_ACTION);
+			special.add(formPage);
 		}
 		
-		writer.startElement(Layer.DIV, null);
-		writer.writeAttribute("id", getId() + SPECIAL, null);
-		writer.writeAttribute("class", specialPartStyleClass, null);
+		body.add(special);
 		
-		component = getFacet(CONFIRMATION_PAGE);
-		if(component != null) {
-			renderChild(context, component);
-		}
-		component = getFacet(THANKYOU_PAGE);
-		if(component != null) {
-			renderChild(context, component);
-		}
-		writer.endElement(Layer.DIV);
-		writer.endElement(Layer.DIV);
-		super.encodeEnd(context);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public void encodeChildren(FacesContext context) throws IOException {
-		if (!isRendered()) {
-			return;
-		}
-		Iterator it = getChildren().iterator();
-		while(it.hasNext()) {
-			renderChild(context, (UIComponent) it.next());
-		}
+		add(body);
 	}
 	
 	public Object saveState(FacesContext context) {

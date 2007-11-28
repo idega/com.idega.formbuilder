@@ -1,11 +1,10 @@
 package com.idega.formbuilder.presentation.components;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.application.Application;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
 import com.idega.documentmanager.business.component.ButtonArea;
@@ -16,12 +15,13 @@ import com.idega.documentmanager.business.component.PageThankYou;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.presentation.beans.FormPage;
+import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
 import com.idega.presentation.text.Paragraph;
 import com.idega.presentation.text.Text;
+import com.idega.presentation.ui.DropdownMenu;
 import com.idega.util.CoreUtil;
-import com.idega.util.RenderUtils;
 import com.idega.webface.WFUtil;
 
 public class FBDesignView extends FBComponentBase {
@@ -47,12 +47,10 @@ public class FBDesignView extends FBComponentBase {
 
 	public FBDesignView() {
 		super(DEFAULT_DESIGN_VIEW_CLASS, DEFAULT_DROPBOX_CLASS);
-		setRendererType(null);
 	}
 	
 	public FBDesignView(String componentClass) {
 		super(DEFAULT_DESIGN_VIEW_CLASS, DEFAULT_DROPBOX_CLASS);
-		setRendererType(null);
 		this.componentStyleClass = componentClass;
 	}
 	
@@ -73,7 +71,6 @@ public class FBDesignView extends FBComponentBase {
 	
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
-		getChildren().clear();
 		IWContext iwc = CoreUtil.getIWContext();
 		
 		Layer component = new Layer(Layer.DIV);
@@ -83,6 +80,8 @@ public class FBDesignView extends FBComponentBase {
 		Layer formHeading = new Layer(Layer.DIV);
 		formHeading.setId("formHeading");
 		formHeading.setStyleClass("info");
+		formHeading.setStyleClass("inlineEdit");
+		formHeading.setMarkupAttribute("rel", "FormDocument.setFormTitle");
 		
 		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
 		
@@ -90,23 +89,31 @@ public class FBDesignView extends FBComponentBase {
 		formHeadingHeader.setId("formHeadingHeader");
 		formHeading.add(formHeadingHeader);
 		
-		component.add(formHeading);
+		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
+		Locale locale = workspace.getLocale();
 		
-//		FBInlineEdit pageTitle = new FBInlineEdit();
-//		pageTitle.setStyleClass("label");
-//		pageTitle.setId("pageNotice");
-//		pageTitle.setText("sdfsdfsdfsdf");
+		DropdownMenu languageChooser = new DropdownMenu();
+		languageChooser.setId("languageChooser");
+		languageChooser.addMenuElementFirst("", "-Languages-");
+		languageChooser.addMenuElement("en", "English");
+		languageChooser.addMenuElement("is", "Icelandic");
+		languageChooser.setSelectedElement(locale.getLanguage());
+		
+		component.add(formHeading);
+		component.add(languageChooser);
 		
 		Layer pageNotice = new Layer(Layer.DIV);
-		pageNotice.setId("pageNotice");
+		pageNotice.setId("designViewPageTitle");
+		pageNotice.setStyleClass("inlineEdit");
 		pageNotice.setStyleClass("label");
-//		
+		pageNotice.setMarkupAttribute("rel", "FormPage.setTitle");
+		
 		FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
-//		
+		
 		Text currentPageTitle = new Text(formPage.getTitle());
-		currentPageTitle.setId("currentPageTitle");
+		currentPageTitle.setId("designViewCurrentPageTitle");
 		pageNotice.add(currentPageTitle);
-//		
+		
 		component.add(pageNotice);
 		
 		Layer dropBoxInner = new Layer(Layer.DIV);
@@ -118,27 +125,26 @@ public class FBDesignView extends FBComponentBase {
 			if(page instanceof PageThankYou) {
 				Layer noFormNotice = new Layer(Layer.DIV);
 				noFormNotice.setId("noFormNotice");
+				noFormNotice.setStyleClass("inlineTextarea");
+				noFormNotice.setMarkupAttribute("rel", "FormDocument.setThankYouText");
 				
-				Text noFormNoticeHeader = new Text(getLocalizedString(iwc, "labels_noform_header", "This is a special page"));
-				noFormNotice.add(noFormNoticeHeader);
-				
-				Paragraph noFormNoticeBody = new Paragraph();
-				noFormNoticeBody.add(getLocalizedString(iwc, "labels_noform_body", ""));
-				noFormNotice.add(noFormNoticeBody);
+				Text thankYouText = new Text(formDocument.getThankYouText());
+				thankYouText.setId("designViewThankYou");
+				noFormNotice.add(thankYouText);
 				
 				component.add(noFormNotice);
 			} else if (formDocument.getOverviewPage() != null && page.getId().equals(formDocument.getOverviewPage().getId())) {
-				Layer noFormNotice = new Layer(Layer.DIV);
-				noFormNotice.setId("noFormNotice");
-				
-				Text noFormNoticeHeader = new Text(getLocalizedString(iwc, "labels_noform_header", "This is a special page"));
-				noFormNotice.add(noFormNoticeHeader);
-				
-				Paragraph noFormNoticeBody = new Paragraph();
-				noFormNoticeBody.add(getLocalizedString(iwc, "labels_noform_body", ""));
-				noFormNotice.add(noFormNoticeBody);
-				
-				component.add(noFormNotice);
+//				Layer thankYouTextBox = new Layer(Layer.DIV);
+//				thankYouTextBox.setId("designViewThankYouBox");
+//				thankYouTextBox.setStyleClass("inlineEdit");
+//				thankYouTextBox.setStyleClass("biglabel");
+//				thankYouTextBox.setMarkupAttribute("rel", "FormDocument.setThankYouText");
+//				
+//				Text thankYouText = new Text(formDocument.getThankYouText());
+//				thankYouText.setId("designViewThankYou");
+//				thankYouTextBox.add(thankYouText);
+//				
+//				component.add(thankYouTextBox);
 			} else {
 				List<String> ids = page.getContainedComponentsIdList();
 				if(!hasComponents(ids, page)) {
@@ -184,16 +190,6 @@ public class FBDesignView extends FBComponentBase {
 		}
 		
 		add(component);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public void encodeChildren(FacesContext context) throws IOException {
-		if (!isRendered()) {
-			return;
-		}
-		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
-			RenderUtils.renderChild(context, (UIComponent) it.next());
-		}
 	}
 	
 	public Object saveState(FacesContext context) {

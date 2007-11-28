@@ -20,6 +20,7 @@ import com.idega.formbuilder.presentation.beans.FormPage;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
+import com.idega.presentation.text.Text;
 import com.idega.webface.WFUtil;
 
 public class FBFormComponent extends FBComponentBase {
@@ -31,7 +32,7 @@ public class FBFormComponent extends FBComponentBase {
 	private static final String DELETE_BUTTON_FACET = "DELETE_BUTTON_FACET";
 	private static final String HANDLE_LAYER_FACET = "HANDLE_LAYER_FACET";
 	private static final String VARIABLE_NAME_FACET = "VARIABLE_NAME_FACET";
-	private static final String DELETE_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete.png";
+	private static final String DELETE_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/del_16.png";
 	private static final String DEFAULT_LOAD_ACTION = "loadComponentInfo(this);";
 	private static final String DEFAULT_DELETE_ACTION = "removeComponent(this);";
 	
@@ -58,12 +59,10 @@ public class FBFormComponent extends FBComponentBase {
 
 	public FBFormComponent() {
 		super();
-		setRendererType(null);
 	}
 	
 	public FBFormComponent(String componentId) {
 		super();
-		setRendererType(null);
 		setId(componentId);
 		setStyleClass("formElement");
 		this.speedButtonStyleClass = "speedButton";
@@ -88,14 +87,24 @@ public class FBFormComponent extends FBComponentBase {
 						Layer handleLayer = new Layer(Layer.DIV);
 						handleLayer.setStyleClass("fbCompHandler");
 						
-						FBAssignVariableComponent assignVariable = new FBAssignVariableComponent();
-						PropertiesComponent properties = component.getProperties();
 						String type = component.getType();
 						type = type.substring(3);
-						assignVariable.setId(component.getId() + "-fbcomp_" + type);
+						Text variableName = new Text();
+						variableName.setId(component.getId() + "-fbcomp_" + type);
+						variableName.setStyleClass("fbcCompVar");
+						PropertiesComponent properties = component.getProperties();
 						if(properties.getVariable() != null) {
-							assignVariable.setValue(properties.getVariable().getName());
+							variableName.setText(properties.getVariable().getName());
 						}
+						
+//						FBAssignVariableComponent assignVariable = new FBAssignVariableComponent();
+//						PropertiesComponent properties = component.getProperties();
+//						String type = component.getType();
+//						type = type.substring(3);
+//						assignVariable.setId(component.getId() + "-fbcomp_" + type);
+//						if(properties.getVariable() != null) {
+//							assignVariable.setValue(properties.getVariable().getName());
+//						}
 						
 						Image deleteButton = new Image();
 						deleteButton.setId("db" + getId());
@@ -103,7 +112,7 @@ public class FBFormComponent extends FBComponentBase {
 						deleteButton.setOnClick(onDelete);
 						deleteButton.setStyleClass(speedButtonStyleClass);
 						
-						addFacet(VARIABLE_NAME_FACET, assignVariable);
+						addFacet(VARIABLE_NAME_FACET, variableName);
 						addFacet(DELETE_BUTTON_FACET, deleteButton);
 						addFacet(HANDLE_LAYER_FACET, handleLayer);
 					}
@@ -138,11 +147,11 @@ public class FBFormComponent extends FBComponentBase {
 		if (!isRendered()) {
 			return;
 		}
-//		UIComponent facet = getFacet(VARIABLE_NAME_FACET);
-//		if(facet != null) {
-//			renderChild(context, facet);
-//		}
-		UIComponent facet = getFacet(DELETE_BUTTON_FACET);
+		UIComponent facet = getFacet(VARIABLE_NAME_FACET);
+		if(facet != null) {
+			renderChild(context, facet);
+		}
+		facet = getFacet(DELETE_BUTTON_FACET);
 		if(facet != null) {
 			renderChild(context, facet);
 		}

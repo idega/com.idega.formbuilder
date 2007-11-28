@@ -7,8 +7,8 @@ import org.jdom.Document;
 
 import com.idega.builder.business.BuilderLogic;
 import com.idega.formbuilder.presentation.components.FBDesignView;
-import com.idega.formbuilder.presentation.components.FBInlineEdit;
 import com.idega.formbuilder.presentation.components.FBViewPanel;
+import com.idega.formbuilder.presentation.components.FBWorkspace;
 import com.idega.util.CoreUtil;
 
 public class Workspace implements Serializable {
@@ -16,6 +16,8 @@ public class Workspace implements Serializable {
 	private static final long serialVersionUID = -7539955904708793992L;
 	
 	public static final String BEAN_ID = "workspace";
+	
+	private static final String DEFAULT_LOCALE = "en";
 	
 	private String view;
 	private Locale locale;
@@ -39,7 +41,7 @@ public class Workspace implements Serializable {
 
 	public Workspace() {
 		this.view = FBViewPanel.DESIGN_VIEW;
-		this.locale = new Locale("en");
+		this.locale = new Locale(DEFAULT_LOCALE);
 		this.processMode = false;
 	}
 	
@@ -64,8 +66,11 @@ public class Workspace implements Serializable {
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView("formElement"), false);
 	}
 	
-	public Document getRenderedInlineEdit(boolean idle) {
-		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBInlineEdit(idle, "formElement"), false);
+	public Document getWorkspace(String locale) {
+		Locale loc = new Locale(locale);
+		this.locale = loc;
+		this.view = FBViewPanel.DESIGN_VIEW;
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBWorkspace("mainWorkspace"), false);
 	}
-
+	
 }

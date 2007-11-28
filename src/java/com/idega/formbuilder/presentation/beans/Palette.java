@@ -35,7 +35,7 @@ public class Palette implements Serializable {
 	public List<PaletteComponent> getBasic() {
 		if(basic == null || basic.isEmpty()) {
 			List<String> basics = instanceManager.getDocumentManagerInstance().getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.BASIC));
-			basic = populatePaletteComponentList(basics);
+			basic = populatePaletteComponentList(basics, "fbc");
 		}
 		return basic;
 	}
@@ -47,18 +47,18 @@ public class Palette implements Serializable {
 	public List<PaletteComponent> getButtons() {
 		if(buttons == null || buttons.isEmpty()) {
 			List<String> btns = instanceManager.getDocumentManagerInstance().getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.BUTTONS));
-			buttons = populatePaletteComponentList(btns);
+			buttons = populatePaletteComponentList(btns, "fbb");
 		}
 		return buttons;
 	}
 	
-	private List<PaletteComponent> populatePaletteComponentList(List<String> components) {
+	private List<PaletteComponent> populatePaletteComponentList(List<String> components, String category) {
 		List<PaletteComponent> list = new ArrayList<PaletteComponent>();
 		Iterator<String> it = components.iterator();
 		while(it.hasNext()) {
 			String nextComp = it.next();
 			try {
-				list.add(new PaletteComponent(nextComp));
+				list.add(new PaletteComponent(nextComp, category));
 			} catch(Exception e) {
 				logger.error("Could not retrieve component: " + nextComp);
 			}
@@ -69,11 +69,19 @@ public class Palette implements Serializable {
 	public void setButtons(List<PaletteComponent> buttons) {
 		this.buttons = buttons;
 	}
+	
+	public List<PaletteComponent> getAllComponents() {
+		List<PaletteComponent> components = new ArrayList<PaletteComponent>();
+		components.addAll(getBasic());
+		components.addAll(getPlain());
+		components.addAll(getButtons());
+		return components;
+	}
 
 	public List<PaletteComponent> getPlain() {
 		if(plain == null || plain.isEmpty()) {
 			List<String> plains = instanceManager.getDocumentManagerInstance().getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.PLAIN));
-			plain = populatePaletteComponentList(plains);
+			plain = populatePaletteComponentList(plains, "fbc");
 		}
 		return plain;
 	}

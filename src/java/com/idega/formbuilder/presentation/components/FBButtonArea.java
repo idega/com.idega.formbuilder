@@ -26,11 +26,6 @@ public class FBButtonArea extends FBComponentBase {
 	
 	public String componentStyleClass;
 	
-	public FBButtonArea() {
-		super();
-		setRendererType(null);
-	}
-	
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
 		getChildren().clear();

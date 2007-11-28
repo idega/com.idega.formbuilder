@@ -1,9 +1,7 @@
 package com.idega.formbuilder.presentation.components;
 
 import java.io.IOException;
-import java.util.Iterator;
 
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
@@ -14,7 +12,6 @@ import com.idega.block.form.presentation.FormViewer;
 import com.idega.documentmanager.business.Document;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
-import com.idega.util.RenderUtils;
 import com.idega.webface.WFUtil;
 
 /**
@@ -61,10 +58,4 @@ public class FBFormPreview extends FBComponentBase {
 		add(formViewer);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public void encodeChildren(FacesContext context) throws IOException {
-		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
-			RenderUtils.renderChild(context, (UIComponent) it.next());
-		}
-	}
 }

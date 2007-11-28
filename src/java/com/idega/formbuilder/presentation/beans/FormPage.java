@@ -4,23 +4,18 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.w3c.dom.Element;
 
 import com.idega.builder.business.BuilderLogic;
 import com.idega.documentmanager.business.Document;
-import com.idega.documentmanager.business.component.Button;
 import com.idega.documentmanager.business.component.ButtonArea;
 import com.idega.documentmanager.business.component.Component;
 import com.idega.documentmanager.business.component.Page;
 import com.idega.documentmanager.component.beans.LocalizedStringBean;
 import com.idega.formbuilder.presentation.components.FBDesignView;
 import com.idega.formbuilder.presentation.components.FBFormPage;
-import com.idega.formbuilder.presentation.converters.FormButtonInfo;
-import com.idega.formbuilder.presentation.converters.FormPageInfo;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.util.CoreUtil;
 
@@ -28,7 +23,7 @@ public class FormPage implements Serializable {
 	
 	private static final long serialVersionUID = -1462694198346788168L;
 	
-	private static Log logger = LogFactory.getLog(FormDocument.class);
+	private static Log logger = LogFactory.getLog(FormPage.class);
 	
 	public static final String BEAN_ID = "formPage";
 	
@@ -74,17 +69,6 @@ public class FormPage implements Serializable {
 		this.special = special;
 		
 		return page;
-	}
-	
-	public FormPageInfo getFirstPageInfo() throws Exception {
-		Document document = formDocument.getDocument();
-		if(document != null) {
-			Page page = document.getPage(document.getContainedPagesIdList().get(0));
-			if(page != null) {
-				return loadPageInfo(page);
-			}
-		}
-		return null;
 	}
 	
 	public org.jdom.Document getThxPageInfo() throws Exception {
@@ -139,13 +123,13 @@ public class FormPage implements Serializable {
 						newPageId = ids.get(1);
 						page.remove();
 						page = document.getPage(newPageId);
-						loadPageInfo(page);
+						initializeBeanInstance(page);
 					}
 				} else {
 					newPageId = ids.get(index - 1);
 					page.remove();
 					page = document.getPage(newPageId);
-					loadPageInfo(page);
+					initializeBeanInstance(page);
 				}
 				properties.add(id);
 				properties.add(newPageId);
@@ -190,42 +174,6 @@ public class FormPage implements Serializable {
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView("formElement"), false);
 	}
 	
-	public FormPageInfo loadPageInfo(Page page) throws Exception {
-		this.page = page;
-		id = page.getId();
-		special = false;
-		
-		FormPageInfo result = new FormPageInfo();
-		result.setPageTitle(getTitle());
-		result.setPageId(id);
-		
-		String areaId = "";
-		ButtonArea area = page.getButtonArea();
-		if(area != null) {
-			areaId = area.getId();
-			result.setButtonAreaId(areaId);
-			List<String> buttons = area.getContainedComponentsIdList();
-			Iterator<String> it = buttons.iterator();
-			while(it.hasNext()) {
-				String nextId = it.next();
-				Button button = (Button) area.getComponent(nextId);
-				if(button != null) {
-					result.getButtons().add(new FormButtonInfo(nextId, button.getProperties().getLabel().getString(new Locale("en"))));
-				}
-			}
-		}
-		List<String> components = page.getContainedComponentsIdList();
-		Iterator<String> it = components.iterator();
-		while(it.hasNext()) {
-			String nextId = it.next();
-			if(areaId.equals(nextId)) {
-				continue;
-			}
-			result.getComponents().add((Element) page.getComponent(nextId).getHtmlRepresentation(new Locale("en")).cloneNode(true));
-		}
-		return result;
-	}
-	
 	public List<org.jdom.Document> createNewPage() throws Exception {
 		Document document = formDocument.getDocument();
 		List<org.jdom.Document> doms = new ArrayList<org.jdom.Document>();
@@ -239,7 +187,7 @@ public class FormPage implements Serializable {
 			Page page = document.addPage(temp);
 			if(page != null) {
 				special = false;
-				loadPageInfo(page);
+				initializeBeanInstance(page);
 				workspace.setView("design");
 				doms.add(BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView("formElement"), false));
 				doms.add(BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormPage(id, page.getProperties().getLabel().getString(FBUtil.getUILocale())), true));

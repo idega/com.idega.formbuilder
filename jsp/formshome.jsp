@@ -18,7 +18,7 @@
 									/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formshome.js"
 					stylesheeturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formshome.css,
 									/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/moodalbox/1.2.1/css/moodalbox.css">
-			<h:form id="workspaceform1">
+			<h:form id="workspaceform1" onsubmit="return false;">
 				<f:verbatim>
                 	<script type="text/javascript">
                 		window.addEvent('domready', function() {
@@ -27,10 +27,20 @@
 							}
 							DWREngine.setErrorHandler(errorHanlder);
 						});
+						window.addEvent('domready', registerFormsHomeActions);
                 	</script>
                 </f:verbatim>
 				<fb:homePage />
-				<t:commandButton style="display: none" id="newFormButton" onclick="alert('done');" forceId="true" type="button" action="#{formDocument.createNewForm}" value="#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"></t:commandButton>
+				<t:div id="newFormDialog" forceId="true" styleClass="newFormDialogStyle" style="display: none;">
+					<t:htmlTag styleClass="accordionHeading" value="span">
+						<t:outputText value="New form" styleClass="title"> </t:outputText>
+					</t:htmlTag>
+					<t:inputText id="newFormDialogInput" forceId="true"></t:inputText>
+					<t:commandLink id="createFormBtn" forceId="true"  value="Create"></t:commandLink>
+				</t:div>
+				<t:div styleClass="fbBottomButtonsContainer">
+					<t:commandLink id="newFormButton" styleClass="rightButton" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}"></t:commandLink>
+				</t:div>
 			</h:form>
 		</ws:page>
 	</f:view>

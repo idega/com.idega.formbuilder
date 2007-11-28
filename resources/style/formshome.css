@@ -1,13 +1,13 @@
 #fbHomePage {
-	margin: 5px;
 	background-color: White;
 	border: 1px solid LightGrey;
 	padding: 25px;
 	right: 0px;
 	left: 0px;
 	position: absolute;
-	bottom: 0px;
+	bottom: 60px;
 	top: 80px;
+	margin:5px 25px 20px;
 }
 
 #fbAdminPage {
@@ -17,7 +17,46 @@
 	padding: 25px;
 	height: 100%;
 }
+.fbBottomButtonsContainer {
+	border-top: 1px #959494 solid;
+	position: absolute;
+	bottom: 0;
+	height: 55px;
+	right: 0;
+	left: 0;
+	width: auto;
+	background: url(images/bottom_tiler.gif) top left repeat-x #c7c6c6;
+}
+.newFormDialogStyle {
+	position: absolute;
+	bottom: 3px;
+	width: auto;
+	z-index: 10;
+	background-color: #fff;
+	border: 3px solid #a1a1a1;
+}
+.fbBottomButtonsContainer a {
+	padding-top: 30px;
+	margin-top: 7px;
+	font-family: "Lucida Grande", "Lucida Sans", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #131313;
+	margin-left: 13px;
+	margin-right: 13px;
+	width: 24px;
+}
 
+html>body .fbBottomButtonsContainer a {
+	min-width: 24px;
+	width: auto;
+}
+.fbBottomButtonsContainer a.rightButton {
+	margin-right: 24px;
+	float: right;
+}
+.fbBottomButtonsContainer a#newFormButton {
+	background: url(images/new_32.png) center top no-repeat;
+}
 .fbBottomRightButtonsContainer {
 	position: absolute;
 	right: 0px;
@@ -112,17 +151,16 @@
 .newFormComponentIdle #okBt {
 	display: none;
 }
-.newFormComponentExpand #okBt {
-	background: url(images/button_ok.png) no-repeat;
-	color: Black;
-	cursor: pointer;
-	font-weight: Bold;
+#createFormBtn {
+	padding-top: 30px;
+	margin-top: 7px;
+	font-family: "Lucida Grande", "Lucida Sans", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
 	font-size: 13px;
-	position: absolute;
-	left: 160px;
-	bottom: 13px;
-	width: 55px;
-	text-align: right;
+	font-weight: Bold;
+	color: #131313;
+	margin-left: 13px;
+	margin-right: 13px;
+	width: 24px;
 }
 #cancelBt:hover {
 	color: Black;
@@ -341,6 +379,9 @@
 .buttonList li.editButton {
 	background: url(images/application_form_edit.png) left no-repeat;
 }
+.buttonList li.tryButton {
+	background: url(images/cog_go.png) left no-repeat;
+}
 .editButton.processForm {
 	right: 90px;
 	top: 10px;
@@ -484,10 +525,10 @@
 	top: 0px;
 	
 }
-.buttonList li a.casesButton {
+.buttonList li.casesButton {
 	background: url(images/application_view_list.png) left no-repeat;
 }
-.buttonList li a.taskFormButton {
+.buttonList li.taskFormButton {
 	background: url(images/list-add.png) left no-repeat;
 }
 

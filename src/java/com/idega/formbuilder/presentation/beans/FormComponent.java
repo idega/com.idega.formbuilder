@@ -14,6 +14,7 @@ import com.idega.documentmanager.business.component.ComponentPlain;
 import com.idega.documentmanager.business.component.ComponentSelect;
 import com.idega.documentmanager.business.component.ConstButtonType;
 import com.idega.documentmanager.business.component.Page;
+import com.idega.documentmanager.business.component.properties.PropertiesButton;
 import com.idega.documentmanager.business.component.properties.PropertiesComponent;
 import com.idega.documentmanager.component.beans.ItemBean;
 import com.idega.documentmanager.component.beans.LocalizedStringBean;
@@ -26,7 +27,6 @@ import com.idega.formbuilder.util.FBUtil;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
 import com.idega.jbpm.def.Variable;
 import com.idega.util.CoreUtil;
-import com.idega.webface.WFUtil;
 
 public class FormComponent implements Serializable {
 	
@@ -45,9 +45,7 @@ public class FormComponent implements Serializable {
 	
 	private ProcessPalette processPalette;
 	private JbpmProcessBusinessBean jbpmProcessBusiness;
-	
-	private boolean autofill;
-	
+	private ProcessData processData;
 	private FormPage formPage;
 	
 	public FormPage getFormPage() {
@@ -57,7 +55,36 @@ public class FormComponent implements Serializable {
 	public void setFormPage(FormPage formPage) {
 		this.formPage = formPage;
 	}
-
+	
+	public String assignVariable(String componentId, String variable, String datatype) {
+		Page page = formPage.getPage();
+		if(page != null) {
+			Component component = page.getComponent(componentId);
+			PropertiesComponent properties = component.getProperties();
+			if(properties != null) {
+				properties.setVariable(Variable.parseDefaultStringRepresentation(datatype + ":" + variable));
+				return processData.bindVariable(componentId, datatype + ":" + variable).getStatus();
+			}
+		}
+		return null;
+	}
+	
+	public String assignTransition(String buttonId, String transition) {
+		Page page = formPage.getPage();
+		if(page != null) {
+			ButtonArea area = page.getButtonArea();
+			if(area != null) {
+				Button button = (Button) area.getComponent(buttonId);
+				PropertiesButton properties = button.getProperties();
+				if(properties != null) {
+					properties.setReferAction(transition);
+					return processData.bindTransition(buttonId, transition).getStatus();
+				}
+			}
+		}
+		return null;
+	}
+	
 	public void initializeBeanInstace(Component component) {
 		if(component instanceof ComponentPlain) {
 			this.plainComponent = (ComponentPlain) component;
@@ -83,7 +110,7 @@ public class FormComponent implements Serializable {
 	}
 	
 	public void initializeBeanInstace(String id, String type) {
-		Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
+		Page page = formPage.getPage();
 		if(page != null) {
 			if(BUTTON_TYPE.equals(type)) {
 				ButtonArea area = page.getButtonArea();
@@ -224,14 +251,6 @@ public class FormComponent implements Serializable {
 		return null;
 	}
 	
-	public boolean isSimple() {
-		if(selectComponent != null) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
 	public void setDataSrc(String dataSrc) {
 		if(selectComponent != null) {
 			selectComponent.getProperties().setDataSrcUsed(Integer.parseInt(dataSrc));
@@ -246,7 +265,6 @@ public class FormComponent implements Serializable {
 	public void removeItem(int index) {
 		if(index < getItems().size()) {
 			getItems().remove(index);
-//			setItems(items);
 		}
 	}
 	
@@ -293,7 +311,6 @@ public class FormComponent implements Serializable {
 		} else {
 			setDataSrc(DataSourceList.externalDataSrc);
 			getItems().clear();
-//			setItems(items);
 		}
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentProperties(id, FBConstants.COMPONENT_TYPE), true);
 	}
@@ -311,29 +328,6 @@ public class FormComponent implements Serializable {
 				before = area.getId();
 			}
 			Component component = page.addComponent(type, before);
-			if(component != null) {
-				return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component.getId()), true);
-			}
-		}
-		return null;
-	}
-	
-	public Document addComponentWithVariable(String type) throws Exception {
-		if(type == null) {
-			return null;
-		}
-		
-		Page page = formPage.getPage();
-		if(page != null) {
-			String before = null;
-			ButtonArea area = page.getButtonArea();
-			if(area != null) {
-				before = area.getId();
-			}
-			Component component = page.addComponent(type, before);
-			String datatype = processPalette.getComponentDatatype(type);
-			FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
-			List<String> variables = jbpmProcessBusiness.getTaskVariablesByDatatype(new Long(formDocument.getProcessId()).toString(), formDocument.getTaskName(), datatype);
 			if(component != null) {
 				return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component.getId()), true);
 			}
@@ -576,16 +570,7 @@ public class FormComponent implements Serializable {
 		}
 	}
 
-	public boolean isAutofill() {
-		return autofill;
-	}
-
-	public void setAutofill(boolean autofill) {
-		this.autofill = autofill;
-	}
-	
 	public Document saveAutofill(boolean autofill) {
-		setAutofill(autofill);
 		if(autofill) {
 			setAutofillKey("example");
 		} else {
@@ -644,6 +629,14 @@ public class FormComponent implements Serializable {
 
 	public void setJbpmProcessBusiness(JbpmProcessBusinessBean jbpmProcessBusiness) {
 		this.jbpmProcessBusiness = jbpmProcessBusiness;
+	}
+
+	public ProcessData getProcessData() {
+		return processData;
+	}
+
+	public void setProcessData(ProcessData processData) {
+		this.processData = processData;
 	}
 
 }

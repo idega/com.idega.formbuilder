@@ -12,12 +12,97 @@
 .activeAutofill {
 	display: block					!important;
 }
+#languageChooser {
+	position: absolute;
+	left: 85%;
+	top: 20px;
+}
+.fbVariablesLegend ul {
+	list-style: none;
+}
+.fbVariablesLegend ul li.legenItem {
+	width: 100px;
+}
+span.unusedLegend {
+	background:transparent url(images/bullet_black.png) no-repeat left;
+}
+span.singleLegend {
+	background:transparent url(images/bullet_green.png) no-repeat left;
+}
+span.multipleLegend {
+	background:transparent url(images/bullet_red.png) no-repeat left;
+}
+.selectVariableDialogStyle {
+	position: fixed;
+	width: auto;
+	z-index: 10;
+	background-color: #fff;
+	border: 3px solid #a1a1a1;
+}
+.unused {
+	background-color: Grey;
+}
+.single {
+	background-color: Green;
+}
+.multiple {
+	background-color: Red;
+}
+.variablePopupList {
+	list-style: none;
+	margin-left: 0px;
+	margin-top: 5px;
+	background-color: #fff;
+	padding: 0px;
+}
+.variablePopupList li {
+	padding: 2px;
+	margin-left: 0px;
+	height: 20px;
+	line-height: 20px;
+	border-bottom: 1px solid #000;
+}
+.newFormDialogStyle {
+	position: absolute;
+	bottom: 55px;
+	width: auto;
+	z-index: 10;
+	background-color: #fff;
+	border: 3px solid #a1a1a1;
+}
+.formListDialogStyle {
+	position: absolute;
+	bottom: 55px;
+	width: auto;
+	z-index: 10;
+	background-color: #fff;
+	border: 3px solid #a1a1a1;
+}
+#createFormBtn, #yesSaveFormBtn, #noSaveFormBtn, #noVariableBtn, #cancelVariableBtn {
+	padding-top: 30px;
+	margin-top: 7px;
+	font-family: "Lucida Grande", "Lucida Sans", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-weight: Bold;
+	color: #131313;
+	margin-left: 13px;
+	margin-right: 13px;
+	width: 24px;
+}
 div.label {
 	background:#FFFFFF url(images/header_tiler.gif) repeat-x scroll 0% 50%;
 	border-bottom:1px solid #B2B6B8;
 	border-top:1px solid #FFFFFF;
 	clear:both;
 	height:28px;
+	position:relative;
+}
+div.biglabel {
+	background:#FFFFFF url(images/header_tiler.gif) repeat-x scroll 0% 50%;
+	border-bottom:1px solid #B2B6B8;
+	border-top:1px solid #FFFFFF;
+	clear:both;
+	height:60px;
 	position:relative;
 }
 div.label span, div.label input {
@@ -506,14 +591,28 @@ span.statusMsg {
 #optionsPanel {
 	left: 5px;
 	top: 85px;
-	bottom: 61px;
 	position: absolute;
 	background: #fff;
 	overflow: auto;
-	height: auto;
+	height: 704px;
 	border: 1px solid #aeaeae;
+	width: 300px;
 }
-
+.variableViewer {
+	position: absolute;
+	border:1px solid #AEAEAE;
+}
+.variableListSection {
+	height: auto;
+	padding-left: 20px;
+}
+.varEntry {
+	display: block;
+	margin-top: 10px;
+}
+#fbLeftPanel {
+	position: relative;
+}
 #viewPanel {
 	position: absolute;
 	top: 85px;
@@ -532,8 +631,23 @@ span.statusMsg {
 	border-top-width: 0 !important;
 	width: 100%;
 }
-
-.pagesPanel {
+#rightPanel {
+	position: absolute;
+	top: 85px !important;
+	right: 5px !important;
+	display: inline;
+	background-color: #FFFFFF;
+	width: 210px;
+	height: 704px;
+	bottom: 61px !important;
+	z-index: 5;
+	border: 1px solid #AEAEAE;
+	overflow: auto;
+}
+#pagesPanelMain {
+	height: 654px;
+}
+/*.pagesPanel {
 	position: absolute;
 	top: 85px !important;
 	right: 5px !important;
@@ -545,7 +659,7 @@ span.statusMsg {
 	z-index: 5;
 	border: 1px solid #AEAEAE;
 	overflow: auto;
-}
+}*/
 
 .formPageIcon, .formPageIconSpecial {
 	background-color: #F4F4F4;
@@ -585,6 +699,16 @@ span.statusMsg {
 	position: absolute;
 	top: 6px;
 	left: 5px;
+}
+.inlineEdit {
+}
+.inlineEdit .inlineEditIcon {
+	visibility: hidden;
+	margin-left: 10px;
+	margin-top: 5px;
+}
+.inlineEdit:hover .inlineEditIcon {
+	visibility: visible;
 }
 .pageIconLabel {
 	position: relative;
@@ -655,7 +779,7 @@ span.statusMsg {
 }
 
 #paletteBody {
-	height: 588px;
+	/*height: 588px;*/
 	font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
 	/* Font  of sub menu items */
 	background: #FFF !important; /* Background color of sub menu items */
@@ -742,9 +866,18 @@ span.statusMsg {
 	width: 22px;
 	background-color: White;
 }
+.fbcCompVar {
+	visibility: hidden;
+	position: absolute;
+	top: 10px;
+	left: 80%;
+}
 
 .formElement:hover .fbCompHandler {
 	background: url(images/move_16.png) center 3px no-repeat Yellow;
+}
+.formElement:hover .fbcCompVar {
+	visibility: visible;
 }
 
 .fbPageHandler {
@@ -798,7 +931,7 @@ span.statusMsg {
 
 .formElement:hover .speedButton {
 	position: absolute;
-	right: 10px;
+	left: 90%;
 	top: 10px;
 	display: inline;
 	cursor: pointer;
@@ -844,7 +977,10 @@ span.statusMsg {
 	display: block;
 	font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
 }
-
+#noFormNotice textarea {
+	width: 90%;
+	height: 100%;
+}
 .noMenuLabel {
 	background-color: Grey;
 	padding-left: 30px;
@@ -937,6 +1073,7 @@ body#formbuilder .toolbarButton:hover {
 .componentsList {
 	margin-bottom: 10px;
 	margin-top: 10px;
+	height: 358px;
 }
 
 .paletteComponent,.paletteComponentBt {
@@ -1301,7 +1438,7 @@ div#dropBoxinner {
 	height: auto !important;
 	overflow: auto !important;
 }
-#optionsPanel .acToggle {
+#optionsPanel .acToggle, #rightPanel .acToggle {
 	width:auto; 
 	height: 24px;
 	padding: 0 10px;

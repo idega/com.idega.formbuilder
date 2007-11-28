@@ -1,125 +1,12 @@
-var arrowImageHeight = 35;
-var displayWaitMessage=true;
-var previewImage = false;
-var previewImageParent = false;
-var slideSpeed = 0;
-var previewImagePane = false;
-var slideEndMarker = false;
-var galleryContainer = false;
-var imageGalleryCaptions = new Array();
-var myMorph = null;
-
-var NEW_FORM_COMPACT = 'newFormCompBox';
 var FORMBUILDER_PATH = "/workspace/forms/formbuilder/";
 var FORMADMIN_PATH = "/workspace/forms/formadmin/";
 var FORMSHOME_PATH = "/workspace/forms/";
+var SHOW_ELEMENT_TRANSITION_DURATION = 250;
+var SET_DISPLAY_PROPERTY_ID = 0;
 
-Window.onDomReady(function() {
-	$(NEW_FORM_COMPACT).makeRounded(false, {radius: 6});
-	
-	myMorph = new Fx.Morph(NEW_FORM_COMPACT, {wait: false});
-	$('newBt').addEvent('click', function(e){
-		new Event(e).stop();
-		myMorph.start('newFormComponentExpand');
-	});
-	$('newIcon').addEvent('click', function(e){
-		new Event(e).stop();
-		myMorph.start('newFormComponentExpand');
-	});
-	$('cancelBt').addEvent('click', function(e){
-		new Event(e).stop();
-		myMorph.start('newFormComponentIdle');
-	});
-	$('newTxt').addEvent('keypress', function(e){
-		if(isEnterEvent(e)) {
-			new Event(e).stop();
-			var formName = $('newTxt').value;
-			createNewForm(formName);
-		}
-	});
-	$('okBt').addEvent('click', function(e){
-		new Event(e).stop();
-		var formName = $('newTxt').value;
-		createNewForm(formName);
-	});
-	$ES("a.entriesButton").each(function(item) {
-		item.addEvent('click', function(e){
-			new Event(e).stop();
-			showLoadingMessage('Loading');
-			FormDocument.loadFormDocumentEntries(item.id, {
-				callback: function(result) {
-					if(result == true) {
-						window.location=FORMADMIN_PATH;
-					} else {
-						alert('Error occured trying to load admin mode');
-						closeLoadingMessage();
-					}
-				}
-			});
-		});
-	});
-	$ES("a.editButton").each(function(item) {
-		item.addEvent('click', function(e){
-			new Event(e).stop();
-			showLoadingMessage('Loading');
-			FormDocument.loadFormDocument(item.id, {
-				callback: function(result) {
-					if(result == true) {
-						window.location=FORMBUILDER_PATH;
-					} else {
-						alert('Error occured trying to load editing mode');
-						closeLoadingMessage();
-					}
-				}
-			});
-		});
-	});
-	$ES("a.codeButton").each(function(item) {
-		item.addEvent('click', function(e){
-			new Event(e).stop();
-			showLoadingMessage('Loading');
-			FormDocument.loadFormDocumentCode(item.id, {
-				callback: function(result) {
-					if(result == true) {
-						window.location=FORMBUILDER_PATH;
-					} else {
-						alert('Error occured trying to load code view mode');
-						closeLoadingMessage();
-					}
-				}
-			});
-		});
-	});
-	$ES("a.duplicateButton").each(function(item) {
-		item.addEvent('click', function(e){
-			new Event(e).stop();
-			//showLoadingMessage('Loading');
-			alert('Duplicate disabled');
-		});
-	});
-	$ES("a.deleteButton").each(function(item) {
-		item.addEvent('click', function(e){
-			new Event(e).stop();
-			var answer = confirm("Delete form?")
-			if (answer) {
-				showLoadingMessage('Deleting');
-				FormDocument.deleteFormDocument(item.id, {
-					callback: function(result) {
-						if(result == true) {
-							window.location = FORMSHOME_PATH;
-						} else {
-							alert('Error trying to delete');
-							closeLoadingMessage();
-						}
-					}
-				});
-			}
-		});
-	});
-});
 function loadTaskFormDocument(processName, processId, taskName, formId) {
 	showLoadingMessage('Loading');
-	FormDocument.loadTaskFormDocument(processName, processId, taskName, formId, {
+	FormDocument.loadTaskFormDocument(processId, taskName, formId, {
 		callback: function(result) {
 			if(result == true) {
 				window.location=FORMBUILDER_PATH;
@@ -133,16 +20,17 @@ function loadTaskFormDocument(processName, processId, taskName, formId) {
 }
 function createNewForm(formName) {
 	if(formName.length < 1) {
+		return false;
+	}
 		
-	} else {
-		showLoadingMessage('Creating');
-		FormDocument.createFormDocument(formName, createdNewForm);
-	}
-}
-function createdNewForm(result) {
-	if(result != null) {
-		window.location=FORMBUILDER_PATH;
-	}
+	showLoadingMessage('Creating');
+	FormDocument.createFormDocument(formName, {
+		callback: function(result) {
+			if(result != null) {
+				window.location=FORMBUILDER_PATH;
+			}
+		}
+	});
 }
 function resetAddTaskForm(event) {
 	new Event(event).stop();
@@ -205,164 +93,180 @@ function reloadAddTaskForm1(event) {
 		});
 	}
 }
-/*function reloadAddTaskForm(event) {
-	var ev = new Event(event);
-	if((event.type == 'keypress' && (typeof event.keyCode != 'undefined' ? event.keyCode : event.charCode) == '13') || event.type == 'change' || event.type == 'click') {
-		var target = event.target;
-		var divBox = target.parentNode;
-		var targetId = divBox.id;
-		var parent = divBox.parentNode;
-		var tokens = targetId.split('_');
-		if(tokens[3] == '1') {
-			FormDocument.getRenderedAddTaskFormComponent(tokens[1], null, null, false, {
-				callback: function(resultDOM) {
-					replaceNode(resultDOM, divBox, parent);
-					$('newTF_' + tokens[1] + '_chooser').focus();
+function setHrefToVoidFunction(element) {
+	element.setProperty('href', 'javascript:void(0)');
+}
+function registerFormsHomeActions() {
+	var newFormButton = $('newFormButton');
+	setHrefToVoidFunction(newFormButton);
+	newFormButton.addEvent('click', function() {
+		showNewFormDialog('newFormDialog', 'newFormButton', "New form", newFormButton.getLeft());
+	});
+	var newFormInput = $('newFormDialogInput');
+	newFormInput.addEvent('keydown', function(e) {
+		var event = new Event(e);
+		if(isEnterEvent(e)) {
+			createNewForm(event.target.value);
+		}
+	});
+	$('createFormBtn').addEvent('click', function(e) {
+		createNewForm(newFormInput.value);
+	});
+	$ES("a.entriesButton").each(function(item) {
+		item.addEvent('click', function(e){
+			new Event(e).stop();
+			showLoadingMessage('Loading');
+			FormDocument.loadFormDocumentEntries(item.id, {
+				callback: function(result) {
+					if(result == true) {
+						window.location=FORMADMIN_PATH;
+					} else {
+						alert('Error occured trying to load admin mode');
+						closeLoadingMessage();
+					}
 				}
 			});
-		} else if(tokens[3] == '2') {
-			FormDocument.getRenderedAddTaskFormComponent(tokens[1], target.value, null, false, {
-				callback: function(resultDOM) {
-					replaceNode(resultDOM, divBox, parent);
-					$('newTF_' + tokens[1] + '_input').focus();
+		});
+	});
+	/*$ES("a.editButton").each(function(item) {
+		item.addEvent('click', function(e){
+			new Event(e).stop();
+			showLoadingMessage('Loading');
+			FormDocument.loadFormDocument(item.id, {
+				callback: function(result) {
+					if(result == true) {
+						window.location=FORMBUILDER_PATH;
+					} else {
+						alert('Error occured trying to load editing mode');
+						closeLoadingMessage();
+					}
 				}
 			});
-		} else if(tokens[3] == '3') {
-			FormDocument.getRenderedAddTaskFormComponent(tokens[1], null, null, true, {
-				callback: function(resultDOM) {
-					replaceNode(resultDOM, divBox, parent);
+		});
+	});*/
+	$ES("a.tryButton").each(function(item) {
+		item.addEvent('click', function(e){
+			new Event(e).stop();
+			showLoadingMessage('Loading');
+			FormDocument.loadFormDocumentPreview(item.id, {
+				callback: function(result) {
+					if(result == true) {
+						window.location=FORMBUILDER_PATH;
+					} else {
+						alert('Error occured trying to load preview mode');
+						closeLoadingMessage();
+					}
 				}
 			});
-		}
-	}
-}
-function duplicateForm(parameter) {
-	var container = $(parameter);
-	hideDialog(parameter);
-	//new Rico.Effect.Size(parameter, null, 100, 500, 10, {complete:function() {showDialog(parameter,'duplicate')}});
-}
-function duplicateFormDocument(parameter, newTitle) {
-	if(parameter.indexOf(ITEM_ID_PREFIX) == 0) {
-		var formId = parameter.substring(ITEM_ID_PREFIX.length);
-		if(newTitle != '') {
-			FormDocument.duplicateFormDocument(formId,newTitle,refreshHomePageView);
-		}
-	}
-}*/
-/*function deleteForm(parameter) {
-	var container = $(parameter);
-	hideDialog(parameter);
-	//new Rico.Effect.Size(parameter, null, 100, 500, 10, {complete:function() {showDialog(parameter,'delete');}});
-}
-function showDialog(parameter,type) {
-	if(type == 'delete') {
-		var dialogNode = createDeleteDialog();
-		if(dialogNode != null) {
-			var containerNode = $(parameter).childNodes[1];
-			var oldNode = $(parameter + '_DD');
-			if(oldNode == null) {
-				dialogNode.id = parameter + '_DD';
-				dialogNode.childNodes[1].setAttribute("onclick","deleteFormDocument('" + parameter + "');");
-				dialogNode.childNodes[2].setAttribute("onclick","hideDialog('" + parameter + "');");
-				containerNode.appendChild(dialogNode);
+		});
+	});
+	$ES("a.codeButton").each(function(item) {
+		item.addEvent('click', function(e){
+			new Event(e).stop();
+			showLoadingMessage('Loading');
+			FormDocument.loadFormDocumentCode(item.id, {
+				callback: function(result) {
+					if(result == true) {
+						window.location=FORMBUILDER_PATH;
+					} else {
+						alert('Error occured trying to load code view mode');
+						closeLoadingMessage();
+					}
+				}
+			});
+		});
+	});
+	$ES("a.duplicateButton").each(function(item) {
+		item.addEvent('click', function(e){
+			new Event(e).stop();
+			//showLoadingMessage('Loading');
+			alert('Duplicate disabled');
+		});
+	});
+	$ES("a.deleteButton").each(function(item) {
+		item.addEvent('click', function(e){
+			new Event(e).stop();
+			var answer = confirm("Delete form?")
+			if (answer) {
+				showLoadingMessage('Deleting');
+				FormDocument.deleteFormDocument(item.id, {
+					callback: function(result) {
+						if(result == true) {
+							window.location = FORMSHOME_PATH;
+						} else {
+							alert('Error trying to delete');
+							closeLoadingMessage();
+						}
+					}
+				});
 			}
-		}
-	} else if(type == 'duplicate') {
-		var dialogNode = createDuplicateDialog();
-		if(dialogNode != null) {
-			var containerNode = $(parameter).childNodes[1];
-			var oldNode = $(parameter + '_DupD');
-			if(oldNode == null) {
-				dialogNode.id = parameter + '_DupD';
-				dialogNode.childNodes[2].setAttribute("onclick","duplicateFormDocument('" + parameter + "',this.previousSibling.value);");
-				dialogNode.childNodes[3].setAttribute("onclick","hideDialog('" + parameter + "');");
-				containerNode.appendChild(dialogNode);
+		});
+	});
+	$ES("a.deleteTFButton").each(function(item) {
+		item.addEvent('click', function(e){
+			new Event(e).stop();
+			var answer = confirm("Delete form?")
+			if (answer) {
+				showLoadingMessage('Deleting');
+				FormDocument.deleteTaskFormDocument(item.id, {
+					callback: function(result) {
+						if(result == true) {
+							window.location = FORMSHOME_PATH;
+						} else {
+							alert('Error trying to delete');
+							closeLoadingMessage();
+						}
+					}
+				});
 			}
-		}
-	}
+		});
+	});
 }
-function hideDialog(parameter) {
-	var root = $(parameter);
-	if(root != null) {
-		var bottomHalf = root.childNodes[1];
-		if(bottomHalf != null) {
-			var index = bottomHalf.childNodes.length - 1;
-			if(index > 9) {
-				var node = bottomHalf.childNodes[index];
-				bottomHalf.removeChild(node);
-				new Rico.Effect.Size(parameter, null, 60, 50, 1);
-			}
-		}
+function showNewFormDialog(containerId, buttonId, buttonText, positionFromLeft) {
+	var container = $(containerId);
+	if (container == null) {
+		return false;
 	}
 	
-}
-function deleteFormDocument(parameter) {
-	if(parameter.indexOf(ITEM_ID_PREFIX) == 0) {
-		var formId = parameter.substring(ITEM_ID_PREFIX.length);
-		FormDocument.deleteFormDocument(formId,refreshHomePageView);
+	var containerOpen = buttonText != $(buttonId).getText();
+	if (containerOpen) {
+		setButtonText(buttonId, buttonText);
+		closeNewPage(container);
+	}
+	else {
+		container.setStyle('left', positionFromLeft-190);
+		setButtonText(buttonId, "Close");
+		var showNewPage = new Fx.Style(container, 'opacity', {duration: SHOW_ELEMENT_TRANSITION_DURATION});
+		showNewPage.start(0, 1);
+		SET_DISPLAY_PROPERTY_ID = window.setTimeout("setDisplayPropertyToElement('"+container.id+"', 'block', null)", SHOW_ELEMENT_TRANSITION_DURATION);
 	}
 }
-function refreshHomePageView(result) {
-	if(result != null) {
-		window.location="/workspace/forms/";
+function setButtonText(id, text) {
+	var button = $(id);
+	if (button != null) {
+		button.setText(text);
 	}
 }
-function showDuplicateDialog(parameter) {
-	//new Rico.Effect.Size(parameter, null, 100, 500, 10);
+function closeNewPage(container) {
+	if (container != null) {
+		var hideNewPage = new Fx.Style(container, 'opacity', {duration: SHOW_ELEMENT_TRANSITION_DURATION});
+		hideNewPage.start(1, 0);
+		SET_DISPLAY_PROPERTY_ID = window.setTimeout("setDisplayPropertyToElement('"+container.id+"', 'none', null)", SHOW_ELEMENT_TRANSITION_DURATION);
+	}
 }
-function createDuplicateDialog() {
-	var root = document.createElement('div');
-	root.setAttribute('class','duplicateFormDialog');
+function setDisplayPropertyToElement(id, property, frameChange) {
+	if (id == null || property == null) {
+		return false;
+	}
+	var element = $(id);
+	if (element == null) {
+		return false;;
+	}
 	
-	var lbl = document.createElement('label');
-	var txt = document.createTextNode('Please enter the name of the new form:');
-	var formInput = document.createElement('input');
-	formInput.type = 'text';
-	formInput.value = '';
-	var okBtn = document.createElement('input');
-	okBtn.type = 'button';
-	okBtn.value = 'OK';
-	var cancelBtn = document.createElement('input');
-	cancelBtn.type = 'button';
-	cancelBtn.value = 'Cancel';
-	lbl.appendChild(txt);
-	root.appendChild(lbl);
-	root.appendChild(formInput);
-	root.appendChild(okBtn);
-	root.appendChild(cancelBtn);
-	return root;
-}
-function createDeleteDialog() {
-	var root = document.createElement('div');
-	root.setAttribute('class','deleteFormDialog');
+	element.setStyle('display', property);
+	window.clearTimeout(SET_DISPLAY_PROPERTY_ID);
 	
-	var lbl = document.createElement('label');
-	var txt = document.createTextNode('Are you sure you want to send this form to trash?');
-	var okBtn = document.createElement('input');
-	okBtn.type = 'button';
-	okBtn.value = 'OK';
-	var cancelBtn = document.createElement('input');
-	cancelBtn.type = 'button';
-	cancelBtn.value = 'Cancel';
-	lbl.appendChild(txt);
-	root.appendChild(lbl);
-	root.appendChild(okBtn);
-	root.appendChild(cancelBtn);
-	return root;
-}
-* */
-Fx.Morph = Fx.Styles.extend({
-	start: function(className){
-		var to = {};
-		if(className == 'newFormComponentExpand') {
-			$(NEW_FORM_COMPACT).removeClass('newFormComponentIdle');
-			$(NEW_FORM_COMPACT).addClass('newFormComponentExpand');
-			$('newTxt').value = '';
-			$('newTxt').focus();
-		} else {
-			$(NEW_FORM_COMPACT).removeClass('newFormComponentExpand');
-			$(NEW_FORM_COMPACT).addClass('newFormComponentIdle');
-		}
-		return this.parent(to);
+	if (frameChange != null) {
+		changeFrameHeight(frameChange);
 	}
-});
+}
