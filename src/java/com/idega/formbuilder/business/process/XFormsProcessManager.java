@@ -72,8 +72,7 @@ public class XFormsProcessManager {
 			ProcessDefinition pd = ctx.getGraphSession().getProcessDefinition(Long.parseLong(processId));
 			TaskMgmtDefinition mgmt = pd.getTaskMgmtDefinition();
 			Task task = mgmt.getTask(taskName);
-			View view = getViewFactory().createView();
-			view.setViewId(formId);
+			View view = getViewFactory().getViewNoLoad(formId);
 			getViewToTaskBinder().bind(view, task);
 			
 		} finally {
