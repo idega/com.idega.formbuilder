@@ -19,7 +19,7 @@ import com.idega.block.form.process.XFormsToTask;
 import com.idega.block.formadmin.presentation.actions.GetAvailableFormsAction;
 import com.idega.builder.business.BuilderLogic;
 import com.idega.content.themes.business.TemplatesLoader;
-import com.idega.content.themes.helpers.ThemesHelper;
+import com.idega.content.themes.helpers.business.ThemesHelper;
 import com.idega.content.tree.PageTemplate;
 import com.idega.core.builder.business.BuilderService;
 import com.idega.core.builder.business.BuilderServiceFactory;
