@@ -47,7 +47,7 @@ public class FBAddTaskForm extends FBComponentBase {
 		ProcessData processData = (ProcessData) WFUtil.getBeanInstance(ProcessData.BEAN_ID);
 		
 		XFormsToTask viewToTaskbinder = (XFormsToTask) WFUtil.getBeanInstance("process_xforms_viewToTask");
-		JbpmProcessBusinessBean jbpmProcessBean = viewToTaskbinder.getJbpmProcessBusiness();
+		JbpmProcessBusinessBean jbpmProcessBean = (JbpmProcessBusinessBean)WFUtil.getBeanInstance("jbpmProcessBusiness");
 		List<Task> tasks = jbpmProcessBean.getProcessDefinitionTasks(processData.getProcessId());
 
 		Long processId = processData.getProcessId();

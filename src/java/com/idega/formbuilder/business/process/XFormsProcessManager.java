@@ -3,15 +3,13 @@ package com.idega.formbuilder.business.process;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.jbpm.JbpmConfiguration;
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 
 import com.idega.builder.bean.AdvancedProperty;
+import com.idega.jbpm.IdegaJbpmContext;
 import com.idega.jbpm.data.ActorTaskBind;
 import com.idega.jbpm.def.ActorTaskBinder;
 import com.idega.jbpm.def.View;
@@ -27,30 +25,13 @@ public class XFormsProcessManager {
 	private static final String JBPM_XFORM_ACTOR_TYPE = "jbpm_actor_type";
 	private static final String JBPM_XFORM_ACTOR_ID = "jbpm_actor_id";
 	
-	private SessionFactory sessionFactory;
-	private JbpmConfiguration jbpmConfiguration;
 	private ViewToTask viewToTaskBinder;
 	private ActorTaskBinder actorToTaskBinder;
 	private ViewFactory viewFactory;
+	private IdegaJbpmContext idegaJbpmContext;
 	
 	public ViewFactory getViewFactory() {
 		return viewFactory;
-	}
-
-	public SessionFactory getSessionFactory() {
-		return sessionFactory;
-	}
-
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
-
-	public JbpmConfiguration getJbpmConfiguration() {
-		return jbpmConfiguration;
-	}
-
-	public void setJbpmConfiguration(JbpmConfiguration jbpmConfiguration) {
-		this.jbpmConfiguration = jbpmConfiguration;
 	}
 
 	public void setViewFactory(ViewFactory viewFactory) {
@@ -59,14 +40,7 @@ public class XFormsProcessManager {
 
 	public void assignTaskForm(String processId, String taskName, String formId) {
 		
-		Transaction transaction = getSessionFactory().getCurrentSession().getTransaction();
-		boolean transactionWasActive = transaction.isActive();
-		
-		if(!transactionWasActive)
-			transaction.begin();
-		
-		JbpmContext ctx = getJbpmConfiguration().createJbpmContext();
-		ctx.setSession(getSessionFactory().getCurrentSession());
+		JbpmContext ctx = getIdegaJbpmContext().createJbpmContext();
 		
 		try {
 			ProcessDefinition pd = ctx.getGraphSession().getProcessDefinition(Long.parseLong(processId));
@@ -78,23 +52,13 @@ public class XFormsProcessManager {
 		} finally {
 			
 			ctx.close();
-			
-			if(!transactionWasActive)
-				transaction.commit();
 		}
 	}
 	
 	public List<AdvancedProperty> getTaskProperties(String processId, String taskId) {
 		List<AdvancedProperty> result = new ArrayList<AdvancedProperty>();
 		
-		Transaction transaction = getSessionFactory().getCurrentSession().getTransaction();
-		boolean transactionWasActive = transaction.isActive();
-		
-		if(!transactionWasActive)
-			transaction.begin();
-		
-		JbpmContext ctx = getJbpmConfiguration().createJbpmContext();
-		ctx.setSession(getSessionFactory().getCurrentSession());
+		JbpmContext ctx = getIdegaJbpmContext().createJbpmContext();
 		
 		try {
 			ProcessDefinition pd = ctx.getGraphSession().getProcessDefinition(Long.parseLong(processId));
@@ -125,9 +89,6 @@ public class XFormsProcessManager {
 		} finally {
 			
 			ctx.close();
-			
-			if(!transactionWasActive)
-				transaction.commit();
 		}
 	}
 
@@ -145,5 +106,13 @@ public class XFormsProcessManager {
 
 	public void setActorToTaskBinder(ActorTaskBinder actorToTaskBinder) {
 		this.actorToTaskBinder = actorToTaskBinder;
+	}
+
+	public IdegaJbpmContext getIdegaJbpmContext() {
+		return idegaJbpmContext;
+	}
+
+	public void setIdegaJbpmContext(IdegaJbpmContext idegaJbpmContext) {
+		this.idegaJbpmContext = idegaJbpmContext;
 	}
 }
