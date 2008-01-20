@@ -11,6 +11,9 @@
 		<project>com.idega.dwr</project>
 		<project>com.idega.slide</project>
 		<project>com.idega.workspace</project>
+		<project>is.idega.idegaweb.egov.application</project>
+		<project>org.chiba.web</project>
+		<project>org.jboss.jbpm</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
@@ -23,8 +26,14 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+		<buildCommand>
+			<name>org.springframework.ide.eclipse.core.springbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
+		<nature>org.springframework.ide.eclipse.core.springnature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.maven.ide.eclipse.maven2Nature</nature>
 	</natures>
