@@ -245,7 +245,8 @@ public class FormDocument implements Serializable {
 		try {
 			document.save();
 			
-			if(app_id != null) {
+//			TODO: this need to be moved under the bean implementing ApplicationType interface
+			if(app_id != null && false) {
 				FacesContext ctx = FacesContext.getCurrentInstance();
 				
 				String name = primary_form_name;

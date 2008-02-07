@@ -51,7 +51,7 @@ public class XFormsProcessManager {
 			
 		} finally {
 			
-			ctx.close();
+			getIdegaJbpmContext().closeAndCommit(ctx);
 		}
 	}
 	
@@ -88,7 +88,7 @@ public class XFormsProcessManager {
 			
 		} finally {
 			
-			ctx.close();
+			getIdegaJbpmContext().closeAndCommit(ctx);
 		}
 	}
 
