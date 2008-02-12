@@ -17,9 +17,9 @@ import com.idega.jbpm.def.ViewToTask;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
- * Last modified: $Date: 2007/09/28 11:08:35 $ by $Author: civilis $
+ * Last modified: $Date: 2008/02/12 14:38:18 $ by $Author: civilis $
  *
  */
 public class Mockup {
@@ -48,7 +48,10 @@ public class Mockup {
 	}
 	
 	public void userChoseToInitiateBasicComplaintProcess() {
-		
+
+		if(true)
+			throw new UnsupportedOperationException("THis class uses deprecated jbpm context handling, fix this.");
+			
 		JbpmContext ctx = getJbpmConfiguration().createJbpmContext();
 		
 		try {
