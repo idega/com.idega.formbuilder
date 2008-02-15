@@ -163,19 +163,6 @@
 		<managed-bean-class>com.idega.formbuilder.presentation.beans.LocaleList</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
-	<managed-bean>
-        <managed-bean-name>idegaSomeMockup</managed-bean-name>
-        <managed-bean-class>com.idega.formbuilder.business.process.Mockup</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-        <managed-property>
-		  	<property-name>jbpmConfiguration</property-name>
-		    <value>#{defaultJbpmConfiguration}</value>
-		</managed-property>
-		<managed-property>
-		  	<property-name>x2t</property-name>
-		    <value>#{process_xforms_viewToTask}</value>
-		</managed-property>
-    </managed-bean>
     
     <component>
 		<component-type>VariableViewer</component-type>
