@@ -205,10 +205,6 @@
 		<component-class>com.idega.formbuilder.presentation.components.FBSourceView</component-class>
 	</component>
 	<component>
-		<component-type>Menu</component-type>
-		<component-class>com.idega.formbuilder.presentation.components.FBMenu</component-class>
-	</component>
-	<component>
 		<component-type>Workspace</component-type>
 		<component-class>com.idega.formbuilder.presentation.components.FBWorkspace</component-class>
 	</component>
