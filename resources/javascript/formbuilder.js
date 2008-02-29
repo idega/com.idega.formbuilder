@@ -262,7 +262,10 @@ function registerFormbuilderActions() {
 		closeVariableListDialog($('selectVariableDialog'));
 	});
 }
-function setupVariableViewer() {
+function initializePalette() {
+	var tabs = new mootabs('firstList', {width: '100%', height: '358px', changeTransition: 'none'});
+}
+function initializeVariableViewer() {
 	$$('.addVariableIcon').each(function(el){
 		el.addEvent('click', function(e) {
 			var id = el.getProperty('id');
@@ -380,7 +383,7 @@ function showVariableList(containerId, positionLeft, positionTop, list, transiti
 										insertNodesToContainerBefore(currentElement, $('dropBoxinner'), node);
 										currentElement = null;
 									}
-									setupDesignView();
+									initializeDesignView();
 								}
 							});
 							dwr.engine.endBatch();
@@ -471,7 +474,7 @@ function setDisplayPropertyToElement(id, property, frameChange) {
 		changeFrameHeight(frameChange);
 	}
 }
-function setupDesignView() {
+function initializeDesignView() {
 	FormComponent.getId(markSelectedComponent);
 	var myComponentSort = new Sortables($('dropBoxinner'), {
 		onComplete: function(el){
@@ -518,7 +521,7 @@ function setupDesignView() {
 												insertNodesToContainerBefore(currentElement, $('dropBoxinner'), node);
 												currentElement = null;
 											}
-											setupDesignView();
+											initializeDesignView();
 										}
 									});
 							    }
@@ -743,7 +746,7 @@ function loadConfirmationPage(parameter) {
 					var node = parentNode.getLast();
 					node.remove();
 					insertNodesToContainer(resultDOM, parentNode);
-					setupDesignView();
+					initializeDesignView();
 				}
 				closeLoadingMessage();
 			}
@@ -763,7 +766,7 @@ function loadThxPage(parameter) {
 					var node = parentNode.getLast();
 					node.remove();
 					insertNodesToContainer(resultDOM, parentNode);
-					setupDesignView();
+					initializeDesignView();
 				}
 				closeLoadingMessage();
 			}
@@ -784,7 +787,7 @@ function loadPageInfo(targetId) {
 						var node = parentNode.getLast();
 						node.remove();
 						insertNodesToContainer(resultDOM, parentNode);
-						setupDesignView();
+						initializeDesignView();
 					}
 					closeLoadingMessage();
 				}
@@ -803,7 +806,7 @@ function placePageTitle(parameter) {
 		}
 	}
 }
-function setupPagesPanel() {
+function initializePagesPanel() {
 	var myPagesSort = new Sortables($(PAGES_PANEL_ID), {
 		onComplete: function(el){
 			var children = $(PAGES_PANEL_ID).getChildren();
@@ -1307,8 +1310,8 @@ function createNewPage() {
 				var node = parentNode.getLast();
 				node.remove();
 				insertNodesToContainer(resultDOMs[0], parentNode);
-				setupDesignView();
-				setupPagesPanel();
+				initializeDesignView();
+				initializePagesPanel();
 			}
 		}
 	});
@@ -1341,14 +1344,14 @@ function deletePage(event) {
 						var node = parentNode.getLast();
 						node.remove();
 						insertNodesToContainer(designViewDOM, parentNode);
-						setupDesignView();
+						initializeDesignView();
 					}
 					closeLoadingMessage();
 				}
 			}
 		});
 	}
-	setupPagesPanel();
+	initializePagesPanel();
 }
 function removeComponent(parameter) {
 	var node = parameter.parentNode;
@@ -1370,8 +1373,8 @@ function removeComponent(parameter) {
 										var node2 = parentNode.getLast();
 										node2.remove();
 										insertNodesToContainer(resultDOM, parentNode);
-										setupDesignView();
-										setupPagesPanel();
+										initializeDesignView();
+										initializePagesPanel();
 									}
 								}
 							}

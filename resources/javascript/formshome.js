@@ -97,6 +97,9 @@ function setHrefToVoidFunction(element) {
 	element.setProperty('href', 'javascript:void(0)');
 }
 function registerFormsHomeActions() {
+	var widthForTabs = Math.round(window.getWidth() * 0.93);
+	var heightForTabs = Math.round(window.getHeight() * 0.7);
+	var tabs = new mootabs('formListContainer', {width: widthForTabs + 'px', height: (heightForTabs - 50) + 'px', changeTransition: 'none'});
 	var newFormButton = $('newFormButton');
 	setHrefToVoidFunction(newFormButton);
 	newFormButton.addEvent('click', function() {
@@ -112,6 +115,10 @@ function registerFormsHomeActions() {
 	$('createFormBtn').addEvent('click', function(e) {
 		createNewForm(newFormInput.value);
 	});
+	/*$ES(".smoothbox").each(function(button) {
+		button.setProperty('href', '#TB_inline?height=50&width=300&inlineId=newFormDialog');
+		button.setProperty('title', 'New form');
+	});*/
 	$ES("a.entriesButton").each(function(item) {
 		item.addEvent('click', function(e){
 			new Event(e).stop();
@@ -128,7 +135,7 @@ function registerFormsHomeActions() {
 			});
 		});
 	});
-	/*$ES("a.editButton").each(function(item) {
+	$ES("a.editButton").each(function(item) {
 		item.addEvent('click', function(e){
 			new Event(e).stop();
 			showLoadingMessage('Loading');
@@ -143,7 +150,7 @@ function registerFormsHomeActions() {
 				}
 			});
 		});
-	});*/
+	});
 	$ES("a.tryButton").each(function(item) {
 		item.addEvent('click', function(e){
 			new Event(e).stop();
