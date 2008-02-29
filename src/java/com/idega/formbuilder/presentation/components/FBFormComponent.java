@@ -17,6 +17,7 @@ import com.idega.documentmanager.business.component.properties.PropertiesCompone
 import com.idega.formbuilder.dom.DOMTransformer;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormPage;
+import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
@@ -147,11 +148,15 @@ public class FBFormComponent extends FBComponentBase {
 		if (!isRendered()) {
 			return;
 		}
-		UIComponent facet = getFacet(VARIABLE_NAME_FACET);
-		if(facet != null) {
-			renderChild(context, facet);
+		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
+		
+		if(workspace.isProcessMode()) {
+			UIComponent facet = getFacet(VARIABLE_NAME_FACET);
+			if(facet != null) {
+				renderChild(context, facet);
+			}
 		}
-		facet = getFacet(DELETE_BUTTON_FACET);
+		UIComponent facet = getFacet(DELETE_BUTTON_FACET);
 		if(facet != null) {
 			renderChild(context, facet);
 		}

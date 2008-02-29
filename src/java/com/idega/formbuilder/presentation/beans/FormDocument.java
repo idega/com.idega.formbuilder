@@ -190,13 +190,13 @@ public class FormDocument implements Serializable {
 				
 			String firstPage = getCommonPagesIdList().get(0);
 			Page firstP = getDocument().getPage(firstPage);
-			FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+			FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 			formPage.initializeBeanInstance(firstP);
 				
 			getWorkspace().setView("design");
 			getWorkspace().setProcessMode(true);
 			initializeBeanInstance(getDocument());
-			processData.initializeBeanInstance(getDocument(), new Long(processId), taskName);
+			getProcessData().initializeBeanInstance(getDocument(), new Long(processId), taskName);
 		} catch (FormLockException e) {
 			// TODO: inform about lock
 			logger.info("Form was locked when tried to open it", e);
@@ -221,7 +221,6 @@ public class FormDocument implements Serializable {
 			
 		try {
 			document = formManagerInstance.createForm(id, formName);
-//			CoreUtil.getIWContext().getExternalContext().getSessionMap().put(FBConstants.FORM_DOCUMENT_ID, id);
 		} catch(Exception e) {
 			logger.error("Could not crea XForms document");
 		}
@@ -234,7 +233,7 @@ public class FormDocument implements Serializable {
 		initializeBeanInstance(document);
 			
 		Page page = document.getPage(document.getContainedPagesIdList().get(0));
-		FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+		FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 		formPage.initializeBeanInstance(page);
 		
 		return true;
@@ -413,10 +412,10 @@ public class FormDocument implements Serializable {
 				
 				String firstPage = getCommonPagesIdList().get(0);
 				Page firstP = document.getPage(firstPage);
-				FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+				FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 				formPage.initializeBeanInstance(firstP);
 				
-				workspace.setView("design");
+				getWorkspace().setView("design");
 				getWorkspace().setProcessMode(false);
 				initializeBeanInstance(document);
 			}
@@ -448,7 +447,7 @@ public class FormDocument implements Serializable {
 				
 				String firstPage = getCommonPagesIdList().get(0);
 				Page firstP = document.getPage(firstPage);
-				FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+				FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 				formPage.initializeBeanInstance(firstP);
 				
 				initializeBeanInstance(document);
@@ -481,7 +480,7 @@ public class FormDocument implements Serializable {
 				
 				String firstPage = getCommonPagesIdList().get(0);
 				Page firstP = document.getPage(firstPage);
-				FormPage formPage = (FormPage) WFUtil.getBeanInstance("formPage");
+				FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 				formPage.initializeBeanInstance(firstP);
 				
 				initializeBeanInstance(document);
@@ -661,7 +660,7 @@ public class FormDocument implements Serializable {
 		try {
 			if(document != null) {
 				document.setFormSourceCode(sourceCode);
-				FormPage currentPage = (FormPage) WFUtil.getBeanInstance("formPage");
+				FormPage currentPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 				if(currentPage != null) {
 					Page page = document.getPage(document.getContainedPagesIdList().get(0));
 					currentPage.initializeBeanInstance(page);

@@ -6,6 +6,7 @@ import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
 import com.idega.presentation.text.Text;
+import com.idega.util.CoreConstants;
 
 public class FBFormPage extends FBComponentBase {
 	
@@ -19,6 +20,7 @@ public class FBFormPage extends FBComponentBase {
 	private static final String DEFAULT_ICON_STYLE_CLASS = "pageIconIcon";
 	private static final String DEFAULT_LABEL_STYLE_CLASS = "pageIconLabel";
 	private static final String DEFAULT_SPEED_BUTTON_STYLE_CLASS = "pageSpeedButton";
+	private static final String FB_PAGE_HANDLER = "fbPageHandler";
 	private static final String PAGE_ID_POSTFIX = "_page";
 	private static final String ICON_ID_POSTFIX = "_pi";
 	private static final String SPEED_BUTTON_ID_POSTFIX = "_db";
@@ -69,7 +71,7 @@ public class FBFormPage extends FBComponentBase {
 	public FBFormPage(String id, String label, boolean special) {
 		this(id, label);
 		if(special) {
-			this.onDelete = "";
+			this.onDelete = CoreConstants.EMPTY;
 		}
 	}
 	
@@ -88,9 +90,9 @@ public class FBFormPage extends FBComponentBase {
 		pageLayer.setStyleClass(getStyleClass());
 		pageLayer.setOnClick(onLoad);
 		
-		if(!"".equals(onDelete)) {
+		if(!CoreConstants.EMPTY.equals(onDelete)) {
 			Layer handleLayer = new Layer(Layer.DIV);
-			handleLayer.setStyleClass("fbPageHandler");
+			handleLayer.setStyleClass(FB_PAGE_HANDLER);
 			pageLayer.add(handleLayer);
 		}
 		
@@ -105,7 +107,7 @@ public class FBFormPage extends FBComponentBase {
 		pageLayer.add(pageIconImg);
 		pageLayer.add(pageIconLabel);
 		
-		if(!"".equals(onDelete)) {
+		if(!CoreConstants.EMPTY.equals(onDelete)) {
 			Image deleteButton = new Image();
 			deleteButton.setId(getId() + SPEED_BUTTON_ID_POSTFIX);
 			deleteButton.setSrc(DELETE_ICON_IMG);

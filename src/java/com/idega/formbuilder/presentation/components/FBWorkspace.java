@@ -7,6 +7,7 @@ import javax.faces.context.FacesContext;
 import com.idega.block.web2.presentation.Accordion;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
+import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
 import com.idega.presentation.text.Text;
@@ -22,6 +23,18 @@ public class FBWorkspace extends FBComponentBase {
 	private static final String PAGES_GENERAL_CONTAINER_CLASS = "pagesGeneralContainer";
 	private static final String PAGES_SPECIAL_CONTAINER_CLASS = "pagesSpecialContainer";
 	private static final String SELECTED_ELEMENT_CLASS = "selectedElement";
+	private static final String OPTIONS_PANEL_ID = "optionsPanel";
+	private static final String FB_MENU_ID = "fbMenu";
+	private static final String FB_MENU_ACCORDION_ID = "fbMenuAccordion";
+	private static final String PALETTE_COMPONENT_CLASS = "paletteComponent";
+	private static final String COMPONENTS_LIST_CLASS = "componentsList";
+	private static final String FB_MENU_BAR_CLASS = "fbMenuTabBar";
+	private static final String RIGHT_PANEL_ID = "rightPanel";
+	private static final String FB_MENU_ID2 = "fbMenu2";
+	private static final String FB_RIGHT_ACCORDION_ID = "fbRightAccordion";
+	private static final String PAGES_ACC_PANEL = "pagesAccPanel";
+	private static final String VARIABLE_ACC_PANEL = "variablesAccPanel";
+	private static final String ACCORDION_HEIGHT = "400";
 
 	public FBWorkspace() {
 		this(null);
@@ -54,20 +67,20 @@ public class FBWorkspace extends FBComponentBase {
 		Layer mainApplication = new Layer(Layer.DIV);
 		
 		Layer body = new Layer(Layer.DIV);
-		body.setId("optionsPanel");
+		body.setId(OPTIONS_PANEL_ID);
 		
-		Accordion acc = new Accordion("fbMenu");
-		acc.setId("fbMenuAccordion");
+		Accordion acc = new Accordion(FB_MENU_ID);
+		acc.setId(FB_MENU_ACCORDION_ID);
 		acc.setUseSound(false);
-		acc.setHeight("400");
+		acc.setHeight(ACCORDION_HEIGHT);
 		
 		FBPalette palette = new FBPalette();
-		palette.setItemStyleClass("paletteComponent");
-		palette.setStyleClass("componentsList");
+		palette.setItemStyleClass(PALETTE_COMPONENT_CLASS);
+		palette.setStyleClass(COMPONENTS_LIST_CLASS);
 		
 		Text tab1 = new Text();
 		tab1.setText(getLocalizedString(iwc, "fb_acc_comp_palette", "Component palette"));
-		tab1.setStyleClass("fbMenuTabBar");
+		tab1.setStyleClass(FB_MENU_BAR_CLASS);
 		
 		acc.addPanel(tab1, palette);
 		
@@ -75,7 +88,7 @@ public class FBWorkspace extends FBComponentBase {
 		
 		Text tab2 = new Text();
 		tab2.setText(getLocalizedString(iwc, "fb_acc_comp_properties", "Component properties"));
-		tab2.setStyleClass("fbMenuTabBar");
+		tab2.setStyleClass(FB_MENU_BAR_CLASS);
 		
 		acc.addPanel(tab2, simpleProperties);
 		
@@ -83,19 +96,17 @@ public class FBWorkspace extends FBComponentBase {
 		
 		mainApplication.add(body);
 		
-//		FBMenu menu = new FBMenu();
-		
 		FBViewPanel views = new FBViewPanel();
 		
 		mainApplication.add(views);
 		
 		body = new Layer(Layer.DIV);
-		body.setId("rightPanel");
+		body.setId(RIGHT_PANEL_ID);
 		
-		acc = new Accordion("fbMenu2");
-		acc.setId("fbRightAccordion");
+		acc = new Accordion(FB_MENU_ID2);
+		acc.setId(FB_RIGHT_ACCORDION_ID);
 		acc.setUseSound(false);
-		acc.setHeight("400");
+		acc.setHeight(ACCORDION_HEIGHT);
 		
 		FBPagesPanel pages = new FBPagesPanel();
 		pages.setStyleClass(PAGES_PANEL);
@@ -105,18 +116,22 @@ public class FBWorkspace extends FBComponentBase {
 		pages.setSelectedStyleClass(SELECTED_ELEMENT_CLASS);
 		
 		tab1 = new Text();
-		tab1.setText("Sections");
-		tab1.setStyleClass("fbMenuTabBar");
+		tab1.setText(getLocalizedString(iwc, "fb_acc_sections", "Sections"));
+		tab1.setStyleClass(FB_MENU_BAR_CLASS);
 		
-		acc.addPanel("pagesAccPanel", tab1, pages);
+		acc.addPanel(PAGES_ACC_PANEL, tab1, pages);
 		
-		FBVariableViewer variableViewer = new FBVariableViewer();
+		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
 		
-		tab2 = new Text();
-		tab2.setText("Variables and transitions");
-		tab2.setStyleClass("fbMenuTabBar");
-		
-		acc.addPanel("variablesAccPanel", tab2, variableViewer);
+		if(workspace.isProcessMode()) {
+			FBVariableViewer variableViewer = new FBVariableViewer();
+			
+			tab2 = new Text();
+			tab2.setText(getLocalizedString(iwc, "fb_acc_variables", "Variables and transitions"));
+			tab2.setStyleClass(FB_MENU_BAR_CLASS);
+			
+			acc.addPanel(VARIABLE_ACC_PANEL, tab2, variableViewer);
+		}
 		
 		body.add(acc);
 		

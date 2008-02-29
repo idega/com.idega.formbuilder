@@ -29,7 +29,7 @@ public class FBButtonArea extends FBComponentBase {
 	protected void initializeComponent(FacesContext context) {
 		Application application = context.getApplication();
 		getChildren().clear();
-		ButtonArea buttonArea = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage().getButtonArea();
+		ButtonArea buttonArea = ((FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID)).getPage().getButtonArea();
 		if(buttonArea != null) {
 			List<String> ids = buttonArea.getContainedComponentsIdList();
 			if(ids != null) {
@@ -39,8 +39,8 @@ public class FBButtonArea extends FBComponentBase {
 					if(bt != null) {
 						FBButton button = (FBButton) application.createComponent(FBButton.COMPONENT_TYPE);
 						button.setLabel(bt.getProperties().getLabel().getString(FBUtil.getUILocale()));
-						button.setId(nextId);
-						button.setStyleClass(componentStyleClass);
+						button.setButtonId(nextId);
+//						button.setStyleClass(componentStyleClass);
 						button.setOnSelect(DEFAULT_LOAD_ACTION);
 						button.setOnDelete(DEFAULT_DELETE_ACTION);
 						add(button);

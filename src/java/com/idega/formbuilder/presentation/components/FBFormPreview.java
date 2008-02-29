@@ -43,7 +43,7 @@ public class FBFormPreview extends FBComponentBase {
 	
 	protected void initializeComponent(FacesContext context) {
 		
-		FormDocument formDocument = (FormDocument)WFUtil.getBeanInstance("formDocument");
+		FormDocument formDocument = (FormDocument)WFUtil.getBeanInstance(FormDocument.BEAN_ID);
 		Document xformsDocument = formDocument.getDocument();
 		
 		if(xformsDocument == null) {

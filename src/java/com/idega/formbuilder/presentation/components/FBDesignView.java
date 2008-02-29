@@ -7,6 +7,7 @@ import java.util.Locale;
 import javax.faces.application.Application;
 import javax.faces.context.FacesContext;
 
+import com.idega.core.localisation.business.ICLocaleBusiness;
 import com.idega.documentmanager.business.component.ButtonArea;
 import com.idega.documentmanager.business.component.Component;
 import com.idega.documentmanager.business.component.Container;
@@ -21,6 +22,7 @@ import com.idega.presentation.Layer;
 import com.idega.presentation.text.Paragraph;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.DropdownMenu;
+import com.idega.presentation.ui.Label;
 import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
 
@@ -92,15 +94,17 @@ public class FBDesignView extends FBComponentBase {
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
 		Locale locale = workspace.getLocale();
 		
-		DropdownMenu languageChooser = new DropdownMenu();
-		languageChooser.setId("languageChooser");
-		languageChooser.addMenuElementFirst("", "-Languages-");
-		languageChooser.addMenuElement("en", "English");
-		languageChooser.addMenuElement("is", "Icelandic");
+		Layer languageChooserLayer = new Layer(Layer.DIV);
+		languageChooserLayer.setId("languageChooser");
+		
+		DropdownMenu languageChooser = ICLocaleBusiness.getAvailableLocalesDropdownStringKeyed(iwc.getIWMainApplication(), "languageChooser", false);
 		languageChooser.setSelectedElement(locale.getLanguage());
 		
+		languageChooserLayer.add(new Label(getLocalizedString(iwc, "fb_choose_language", "Form language"), languageChooser));
+		languageChooserLayer.add(languageChooser);
+		
 		component.add(formHeading);
-		component.add(languageChooser);
+		component.add(languageChooserLayer);
 		
 		Layer pageNotice = new Layer(Layer.DIV);
 		pageNotice.setId("designViewPageTitle");

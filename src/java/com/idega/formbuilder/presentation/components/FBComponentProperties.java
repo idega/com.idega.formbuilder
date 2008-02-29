@@ -15,6 +15,7 @@ import com.idega.formbuilder.presentation.beans.DataSourceList;
 import com.idega.formbuilder.presentation.beans.FormComponent;
 import com.idega.formbuilder.presentation.beans.FormPage;
 import com.idega.formbuilder.util.FBConstants;
+import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.CheckBox;
@@ -25,6 +26,7 @@ import com.idega.presentation.ui.SelectDropdown;
 import com.idega.presentation.ui.SelectOption;
 import com.idega.presentation.ui.TextArea;
 import com.idega.presentation.ui.TextInput;
+import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
 
 public class FBComponentProperties extends FBComponentBase {
@@ -34,6 +36,19 @@ public class FBComponentProperties extends FBComponentBase {
 	private static final String PROPERTIES_PANEL_SECTION_STYLE = "fbPropertiesPanelSection";
 	private String componentId;
 	private String componentType;
+
+	private static final String SINGLE_LINE_PROPERTY = "fbSingleLineProperty";
+	private static final String TWO_LINE_PROPERTY = "fbTwoLineProperty";
+	private static final String COMP_LAYER_ID = "fbComponentPropertiesPanel";
+	private static final String PLAIN_PROPERTIES_PANEL = "plainPropertiesPanel";
+	private static final String FB_PROPERTY_CLASS = "fbProperty";
+	private static final String PROPERTY_PLAIN_TEXT_NAME = "propertyPlaintext";
+	private static final String PROPERTY_LABEL_NAME = "propertyLabel";
+	private static final String LABEL_PROPERTIES_PANEL = "labelPropertiesPanel";
+	private static final String PROPERTY_REQUIRED_ID = "propertyRequired";
+	private static final String PROPERTY_ERROR_MESSAGE_NAME = "propertyErrorMessage";
+	private static final String PROPERTY_HELP_TEXT_NAME = "propertyHelpText";
+	private static final String PROPERTY_AUTOFILL_CHECKBOX = "propertyHasAutofill";
 	
 	public String getComponentId() {
 		return componentId;
@@ -56,7 +71,7 @@ public class FBComponentProperties extends FBComponentBase {
 	private Layer createPropertyContainer(String styleClass) {
 		Layer body = new Layer(Layer.DIV);
 		body.setStyleClass(styleClass);
-		body.setStyleClass("fbProperty");
+		body.setStyleClass(FB_PROPERTY_CLASS);
 		
 		return body;
 	}
@@ -70,7 +85,7 @@ public class FBComponentProperties extends FBComponentBase {
 	}
 	
 	protected void initializeComponent(FacesContext context) {
-//		Application application = context.getApplication();
+		IWContext iwc = CoreUtil.getIWContext();
 		
 		if(componentId == null) {
 			return;
@@ -81,7 +96,7 @@ public class FBComponentProperties extends FBComponentBase {
 		}
 		
 		Layer layer = new Layer(Layer.DIV);
-		layer.setId("fbComponentPropertiesPanel");
+		layer.setId(COMP_LAYER_ID);
 		
 		if(componentType.equals(FBConstants.COMPONENT_TYPE)) {
 			
@@ -89,30 +104,30 @@ public class FBComponentProperties extends FBComponentBase {
 			formComponent.initializeBeanInstace(componentId, "component");
 			
 			if(formComponent.getPlainComponent() != null) {
-				Layer body = createPanelSection("plainPropertiesPanel");
-				Layer line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
+				Layer body = createPanelSection(PLAIN_PROPERTIES_PANEL);
+				Layer line = createPropertyContainer(TWO_LINE_PROPERTY);
 				
-				TextArea plainTextValue = new TextArea("propertyPlaintext", formComponent.getPlainText());
+				TextArea plainTextValue = new TextArea(PROPERTY_PLAIN_TEXT_NAME, formComponent.getPlainText());
 				
 				plainTextValue.setOnBlur("savePlaintext(this.value);");
 				plainTextValue.setOnKeyDown("savePropertyOnEnter(this.value,'compText',event);");
 				
-				line.add(new Label("Text", plainTextValue));
+				line.add(new Label(getLocalizedString(iwc, "comp_prop_plaintext", "Text"), plainTextValue));
 				line.add(plainTextValue);
 				body.add(line);
 				
-				line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
+				line = createPropertyContainer(TWO_LINE_PROPERTY);
 				
-				TextInput labelValue = new TextInput("propertyLabel", formComponent.getLabel());
+				TextInput labelValue = new TextInput(PROPERTY_LABEL_NAME, formComponent.getLabel());
 				
 				labelValue.setOnBlur("saveComponentLabel(this.value);");
 				labelValue.setOnKeyDown("savePropertyOnEnter(this.value,'compTitle',event);");
 				
-				line.add(new Label("Field name", labelValue));
+				line.add(new Label(getLocalizedString(iwc, "comp_prop_fieldname", "Field name"), labelValue));
 				line.add(labelValue);
 				body.add(line);
 				
-				line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
+				line = createPropertyContainer(SINGLE_LINE_PROPERTY);
 				
 				String variableName = formComponent.getVariableName();
 				TextInput processVarName = new TextInput("processVarName", variableName == null ? "" : variableName);
@@ -126,50 +141,50 @@ public class FBComponentProperties extends FBComponentBase {
 				
 				layer.add(body);
 			} else {
-				Layer body = createPanelSection("labelPropertiesPanel");
-				Layer line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
+				Layer body = createPanelSection(LABEL_PROPERTIES_PANEL);
+				Layer line = createPropertyContainer(TWO_LINE_PROPERTY);
 				
-				TextInput labelValue = new TextInput("propertyLabel", formComponent.getLabel());
+				TextInput labelValue = new TextInput(PROPERTY_LABEL_NAME, formComponent.getLabel());
 				
 				labelValue.setOnBlur("saveComponentLabel(this.value);");
 				labelValue.setOnKeyDown("savePropertyOnEnter(this.value,'compTitle',event);");
 				
-				line.add(new Label("Field name", labelValue));
+				line.add(new Label(getLocalizedString(iwc, "comp_prop_fieldname", "Field name"), labelValue));
 				line.add(labelValue);
 				body.add(line);
 				
-				line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
+				line = createPropertyContainer(SINGLE_LINE_PROPERTY);
 				
 				CheckBox required = new CheckBox();
-				required.setId("propertyRequired");
+				required.setId(PROPERTY_REQUIRED_ID);
 				required.setChecked(formComponent.getRequired());
 				required.setOnClick("saveRequired(this.checked);");
 				
 				line.add(required);
-				line.add(new Label("Required field", required));
+				line.add(new Label(getLocalizedString(iwc, "comp_prop_requiredfield", "Required field"), required));
 				body.add(line);
 				
-				line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
+				line = createPropertyContainer(TWO_LINE_PROPERTY);
 				
-				TextArea errorMsg = new TextArea("propertyErrorMessage", formComponent.getErrorMessage());
+				TextArea errorMsg = new TextArea(PROPERTY_ERROR_MESSAGE_NAME, formComponent.getErrorMessage());
 				errorMsg.setOnBlur("saveErrorMessage(this.value)");
 				errorMsg.setOnKeyDown("savePropertyOnEnter(this.value,'compErr',event);");
 				
-				line.add(new Label("Error message", errorMsg));
+				line.add(new Label(getLocalizedString(iwc, "comp_prop_errormsg", "Error message"), errorMsg));
 				line.add(errorMsg);
 				body.add(line);
 				
-				line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
+				line = createPropertyContainer(TWO_LINE_PROPERTY);
 				
-				TextArea helpMsg = new TextArea("propertyHelpText", formComponent.getHelpMessage());
+				TextArea helpMsg = new TextArea(PROPERTY_HELP_TEXT_NAME, formComponent.getHelpMessage());
 				helpMsg.setOnBlur("saveHelpMessage(this.value)");
 				helpMsg.setOnKeyDown("savePropertyOnEnter(this.value,'compHelp',event);");
 				
-				line.add(new Label("Help text", helpMsg));
+				line.add(new Label(getLocalizedString(iwc, "comp_prop_helpmsg", "Help text"), helpMsg));
 				line.add(helpMsg);
 				body.add(line);
 				
-				line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
+				line = createPropertyContainer(SINGLE_LINE_PROPERTY);
 				
 				String variableName = formComponent.getVariableName();
 				TextInput processVarName = new TextInput("processVarName", variableName == null ? "" : variableName);
@@ -181,23 +196,23 @@ public class FBComponentProperties extends FBComponentBase {
 				line.add(processVarName);
 				body.add(line);
 				
-				line = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
+				line = createPropertyContainer(SINGLE_LINE_PROPERTY);
 				
 				CheckBox hasAutoFill = new CheckBox();
-				hasAutoFill.setId("propertyHasAutofill");
+				hasAutoFill.setId(PROPERTY_AUTOFILL_CHECKBOX);
 				hasAutoFill.setOnClick("toggleAutofill(this.checked);");
 				String autofillKey = formComponent.getAutofillKey();
 				hasAutoFill.setChecked(autofillKey != null ? true : false);
 				
 				line.add(hasAutoFill);
-				line.add(new Label("Autofill field", hasAutoFill));
+				line.add(new Label(getLocalizedString(iwc, "comp_prop_autofill", "Autofill field"), hasAutoFill));
 				body.add(line);
 				
 				layer.add(body);
 				
 				Layer body2 = createPanelSection("autoPropertiesPanel");
 				
-				Layer line2 = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
+				Layer line2 = createPropertyContainer(FBComponentProperties.SINGLE_LINE_PROPERTY);
 				
 				TextInput autofillValue = new TextInput();
 				autofillValue.setValue(autofillKey);
@@ -216,12 +231,12 @@ public class FBComponentProperties extends FBComponentBase {
 				if(formComponent.getSelectComponent() != null) {
 					Layer body3 = createPanelSection("advPropertiesPanel");
 					
-					Layer line3 = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
+					Layer line3 = createPropertyContainer(FBComponentProperties.SINGLE_LINE_PROPERTY);
 					
-					line3.add(new Text("Select source"));
+					line3.add(new Text(getLocalizedString(iwc, "comp_prop_select_source", "Select source")));
 					body3.add(line3);
 					
-					line3 = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
+					line3 = createPropertyContainer(FBComponentProperties.SINGLE_LINE_PROPERTY);
 					
 					boolean localDataSource = formComponent.getDataSrc().equals(DataSourceList.localDataSrc) ? true : false;
 					
@@ -229,8 +244,8 @@ public class FBComponentProperties extends FBComponentBase {
 					dataSrcSwitch.setStyleClass("inlineRadioButton");
 					RadioButton lcl = new RadioButton(DataSourceList.localDataSrc, DataSourceList.localDataSrc);
 					RadioButton ext = new RadioButton(DataSourceList.externalDataSrc, DataSourceList.externalDataSrc);
-					dataSrcSwitch.addRadioButton(lcl, new Text("List of values"));
-					dataSrcSwitch.addRadioButton(ext, new Text("External"));
+					dataSrcSwitch.addRadioButton(lcl, new Text(getLocalizedString(iwc, "comp_prop_valuelist", "List of values")));
+					dataSrcSwitch.addRadioButton(ext, new Text(getLocalizedString(iwc, "comp_prop_external", "External")));
 					if(localDataSource) {
 						lcl.setSelected(true);
 						ext.setSelected(false);
@@ -258,7 +273,7 @@ public class FBComponentProperties extends FBComponentBase {
 					} else {
 						Layer externalBody = createPanelSection("extPropertiesPanel");
 						
-						Layer externalline = createPropertyContainer(FBConstants.SINGLE_LINE_PROPERTY);
+						Layer externalline = createPropertyContainer(FBComponentProperties.SINGLE_LINE_PROPERTY);
 						
 						SelectDropdown select = new SelectDropdown();
 						select.setId("propertyExternal");
@@ -269,7 +284,7 @@ public class FBComponentProperties extends FBComponentBase {
 						}
 						select.setSelectedOption(formComponent.getExternalSrc());
 						
-						externalline.add(new Text("External data source"));
+						externalline.add(new Text(getLocalizedString(iwc, "comp_prop_externaldata", "External data")));
 						externalline.add(select);
 						externalBody.add(externalline);
 						
@@ -290,17 +305,17 @@ public class FBComponentProperties extends FBComponentBase {
 					
 					Layer body = createPanelSection("labelPropertiesPanel");
 					
-					Layer line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
+					Layer line = createPropertyContainer(FBComponentProperties.TWO_LINE_PROPERTY);
 					
 					TextInput title = new TextInput("propertyTitle", properties.getLabel().getString(new Locale("en")));
 					title.setOnBlur("saveButtonLabel(this.value);");
 					title.setOnKeyDown("savePropertyOnEnter(this.value,'btnTitle',event);");
 					
-					line.add(new Label("Button title", title));
+					line.add(new Label(getLocalizedString(iwc, "comp_prop_buttonlabel", "Button label"), title));
 					line.add(title);
 					body.add(line);
 					
-					line = createPropertyContainer(FBConstants.TWO_LINE_PROPERTY);
+					line = createPropertyContainer(FBComponentProperties.TWO_LINE_PROPERTY);
 					
 					title = new TextInput("propertyAction", properties.getReferAction());
 					title.setOnBlur("saveButtonAction(this.value);");

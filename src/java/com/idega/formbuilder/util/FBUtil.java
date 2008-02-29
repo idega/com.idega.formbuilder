@@ -12,6 +12,7 @@ import com.idega.idegaweb.IWMainApplication;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.slide.business.IWSlideServiceBean;
+import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
 
 /**
@@ -73,7 +74,7 @@ public class FBUtil {
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
 		Locale locale = workspace.getLocale();
 		if(locale == null) {
-			locale = new Locale(FBConstants.FORMBUILDER_DEFAULT_LOCALE);
+			locale = CoreUtil.getIWContext().getCurrentLocale();
 		}
 		return locale;
 	}

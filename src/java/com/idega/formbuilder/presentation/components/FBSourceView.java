@@ -13,26 +13,33 @@ public class FBSourceView extends FBComponentBase {
 	
 	public static final String COMPONENT_TYPE = "SourceView";
 	
+	private static final String DIV_POSTFIX = "Div";
+	private static final String FORM_HEADING_ID = "formHeading";
+	private static final String INFO_CLASS = "info";
+	private static final String FORM_HEADING_HEADER_ID = "formHeadingHeader";
+	private static final String SOURCE_BOX_ID = "sourceTextarea";
+	private static final String CODEPRESS_BOX_CLASS = "codepress html linenumbers-on";
+	
 	protected void initializeComponent(FacesContext context) {
 		Layer content = new Layer(Layer.DIV);
 		content.setStyleClass(getStyleClass());
-		content.setId(getId() + "Div");
+		content.setId(getId() + DIV_POSTFIX);
 		
 		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
 		
 		Layer formHeading = new Layer(Layer.DIV);
-		formHeading.setId("formHeading");
-		formHeading.setStyleClass("info");
+		formHeading.setId(FORM_HEADING_ID);
+		formHeading.setStyleClass(INFO_CLASS);
 		
 		Text formHeadingHeader = new Text(formDocument.getFormTitle());
-		formHeadingHeader.setId("formHeadingHeader");
+		formHeadingHeader.setId(FORM_HEADING_HEADER_ID);
 		formHeading.add(formHeadingHeader);
 		
 		TextArea textarea = new TextArea();
 		textarea.setRendered(true);
 		textarea.setValue(formDocument.getSourceCode());
-		textarea.setId("sourceTextarea");
-		textarea.setStyleClass("codepress html linenumbers-on");
+		textarea.setId(SOURCE_BOX_ID);
+		textarea.setStyleClass(CODEPRESS_BOX_CLASS);
 		
 		content.add(formHeading);
 		content.add(textarea);

@@ -5,13 +5,20 @@ import java.util.List;
 
 import javax.faces.context.FacesContext;
 
+import org.apache.myfaces.renderkit.html.util.AddResource;
+import org.apache.myfaces.renderkit.html.util.AddResourceFactory;
+
+import com.idega.block.web2.business.Web2Business;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.Palette;
 import com.idega.formbuilder.presentation.beans.PaletteComponent;
 import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
-import com.idega.presentation.text.Link;
+import com.idega.presentation.text.ListItem;
+import com.idega.presentation.text.Lists;
+import com.idega.presentation.text.Text;
+import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
 
@@ -21,12 +28,8 @@ public class FBPalette extends FBComponentBase {
 	
 	private String itemStyleClass;
 	
-//	private static final String COMPONENT_CATEGORY = "fbc";
-//	private static final String BUTTON_CATEGORY = "fbbutton";
-//	private static final String PROCESS_CATEGORY = "fbprocess";
 	private static final String BODY_ID = "firstList";
 	private static final String MAIN_PALETTE_ID = "mainPalette";
-	private static final String PALETTE_BODY_ID = "paletteBody";
 	private static final String TAB1_ID = "paletteBody_1";
 	private static final String TAB2_ID = "paletteBody_2";
 	private static final String fb_palette_simple = "fb_palette_simple";
@@ -34,36 +37,62 @@ public class FBPalette extends FBComponentBase {
 	private static final String palette_row_class = "paletteRow";
 	private static final String palette_row_left_class = "left";
 	private static final String palette_row_right_class = "right";
+	private static final String web2BeanIdentifier = "web2bean";
+	private static final String MOOTABS_TITLE_CLASS = "mootabs_title";
+	private static final String TITLE_ATTRIBUTE = "title";
+	private static final String PROCESS_TAB_TITLE = "processes";
+	private static final String STANDALONE_TAB_TITLE = "standalone";
+	private static final String MOOTABS_PANEL_CLASS = "mootabs_panel";
+	private static final String LETTER_P = "p";
 	
 
 	protected void initializeComponent(FacesContext context) {
 		IWContext iwc = CoreUtil.getIWContext();
 		
+		AddResource adder = AddResourceFactory.getInstance(iwc);
+		Web2Business web2 = (Web2Business) getBeanInstance(web2BeanIdentifier);
+		adder.addJavaScriptAtPosition(iwc, AddResource.HEADER_BEGIN, web2.getBundleUriToMootabsScript());
+		adder.addStyleSheet(iwc, AddResource.HEADER_BEGIN, web2.getBundleUriToMootabsStyle());
+		
 		Layer body = new Layer(Layer.DIV);
 		body.setId(BODY_ID);
 		body.setStyleClass(getStyleClass());
 		
-		Layer mainPalette = new Layer(Layer.DIV);
-		mainPalette.setId(MAIN_PALETTE_ID);
-		body.add(mainPalette);
+		Lists tabsList = new Lists();
+		tabsList.setStyleClass(MOOTABS_TITLE_CLASS);
+		tabsList.setStyleClass(MAIN_PALETTE_ID);
 		
-		Palette palette = (Palette) WFUtil.getBeanInstance(Palette.BEAN_ID);
-			
-		Link tab = new Link(getLocalizedString(iwc, fb_palette_simple, "Simple"));
-		tab.setNoURL();
-		mainPalette.add(tab);
-		tab = new Link(getLocalizedString(iwc, fb_palette_advanced, "Advanced"));
-		tab.setNoURL();
-		mainPalette.add(tab);
-			
-		Layer paletteBody = new Layer(Layer.DIV);
-		paletteBody.setId(PALETTE_BODY_ID);
-		body.add(paletteBody);
+		ListItem tab1 = new ListItem();
+		tab1.setMarkupAttribute(TITLE_ATTRIBUTE, PROCESS_TAB_TITLE);
+		tab1.add(new Text(getLocalizedString(iwc, fb_palette_simple, "Simple")));
+		
+		ListItem tab2 = new ListItem();
+		tab2.add(new Text(getLocalizedString(iwc, fb_palette_advanced, "Advanced")));
+		tab2.setMarkupAttribute(TITLE_ATTRIBUTE, STANDALONE_TAB_TITLE);
+		
+		tabsList.add(tab1);
+		tabsList.add(tab2);
+		
+		body.add(tabsList);
+		
+		Layer tab1Forms = new Layer(Layer.DIV);
+		tab1Forms.setStyleClass(MOOTABS_PANEL_CLASS);
+		tab1Forms.setId(PROCESS_TAB_TITLE);
 		
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
-			
-		paletteBody.add(getTab(TAB1_ID, context, palette.getAllComponents(), workspace.isProcessMode()));
-		paletteBody.add(getTab(TAB2_ID, context, null, workspace.isProcessMode()));
+		Palette palette = (Palette) WFUtil.getBeanInstance(Palette.BEAN_ID);
+		
+		tab1Forms.add(getTab(TAB1_ID, context, palette.getAllComponents(), workspace.isProcessMode()));
+		
+		body.add(tab1Forms);
+		
+		Layer tab2Forms = new Layer(Layer.DIV);
+		tab2Forms.setStyleClass(MOOTABS_PANEL_CLASS);
+		tab2Forms.setId(STANDALONE_TAB_TITLE);
+		
+		tab2Forms.add(getTab(TAB2_ID, context, null, workspace.isProcessMode()));
+		
+		body.add(tab2Forms);
 		
 		add(body);
 	}
@@ -78,26 +107,10 @@ public class FBPalette extends FBComponentBase {
 				Layer row = new Layer(Layer.DIV);
 				row.setStyleClass(palette_row_class);
 				if(it.hasNext()) {
-					PaletteComponent current = it.next();
-					
-					FBPaletteComponent formComponent = new FBPaletteComponent();
-					formComponent.setName(current.getName());
-					formComponent.setType(current.getType());
-					formComponent.setIcon(current.getIconPath());
-					formComponent.setCategory(current.getCategory() + (processMode ? "p" : ""));
-					formComponent.setStyleClass(itemStyleClass + " " + palette_row_left_class);
-					row.add(formComponent);
+					row.add(getFBPaletteComponent(it.next(), processMode, false));
 				}
 				if(it.hasNext()) {
-					PaletteComponent current = it.next();
-					
-					FBPaletteComponent formComponent = new FBPaletteComponent();
-					formComponent.setName(current.getName());
-					formComponent.setType(current.getType());
-					formComponent.setIcon(current.getIconPath());
-					formComponent.setCategory(current.getCategory() + (processMode ? "p" : ""));
-					formComponent.setStyleClass(itemStyleClass + " " + palette_row_right_class);
-					row.add(formComponent);
+					row.add(getFBPaletteComponent(it.next(), processMode, true));
 				}
 				tab.add(row);
 			}
@@ -105,6 +118,17 @@ public class FBPalette extends FBComponentBase {
 		}
 		
 		return tab;
+	}
+	
+	private FBPaletteComponent getFBPaletteComponent(PaletteComponent component, boolean processMode, boolean right) {
+		FBPaletteComponent formComponent = new FBPaletteComponent();
+		formComponent.setName(component.getName());
+		formComponent.setType(component.getType());
+		formComponent.setIcon(component.getIconPath());
+		formComponent.setCategory(component.getCategory() + (processMode ? LETTER_P : CoreConstants.EMPTY));
+		formComponent.setStyleClass(itemStyleClass + CoreConstants.SPACE + (right ? palette_row_right_class : palette_row_left_class));
+		
+		return formComponent;
 	}
 	
 	public String getItemStyleClass() {

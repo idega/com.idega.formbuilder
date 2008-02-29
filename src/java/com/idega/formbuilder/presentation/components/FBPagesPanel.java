@@ -17,6 +17,7 @@ import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
+import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
 
@@ -125,7 +126,7 @@ public class FBPagesPanel extends FBComponentBase {
 						FBFormPage formPage = new FBFormPage();
 						formPage.setId(nextId + P);
 						if(nextId.equals(selectedPageId)) {
-							formPage.setStyleClass(componentStyleClass + " " + selectedStyleClass);
+							formPage.setStyleClass(componentStyleClass + CoreConstants.SPACE + selectedStyleClass);
 						} else {
 							formPage.setStyleClass(componentStyleClass);
 						}
@@ -160,7 +161,7 @@ public class FBPagesPanel extends FBComponentBase {
 				FBFormPage formPage = new FBFormPage();
 				formPage.setId(confirmation.getId() + P);
 				if(confirmation.getId().equals(selectedPageId)) {
-					formPage.setStyleClass(componentStyleClass + SPECIAL + " " + selectedStyleClass);
+					formPage.setStyleClass(componentStyleClass + SPECIAL + CoreConstants.SPACE + selectedStyleClass);
 				} else {
 					formPage.setStyleClass(componentStyleClass + SPECIAL);
 				}
@@ -176,7 +177,7 @@ public class FBPagesPanel extends FBComponentBase {
 			FBFormPage formPage = new FBFormPage();
 			formPage.setId(thanks.getId() + P);
 			if(thanks.getId().equals(selectedPageId)) {
-				formPage.setStyleClass(componentStyleClass + SPECIAL + " " + selectedStyleClass);
+				formPage.setStyleClass(componentStyleClass + SPECIAL + CoreConstants.SPACE + selectedStyleClass);
 			} else {
 				formPage.setStyleClass(componentStyleClass + SPECIAL);
 			}

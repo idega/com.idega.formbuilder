@@ -1,9 +1,6 @@
 package com.idega.formbuilder.presentation.components;
 
-import java.io.IOException;
-
 import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
 
 import com.idega.documentmanager.business.component.Button;
 import com.idega.documentmanager.business.component.ButtonArea;
@@ -11,7 +8,9 @@ import com.idega.documentmanager.business.component.Page;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormPage;
 import com.idega.formbuilder.util.FBUtil;
+import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
+import com.idega.presentation.ui.GenericButton;
 import com.idega.webface.WFUtil;
 
 public class FBButton extends FBComponentBase {
@@ -21,6 +20,7 @@ public class FBButton extends FBComponentBase {
 	private static final String DELETE_BUTTON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete-tiny.png";
 	private static final String SPEED_BUTTON_STYLE = "fbSpeedBButton";
 	private static final String INLINE_STYLE = "display: inline;";
+	private static final String DEFAULT_BUTTON_CLASS = "formButton";
 	
 	public String selectedStyleClass;
 	public String label;
@@ -77,12 +77,13 @@ public class FBButton extends FBComponentBase {
 		this.setStyleClass(styleClass);
 	}
 	
-	public void encodeBegin(FacesContext context) throws IOException {
-		ResponseWriter writer = context.getResponseWriter();
-		super.encodeBegin(context);
-		
+	protected void initializeComponent(FacesContext context) {
+		Layer container = new Layer(Layer.DIV);
+		container.setId(buttonId);
+		container.setStyleAttribute(INLINE_STYLE);
+		container.setOnClick(onSelect);
 		if(buttonId != null) {
-			Page page = ((FormPage) WFUtil.getBeanInstance("formPage")).getPage();
+			Page page = ((FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID)).getPage();
 			if(page != null) {
 				ButtonArea area = page.getButtonArea();
 				if(area != null) {
@@ -95,32 +96,52 @@ public class FBButton extends FBComponentBase {
 			}
 		}
 		
-		writer.startElement(Layer.DIV, this);
 		if(!isSelected()) {
-			writer.writeAttribute("class", getStyleClass(), "styleClass");
+			container.setStyleClass(DEFAULT_BUTTON_CLASS);
 		} else {
-			writer.writeAttribute("class", selectedStyleClass, "styleClass");
+			container.setStyleClass(selectedStyleClass);
 		}
 		
-		writer.writeAttribute("id", getId(), "id");
-		writer.writeAttribute("style", INLINE_STYLE, null);
-		writer.writeAttribute("onclick", onSelect, "onclick");
+		GenericButton button = new GenericButton();
+		button.setValue(label);
+		button.setStyleAttribute(INLINE_STYLE);
+		button.setMarkupAttribute("enabled", "false");
 		
-		writer.startElement("input", null);
-		writer.writeAttribute("type", "button", null);
-		writer.writeAttribute("value", label, null);
-		writer.writeAttribute("style", INLINE_STYLE, null);
-		writer.writeAttribute("enabled", "false", null);
-		writer.endElement("input");
+		Image icon = new Image();
+		icon.setStyleClass(SPEED_BUTTON_STYLE);
+		icon.setSrc(DELETE_BUTTON_IMG);
+		icon.setOnClick(onDelete);
 		
-		writer.startElement("img", null);
-		writer.writeAttribute("class", SPEED_BUTTON_STYLE, null);
-		writer.writeAttribute("src", DELETE_BUTTON_IMG, null);
-		writer.writeAttribute("onclick", onDelete, "onclick");
-		writer.endElement("img");
-		
-		writer.endElement(Layer.DIV);
+		container.add(button);
+		container.add(icon);
 	}
+	
+//	public void encodeBegin(FacesContext context) throws IOException {
+//		ResponseWriter writer = context.getResponseWriter();
+//		super.encodeBegin(context);
+//		
+//		
+//		
+//		
+////		writer.writeAttribute("id", getId(), "id");
+////		writer.writeAttribute("style", INLINE_STYLE, null);
+////		writer.writeAttribute("onclick", onSelect, "onclick");
+//		
+////		writer.startElement("input", null);
+////		writer.writeAttribute("type", "button", null);
+////		writer.writeAttribute("value", label, null);
+////		writer.writeAttribute("style", INLINE_STYLE, null);
+////		writer.writeAttribute("enabled", "false", null);
+////		writer.endElement("input");
+//		
+//		writer.startElement("img", null);
+//		writer.writeAttribute("class", SPEED_BUTTON_STYLE, null);
+//		writer.writeAttribute("src", DELETE_BUTTON_IMG, null);
+//		writer.writeAttribute("onclick", onDelete, "onclick");
+//		writer.endElement("img");
+//		
+//		writer.endElement(Layer.DIV);
+//	}
 
 	public String getLabel() {
 		return label;

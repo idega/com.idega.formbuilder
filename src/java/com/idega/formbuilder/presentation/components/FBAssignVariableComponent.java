@@ -8,7 +8,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
-import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.presentation.beans.ProcessData;
 import com.idega.formbuilder.presentation.beans.ProcessPalette;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
@@ -96,7 +95,7 @@ public class FBAssignVariableComponent extends FBComponentBase {
 				ProcessPalette processPalette = (ProcessPalette) WFUtil.getBeanInstance(ProcessPalette.BEAN_ID);
 				String datatype = processPalette.getComponentDatatype(type);
 				JbpmProcessBusinessBean jbpmProcessBean = (JbpmProcessBusinessBean) WFUtil.getBeanInstance(JbpmProcessBusinessBean.BEAN_ID);
-				FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
+//				FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
 				ProcessData processData = (ProcessData) WFUtil.getBeanInstance(ProcessData.BEAN_ID);
 				List<String> variables = jbpmProcessBean.getTaskVariablesByDatatype(processData.getProcessId(), processData.getTaskName(), datatype);
 				
