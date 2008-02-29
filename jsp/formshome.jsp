@@ -8,16 +8,13 @@
 	<jsp:directive.page contentType="text/html" />
 	<f:view>
 		<ws:page id="formbuilder" showFunctionMenu="false"
-					javascripturls="/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/mootools/1.11/mootools-all.js,
-									/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/transcorners/Transcorners.js,
-									/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/moodalbox/1.2.1/js/moodalbox.js,
-												
-									/dwr/interface/FormDocument.js,
+					javascripturls="/dwr/interface/FormDocument.js,
 									/dwr/engine.js,
 												
-									/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formshome.js"
+									/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formshome.js,
+									/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/smoothbox.js"
 					stylesheeturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formshome.css,
-									/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/moodalbox/1.2.1/css/moodalbox.css">
+									/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/smoothbox.css">
 			<h:form id="workspaceform1" onsubmit="return false;">
 				<f:verbatim>
                 	<script type="text/javascript">
@@ -32,14 +29,13 @@
                 </f:verbatim>
 				<fb:homePage />
 				<t:div id="newFormDialog" forceId="true" styleClass="newFormDialogStyle" style="display: none;">
-					<t:htmlTag styleClass="accordionHeading" value="span">
-						<t:outputText value="New form" styleClass="title"> </t:outputText>
+					<t:inputText id="newFormDialogInput" onkeydown="this.setProperty('value', this.value);" forceId="true" />
+					<t:htmlTag value="a">
+						<t:outputText forceId="true" id="createFormBtn" onclick="createNewForm($('newFormDialogInput').getText());" value="#{localizedStrings['com.idega.formbuilder']['fb_create_form']}" />
 					</t:htmlTag>
-					<t:inputText id="newFormDialogInput" forceId="true"></t:inputText>
-					<t:commandLink id="createFormBtn" forceId="true"  value="Create"></t:commandLink>
 				</t:div>
 				<t:div styleClass="fbBottomButtonsContainer">
-					<t:commandLink id="newFormButton" styleClass="rightButton" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}"></t:commandLink>
+					<t:commandLink id="newFormButton" styleClass="rightButton" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}" />
 				</t:div>
 			</h:form>
 		</ws:page>

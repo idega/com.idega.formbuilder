@@ -11,8 +11,6 @@
 				 showFunctionMenu="false"
 				 javascripturls="/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/mootools/1.11/mootools-all.js,
 				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/codepress/codepress.js,
-								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/categories-tabs.js,
-								/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/moodalbox/1.2.1/js/moodalbox.js,
 								/dwr/engine.js,
 								/dwr/util.js,
 								/dwr/interface/FormComponent.js,
@@ -23,8 +21,7 @@
 								/dwr/interface/ProcessData.js,
 								/dwr/interface/Workspace.js,
 								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js"
-				stylesheeturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formbuilder.css,
-								/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/moodalbox/1.2.1/css/moodalbox.css">
+				stylesheeturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formbuilder.css">
 			<h:form id="workspaceform1" onsubmit="return false;">
 				<f:verbatim>
                 	<script type="text/javascript">
@@ -35,11 +32,11 @@
 							DWREngine.setErrorHandler(errorHanlder);
 						});
 						window.addEvent('domready', initializeInlineEdits);
-						window.addEvent('domready', initMenu);
-						window.addEvent('domready', setupPagesPanel);
-						window.addEvent('domready', setupDesignView);
+						window.addEvent('domready', initializePalette);
+						window.addEvent('domready', initializePagesPanel);
+						window.addEvent('domready', initializeDesignView);
 						window.addEvent('domready', registerFormbuilderActions);
-						window.addEvent('domready', setupVariableViewer);
+						window.addEvent('domready', initializeVariableViewer);
                 	</script>
                 </f:verbatim>
 				<t:div id="mainApplication" forceId="true">
