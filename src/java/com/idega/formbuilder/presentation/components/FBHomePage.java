@@ -261,7 +261,10 @@ public class FBHomePage extends FBComponentBase {
 		Link editButton = new Link(getLocalizedString(iwc, "fb_home_edit_link", "Edit"));
 		editButton.setStyleClass(EDIT_BUTTON_CLASS);
 		editButton.setId(formId + edit_process_mode_button_postfix);
-		editButton.setOnClick(new StringBuffer("loadTaskFormDocument('").append(processName).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(processId).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(taskName).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(formId).append("');return false;").toString());
+		
+		if(true)
+			throw new RuntimeException("Doesn't compile with the following line. Fix this");
+		//editButton.setOnClick(new StringBuffer("loadTaskFormDocument('").append(processName).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(processId).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(taskName).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(formId).append("');return false;").toString());
 		item2.add(editButton);
 		list.add(item2);
 		
