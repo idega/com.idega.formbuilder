@@ -11,11 +11,11 @@ import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 import com.idega.builder.bean.AdvancedProperty;
 import com.idega.jbpm.IdegaJbpmContext;
 import com.idega.jbpm.data.ActorTaskBind;
-import com.idega.jbpm.def.ActorTaskBinder;
 import com.idega.jbpm.def.View;
 import com.idega.jbpm.def.ViewFactory;
 import com.idega.jbpm.def.ViewToTask;
-import com.idega.jbpm.presentation.beans.ActorBindingViewBean;
+import com.idega.jbpm.identity.ActorTaskBinder;
+import com.idega.jbpm.presentation.beans.ProcRoleIdentityMgmntBean;
 import com.idega.webface.WFUtil;
 
 public class XFormsProcessManager {
@@ -77,12 +77,12 @@ public class XFormsProcessManager {
 				AdvancedProperty name = new AdvancedProperty(JBPM_XFORM_ACTOR_NAME, actorName);
 				result.add(name);
 				
-				ActorBindingViewBean abm = (ActorBindingViewBean) WFUtil.getBeanInstance("actorBindingManager");
-				if(abm != null) {
-					abm.setActorType(atb.getActorType());
-					String[] actors = {atb.getActorId()};
-					abm.setActorId(actors);
-				}
+				ProcRoleIdentityMgmntBean abm = (ProcRoleIdentityMgmntBean) WFUtil.getBeanInstance("actorBindingManager");
+//				if(abm != null) {
+//					abm.setActorType(atb.getActorType());
+//					String[] actors = {atb.getActorId()};
+//					abm.setActorId(actors);
+//				}
 			}
 			return result;
 			
