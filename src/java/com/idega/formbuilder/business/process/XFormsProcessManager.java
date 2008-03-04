@@ -15,7 +15,7 @@ import com.idega.jbpm.def.View;
 import com.idega.jbpm.def.ViewFactory;
 import com.idega.jbpm.def.ViewToTask;
 import com.idega.jbpm.identity.ActorTaskBinder;
-import com.idega.jbpm.presentation.beans.ProcRoleIdentityMgmntBean;
+import com.idega.jbpm.presentation.beans.IdentityMgmntBean;
 import com.idega.webface.WFUtil;
 
 public class XFormsProcessManager {
@@ -77,7 +77,7 @@ public class XFormsProcessManager {
 				AdvancedProperty name = new AdvancedProperty(JBPM_XFORM_ACTOR_NAME, actorName);
 				result.add(name);
 				
-				ProcRoleIdentityMgmntBean abm = (ProcRoleIdentityMgmntBean) WFUtil.getBeanInstance("actorBindingManager");
+				IdentityMgmntBean abm = (IdentityMgmntBean) WFUtil.getBeanInstance("actorBindingManager");
 //				if(abm != null) {
 //					abm.setActorType(atb.getActorType());
 //					String[] actors = {atb.getActorId()};
