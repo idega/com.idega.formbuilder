@@ -5,7 +5,9 @@
     <bean id="xformsProcessManager" class="com.idega.formbuilder.business.process.XFormsProcessManager" scope="session">
         <property name="idegaJbpmContext" ref="idegaJbpmContext" />
         <property name="viewToTaskBinder" ref="process_xforms_viewToTask" />
+        <!--  
         <property name="actorToTaskBinder" ref="actorToTaskBinder" />
+        -->
         <property name="viewFactory" ref="process_xforms_viewFactory" />
     </bean>
 </beans>
