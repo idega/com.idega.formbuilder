@@ -11,8 +11,11 @@
 				 showFunctionMenu="false"
 				 javascripturls="/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/mootools/1.11/mootools-all.js,
 				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/codepress/codepress.js,
-								/dwr/engine.js,
-								/dwr/util.js,
+				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/mootabs/1.2/mootabs.js,
+				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/inlineEdit/1.1/inlineEdit.js,
+				 				
+				 				/dwr/engine.js,
+				 				/dwr/util.js,
 								/dwr/interface/FormComponent.js,
 								/dwr/interface/FormDocument.js,
 								/dwr/interface/FormPage.js,
@@ -21,7 +24,8 @@
 								/dwr/interface/ProcessData.js,
 								/dwr/interface/Workspace.js,
 								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js"
-				stylesheeturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formbuilder.css">
+				stylesheeturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formbuilder.css,
+								/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/mootabs/1.2/mootabs.css">
 			<h:form id="workspaceform1" onsubmit="return false;">
 				<f:verbatim>
                 	<script type="text/javascript">

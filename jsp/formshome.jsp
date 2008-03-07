@@ -7,7 +7,8 @@
 	xmlns:t="http://myfaces.apache.org/tomahawk">
 	<jsp:directive.page contentType="text/html" />
 	<f:view>
-		<ws:page id="formbuilder" showFunctionMenu="false"
+		<ws:page 	id="formbuilder" 
+					showFunctionMenu="false"
 					javascripturls="/dwr/interface/FormDocument.js,
 									/dwr/engine.js,
 												
@@ -28,14 +29,35 @@
                 	</script>
                 </f:verbatim>
 				<fb:homePage />
-				<t:div id="newFormDialog" forceId="true" styleClass="newFormDialogStyle" style="display: none;">
-					<t:inputText id="newFormDialogInput" onkeydown="this.setProperty('value', this.value);" forceId="true" />
-					<t:htmlTag value="a">
-						<t:outputText forceId="true" id="createFormBtn" onclick="createNewForm($('newFormDialogInput').getText());" value="#{localizedStrings['com.idega.formbuilder']['fb_create_form']}" />
-					</t:htmlTag>
+				<t:div id="newTaskFormDialog" forceId="true" style="display: none;">
+					<t:outputLabel for="taskFormNameInput" value="Form name" />
+					<t:inputText id="taskFormNameInput" onkeyup="modalFormName = this.value;" onblur="modalFormName = this.value;" forceId="true" />
+					<t:htmlTag value="br" />
+					<t:outputLabel for="designerCheckbox" value="Go to designer" />
+					<t:selectBooleanCheckbox onchange="modalGoToDesigner = this.checked;" id="designerCheckbox" forceId="true" />
+					<t:htmlTag value="br" />
+					<t:commandLink id="createTaskFormBtn" onclick="createNewTaskForm(modalFormName, modalGoToDesigner);" forceId="true" value="Create" />
+				</t:div>
+				<t:div id="attachTaskFormDialog" forceId="true" style="display: none;">
+					<t:outputLabel for="formSelector" value="Choose form" />
+					<t:selectOneMenu id="formSelector" onchange="var selFormVal = this.options[this.selectedIndex].getProperty('value');if(selFormVal != ''){modalSelectedForm = selFormVal;}" forceId="true" />
+					<t:htmlTag value="br" />
+					<t:outputLabel for="designerCheckbox" value="Go to designer" />
+					<t:selectBooleanCheckbox onchange="modalGoToDesigner = this.checked;" id="designerCheckbox" forceId="true" />
+					<t:htmlTag value="br" />
+					<t:commandLink id="attachTaskFormBtn" onclick="attachTaskForm(modalFormName, modalGoToDesigner);" forceId="true" value="Attach" />
+				</t:div>
+				<t:div id="newFormDialog" forceId="true" style="display: none;">
+					<t:outputLabel for="formNameInput" value="Form name" />
+					<t:inputText id="formNameInput" onkeyup="modalFormName = this.value;" onblur="modalFormName = this.value;" forceId="true" />
+					<t:htmlTag value="br" />
+					<t:outputLabel for="designerCheckbox2" value="Go to designer" />
+					<t:selectBooleanCheckbox onchange="modalGoToDesigner = this.checked;" id="designerCheckbox2" forceId="true" />
+					<t:htmlTag value="br" />
+					<t:commandLink id="createFormBtn" onclick="createNewForm(modalFormName, modalGoToDesigner);" forceId="true" value="Create" />
 				</t:div>
 				<t:div styleClass="fbBottomButtonsContainer">
-					<t:commandLink id="newFormButton" styleClass="rightButton" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}" />
+					<t:commandLink id="newFormButton" styleClass="rightButton smoothbox" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}" />
 				</t:div>
 			</h:form>
 		</ws:page>
