@@ -14,9 +14,11 @@ import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.taskmgmt.def.Task;
 
 import com.idega.block.web2.business.Web2Business;
+import com.idega.builder.bean.AdvancedProperty;
 import com.idega.documentmanager.business.PersistenceManager;
 import com.idega.formbuilder.business.process.XFormsProcessManager;
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
 import com.idega.jbpm.def.View;
 import com.idega.jbpm.def.ViewToTask;
@@ -69,13 +71,22 @@ public class FBHomePage extends FBComponentBase {
 	private static final String web2BeanIdentifier = "web2bean";
 	private static final String MOOTABS_TITLE_CLASS = "mootabs_title";
 	private static final String TITLE_ATTRIBUTE = "title";
+	private static final String REL_ATTRIBUTE = "rel";
+	private static final String HREF_ATTRIBUTE = "href";
 	private static final String PROCESS_TAB_TITLE = "processes";
 	private static final String STANDALONE_TAB_TITLE = "standalone";
 	private static final String MOOTABS_PANEL_CLASS = "mootabs_panel";
 	private static final String PROCESS_BUTTON_LIST_CLASS = "processButtonList";
+	private static final String TAB_TITLE_CLASS = "tabTitle";
+	private static final String PROC_BTN_CLASS = "procBtnClass";
+	private static final String TRANSITION_BTN_CLASS = "transitionButton";
+	private static final String EXPAND_BTN_CLASS = "expandButton";
+	private static final String ATTACH_BTN_CLASS = "attachButton";
+	private static final String CREATE_BTN_CLASS = "createButton";
+	private static final String SMOOTHBOX_LINK_CLASS = "smoothbox";
 	
-	private static final String PROCESS_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/images/process.png";
-	private static final String STANDALONE_FORM_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/images/window-new.png";
+	private static final String PROCESS_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/orbz-machine-32x32.png";
+	private static final String STANDALONE_FORM_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/fields_32.png";
 	
 	protected void initializeComponent(FacesContext context) {
 		IWContext iwc = IWContext.getIWContext(context);
@@ -123,22 +134,27 @@ public class FBHomePage extends FBComponentBase {
 		Lists tabsList = new Lists();
 		tabsList.setStyleClass(MOOTABS_TITLE_CLASS);
 		
-		ListItem tab1 = new ListItem();
-		tab1.setMarkupAttribute(TITLE_ATTRIBUTE, PROCESS_TAB_TITLE);
-		Image tabIcon = new Image();
-		tabIcon.setSrc(PROCESS_ICON);
-		tab1.add(tabIcon);
-		tab1.add(new Text(getLocalizedString(iwc, "fb_home_proc_tab", "Processes")));
+//		ListItem tab1 = new ListItem();
+//		tab1.setMarkupAttribute(TITLE_ATTRIBUTE, PROCESS_TAB_TITLE);
+//		Image tabIcon = new Image();
+//		tabIcon.setSrc(PROCESS_ICON);
+//		tab1.add(tabIcon);
+//		Text tab1Title = new Text(getLocalizedString(iwc, "fb_home_proc_tab", "Processes"));
+//		tab1Title.setStyleClass(TAB_TITLE_CLASS);
+//		tab1.add(tab1Title);
+//		
+//		ListItem tab2 = new ListItem();
+//		tab2.setMarkupAttribute(TITLE_ATTRIBUTE, STANDALONE_TAB_TITLE);
+//		tabIcon = new Image();
+//		tabIcon.setSrc(STANDALONE_FORM_ICON);
+//		tab2.add(tabIcon);
+//		Text tab2Title = new Text(getLocalizedString(iwc, "fb_home_proc_alone", "Standalone"));
+//		tab2Title.setStyleClass(TAB_TITLE_CLASS);
+//		tab2.add(tab2Title);
 		
-		ListItem tab2 = new ListItem();
-		tabIcon = new Image();
-		tabIcon.setSrc(STANDALONE_FORM_ICON);
-		tab2.add(tabIcon);
-		tab2.add(new Text(getLocalizedString(iwc, "fb_home_proc_alone", "Standalone")));
-		tab2.setMarkupAttribute(TITLE_ATTRIBUTE, STANDALONE_TAB_TITLE);
 		
-		tabsList.add(tab1);
-		tabsList.add(tab2);
+		tabsList.add(addTab(iwc, PROCESS_TAB_TITLE, PROCESS_ICON, getLocalizedString(iwc, "fb_home_proc_tab", "Processes")));
+		tabsList.add(addTab(iwc, STANDALONE_TAB_TITLE, STANDALONE_FORM_ICON, getLocalizedString(iwc, "fb_home_proc_alone", "Standalone")));
 		
 		listContainer.add(tabsList);
 		
@@ -156,22 +172,34 @@ public class FBHomePage extends FBComponentBase {
 			topList.setStyleClass(BUTTON_LIST_CLASS);
 			topList.setStyleClass(PROCESS_BUTTON_LIST_CLASS);
 			
+//			ListItem item2 = new ListItem();
+//			item2.setStyleClass(CASES_BUTTON_CLASS);
+//			item2.setStyleClass(PROC_BTN_CLASS);
+//			
+//			Link casesButton = new Link(getLocalizedString(iwc, "fb_home_view_cases_link", "View cases"));
+//			casesButton.setStyleClass(CASES_BUTTON_CLASS);
+//			casesButton.setStyleClass(PROCESS_BUTTON_CLASS);
+//			item2.add(casesButton);
+			
+			topList.add(addProcessButton(iwc, CASES_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_view_cases_link", "View cases")));
+			
+//			Link deleteProcessButton = new Link(getLocalizedString(iwc, "fb_home_delete_process_link", "Delete"));
+//			deleteProcessButton.setStyleClass(PROCESS_BUTTON_CLASS);
+//			deleteProcessButton.setStyleClass(DELETE_BUTTON_CLASS);
+//			
+//			item2 = new ListItem();
+//			item2.setStyleClass(DELETE_BUTTON_CLASS);
+//			item2.setStyleClass(PROC_BTN_CLASS);
+//			item2.add(deleteProcessButton);
+//			topList.add(item2);
+			
+			topList.add(addProcessButton(iwc, DELETE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_delete_process_link", "Delete")));
+			
 			ListItem item2 = new ListItem();
-			item2.setStyleClass(CASES_BUTTON_CLASS);
-			
-			Link casesButton = new Link(getLocalizedString(iwc, "fb_home_view_cases_link", "View cases"));
-			casesButton.setStyleClass(CASES_BUTTON_CLASS);
-			casesButton.setStyleClass(PROCESS_BUTTON_CLASS);
-			item2.add(casesButton);
-			
-			topList.add(item2);
-			
-			Link deleteProcessButton = new Link(getLocalizedString(iwc, "fb_home_delete_process_link", "Delete"));
-			deleteProcessButton.setStyleClass(PROCESS_BUTTON_CLASS + " " + DELETE_BUTTON_CLASS);
-			
-			item2 = new ListItem();
-			item2.setStyleClass(DELETE_BUTTON_CLASS);
-			item2.add(deleteProcessButton);
+			Link expandButton = new Link(getLocalizedString(iwc, "fb_home_expand_process_link", "Expand"));
+			expandButton.setStyleClass(TRANSITION_BTN_CLASS);
+			expandButton.setStyleClass(EXPAND_BTN_CLASS);
+			item2.add(expandButton);
 			topList.add(item2);
 			
 			Image processIcon = new Image();
@@ -181,34 +209,44 @@ public class FBHomePage extends FBComponentBase {
 			Text processName = new Text(definition.getName());
 			processName.setStyleClass(FORM_TITLE_CLASS);
 			
-			Text created = new Text("");
+			Text created = new Text(CoreConstants.EMPTY);
 			created.setStyleClass(CREATED_DATE_CLASS);
-			
-			processItem.add(processIcon);
-			processItem.add(processName);
-			processItem.add(created);
-			processItem.add(topList);
 			
 			Lists list = new Lists();
 			list.setStyleClass(TASK_FORM_LIST_CLASS);
 				
 			List<Task> tasks = jbpmProcessBusiness.getProcessDefinitionTasks(definition.getId());
 				
+			int formCount = 0;
 			String formTitle = null;
 			for(Iterator<Task> taskIterator = tasks.iterator(); taskIterator.hasNext(); ) {
 				Task task = (Task) taskIterator.next();
-				View view = viewToTaskBinnder.getView(task.getId());
-				if(view == null) 
-					continue;
-				for(Iterator<SelectItem> it = formsList.iterator(); it.hasNext(); ) {
-					SelectItem item = it.next();
-					if(item.getValue().equals(view.getViewId())) {
-						formTitle = (String) item.getLabel();
-						it.remove();
+				try {
+					View view = viewToTaskBinnder.getView(task.getId());
+					if(view == null) {
+						list.add(getProcessEmptyTaskItem(iwc, definition.getName(), definition.getId(), task.getName()));
+					} else {
+						for(Iterator<SelectItem> it = formsList.iterator(); it.hasNext(); ) {
+							SelectItem item = it.next();
+							if(item.getValue().equals(view.getViewId())) {
+								formTitle = (String) item.getLabel();
+								it.remove();
+								formCount++;
+							}
+						}
+						list.add(getProcessTaskFormItem(iwc, definition.getName(), definition.getId(), formTitle,  task.getName(), getLocalizedString(iwc, "fb_home_created_label", "Created") + ": " + getCreatedDate(view.getViewId()), view.getViewId()));
 					}
+				} catch(Exception e) {
+					list.add(getProcessEmptyTaskItem(iwc, definition.getName(), definition.getId(), task.getName()));
 				}
-				list.add(getProcessTaskFormItem(context, definition.getName(), definition.getId(), formTitle,  task.getName(), getLocalizedString(iwc, "fb_home_created_label", "Created") + ": " + getCreatedDate(view.getViewId()), view.getViewId()));
 			}
+			
+			processItem.add(processIcon);
+			processItem.add(processName);
+			processItem.add(new Text(getLocalizedString(iwc, "fb_home_total_tasks", "Total tasks: ") + tasks.size() + CoreConstants.SPACE));
+			processItem.add(new Text(getLocalizedString(iwc, "fb_home_assigned_forms", "Assigned forms: ") + formCount));
+			processItem.add(created);
+			processItem.add(topList);
 
 			processItem.add(list);
 			tab1Forms.add(processItem);
@@ -219,10 +257,14 @@ public class FBHomePage extends FBComponentBase {
 		tab2Forms.setStyleClass(MOOTABS_PANEL_CLASS);
 		tab2Forms.setId(STANDALONE_TAB_TITLE);
 		
+		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
+		formDocument.getStandaloneForms().clear();
+		
 		Iterator<SelectItem> it = formsList.iterator();
 		while(it.hasNext()) {
 			SelectItem item = it.next();
-			tab2Forms.add(getListItem(context, item.getLabel(), getLocalizedString(iwc, "fb_home_created_label", "Created") + ": " + getCreatedDate(item.getValue().toString()), item.getValue().toString()));
+			formDocument.getStandaloneForms().add(new AdvancedProperty(item.getValue().toString(), item.getLabel()));
+			tab2Forms.add(getListItem(iwc, item.getLabel(), getLocalizedString(iwc, "fb_home_created_label", "Created") + ": " + getCreatedDate(item.getValue().toString()), item.getValue().toString()));
 		}
 		
 		listContainer.add(tab2Forms);
@@ -232,17 +274,81 @@ public class FBHomePage extends FBComponentBase {
 		add(fbHomePage);
 	}
 	
-	private ListItem getProcessTaskFormItem(FacesContext context, String processName, long processId, String title, String taskName, String date, String formId) {
-		IWContext iwc = IWContext.getIWContext(context);
+	private ListItem addTab(IWContext iwc, String tabTitleParameter, String tabIconSrc, String tabTitle) {
+		ListItem tab1 = new ListItem();
+		tab1.setMarkupAttribute(TITLE_ATTRIBUTE, tabTitleParameter);
+		Image tabIcon = new Image();
+		tabIcon.setSrc(tabIconSrc);
+		tab1.add(tabIcon);
+		Text tab1Title = new Text(tabTitle);
+		tab1Title.setStyleClass(TAB_TITLE_CLASS);
+		tab1.add(tab1Title);
 		
+		return tab1;
+	}
+	
+	private ListItem addProcessButton(IWContext iwc, String buttonClass, String buttonTitle) {
+		ListItem item2 = new ListItem();
+		item2.setStyleClass(buttonClass);
+		item2.setStyleClass(PROC_BTN_CLASS);
+		
+		Link casesButton = new Link(buttonTitle);
+		casesButton.setStyleClass(buttonClass);
+		casesButton.setStyleClass(PROCESS_BUTTON_CLASS);
+		item2.add(casesButton);
+		
+		return item2;
+	}
+	
+	private ListItem getProcessEmptyTaskItem(IWContext iwc, String processName, long processId, String taskName) {
+		ListItem item = new ListItem();
+		
+		Layer body = new Layer(Layer.DIV);
+		body.setStyleClass(TASK_FORM_ITEM_CLASS);
+		
+		Text name = new Text(taskName);
+		name.setStyleClass(FORM_TITLE_CLASS);
+		
+		body.add(name);
+		
+		Lists list = new Lists();
+		list.setStyleClass(BUTTON_LIST_CLASS);
+		
+		ListItem item2 = new ListItem();
+		item2.setStyleClass(ATTACH_BTN_CLASS);
+		Link editButton = new Link(getLocalizedString(iwc, "fb_home_attach_link", "Attach"));
+		editButton.setMarkupAttribute(HREF_ATTRIBUTE, "#TB_inline?height=100&width=300&inlineId=attachTaskFormDialog");
+		editButton.setMarkupAttribute(TITLE_ATTRIBUTE, getLocalizedString(iwc, "fb_modal_attach_title", "Attach a form"));
+		editButton.setStyleClass(ATTACH_BTN_CLASS);
+		editButton.setStyleClass(SMOOTHBOX_LINK_CLASS);
+		editButton.setMarkupAttribute(REL_ATTRIBUTE, processId + CoreConstants.UNDER + taskName);
+		item2.add(editButton);
+		list.add(item2);
+		
+		item2 = new ListItem();
+		item2.setStyleClass(CREATE_BTN_CLASS);
+		Link tryButton = new Link(getLocalizedString(iwc, "fb_home_create_link", "Create"));
+		tryButton.setStyleClass(CREATE_BTN_CLASS);
+		tryButton.setMarkupAttribute(HREF_ATTRIBUTE, "#TB_inline?height=100&width=300&inlineId=newTaskFormDialog");
+		tryButton.setMarkupAttribute(TITLE_ATTRIBUTE, getLocalizedString(iwc, "fb_modal_createTF_title", "Create new task form"));
+		tryButton.setStyleClass(SMOOTHBOX_LINK_CLASS);
+		tryButton.setMarkupAttribute(REL_ATTRIBUTE, processId + CoreConstants.UNDER + taskName);
+		item2.add(tryButton);
+		list.add(item2);
+		
+		body.add(list);
+		
+		item.add(body);
+		
+		return item;
+	}
+	
+	private ListItem getProcessTaskFormItem(IWContext iwc, String processName, long processId, String title, String taskName, String date, String formId) {
 		ListItem item = new ListItem();
 		
 		Layer body = new Layer(Layer.DIV);
 		body.setStyleClass(TASK_FORM_ITEM_CLASS);
 		body.setId(formId);
-		
-		Image formIcon = new Image();
-		formIcon.setSrc(STANDALONE_FORM_ICON);
 		
 		Text name = new Text(title);
 		name.setStyleClass(FORM_TITLE_CLASS);
@@ -261,10 +367,7 @@ public class FBHomePage extends FBComponentBase {
 		Link editButton = new Link(getLocalizedString(iwc, "fb_home_edit_link", "Edit"));
 		editButton.setStyleClass(EDIT_BUTTON_CLASS);
 		editButton.setId(formId + edit_process_mode_button_postfix);
-		
-		if(true)
-			throw new RuntimeException("Doesn't compile with the following line. Fix this");
-		//editButton.setOnClick(new StringBuffer("loadTaskFormDocument('").append(processName).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(processId).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(taskName).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(formId).append("');return false;").toString());
+		editButton.setOnClick(new StringBuffer("loadTaskFormDocument('").append(processName).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(processId).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(taskName).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(formId).append("');return false;").toString());
 		item2.add(editButton);
 		list.add(item2);
 		
@@ -299,9 +402,7 @@ public class FBHomePage extends FBComponentBase {
 		return item;
 	}
 	
-	private Layer getListItem(FacesContext context, String title, String date, String formId) {
-		IWContext iwc = IWContext.getIWContext(context);
-		
+	private Layer getListItem(IWContext iwc, String title, String date, String formId) {
 		Layer body = new Layer(Layer.DIV);
 		body.setStyleClass(FORM_LIST_ITEM_CLASS);
 		body.setId(formId);

@@ -48,7 +48,7 @@ public class FBWorkspace extends FBComponentBase {
 	protected void initializeComponent(FacesContext context) {
 		
 		IWContext iwc = CoreUtil.getIWContext();
-
+		
 		if (context.getExternalContext().getRequestParameterMap().containsKey(FormDocument.FROM_APP_REQ_PARAM)) {
 			FormDocument fd = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
 			try {
@@ -108,6 +108,18 @@ public class FBWorkspace extends FBComponentBase {
 		acc.setUseSound(false);
 		acc.setHeight(ACCORDION_HEIGHT);
 		
+		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
+		
+		if(workspace.isProcessMode()) {
+			FBVariableViewer variableViewer = new FBVariableViewer();
+			
+			tab2 = new Text();
+			tab2.setText(getLocalizedString(iwc, "fb_acc_variables", "Variables and transitions"));
+			tab2.setStyleClass(FB_MENU_BAR_CLASS);
+			
+			acc.addPanel(VARIABLE_ACC_PANEL, tab2, variableViewer);
+		}
+		
 		FBPagesPanel pages = new FBPagesPanel();
 		pages.setStyleClass(PAGES_PANEL);
 		pages.setComponentStyleClass(FORM_PAGE_ICON_CLASS);
@@ -120,18 +132,6 @@ public class FBWorkspace extends FBComponentBase {
 		tab1.setStyleClass(FB_MENU_BAR_CLASS);
 		
 		acc.addPanel(PAGES_ACC_PANEL, tab1, pages);
-		
-		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
-		
-		if(workspace.isProcessMode()) {
-			FBVariableViewer variableViewer = new FBVariableViewer();
-			
-			tab2 = new Text();
-			tab2.setText(getLocalizedString(iwc, "fb_acc_variables", "Variables and transitions"));
-			tab2.setStyleClass(FB_MENU_BAR_CLASS);
-			
-			acc.addPanel(VARIABLE_ACC_PANEL, tab2, variableViewer);
-		}
 		
 		body.add(acc);
 		

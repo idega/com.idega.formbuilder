@@ -2,6 +2,7 @@ package com.idega.formbuilder.presentation.beans;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,7 +17,9 @@ import org.apache.commons.logging.LogFactory;
 
 import com.idega.block.form.presentation.FormViewer;
 import com.idega.block.form.process.XFormsToTask;
+import com.idega.block.form.process.XFormsView;
 import com.idega.block.formadmin.presentation.actions.GetAvailableFormsAction;
+import com.idega.builder.bean.AdvancedProperty;
 import com.idega.builder.business.BuilderLogic;
 import com.idega.content.themes.business.TemplatesLoader;
 import com.idega.content.themes.helpers.business.ThemesHelper;
@@ -42,6 +45,7 @@ import com.idega.formbuilder.presentation.components.FBViewPanel;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
+import com.idega.jbpm.def.View;
 import com.idega.presentation.IWContext;
 import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
@@ -65,6 +69,7 @@ public class FormDocument implements Serializable {
 	private Document document;
 	private Page overviewPage;
 	private PageThankYou submitPage;
+	private List<AdvancedProperty> standaloneForms = new ArrayList<AdvancedProperty>();
 	
 	private Workspace workspace;
 	private ApplicationBusiness app_business_bean;
@@ -132,8 +137,8 @@ public class FormDocument implements Serializable {
 		formName.setString(locale, parameter);
 			
 		try {
-			setDocument(formManagerInstance.createForm(id, formName));
-//			CoreUtil.getIWContext().getExternalContext().getSessionMap().put(FBConstants.FORM_DOCUMENT_ID, id);
+			document = formManagerInstance.createForm(id, formName);
+			document.save();
 		} catch(Exception e) {
 			logger.error("Could not create XForms document");
 		}
@@ -154,24 +159,45 @@ public class FormDocument implements Serializable {
 		return true;
 	}
 	
-//	public org.jdom.Document getRenderedAddTaskFormComponent(String processId, String taskName, String formName, boolean idle) {
-//		if(idle) {
-//			return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBAddTaskForm("idle"), true);
-//		} else {
-//			if(processId == null) 
-//				return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBAddTaskForm("idle"), true);
-//			
-//			this.processId = new Long(processId).longValue();
-//			if(formName != null && !formName.equals("")) {
-//				return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBAddTaskForm("idle"), true);
-//			} else if(taskName != null && !taskName.equals("")) {
-//				this.taskName = taskName;
-//				return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBAddTaskForm("name"), true);
-//			} else {
-//				return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBAddTaskForm("task"), true);
-//			}
-//		}
-//	}
+	public boolean attachFormDocumentToTask(String processId, String taskName, String formId, boolean gotoDesigner) {
+		
+		if(processId == null || taskName == null || formId == null)
+			return false;
+		
+		clearAppsRelatedMetaData();
+		
+		try {
+			if(gotoDesigner) {
+				DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
+				setDocument(formManagerInstance.openForm(formId));
+//				if(getFormId() != null)
+//					getFormsService().unlockForm(getFormId());
+					
+				String firstPage = getCommonPagesIdList().get(0);
+				Page firstP = getDocument().getPage(firstPage);
+				FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
+				formPage.initializeBeanInstance(firstP);
+					
+				getWorkspace().setView("design");
+				getWorkspace().setProcessMode(true);
+				initializeBeanInstance(getDocument());
+				getProcessData().initializeBeanInstance(getDocument(), new Long(processId), taskName);
+			}
+			
+			View view = new XFormsView();
+			view.setViewId(formId);
+			getViewToTaskBinder().bind(view, getJbpmProcessBusiness().getProcessTask(Long.valueOf(processId), taskName));
+			
+		} catch (FormLockException e) {
+			// TODO: inform about lock
+			logger.info("Form was locked when tried to open it", e);
+			return false;
+		} catch(Exception e) {
+			logger.info("Exception while trying to open a form document", e);
+			return false;
+		}
+		return true;
+	}
 	
 	@SuppressWarnings("unchecked")
 	public boolean loadTaskFormDocument(String processId, String taskName, String formId) {
@@ -184,9 +210,8 @@ public class FormDocument implements Serializable {
 		try {
 			DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
 			setDocument(formManagerInstance.openForm(formId));
-//			CoreUtil.getIWContext().getExternalContext().getSessionMap().put(FBConstants.FORM_DOCUMENT_ID, formId);
-//				if(getFormId() != null)
-//					getFormsService().unlockForm(getFormId());
+//			if(getFormId() != null)
+//				getFormsService().unlockForm(getFormId());
 				
 			String firstPage = getCommonPagesIdList().get(0);
 			Page firstP = getDocument().getPage(firstPage);
@@ -213,7 +238,6 @@ public class FormDocument implements Serializable {
 		Locale locale = workspace.getLocale();
 		
 		DocumentManager formManagerInstance = InstanceManager.getCurrentInstance().getDocumentManagerInstance();
-		Document document = null;
 		
 		String id = getPersistenceManager().generateFormId(parameter);
 		LocalizedStringBean formName = new LocalizedStringBean();
@@ -221,6 +245,7 @@ public class FormDocument implements Serializable {
 			
 		try {
 			document = formManagerInstance.createForm(id, formName);
+			document.save();
 		} catch(Exception e) {
 			logger.error("Could not crea XForms document");
 		}
@@ -887,5 +912,13 @@ public class FormDocument implements Serializable {
 
 	public void setProcessData(ProcessData processData) {
 		this.processData = processData;
+	}
+
+	public List<AdvancedProperty> getStandaloneForms() {
+		return standaloneForms;
+	}
+
+	public void setStandaloneForms(List<AdvancedProperty> standaloneForms) {
+		this.standaloneForms = standaloneForms;
 	}
 }

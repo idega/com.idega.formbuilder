@@ -2,10 +2,13 @@ package com.idega.formbuilder.presentation.beans;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.jdom.Document;
 
+import com.idega.builder.bean.AdvancedProperty;
 import com.idega.builder.business.BuilderLogic;
 import com.idega.documentmanager.business.component.Button;
 import com.idega.documentmanager.business.component.ButtonArea;
@@ -18,7 +21,6 @@ import com.idega.documentmanager.business.component.properties.PropertiesButton;
 import com.idega.documentmanager.business.component.properties.PropertiesComponent;
 import com.idega.documentmanager.component.beans.ItemBean;
 import com.idega.documentmanager.component.beans.LocalizedStringBean;
-import com.idega.formbuilder.presentation.components.FBAssignVariableComponent;
 import com.idega.formbuilder.presentation.components.FBButton;
 import com.idega.formbuilder.presentation.components.FBComponentProperties;
 import com.idega.formbuilder.presentation.components.FBFormComponent;
@@ -57,6 +59,9 @@ public class FormComponent implements Serializable {
 	}
 	
 	public String assignVariable(String componentId, String variable, String datatype) {
+		if(componentId == null) {
+			componentId = id;
+		}
 		Page page = formPage.getPage();
 		if(page != null) {
 			Component component = page.getComponent(componentId);
@@ -214,31 +219,32 @@ public class FormComponent implements Serializable {
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(id), true);
 	}
 	
-	public Document getAvailableComponentVariables(String variable, String componentId, String type) {
-		FBAssignVariableComponent newAssign = new FBAssignVariableComponent();
-		newAssign.setId(componentId + "-" + type);
-		newAssign.setStatus("assign");
-		newAssign.setType(type);
-		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), newAssign, true);
+	public List<AdvancedProperty> getAvailableComponentVariables(String type) {
+		Set<String> variables = getProcessData().getComponentTypeVariables(type);
+		List<AdvancedProperty> result = new ArrayList<AdvancedProperty>();
+		for(Iterator<String> it = variables.iterator(); it.hasNext(); ) {
+			String var = it.next();
+			result.add(new AdvancedProperty(var, var));
+		}
+		return result;
 	}
 	
-	public Document assignComponentToVariable(String variable, String componentId, String type) {
-		FBAssignVariableComponent newAssign = new FBAssignVariableComponent();
-		newAssign.setId(componentId + "-" + type);
-		newAssign.setStatus("idle");
-		if(variable != null) {
-			Page page = formPage.getPage();
-			if(page != null) {
-				Component component = page.getComponent(componentId);
-				PropertiesComponent properties = component.getProperties();
-				if(properties != null) {
-					properties.setVariable(Variable.parseDefaultStringRepresentation(variable));
-				}
-			}
-			newAssign.setValue(variable.substring(variable.indexOf(":") + 1));
-		}
-		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), newAssign, true);
-	}
+//	public Document assignComponentToVariable(String variable, String componentId, String type) {
+//		FBAssignVariableComponent newAssign = new FBAssignVariableComponent();
+//		newAssign.setId(componentId + "-" + type);
+//		if(variable != null) {
+//			Page page = formPage.getPage();
+//			if(page != null) {
+//				Component component = page.getComponent(componentId);
+//				PropertiesComponent properties = component.getProperties();
+//				if(properties != null) {
+//					properties.setVariable(Variable.parseDefaultStringRepresentation(variable));
+//				}
+//			}
+//			newAssign.setValue(variable.substring(variable.indexOf(":") + 1));
+//		}
+//		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), newAssign, true);
+//	}
 	
 	public String getDataSrc() {
 		if(selectComponent != null) {

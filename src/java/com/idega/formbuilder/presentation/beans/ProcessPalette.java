@@ -23,7 +23,21 @@ public class ProcessPalette extends Palette implements Serializable {
 	public static final String BEAN_ID = "processPalette";
 	
 	private Map<String, List<PaletteComponent>> components = new HashMap<String, List<PaletteComponent>>();
+	private Map<String, String> componentInternalTypeMappings = new HashMap<String, String>();
 	
+	public Map<String, String> getComponentInternalTypeMappings() {
+		if(componentInternalTypeMappings.isEmpty()) {
+			componentInternalTypeMappings.put("xf:input", "fbc_text");
+			componentInternalTypeMappings.put("xf:textarea", "fbc_textarea");
+		}
+		return componentInternalTypeMappings;
+	}
+
+	public void setComponentInternalTypeMappings(
+			Map<String, String> componentInternalTypeMappings) {
+		this.componentInternalTypeMappings = componentInternalTypeMappings;
+	}
+
 	private List<PaletteComponent> populatePaletteComponentList(List<ComponentType> components) {
 		List<PaletteComponent> list = new ArrayList<PaletteComponent>();
 		Iterator<ComponentType> it = components.iterator();
@@ -32,6 +46,7 @@ public class ProcessPalette extends Palette implements Serializable {
 			try {
 				list.add(new PaletteComponent(nextComp.getType(), "fbv"));
 			} catch(Exception e) {
+				e.printStackTrace();
 				logger.error("Could not retrieve component: " + nextComp);
 			}
 		}

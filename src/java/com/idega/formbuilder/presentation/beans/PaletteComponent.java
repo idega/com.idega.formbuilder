@@ -5,7 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.idega.formbuilder.IWBundleStarter;
+import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.idegaweb.BundleLocalizationMap;
+import com.idega.util.CoreConstants;
+import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
 
 public class PaletteComponent implements Serializable {
@@ -13,6 +16,8 @@ public class PaletteComponent implements Serializable {
 	private static final long serialVersionUID = -1462694114806788168L;
 	
 	public static final String BEAN_ID = "paletteComponent";
+	
+	private static final String ICON_PATH_POSTFIX = "_icon";
 	
 	private static Map localizedStrings = (BundleLocalizationMap) ((HashMap) WFUtil.getBeanInstance("localizedStrings")).get(IWBundleStarter.IW_BUNDLE_IDENTIFIER);
 	
@@ -38,14 +43,14 @@ public class PaletteComponent implements Serializable {
 	}
 
 	public PaletteComponent() {
-		this.type = "";
-		this.iconPath = "";
-		this.category = "";
+		this.type = CoreConstants.EMPTY;
+		this.iconPath = CoreConstants.EMPTY;
+		this.category = CoreConstants.EMPTY;
 	}
 	
 	public PaletteComponent(String type, String category) throws Exception {
 		this.type = type;
-		this.iconPath = (String) localizedStrings.get(type + "_icon");
+		this.iconPath = FBComponentBase.getLocalizedString(CoreUtil.getIWContext(), type + ICON_PATH_POSTFIX, "fdfgdfg");
 		this.category = category;
 	}
 	
@@ -59,9 +64,9 @@ public class PaletteComponent implements Serializable {
 		
 		if(name == null) {
 			if(type != null) {
-				name = (String) localizedStrings.get(type);
+				name = FBComponentBase.getLocalizedString(CoreUtil.getIWContext(), type, "Component");
 			} else
-				name = "";
+				name = CoreConstants.EMPTY;
 		}
 		return name;
 	}

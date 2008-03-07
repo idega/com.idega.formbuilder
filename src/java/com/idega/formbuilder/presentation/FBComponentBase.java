@@ -106,7 +106,7 @@ public class FBComponentBase extends IWBaseComponent {
 		return bundle.getResourceBundle(iwc.getCurrentLocale()).getLocalizedString(localizationKey, defaultString);
 	}
 	
-	protected static String getLocalizedString(IWContext iwc, String localizationKey, String defaultString) {
+	public static String getLocalizedString(IWContext iwc, String localizationKey, String defaultString) {
 		IWMainApplication iwma = iwc.getApplicationContext().getIWMainApplication();
 		IWBundle bundle = iwma.getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER);
 		return bundle.getResourceBundle(iwc.getCurrentLocale()).getLocalizedString(localizationKey, defaultString);

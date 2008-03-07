@@ -17,11 +17,13 @@ import com.idega.documentmanager.business.component.properties.PropertiesCompone
 import com.idega.formbuilder.dom.DOMTransformer;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormPage;
+import com.idega.formbuilder.presentation.beans.ProcessPalette;
 import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.formbuilder.util.FBUtil;
+import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
-import com.idega.presentation.text.Text;
+import com.idega.presentation.text.Link;
 import com.idega.webface.WFUtil;
 
 public class FBFormComponent extends FBComponentBase {
@@ -36,11 +38,42 @@ public class FBFormComponent extends FBComponentBase {
 	private static final String DELETE_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/del_16.png";
 	private static final String DEFAULT_LOAD_ACTION = "loadComponentInfo(this);";
 	private static final String DEFAULT_DELETE_ACTION = "removeComponent(this);";
+	private static final String DEFAULT_CLASS = "formElement";
+	private static final String DEFAULT_SPEED_CLASS = "speedButton";
+	private static final String HANDLER_LAYER_CLASS = "fbCompHandler";
+	private static final String DELETE_BUTTON_PREFIX = "db";
+	private static final String ID_ATTRIBUTE = "id";
+	private static final String ONCLICK_ATTRIBUTE = "onclick";
+	private static final String CLASS_ATTRIBUTE = "class";
+	private static final String STYLECLASS_ATTRIBUTE = "styleClass";
+	private static final String EDIT_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit_16.png";
+	private static final String ASSIGN_VAR_BOX_CLASS = "assignVariableBox";
+	private static final String LETTER_A = "A";
+	private static final String ASSIGN_LABEL_CLASS = "assignLabel";
+	private static final String REL_ATTRIBUTE = "rel";
 	
 	private Element element;
 	private String onLoad;
 	private String onDelete;
 	private String speedButtonStyleClass;
+	private String value;
+	private String type;
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 
 	public String getOnDelete() {
 		return onDelete;
@@ -65,8 +98,8 @@ public class FBFormComponent extends FBComponentBase {
 	public FBFormComponent(String componentId) {
 		super();
 		setId(componentId);
-		setStyleClass("formElement");
-		this.speedButtonStyleClass = "speedButton";
+		setStyleClass(DEFAULT_CLASS);
+		this.speedButtonStyleClass = DEFAULT_SPEED_CLASS;
 		this.onDelete = DEFAULT_DELETE_ACTION;
 		this.onLoad = DEFAULT_LOAD_ACTION;
 	}
@@ -81,39 +114,50 @@ public class FBFormComponent extends FBComponentBase {
 					Element element = (Element) component.getHtmlRepresentation(current).cloneNode(true);
 					
 					if(element != null) {
+						IWContext iwc = IWContext.getIWContext(context);
 						
-						element.removeAttribute("id");
+						element.removeAttribute(ID_ATTRIBUTE);
 						setElement(element);
 						
 						Layer handleLayer = new Layer(Layer.DIV);
-						handleLayer.setStyleClass("fbCompHandler");
+						handleLayer.setStyleClass(HANDLER_LAYER_CLASS);
 						
-						String type = component.getType();
-						type = type.substring(3);
-						Text variableName = new Text();
-						variableName.setId(component.getId() + "-fbcomp_" + type);
-						variableName.setStyleClass("fbcCompVar");
 						PropertiesComponent properties = component.getProperties();
+						type = component.getType();
+						if(type.startsWith("xf:")) {
+							ProcessPalette processPalette = (ProcessPalette) WFUtil.getBeanInstance(ProcessPalette.BEAN_ID);
+							type = processPalette.getComponentInternalTypeMappings().get(type);
+						}
 						if(properties.getVariable() != null) {
-							variableName.setText(properties.getVariable().getName());
+							value = properties.getVariable().getName();
 						}
 						
-//						FBAssignVariableComponent assignVariable = new FBAssignVariableComponent();
-//						PropertiesComponent properties = component.getProperties();
-//						String type = component.getType();
-//						type = type.substring(3);
-//						assignVariable.setId(component.getId() + "-fbcomp_" + type);
-//						if(properties.getVariable() != null) {
-//							assignVariable.setValue(properties.getVariable().getName());
-//						}
+						Layer assignVariable = new Layer(Layer.DIV);
+						assignVariable.setStyleClass(ASSIGN_VAR_BOX_CLASS);
+						assignVariable.setMarkupAttribute(REL_ATTRIBUTE, type);
+						assignVariable.setId(LETTER_A + getId());
+						
+						Link assignLabel = new Link();
+						assignLabel.setStyleClass(ASSIGN_LABEL_CLASS);
+						if(value == null) {
+							assignLabel.setText(getLocalizedString(iwc, "fb_no_assign_label", "Not assigned"));
+						} else {
+							assignLabel.setText(getLocalizedString(iwc, "fb_assigned_to_label", "Assigned to: ") + value);
+						}
+							
+						Image icon = new Image();
+						icon.setSrc(EDIT_ICON);
+							
+						assignVariable.add(icon);
+						assignVariable.add(assignLabel);
 						
 						Image deleteButton = new Image();
-						deleteButton.setId("db" + getId());
+						deleteButton.setId(DELETE_BUTTON_PREFIX + getId());
 						deleteButton.setSrc(DELETE_BUTTON_ICON);
 						deleteButton.setOnClick(onDelete);
 						deleteButton.setStyleClass(speedButtonStyleClass);
 						
-						addFacet(VARIABLE_NAME_FACET, variableName);
+						addFacet(VARIABLE_NAME_FACET, assignVariable);
 						addFacet(DELETE_BUTTON_FACET, deleteButton);
 						addFacet(HANDLE_LAYER_FACET, handleLayer);
 					}
@@ -128,9 +172,9 @@ public class FBFormComponent extends FBComponentBase {
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeBegin(context);
 		writer.startElement(Layer.DIV, this);
-		writer.writeAttribute("class", getStyleClass(), "styleClass");
-		writer.writeAttribute("id", getId(), "id");
-		writer.writeAttribute("onclick", onLoad, "onclick");
+		writer.writeAttribute(CLASS_ATTRIBUTE, getStyleClass(), STYLECLASS_ATTRIBUTE);
+		writer.writeAttribute(ID_ATTRIBUTE, getId(), ID_ATTRIBUTE);
+		writer.writeAttribute(ONCLICK_ATTRIBUTE, onLoad, ONCLICK_ATTRIBUTE);
 		UIComponent handleLayer = getFacet(HANDLE_LAYER_FACET);
 		if(handleLayer != null) {
 			renderChild(context, handleLayer);
