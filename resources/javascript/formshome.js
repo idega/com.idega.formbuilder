@@ -1,9 +1,17 @@
 var FORMBUILDER_PATH = "/workspace/forms/formbuilder/";
 var FORMADMIN_PATH = "/workspace/forms/formadmin/";
 var FORMSHOME_PATH = "/workspace/forms/";
-var SHOW_ELEMENT_TRANSITION_DURATION = 250;
-var SET_DISPLAY_PROPERTY_ID = 0;
+var TRANSITION_DURATION = 500;
 
+var modalFormName = null;
+var modalGoToDesigner = false;
+var modalSelectedForm = null;
+var SELECTED_PROCESS = null;
+var SELECTED_TASK = null;
+
+function setHrefToVoidFunction(element) {
+	element.setProperty('href', 'javascript:void(0)');
+}
 function loadTaskFormDocument(processName, processId, taskName, formId) {
 	showLoadingMessage('Loading');
 	FormDocument.loadTaskFormDocument(processId, taskName, formId, {
@@ -18,107 +26,92 @@ function loadTaskFormDocument(processName, processId, taskName, formId) {
 	closeLoadingMessage();
 	return false;
 }
-function createNewForm(formName) {
-	if(formName.length < 1) {
-		return false;
-	}
-		
-	showLoadingMessage('Creating');
-	FormDocument.createFormDocument(formName, {
+function createNewForm() {
+	FormDocument.createFormDocument(modalFormName, {
 		callback: function(result) {
-			if(result != null) {
-				window.location=FORMBUILDER_PATH;
+			if(result == true) {
+				if(modalGoToDesigner == true) {
+					window.location=FORMBUILDER_PATH;
+				} else {
+					window.location=FORMSHOME_PATH;
+				}
 			}
 		}
 	});
 }
-function resetAddTaskForm(event) {
-	new Event(event).stop();
-	var target = event.target;
-	var divBox = target.parentNode;
-	var targetId = divBox.id;
-	var parent = divBox.parentNode;
-	var tokens = targetId.split('_');
-	FormDocument.getRenderedAddTaskFormComponent(tokens[1], null, null, true, {
-		callback: function(resultDOM) {
-			replaceNode(resultDOM, divBox, parent);
+function createNewTaskForm() {
+	FormDocument.createTaskFormDocument(modalFormName, SELECTED_PROCESS, SELECTED_TASK, {
+		callback: function(result) {
+			if(result == true) {
+				if(modalGoToDesigner == true) {
+					window.location=FORMBUILDER_PATH;
+				} else {
+					window.location=FORMSHOME_PATH;
+				}
+			}
 		}
 	});
 }
-function reloadAddTaskForm2(event) {
-	new Event(event).stop();
-	var target = event.target;
-	var divBox = target.parentNode;
-	var targetId = divBox.id;
-	var parent = divBox.parentNode;
-	var tokens = targetId.split('_');
-	if(tokens[3] == '2') {
-		FormDocument.getRenderedAddTaskFormComponent(tokens[1], target.value, null, false, {
-			callback: function(resultDOM) {
-				replaceNode(resultDOM, divBox, parent);
-				$('newTF_' + tokens[1] + '_input').focus();
-				$('newTF_' + tokens[1] + '_input').addEvent('keypress', function(e){
-					if(isEnterEvent(e)) {
-						new Event(e).stop();
-						var target = e.target;
-						var divBox = target.parentNode;
-						var targetId = divBox.id;
-						var parent = divBox.parentNode;
-						var tokens = targetId.split('_');
-						if(tokens[3] == '3') {
-							FormDocument.createTaskFormDocument(target.value, {
-								callback: function(result) {
-									window.location=FORMBUILDER_PATH;
-								}
-							});
-						}
-					}
-				});
+function attachTaskForm() {
+	FormDocument.attachFormDocumentToTask(SELECTED_PROCESS, SELECTED_TASK, modalSelectedForm, modalGoToDesigner,  {
+		callback: function(result) {
+			if(result == true) {
+				if(modalGoToDesigner == true) {
+					window.location=FORMBUILDER_PATH;
+				} else {
+					window.location=FORMSHOME_PATH;
+				}
 			}
-		});
-	}
-}
-function reloadAddTaskForm1(event) {
-	var target = event.target;
-	var divBox = target.parentNode;
-	var targetId = divBox.id;
-	var parent = divBox.parentNode;
-	var tokens = targetId.split('_');
-	if(tokens[3] == '1') {
-		FormDocument.getRenderedAddTaskFormComponent(tokens[1], null, null, false, {
-			callback: function(resultDOM) {
-				replaceNode(resultDOM, divBox, parent);
-				$('newTF_' + tokens[1] + '_chooser').focus();
-			}
-		});
-	}
-}
-function setHrefToVoidFunction(element) {
-	element.setProperty('href', 'javascript:void(0)');
+		}
+	});
 }
 function registerFormsHomeActions() {
 	var widthForTabs = Math.round(window.getWidth() * 0.93);
 	var heightForTabs = Math.round(window.getHeight() * 0.7);
 	var tabs = new mootabs('formListContainer', {width: widthForTabs + 'px', height: (heightForTabs - 50) + 'px', changeTransition: 'none'});
 	var newFormButton = $('newFormButton');
-	setHrefToVoidFunction(newFormButton);
-	newFormButton.addEvent('click', function() {
-		showNewFormDialog('newFormDialog', 'newFormButton', "New form", newFormButton.getLeft());
-	});
-	var newFormInput = $('newFormDialogInput');
+	if(newFormButton != null) {
+		newFormButton.setProperty('Title', 'Create new form');
+		newFormButton.setProperty('href', '#TB_inline?height=100&width=300&inlineId=newFormDialog');
+	}
+	
+	var newFormInput = $('taskFormNameInput');
 	newFormInput.addEvent('keydown', function(e) {
 		var event = new Event(e);
 		if(isEnterEvent(e)) {
 			createNewForm(event.target.value);
 		}
 	});
-	$('createFormBtn').addEvent('click', function(e) {
-		createNewForm(newFormInput.value);
+	$ES("a.smoothbox").each(function(item) {
+		item.addEvent('click', function(e){
+			var relAttribute = item.getProperty('rel');
+			if(relAttribute != null) {
+				var values = relAttribute.split('_')
+				SELECTED_TASK = values[1];
+				SELECTED_PROCESS = values[0];
+			}
+		});
 	});
-	/*$ES(".smoothbox").each(function(button) {
-		button.setProperty('href', '#TB_inline?height=50&width=300&inlineId=newFormDialog');
-		button.setProperty('title', 'New form');
-	});*/
+	FormDocument.getStandaloneForms({
+		callback: function(resultList) {
+			if(resultList != null) {
+				var select = $('formSelector');
+				if(select != null) {
+					var option = new Element('option',{
+						'value': ''
+					}).setText('');
+					option.injectInside(select);
+					for(var i = 0; i < resultList.length; i++) {
+						var it = resultList[i];
+						var option = new Element('option',{
+							'value': it.id
+						}).setText(it.value);
+						option.injectInside(select);
+					}
+				}
+			}
+		}
+	});
 	$ES("a.entriesButton").each(function(item) {
 		item.addEvent('click', function(e){
 			new Event(e).stop();
@@ -133,6 +126,41 @@ function registerFormsHomeActions() {
 					}
 				}
 			});
+		});
+	});
+	$ES('div.processItem').each(function(item) {
+		item.setStyle('cursor', 'pointer');
+		item.addEvent('click', function(e){
+			var link = item.getElement('ul.processButtonList').getLast().getFirst();
+			var transition = new Fx.Style(item, 'height' ,{duration: TRANSITION_DURATION, onComplete: function() {transitionButtons(item, link, false);}});
+			if(item.getStyle('height').toInt() == 35) {
+				var listSize = item.getLast().getChildren().length;
+				transition.start((listSize * 55) + 53);
+			} else {
+				item.getElements('li.procBtnClass').each(function(button) {
+					button.setStyle('visibility', 'hidden');
+				});
+				transition.start(35);
+			}
+		});
+	});
+	$ES('a.transitionButton').each(function(item) {
+		var container = item.getParent().getParent().getParent();
+		container.getElements('li.procBtnClass').each(function(button) {
+			button.setStyle('visibility', 'hidden');
+		});
+		item.addEvent('click', function(e){
+			new Event(e).stop();
+			var transition = new Fx.Style(item.getParent().getParent().getParent(), 'height' ,{duration: TRANSITION_DURATION, onComplete: function() {transitionButtons(container, item, true);}});
+			if(container.getStyle('height').toInt() == 35) {
+				var listSize = container.getLast().getChildren().length;
+				transition.start((listSize * 55) + 53);
+			} else {
+					container.getElements('li.procBtnClass').each(function(button) {
+					button.setStyle('visibility', 'hidden');
+				});
+				transition.start(35);
+			}
 		});
 	});
 	$ES("a.editButton").each(function(item) {
@@ -183,13 +211,6 @@ function registerFormsHomeActions() {
 			});
 		});
 	});
-	$ES("a.duplicateButton").each(function(item) {
-		item.addEvent('click', function(e){
-			new Event(e).stop();
-			//showLoadingMessage('Loading');
-			alert('Duplicate disabled');
-		});
-	});
 	$ES("a.deleteButton").each(function(item) {
 		item.addEvent('click', function(e){
 			new Event(e).stop();
@@ -229,51 +250,24 @@ function registerFormsHomeActions() {
 		});
 	});
 }
-function showNewFormDialog(containerId, buttonId, buttonText, positionFromLeft) {
-	var container = $(containerId);
-	if (container == null) {
-		return false;
-	}
-	
-	var containerOpen = buttonText != $(buttonId).getText();
-	if (containerOpen) {
-		setButtonText(buttonId, buttonText);
-		closeNewPage(container);
-	}
-	else {
-		container.setStyle('left', positionFromLeft-190);
-		setButtonText(buttonId, "Close");
-		var showNewPage = new Fx.Style(container, 'opacity', {duration: SHOW_ELEMENT_TRANSITION_DURATION});
-		showNewPage.start(0, 1);
-		SET_DISPLAY_PROPERTY_ID = window.setTimeout("setDisplayPropertyToElement('"+container.id+"', 'block', null)", SHOW_ELEMENT_TRANSITION_DURATION);
-	}
-}
-function setButtonText(id, text) {
-	var button = $(id);
-	if (button != null) {
-		button.setText(text);
-	}
-}
-function closeNewPage(container) {
-	if (container != null) {
-		var hideNewPage = new Fx.Style(container, 'opacity', {duration: SHOW_ELEMENT_TRANSITION_DURATION});
-		hideNewPage.start(1, 0);
-		SET_DISPLAY_PROPERTY_ID = window.setTimeout("setDisplayPropertyToElement('"+container.id+"', 'none', null)", SHOW_ELEMENT_TRANSITION_DURATION);
-	}
-}
-function setDisplayPropertyToElement(id, property, frameChange) {
-	if (id == null || property == null) {
-		return false;
-	}
-	var element = $(id);
-	if (element == null) {
-		return false;;
-	}
-	
-	element.setStyle('display', property);
-	window.clearTimeout(SET_DISPLAY_PROPERTY_ID);
-	
-	if (frameChange != null) {
-		changeFrameHeight(frameChange);
+function transitionButtons(container, item, linkTarget) {
+	if(item.hasClass('expandButton')) {
+		item.removeClass('expandButton');
+		item.addClass('collapseButton');
+		item.setText('Collapse');
+		
+		if(linkTarget) {
+			container.getElements('li.procBtnClass').each(function(button) {
+				button.setStyle('visibility', 'visible');
+			});
+		} else {
+			container.getElements('ul.processButtonList').getElements('li.procBtnClass').each(function(button) {
+				button.setStyle('visibility', 'visible');
+			});
+		}
+	} else {
+		item.removeClass('collapseButton');
+		item.addClass('expandButton');
+		item.setText('Expand');
 	}
 }

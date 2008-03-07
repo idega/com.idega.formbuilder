@@ -5,9 +5,41 @@
     <bean id="xformsProcessManager" class="com.idega.formbuilder.business.process.XFormsProcessManager" scope="session">
         <property name="idegaJbpmContext" ref="idegaJbpmContext" />
         <property name="viewToTaskBinder" ref="process_xforms_viewToTask" />
-        <!--  
         <property name="actorToTaskBinder" ref="actorToTaskBinder" />
-        -->
         <property name="viewFactory" ref="process_xforms_viewFactory" />
     </bean>
+    <bean id="formDocument" class="com.idega.formbuilder.presentation.beans.FormDocument" scope="session">
+        <property name="persistenceManager" ref="xformsPersistenceManager" />
+        <property name="workspace" ref="workspace" />
+        <property name="viewToTaskBinder" ref="process_xforms_viewToTask" />
+        <property name="xformsProcessManager" ref="xformsProcessManager" />
+        <property name="jbpmProcessBusiness" ref="jbpmProcessBusiness" />
+        <property name="instanceManager" ref="actionManager" />
+        <property name="processData" ref="processData" />
+    </bean>
+    <bean id="workspace" class="com.idega.formbuilder.presentation.beans.Workspace" scope="session" />
+    <bean id="actionManager" class="com.idega.formbuilder.presentation.beans.InstanceManager" scope="session">
+        <property name="documentManagerFactory" ref="xformsDocumentManagerFact" />
+    </bean>
+    <bean id="processData" class="com.idega.formbuilder.presentation.beans.ProcessData" scope="session">
+        <property name="jbpmProcessBusiness" ref="jbpmProcessBusiness" />
+    </bean>
+    <bean id="palette" class="com.idega.formbuilder.presentation.beans.Palette" scope="session">
+        <property name="instanceManager" ref="actionManager" />
+    </bean>
+    <bean id="processPalette" class="com.idega.formbuilder.presentation.beans.ProcessPalette" scope="session">
+        <property name="instanceManager" ref="actionManager" />
+    </bean>
+    <bean id="formPage" class="com.idega.formbuilder.presentation.beans.FormPage" scope="session">
+        <property name="formDocument" ref="formDocument" />
+        <property name="workspace" ref="workspace" />
+    </bean>
+    <bean id="formComponent" class="com.idega.formbuilder.presentation.beans.FormComponent" scope="session">
+        <property name="formPage" ref="formPage" />
+        <property name="processPalette" ref="processPalette" />
+        <property name="jbpmProcessBusiness" ref="jbpmProcessBusiness" />
+        <property name="processData" ref="processData" />
+    </bean>
+    <bean id="dataSources" class="com.idega.formbuilder.presentation.beans.DataSourceList" scope="session" />
+    <bean id="formField" class="com.idega.formbuilder.presentation.beans.PaletteComponent" scope="session" />
 </beans>

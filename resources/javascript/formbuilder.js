@@ -285,6 +285,68 @@ function initializeVariableViewer() {
 			input.focus();
 		});
 	});
+	$$('a.assignLabel').each(function(item) {
+		setHrefToVoidFunction(item);
+		item.addEvent('click', function(e) {
+			handleAssignLabelWidget(e);
+		});
+	});
+}
+function handleAssignLabelWidget(e) {
+	var target = e.target;
+	var labelContainer = target.getParent();
+	var compType = labelContainer.getProperty('rel');
+			
+	FormComponent.getAvailableComponentVariables(compType, {
+		callback: function(resultItems) {
+			var icon = labelContainer.getFirst();
+			icon.remove();
+			var label = labelContainer.getFirst();
+			var labelText = label.getText().substring(label.getText().indexOf(':') + 2);
+			label.remove();
+			var select = new Element('select');
+			var option = new Element('option',{
+				'value': ''
+			}).setText('Not assigned');
+			option.injectInside(select);
+			for(var i = 0; i < resultItems.length; i++) {
+				var it = resultItems[i];
+				var option = new Element('option',{
+					'value': it.id
+				}).setText(it.value);
+				if(it.value == labelText) {
+					option.setProperty('selected', 'selected');
+				}
+				option.injectInside(select);
+			}
+			select.addEvent('change', function(e) {
+				var selValue = select.options[select.selectedIndex].getText();
+				FormComponent.assignVariable(null, selValue, 'string', {
+					callback: function(result) {
+						select.setStyle('display', 'none');
+						icon.injectInside(labelContainer);
+						label.injectInside(labelContainer);
+						label.setText('Assigned to: ' + selValue);
+						label.removeEvents('click');
+						setHrefToVoidFunction(label);
+					}
+				});
+			});
+			select.addEvent('blur', function(e) {
+				this.setStyle('display', 'none');
+				icon.injectInside(labelContainer);
+				label.injectInside(labelContainer);
+				label.removeEvents('click');
+				setHrefToVoidFunction(label);
+				/*label.addEvent('click', function(event) {
+					handleAssignLabelWidget(event);
+				});*/
+				initializeVariableViewer();
+			});
+			select.injectInside(labelContainer);
+			select.focus();
+		}
+	});
 }
 function createVariable(datatype, value, element, image) {
 	ProcessData.createVariable(value, datatype, {
@@ -1102,87 +1164,29 @@ function saveSourceCode(source_code) {
 	}
 }
 
-/*Functions for inline edit widget*/
-function activeInlineEdit(element, action, textarea) {
-	var spanElement = element.getFirst();
-	spanElement.setStyle('display', 'none');
-	var text = spanElement.getText();
-	element.getFirst().getNext().remove();
-	var inputElement;
-	if(textarea == true) {
-		inputElement = new Element('textarea');
-	} else {
-		inputElement = new Element('input');
-		inputElement.setProperty('type', 'text');
-	}
-	inputElement.setProperty('value', text);
-	inputElement.injectInside(element);
-	inputElement.focus();
-	
-	inputElement.addEvent('blur', function() {
-		inputElement.removeEvents();
-		var value = getInlineEditValue(element, null);
-		executeInlineAction(action, value, element);
-	});
-	inputElement.addEvent('keypress', function(e) {
-		if(isEnterEvent(e)) {
-			inputElement.removeEvents();
-			var value = getInlineEditValue(element, e);
-			executeInlineAction(action, value, element);
-		}
-	});
-}
-function getInlineEditValue(element, event) {
-	if(event != null) {
-		return event.target.value;
-	} else {
-		var input = element.getFirst().getNext();
-		return input.value;
-	}
-}
-function executeInlineAction(action, parameter, element) {
-	action += "('" + parameter + "', {" +
-				"callback: function(result) {" +
-				"deactiveInlineEdit(element,'" + parameter + "');" +
-				"}" +
-				"})";
-	var customFunction = function() {
-		window.eval(action);
-	}
-	customFunction();
-}
-function deactiveInlineEdit(element, text) {
-	var spanElement = element.getFirst();
-	spanElement.setStyle('display', 'inline');
-	spanElement.setText(text);
-	
-	var input = element.getFirst().getNext();	
-	input.remove();
-		
-	injectEditIcon(element);
-}
+
 function initializeInlineEdits() {
 	$$('div.inlineEdit').each(
 		function(element) {
-			var action = element.getProperty('rel');
-			injectEditIcon(element);
-			element.addEvent('dblclick', function() {
-				activeInlineEdit(element, action, false);
-			});
-    	}
-    );
-    $$('div.inlineTextarea').each(
-		function(element) {
-			var action = element.getProperty('rel');
-			injectEditIcon(element);
-			element.addEvent('dblclick', function() {
-				activeInlineEdit(element, action, true);
-			});
+			prepareInlineEdit(element);
+			this.$$('span').addEvent('click',function(){
+		    	this.inlineEdit({
+		    		onComplete:function(el,oldContent,newContent){
+		    			var action = el.getParent().getProperty('rel');
+						action += "('" + newContent + "');";
+						var customFunction = function() {
+							window.eval(action);
+						}
+						customFunction();
+					}
+		    	});
+		    });
     	}
     );
 }
-function injectEditIcon(element) {
+function prepareInlineEdit(element) {
 	var editIcon = new Element('img');
+	element.setStyle('cursor','pointer');
 	editIcon.addClass('inlineEditIcon');
 	editIcon.setProperty('src', '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit_16.png');
 	editIcon.injectInside(element);

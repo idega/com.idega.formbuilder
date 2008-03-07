@@ -12,10 +12,8 @@
 					javascripturls="/dwr/interface/FormDocument.js,
 									/dwr/engine.js,
 												
-									/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formshome.js,
-									/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/smoothbox.js"
-					stylesheeturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formshome.css,
-									/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/smoothbox.css">
+									/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formshome.js"
+					stylesheeturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formshome.css">
 			<h:form id="workspaceform1" onsubmit="return false;">
 				<f:verbatim>
                 	<script type="text/javascript">

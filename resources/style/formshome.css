@@ -148,6 +148,14 @@ html>body .fbBottomButtonsContainer a {
 	width: 60px;
 	text-align: right;
 }
+.expandButton {
+	background: url(images/next_16.png) no-repeat scroll right;
+	width: 70px;
+}
+.collapseButton {
+	background: url(images/previous_16.png) no-repeat scroll right;
+	width: 70px;
+}
 .newFormComponentIdle #okBt {
 	display: none;
 }
@@ -238,12 +246,12 @@ html>body .fbBottomButtonsContainer a {
 }
 
 .formListItem, .processItem {
-	background-color:#DDEDD3;
-	border:1px groove #BDBDBD;
-	cursor:pointer;
-	height:auto;
-	margin-bottom:8px;
-	position:relative;
+	background-color: #DDEDD3;
+	border: 1px groove #BDBDBD;
+	cursor: pointer;
+	height: 35px;
+	margin-bottom: 8px;
+	position: relative;
 	padding: 5px;
 }
 
@@ -375,12 +383,17 @@ html>body .fbBottomButtonsContainer a {
 .buttonList li.entriesButton {
 	background: url(images/application_view_list.png) left no-repeat;
 }
-
 .buttonList li.editButton {
 	background: url(images/application_form_edit.png) left no-repeat;
 }
 .buttonList li.tryButton {
 	background: url(images/cog_go.png) left no-repeat;
+}
+.buttonList li.attachButton {
+	background: url(images/application_link.png) left no-repeat;
+}
+.buttonList li.createButton {
+	background: url(images/application_form_add.png) left no-repeat;
 }
 .editButton.processForm {
 	right: 90px;
