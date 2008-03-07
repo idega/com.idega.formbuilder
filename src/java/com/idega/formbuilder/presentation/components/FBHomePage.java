@@ -95,6 +95,8 @@ public class FBHomePage extends FBComponentBase {
 		Web2Business web2 = (Web2Business) getBeanInstance(web2BeanIdentifier);
 		try {
 			adder.addJavaScriptAtPosition(iwc, AddResource.HEADER_BEGIN, web2.getBundleURIToMootoolsLib());
+			adder.addJavaScriptAtPosition(iwc, AddResource.HEADER_BEGIN, web2.getBundleUriToSmoothboxScript());
+			adder.addStyleSheet(iwc, AddResource.HEADER_BEGIN, web2.getBundleUriToSmoothboxStylesheet());
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
