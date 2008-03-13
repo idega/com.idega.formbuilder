@@ -7,6 +7,7 @@ import javax.faces.context.FacesContext;
 import com.idega.block.web2.presentation.Accordion;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
+import com.idega.formbuilder.presentation.beans.ProcessData;
 import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
@@ -48,9 +49,9 @@ public class FBWorkspace extends FBComponentBase {
 	protected void initializeComponent(FacesContext context) {
 		
 		IWContext iwc = CoreUtil.getIWContext();
-		
+		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
+		FormDocument fd = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
 		if (context.getExternalContext().getRequestParameterMap().containsKey(FormDocument.FROM_APP_REQ_PARAM)) {
-			FormDocument fd = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
 			try {
 				Map session_map = context.getExternalContext().getSessionMap();
 				fd.setAppId((String)session_map.get(FormDocument.APP_ID_PARAM));
@@ -61,6 +62,13 @@ public class FBWorkspace extends FBComponentBase {
 				// TODO: use logger and redirect back to applications list if
 				// possible
 				e.printStackTrace();
+			}
+			
+		}
+		ProcessData pd = fd.getProcessData();
+		if(pd != null) {
+			if(pd.getProcessId() != null) {
+				workspace.setProcessMode(true);
 			}
 		}
 
@@ -108,8 +116,6 @@ public class FBWorkspace extends FBComponentBase {
 		acc.setUseSound(false);
 		acc.setHeight(ACCORDION_HEIGHT);
 		
-		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
-		
 		if(workspace.isProcessMode()) {
 			FBVariableViewer variableViewer = new FBVariableViewer();
 			
@@ -138,5 +144,7 @@ public class FBWorkspace extends FBComponentBase {
 		mainApplication.add(body);
 		
 		add(mainApplication);
+		
 	}
+	
 }

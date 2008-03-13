@@ -149,6 +149,7 @@ public class FBFormComponent extends FBComponentBase {
 						icon.setSrc(EDIT_ICON);
 							
 						assignVariable.add(icon);
+						System.out.println("Added icon");
 						assignVariable.add(assignLabel);
 						
 						Image deleteButton = new Image();
@@ -197,6 +198,7 @@ public class FBFormComponent extends FBComponentBase {
 		if(workspace.isProcessMode()) {
 			UIComponent facet = getFacet(VARIABLE_NAME_FACET);
 			if(facet != null) {
+				System.out.println("Rendering icon - " + facet.getChildCount());
 				renderChild(context, facet);
 			}
 		}

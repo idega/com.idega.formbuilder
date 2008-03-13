@@ -28,6 +28,7 @@ import com.idega.formbuilder.util.FBConstants;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
 import com.idega.jbpm.def.Variable;
+import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
 
 public class FormComponent implements Serializable {
@@ -67,8 +68,8 @@ public class FormComponent implements Serializable {
 			Component component = page.getComponent(componentId);
 			PropertiesComponent properties = component.getProperties();
 			if(properties != null) {
-				properties.setVariable(Variable.parseDefaultStringRepresentation(datatype + ":" + variable));
-				return processData.bindVariable(componentId, datatype + ":" + variable).getStatus();
+				properties.setVariable(Variable.parseDefaultStringRepresentation(datatype + CoreConstants.COLON + variable));
+				return processData.bindVariable(componentId, datatype + CoreConstants.COLON + variable).getStatus();
 			}
 		}
 		return null;
@@ -179,7 +180,7 @@ public class FormComponent implements Serializable {
 	}
 	
 	public Document saveComponentExternalSrc(String value) {
-		if(value != null && !"".equals(value))
+		if(value != null && ! CoreConstants.EMPTY.equals(value))
 			setExternalSrc(value);
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(id), true);
 	}
@@ -346,7 +347,7 @@ public class FormComponent implements Serializable {
 			return "append";
 		} else {
 			Page page = formPage.getPage();
-			String beforeId = "";
+			String beforeId = CoreConstants.EMPTY;
 			if(page != null) {
 				List<String> ids = page.getContainedComponentsIdList();
 				if(ids.indexOf(id) != -1) {
@@ -566,7 +567,7 @@ public class FormComponent implements Serializable {
 	}
 
 	public void setAutofillKey(String autofillKey) {
-		if(autofillKey == null || "".equals(autofillKey)) {
+		if(autofillKey == null || CoreConstants.EMPTY.equals(autofillKey)) {
 			return;
 		}
 		if(component != null) {
@@ -580,7 +581,7 @@ public class FormComponent implements Serializable {
 		if(autofill) {
 			setAutofillKey("example");
 		} else {
-			setAutofillKey("");
+			setAutofillKey(CoreConstants.EMPTY);
 		}
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentProperties(id, FBConstants.COMPONENT_TYPE), true);
 	}

@@ -136,25 +136,6 @@ public class FBHomePage extends FBComponentBase {
 		Lists tabsList = new Lists();
 		tabsList.setStyleClass(MOOTABS_TITLE_CLASS);
 		
-//		ListItem tab1 = new ListItem();
-//		tab1.setMarkupAttribute(TITLE_ATTRIBUTE, PROCESS_TAB_TITLE);
-//		Image tabIcon = new Image();
-//		tabIcon.setSrc(PROCESS_ICON);
-//		tab1.add(tabIcon);
-//		Text tab1Title = new Text(getLocalizedString(iwc, "fb_home_proc_tab", "Processes"));
-//		tab1Title.setStyleClass(TAB_TITLE_CLASS);
-//		tab1.add(tab1Title);
-//		
-//		ListItem tab2 = new ListItem();
-//		tab2.setMarkupAttribute(TITLE_ATTRIBUTE, STANDALONE_TAB_TITLE);
-//		tabIcon = new Image();
-//		tabIcon.setSrc(STANDALONE_FORM_ICON);
-//		tab2.add(tabIcon);
-//		Text tab2Title = new Text(getLocalizedString(iwc, "fb_home_proc_alone", "Standalone"));
-//		tab2Title.setStyleClass(TAB_TITLE_CLASS);
-//		tab2.add(tab2Title);
-		
-		
 		tabsList.add(addTab(iwc, PROCESS_TAB_TITLE, PROCESS_ICON, getLocalizedString(iwc, "fb_home_proc_tab", "Processes")));
 		tabsList.add(addTab(iwc, STANDALONE_TAB_TITLE, STANDALONE_FORM_ICON, getLocalizedString(iwc, "fb_home_proc_alone", "Standalone")));
 		
@@ -174,26 +155,7 @@ public class FBHomePage extends FBComponentBase {
 			topList.setStyleClass(BUTTON_LIST_CLASS);
 			topList.setStyleClass(PROCESS_BUTTON_LIST_CLASS);
 			
-//			ListItem item2 = new ListItem();
-//			item2.setStyleClass(CASES_BUTTON_CLASS);
-//			item2.setStyleClass(PROC_BTN_CLASS);
-//			
-//			Link casesButton = new Link(getLocalizedString(iwc, "fb_home_view_cases_link", "View cases"));
-//			casesButton.setStyleClass(CASES_BUTTON_CLASS);
-//			casesButton.setStyleClass(PROCESS_BUTTON_CLASS);
-//			item2.add(casesButton);
-			
 			topList.add(addProcessButton(iwc, CASES_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_view_cases_link", "View cases")));
-			
-//			Link deleteProcessButton = new Link(getLocalizedString(iwc, "fb_home_delete_process_link", "Delete"));
-//			deleteProcessButton.setStyleClass(PROCESS_BUTTON_CLASS);
-//			deleteProcessButton.setStyleClass(DELETE_BUTTON_CLASS);
-//			
-//			item2 = new ListItem();
-//			item2.setStyleClass(DELETE_BUTTON_CLASS);
-//			item2.setStyleClass(PROC_BTN_CLASS);
-//			item2.add(deleteProcessButton);
-//			topList.add(item2);
 			
 			topList.add(addProcessButton(iwc, DELETE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_delete_process_link", "Delete")));
 			
@@ -302,6 +264,34 @@ public class FBHomePage extends FBComponentBase {
 		return item2;
 	}
 	
+	private ListItem addSmoothboxButton(IWContext iwc, String buttonClass, String buttonText, String href, String titleAttribute, String relAttribute) {
+		ListItem item2 = new ListItem();
+		item2.setStyleClass(buttonClass);
+		Link editButton = new Link(buttonText);
+		editButton.setMarkupAttribute(HREF_ATTRIBUTE, href);
+		editButton.setMarkupAttribute(TITLE_ATTRIBUTE, titleAttribute);
+		editButton.setStyleClass(buttonClass);
+		editButton.setStyleClass(SMOOTHBOX_LINK_CLASS);
+		editButton.setMarkupAttribute(REL_ATTRIBUTE, relAttribute);
+		item2.add(editButton);
+		
+		return item2;
+	}
+	
+	private ListItem addButton(IWContext iwc, String buttonClass, String buttonText, String id, String onClick) {
+		ListItem item2 = new ListItem();
+		item2.setStyleClass(buttonClass);
+		Link editButton = new Link(buttonText);
+		editButton.setStyleClass(buttonClass);
+		editButton.setId(id);
+		if(onClick != null) {
+			editButton.setOnClick(onClick);
+		}
+		item2.add(editButton);
+		
+		return item2;
+	}
+	
 	private ListItem getProcessEmptyTaskItem(IWContext iwc, String processName, long processId, String taskName) {
 		ListItem item = new ListItem();
 		
@@ -316,27 +306,8 @@ public class FBHomePage extends FBComponentBase {
 		Lists list = new Lists();
 		list.setStyleClass(BUTTON_LIST_CLASS);
 		
-		ListItem item2 = new ListItem();
-		item2.setStyleClass(ATTACH_BTN_CLASS);
-		Link editButton = new Link(getLocalizedString(iwc, "fb_home_attach_link", "Attach"));
-		editButton.setMarkupAttribute(HREF_ATTRIBUTE, "#TB_inline?height=100&width=300&inlineId=attachTaskFormDialog");
-		editButton.setMarkupAttribute(TITLE_ATTRIBUTE, getLocalizedString(iwc, "fb_modal_attach_title", "Attach a form"));
-		editButton.setStyleClass(ATTACH_BTN_CLASS);
-		editButton.setStyleClass(SMOOTHBOX_LINK_CLASS);
-		editButton.setMarkupAttribute(REL_ATTRIBUTE, processId + CoreConstants.UNDER + taskName);
-		item2.add(editButton);
-		list.add(item2);
-		
-		item2 = new ListItem();
-		item2.setStyleClass(CREATE_BTN_CLASS);
-		Link tryButton = new Link(getLocalizedString(iwc, "fb_home_create_link", "Create"));
-		tryButton.setStyleClass(CREATE_BTN_CLASS);
-		tryButton.setMarkupAttribute(HREF_ATTRIBUTE, "#TB_inline?height=100&width=300&inlineId=newTaskFormDialog");
-		tryButton.setMarkupAttribute(TITLE_ATTRIBUTE, getLocalizedString(iwc, "fb_modal_createTF_title", "Create new task form"));
-		tryButton.setStyleClass(SMOOTHBOX_LINK_CLASS);
-		tryButton.setMarkupAttribute(REL_ATTRIBUTE, processId + CoreConstants.UNDER + taskName);
-		item2.add(tryButton);
-		list.add(item2);
+		list.add(addSmoothboxButton(iwc, ATTACH_BTN_CLASS, getLocalizedString(iwc, "fb_home_attach_link", "Attach"), "#TB_inline?height=100&width=300&inlineId=attachTaskFormDialog", getLocalizedString(iwc, "fb_modal_attach_title", "Attach a form"), processId + CoreConstants.UNDER + taskName));
+		list.add(addSmoothboxButton(iwc, CREATE_BTN_CLASS, getLocalizedString(iwc, "fb_home_create_link", "Create"), "#TB_inline?height=100&width=300&inlineId=newTaskFormDialog", getLocalizedString(iwc, "fb_modal_createTF_title", "Create new task form"), processId + CoreConstants.UNDER + taskName));
 		
 		body.add(list);
 		
@@ -364,38 +335,11 @@ public class FBHomePage extends FBComponentBase {
 		Lists list = new Lists();
 		list.setStyleClass(BUTTON_LIST_CLASS);
 		
-		ListItem item2 = new ListItem();
-		item2.setStyleClass(EDIT_BUTTON_CLASS);
-		Link editButton = new Link(getLocalizedString(iwc, "fb_home_edit_link", "Edit"));
-		editButton.setStyleClass(EDIT_BUTTON_CLASS);
-		editButton.setId(formId + edit_process_mode_button_postfix);
-		editButton.setOnClick(new StringBuffer("loadTaskFormDocument('").append(processName).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(processId).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(taskName).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(formId).append("');return false;").toString());
-		item2.add(editButton);
-		list.add(item2);
-		
-		item2 = new ListItem();
-		item2.setStyleClass(TRY_BUTTON_CLASS);
-		Link tryButton = new Link(getLocalizedString(iwc, "fb_home_try_link", "Try"));
-		tryButton.setStyleClass(TRY_BUTTON_CLASS);
-		tryButton.setId(formId + try_button_postfix);
-		item2.add(tryButton);
-		list.add(item2);
-		
-		item2 = new ListItem();
-		item2.setStyleClass(CODE_BUTTON_CLASS);
-		Link codeButton = new Link(getLocalizedString(iwc, "fb_home_code_link", "Code"));
-		codeButton.setStyleClass(CODE_BUTTON_CLASS);
-		codeButton.setId(formId + code_button_postfix);
-		item2.add(codeButton);
-		list.add(item2);
-		
-		item2 = new ListItem();
-		item2.setStyleClass(DELETE_BUTTON_CLASS);
-		Link deleteButton = new Link(getLocalizedString(iwc, "fb_home_delete_link", "Delete"));
-		deleteButton.setStyleClass(DELETE_TF_BUTTON_CLASS);
-		deleteButton.setId(formId + delete_button_postfix);
-		item2.add(deleteButton);
-		list.add(item2);
+		StringBuffer clickEvent = new StringBuffer("loadTaskFormDocument('").append(processName).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(processId).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(taskName).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(formId).append("');return false;");
+		list.add(addButton(iwc, EDIT_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_edit_link", "Edit"), formId + edit_process_mode_button_postfix, clickEvent.toString()));
+		list.add(addButton(iwc, TRY_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_try_link", "Try"), formId + try_button_postfix, null));
+		list.add(addButton(iwc, CODE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_code_link", "Code"), formId + code_button_postfix, null));
+		list.add(addButton(iwc, DELETE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_delete_link", "Delete"), formId + delete_button_postfix, null));
 		
 		body.add(list);
 		
@@ -412,7 +356,7 @@ public class FBHomePage extends FBComponentBase {
 		Image processIcon = new Image();
 		processIcon.setStyleClass(FORM_LIST_ICON_CLASS);
 		processIcon.setSrc(PROCESS_ICON);
-		Text processName = new Text("");
+		Text processName = new Text(CoreConstants.EMPTY);
 		processName.setStyleClass(PROCESS_NAME_CLASS);
 		processName.setStyleClass(FORM_TITLE_CLASS);
 		Link casesButton = new Link(getLocalizedString(iwc, "fb_home_view_cases_link", "View cases"));
@@ -441,45 +385,11 @@ public class FBHomePage extends FBComponentBase {
 		
 		body.add(list);
 		
-		ListItem item = new ListItem();
-		item.setStyleClass(ENTRIES_BUTTON_CLASS);
-		Link entriesButton = new Link(getLocalizedString(iwc, "fb_home_entries_link", "Entries"));
-		entriesButton.setId(formId + entries_button_postfix);
-		entriesButton.setStyleClass(ENTRIES_BUTTON_CLASS);
-		item.add(entriesButton);
-		list.add(item);
-		
-		item = new ListItem();
-		item.setStyleClass(EDIT_BUTTON_CLASS);
-		Link editButton = new Link(getLocalizedString(iwc, "fb_home_edit_link", "Edit"));
-		editButton.setId(formId + edit_button_postfix);
-		editButton.setStyleClass(EDIT_BUTTON_CLASS);
-		item.add(editButton);
-		list.add(item);
-		
-		item = new ListItem();
-		item.setStyleClass(TRY_BUTTON_CLASS);
-		Link tryButton = new Link(getLocalizedString(iwc, "fb_home_try_link", "Try"));
-		tryButton.setStyleClass(TRY_BUTTON_CLASS);
-		tryButton.setId(formId + try_button_postfix);
-		item.add(tryButton);
-		list.add(item);
-		
-		item = new ListItem();
-		item.setStyleClass(CODE_BUTTON_CLASS);
-		Link codeButton = new Link(getLocalizedString(iwc, "fb_home_code_link", "Code"));
-		codeButton.setId(formId + code_button_postfix);
-		codeButton.setStyleClass(CODE_BUTTON_CLASS);
-		item.add(codeButton);
-		list.add(item);
-		
-		item = new ListItem();
-		item.setStyleClass(DELETE_BUTTON_CLASS);
-		Link deleteButton = new Link(getLocalizedString(iwc, "fb_home_delete_link", "Delete"));
-		deleteButton.setId(formId + delete_button_postfix);
-		deleteButton.setStyleClass(DELETE_BUTTON_CLASS);
-		item.add(deleteButton);
-		list.add(item);
+		list.add(addButton(iwc, ENTRIES_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_entries_link", "Entries"), formId + entries_button_postfix, null));
+		list.add(addButton(iwc, EDIT_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_edit_link", "Edit"), formId + edit_button_postfix, null));
+		list.add(addButton(iwc, TRY_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_try_link", "Try"), formId + try_button_postfix, null));
+		list.add(addButton(iwc, CODE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_code_link", "Code"), formId + code_button_postfix, null));
+		list.add(addButton(iwc, DELETE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_delete_link", "Delete"), formId + delete_button_postfix, null));
 		
 		return body;
 	}

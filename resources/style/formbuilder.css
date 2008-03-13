@@ -39,6 +39,9 @@ span.multipleLegend {
 	background-color: #fff;
 	border: 3px solid #a1a1a1;
 }
+.assignVariableBox {
+	float: right;
+}
 .unused {
 	background-color: Grey;
 }
@@ -937,6 +940,19 @@ span.statusMsg {
 .formElement:hover .speedButton {
 	position: absolute;
 	left: 90%;
+	top: 10px;
+	display: inline;
+	cursor: pointer;
+}
+.assignVariableBox {
+	display: none;
+}
+.assignVariableBox a:hover {
+	text-decoration: none;
+}
+.formElement:hover .assignVariableBox {
+	position: absolute;
+	left: 70%;
 	top: 10px;
 	display: inline;
 	cursor: pointer;

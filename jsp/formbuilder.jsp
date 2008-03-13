@@ -12,6 +12,7 @@
 				 javascripturls="/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/mootools/1.11/mootools-all.js,
 				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/codepress/codepress.js,
 				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/mootabs/1.2/mootabs.js,
+				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/smoothbox/smoothbox.js,
 				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/inlineEdit/1.1/inlineEdit.js,
 				 				
 				 				/dwr/engine.js,
@@ -25,6 +26,7 @@
 								/dwr/interface/Workspace.js,
 								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js"
 				stylesheeturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formbuilder.css,
+								/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/smoothbox/smoothbox.css,
 								/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/mootabs/1.2/mootabs.css">
 			<h:form id="workspaceform1" onsubmit="return false;">
 				<f:verbatim>
@@ -46,19 +48,18 @@
 				<t:div id="mainApplication" forceId="true">
 					<fb:workspace id="mainWorkspace"/>
 				</t:div>
-				<t:div id="newFormDialog" forceId="true" styleClass="newFormDialogStyle" style="display: none;">
-					<t:htmlTag styleClass="accordionHeading" value="span">
-						<t:outputText value="New form" styleClass="title"> </t:outputText>
-					</t:htmlTag>
-					<t:inputText id="newFormDialogInput" forceId="true"></t:inputText>
-					<t:commandLink id="createFormBtn" forceId="true"  value="Create"></t:commandLink>
+				<t:div id="newFormDialog" forceId="true" style="display: none;">
+					<t:outputLabel for="formNameInput" value="Form name" />
+					<t:inputText id="formNameInput" onkeyup="modalFormName = this.value;" onblur="modalFormName = this.value;" forceId="true" />
+					<t:htmlTag value="br" />
+					<t:outputLabel for="designerCheckbox2" value="Go to designer" />
+					<t:selectBooleanCheckbox onchange="modalGoToDesigner = this.checked;" id="designerCheckbox2" forceId="true" />
+					<t:htmlTag value="br" />
+					<t:commandLink id="createFormBtn" onclick="createNewForm(modalFormName, modalGoToDesigner);" forceId="true" value="Create" />
 				</t:div>
 				<t:div id="formListDialog" forceId="true" styleClass="formListDialogStyle" style="display: none;">
-					<t:htmlTag styleClass="accordionHeading" value="span">
-						<t:outputText value="Save form" styleClass="title"> </t:outputText>
-					</t:htmlTag>
-					<t:commandLink id="yesSaveFormBtn" forceId="true"  value="Yes"></t:commandLink>
-					<t:commandLink id="noSaveFormBtn" forceId="true"  value="No"></t:commandLink>
+					<t:commandLink id="yesSaveFormBtn" forceId="true" onclick="fbsave();window.location.href = '/workspace/forms/';" value="Yes" />
+					<t:commandLink id="noSaveFormBtn" forceId="true" onclick="window.location.href = '/workspace/forms/';" value="No" />
 				</t:div>
 				<t:div id="selectVariableDialog" forceId="true" styleClass="selectVariableDialogStyle" style="visibility: hidden;">
 					<t:htmlTag styleClass="accordionHeading" value="span">
@@ -73,9 +74,9 @@
 					<t:commandLink id="designButton" styleClass="leftButton" forceId="true" onclick="switchView('design', this.id);return false" value="Design"></t:commandLink>
 					<t:commandLink id="previewButton" styleClass="leftButton" forceId="true" onclick="switchView('preview', this.id);return false" value="Preview"></t:commandLink>
 					<t:commandLink id="sourceCodeButton" styleClass="leftButton" forceId="true" onclick="switchView('source', this.id);return false" value="Source"></t:commandLink>
-					<t:commandLink id="newFormButton" styleClass="rightButton" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}"></t:commandLink>
+					<t:commandLink id="newFormButton" styleClass="rightButton smoothbox" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}"></t:commandLink>
 					<t:commandLink id="saveFormButton" styleClass="rightButton" forceId="true" onclick="fbsave();return false" value="#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"></t:commandLink>
-					<t:commandLink id="homeButton" styleClass="rightButton" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_home']}"></t:commandLink>
+					<t:commandLink id="homeButton" styleClass="rightButton smoothbox" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_home']}"></t:commandLink>
 				</t:div>
 			</h:form>
 		</ws:page>

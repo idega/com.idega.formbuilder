@@ -110,7 +110,7 @@ public class FBDesignView extends FBComponentBase {
 		pageNotice.setId("designViewPageTitle");
 		pageNotice.setStyleClass("inlineEdit");
 		pageNotice.setStyleClass("label");
-		pageNotice.setMarkupAttribute("rel", "FormPage.setTitle");
+		pageNotice.setMarkupAttribute("rel", "FormPage.saveTitle updatePageIconText");
 		
 		FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 		

@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.idega.builder.business.BuilderLogic;
 import com.idega.documentmanager.business.Document;
 import com.idega.documentmanager.business.component.ButtonArea;
@@ -17,15 +14,16 @@ import com.idega.documentmanager.component.beans.LocalizedStringBean;
 import com.idega.formbuilder.presentation.components.FBDesignView;
 import com.idega.formbuilder.presentation.components.FBFormPage;
 import com.idega.formbuilder.util.FBUtil;
+import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
 
 public class FormPage implements Serializable {
 	
-	private static final long serialVersionUID = -1462694198346788168L;
-	
-	private static Log logger = LogFactory.getLog(FormPage.class);
+	private static final long serialVersionUID = 1L;
 	
 	public static final String BEAN_ID = "formPage";
+	
+	private static final String FORM_ELEMENT = "formElement";
 	
 	private Page page;
 	private String id;
@@ -80,7 +78,7 @@ public class FormPage implements Serializable {
 				initializeBeanInstance(page, true);
 			}
 		}
-		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView("formElement"), false);
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView(FORM_ELEMENT), false);
 	}
 	
 	public void updateComponentList(List<String> idSequence) throws Exception {
@@ -110,13 +108,10 @@ public class FormPage implements Serializable {
 		List<Object> properties = new ArrayList<Object>();
 		Document document = formDocument.getDocument();
 		if(document != null) {
-			String temp = id.substring(id.indexOf(":") + 1);
-			int k = temp.indexOf("_", temp.indexOf("_") + 1);
-			String temp2 = temp.substring(0, k);
-			Page page = document.getPage(temp2);
+			Page page = document.getPage(id);
 			if(page != null) {
 				List<String> ids = formDocument.getCommonPagesIdList();
-				int index = ids.indexOf(temp2);
+				int index = ids.indexOf(id);
 				String newPageId = "";
 				if(index < 1) {
 					if(ids.size() > 1) {
@@ -133,7 +128,7 @@ public class FormPage implements Serializable {
 				}
 				properties.add(id);
 				properties.add(newPageId);
-				properties.add(BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView("formElement"), false));
+				properties.add(BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView(FORM_ELEMENT), false));
 				workspace.setView("design");
 			}
 		}
@@ -141,25 +136,15 @@ public class FormPage implements Serializable {
 	}
 	
 	public org.jdom.Document getFormPageInfo(String id) {
-		if(id == null || id.equals("")) {
-			return null;
-		}
-		String realId = null;
-		try {
-			String temp = id.substring(id.indexOf(":") + 1);
-			int k = temp.indexOf("_", temp.indexOf("_") + 1);
-			realId = temp.substring(0, k);
-			this.id = realId;
-		} catch(ArrayIndexOutOfBoundsException e) {
-			logger.error("Could not parse page ID", e);
+		if(id == null || CoreConstants.EMPTY.equals(id)) {
 			return null;
 		}
 		
 		Document document = formDocument.getDocument();
 		if(document != null) {
-			initializeBeanInstance(document.getPage(realId));
+			initializeBeanInstance(document.getPage(id));
 		}
-		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView("formElement"), false);
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView(FORM_ELEMENT), false);
 	}
 	
 	public org.jdom.Document getConfirmationPageInfo() throws Exception {
@@ -171,7 +156,7 @@ public class FormPage implements Serializable {
 				initializeBeanInstance(page, true);
 			}
 		}
-		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView("formElement"), false);
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView(FORM_ELEMENT), false);
 	}
 	
 	public List<org.jdom.Document> createNewPage() throws Exception {
@@ -189,7 +174,7 @@ public class FormPage implements Serializable {
 				special = false;
 				initializeBeanInstance(page);
 				workspace.setView("design");
-				doms.add(BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView("formElement"), false));
+				doms.add(BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView(FORM_ELEMENT), false));
 				doms.add(BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormPage(id, page.getProperties().getLabel().getString(FBUtil.getUILocale())), true));
 			}
 		}

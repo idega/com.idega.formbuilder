@@ -7,6 +7,7 @@ import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.formbuilder.presentation.pages.PreviewPage;
 import com.idega.presentation.Layer;
 import com.idega.presentation.ui.IFrame;
+import com.idega.util.CoreConstants;
 import com.idega.webface.WFUtil;
 
 public class FBViewPanel extends FBComponentBase {
@@ -27,6 +28,8 @@ public class FBViewPanel extends FBComponentBase {
 	private static final String DROPBOX_CLASS = "dropBox";
 	private static final String FORM_ELEMENT_CLASS = "formElement";
 	private static final String SELECTED_FORM_ELEMENT_CLASS = "selectedElement";
+	private static final String FORM_CONTAINER_CLASS = "formContainer";
+	private static final String VIEW_PANEL_ID = "viewPanel";
 
 	public FBViewPanel() {
 		super(null, null);
@@ -38,8 +41,8 @@ public class FBViewPanel extends FBComponentBase {
 	
 	protected void initializeComponent(FacesContext context) {
 		Layer body = new Layer(Layer.DIV);
-		body.setStyleClass("formContainer");
-		body.setId("viewPanel");
+		body.setStyleClass(FORM_CONTAINER_CLASS);
+		body.setId(VIEW_PANEL_ID);
 		
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
 		String view = workspace.getView();
@@ -59,7 +62,7 @@ public class FBViewPanel extends FBComponentBase {
 			designView.setId(DESIGN_VIEW_ID);
 			designView.setStyleClass(DROPBOX_CLASS);
 			designView.setComponentStyleClass(FORM_ELEMENT_CLASS);
-			designView.setSelectedStyleClass(FORM_ELEMENT_CLASS + " " + SELECTED_FORM_ELEMENT_CLASS);
+			designView.setSelectedStyleClass(FORM_ELEMENT_CLASS + CoreConstants.SPACE + SELECTED_FORM_ELEMENT_CLASS);
 			
 			body.add(designView);
 		}
