@@ -30,6 +30,8 @@ public class FBPagesPanel extends FBComponentBase {
 	private static final String DEFAULT_CONFIRM_LOAD_ACTION = "loadConfirmationPage(this.id);";
 	private static final String DEFAULT_THX_LOAD_ACTION = "loadThxPage(this.id);";
 	private static final String SPECIAL = "Special";
+	private static final String SPECIAL_PREVIEW = "preview";
+	private static final String SPECIAL_THANKYOU = "thankyou";
 	private static final String P = "_P";
 	private static final String PAGES_PANEL_TOOLBAR_CLASS = "pagesPanelToolbar";
 	private static final String PAGES_PANEL_HEADER_CLASS = "pagesPanelHeaderText";
@@ -125,13 +127,8 @@ public class FBPagesPanel extends FBComponentBase {
 					if(currentPage != null) {
 						FBFormPage formPage = new FBFormPage();
 						formPage.setId(nextId + P);
-						if(nextId.equals(selectedPageId)) {
-							formPage.setStyleClass(componentStyleClass + CoreConstants.SPACE + selectedStyleClass);
-						} else {
-							formPage.setStyleClass(componentStyleClass);
-						}
+						formPage.setStyleClass(generateClassAttribute(false, nextId.equals(selectedPageId), null));
 						formPage.setOnDelete(DEFAULT_PAGE_REMOVE_ACTION);
-						formPage.setOnLoad(DEFAULT_PAGE_LOAD_ACTION);
 						String label = ((PropertiesPage)currentPage.getProperties()).getLabel().getString(locale);
 						formPage.setLabel(label);
 						formPage.setActive(false);
@@ -160,11 +157,7 @@ public class FBPagesPanel extends FBComponentBase {
 			if(confirmation != null) {
 				FBFormPage formPage = new FBFormPage();
 				formPage.setId(confirmation.getId() + P);
-				if(confirmation.getId().equals(selectedPageId)) {
-					formPage.setStyleClass(componentStyleClass + SPECIAL + CoreConstants.SPACE + selectedStyleClass);
-				} else {
-					formPage.setStyleClass(componentStyleClass + SPECIAL);
-				}
+				formPage.setStyleClass(generateClassAttribute(true, confirmation.getId().equals(selectedPageId), SPECIAL_PREVIEW));	
 				String label = ((PropertiesPage)confirmation.getProperties()).getLabel().getString(locale);
 				formPage.setLabel(label);
 				formPage.setActive(false);
@@ -176,11 +169,7 @@ public class FBPagesPanel extends FBComponentBase {
 		if(thanks != null) {
 			FBFormPage formPage = new FBFormPage();
 			formPage.setId(thanks.getId() + P);
-			if(thanks.getId().equals(selectedPageId)) {
-				formPage.setStyleClass(componentStyleClass + SPECIAL + CoreConstants.SPACE + selectedStyleClass);
-			} else {
-				formPage.setStyleClass(componentStyleClass + SPECIAL);
-			}
+			formPage.setStyleClass(generateClassAttribute(true, thanks.getId().equals(selectedPageId), SPECIAL_THANKYOU));	
 			String label = ((PropertiesPage)thanks.getProperties()).getLabel().getString(locale);
 			formPage.setLabel(label);
 			formPage.setActive(false);
@@ -191,6 +180,22 @@ public class FBPagesPanel extends FBComponentBase {
 		body.add(special);
 		
 		add(body);
+	}
+	
+	private String generateClassAttribute(boolean special, boolean selected, String specialClass) {
+		StringBuilder style = new StringBuilder(componentStyleClass)
+			.append(CoreConstants.SPACE);
+		if(special) {
+			style.append(SPECIAL)
+			.append(CoreConstants.SPACE)
+			.append(specialClass)
+			.append(CoreConstants.SPACE);
+		}
+		if(selected) {
+			style.append(CoreConstants.SPACE)
+			.append(selectedStyleClass);
+		}
+		return style.toString();
 	}
 	
 	public Object saveState(FacesContext context) {

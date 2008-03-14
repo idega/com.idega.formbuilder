@@ -37,7 +37,6 @@
 							}
 							DWREngine.setErrorHandler(errorHanlder);
 						});
-						window.addEvent('domready', initializeInlineEdits);
 						window.addEvent('domready', initializePalette);
 						window.addEvent('domready', initializePagesPanel);
 						window.addEvent('domready', initializeDesignView);
@@ -75,7 +74,7 @@
 					<t:commandLink id="previewButton" styleClass="leftButton" forceId="true" onclick="switchView('preview', this.id);return false" value="Preview"></t:commandLink>
 					<t:commandLink id="sourceCodeButton" styleClass="leftButton" forceId="true" onclick="switchView('source', this.id);return false" value="Source"></t:commandLink>
 					<t:commandLink id="newFormButton" styleClass="rightButton smoothbox" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}"></t:commandLink>
-					<t:commandLink id="saveFormButton" styleClass="rightButton" forceId="true" onclick="fbsave();return false" value="#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"></t:commandLink>
+					<t:commandLink id="saveFormButton" styleClass="rightButton" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"></t:commandLink>
 					<t:commandLink id="homeButton" styleClass="rightButton smoothbox" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_home']}"></t:commandLink>
 				</t:div>
 			</h:form>

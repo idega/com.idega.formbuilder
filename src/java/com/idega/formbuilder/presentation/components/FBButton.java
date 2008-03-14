@@ -89,7 +89,6 @@ public class FBButton extends FBComponentBase {
 				if(area != null) {
 					Button button = (Button) area.getComponent(buttonId);
 					if(button != null) {
-						setId(button.getId());
 						this.label = button.getProperties().getLabel().getString(FBUtil.getUILocale());
 					}
 				}
@@ -114,35 +113,10 @@ public class FBButton extends FBComponentBase {
 		
 		container.add(button);
 		container.add(icon);
+		
+		add(container);
 	}
 	
-//	public void encodeBegin(FacesContext context) throws IOException {
-//		ResponseWriter writer = context.getResponseWriter();
-//		super.encodeBegin(context);
-//		
-//		
-//		
-//		
-////		writer.writeAttribute("id", getId(), "id");
-////		writer.writeAttribute("style", INLINE_STYLE, null);
-////		writer.writeAttribute("onclick", onSelect, "onclick");
-//		
-////		writer.startElement("input", null);
-////		writer.writeAttribute("type", "button", null);
-////		writer.writeAttribute("value", label, null);
-////		writer.writeAttribute("style", INLINE_STYLE, null);
-////		writer.writeAttribute("enabled", "false", null);
-////		writer.endElement("input");
-//		
-//		writer.startElement("img", null);
-//		writer.writeAttribute("class", SPEED_BUTTON_STYLE, null);
-//		writer.writeAttribute("src", DELETE_BUTTON_IMG, null);
-//		writer.writeAttribute("onclick", onDelete, "onclick");
-//		writer.endElement("img");
-//		
-//		writer.endElement(Layer.DIV);
-//	}
-
 	public String getLabel() {
 		return label;
 	}

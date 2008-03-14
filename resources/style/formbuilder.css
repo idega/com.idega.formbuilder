@@ -190,11 +190,12 @@ div.label span, div.label input {
 	width: 250px;
 }
 .fbPropertiesPanelSection {
-	padding: 15px;
+	padding-left: 15px;
 }
 #fbComponentPropertiesPanel {
 	height: 550px;
 	position: relative;
+	padding-top: 15px;
 }
 
 .fbTwoLineProperty label {
@@ -216,11 +217,15 @@ div.label span, div.label input {
 	margin-left: 4px;	
 }
 
+.fbSingleLineProperty table tr {
+	display: inline;
+}
+
 .fbProperty input, .fbProperty textarea {
 	margin: 0;	
 }
 
-.fbProperty label {
+.fbProperty label, .fbPropertiesPanelSection label, #languageChooser label {
 	font-weight: bold;
 	margin-bottom: 3px;
 }
@@ -1521,10 +1526,10 @@ div#sourceViewDiv {
 }
 
 div#sourceViewDiv iframe {
-	height: auto !important;
+	height: 100% !important;
 	display: block !important;
 	position: absolute !important;
-	width: auto !important;
+	width: 100% !important;
 	top: 81px;
 	left: 0;
 	right: 0;

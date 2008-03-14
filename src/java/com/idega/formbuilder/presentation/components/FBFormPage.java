@@ -88,7 +88,6 @@ public class FBFormPage extends FBComponentBase {
 		Layer pageLayer = new Layer(Layer.DIV);
 		pageLayer.setId(getId() + PAGE_ID_POSTFIX);
 		pageLayer.setStyleClass(getStyleClass());
-		pageLayer.setOnClick(onLoad);
 		
 		if(!CoreConstants.EMPTY.equals(onDelete)) {
 			Layer handleLayer = new Layer(Layer.DIV);

@@ -149,7 +149,6 @@ public class FBFormComponent extends FBComponentBase {
 						icon.setSrc(EDIT_ICON);
 							
 						assignVariable.add(icon);
-						System.out.println("Added icon");
 						assignVariable.add(assignLabel);
 						
 						Image deleteButton = new Image();

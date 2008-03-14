@@ -129,7 +129,7 @@ public class FBDesignView extends FBComponentBase {
 			if(page instanceof PageThankYou) {
 				Layer noFormNotice = new Layer(Layer.DIV);
 				noFormNotice.setId("noFormNotice");
-				noFormNotice.setStyleClass("inlineTextarea");
+				noFormNotice.setStyleClass("inlineEdit");
 				noFormNotice.setMarkupAttribute("rel", "FormDocument.setThankYouText");
 				
 				Text thankYouText = new Text(formDocument.getThankYouText());
@@ -187,7 +187,6 @@ public class FBDesignView extends FBComponentBase {
 		
 		if(page != null) {
 			FBButtonArea area = (FBButtonArea) application.createComponent(FBButtonArea.COMPONENT_TYPE);
-			area.setId("pageButtonArea");
 			area.setStyleClass(componentStyleClass);
 			area.setComponentStyleClass("formButton");
 			component.add(area);

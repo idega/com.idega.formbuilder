@@ -389,6 +389,9 @@ public class FormComponent implements Serializable {
 	}
 	
 	public String removeButton(String id) {
+		if(id == null) {
+			return null;
+		}
 		Page page = formPage.getPage();
 		if(page != null) {
 			ButtonArea area = page.getButtonArea();
@@ -434,10 +437,20 @@ public class FormComponent implements Serializable {
 	}
 
 	public String getLabel() {
+		PropertiesComponent properties = null;
 		if(component != null) {
-			return component.getProperties().getLabel().getString(FBUtil.getUILocale());
+			properties = component.getProperties();
 		} else if(selectComponent != null) {
-			return selectComponent.getProperties().getLabel().getString(FBUtil.getUILocale());
+			properties = selectComponent.getProperties();
+		} else if(plainComponent != null) {
+			properties = plainComponent.getProperties();
+		}
+		if(properties != null) {
+			LocalizedStringBean bean = properties.getLabel();
+			if(bean == null) {
+				bean = new LocalizedStringBean();
+			}
+			return bean.getString(FBUtil.getUILocale());
 		}
 		return null;
 	}
@@ -466,7 +479,7 @@ public class FormComponent implements Serializable {
 			plainComponent.getProperties().setLabel(bean);
 		}
 	}
-
+	
 	public boolean getRequired() {
 		if(component != null) {
 			return component.getProperties().isRequired();

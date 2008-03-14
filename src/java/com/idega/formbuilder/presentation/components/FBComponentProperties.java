@@ -127,17 +127,17 @@ public class FBComponentProperties extends FBComponentBase {
 				line.add(labelValue);
 				body.add(line);
 				
-				line = createPropertyContainer(SINGLE_LINE_PROPERTY);
-				
-				String variableName = formComponent.getVariableName();
-				TextInput processVarName = new TextInput("processVarName", variableName == null ? "" : variableName);
-				
-				processVarName.setOnBlur("saveComponentProcessVariableName(this.value);");
-				processVarName.setOnKeyDown("savePropertyOnEnter(this.value,'compProcVar',event);");
-				
-				line.add(new Text("(Temporary) Process variable name:"));
-				line.add(processVarName);
-				body.add(line);
+//				line = createPropertyContainer(SINGLE_LINE_PROPERTY);
+//				
+//				String variableName = formComponent.getVariableName();
+//				TextInput processVarName = new TextInput("processVarName", variableName == null ? "" : variableName);
+//				
+//				processVarName.setOnBlur("saveComponentProcessVariableName(this.value);");
+//				processVarName.setOnKeyDown("savePropertyOnEnter(this.value,'compProcVar',event);");
+//				
+//				line.add(new Text("(Temporary) Process variable name:"));
+//				line.add(processVarName);
+//				body.add(line);
 				
 				layer.add(body);
 			} else {
@@ -184,17 +184,17 @@ public class FBComponentProperties extends FBComponentBase {
 				line.add(helpMsg);
 				body.add(line);
 				
-				line = createPropertyContainer(SINGLE_LINE_PROPERTY);
-				
-				String variableName = formComponent.getVariableName();
-				TextInput processVarName = new TextInput("processVarName", variableName == null ? "" : variableName);
-				
-				processVarName.setOnBlur("saveComponentProcessVariableName(this.value);");
-				processVarName.setOnKeyDown("savePropertyOnEnter(this.value,'compProcVar',event);");
-				
-				line.add(new Text("(Temporary) Process variable name:"));
-				line.add(processVarName);
-				body.add(line);
+//				line = createPropertyContainer(SINGLE_LINE_PROPERTY);
+//				
+//				String variableName = formComponent.getVariableName();
+//				TextInput processVarName = new TextInput("processVarName", variableName == null ? "" : variableName);
+//				
+//				processVarName.setOnBlur("saveComponentProcessVariableName(this.value);");
+//				processVarName.setOnKeyDown("savePropertyOnEnter(this.value,'compProcVar',event);");
+//				
+//				line.add(new Text("(Temporary) Process variable name:"));
+//				line.add(processVarName);
+//				body.add(line);
 				
 				line = createPropertyContainer(SINGLE_LINE_PROPERTY);
 				
@@ -233,14 +233,15 @@ public class FBComponentProperties extends FBComponentBase {
 					
 					Layer line3 = createPropertyContainer(FBComponentProperties.SINGLE_LINE_PROPERTY);
 					
-					line3.add(new Text(getLocalizedString(iwc, "comp_prop_select_source", "Select source")));
+					RadioGroup dataSrcSwitch = new RadioGroup("dataSrcSwitch");
+					
+					line3.add(new Label(new Text(getLocalizedString(iwc, "comp_prop_select_source", "Select source")), dataSrcSwitch));
 					body3.add(line3);
 					
 					line3 = createPropertyContainer(FBComponentProperties.SINGLE_LINE_PROPERTY);
 					
 					boolean localDataSource = formComponent.getDataSrc().equals(DataSourceList.localDataSrc) ? true : false;
 					
-					RadioGroup dataSrcSwitch = new RadioGroup("dataSrcSwitch");
 					dataSrcSwitch.setStyleClass("inlineRadioButton");
 					RadioButton lcl = new RadioButton(DataSourceList.localDataSrc, DataSourceList.localDataSrc);
 					RadioButton ext = new RadioButton(DataSourceList.externalDataSrc, DataSourceList.externalDataSrc);
@@ -261,12 +262,15 @@ public class FBComponentProperties extends FBComponentBase {
 					
 					layer.add(body3);
 					
+					SelectDropdown select = new SelectDropdown();
+					
 					if(localDataSource) {
 						Layer localBody = createPanelSection("localPropertiesPanel");
 						
 						FBSelectValuesList selectValues = new FBSelectValuesList();
 						selectValues.setId("selectOpts");
 						
+						localBody.add(new Label(new Text(getLocalizedString(iwc, "comp_prop_itemslist", "Options")), select));
 						localBody.add(selectValues);
 						
 						layer.add(localBody);
@@ -275,7 +279,7 @@ public class FBComponentProperties extends FBComponentBase {
 						
 						Layer externalline = createPropertyContainer(FBComponentProperties.SINGLE_LINE_PROPERTY);
 						
-						SelectDropdown select = new SelectDropdown();
+						
 						select.setId("propertyExternal");
 						select.setOnChange("saveExternalSrc(this.value);");
 						List<SelectOption> options = ((DataSourceList) WFUtil.getBeanInstance("dataSources")).getExternalDataSources();
@@ -284,7 +288,7 @@ public class FBComponentProperties extends FBComponentBase {
 						}
 						select.setSelectedOption(formComponent.getExternalSrc());
 						
-						externalline.add(new Text(getLocalizedString(iwc, "comp_prop_externaldata", "External data")));
+						externalline.add(new Label(new Text(getLocalizedString(iwc, "comp_prop_externaldata", "External data")), select));
 						externalline.add(select);
 						externalBody.add(externalline);
 						

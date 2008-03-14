@@ -1,13 +1,9 @@
 package com.idega.formbuilder.presentation.components;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.faces.application.Application;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
 
 import com.idega.documentmanager.business.component.Button;
 import com.idega.documentmanager.business.component.ButtonArea;
@@ -27,8 +23,10 @@ public class FBButtonArea extends FBComponentBase {
 	public String componentStyleClass;
 	
 	protected void initializeComponent(FacesContext context) {
-		Application application = context.getApplication();
-		getChildren().clear();
+		Layer container = new Layer(Layer.DIV);
+		container.setId("pageButtonArea");
+		container.setStyleClass(getStyleClass());
+		
 		ButtonArea buttonArea = ((FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID)).getPage().getButtonArea();
 		if(buttonArea != null) {
 			List<String> ids = buttonArea.getContainedComponentsIdList();
@@ -37,41 +35,17 @@ public class FBButtonArea extends FBComponentBase {
 					String nextId = (String) it.next();
 					Button bt = (Button) buttonArea.getComponent(nextId);
 					if(bt != null) {
-						FBButton button = (FBButton) application.createComponent(FBButton.COMPONENT_TYPE);
+						FBButton button = new FBButton();
 						button.setLabel(bt.getProperties().getLabel().getString(FBUtil.getUILocale()));
 						button.setButtonId(nextId);
-//						button.setStyleClass(componentStyleClass);
 						button.setOnSelect(DEFAULT_LOAD_ACTION);
 						button.setOnDelete(DEFAULT_DELETE_ACTION);
-						add(button);
+						container.add(button);
 					}
 				}
 			}
 		}
-	}
-	
-	public void encodeBegin(FacesContext context) throws IOException {
-		ResponseWriter writer = context.getResponseWriter();
-		super.encodeBegin(context);
-		writer.startElement(Layer.DIV, this);
-		writer.writeAttribute("id", getId(), "id");
-		writer.writeAttribute("class", getStyleClass(), "styleClass");
-	}
-	
-	public void encodeEnd(FacesContext context) throws IOException {
-		ResponseWriter writer = context.getResponseWriter();
-		writer.endElement(Layer.DIV);
-		super.encodeEnd(context);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public void encodeChildren(FacesContext context) throws IOException {
-		if (!isRendered()) {
-			return;
-		}
-		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
-			renderChild(context, (UIComponent) it.next());
-		}
+		add(container);
 	}
 	
 	public Object saveState(FacesContext context) {
