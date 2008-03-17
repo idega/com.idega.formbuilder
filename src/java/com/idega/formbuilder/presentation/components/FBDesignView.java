@@ -138,17 +138,14 @@ public class FBDesignView extends FBComponentBase {
 				
 				component.add(noFormNotice);
 			} else if (formDocument.getOverviewPage() != null && page.getId().equals(formDocument.getOverviewPage().getId())) {
-//				Layer thankYouTextBox = new Layer(Layer.DIV);
-//				thankYouTextBox.setId("designViewThankYouBox");
-//				thankYouTextBox.setStyleClass("inlineEdit");
-//				thankYouTextBox.setStyleClass("biglabel");
-//				thankYouTextBox.setMarkupAttribute("rel", "FormDocument.setThankYouText");
-//				
-//				Text thankYouText = new Text(formDocument.getThankYouText());
-//				thankYouText.setId("designViewThankYou");
-//				thankYouTextBox.add(thankYouText);
-//				
-//				component.add(thankYouTextBox);
+				Layer thankYouTextBox = new Layer(Layer.DIV);
+				thankYouTextBox.setId("noFormNotice");
+				
+				Text thankYouText = new Text(getLocalizedString(iwc, "labels_confirmation_page", "This is the confirmation page of the form"));
+				thankYouText.setId("designViewThankYou");
+				thankYouTextBox.add(thankYouText);
+				
+				component.add(thankYouTextBox);
 			} else {
 				List<String> ids = page.getContainedComponentsIdList();
 				if(!hasComponents(ids, page)) {

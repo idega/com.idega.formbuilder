@@ -1348,7 +1348,7 @@ span.fbMenuTabBar {
 	font-weight: bold;
 }
 
-.fbBottomButtonsContainer a {
+.fbBottomButtonsContainer a, div#sourceViewDiv a {
 	padding-top: 30px;
 	margin-top: 7px;
 	font-family: "Lucida Grande", "Lucida Sans", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
@@ -1358,13 +1358,16 @@ span.fbMenuTabBar {
 	margin-right: 13px;
 	width: 24px;
 }
-
-html>body .fbBottomButtonsContainer a {
+div#sourceViewDiv a#saveCodeButton {
+	position: relative;
+	top: -20px;
+}
+html>body .fbBottomButtonsContainer a, html>body div#sourceViewDiv a {
 	min-width: 24px;
 	width: auto;
 }
 
-.fbBottomButtonsContainer a.rightButton {
+.fbBottomButtonsContainer a.rightButton, div#sourceViewDiv a.rightButton {
 	margin-right: 24px;
 	float: right;
 }
@@ -1381,7 +1384,7 @@ html>body .fbBottomButtonsContainer a {
 	background: url(images/wiz_32.png) center top no-repeat;
 }
 
-.fbBottomButtonsContainer a#saveFormButton {
+.fbBottomButtonsContainer a#saveFormButton, div#sourceViewDiv a#saveCodeButton {
 	background: url(images/save_32.png) center top no-repeat;
 }
 
@@ -1534,6 +1537,17 @@ div#sourceViewDiv iframe {
 	left: 0;
 	right: 0;
 	bottom: 0;
+	border: 0 !important;
+}
+div#sourceViewDiv textarea {
+	height: 89% !important;
+	display: block !important;
+	position: absolute !important;
+	width: 100% !important;
+	top: 78px;
+	left: 0;
+	/*right: 0;
+	bottom: 0;*/
 	border: 0 !important;
 }
 

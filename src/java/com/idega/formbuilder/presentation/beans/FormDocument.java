@@ -47,6 +47,7 @@ import com.idega.idegaweb.IWMainApplication;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
 import com.idega.jbpm.def.View;
 import com.idega.presentation.IWContext;
+import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
 
@@ -679,7 +680,7 @@ public class FormDocument implements Serializable {
 	}
 	
 	public void saveSrc(String sourceCode) {
-		if(sourceCode == null)
+		if(sourceCode == null || sourceCode.equals(CoreConstants.EMPTY))
 			return;
 		
 		try {
@@ -696,10 +697,6 @@ public class FormDocument implements Serializable {
 			logger.error("Error when setting form source code", e);
 		}
 	}
-	
-//	public void loadFormProperties(ActionEvent ae) {
-//		initializeBeanInstance(document);
-//	}
 	
 	public Document initializeBeanInstance(Document document) {
 		this.document = document;
