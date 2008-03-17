@@ -98,18 +98,24 @@ public class FBVariableViewer extends FBComponentBase {
 		
 		if(processData.getProcessId() != null) {
 			
-			List<String> transitions = jbpmBusiness.getTaskTransitions(processData.getProcessId(), processData.getTaskName());
-			for(Iterator<String> it2 = transitions.iterator(); it2.hasNext(); ) {
-				String transition = it2.next();
+			try {
 				
-				Text varEntry = new Text(transition);
-				varEntry.setStyleClass(VAR_ENTRY);
-				varEntry.setId(transition + CoreConstants.UNDER + TRANS_POSTFIX);
+				List<String> transitions = jbpmBusiness.getTaskTransitions(processData.getProcessId(), processData.getTaskName());
+				for(Iterator<String> it2 = transitions.iterator(); it2.hasNext(); ) {
+					String transition = it2.next();
+					
+					Text varEntry = new Text(transition);
+					varEntry.setStyleClass(VAR_ENTRY);
+					varEntry.setId(transition + CoreConstants.UNDER + TRANS_POSTFIX);
+					
+					String status = processData.getTransitionStatus(transition).getStatus();
+					varEntry.setStyleClass(status);
+					
+					layer.add(varEntry);
+				}
 				
-				String status = processData.getTransitionStatus(transition).getStatus();
-				varEntry.setStyleClass(status);
-				
-				layer.add(varEntry);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		

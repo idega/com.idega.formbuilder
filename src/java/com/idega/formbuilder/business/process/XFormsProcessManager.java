@@ -10,13 +10,9 @@ import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 
 import com.idega.builder.bean.AdvancedProperty;
 import com.idega.jbpm.IdegaJbpmContext;
-import com.idega.jbpm.data.ActorTaskBind;
 import com.idega.jbpm.def.View;
 import com.idega.jbpm.def.ViewFactory;
 import com.idega.jbpm.def.ViewToTask;
-import com.idega.jbpm.identity.ActorTaskBinder;
-import com.idega.jbpm.presentation.beans.IdentityMgmntBean;
-import com.idega.webface.WFUtil;
 
 public class XFormsProcessManager {
 	
@@ -26,7 +22,6 @@ public class XFormsProcessManager {
 	private static final String JBPM_XFORM_ACTOR_ID = "jbpm_actor_id";
 	
 	private ViewToTask viewToTaskBinder;
-	private ActorTaskBinder actorToTaskBinder;
 	private ViewFactory viewFactory;
 	private IdegaJbpmContext idegaJbpmContext;
 	
@@ -40,6 +35,7 @@ public class XFormsProcessManager {
 
 	public void assignTaskForm(String processId, String taskName, String formId) {
 		
+//		TODO: moe purely bpm related stuff to jbpm module.
 		JbpmContext ctx = getIdegaJbpmContext().createJbpmContext();
 		
 		try {
@@ -67,6 +63,9 @@ public class XFormsProcessManager {
 			View view = getViewToTaskBinder().getView(task.getId());
 			AdvancedProperty taskForm = new AdvancedProperty(JBPM_XFORM_VIEW_NAME, view == null ? "" : view.getViewId());
 			result.add(taskForm);
+			/*
+			 * 
+			 * TODO: adapt this logic to current assignments management 
 			ActorTaskBind atb = getActorToTaskBinder().getActor(task.getId());
 			if(atb != null) {
 				AdvancedProperty taskActor = new AdvancedProperty(JBPM_XFORM_ACTOR_ID, atb == null ? "" : atb.getActorId());
@@ -84,6 +83,7 @@ public class XFormsProcessManager {
 //					abm.setActorId(actors);
 //				}
 			}
+			*/
 			return result;
 			
 		} finally {
@@ -98,14 +98,6 @@ public class XFormsProcessManager {
 
 	public void setViewToTaskBinder(ViewToTask viewToTaskBinder) {
 		this.viewToTaskBinder = viewToTaskBinder;
-	}
-
-	public ActorTaskBinder getActorToTaskBinder() {
-		return actorToTaskBinder;
-	}
-
-	public void setActorToTaskBinder(ActorTaskBinder actorToTaskBinder) {
-		this.actorToTaskBinder = actorToTaskBinder;
 	}
 
 	public IdegaJbpmContext getIdegaJbpmContext() {
