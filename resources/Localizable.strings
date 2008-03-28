@@ -11,6 +11,7 @@ toolbar_new=New form
 toolbar_save=Save form
 toolbar_home=Form list
 
+fbc_identifier_number=Identifier
 fbc_text=Text Field
 fbc_textarea=Textarea
 fbc_rich_textarea=Rich textarea
@@ -30,6 +31,8 @@ fbc_header_text=Header
 fbc_separator=Separator
 fbc_text-loginSession.user.name=User name
 
+
+fbc_identifier_number_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield.png
 fbc_text_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield.png
 fbc_textarea_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/font.png
 fbc_rich_textarea_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/font.png
