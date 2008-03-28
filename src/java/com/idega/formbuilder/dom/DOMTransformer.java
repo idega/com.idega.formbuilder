@@ -9,6 +9,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.idega.util.xml.XPathUtil;
+
 public class DOMTransformer {
 	
 	public static void renderNode(Node node, UIComponent component, ResponseWriter writer) throws IOException {
@@ -17,8 +19,9 @@ public class DOMTransformer {
 		}
 		String nodeName = node.getNodeName();
 		writer.startElement(node.getNodeName(), component);
-		if(nodeName.equalsIgnoreCase("input") || nodeName.equalsIgnoreCase("textarea") || nodeName.equalsIgnoreCase("select")) {
-			writer.writeAttribute("disabled", "true", null);
+		if(nodeName.equalsIgnoreCase("input") || nodeName.equalsIgnoreCase("textarea") || nodeName.equalsIgnoreCase("select")) {  
+		    	if (node.getAttributes().getNamedItem("disabled")==null)  
+		    	    		writer.writeAttribute("disabled", "disabled", null);
 		}
 		Node attr = null;
 		if(node.hasAttributes()) {
