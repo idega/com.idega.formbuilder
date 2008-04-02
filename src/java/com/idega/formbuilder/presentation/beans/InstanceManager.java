@@ -6,6 +6,7 @@ import javax.faces.context.FacesContext;
 
 import com.idega.documentmanager.business.DocumentManager;
 import com.idega.documentmanager.business.DocumentManagerFactory;
+import com.idega.idegaweb.IWMainApplication;
 import com.idega.webface.WFUtil;
 
 public class InstanceManager implements Serializable {
@@ -21,7 +22,7 @@ public class InstanceManager implements Serializable {
 		
 		if(documentManagerInstance == null) {
 			
-			DocumentManager documentManager = getDocumentManagerFactory().newDocumentManager(FacesContext.getCurrentInstance());
+			DocumentManager documentManager = getDocumentManagerFactory().newDocumentManager(IWMainApplication.getIWMainApplication(FacesContext.getCurrentInstance()));
 			documentManagerInstance = documentManager;
 		}
 		return documentManagerInstance;
