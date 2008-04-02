@@ -668,15 +668,17 @@ public class FormDocument implements Serializable {
 			if(page == null) {
 				throw new Exception("Confirmation page does not exist in the document");
 			}
+			setOverviewPage(page);
 		} else {
 			page = document.getConfirmationPage();
 			if(page != null) {
+				setOverviewPage(null);
 				page.remove();
 			} else {
 				throw new Exception("Confirmation page does not exist in the document");
 			}
 		}
-		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormPage(page.getId(), page.getProperties().getLabel().getString(new Locale("en")), true), true);
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormPage(page.getId(), page.getProperties().getLabel().getString(new Locale("en")), true, "formPageIcon Special preview"), true);
 	}
 	
 	public void saveSrc(String sourceCode) {
@@ -717,6 +719,9 @@ public class FormDocument implements Serializable {
 	}
 	
 	public String getFormTitle() {
+		if(document == null) {
+			return null;
+		}
 		return document.getFormTitle().getString(FBUtil.getUILocale());
 	}
 	

@@ -22,7 +22,16 @@ public class Workspace implements Serializable {
 	private String view;
 	private Locale locale;
 	private boolean processMode;
+	private String activeHomepageTab;
 	
+	public String getActiveHomepageTab() {
+		return activeHomepageTab;
+	}
+
+	public void setActiveHomepageTab(String activeHomepageTab) {
+		this.activeHomepageTab = activeHomepageTab;
+	}
+
 	public boolean isProcessMode() {
 		return processMode;
 	}

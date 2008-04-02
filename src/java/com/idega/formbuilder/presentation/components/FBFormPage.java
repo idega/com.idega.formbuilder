@@ -68,8 +68,8 @@ public class FBFormPage extends FBComponentBase {
 		setRendererType(null);
 	}
 	
-	public FBFormPage(String id, String label, boolean special) {
-		this(id, label);
+	public FBFormPage(String id, String label, boolean special, String styleClass) {
+		this(id, label, styleClass);
 		if(special) {
 			this.onDelete = CoreConstants.EMPTY;
 		}
@@ -79,6 +79,15 @@ public class FBFormPage extends FBComponentBase {
 		setRendererType(null);
 		setId(id);
 		setStyleClass(DEFAULT_STYLE_CLASS);
+		this.label = label;
+		this.onDelete = DEFAULT_DELETE_ACTION;
+		this.onLoad = DEFAULT_LOAD_ACTION;
+	}
+	
+	public FBFormPage(String id, String label, String styleClass) {
+		setRendererType(null);
+		setId(id);
+		setStyleClass(styleClass);
 		this.label = label;
 		this.onDelete = DEFAULT_DELETE_ACTION;
 		this.onLoad = DEFAULT_LOAD_ACTION;

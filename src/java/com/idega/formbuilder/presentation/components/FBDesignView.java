@@ -91,6 +91,17 @@ public class FBDesignView extends FBComponentBase {
 		formHeadingHeader.setId("formHeadingHeader");
 		formHeading.add(formHeadingHeader);
 		
+		Layer messageBox = new Layer(Layer.DIV);
+		messageBox.setId("messageDialog");
+		messageBox.setStyleAttribute("display: none;");
+		
+		Text messageBoxContent = new Text();
+		messageBoxContent.setStyleClass("messageBoxContent");
+		messageBoxContent.setText("No content");
+		
+		messageBox.add(messageBoxContent);
+//		formHeading.add(messageBox);
+		
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
 		Locale locale = workspace.getLocale();
 		

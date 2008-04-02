@@ -87,6 +87,11 @@ var FBDraggable = Element.extend({
 							callback: function(resultDOM) {
 								if(resultDOM != null) {
 									currentElement = resultDOM;
+								} else {
+									var messagePanel = $('messageDialog');
+									if(messagePanel != null) {
+										messagePanel.removeProperty('style');
+									}
 								}
 							}
 						});
@@ -178,48 +183,37 @@ var FBDraggable = Element.extend({
 				}
 			},
 			onComplete: function(event) {
-				if(!event) event = window.event;
-				var now = {'x': this.element.getLeft(), 'y': this.element.getTop()};
 				this.element.remove();
 				this.element = this.elementOrg;
 				this.elementOrg = null;
 				if(type == 'fbc') {
-					$('dropBoxinner').setStyle('background-color', '#FFFFFF');
-					if(draggingComponent == true) {
-						if(insideDropzone == false) {
-							var currentId = currentElement.documentElement.getAttribute('id');
-							this.element.removeEvents('mousemove');
-							FormComponent.removeComponent(currentId);
-							draggingComponent = false;
-						}
+					$('dropBoxinner').removeProperty('style');
+					if(insideDropzone == false && currentElement != null && draggingComponent == true) {
+						var currentId = currentElement.documentElement.getAttribute('id');
+						this.element.removeEvents('mousemove');
+						FormComponent.removeComponent(currentId);
+						draggingComponent = false;
 					}
 				} else if(type == 'fbb') {
-					$('pageButtonArea').setStyle('background-color', '#FFFFFF');
-					if(draggingButton == true) {
-						if(insideDropzone == false) {
-							FormComponent.removeButton(CURRENT_BUTTON.documentElement.getAttribute('id'));
-							draggingButton = false;
-						}
+					$('pageButtonArea').removeProperty('style');
+					if(draggingButton == true && insideDropzone == false && CURRENT_BUTTON != null) {
+						FormComponent.removeButton(CURRENT_BUTTON.documentElement.getAttribute('id'));
+						draggingButton = false;
 					}
-					
 				} else if(type == 'fbcp') {
-					$('dropBoxinner').setStyle('background-color', '#FFFFFF');
-					if(draggingComponent == true) {
-						if(insideDropzone == false) {
-							var currentId = currentElement.documentElement.getAttribute('id');
-							this.element.removeEvents('mousemove');
-							FormComponent.removeComponent(currentId);
-						}
+					$('dropBoxinner').removeProperty('style');
+					if(insideDropzone == false && currentElement != null && draggingComponent == true) {
+						var currentId = currentElement.documentElement.getAttribute('id');
+						this.element.removeEvents('mousemove');
+						FormComponent.removeComponent(currentId);
+						draggingComponent = false;
 					}
 				} else if(type == 'fbbp') {
-					$('pageButtonArea').setStyle('background-color', '#FFFFFF');
-					if(draggingButton == true) {
-						if(insideDropzone == false) {
-							FormComponent.removeButton(CURRENT_BUTTON.documentElement.getAttribute('id'));
-							draggingButton = false;
-						}
+					$('pageButtonArea').removeProperty('style');
+					if(draggingButton == true && insideDropzone == false && CURRENT_BUTTON != null) {
+						FormComponent.removeButton(CURRENT_BUTTON.documentElement.getAttribute('id'));
+						draggingButton = false;
 					}
-					
 				}
 			}
 		});
@@ -229,7 +223,7 @@ var FBDraggable = Element.extend({
 		return this;
 	}
 });
-function initializeDesignView() {
+function initializeDesignView(initializeInline) {
 	FormComponent.getId(markSelectedComponent);
 	var myComponentSort = new Sortables($('dropBoxinner'), {
 		onComplete: function(el){
@@ -290,8 +284,10 @@ function initializeDesignView() {
 				if(draggingComponent == true) {
 					draggingComponent = false;
 					if(el.hasClass('fbc')) {
+						console.log('dropping component');
 						if(currentElement != null) {
 							if(currentElement.documentElement) {
+								console.log('component is available');
 								var currentId = currentElement.documentElement.getAttribute('id');
 							    if(CURRENT_ELEMENT_UNDER != null) {
 									FormComponent.moveComponent(currentId, CURRENT_ELEMENT_UNDER, {
@@ -307,7 +303,7 @@ function initializeDesignView() {
 												insertNodesToContainerBefore(currentElement, dropBoxinner, node);
 												currentElement = null;
 											}
-											initializeDesignView();
+											initializeDesignView(false);
 										}
 									});
 							    }
@@ -333,7 +329,9 @@ function initializeDesignView() {
 	$$('.fbbp').each(function(el){
 		el.draggableTag(pageButtonArea, null, 'fbbp');
 	});
-	initializeInlineEdits();
+	if(initializeInline == true) {
+		initializeInlineEdits();
+	}
 }
 function createNewForm() {
 	FormDocument.createFormDocument(modalFormName, {
@@ -569,7 +567,7 @@ function showVariableList(containerId, positionLeft, positionTop, list, transiti
 										insertNodesToContainerBefore(currentElement, $('dropBoxinner'), node);
 										currentElement = null;
 									}
-									initializeDesignView();
+									initializeDesignView(false);
 								}
 							});
 							dwr.engine.endBatch();
@@ -755,6 +753,7 @@ function saveHasPreview(event) {
 				if(checked == true) {
 					$('previewPageButton').removeClass('addPreviewPageBtn').addClass('removePreviewPageBtn');
 					insertNodesToContainerBefore(resultDOM, $('pagesPanelSpecial'), $('pagesPanelSpecial').childNodes[0]);
+					initialiazePreviewPage();
 				} else {
 					$('previewPageButton').removeClass('removePreviewPageBtn').addClass('addPreviewPageBtn');
 					$('pagesPanelSpecial').getFirst().remove();
@@ -804,7 +803,7 @@ function initializePagesPanel() {
 		handles: '.fbPageHandler'
 	});
 	FormPage.getId(markSelectedPage);
-	$ES("div.formPageIcon").each(function(item) {
+	$('pagesPanel').getElements("div.formPageIcon").each(function(item) {
 		item.addEvent('click', function(e){
 			var targetId = getPageID(e);
 			if(draggingPage == false) {
@@ -832,6 +831,9 @@ function initializePagesPanel() {
 			});
 		});
 	}
+	initialiazePreviewPage();
+}
+function initialiazePreviewPage() {
 	var previewp = $E('div.preview');
 	if(previewp != null) {
 		previewp.addEvent('click', function(e){
@@ -864,7 +866,7 @@ function reloadDesignView(resultDOM, targetId) {
 				node.remove();
 			}
 			insertNodesToContainer(resultDOM, parentNode);
-			initializeDesignView();
+			initializeDesignView(true);
 		}
 		closeLoadingMessage();
 	}
@@ -1162,6 +1164,7 @@ function initializeInlineEdits() {
 	$$('div.inlineEdit').each(
 		function(element) {
 			prepareInlineEdit(element);
+			console.log('inline edit smth');
 			$$('div.inlineEdit span').addEvent('click',function(){
 		    	this.inlineEdit({
 		    		onComplete:function(el,oldContent,newContent){
@@ -1185,13 +1188,16 @@ function initializeInlineEdits() {
     );
 }
 function updatePageIconText(result) {
-	var pageIcon = $('pagesPanel').getElement('div.selectedElement');
-	if(pageIcon != null) {
-		var last = pageIcon.getLast();
-		if(last != null) {
-			var span = last.getPrevious();
-			if(span != null) {
-				span.setText(result);
+	var pagesPanel = $('pagesPanelMain');
+	if(pagesPanel != null) {
+		var pageIcon = pagesPanel.getElement('div.selectedElement');
+		if(pageIcon != null) {
+			var last = pageIcon.getLast();
+			if(last != null) {
+				var span = last.getPrevious();
+				if(span != null) {
+					span.setText(result);
+				}
 			}
 		}
 	}
@@ -1326,7 +1332,7 @@ function createNewPage() {
 				var node = parentNode.getLast();
 				node.remove();
 				insertNodesToContainer(resultDOMs[0], parentNode);
-				initializeDesignView();
+				initializeDesignView(true);
 				initializePagesPanel();
 			}
 		}
@@ -1360,7 +1366,7 @@ function deletePage(event) {
 							var node = parentNode.getLast();
 							node.remove();
 							insertNodesToContainer(designViewDOM, parentNode);
-							initializeDesignView();
+							initializeDesignView(true);
 						}
 						closeLoadingMessage();
 					}
@@ -1369,6 +1375,9 @@ function deletePage(event) {
 		}
 	}
 	initializePagesPanel();
+}
+function initializeDesign() {
+	initializeDesignView(true);
 }
 function removeComponent(parameter) {
 	var node = parameter.parentNode;
@@ -1390,7 +1399,7 @@ function removeComponent(parameter) {
 										var node2 = parentNode.getLast();
 										node2.remove();
 										insertNodesToContainer(resultDOM, parentNode);
-										initializeDesignView();
+										initializeDesignView(true);
 										initializePagesPanel();
 									}
 								}

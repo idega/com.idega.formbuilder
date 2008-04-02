@@ -214,6 +214,9 @@ public class FormPage implements Serializable {
 	}
 
 	public String getTitle() {
+		if(page == null) {
+			return "";
+		}
 		return page.getProperties().getLabel().getString(FBUtil.getUILocale());
 	}
 

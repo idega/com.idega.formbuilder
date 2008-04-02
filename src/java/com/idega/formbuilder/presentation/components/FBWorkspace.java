@@ -59,11 +59,14 @@ public class FBWorkspace extends FBComponentBase {
 				session_map.remove(FormDocument.APP_ID_PARAM);
 				session_map.remove(FormDocument.APP_FORM_NAME_PARAM);
 			} catch (Exception e) {
-				// TODO: use logger and redirect back to applications list if
-				// possible
-				e.printStackTrace();
+				iwc.sendRedirect("/workspace/forms");
+				return;
 			}
 			
+		}
+		if(fd.getDocument() == null) {
+			iwc.sendRedirect("/workspace/forms");
+			return;
 		}
 		ProcessData pd = fd.getProcessData();
 		if(pd != null) {

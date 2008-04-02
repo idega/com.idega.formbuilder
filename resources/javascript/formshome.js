@@ -4,7 +4,7 @@ var FORMSHOME_PATH = "/workspace/forms/";
 var TRANSITION_DURATION = 500;
 
 var modalFormName = null;
-var modalGoToDesigner = false;
+var modalGoToDesigner = true;
 var modalSelectedForm = null;
 var SELECTED_PROCESS = null;
 var SELECTED_TASK = null;
@@ -68,7 +68,14 @@ function attachTaskForm() {
 function registerFormsHomeActions() {
 	var widthForTabs = Math.round(window.getWidth() * 0.93);
 	var heightForTabs = Math.round(window.getHeight() * 0.7);
-	var tabs = new mootabs('formListContainer', {width: widthForTabs + 'px', height: (heightForTabs - 50) + 'px', changeTransition: 'none'});
+	Workspace.getActiveHomepageTab({
+		callback: function(result) {
+			if(result == null) {
+				result = 'first';
+			}
+			var tabs = new mootabs('formListContainer', {width: widthForTabs + 'px', height: (heightForTabs - 50) + 'px', changeTransition: 'none', activateOnLoad:	result});
+		}
+	});
 	var newFormButton = $('newFormButton');
 	if(newFormButton != null) {
 		newFormButton.setProperty('Title', 'Create new form');
@@ -126,6 +133,12 @@ function registerFormsHomeActions() {
 					}
 				}
 			});
+		});
+	});
+	$ES("li.stateFullTab").each(function(item) {
+		item.addEvent('click', function(e){
+			var title = e.target.getProperty('title');
+			Workspace.setActiveHomepageTab(title);
 		});
 	});
 	$ES('div.processItem').each(function(item) {

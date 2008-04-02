@@ -328,6 +328,9 @@ public class FormComponent implements Serializable {
 		}
 		
 		Page page = formPage.getPage();
+		if(formPage.isSpecial()) {
+			return null;
+		}
 		if(page != null) {
 			String before = null;
 			ButtonArea area = page.getButtonArea();
@@ -336,7 +339,9 @@ public class FormComponent implements Serializable {
 			}
 			Component component = page.addComponent(type, before);
 			if(component != null) {
-				return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component.getId()), true);
+				Document doc = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component.getId()), true);
+				System.out.println("Created component " + doc.getRootElement().getChildren().size());
+				return doc;
 			}
 		}
 		return null;

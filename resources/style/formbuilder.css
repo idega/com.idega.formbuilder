@@ -866,7 +866,7 @@ span.statusMsg {
 	min-height: 35px;
 	margin-right: 0px;
 	margin-left: 0px;
-	padding: 10px 20px;
+	padding: 10px 30px;
 	position: relative;
 }
 
@@ -902,6 +902,21 @@ span.statusMsg {
 	background: url(images/move_16.png) no-repeat;
 	display: none;
 	z-index: 100;
+}
+#messageDialog {
+	position: relative;
+	top: 0px;
+	left: 0px;
+	width: 180px;
+	height: 40px;
+	background-color: Grey;
+	text-align: center;
+	padding-top: 15px;
+	display: inline;
+}
+#messageDialog span {
+	font-family:"Trebuchet MS",Arial,Helvetica,sans-serif;
+	font-size:12px;
 }
 
 .formPageIcon:hover .fbPageHandler {

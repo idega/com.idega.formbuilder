@@ -25,7 +25,6 @@ public class FBPagesPanel extends FBComponentBase {
 	
 	public static final String COMPONENT_TYPE = "PagesPanel";
 	
-	private static final String DEFAULT_PAGE_LOAD_ACTION = "loadPage(event);";
 	private static final String DEFAULT_PAGE_REMOVE_ACTION = "deletePage(event);";
 	private static final String DEFAULT_CONFIRM_LOAD_ACTION = "loadConfirmationPage(this.id);";
 	private static final String DEFAULT_THX_LOAD_ACTION = "loadThxPage(this.id);";

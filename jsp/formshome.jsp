@@ -10,6 +10,7 @@
 		<ws:page 	id="formbuilder" 
 					showFunctionMenu="false"
 					javascripturls="/dwr/interface/FormDocument.js,
+									/dwr/interface/Workspace.js,
 									/dwr/engine.js,
 												
 									/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formshome.js"
@@ -32,7 +33,7 @@
 					<t:inputText id="taskFormNameInput" onkeyup="modalFormName = this.value;" onblur="modalFormName = this.value;" forceId="true" />
 					<t:htmlTag value="br" />
 					<t:outputLabel for="designerCheckbox" value="Go to designer" />
-					<t:selectBooleanCheckbox onchange="modalGoToDesigner = this.checked;" id="designerCheckbox" forceId="true" />
+					<t:selectBooleanCheckbox onchange="modalGoToDesigner = this.checked;" id="designerCheckbox" forceId="true" value="true" />
 					<t:htmlTag value="br" />
 					<t:commandLink id="createTaskFormBtn" onclick="createNewTaskForm(modalFormName, modalGoToDesigner);" forceId="true" value="Create" />
 				</t:div>
@@ -41,7 +42,7 @@
 					<t:selectOneMenu id="formSelector" onchange="var selFormVal = this.options[this.selectedIndex].getProperty('value');if(selFormVal != ''){modalSelectedForm = selFormVal;}" forceId="true" />
 					<t:htmlTag value="br" />
 					<t:outputLabel for="designerCheckbox" value="Go to designer" />
-					<t:selectBooleanCheckbox onchange="modalGoToDesigner = this.checked;" id="designerCheckbox" forceId="true" />
+					<t:selectBooleanCheckbox onchange="modalGoToDesigner = this.checked;" id="designerCheckbox" forceId="true" value="true" />
 					<t:htmlTag value="br" />
 					<t:commandLink id="attachTaskFormBtn" onclick="attachTaskForm(modalFormName, modalGoToDesigner);" forceId="true" value="Attach" />
 				</t:div>
@@ -50,7 +51,7 @@
 					<t:inputText id="formNameInput" onkeyup="modalFormName = this.value;" onblur="modalFormName = this.value;" forceId="true" />
 					<t:htmlTag value="br" />
 					<t:outputLabel for="designerCheckbox2" value="Go to designer" />
-					<t:selectBooleanCheckbox onchange="modalGoToDesigner = this.checked;" id="designerCheckbox2" forceId="true" />
+					<t:selectBooleanCheckbox onchange="modalGoToDesigner = this.checked;" id="designerCheckbox2" forceId="true" value="true" />
 					<t:htmlTag value="br" />
 					<t:commandLink id="createFormBtn" onclick="createNewForm(modalFormName, modalGoToDesigner);" forceId="true" value="Create" />
 				</t:div>

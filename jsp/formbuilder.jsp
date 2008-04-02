@@ -42,7 +42,7 @@
 						});
 						window.addEvent('domready', initializePalette);
 						window.addEvent('domready', initializePagesPanel);
-						window.addEvent('domready', initializeDesignView);
+						window.addEvent('domready', initializeDesign);
 						window.addEvent('domready', registerFormbuilderActions);
 						window.addEvent('domready', initializeVariableViewer);
                 	</script>
