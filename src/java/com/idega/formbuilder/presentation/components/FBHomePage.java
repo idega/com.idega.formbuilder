@@ -136,8 +136,8 @@ public class FBHomePage extends FBComponentBase {
 		Lists tabsList = new Lists();
 		tabsList.setStyleClass(MOOTABS_TITLE_CLASS);
 		
-		tabsList.add(addTab(iwc, PROCESS_TAB_TITLE, PROCESS_ICON, getLocalizedString(iwc, "fb_home_proc_tab", "Processes")));
 		tabsList.add(addTab(iwc, STANDALONE_TAB_TITLE, STANDALONE_FORM_ICON, getLocalizedString(iwc, "fb_home_proc_alone", "Standalone")));
+		tabsList.add(addTab(iwc, PROCESS_TAB_TITLE, PROCESS_ICON, getLocalizedString(iwc, "fb_home_proc_tab", "Processes")));
 		
 		listContainer.add(tabsList);
 		

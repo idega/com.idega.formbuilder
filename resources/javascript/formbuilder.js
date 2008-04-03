@@ -1133,7 +1133,15 @@ function fbsave() {
 	var node = $('sourceViewDiv');
 	if(node != null) {
 		showLoadingMessage('Saving');
-		FormDocument.saveSrc(sourceTextarea.getCode(), closeLoadingMessage);
+		try {
+			if(sourceTextarea != null) {
+				FormDocument.saveSrc(sourceTextarea.getCode(), closeLoadingMessage);
+			} else {
+				FormDocument.saveSrc(node.getLast().getProperty('value'), closeLoadingMessage);
+			}
+		} catch(e) {
+			FormDocument.saveSrc(node.getLast().getProperty('value'), closeLoadingMessage);
+		}
 	} else {
 		showLoadingMessage('Saving document...');
 		FormDocument.save(closeLoadingMessage);

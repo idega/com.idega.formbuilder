@@ -38,8 +38,8 @@ public class FBSourceView extends FBComponentBase {
 //		
 //		content.add(PresentationUtil.getJavaScriptSourceLines(scriptFiles));
 		
-		Script script = new Script();
-		script.addScriptLine("CodePress.run();");
+//		Script script = new Script();
+//		script.addScriptLine("CodePress.run();");
 		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
 		
 		Layer formHeading = new Layer(Layer.DIV);
@@ -56,17 +56,17 @@ public class FBSourceView extends FBComponentBase {
 		saveLink.setId("saveCodeButton");
 		saveLink.setStyleClass("rightButton");
 		
-		formHeading.add(saveLink);
+//		formHeading.add(saveLink);
 		
 		TextArea textarea = new TextArea();
 		textarea.setRendered(true);
 		textarea.setValue(formDocument.getSourceCode());
 		textarea.setId(SOURCE_BOX_ID);
-		textarea.setStyleClass(CODEPRESS_BOX_CLASS);
+//		textarea.setStyleClass(CODEPRESS_BOX_CLASS);
 		
 		content.add(formHeading);
 		content.add(textarea);
-		content.add(script);
+//		content.add(script);
 		
 		add(content);
 	}
