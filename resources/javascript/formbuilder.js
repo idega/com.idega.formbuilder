@@ -284,10 +284,8 @@ function initializeDesignView(initializeInline) {
 				if(draggingComponent == true) {
 					draggingComponent = false;
 					if(el.hasClass('fbc')) {
-						console.log('dropping component');
 						if(currentElement != null) {
 							if(currentElement.documentElement) {
-								console.log('component is available');
 								var currentId = currentElement.documentElement.getAttribute('id');
 							    if(CURRENT_ELEMENT_UNDER != null) {
 									FormComponent.moveComponent(currentId, CURRENT_ELEMENT_UNDER, {
@@ -763,9 +761,9 @@ function saveHasPreview(event) {
 	});
 }
 function markSelectedPage(parameter) {
-	if(CURRENT_PAGE_ID != null) {
-		PREVIOUS_PAGE_ID = CURRENT_PAGE_ID;
-		$(PREVIOUS_PAGE_ID).removeClass('selectedElement');
+	var oldPageIcon = $('pagesPanelMain').getElement('div.selectedElement');
+	if(oldPageIcon != null) {
+		oldPageIcon.removeClass('selectedElement');
 	}
 	var pageNode = $(parameter);
 	if(pageNode == null) {
@@ -782,8 +780,8 @@ function placePageTitle(parameter) {
 	if(parameter != null) {
 		var node = $(parameter.pageId + '_P_page');
 		if(node != null) {
-			var parent = node.childNodes[1];
-			var textNode = parent.childNodes[0];
+			var parent = node.getFirst().getNext();
+			var textNode = parent.getFirst();
 			var newTextNode = document.createTextNode(parameter.pageTitle);
 			parent.replaceChild(newTextNode, textNode);
 		}
@@ -805,18 +803,7 @@ function initializePagesPanel() {
 	FormPage.getId(markSelectedPage);
 	$('pagesPanel').getElements("div.formPageIcon").each(function(item) {
 		item.addEvent('click', function(e){
-			var targetId = getPageID(e);
-			if(draggingPage == false) {
-				if(targetId.indexOf('_P_page') != -1) {
-					var actualId = targetId.substring(0, targetId.indexOf('_P_page'));
-					showLoadingMessage('Loading section...');
-					FormPage.getFormPageInfo(actualId, {
-						callback: function(resultDOM) {
-							reloadDesignView(resultDOM, targetId);
-						}
-					});
-				}
-			}
+			initializeGeneralPage(e);
 		});
 	});
 	var thankyoupage = $E('div.thankyou');
@@ -833,6 +820,18 @@ function initializePagesPanel() {
 	}
 	initialiazePreviewPage();
 }
+function initializeGeneralPage(element) {
+	var targetId = getPageID(element);
+	if(draggingPage == false && targetId.indexOf('_P_page') != -1) {
+		var actualId = targetId.substring(0, targetId.indexOf('_P_page'));
+		showLoadingMessage('Loading section...');
+		FormPage.getFormPageInfo(actualId, {
+			callback: function(resultDOM) {
+				reloadDesignView(resultDOM, targetId);
+			}
+		});
+	}
+}
 function initialiazePreviewPage() {
 	var previewp = $E('div.preview');
 	if(previewp != null) {
@@ -847,8 +846,8 @@ function initialiazePreviewPage() {
 		});
 	}
 }
-function getPageID(e) {
-	var target = e.target;
+function getPageID(event) {
+	var target = event.target;
 	if(target.hasClass('formPageIcon')) {
 		return target.getProperty('id');
 	} else {
@@ -881,17 +880,15 @@ function markSelectedComponent(parameter) {
 }
 function loadComponentInfo(component) {
 	if(component != null) {
-		if(component.id) {
-			if(pressedComponentDelete == false && draggingComponent == false) {
-				FormComponent.getFormComponentInfo(component.id, {
-					callback: function(resultDOM) {
-						placeComponentInfo(resultDOM, 1, component.id);
-					}
-				});
-			}
-			pressedComponentDelete = false;
-			draggingComponent = false;
+		if(pressedComponentDelete == false && draggingComponent == false) {
+			FormComponent.getFormComponentInfo(component.id, {
+				callback: function(resultDOM) {
+					placeComponentInfo(resultDOM, 1, component.id);
+				}
+			});
 		}
+		pressedComponentDelete = false;
+		draggingComponent = false;
 	}
 }
 function placeComponentInfo(resultDOM, tabIndex, component) {
@@ -947,9 +944,9 @@ function replaceChangedComponent(resultDOM) {
 }
 function replaceChangedButton(parameter) {
 	if(parameter != null) {
-		var button = $(parameter.id).childNodes[0];
+		var button = parameter.getFirst();
 		if(button != null) {
-			button.value = parameter.label;
+			button.setProperty('value', parameter.label);
 		}
 	}
 }
@@ -958,9 +955,10 @@ function saveButtonLabel(value) {
 		FormComponent.saveComponentLabel(value, {
 			callback: function(resultDOM) {
 				var btn = $(CURRENT_ELEMENT);
-				if(btn != null)
+				if(btn != null) {
 					var nodes = btn.getChildren();
-				nodes[0].value = value;
+					nodes[0].setProperty('value', value);
+				}
 			}
 		});
 	}
@@ -1014,14 +1012,14 @@ function saveHelpMessage(parameter) {
 }
 function saveLabel(parameter) {
 	var index = parameter.id.split('_')[1];
-	var value = parameter.value;
+	var value = parameter.getProperty('value');
 	if(value.length != 0) {
 		FormComponent.saveSelectOptionLabel(index,value,replaceChangedComponent);
 	}
 }
 function saveValue(parameter) {
 	var index = parameter.id.split('_')[1];
-	var value = parameter.value;
+	var value = parameter.getProperty('value');
 	if(value.length != 0) {
 		FormComponent.saveSelectOptionValue(index,value,replaceChangedComponent);
 	}
@@ -1035,21 +1033,21 @@ function switchDataSource() {
 }
 function expandOrCollapse(node,expand) {
 	if(expand == true) {
-		node.previousSibling.style.display = 'inline';
-		var value = node.previousSibling.value;
+		node.getPrevious().setStyle('display', 'inline');
+		var value = node.getPrevious().getProperty('value');
 		if(value.length == 0) {
-			node.previousSibling.value = node.previousSibling.previousSibling.value;
+			node.getPrevious().setProperty('value', node.getPrevious().getPrevious().getProperty('value'));
 		}
-		node.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow_left.png';
-		node.setAttribute('onclick','expandOrCollapse(this,false);');
+		node.setProperty('src', '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow_left.png');
+		node.setProperty('onclick', 'expandOrCollapse(this,false);');
 	} else {
-		node.previousSibling.style.display = 'none';
-		node.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow_right.png';
-		node.setAttribute('onclick','expandOrCollapse(this,true);');
+		node.getPrevious().setStyle('display', 'none');
+		node.setProperty('src', '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow_right.png');
+		node.setProperty('onclick', 'expandOrCollapse(this,true);');
 	}
 }
 function addNewItem(parameter) {
-	var par = $(parameter).lastChild;
+	var par = $(parameter).getLast();
 	var newInd = getNextRowIndex(par);
 	par.appendChild(getEmptySelect(newInd,'',''));
 }
@@ -1058,13 +1056,13 @@ function deleteThisItem(ind) {
 	var currRow = $(ind);
 	var node = $(ind);
 	if(node != null) {
-		var node2 = node.parentNode;
+		var node2 = node.getParent();
 		node2.removeChild(currRow);
 	}
 	FormComponent.removeSelectOption(index,replaceChangedComponent);
 }
 function getNextRowIndex(parameter) {
-	var lastC = parameter.lastChild;
+	var lastC = parameter.getLast();
 	if(lastC != null) {
 		var ind = lastC.id.split('_')[1];
 		ind++;
@@ -1158,13 +1156,10 @@ function saveSourceCode(source_code) {
 		FormDocument.saveSrc(source_code, closeLoadingMessage);
 	}
 }
-
-
 function initializeInlineEdits() {
 	$$('div.inlineEdit').each(
 		function(element) {
 			prepareInlineEdit(element);
-			console.log('inline edit smth');
 			$$('div.inlineEdit span').addEvent('click',function(){
 		    	this.inlineEdit({
 		    		onComplete:function(el,oldContent,newContent){
@@ -1308,7 +1303,7 @@ function addNewVariable(event) {
 		new Event(event).stop();
 		var target = event.target;
 		var value = target.value;
-		var id = target.id
+		var id = target.id;
 		var index = id.indexOf('_');
 		if(index != -1) {
 			var datatype = id.substring(index + 1);
@@ -1326,14 +1321,24 @@ function createNewPage() {
 	FormPage.createNewPage({
 		callback: function(resultDOMs) {
 			insertNodesToContainer(resultDOMs[1], $(PAGES_PANEL_ID));
+			var panel = $('pagesPanel');
+			if(panel != null) {
+				panel.getLast().addEvent('click', function(e){
+					initializeGeneralPage(e);
+				});
+			}
 			var dropBox = $('dropBox');
 			if(dropBox != null) {
-				var parentNode = dropBox.parentNode;
+				var parentNode = dropBox.getParent();
 				var node = parentNode.getLast();
-				node.remove();
+				if(node != null) {
+					node.remove();
+				}
 				insertNodesToContainer(resultDOMs[0], parentNode);
 				initializeDesignView(true);
 				initializePagesPanel();
+				var newIcon = $(PAGES_PANEL_ID).getLast();
+				markSelectedPage(newIcon);
 			}
 		}
 	});
@@ -1357,12 +1362,15 @@ function deletePage(event) {
 				callback: function(result) {
 					if(result != null) {
 						showLoadingMessage('Loading section...');
-						parentNode.remove();
+						var iconNode = $(result[0] + '_P_page');
+						if(iconNode != null) {
+							iconNode.remove();
+						}
 						markSelectedPage(result[1])
 						var designViewDOM = result[2];
 						var dropBox = $('dropBox');
 						if(dropBox != null) {
-							var parentNode = dropBox.parentNode;
+							var parentNode = dropBox.getParent();
 							var node = parentNode.getLast();
 							node.remove();
 							insertNodesToContainer(designViewDOM, parentNode);
@@ -1380,7 +1388,7 @@ function initializeDesign() {
 	initializeDesignView(true);
 }
 function removeComponent(parameter) {
-	var node = parameter.parentNode;
+	var node = parameter.getParent();
 	if(node != null) {
 		pressedComponentDelete = true;
 		FormComponent.removeComponent(node.id, {
@@ -1395,9 +1403,11 @@ function removeComponent(parameter) {
 								if(resultDOM != null) {
 									var dropBox = $('dropBox');
 									if(dropBox != null) {
-										var parentNode = dropBox.parentNode;
+										var parentNode = dropBox.getParent();
 										var node2 = parentNode.getLast();
-										node2.remove();
+										if(node2 != null) {
+											node2.remove();
+										}
 										insertNodesToContainer(resultDOM, parentNode);
 										initializeDesignView(true);
 										initializePagesPanel();

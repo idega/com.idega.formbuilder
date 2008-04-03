@@ -37,6 +37,7 @@
                 		window.addEvent('domready', function() {
 							var errorHanlder = function(errorString, exception) {
 								reloadPage();
+								/*alert(errorString + ' : ' + exception);*/
 							}
 							DWREngine.setErrorHandler(errorHanlder);
 						});
@@ -53,9 +54,6 @@
 				<t:div id="newFormDialog" forceId="true" style="display: none;">
 					<t:outputLabel for="formNameInput" value="Form name" />
 					<t:inputText id="formNameInput" onkeyup="modalFormName = this.value;" onblur="modalFormName = this.value;" forceId="true" />
-					<t:htmlTag value="br" />
-					<t:outputLabel for="designerCheckbox2" value="Go to designer" />
-					<t:selectBooleanCheckbox onchange="modalGoToDesigner = this.checked;" id="designerCheckbox2" forceId="true" />
 					<t:htmlTag value="br" />
 					<t:commandLink id="createFormBtn" onclick="createNewForm(modalFormName, modalGoToDesigner);" forceId="true" value="Create" />
 				</t:div>

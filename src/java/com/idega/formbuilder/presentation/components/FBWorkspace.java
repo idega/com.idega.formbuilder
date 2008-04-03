@@ -4,11 +4,14 @@ import java.util.Map;
 
 import javax.faces.context.FacesContext;
 
+import org.springframework.dao.EmptyResultDataAccessException;
+
 import com.idega.block.web2.presentation.Accordion;
+import com.idega.formbuilder.business.process.XFormsProcessManager;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
-import com.idega.formbuilder.presentation.beans.ProcessData;
 import com.idega.formbuilder.presentation.beans.Workspace;
+import com.idega.jbpm.def.ViewToTask;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
 import com.idega.presentation.text.Text;
@@ -68,13 +71,23 @@ public class FBWorkspace extends FBComponentBase {
 			iwc.sendRedirect("/workspace/forms");
 			return;
 		}
-		ProcessData pd = fd.getProcessData();
-		if(pd != null) {
-			if(pd.getProcessId() != null) {
-				workspace.setProcessMode(true);
-			}
+		
+		XFormsProcessManager xformsProcessManager = (XFormsProcessManager) WFUtil.getBeanInstance("xformsProcessManager");
+		ViewToTask viewToTaskBinnder = xformsProcessManager.getViewToTaskBinder();
+		
+		Long task = null;
+		try {
+			task = viewToTaskBinnder.getTask(fd.getFormId());
+		} catch(EmptyResultDataAccessException e) {
+			workspace.setProcessMode(false);
 		}
-
+		
+		if(task != null && task.intValue() > 0) {
+			workspace.setProcessMode(true);
+		} else {
+			workspace.setProcessMode(false);
+		}
+		
 		Layer mainApplication = new Layer(Layer.DIV);
 		
 		Layer body = new Layer(Layer.DIV);

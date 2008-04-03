@@ -220,7 +220,6 @@ public class FormDocument implements Serializable {
 			formPage.initializeBeanInstance(firstP);
 				
 			getWorkspace().setView("design");
-			getWorkspace().setProcessMode(true);
 			initializeBeanInstance(getDocument());
 			getProcessData().initializeBeanInstance(getDocument(), new Long(processId), taskName);
 		} catch (FormLockException e) {
@@ -442,7 +441,6 @@ public class FormDocument implements Serializable {
 				formPage.initializeBeanInstance(firstP);
 				
 				getWorkspace().setView("design");
-				getWorkspace().setProcessMode(false);
 				initializeBeanInstance(document);
 			}
 		} catch (FormLockException e) {

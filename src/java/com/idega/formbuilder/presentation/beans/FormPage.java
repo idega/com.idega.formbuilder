@@ -175,7 +175,7 @@ public class FormPage implements Serializable {
 				initializeBeanInstance(page);
 				workspace.setView("design");
 				doms.add(BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView(FORM_ELEMENT), false));
-				doms.add(BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormPage(id, page.getProperties().getLabel().getString(FBUtil.getUILocale())), true));
+				doms.add(BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormPage(id + "_P", page.getProperties().getLabel().getString(FBUtil.getUILocale())), true));
 			}
 		}
 		return doms;

@@ -138,6 +138,17 @@ public class FBDesignView extends FBComponentBase {
 		Page page = formPage.getPage();
 		if(page != null) {
 			if(page instanceof PageThankYou) {
+//				Layer thankYouTextBox = new Layer(Layer.DIV);
+//				thankYouTextBox.setId("noFormNotice2");
+//				
+//				Text headline = new Text(getLocalizedString(iwc, "labels_confirmation_page", "This is the confirmation page of the form"));
+//				headline.setId("designViewThankYou2");
+//				thankYouTextBox.add(headline);
+//				
+//				Paragraph emptyFormBody = new Paragraph();
+//				emptyFormBody.add(getLocalizedString(iwc, "labels_confirmation_page_body", "You can only add buttons to this page"));
+//				thankYouTextBox.add(emptyFormBody);
+				
 				Layer noFormNotice = new Layer(Layer.DIV);
 				noFormNotice.setId("noFormNotice");
 				noFormNotice.setStyleClass("inlineEdit");
@@ -147,6 +158,7 @@ public class FBDesignView extends FBComponentBase {
 				thankYouText.setId("designViewThankYou");
 				noFormNotice.add(thankYouText);
 				
+//				component.add(thankYouTextBox);
 				component.add(noFormNotice);
 			} else if (formDocument.getOverviewPage() != null && page.getId().equals(formDocument.getOverviewPage().getId())) {
 				Layer thankYouTextBox = new Layer(Layer.DIV);
@@ -155,6 +167,10 @@ public class FBDesignView extends FBComponentBase {
 				Text thankYouText = new Text(getLocalizedString(iwc, "labels_confirmation_page", "This is the confirmation page of the form"));
 				thankYouText.setId("designViewThankYou");
 				thankYouTextBox.add(thankYouText);
+				
+				Paragraph emptyFormBody = new Paragraph();
+				emptyFormBody.add(getLocalizedString(iwc, "labels_confirmation_page_body", "You can only add buttons to this page"));
+				thankYouTextBox.add(emptyFormBody);
 				
 				component.add(thankYouTextBox);
 			} else {
