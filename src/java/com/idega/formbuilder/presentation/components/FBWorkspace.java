@@ -31,13 +31,18 @@ public class FBWorkspace extends FBComponentBase {
 	private static final String TAB_TITLE_CLASS = "title";
 	private static final String PALETTE_COMPONENT_CLASS = "paletteComponent";
 	private static final String COMPONENTS_LIST_CLASS = "componentsList";
-	private static final String FB_MENU_BAR_CLASS = "fbMenuTabBar";
+	private static final String LEFT_ACC_ID = "accordionLeft";
+	private static final String RIGHT_ACC_ID = "accordionRight";
 	private static final String RIGHT_PANEL_ID = "rightPanel";
-	private static final String FB_MENU_ID2 = "fbMenu2";
-	private static final String FB_RIGHT_ACCORDION_ID = "fbRightAccordion";
-	private static final String PAGES_ACC_PANEL = "pagesAccPanel";
-	private static final String VARIABLE_ACC_PANEL = "variablesAccPanel";
-	private static final String ACCORDION_HEIGHT = "400";
+	private static final String TOGGLER_CLASS = "toggler";
+	private static final String ELEMENT_CLASS = "element";
+	private static final String AT_START_CLASS = "atStart";
+	private static final String AT_START_RIGHT_CLASS = "atStartRight";
+	private static final String FIRST_TOGGLER_CLASS = "firstToggler";
+	private static final String LEFT_PANEL_0 = "panel0Content";
+	private static final String LEFT_PANEL_1 = "panel1Content";
+	private static final String RIGHT_PANEL_0 = "panel0Content2";
+	private static final String RIGHT_PANEL_1 = "panel1Content2";
 
 	public FBWorkspace() {
 		this(null);
@@ -93,12 +98,12 @@ public class FBWorkspace extends FBComponentBase {
 		body.setId(OPTIONS_PANEL_ID);
 		
 		Layer leftAccordion = new Layer(Layer.DIV);
-		leftAccordion.setId("accordionLeft");
+		leftAccordion.setId(LEFT_ACC_ID);
 		
 		Layer tab1 = new Layer(Layer.SPAN);
-		tab1.setStyleClass("toggler");
-		tab1.setStyleClass("atStart");
-		tab1.setStyleClass("firstToggler");
+		tab1.setStyleClass(TOGGLER_CLASS);
+		tab1.setStyleClass(AT_START_CLASS);
+		tab1.setStyleClass(FIRST_TOGGLER_CLASS);
 		
 		Text tab1Title = new Text(getLocalizedString(iwc, "fb_acc_comp_palette", "Component palette"));
 		tab1Title.setStyleClass(TAB_TITLE_CLASS);
@@ -107,9 +112,9 @@ public class FBWorkspace extends FBComponentBase {
 		leftAccordion.add(tab1);
 		
 		Layer panel1 = new Layer(Layer.DIV);
-		panel1.setId("panel0Content");
-		panel1.setStyleClass("element");
-		panel1.setStyleClass("atStart");
+		panel1.setId(LEFT_PANEL_0);
+		panel1.setStyleClass(ELEMENT_CLASS);
+		panel1.setStyleClass(AT_START_CLASS);
 		
 		FBPalette palette = new FBPalette();
 		palette.setItemStyleClass(PALETTE_COMPONENT_CLASS);
@@ -120,8 +125,8 @@ public class FBWorkspace extends FBComponentBase {
 		leftAccordion.add(panel1);
 		
 		Layer tab2 = new Layer(Layer.SPAN);
-		tab2.setStyleClass("toggler");
-		tab2.setStyleClass("atStart");
+		tab2.setStyleClass(TOGGLER_CLASS);
+		tab2.setStyleClass(AT_START_CLASS);
 		
 		
 		Text tab2Title = new Text(getLocalizedString(iwc, "fb_acc_comp_properties", "Component properties"));
@@ -131,9 +136,9 @@ public class FBWorkspace extends FBComponentBase {
 		leftAccordion.add(tab2);
 		
 		Layer panel2 = new Layer(Layer.DIV);
-		panel2.setStyleClass("element");
-		panel2.setStyleClass("atStart");
-		panel2.setId("panel1Content");
+		panel2.setStyleClass(ELEMENT_CLASS);
+		panel2.setStyleClass(AT_START_CLASS);
+		panel2.setId(LEFT_PANEL_1);
 		
 		FBComponentProperties simpleProperties = new FBComponentProperties();
 		
@@ -153,13 +158,13 @@ public class FBWorkspace extends FBComponentBase {
 		body.setId(RIGHT_PANEL_ID);
 		
 		Layer rightAccordion = new Layer(Layer.DIV);
-		rightAccordion.setId("accordionRight");
+		rightAccordion.setId(RIGHT_ACC_ID);
 		
 		if(workspace.isProcessMode()) {
 			tab1 = new Layer(Layer.SPAN);
-			tab1.setStyleClass("toggler");
-			tab1.setStyleClass("atStartRight");
-			tab1.setStyleClass("firstToggler");
+			tab1.setStyleClass(TOGGLER_CLASS);
+			tab1.setStyleClass(AT_START_RIGHT_CLASS);
+			tab1.setStyleClass(FIRST_TOGGLER_CLASS);
 			
 			tab1Title = new Text(getLocalizedString(iwc, "fb_acc_variables", "Variables and transitions"));
 			tab1Title.setStyleClass(TAB_TITLE_CLASS);
@@ -168,9 +173,9 @@ public class FBWorkspace extends FBComponentBase {
 			rightAccordion.add(tab1);
 			
 			panel1 = new Layer(Layer.DIV);
-			panel1.setId("panel0Content2");
-			panel1.setStyleClass("element");
-			panel1.setStyleClass("atStartRight");
+			panel1.setId(RIGHT_PANEL_0);
+			panel1.setStyleClass(ELEMENT_CLASS);
+			panel1.setStyleClass(AT_START_RIGHT_CLASS);
 			
 			FBVariableViewer variableViewer = new FBVariableViewer();
 			
@@ -181,8 +186,8 @@ public class FBWorkspace extends FBComponentBase {
 		}
 		
 		tab2 = new Layer(Layer.SPAN);
-		tab2.setStyleClass("toggler");
-		tab2.setStyleClass("atStartRight");
+		tab2.setStyleClass(TOGGLER_CLASS);
+		tab2.setStyleClass(AT_START_RIGHT_CLASS);
 		
 		
 		tab2Title = new Text(getLocalizedString(iwc, "fb_acc_sections", "Sections"));
@@ -192,9 +197,9 @@ public class FBWorkspace extends FBComponentBase {
 		rightAccordion.add(tab2);
 		
 		panel2 = new Layer(Layer.DIV);
-		panel2.setStyleClass("element");
-		panel2.setStyleClass("atStartRight");
-		panel2.setId("panel1Content2");
+		panel2.setStyleClass(ELEMENT_CLASS);
+		panel2.setStyleClass(AT_START_RIGHT_CLASS);
+		panel2.setId(RIGHT_PANEL_1);
 		
 		FBPagesPanel pages = new FBPagesPanel();
 		pages.setStyleClass(PAGES_PANEL);
