@@ -26,7 +26,7 @@ public class FBViewPanel extends FBComponentBase {
 	private static final String SOURCE_VIEW_ID = "sourceView";
 	private static final String DESIGN_VIEW_ID = "designView";
 	private static final String DROPBOX_CLASS = "dropBox";
-	private static final String FORM_ELEMENT_CLASS = "formElement";
+	private static final String FORM_ELEMENT_CLASS = "formElement formElementHover";
 	private static final String SELECTED_FORM_ELEMENT_CLASS = "selectedElement";
 	private static final String FORM_CONTAINER_CLASS = "formContainer";
 	private static final String VIEW_PANEL_ID = "viewPanel";

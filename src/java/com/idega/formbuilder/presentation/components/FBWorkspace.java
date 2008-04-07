@@ -6,7 +6,6 @@ import javax.faces.context.FacesContext;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import com.idega.block.web2.presentation.Accordion;
 import com.idega.formbuilder.business.process.XFormsProcessManager;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
@@ -28,8 +27,8 @@ public class FBWorkspace extends FBComponentBase {
 	private static final String PAGES_SPECIAL_CONTAINER_CLASS = "pagesSpecialContainer";
 	private static final String SELECTED_ELEMENT_CLASS = "selectedElement";
 	private static final String OPTIONS_PANEL_ID = "optionsPanel";
-	private static final String FB_MENU_ID = "fbMenu";
-	private static final String FB_MENU_ACCORDION_ID = "fbMenuAccordion";
+	private static final String FORM_LIST_URL = "/workspace/forms";
+	private static final String TAB_TITLE_CLASS = "title";
 	private static final String PALETTE_COMPONENT_CLASS = "paletteComponent";
 	private static final String COMPONENTS_LIST_CLASS = "componentsList";
 	private static final String FB_MENU_BAR_CLASS = "fbMenuTabBar";
@@ -62,13 +61,13 @@ public class FBWorkspace extends FBComponentBase {
 				session_map.remove(FormDocument.APP_ID_PARAM);
 				session_map.remove(FormDocument.APP_FORM_NAME_PARAM);
 			} catch (Exception e) {
-				iwc.sendRedirect("/workspace/forms");
+				iwc.sendRedirect(FORM_LIST_URL);
 				return;
 			}
 			
 		}
 		if(fd.getDocument() == null) {
-			iwc.sendRedirect("/workspace/forms");
+			iwc.sendRedirect(FORM_LIST_URL);
 			return;
 		}
 		
@@ -102,7 +101,7 @@ public class FBWorkspace extends FBComponentBase {
 		tab1.setStyleClass("firstToggler");
 		
 		Text tab1Title = new Text(getLocalizedString(iwc, "fb_acc_comp_palette", "Component palette"));
-		tab1Title.setStyleClass("title");
+		tab1Title.setStyleClass(TAB_TITLE_CLASS);
 		tab1.add(tab1Title);
 		
 		leftAccordion.add(tab1);
@@ -126,7 +125,7 @@ public class FBWorkspace extends FBComponentBase {
 		
 		
 		Text tab2Title = new Text(getLocalizedString(iwc, "fb_acc_comp_properties", "Component properties"));
-		tab2Title.setStyleClass("title");
+		tab2Title.setStyleClass(TAB_TITLE_CLASS);
 		tab2.add(tab2Title);
 		
 		leftAccordion.add(tab2);
@@ -156,14 +155,14 @@ public class FBWorkspace extends FBComponentBase {
 		Layer rightAccordion = new Layer(Layer.DIV);
 		rightAccordion.setId("accordionRight");
 		
-//		if(workspace.isProcessMode()) {
+		if(workspace.isProcessMode()) {
 			tab1 = new Layer(Layer.SPAN);
 			tab1.setStyleClass("toggler");
 			tab1.setStyleClass("atStartRight");
 			tab1.setStyleClass("firstToggler");
 			
 			tab1Title = new Text(getLocalizedString(iwc, "fb_acc_variables", "Variables and transitions"));
-			tab1Title.setStyleClass("title");
+			tab1Title.setStyleClass(TAB_TITLE_CLASS);
 			tab1.add(tab1Title);
 			
 			rightAccordion.add(tab1);
@@ -179,7 +178,7 @@ public class FBWorkspace extends FBComponentBase {
 			
 			rightAccordion.add(panel1);
 			
-//		}
+		}
 		
 		tab2 = new Layer(Layer.SPAN);
 		tab2.setStyleClass("toggler");
@@ -187,7 +186,7 @@ public class FBWorkspace extends FBComponentBase {
 		
 		
 		tab2Title = new Text(getLocalizedString(iwc, "fb_acc_sections", "Sections"));
-		tab2Title.setStyleClass("title");
+		tab2Title.setStyleClass(TAB_TITLE_CLASS);
 		tab2.add(tab2Title);
 		
 		rightAccordion.add(tab2);

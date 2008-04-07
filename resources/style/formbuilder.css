@@ -886,10 +886,10 @@ span.statusMsg {
 	left: 80%;
 }
 
-.formElement:hover .fbCompHandler {
+.formElementHover:hover .fbCompHandler {
 	background: url(images/move_16.png) center 3px no-repeat Yellow;
 }
-.formElement:hover .fbcCompVar {
+.formElementHover:hover .fbcCompVar {
 	visibility: visible;
 }
 
@@ -936,7 +936,7 @@ span.statusMsg {
 	margin-right: 0px;
 }
 
-.formElement:hover {
+.formElementHover:hover {
 	border-top: 1px solid #a1a1a1;
 	border-bottom: 1px solid #a1a1a1;
 	cursor: pointer;

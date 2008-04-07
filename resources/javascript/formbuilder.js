@@ -278,12 +278,21 @@ function initializeDesignView(initializeInline) {
 				}
 				this.dragEffect.stop().start('#F9FF9E', '#FFFF00');
 				insideDropzone = true;
+				dropBoxinner.getElements('div.formElement').each(function(element) {
+					element.removeClass('formElementHover');
+				});
 			},
 			'leave': function(el){
 				this.dragEffect.stop().start('#FFFF00', '#F9FF9E');
 				insideDropzone = false;
+				dropBoxinner.getElements('div.formElement').each(function(element) {
+					element.addClass('formElementHover');
+				});
 			},
 			'drop': function(el, drag){
+				dropBoxinner.getElements('div.formElement').each(function(element) {
+					element.addClass('formElementHover');
+				});
 				if(draggingComponent == true) {
 					draggingComponent = false;
 					if(el.hasClass('fbc')) {

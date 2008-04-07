@@ -38,7 +38,7 @@ public class FBFormComponent extends FBComponentBase {
 	private static final String DELETE_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/del_16.png";
 	private static final String DEFAULT_LOAD_ACTION = "loadComponentInfo(this);";
 	private static final String DEFAULT_DELETE_ACTION = "removeComponent(this);";
-	private static final String DEFAULT_CLASS = "formElement";
+	private static final String DEFAULT_CLASS = "formElement formElementHover";
 	private static final String DEFAULT_SPEED_CLASS = "speedButton";
 	private static final String HANDLER_LAYER_CLASS = "fbCompHandler";
 	private static final String DELETE_BUTTON_PREFIX = "db";
