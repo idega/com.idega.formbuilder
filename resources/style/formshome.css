@@ -2,12 +2,11 @@
 	background-color: White;
 	border: 1px solid LightGrey;
 	padding: 25px;
-	right: 0px;
-	left: 0px;
+	right: 5px;
+	left: 5px;
 	position: absolute;
-	bottom: 60px;
-	top: 80px;
-	margin:5px 25px 20px;
+	bottom: 62px;
+	top: 85px;
 }
 
 #fbAdminPage {
@@ -286,7 +285,8 @@ html>body .fbBottomButtonsContainer a {
 
 .taskFormList > li {
 	height: 50px;
-	margin: 0 10px 10px 10px;
+	margin: 0 10px 8px 10px;
+	clear: both;
 }
 
 .taskFormList > li > div {
@@ -433,19 +433,22 @@ html>body .fbBottomButtonsContainer a {
 	float:left;
 	font-size:16px;
 	font-weight:bold;
-	margin-top: 6px;
+	margin-top: 2px;
 	margin-left: 8px;
 	margin-bottom: 3px;
 }
 
 .createdDate {
-	clear:both;
 	display:block;
 	font-size:11px;
 	color: #a1a1a1;
 	margin-left: 33px;
-	font-weight:normal					!important;
+	font-weight:normal !important;
+	position: absolute;
+	left: 16px;
+	top: 25px;
 }
+
 .formListIcon {
 	float: left;
 	margin-left: 3px;
@@ -485,6 +488,8 @@ html>body .fbBottomButtonsContainer a {
 	position:absolute;
 	right:25px;
 	top:100px;
+	overflow: auto;
+	width: auto !important;
 }
 
 #forms {
@@ -492,6 +497,7 @@ html>body .fbBottomButtonsContainer a {
 	overflow: hidden;
 	height: 320px;
 }
+
 .formListItemSub {
 	margin-right: 15px;
 	margin-left: 15px;
@@ -501,7 +507,14 @@ html>body .fbBottomButtonsContainer a {
 	padding-top: 10px;
 	background: #e5f1ee;
 	position: relative;
-	height: auto;
+	clear: both;
+}
+
+.formListItemSub .createdDate {
+	clear: both;
+	position: relative;
+	top: 0;
+	left: 0;
 }
 .processNameBox {
 	margin-left: 20px;
@@ -562,4 +575,48 @@ html>body .fbBottomButtonsContainer a {
 .processButtonList li select {
 	margin: 0;
 	margin-top: 2px;
+}
+
+#formListContainer .mootabs_title {
+	height: 40px;
+}
+
+#formListContainer .mootabs_panel {
+	width: auto !important;
+	height: auto !important;
+	border: 1px #BDBDBD solid;
+	position: absolute;
+	padding: 5px;
+	top: 56px;
+	left: 8px;
+	right: 8px;
+	bottom: 8px;
+}
+
+#formListContainer .mootabs_title .stateFullTab {
+	border: 1px #bdbdbd solid;
+	height: auto;
+	margin-right: 8px;
+	position: relative;
+	line-height: 34px;
+	background-color: #ddd;
+}
+
+#formListContainer .mootabs_title li.active {
+	background-color: #ddedd3;
+}
+
+.processSummaryText {
+}
+
+
+#formListContainer .mootabs_title .stateFullTab img {
+	position: absolute;
+	left: 2px;
+	top: 4px;
+}
+
+#formListContainer .mootabs_title .stateFullTab span {
+	font-size: 14px;
+	padding-left: 28px;
 }

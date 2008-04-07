@@ -44,6 +44,31 @@ public class FBDesignView extends FBComponentBase {
 	
 	public static final String BUTTON_AREA_FACET = "BUTTON_AREA_FACET";
 	
+	private static final String FORM_HEADER_ID = "formHeading";
+	private static final String INFO_CLASS = "info";
+	private static final String INLINE_EDIT_CLASS = "inlineEdit";
+	private static final String REL_ATTRIBUTE = "rel";
+	private static final String FORM_TITLE_REL = "FormDocument.setFormTitle";
+	private static final String FORM_HEADING_HEADER_ID = "formHeadingHeader";
+	private static final String MESSAGE_DIALOG_ID = "messageDialog";
+	private static final String DISPLAY_NONE = "display: none;";
+	private static final String MESSAGE_BOX_CONTENT_CLASS = "messageBoxContent";
+	private static final String LANGUAGE_CHOOSER_ID = "languageChooser";
+	private static final String DESIGN_VIEW_PAGE_TITLE_ID = "designViewPageTitle";
+	private static final String LABEL_CLASS = "label";
+	private static final String PAGE_TITLE_REL = "FormPage.saveTitle updatePageIconText";
+	private static final String DESIGN_VIEW_CURRENT_PAGE_TITLE_ID = "designViewCurrentPageTitle";
+	private static final String DROPBOX_INNER_ID = "dropBoxinner";
+	private static final String INNER_POSTFIX = "inner";
+	private static final String NOFORM_NOTICE_ID = "noFormNotice";
+	private static final String THANK_YOU_TEXT_REL = "FormDocument.setThankYouText";
+	private static final String DESIGN_VIEW_THANK_YOU_ID = "designViewThankYou";
+	private static final String EMPTY_FORM_ID = "emptyForm";
+	private static final String LOAD_COMPONENT_ACTION = "loadComponentInfo(this);";
+	private static final String REMOVE_COMPONENT_ACTION = "removeComponent(this);";
+	private static final String SPEED_BUTTON_CLASS = "speedButton";
+	private static final String FORM_BUTTON_CLASS = "formButton";
+	
 	private String componentStyleClass;
 	private String selectedStyleClass;
 
@@ -80,24 +105,24 @@ public class FBDesignView extends FBComponentBase {
 		component.setStyleClass(getStyleClass());
 		
 		Layer formHeading = new Layer(Layer.DIV);
-		formHeading.setId("formHeading");
-		formHeading.setStyleClass("info");
-		formHeading.setStyleClass("inlineEdit");
-		formHeading.setMarkupAttribute("rel", "FormDocument.setFormTitle");
+		formHeading.setId(FORM_HEADER_ID);
+		formHeading.setStyleClass(INFO_CLASS);
+		formHeading.setStyleClass(INLINE_EDIT_CLASS);
+		formHeading.setMarkupAttribute(REL_ATTRIBUTE, FORM_TITLE_REL);
 		
 		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
 		
 		Text formHeadingHeader = new Text(formDocument.getFormTitle());
-		formHeadingHeader.setId("formHeadingHeader");
+		formHeadingHeader.setId(FORM_HEADING_HEADER_ID);
 		formHeading.add(formHeadingHeader);
 		
 		Layer messageBox = new Layer(Layer.DIV);
-		messageBox.setId("messageDialog");
-		messageBox.setStyleAttribute("display: none;");
+		messageBox.setId(MESSAGE_DIALOG_ID);
+		messageBox.setStyleAttribute(DISPLAY_NONE);
 		
 		Text messageBoxContent = new Text();
-		messageBoxContent.setStyleClass("messageBoxContent");
-		messageBoxContent.setText("No content");
+		messageBoxContent.setStyleClass(MESSAGE_BOX_CONTENT_CLASS);
+		messageBoxContent.setText(getLocalizedString(iwc, "fb_no_content", "No content"));
 		
 		messageBox.add(messageBoxContent);
 //		formHeading.add(messageBox);
@@ -106,9 +131,9 @@ public class FBDesignView extends FBComponentBase {
 		Locale locale = workspace.getLocale();
 		
 		Layer languageChooserLayer = new Layer(Layer.DIV);
-		languageChooserLayer.setId("languageChooser");
+		languageChooserLayer.setId(LANGUAGE_CHOOSER_ID);
 		
-		DropdownMenu languageChooser = ICLocaleBusiness.getAvailableLocalesDropdownStringKeyed(iwc.getIWMainApplication(), "languageChooser", false);
+		DropdownMenu languageChooser = ICLocaleBusiness.getAvailableLocalesDropdownStringKeyed(iwc.getIWMainApplication(), LANGUAGE_CHOOSER_ID, false);
 		languageChooser.setSelectedElement(locale.getLanguage());
 		
 		languageChooserLayer.add(new Label(getLocalizedString(iwc, "fb_choose_language", "Form language"), languageChooser));
@@ -118,22 +143,22 @@ public class FBDesignView extends FBComponentBase {
 		component.add(languageChooserLayer);
 		
 		Layer pageNotice = new Layer(Layer.DIV);
-		pageNotice.setId("designViewPageTitle");
-		pageNotice.setStyleClass("inlineEdit");
-		pageNotice.setStyleClass("label");
-		pageNotice.setMarkupAttribute("rel", "FormPage.saveTitle updatePageIconText");
+		pageNotice.setId(DESIGN_VIEW_PAGE_TITLE_ID);
+		pageNotice.setStyleClass(INLINE_EDIT_CLASS);
+		pageNotice.setStyleClass(LABEL_CLASS);
+		pageNotice.setMarkupAttribute(REL_ATTRIBUTE, PAGE_TITLE_REL);
 		
 		FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 		
 		Text currentPageTitle = new Text(formPage.getTitle());
-		currentPageTitle.setId("designViewCurrentPageTitle");
+		currentPageTitle.setId(DESIGN_VIEW_CURRENT_PAGE_TITLE_ID);
 		pageNotice.add(currentPageTitle);
 		
 		component.add(pageNotice);
 		
 		Layer dropBoxInner = new Layer(Layer.DIV);
-		dropBoxInner.setId("dropBoxinner");
-		dropBoxInner.setStyleClass(getStyleClass() + "inner");
+		dropBoxInner.setId(DROPBOX_INNER_ID);
+		dropBoxInner.setStyleClass(getStyleClass() + INNER_POSTFIX);
 		
 		Page page = formPage.getPage();
 		if(page != null) {
@@ -150,22 +175,22 @@ public class FBDesignView extends FBComponentBase {
 //				thankYouTextBox.add(emptyFormBody);
 				
 				Layer noFormNotice = new Layer(Layer.DIV);
-				noFormNotice.setId("noFormNotice");
-				noFormNotice.setStyleClass("inlineEdit");
-				noFormNotice.setMarkupAttribute("rel", "FormDocument.setThankYouText");
+				noFormNotice.setId(NOFORM_NOTICE_ID);
+				noFormNotice.setStyleClass(INLINE_EDIT_CLASS);
+				noFormNotice.setMarkupAttribute(REL_ATTRIBUTE, THANK_YOU_TEXT_REL);
 				
 				Text thankYouText = new Text(formDocument.getThankYouText());
-				thankYouText.setId("designViewThankYou");
+				thankYouText.setId(DESIGN_VIEW_THANK_YOU_ID);
 				noFormNotice.add(thankYouText);
 				
 //				component.add(thankYouTextBox);
 				component.add(noFormNotice);
 			} else if (formDocument.getOverviewPage() != null && page.getId().equals(formDocument.getOverviewPage().getId())) {
 				Layer thankYouTextBox = new Layer(Layer.DIV);
-				thankYouTextBox.setId("noFormNotice");
+				thankYouTextBox.setId(NOFORM_NOTICE_ID);
 				
 				Text thankYouText = new Text(getLocalizedString(iwc, "labels_confirmation_page", "This is the confirmation page of the form"));
-				thankYouText.setId("designViewThankYou");
+				thankYouText.setId(DESIGN_VIEW_THANK_YOU_ID);
 				thankYouTextBox.add(thankYouText);
 				
 				Paragraph emptyFormBody = new Paragraph();
@@ -177,7 +202,7 @@ public class FBDesignView extends FBComponentBase {
 				List<String> ids = page.getContainedComponentsIdList();
 				if(!hasComponents(ids, page)) {
 					Layer emptyForm = new Layer(Layer.DIV);
-					emptyForm.setId("emptyForm");
+					emptyForm.setId(EMPTY_FORM_ID);
 					
 					Text emptyFormHeader = new Text(getLocalizedString(iwc, "labels_empty_form_header", "This page is empty right now"));
 					emptyForm.add(emptyFormHeader);
@@ -197,9 +222,9 @@ public class FBDesignView extends FBComponentBase {
 							FBFormComponent formComponent = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
 							formComponent.setId(nextId);
 							formComponent.setStyleClass(componentStyleClass);
-							formComponent.setOnLoad("loadComponentInfo(this);");
-							formComponent.setOnDelete("removeComponent(this);");
-							formComponent.setSpeedButtonStyleClass("speedButton");
+							formComponent.setOnLoad(LOAD_COMPONENT_ACTION);
+							formComponent.setOnDelete(REMOVE_COMPONENT_ACTION);
+							formComponent.setSpeedButtonStyleClass(SPEED_BUTTON_CLASS);
 							dropBoxInner.add(formComponent);
 						}
 					}
@@ -212,7 +237,7 @@ public class FBDesignView extends FBComponentBase {
 		if(page != null) {
 			FBButtonArea area = (FBButtonArea) application.createComponent(FBButtonArea.COMPONENT_TYPE);
 			area.setStyleClass(componentStyleClass);
-			area.setComponentStyleClass("formButton");
+			area.setComponentStyleClass(FORM_BUTTON_CLASS);
 			component.add(area);
 		}
 		

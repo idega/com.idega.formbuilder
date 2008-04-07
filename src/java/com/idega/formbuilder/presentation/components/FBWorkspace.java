@@ -93,30 +93,56 @@ public class FBWorkspace extends FBComponentBase {
 		Layer body = new Layer(Layer.DIV);
 		body.setId(OPTIONS_PANEL_ID);
 		
-		Accordion acc = new Accordion(FB_MENU_ID);
-		acc.setId(FB_MENU_ACCORDION_ID);
-		acc.setUseSound(false);
-		acc.setHeight(ACCORDION_HEIGHT);
+		Layer leftAccordion = new Layer(Layer.DIV);
+		leftAccordion.setId("accordionLeft");
+		
+		Layer tab1 = new Layer(Layer.SPAN);
+		tab1.setStyleClass("toggler");
+		tab1.setStyleClass("atStart");
+		tab1.setStyleClass("firstToggler");
+		
+		Text tab1Title = new Text(getLocalizedString(iwc, "fb_acc_comp_palette", "Component palette"));
+		tab1Title.setStyleClass("title");
+		tab1.add(tab1Title);
+		
+		leftAccordion.add(tab1);
+		
+		Layer panel1 = new Layer(Layer.DIV);
+		panel1.setId("panel0Content");
+		panel1.setStyleClass("element");
+		panel1.setStyleClass("atStart");
 		
 		FBPalette palette = new FBPalette();
 		palette.setItemStyleClass(PALETTE_COMPONENT_CLASS);
 		palette.setStyleClass(COMPONENTS_LIST_CLASS);
 		
-		Text tab1 = new Text();
-		tab1.setText(getLocalizedString(iwc, "fb_acc_comp_palette", "Component palette"));
-		tab1.setStyleClass(FB_MENU_BAR_CLASS);
+		panel1.add(palette);
 		
-		acc.addPanel(tab1, palette);
+		leftAccordion.add(panel1);
+		
+		Layer tab2 = new Layer(Layer.SPAN);
+		tab2.setStyleClass("toggler");
+		tab2.setStyleClass("atStart");
+		
+		
+		Text tab2Title = new Text(getLocalizedString(iwc, "fb_acc_comp_properties", "Component properties"));
+		tab2Title.setStyleClass("title");
+		tab2.add(tab2Title);
+		
+		leftAccordion.add(tab2);
+		
+		Layer panel2 = new Layer(Layer.DIV);
+		panel2.setStyleClass("element");
+		panel2.setStyleClass("atStart");
+		panel2.setId("panel1Content");
 		
 		FBComponentProperties simpleProperties = new FBComponentProperties();
 		
-		Text tab2 = new Text();
-		tab2.setText(getLocalizedString(iwc, "fb_acc_comp_properties", "Component properties"));
-		tab2.setStyleClass(FB_MENU_BAR_CLASS);
+		panel2.add(simpleProperties);
 		
-		acc.addPanel(tab2, simpleProperties);
+		leftAccordion.add(panel2);
 		
-		body.add(acc);
+		body.add(leftAccordion);
 		
 		mainApplication.add(body);
 		
@@ -127,20 +153,49 @@ public class FBWorkspace extends FBComponentBase {
 		body = new Layer(Layer.DIV);
 		body.setId(RIGHT_PANEL_ID);
 		
-		acc = new Accordion(FB_MENU_ID2);
-		acc.setId(FB_RIGHT_ACCORDION_ID);
-		acc.setUseSound(false);
-		acc.setHeight(ACCORDION_HEIGHT);
+		Layer rightAccordion = new Layer(Layer.DIV);
+		rightAccordion.setId("accordionRight");
 		
-		if(workspace.isProcessMode()) {
+//		if(workspace.isProcessMode()) {
+			tab1 = new Layer(Layer.SPAN);
+			tab1.setStyleClass("toggler");
+			tab1.setStyleClass("atStartRight");
+			tab1.setStyleClass("firstToggler");
+			
+			tab1Title = new Text(getLocalizedString(iwc, "fb_acc_variables", "Variables and transitions"));
+			tab1Title.setStyleClass("title");
+			tab1.add(tab1Title);
+			
+			rightAccordion.add(tab1);
+			
+			panel1 = new Layer(Layer.DIV);
+			panel1.setId("panel0Content2");
+			panel1.setStyleClass("element");
+			panel1.setStyleClass("atStartRight");
+			
 			FBVariableViewer variableViewer = new FBVariableViewer();
 			
-			tab2 = new Text();
-			tab2.setText(getLocalizedString(iwc, "fb_acc_variables", "Variables and transitions"));
-			tab2.setStyleClass(FB_MENU_BAR_CLASS);
+			panel1.add(variableViewer);
 			
-			acc.addPanel(VARIABLE_ACC_PANEL, tab2, variableViewer);
-		}
+			rightAccordion.add(panel1);
+			
+//		}
+		
+		tab2 = new Layer(Layer.SPAN);
+		tab2.setStyleClass("toggler");
+		tab2.setStyleClass("atStartRight");
+		
+		
+		tab2Title = new Text(getLocalizedString(iwc, "fb_acc_sections", "Sections"));
+		tab2Title.setStyleClass("title");
+		tab2.add(tab2Title);
+		
+		rightAccordion.add(tab2);
+		
+		panel2 = new Layer(Layer.DIV);
+		panel2.setStyleClass("element");
+		panel2.setStyleClass("atStartRight");
+		panel2.setId("panel1Content2");
 		
 		FBPagesPanel pages = new FBPagesPanel();
 		pages.setStyleClass(PAGES_PANEL);
@@ -149,13 +204,11 @@ public class FBWorkspace extends FBComponentBase {
 		pages.setSpecialPartStyleClass(PAGES_SPECIAL_CONTAINER_CLASS);
 		pages.setSelectedStyleClass(SELECTED_ELEMENT_CLASS);
 		
-		tab1 = new Text();
-		tab1.setText(getLocalizedString(iwc, "fb_acc_sections", "Sections"));
-		tab1.setStyleClass(FB_MENU_BAR_CLASS);
+		panel2.add(pages);
 		
-		acc.addPanel(PAGES_ACC_PANEL, tab1, pages);
+		rightAccordion.add(panel2);
 		
-		body.add(acc);
+		body.add(rightAccordion);
 		
 		mainApplication.add(body);
 		

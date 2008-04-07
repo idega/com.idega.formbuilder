@@ -37,15 +37,16 @@
                 		window.addEvent('domready', function() {
 							var errorHanlder = function(errorString, exception) {
 								reloadPage();
-								/*alert(errorString + ' : ' + exception);*/
 							}
 							DWREngine.setErrorHandler(errorHanlder);
 						});
+						window.addEvent('domready', createLeftAccordion);
 						window.addEvent('domready', initializePalette);
 						window.addEvent('domready', initializePagesPanel);
 						window.addEvent('domready', initializeDesign);
 						window.addEvent('domready', registerFormbuilderActions);
 						window.addEvent('domready', initializeVariableViewer);
+						
                 	</script>
                 </f:verbatim>
 				<t:div id="mainApplication" forceId="true">

@@ -40,6 +40,9 @@ var modalSelectedForm = null;
 var SELECTED_PROCESS = null;
 var SELECTED_TASK = null;
 
+var fbLeftAccordion = null;
+var fbRightAccordion = null;
+
 var FBDraggable = Element.extend({
 	draggableTag: function(droppables, handle, type) {
 		type = type;
@@ -697,8 +700,8 @@ function loadButtonInfo(button) {
 						if(parentNode != null && resultDOM != null) {
 							removeChildren(parentNode);
 							insertNodesToContainer(resultDOM, parentNode);
-							iwAccordionfbMenu.display(0);
-							iwAccordionfbMenu.display(tabIndex);
+							fbLeftAccordion.display(0);
+							fbLeftAccordion.display(tabIndex);
 						}
 					}
 				});
@@ -761,19 +764,22 @@ function saveHasPreview(event) {
 	});
 }
 function markSelectedPage(parameter) {
-	var oldPageIcon = $('pagesPanelMain').getElement('div.selectedElement');
-	if(oldPageIcon != null) {
-		oldPageIcon.removeClass('selectedElement');
-	}
-	var pageNode = $(parameter);
-	if(pageNode == null) {
-		pageNode = $(parameter + '_P_page');
-		CURRENT_PAGE_ID = parameter + '_P_page';
-	} else {
-		CURRENT_PAGE_ID = parameter;
-	}
-	if(pageNode != null) {
-		pageNode.addClass('selectedElement');
+	var pagesPanel = $('pagesPanelMain');
+	if(pagesPanel != null) {
+		var oldPageIcon = pagesPanel.getElement('div.selectedElement');
+		if(oldPageIcon != null) {
+			oldPageIcon.removeClass('selectedElement');
+		}
+		var pageNode = $(parameter);
+		if(pageNode == null) {
+			pageNode = $(parameter + '_P_page');
+			CURRENT_PAGE_ID = parameter + '_P_page';
+		} else {
+			CURRENT_PAGE_ID = parameter;
+		}
+		if(pageNode != null) {
+			pageNode.addClass('selectedElement');
+		}
 	}
 }
 function placePageTitle(parameter) {
@@ -801,11 +807,14 @@ function initializePagesPanel() {
 		handles: '.fbPageHandler'
 	});
 	FormPage.getId(markSelectedPage);
-	$('pagesPanel').getElements("div.formPageIcon").each(function(item) {
-		item.addEvent('click', function(e){
-			initializeGeneralPage(e);
+	var pagesPanel = $('pagesPanel');
+	if(pagesPanel != null) {
+		pagesPanel.getElements("div.formPageIcon").each(function(item) {
+			item.addEvent('click', function(e){
+				initializeGeneralPage(e);
+			});
 		});
-	});
+	}
 	var thankyoupage = $E('div.thankyou');
 	if(thankyoupage != null) {
 		thankyoupage.addEvent('click', function(e){
@@ -820,6 +829,10 @@ function initializePagesPanel() {
 	}
 	initialiazePreviewPage();
 }
+function getTotalHeight() {
+	return window.getHeight();
+}
+
 function initializeGeneralPage(element) {
 	var targetId = getPageID(element);
 	if(draggingPage == false && targetId.indexOf('_P_page') != -1) {
@@ -891,6 +904,59 @@ function loadComponentInfo(component) {
 		draggingComponent = false;
 	}
 }
+function createLeftAccordion() {
+	fbLeftAccordion = new Accordion('span.atStart', 'div.atStart', {
+		opacity: false,
+		display: 0,
+		height: false,
+		transition: Fx.Transitions.quadOut,
+		onActive: function(toggler, element){
+			toggler.addClass('selectedToggler');
+
+			element.removeClass('hiddenElement');
+			element.addClass('selectedAccElement');
+
+			var heightForAccordion = getTotalHeight() - 187;
+			if (heightForAccordion > 0) {
+				element.setStyle('height', heightForAccordion + 'px');
+			}
+		},
+ 
+		onBackground: function(toggler, element){
+			toggler.removeClass('selectedToggler');
+
+			element.removeClass('selectedAccElement');
+			element.addClass('hiddenElement');
+			element.setStyle('height', '0px');
+		}
+	}, $('accordionLeft'));
+	
+	fbRightAccordion = new Accordion('span.atStartRight', 'div.atStartRight', {
+		opacity: false,
+		display: 0,
+		height: false,
+		transition: Fx.Transitions.quadOut,
+		onActive: function(toggler, element){
+			toggler.addClass('selectedToggler');
+
+			element.removeClass('hiddenElement');
+			element.addClass('selectedAccElement');
+
+			var heightForAccordion = getTotalHeight() - 187;
+			if (heightForAccordion > 0) {
+				element.setStyle('height', heightForAccordion + 'px');
+			}
+		},
+ 
+		onBackground: function(toggler, element){
+			toggler.removeClass('selectedToggler');
+
+			element.removeClass('selectedAccElement');
+			element.addClass('hiddenElement');
+			element.setStyle('height', '0px');
+		}
+	}, $('accordionRight'));
+}
 function placeComponentInfo(resultDOM, tabIndex, component) {
 	var parentNode = $('panel' + tabIndex + 'Content');
 	if(parentNode != null) {
@@ -898,7 +964,7 @@ function placeComponentInfo(resultDOM, tabIndex, component) {
 			CURRENT_ELEMENT = component;
 		removeChildren(parentNode);
 		insertNodesToContainer(resultDOM, parentNode);
-		iwAccordionfbMenu.display(1);
+		fbLeftAccordion.display(1);
 	}
 }
 function loadItemset(container,list) {

@@ -84,6 +84,8 @@ public class FBHomePage extends FBComponentBase {
 	private static final String ATTACH_BTN_CLASS = "attachButton";
 	private static final String CREATE_BTN_CLASS = "createButton";
 	private static final String SMOOTHBOX_LINK_CLASS = "smoothbox";
+	private static final String STATEFULL_TAB_CLASS = "stateFullTab";
+	private static final String TASK_TEXT = "    Task: ";
 	
 	private static final String PROCESS_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/orbz-machine-32x32.png";
 	private static final String STANDALONE_FORM_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/fields_32.png";
@@ -207,8 +209,11 @@ public class FBHomePage extends FBComponentBase {
 			
 			processItem.add(processIcon);
 			processItem.add(processName);
-			processItem.add(new Text(getLocalizedString(iwc, "fb_home_total_tasks", "Total tasks: ") + tasks.size() + CoreConstants.SPACE));
-			processItem.add(new Text(getLocalizedString(iwc, "fb_home_assigned_forms", "Assigned forms: ") + formCount));
+			Layer summaryText = new Layer(Layer.SPAN);
+			summaryText.setStyleClass("processSummaryText");
+			summaryText.add(new Text(getLocalizedString(iwc, "fb_home_total_tasks", "Total tasks: ") + tasks.size() + CoreConstants.SPACE));
+			summaryText.add(new Text(getLocalizedString(iwc, "fb_home_assigned_forms", "Assigned forms: ") + formCount));
+			processItem.add(summaryText);
 			processItem.add(created);
 			processItem.add(topList);
 
@@ -241,7 +246,7 @@ public class FBHomePage extends FBComponentBase {
 	private ListItem addTab(IWContext iwc, String tabTitleParameter, String tabIconSrc, String tabTitle) {
 		ListItem tab1 = new ListItem();
 		tab1.setMarkupAttribute(TITLE_ATTRIBUTE, tabTitleParameter);
-		tab1.setStyleClass("stateFullTab");
+		tab1.setStyleClass(STATEFULL_TAB_CLASS);
 		Image tabIcon = new Image();
 		tabIcon.setSrc(tabIconSrc);
 		tab1.add(tabIcon);
@@ -327,7 +332,11 @@ public class FBHomePage extends FBComponentBase {
 		Text name = new Text(title);
 		name.setStyleClass(FORM_TITLE_CLASS);
 		
-		Text created = new Text(date + "    Task: " + taskName);
+		StringBuilder builder = new StringBuilder(date)
+		.append(TASK_TEXT)
+		.append(taskName);
+		
+		Text created = new Text(builder.toString());
 		created.setStyleClass(CREATED_DATE_CLASS);
 		
 		body.add(name);

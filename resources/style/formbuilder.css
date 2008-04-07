@@ -983,6 +983,36 @@ span.statusMsg {
 	cursor: pointer;
 }
 
+#accordionLeft, #accordionRight {
+	/*background-color: #fff;*/
+}
+
+#accordionLeft .toggler, #accordionRight .toggler {
+	border-bottom: 1px #bdbdbd solid;
+	background: url(images/accordion_title.gif) top left repeat-x #d1d1d1;
+	line-height: 18px;
+	font-family: "Lucida Grande", "Lucida Sans", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
+	color: #3d3d3d;
+	padding: 0 6px;
+	font-weight: bold;
+	display: block;
+}
+
+#accordionLeft .toggler .title, #accordionRight .toggler .title {
+	line-height: 18px;
+	padding-left: 16px;
+	display: block;
+	background: url(images/arrow_right.gif) left 4px no-repeat;
+}
+
+#accordionLeft .selectedToggler,#accordionLeft .firstToggler,#accordionRight .selectedToggler,#accordionRight .firstToggler {
+	border-top: 0;
+}
+
+#accordionLeft .selectedToggler .title, #accordionRight .selectedToggler .title {
+	background: url(images/arrow_down.gif) left 4px no-repeat;
+}
+
 .viewTabs {
 	background-color: #f5f5f5;
 	width: 500px;
