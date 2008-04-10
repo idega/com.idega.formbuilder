@@ -14,9 +14,9 @@ import javax.faces.context.FacesContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.idega.block.form.presentation.FormViewer;
-import com.idega.block.form.process.XFormsToTask;
 import com.idega.block.form.process.XFormsView;
 import com.idega.block.formadmin.presentation.actions.GetAvailableFormsAction;
 import com.idega.builder.bean.AdvancedProperty;
@@ -32,8 +32,6 @@ import com.idega.data.IDOLookup;
 import com.idega.data.IDOLookupException;
 import com.idega.documentmanager.business.Document;
 import com.idega.documentmanager.business.DocumentManager;
-import com.idega.documentmanager.business.FormLockException;
-import com.idega.documentmanager.business.PersistenceManager;
 import com.idega.documentmanager.business.component.Page;
 import com.idega.documentmanager.business.component.PageThankYou;
 import com.idega.documentmanager.component.beans.LocalizedStringBean;
@@ -46,6 +44,8 @@ import com.idega.formbuilder.util.FBUtil;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
 import com.idega.jbpm.def.View;
+import com.idega.jbpm.def.ViewToTask;
+import com.idega.jbpm.def.ViewToTaskType;
 import com.idega.presentation.IWContext;
 import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
@@ -55,11 +55,10 @@ public class FormDocument implements Serializable {
 	
 	private static final long serialVersionUID = -1462694112346788168L;
 	
-	private static Log logger = LogFactory.getLog(FormDocument.class);
+	private static final Log logger = LogFactory.getLog(FormDocument.class);
 	
-	private PersistenceManager persistenceManager;
 	private JbpmProcessBusinessBean jbpmProcessBusiness;
-	private XFormsToTask viewToTaskBinder;
+	private ViewToTask viewToTaskBinder;
 	private InstanceManager instanceManager;
 	private XFormsProcessManager xformsProcessManager;
 	private ProcessData processData;
@@ -117,7 +116,7 @@ public class FormDocument implements Serializable {
 		return result;
 	}
 	
-	public Document initializeBeanInstance(String formId) throws Exception {
+	public Document initializeBeanInstance(Long formId) throws Exception {
 		DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
 		this.document = formManagerInstance.openForm(formId);
 		this.overviewPage = document.getConfirmationPage();
@@ -133,12 +132,11 @@ public class FormDocument implements Serializable {
 		
 		DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
 		
-		String id = getPersistenceManager().generateFormId(parameter);
 		LocalizedStringBean formName = new LocalizedStringBean();
 		formName.setString(locale, parameter);
 			
 		try {
-			document = formManagerInstance.createForm(id, formName);
+			document = formManagerInstance.createForm(formName, null);
 			document.save();
 		} catch(Exception e) {
 			logger.error("Could not create XForms document");
@@ -160,7 +158,8 @@ public class FormDocument implements Serializable {
 		return true;
 	}
 	
-	public boolean attachFormDocumentToTask(String processId, String taskName, String formId, boolean gotoDesigner) {
+//	TODO: fix and move away from here
+	public boolean attachFormDocumentToTask(String processId, String taskName, Long formId, boolean gotoDesigner) {
 		
 		if(processId == null || taskName == null || formId == null)
 			return false;
@@ -186,13 +185,9 @@ public class FormDocument implements Serializable {
 			}
 			
 			View view = new XFormsView();
-			view.setViewId(formId);
+			view.setViewId(String.valueOf(formId));
 			getViewToTaskBinder().bind(view, getJbpmProcessBusiness().getProcessTask(Long.valueOf(processId), taskName));
 			
-		} catch (FormLockException e) {
-			// TODO: inform about lock
-			logger.info("Form was locked when tried to open it", e);
-			return false;
 		} catch(Exception e) {
 			logger.info("Exception while trying to open a form document", e);
 			return false;
@@ -201,7 +196,7 @@ public class FormDocument implements Serializable {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public boolean loadTaskFormDocument(String processId, String taskName, String formId) {
+	public boolean loadTaskFormDocument(String processId, String taskName, Long formId) {
 		
 		if(processId == null || taskName == null || formId == null)
 			return false;
@@ -222,10 +217,6 @@ public class FormDocument implements Serializable {
 			getWorkspace().setView("design");
 			initializeBeanInstance(getDocument());
 			getProcessData().initializeBeanInstance(getDocument(), new Long(processId), taskName);
-		} catch (FormLockException e) {
-			// TODO: inform about lock
-			logger.info("Form was locked when tried to open it", e);
-			return false;
 		} catch(Exception e) {
 			logger.info("Exception while trying to open a form document", e);
 			return false;
@@ -239,12 +230,11 @@ public class FormDocument implements Serializable {
 		
 		DocumentManager formManagerInstance = InstanceManager.getCurrentInstance().getDocumentManagerInstance();
 		
-		String id = getPersistenceManager().generateFormId(parameter);
 		LocalizedStringBean formName = new LocalizedStringBean();
 		formName.setString(locale, parameter);
 			
 		try {
-			document = formManagerInstance.createForm(id, formName);
+			document = formManagerInstance.createForm(formName, null);
 			document.save();
 		} catch(Exception e) {
 			logger.error("Could not crea XForms document");
@@ -411,29 +401,23 @@ public class FormDocument implements Serializable {
 		primary_form_name = null;
 	}
 	
-	private boolean isProcessForm(String formId) {
-		if(formId.endsWith("_process")) 
-			return true;
-		return false;
-	}
+//	private boolean isProcessForm(String formId) {
+//		if(formId.endsWith("_process")) 
+//			return true;
+//		return false;
+//	}
 	
 	@SuppressWarnings("unchecked")
-	public boolean loadFormDocument(String formId) {
+	public boolean loadFormDocument(Long formId) {
+		
+		System.out.println("loadigndsd: "+formId);
 		
 		clearAppsRelatedMetaData();
 		
 		try {
-			if(isProcessForm(formId)) {
-				formId = retrieveFormIdFormButtonId(formId, "_process");
-			} else {
-				formId = retrieveFormIdFormButtonId(formId, "_edit");
-			}
-			if(formId != null && !formId.equals("")) {
+			if(formId != null) {
 				DocumentManager formManagerInstance = InstanceManager.getCurrentInstance().getDocumentManagerInstance();
 				document = formManagerInstance.openForm(formId);
-//				CoreUtil.getIWContext().getExternalContext().getSessionMap().put(FBConstants.FORM_DOCUMENT_ID, formId);
-//				if(getFormId() != null)
-//					getFormsService().unlockForm(getFormId());
 				
 				String firstPage = getCommonPagesIdList().get(0);
 				Page firstP = document.getPage(firstPage);
@@ -443,10 +427,6 @@ public class FormDocument implements Serializable {
 				getWorkspace().setView("design");
 				initializeBeanInstance(document);
 			}
-		} catch (FormLockException e) {
-			// TODO: inform about lock
-			logger.info("Form was locked when tried to open it", e);
-			return false;
 		} catch(Exception e) {
 			logger.info("Exception while trying to open a form document", e);
 			return false;
@@ -454,18 +434,14 @@ public class FormDocument implements Serializable {
 		return true;
 	}
 	
-	public boolean loadFormDocumentCode(String formId) {
+	public boolean loadFormDocumentCode(Long formId) {
 		
 		clearAppsRelatedMetaData();
 		
 		try {
-			formId = retrieveFormIdFormButtonId(formId, "_code");
-			if(formId != null && !formId.equals("")) {
+			if(formId != null) {
 				DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
 				document = formManagerInstance.openForm(formId);
-				
-//				if(getFormId() != null)
-//					getFormsService().unlockForm(getFormId());
 				
 				workspace.setView(FBViewPanel.SOURCE_VIEW);
 				
@@ -476,10 +452,6 @@ public class FormDocument implements Serializable {
 				
 				initializeBeanInstance(document);
 			}
-		} catch (FormLockException e) {
-			// TODO: inform about lock
-			logger.info("Form was locked when tried to open it", e);
-			return false;
 		} catch(Exception e) {
 			logger.info("Exception occured when trying to load form code", e);
 			return false;
@@ -487,18 +459,14 @@ public class FormDocument implements Serializable {
 		return true;
 	}
 	
-	public boolean loadFormDocumentPreview(String formId) {
+	public boolean loadFormDocumentPreview(Long formId) {
 		
 		clearAppsRelatedMetaData();
 		
 		try {
-			formId = retrieveFormIdFormButtonId(formId, "_try");
-			if(formId != null && !formId.equals("")) {
+			if(formId != null) {
 				DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
 				document = formManagerInstance.openForm(formId);
-				
-//				if(getFormId() != null)
-//					getFormsService().unlockForm(getFormId());
 				
 				workspace.setView(FBViewPanel.PREVIEW_VIEW);
 				
@@ -509,10 +477,6 @@ public class FormDocument implements Serializable {
 				
 				initializeBeanInstance(document);
 			}
-		} catch (FormLockException e) {
-			// TODO: inform about lock
-			logger.info("Form was locked when tried to open it", e);
-			return false;
 		} catch(Exception e) {
 			logger.info("Exception occured when trying to load form code", e);
 			return false;
@@ -520,23 +484,14 @@ public class FormDocument implements Serializable {
 		return true;
 	}
 	
-	protected String retrieveFormIdFormButtonId(String button_id, String button_postfix) {
+	public boolean deleteFormDocument(Long formId) {
+		//boolean delete_submitted_data = true;
 		
-		try {
-			String form_id = button_id.substring(button_id.lastIndexOf(":")+1, button_id.indexOf(button_postfix));
-			return form_id == null || form_id.equals("") ? null : form_id;
-		} catch (Exception e) {
-			logger.error("Form id couldn't be parsed from button id: "+button_id, e);
-			return null;
-		}
-	}
-	
-	public boolean deleteFormDocument(String documentId) {
-		boolean delete_submitted_data = true;
-		documentId = retrieveFormIdFormButtonId(documentId, "_delete");
-		
-		if(documentId == null)		
+		if(formId == null || true)		
 			return false;
+		
+//		TODO: implement in persistence manager 
+		/*
 		try {
 			getPersistenceManager().removeForm(documentId, delete_submitted_data);
 		} catch (FormLockException e) {
@@ -546,15 +501,17 @@ public class FormDocument implements Serializable {
 			logger.error("Exception while removing form", e);
 			return false;
 		}
+		*/
 		return true;
 	}
 	
-	public boolean deleteTaskFormDocument(String documentId) {
-		boolean delete_submitted_data = true;
-		documentId = retrieveFormIdFormButtonId(documentId, "_delete");
+	public boolean deleteTaskFormDocument(Long formId) {
+//		boolean delete_submitted_data = true;
 		
-		if(documentId == null)		
+		if(formId == null || true)		
 			return false;
+		
+		/*
 		try {
 			getPersistenceManager().removeForm(documentId, delete_submitted_data);
 			viewToTaskBinder.unbind(documentId);
@@ -565,15 +522,16 @@ public class FormDocument implements Serializable {
 			logger.error("Exception while removing form", e);
 			return false;
 		}
+		*/
 		return true;
 	}
 	
-	public boolean loadFormDocumentEntries(String formId) {
-		formId = retrieveFormIdFormButtonId(formId, "_entries");
-		if(formId != null && !formId.equals("")) {
+	public boolean loadFormDocumentEntries(Long formId) {
+		
+		if(formId != null) {
 			
 			GetAvailableFormsAction admin = (GetAvailableFormsAction) WFUtil.getBeanInstance("availableFormsAction");
-			admin.setSelectedRow(formId);
+			admin.setSelectedRow(formId.toString());
 			
 			return true;
 		}
@@ -584,12 +542,15 @@ public class FormDocument implements Serializable {
 		if(documentId == null || newTitle == null)
 //			TODO: (alex) tell user about error			
 			throw new NullPointerException("Form id not found");
+		
+		/* TODO: implement
 		try {
 			getPersistenceManager().duplicateForm(documentId, newTitle);
 		} catch (Exception e) {
 			logger.error("Exception while duplicating form", e);
 //			TODO: (alex) tell user about error
 		}
+		*/
 		
 		return documentId;
 	}
@@ -802,15 +763,6 @@ public class FormDocument implements Serializable {
 		this.tempValue = tempValue;
 	}
 	
-	public PersistenceManager getPersistenceManager() {
-		
-		return persistenceManager;
-	}
-	
-	public void setPersistenceManager(PersistenceManager persistenceManager) {
-		this.persistenceManager = persistenceManager;
-	}
-	
 	protected BuilderService getBuilderService() {
 		
 		try {
@@ -882,11 +834,13 @@ public class FormDocument implements Serializable {
 		this.jbpmProcessBusiness = jbpmProcessBusiness;
 	}
 
-	public XFormsToTask getViewToTaskBinder() {
+	public ViewToTask getViewToTaskBinder() {
 		return viewToTaskBinder;
 	}
 
-	public void setViewToTaskBinder(XFormsToTask viewToTaskBinder) {
+	@Autowired
+	@ViewToTaskType("xforms")
+	public void setViewToTaskBinder(ViewToTask viewToTaskBinder) {
 		this.viewToTaskBinder = viewToTaskBinder;
 	}
 

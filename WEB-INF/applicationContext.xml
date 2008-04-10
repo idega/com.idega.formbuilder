@@ -3,14 +3,10 @@
 
 <beans>
     <bean id="xformsProcessManager" class="com.idega.formbuilder.business.process.XFormsProcessManager" scope="session">
-        <property name="idegaJbpmContext" ref="idegaJbpmContext" />
-        <property name="viewToTaskBinder" ref="process_xforms_viewToTask" />
         <property name="viewFactory" ref="process_xforms_viewFactory" />
     </bean>
     <bean id="formDocument" class="com.idega.formbuilder.presentation.beans.FormDocument" scope="session">
-        <property name="persistenceManager" ref="xformsPersistenceManager" />
         <property name="workspace" ref="workspace" />
-        <property name="viewToTaskBinder" ref="process_xforms_viewToTask" />
         <property name="xformsProcessManager" ref="xformsProcessManager" />
         <property name="jbpmProcessBusiness" ref="jbpmProcessBusiness" />
         <property name="instanceManager" ref="actionManager" />

@@ -11,7 +11,6 @@
 		<project>com.idega.dwr</project>
 		<project>com.idega.slide</project>
 		<project>com.idega.workspace</project>
-		<project>is.idega.idegaweb.egov.application</project>
 		<project>org.chiba.web</project>
 		<project>org.jboss.jbpm</project>
 	</projects>

@@ -7,19 +7,18 @@ import org.jbpm.JbpmContext;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.idega.builder.bean.AdvancedProperty;
 import com.idega.jbpm.IdegaJbpmContext;
 import com.idega.jbpm.def.View;
 import com.idega.jbpm.def.ViewFactory;
 import com.idega.jbpm.def.ViewToTask;
+import com.idega.jbpm.def.ViewToTaskType;
 
 public class XFormsProcessManager {
 	
 	private static final String JBPM_XFORM_VIEW_NAME = "jbpm_view_name";
-	private static final String JBPM_XFORM_ACTOR_NAME = "jbpm_actor_name";
-	private static final String JBPM_XFORM_ACTOR_TYPE = "jbpm_actor_type";
-	private static final String JBPM_XFORM_ACTOR_ID = "jbpm_actor_id";
 	
 	private ViewToTask viewToTaskBinder;
 	private ViewFactory viewFactory;
@@ -96,6 +95,8 @@ public class XFormsProcessManager {
 		return viewToTaskBinder;
 	}
 
+	@Autowired
+	@ViewToTaskType("xforms")
 	public void setViewToTaskBinder(ViewToTask viewToTaskBinder) {
 		this.viewToTaskBinder = viewToTaskBinder;
 	}
@@ -104,6 +105,7 @@ public class XFormsProcessManager {
 		return idegaJbpmContext;
 	}
 
+	@Autowired
 	public void setIdegaJbpmContext(IdegaJbpmContext idegaJbpmContext) {
 		this.idegaJbpmContext = idegaJbpmContext;
 	}

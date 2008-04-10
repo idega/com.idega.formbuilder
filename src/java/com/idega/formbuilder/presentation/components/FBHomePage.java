@@ -1,27 +1,22 @@
 package com.idega.formbuilder.presentation.components;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
 
 import org.apache.myfaces.renderkit.html.util.AddResource;
 import org.apache.myfaces.renderkit.html.util.AddResourceFactory;
-import org.jbpm.graph.def.ProcessDefinition;
-import org.jbpm.taskmgmt.def.Task;
 
 import com.idega.block.web2.business.Web2Business;
 import com.idega.builder.bean.AdvancedProperty;
-import com.idega.documentmanager.business.PersistenceManager;
-import com.idega.formbuilder.business.process.XFormsProcessManager;
+import com.idega.documentmanager.business.PersistedForm;
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.formbuilder.presentation.beans.FBHomePageBean;
 import com.idega.formbuilder.presentation.beans.FormDocument;
-import com.idega.jbpm.business.JbpmProcessBusinessBean;
-import com.idega.jbpm.def.View;
-import com.idega.jbpm.def.ViewToTask;
+import com.idega.formbuilder.presentation.beans.FBHomePageBean.ProcessAllTasksForms;
+import com.idega.formbuilder.presentation.beans.FBHomePageBean.TaskForm;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
@@ -30,19 +25,20 @@ import com.idega.presentation.text.ListItem;
 import com.idega.presentation.text.Lists;
 import com.idega.presentation.text.Text;
 import com.idega.util.CoreConstants;
+import com.idega.util.IWTimestamp;
 import com.idega.webface.WFUtil;
 
 public class FBHomePage extends FBComponentBase {
 	
 	public static final String COMPONENT_TYPE = "HomePage";
 	
-	public static final String delete_button_postfix = "_delete";
-	public static final String entries_button_postfix = "_entries";
-	public static final String duplicate_button_postfix = "_duplicate";
-	public static final String edit_button_postfix = "_edit";
-	public static final String code_button_postfix = "_code";
-	public static final String edit_process_mode_button_postfix = "_process";
-	public static final String try_button_postfix = "_try";
+//	public static final String delete_button_postfix = "_delete";
+//	public static final String entries_button_postfix = "_entries";
+//	public static final String duplicate_button_postfix = "_duplicate";
+//	public static final String edit_button_postfix = "_edit";
+//	public static final String code_button_postfix = "_code";
+//	public static final String edit_process_mode_button_postfix = "_process";
+//	public static final String try_button_postfix = "_try";
 	
 	private static final String CONTAINER_DIV_ID = "fbHomePage";
 	private static final String CONTAINER_HEADER_ID = "fbHomePageHeaderBlock";
@@ -71,8 +67,8 @@ public class FBHomePage extends FBComponentBase {
 	private static final String web2BeanIdentifier = "web2bean";
 	private static final String MOOTABS_TITLE_CLASS = "mootabs_title";
 	private static final String TITLE_ATTRIBUTE = "title";
-	private static final String REL_ATTRIBUTE = "rel";
-	private static final String HREF_ATTRIBUTE = "href";
+//	private static final String REL_ATTRIBUTE = "rel";
+//	private static final String HREF_ATTRIBUTE = "href";
 	private static final String PROCESS_TAB_TITLE = "processes";
 	private static final String STANDALONE_TAB_TITLE = "standalone";
 	private static final String MOOTABS_PANEL_CLASS = "mootabs_panel";
@@ -81,14 +77,16 @@ public class FBHomePage extends FBComponentBase {
 	private static final String PROC_BTN_CLASS = "procBtnClass";
 	private static final String TRANSITION_BTN_CLASS = "transitionButton";
 	private static final String EXPAND_BTN_CLASS = "expandButton";
-	private static final String ATTACH_BTN_CLASS = "attachButton";
-	private static final String CREATE_BTN_CLASS = "createButton";
-	private static final String SMOOTHBOX_LINK_CLASS = "smoothbox";
+//	private static final String ATTACH_BTN_CLASS = "attachButton";
+//	private static final String CREATE_BTN_CLASS = "createButton";
+//	private static final String SMOOTHBOX_LINK_CLASS = "smoothbox";
 	private static final String STATEFULL_TAB_CLASS = "stateFullTab";
 	private static final String TASK_TEXT = "    Task: ";
 	
 	private static final String PROCESS_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/orbz-machine-32x32.png";
 	private static final String STANDALONE_FORM_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/fields_32.png";
+	
+	private static final String formIdAtt = "formId";
 	
 	protected void initializeComponent(FacesContext context) {
 		IWContext iwc = IWContext.getIWContext(context);
@@ -124,16 +122,8 @@ public class FBHomePage extends FBComponentBase {
 		header.add(headerPartLeft);
 		fbHomePage.add(header);
 		
-		PersistenceManager persistence_manager = (PersistenceManager) WFUtil.getBeanInstance("xformsPersistenceManager");
-		List<SelectItem> formsList = new ArrayList<SelectItem>(persistence_manager.getForms());
-		
 		Layer listContainer = new Layer(Layer.DIV);
 		listContainer.setId(FORM_LIST_CONTAINER);
-		
-		XFormsProcessManager xformsProcessManager = (XFormsProcessManager) WFUtil.getBeanInstance("xformsProcessManager");
-		ViewToTask viewToTaskBinnder = xformsProcessManager.getViewToTaskBinder();
-		JbpmProcessBusinessBean jbpmProcessBusiness = (JbpmProcessBusinessBean) WFUtil.getBeanInstance(JbpmProcessBusinessBean.BEAN_ID);
-		List<ProcessDefinition> processList = jbpmProcessBusiness.getProcessList();
 		
 		Lists tabsList = new Lists();
 		tabsList.setStyleClass(MOOTABS_TITLE_CLASS);
@@ -147,8 +137,42 @@ public class FBHomePage extends FBComponentBase {
 		tab1Forms.setStyleClass(MOOTABS_PANEL_CLASS);
 		tab1Forms.setId(PROCESS_TAB_TITLE);
 		
-		for(Iterator<ProcessDefinition> processIterator = processList.iterator(); processIterator.hasNext(); ) {
-			ProcessDefinition definition = (ProcessDefinition) processIterator.next();
+		displayProcessTasks(iwc, tab1Forms, iwc.getCurrentLocale());
+		
+		listContainer.add(tab1Forms);
+		
+		Layer tab2Forms = new Layer(Layer.DIV);
+		tab2Forms.setStyleClass(MOOTABS_PANEL_CLASS);
+		tab2Forms.setId(STANDALONE_TAB_TITLE);
+		
+		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
+		formDocument.getStandaloneForms().clear();
+		
+		FBHomePageBean homePageBean = (FBHomePageBean) WFUtil.getBeanInstance(FBHomePageBean.beanIdentifier);
+		List<PersistedForm> forms = homePageBean.getStandaloneForms();
+		
+		Locale locale = iwc.getCurrentLocale();
+		
+		for (PersistedForm persistedForm : forms) {
+
+			String dateCreatedStr = new IWTimestamp(persistedForm.getDateCreated()).getLocaleDateAndTime(locale, IWTimestamp.SHORT, IWTimestamp.SHORT);
+			formDocument.getStandaloneForms().add(new AdvancedProperty(persistedForm.getFormId().toString(), persistedForm.getDisplayName()));
+			tab2Forms.add(getListItem(iwc, persistedForm.getDisplayName(), getLocalizedString(iwc, "fb_home_created_label", "Created") + ": " + dateCreatedStr, persistedForm.getFormId().toString()));
+		}
+		
+		listContainer.add(tab2Forms);
+		
+		fbHomePage.add(listContainer);
+		
+		add(fbHomePage);
+	}
+	
+	protected void displayProcessTasks(IWContext iwc, Layer container, Locale locale) {
+		
+		FBHomePageBean homePageBean = (FBHomePageBean) WFUtil.getBeanInstance(FBHomePageBean.beanIdentifier);
+		List<ProcessAllTasksForms> allForms = homePageBean.getAllTasksForms(iwc, locale);
+		
+		for (ProcessAllTasksForms processForms : allForms) {
 			
 			Layer processItem = new Layer(Layer.DIV);
 			processItem.setStyleClass(PROCESS_ITEM_CLASS);
@@ -158,7 +182,6 @@ public class FBHomePage extends FBComponentBase {
 			topList.setStyleClass(PROCESS_BUTTON_LIST_CLASS);
 			
 			topList.add(addProcessButton(iwc, CASES_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_view_cases_link", "View cases")));
-			
 			topList.add(addProcessButton(iwc, DELETE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_delete_process_link", "Delete")));
 			
 			ListItem item2 = new ListItem();
@@ -172,7 +195,7 @@ public class FBHomePage extends FBComponentBase {
 			processIcon.setSrc(PROCESS_ICON);
 			processIcon.setStyleClass(FORM_LIST_ICON_CLASS);
 			
-			Text processName = new Text(definition.getName());
+			Text processName = new Text(processForms.getProcessName());
 			processName.setStyleClass(FORM_TITLE_CLASS);
 			
 			Text created = new Text(CoreConstants.EMPTY);
@@ -180,67 +203,25 @@ public class FBHomePage extends FBComponentBase {
 			
 			Lists list = new Lists();
 			list.setStyleClass(TASK_FORM_LIST_CLASS);
-				
-			List<Task> tasks = jbpmProcessBusiness.getProcessDefinitionTasks(definition.getId());
-				
-			int formCount = 0;
-			String formTitle = null;
-			for(Iterator<Task> taskIterator = tasks.iterator(); taskIterator.hasNext(); ) {
-				Task task = (Task) taskIterator.next();
-				try {
-					View view = viewToTaskBinnder.getView(task.getId());
-					if(view == null) {
-						list.add(getProcessEmptyTaskItem(iwc, definition.getName(), definition.getId(), task.getName()));
-					} else {
-						for(Iterator<SelectItem> it = formsList.iterator(); it.hasNext(); ) {
-							SelectItem item = it.next();
-							if(item.getValue().equals(view.getViewId())) {
-								formTitle = (String) item.getLabel();
-								it.remove();
-								formCount++;
-							}
-						}
-						list.add(getProcessTaskFormItem(iwc, definition.getName(), definition.getId(), formTitle,  task.getName(), getLocalizedString(iwc, "fb_home_created_label", "Created") + ": " + getCreatedDate(view.getViewId()), view.getViewId()));
-					}
-				} catch(Exception e) {
-					list.add(getProcessEmptyTaskItem(iwc, definition.getName(), definition.getId(), task.getName()));
-				}
+			
+			for (TaskForm taskForm : processForms.getTaskForms()) {
+
+				list.add(getProcessTaskFormItem(iwc, processForms.getProcessName(), processForms.getProcessId(), taskForm.getFormName(), taskForm.getTaskName(), getLocalizedString(iwc, "fb_home_created_label", "Created") + ": " + taskForm.getDateCreatedStr(), taskForm.getFormId()));
 			}
 			
 			processItem.add(processIcon);
 			processItem.add(processName);
 			Layer summaryText = new Layer(Layer.SPAN);
 			summaryText.setStyleClass("processSummaryText");
-			summaryText.add(new Text(getLocalizedString(iwc, "fb_home_total_tasks", "Total tasks: ") + tasks.size() + CoreConstants.SPACE));
-			summaryText.add(new Text(getLocalizedString(iwc, "fb_home_assigned_forms", "Assigned forms: ") + formCount));
+			summaryText.add(new Text(getLocalizedString(iwc, "fb_home_total_tasks", "Total tasks: ") + processForms.getTasksCount() + CoreConstants.SPACE));
+			summaryText.add(new Text(getLocalizedString(iwc, "fb_home_assigned_forms", "Assigned forms: ") + processForms.getTaskForms().size()));
 			processItem.add(summaryText);
 			processItem.add(created);
 			processItem.add(topList);
 
 			processItem.add(list);
-			tab1Forms.add(processItem);
+			container.add(processItem);
 		}
-		listContainer.add(tab1Forms);
-		
-		Layer tab2Forms = new Layer(Layer.DIV);
-		tab2Forms.setStyleClass(MOOTABS_PANEL_CLASS);
-		tab2Forms.setId(STANDALONE_TAB_TITLE);
-		
-		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
-		formDocument.getStandaloneForms().clear();
-		
-		Iterator<SelectItem> it = formsList.iterator();
-		while(it.hasNext()) {
-			SelectItem item = it.next();
-			formDocument.getStandaloneForms().add(new AdvancedProperty(item.getValue().toString(), item.getLabel()));
-			tab2Forms.add(getListItem(iwc, item.getLabel(), getLocalizedString(iwc, "fb_home_created_label", "Created") + ": " + getCreatedDate(item.getValue().toString()), item.getValue().toString()));
-		}
-		
-		listContainer.add(tab2Forms);
-		
-		fbHomePage.add(listContainer);
-		
-		add(fbHomePage);
 	}
 	
 	private ListItem addTab(IWContext iwc, String tabTitleParameter, String tabIconSrc, String tabTitle) {
@@ -270,6 +251,7 @@ public class FBHomePage extends FBComponentBase {
 		return item2;
 	}
 	
+	/*
 	private ListItem addSmoothboxButton(IWContext iwc, String buttonClass, String buttonText, String href, String titleAttribute, String relAttribute) {
 		ListItem item2 = new ListItem();
 		item2.setStyleClass(buttonClass);
@@ -283,13 +265,15 @@ public class FBHomePage extends FBComponentBase {
 		
 		return item2;
 	}
+	*/
 	
 	private ListItem addButton(IWContext iwc, String buttonClass, String buttonText, String id, String onClick) {
 		ListItem item2 = new ListItem();
 		item2.setStyleClass(buttonClass);
 		Link editButton = new Link(buttonText);
 		editButton.setStyleClass(buttonClass);
-		editButton.setId(id);
+		editButton.setMarkupAttribute(formIdAtt, id);
+		//editButton.setId(id);
 		if(onClick != null) {
 			editButton.setOnClick(onClick);
 		}
@@ -298,6 +282,7 @@ public class FBHomePage extends FBComponentBase {
 		return item2;
 	}
 	
+	/*
 	private ListItem getProcessEmptyTaskItem(IWContext iwc, String processName, long processId, String taskName) {
 		ListItem item = new ListItem();
 		
@@ -321,15 +306,16 @@ public class FBHomePage extends FBComponentBase {
 		
 		return item;
 	}
+	*/
 	
-	private ListItem getProcessTaskFormItem(IWContext iwc, String processName, long processId, String title, String taskName, String date, String formId) {
+	private ListItem getProcessTaskFormItem(IWContext iwc, String processName, String processId, String title, String taskName, String date, String formId) {
 		ListItem item = new ListItem();
 		
 		Layer body = new Layer(Layer.DIV);
 		body.setStyleClass(TASK_FORM_ITEM_CLASS);
 		body.setId(formId);
 		
-		Text name = new Text(title);
+		Text name = new Text(title == null ? "Removed" : title);
 		name.setStyleClass(FORM_TITLE_CLASS);
 		
 		StringBuilder builder = new StringBuilder(date)
@@ -345,11 +331,11 @@ public class FBHomePage extends FBComponentBase {
 		Lists list = new Lists();
 		list.setStyleClass(BUTTON_LIST_CLASS);
 		
-		StringBuffer clickEvent = new StringBuffer("loadTaskFormDocument('").append(processName).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(processId).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(taskName).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(formId).append("');return false;");
-		list.add(addButton(iwc, EDIT_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_edit_link", "Edit"), formId + edit_process_mode_button_postfix, clickEvent.toString()));
-		list.add(addButton(iwc, TRY_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_try_link", "Try"), formId + try_button_postfix, null));
-		list.add(addButton(iwc, CODE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_code_link", "Code"), formId + code_button_postfix, null));
-		list.add(addButton(iwc, DELETE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_delete_link", "Delete"), formId + delete_button_postfix, null));
+		StringBuilder clickEvent = new StringBuilder("loadTaskFormDocument('").append(processName).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(processId).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(taskName).append(CoreConstants.JS_STR_PARAM_SEPARATOR).append(formId).append("');return false;");
+		list.add(addButton(iwc, EDIT_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_edit_link", "Edit"), formId, clickEvent.toString()));
+		list.add(addButton(iwc, TRY_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_try_link", "Try"), formId, null));
+		list.add(addButton(iwc, CODE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_code_link", "Code"), formId, null));
+		list.add(addButton(iwc, DELETE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_delete_link", "Delete"), formId, null));
 		
 		body.add(list);
 		
@@ -395,22 +381,22 @@ public class FBHomePage extends FBComponentBase {
 		
 		body.add(list);
 		
-		list.add(addButton(iwc, ENTRIES_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_entries_link", "Entries"), formId + entries_button_postfix, null));
-		list.add(addButton(iwc, EDIT_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_edit_link", "Edit"), formId + edit_button_postfix, null));
-		list.add(addButton(iwc, TRY_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_try_link", "Try"), formId + try_button_postfix, null));
-		list.add(addButton(iwc, CODE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_code_link", "Code"), formId + code_button_postfix, null));
-		list.add(addButton(iwc, DELETE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_delete_link", "Delete"), formId + delete_button_postfix, null));
+		list.add(addButton(iwc, ENTRIES_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_entries_link", "Entries"), formId, null));
+		list.add(addButton(iwc, EDIT_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_edit_link", "Edit"), formId, null));
+		list.add(addButton(iwc, TRY_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_try_link", "Try"), formId, null));
+		list.add(addButton(iwc, CODE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_code_link", "Code"), formId, null));
+		list.add(addButton(iwc, DELETE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_delete_link", "Delete"), formId, null));
 		
 		return body;
 	}
 	
-	private String getCreatedDate(String formId) {
-		String interm1 = formId.substring(formId.indexOf(CoreConstants.MINUS) + 5);
-		String month = interm1.substring(0, 3);
-		String interm2 = interm1.substring(interm1.indexOf(CoreConstants.UNDER) + 1);
-		String day = interm2.substring(0, 2);
-		String year = interm2.substring(interm2.length() - 4);
-		return new StringBuilder(month).append(CoreConstants.SPACE).append(day).append(CoreConstants.COMMA).append(CoreConstants.SPACE).append(year).toString();
-	}
+//	private String getCreatedDate(String formId) {
+//		String interm1 = formId.substring(formId.indexOf(CoreConstants.MINUS) + 5);
+//		String month = interm1.substring(0, 3);
+//		String interm2 = interm1.substring(interm1.indexOf(CoreConstants.UNDER) + 1);
+//		String day = interm2.substring(0, 2);
+//		String year = interm2.substring(interm2.length() - 4);
+//		return new StringBuilder(month).append(CoreConstants.SPACE).append(day).append(CoreConstants.COMMA).append(CoreConstants.SPACE).append(year).toString();
+//	}
 	
 }

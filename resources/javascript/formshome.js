@@ -123,7 +123,10 @@ function registerFormsHomeActions() {
 		item.addEvent('click', function(e){
 			new Event(e).stop();
 			showLoadingMessage('Loading');
-			FormDocument.loadFormDocumentEntries(item.id, {
+			
+			var formId = item.getProperty('formId');
+			
+			FormDocument.loadFormDocumentEntries(formId, {
 				callback: function(result) {
 					if(result == true) {
 						window.location=FORMADMIN_PATH;
@@ -180,7 +183,10 @@ function registerFormsHomeActions() {
 		item.addEvent('click', function(e){
 			new Event(e).stop();
 			showLoadingMessage('Loading');
-			FormDocument.loadFormDocument(item.id, {
+			
+			var formId = item.getProperty('formId');
+			
+			FormDocument.loadFormDocument(formId, {
 				callback: function(result) {
 					if(result == true) {
 						window.location=FORMBUILDER_PATH;
@@ -196,7 +202,10 @@ function registerFormsHomeActions() {
 		item.addEvent('click', function(e){
 			new Event(e).stop();
 			showLoadingMessage('Loading');
-			FormDocument.loadFormDocumentPreview(item.id, {
+			
+			var formId = item.getProperty('formId');
+			
+			FormDocument.loadFormDocumentPreview(formId, {
 				callback: function(result) {
 					if(result == true) {
 						window.location=FORMBUILDER_PATH;
@@ -212,7 +221,10 @@ function registerFormsHomeActions() {
 		item.addEvent('click', function(e){
 			new Event(e).stop();
 			showLoadingMessage('Loading');
-			FormDocument.loadFormDocumentCode(item.id, {
+			
+			var formId = item.getProperty('formId');
+			
+			FormDocument.loadFormDocumentCode(formId, {
 				callback: function(result) {
 					if(result == true) {
 						window.location=FORMBUILDER_PATH;
@@ -230,7 +242,10 @@ function registerFormsHomeActions() {
 			var answer = confirm("Delete form?")
 			if (answer) {
 				showLoadingMessage('Deleting');
-				FormDocument.deleteFormDocument(item.id, {
+				
+				var formId = item.getProperty('formId');
+				
+				FormDocument.deleteFormDocument(formId, {
 					callback: function(result) {
 						if(result == true) {
 							window.location = FORMSHOME_PATH;
@@ -249,7 +264,10 @@ function registerFormsHomeActions() {
 			var answer = confirm("Delete form?")
 			if (answer) {
 				showLoadingMessage('Deleting');
-				FormDocument.deleteTaskFormDocument(item.id, {
+				
+				var formId = item.getProperty('formId');
+				
+				FormDocument.deleteTaskFormDocument(formId, {
 					callback: function(result) {
 						if(result == true) {
 							window.location = FORMSHOME_PATH;
