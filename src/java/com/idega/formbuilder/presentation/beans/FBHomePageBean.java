@@ -26,9 +26,9 @@ import com.idega.util.IWTimestamp;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
- * Last modified: $Date: 2008/04/10 01:16:35 $ by $Author: civilis $
+ * Last modified: $Date: 2008/04/10 14:05:07 $ by $Author: civilis $
  */
 @Scope("singleton")
 @Service(FBHomePageBean.beanIdentifier)
@@ -58,17 +58,19 @@ public class FBHomePageBean {
 			for (Long pdId : pdsViews.keySet()) {
 				
 				ProcessDefinition pd;
+				Collection<TaskView> tviews = pdsViews.get(pdId);
 				
-				if(pdsViews.isEmpty())
+				if(tviews.isEmpty()) {
 					pd = jbpmContext.getGraphSession().getProcessDefinition(pdId);
-				else
-					pd = pdsViews.values().iterator().next().getTask().getProcessDefinition();
+				} else {
+					
+					 pd = tviews.iterator().next().getTask().getProcessDefinition();
+				 }
 				
 				ProcessAllTasksForms processForms = new ProcessAllTasksForms();
 				processForms.setProcessId(String.valueOf(pd.getId()));
 				processForms.setProcessName(pd.getName());
 				
-				Collection<TaskView> tviews = pdsViews.get(pdId);
 				ArrayList<TaskForm> taskForms = new ArrayList<TaskForm>(tviews.size());
 				
 				for (TaskView taskView : tviews) {
@@ -82,6 +84,7 @@ public class FBHomePageBean {
 					taskForms.add(form);
 				}
 				
+				processForms.setTasksCount(String.valueOf(pd.getTaskMgmtDefinition().getTasks().size()));
 				processForms.setTaskForms(taskForms);
 				allForms.add(processForms);
 			}
