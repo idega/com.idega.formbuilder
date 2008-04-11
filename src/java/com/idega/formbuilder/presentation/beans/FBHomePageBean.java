@@ -19,16 +19,16 @@ import com.idega.documentmanager.business.PersistenceManager;
 import com.idega.documentmanager.business.XFormPersistenceType;
 import com.idega.jbpm.IdegaJbpmContext;
 import com.idega.jbpm.def.TaskView;
-import com.idega.jbpm.def.ViewToTask;
-import com.idega.jbpm.def.ViewToTaskType;
+import com.idega.jbpm.def.ViewFactory;
+import com.idega.jbpm.def.ViewFactoryType;
 import com.idega.presentation.IWContext;
 import com.idega.util.IWTimestamp;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
- * Last modified: $Date: 2008/04/10 14:05:07 $ by $Author: civilis $
+ * Last modified: $Date: 2008/04/11 01:27:07 $ by $Author: civilis $
  */
 @Scope("singleton")
 @Service(FBHomePageBean.beanIdentifier)
@@ -37,7 +37,7 @@ public class FBHomePageBean {
 	public static final String beanIdentifier = "FBHomePageBean";
 	private IdegaJbpmContext idegaJbpmContext;
 	private PersistenceManager persistenceManager;
-	private ViewToTask viewToTask;
+	private ViewFactory viewFactory;
 	
 	@Transactional(readOnly=true)
 	public List<ProcessAllTasksForms> getAllTasksForms(IWContext iwc, Locale locale) {
@@ -52,7 +52,7 @@ public class FBHomePageBean {
 			for (ProcessDefinition def : defs)
 				defsIds.add(def.getId());
 			
-			Multimap<Long, TaskView> pdsViews = getViewToTask().getAllViewsByProcessDefinitions(defsIds);
+			Multimap<Long, TaskView> pdsViews = getViewFactory().getAllViewsByProcessDefinitions(defsIds);
 			ArrayList<ProcessAllTasksForms> allForms = new ArrayList<ProcessAllTasksForms>(pdsViews.keySet().size());
 			
 			for (Long pdId : pdsViews.keySet()) {
@@ -108,16 +108,6 @@ public class FBHomePageBean {
 	@Autowired
 	public void setIdegaJbpmContext(IdegaJbpmContext idegaJbpmContext) {
 		this.idegaJbpmContext = idegaJbpmContext;
-	}
-
-	public ViewToTask getViewToTask() {
-		return viewToTask;
-	}
-
-	@Autowired
-	@ViewToTaskType("xforms")
-	public void setViewToTask(ViewToTask viewToTask) {
-		this.viewToTask = viewToTask;
 	}
 	
 	public class ProcessAllTasksForms {
@@ -194,5 +184,15 @@ public class FBHomePageBean {
 	@XFormPersistenceType("slide")
 	public void setPersistenceManager(PersistenceManager persistenceManager) {
 		this.persistenceManager = persistenceManager;
+	}
+	
+	public ViewFactory getViewFactory() {
+		return viewFactory;
+	}
+
+	@Autowired
+	@ViewFactoryType("xforms")
+	public void setViewFactory(ViewFactory viewFactory) {
+		this.viewFactory = viewFactory;
 	}
 }

@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.faces.context.FacesContext;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.idega.documentmanager.business.DocumentManager;
 import com.idega.documentmanager.business.DocumentManagerFactory;
 import com.idega.idegaweb.IWMainApplication;
@@ -37,6 +39,7 @@ public class InstanceManager implements Serializable {
 		return documentManagerFactory;
 	}
 
+	@Autowired
 	public void setDocumentManagerFactory(
 			DocumentManagerFactory documentManagerFactory) {
 		this.documentManagerFactory = documentManagerFactory;

@@ -59,9 +59,13 @@ public class XFormsProcessManager {
 			ProcessDefinition pd = ctx.getGraphSession().getProcessDefinition(Long.parseLong(processId));
 			TaskMgmtDefinition mgmt = pd.getTaskMgmtDefinition();
 			Task task = mgmt.getTask(taskId);
+			/*
 			View view = getViewToTaskBinder().getView(task.getId());
 			AdvancedProperty taskForm = new AdvancedProperty(JBPM_XFORM_VIEW_NAME, view == null ? "" : view.getViewId());
 			result.add(taskForm);
+			*/
+			
+			
 			/*
 			 * 
 			 * TODO: adapt this logic to current assignments management 

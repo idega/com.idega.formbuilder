@@ -13,9 +13,7 @@
         <property name="processData" ref="processData" />
     </bean>
     <bean id="workspace" class="com.idega.formbuilder.presentation.beans.Workspace" scope="session" />
-    <bean id="actionManager" class="com.idega.formbuilder.presentation.beans.InstanceManager" scope="session">
-        <property name="documentManagerFactory" ref="xformsDocumentManagerFact" />
-    </bean>
+    <bean id="actionManager" class="com.idega.formbuilder.presentation.beans.InstanceManager" scope="session" />
     <bean id="processData" class="com.idega.formbuilder.presentation.beans.ProcessData" scope="session">
         <property name="jbpmProcessBusiness" ref="jbpmProcessBusiness" />
     </bean>
