@@ -34,6 +34,9 @@ var FORMADMIN_PATH = "/workspace/forms/formadmin/";
 var FORMSHOME_PATH = "/workspace/forms/";
 var TRANSITION_DURATION = 500;
 
+var RESERVED_HEIGHT = 82;
+var RESERVED_HEIGHT_FOR_FB = RESERVED_HEIGHT + 94;
+
 var modalFormName = null;
 var modalGoToDesigner = false;
 var modalSelectedForm = null;
@@ -42,6 +45,8 @@ var SELECTED_TASK = null;
 
 var fbLeftAccordion = null;
 var fbRightAccordion = null;
+
+var currentCallback = null;
 
 var FBDraggable = Element.extend({
 	draggableTag: function(droppables, handle, type) {
@@ -226,6 +231,30 @@ var FBDraggable = Element.extend({
 		return this;
 	}
 });
+function controlFormbuilderAppWindow() {
+	resizeAccordion(RESERVED_HEIGHT_FOR_FB, 'firstList');
+	resizeAccordion(RESERVED_HEIGHT_FOR_FB, 'pagesPanelMain');
+}
+function resizeAccordion(reservedHeight, containerId) {
+	var siteTreeContainer = $(containerId);
+	if (siteTreeContainer) {
+		var totalHeight = getTotalHeight();
+		var height = totalHeight - reservedHeight;
+		if (height > 0) {
+			siteTreeContainer.setStyle('height', height + 'px');
+		}
+
+		var heightForAccordion = totalHeight - 225;
+		if (heightForAccordion > 0) {
+			$$('.selectedElement').setStyle('height', heightForAccordion + 'px');
+		}
+	}
+	
+	/*if (!isSiteMap()) {
+		resizeFrame();
+		resizeSlider();
+	}*/
+}
 function initializeDesignView(initializeInline) {
 	FormComponent.getId(markSelectedComponent);
 	var myComponentSort = new Sortables($('dropBoxinner'), {
@@ -701,8 +730,10 @@ function loadButtonInfo(button) {
 	if(button != null) {
 		if(button.id) {
 			if(pressedButtonDelete == false) {
-				FormComponent.getFormButtonInfo(button.id, {
+				PropertyManager.selectComponent(button.id, 'button', {
+				//FormComponent.getFormButtonInfo(button.id, {
 					callback: function(resultDOM) {
+						currentCallback = buttonRerenderCallback;
 						CURRENT_ELEMENT = button.id;
 						var tabIndex = 1;
 						var parentNode = $('panel' + tabIndex + 'Content');
@@ -775,9 +806,9 @@ function saveHasPreview(event) {
 function markSelectedPage(parameter) {
 	var pagesPanel = $('pagesPanelMain');
 	if(pagesPanel != null) {
-		var oldPageIcon = pagesPanel.getElement('div.selectedElement');
+		var oldPageIcon = pagesPanel.getElement('div.selectedPage');
 		if(oldPageIcon != null) {
-			oldPageIcon.removeClass('selectedElement');
+			oldPageIcon.removeClass('selectedPage');
 		}
 		var pageNode = $(parameter);
 		if(pageNode == null) {
@@ -787,7 +818,7 @@ function markSelectedPage(parameter) {
 			CURRENT_PAGE_ID = parameter;
 		}
 		if(pageNode != null) {
-			pageNode.addClass('selectedElement');
+			pageNode.addClass('selectedPage');
 		}
 	}
 }
@@ -903,8 +934,10 @@ function markSelectedComponent(parameter) {
 function loadComponentInfo(component) {
 	if(component != null) {
 		if(pressedComponentDelete == false && draggingComponent == false) {
-			FormComponent.getFormComponentInfo(component.id, {
+			//FormComponent.getFormComponentInfo(component.id, {
+			PropertyManager.selectComponent(component.id, 'component', {
 				callback: function(resultDOM) {
+					currentCallback = componentRerenderCallback;
 					placeComponentInfo(resultDOM, 1, component.id);
 				}
 			});
@@ -1025,6 +1058,26 @@ function replaceChangedButton(parameter) {
 		}
 	}
 }
+var componentRerenderCallback = function(result) {
+	if(result[1] != null) {
+		var componentNode = result[1].documentElement;
+		var oldNode = $(result[0]);
+		if(oldNode != null) {
+			replaceNode(result[1], oldNode, $('dropBoxinner'));
+		}
+	}
+}
+var buttonRerenderCallback = function(results) {
+	var btn = $(results[0]);
+	if(btn != null) {
+		btn.getFirst().setProperty('value', results[1]);
+	}
+};
+function saveComponentProperty(id,type,value,event) {
+	if(event.type == 'blur' || event.type == 'change' || isEnterEvent(event)) {
+		PropertyManager.saveComponentProperty(id,type,value,currentCallback);
+	}
+}
 function saveButtonLabel(value) {
 	if(value != null) {
 		FormComponent.saveComponentLabel(value, {
@@ -1089,18 +1142,18 @@ function saveLabel(parameter) {
 	var index = parameter.id.split('_')[1];
 	var value = parameter.getProperty('value');
 	if(value.length != 0) {
-		FormComponent.saveSelectOptionLabel(index,value,replaceChangedComponent);
+		PropertyManager.saveSelectOptionLabel(index,value,currentCallback);
 	}
 }
 function saveValue(parameter) {
 	var index = parameter.id.split('_')[1];
 	var value = parameter.getProperty('value');
 	if(value.length != 0) {
-		FormComponent.saveSelectOptionValue(index,value,replaceChangedComponent);
+		PropertyManager.saveSelectOptionValue(index,value,currentCallback);
 	}
 }
 function switchDataSource() {
-	FormComponent.switchDataSource({
+	PropertyManager.switchDataSource({
 		callback: function(resultDOM) {
 			placeComponentInfo(resultDOM, 1, null);
 		}
@@ -1134,7 +1187,7 @@ function deleteThisItem(ind) {
 		var node2 = node.getParent();
 		node2.removeChild(currRow);
 	}
-	FormComponent.removeSelectOption(index,replaceChangedComponent);
+	PropertyManager.removeSelectOption(index,currentCallback);
 }
 function getNextRowIndex(parameter) {
 	var lastC = parameter.getLast();
@@ -1268,7 +1321,7 @@ function initializeInlineEdits() {
 function updatePageIconText(result) {
 	var pagesPanel = $('pagesPanelMain');
 	if(pagesPanel != null) {
-		var pageIcon = pagesPanel.getElement('div.selectedElement');
+		var pageIcon = pagesPanel.getElement('div.selectedPage');
 		if(pageIcon != null) {
 			var last = pageIcon.getLast();
 			if(last != null) {

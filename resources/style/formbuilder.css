@@ -607,7 +607,7 @@ span.statusMsg {
 	position: absolute;
 	background: #fff;
 	overflow: auto;
-	height: 704px;
+	bottom: 61px;
 	border: 1px solid #aeaeae;
 	width: 300px;
 }
@@ -651,8 +651,7 @@ span.statusMsg {
 	display: inline;
 	background-color: #FFFFFF;
 	width: 210px;
-	height: 704px;
-	bottom: 61px !important;
+	bottom: 61px;
 	z-index: 5;
 	border: 1px solid #AEAEAE;
 	overflow: auto;
@@ -886,10 +885,10 @@ span.statusMsg {
 	left: 80%;
 }
 
-.formElementHover:hover .fbCompHandler {
+.formElement:hover .fbCompHandler {
 	background: url(images/move_16.png) center 3px no-repeat Yellow;
 }
-.formElementHover:hover .fbcCompVar {
+.formElement:hover .fbcCompVar {
 	visibility: visible;
 }
 
@@ -923,7 +922,7 @@ span.statusMsg {
 	display: block;
 }
 
-.selectedElement {
+.selectedElement, .selectedPage {
 	background-color: #E4E4E4;
 	border: 1px solid #38485C;
 }
@@ -936,7 +935,7 @@ span.statusMsg {
 	margin-right: 0px;
 }
 
-.formElementHover:hover {
+.formElement:hover {
 	border-top: 1px solid #a1a1a1;
 	border-bottom: 1px solid #a1a1a1;
 	cursor: pointer;

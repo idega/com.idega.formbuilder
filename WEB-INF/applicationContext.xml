@@ -17,6 +17,9 @@
     <bean id="processData" class="com.idega.formbuilder.presentation.beans.ProcessData" scope="session">
         <property name="jbpmProcessBusiness" ref="jbpmProcessBusiness" />
     </bean>
+    <bean id="propertyManager" class="com.idega.formbuilder.presentation.beans.ComponentPropertyManager" scope="session">
+        <property name="formPage" ref="formPage" />
+    </bean>
     <bean id="palette" class="com.idega.formbuilder.presentation.beans.Palette" scope="session">
         <property name="instanceManager" ref="actionManager" />
     </bean>

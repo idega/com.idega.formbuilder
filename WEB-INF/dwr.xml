@@ -6,6 +6,10 @@
 	    	<param name="managedBeanName" value="processPalette"/>
 	    	<param name="class" value="com.idega.formbuilder.presentation.beans.ProcessPalette"/>
     	</create>
+    	<create creator="jsf" javascript="PropertyManager" scope="session">
+	    	<param name="managedBeanName" value="propertyManager"/>
+	    	<param name="class" value="com.idega.formbuilder.presentation.beans.ComponentPropertyManager"/>
+    	</create>
     	<create creator="jsf" javascript="ProcessData" scope="session">
 	    	<param name="managedBeanName" value="processData"/>
 	    	<param name="class" value="com.idega.formbuilder.presentation.beans.ProcessData"/>

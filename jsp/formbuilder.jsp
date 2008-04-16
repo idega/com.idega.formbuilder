@@ -19,6 +19,7 @@
 				 				/dwr/engine.js,
 				 				/dwr/util.js,
 								/dwr/interface/FormComponent.js,
+								/dwr/interface/PropertyManager.js,
 								/dwr/interface/FormDocument.js,
 								/dwr/interface/FormPage.js,
 								/dwr/interface/JbpmBusiness.js,
@@ -46,6 +47,7 @@
 						window.addEvent('domready', initializeDesign);
 						window.addEvent('domready', registerFormbuilderActions);
 						window.addEvent('domready', initializeVariableViewer);
+						window.addEvent('resize', controlFormbuilderAppWindow);
 						
                 	</script>
                 </f:verbatim>
