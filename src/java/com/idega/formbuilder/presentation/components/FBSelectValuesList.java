@@ -66,7 +66,6 @@ public class FBSelectValuesList extends FBComponentBase {
 		
 		Layer inner = new Layer(Layer.DIV);
 		inner.setId("selectOptsInner");
-		inner.setStyleClass(getStyleClass() + "Inner");
 		
 		List<ItemBean> itemSet = component.getItems();
 		for(int i = 0; i < itemSet.size(); i++) {
@@ -83,6 +82,7 @@ public class FBSelectValuesList extends FBComponentBase {
 	private UIComponent getNextSelectRow(String field, String value, int index, FacesContext context) {
 		Layer row = new Layer(Layer.DIV);
 		row.setId(DIV_PREFIX + index);
+		row.setStyleClass("selectRow");
 		
 		Image deleteButton = new Image();
 		deleteButton.setSrc(DELETE_BUTTON_IMG);

@@ -135,6 +135,7 @@ html>body .fbBottomButtonsContainer a {
 .newFormComponentIdle #cancelBt {
 	display: none;
 }
+
 .newFormComponentExpand #cancelBt {
 	background: url(images/button_cancel.png) no-repeat;
 	color: Black;
@@ -147,6 +148,7 @@ html>body .fbBottomButtonsContainer a {
 	width: 60px;
 	text-align: right;
 }
+
 .expandButton {
 	background: url(images/next_16.png) no-repeat scroll right;
 	width: 70px;
@@ -155,9 +157,11 @@ html>body .fbBottomButtonsContainer a {
 	background: url(images/previous_16.png) no-repeat scroll right;
 	width: 70px;
 }
+
 .newFormComponentIdle #okBt {
 	display: none;
 }
+
 #createFormBtn {
 	padding-top: 30px;
 	margin-top: 7px;
@@ -248,10 +252,13 @@ html>body .fbBottomButtonsContainer a {
 	background-color: #DDEDD3;
 	border: 1px groove #BDBDBD;
 	cursor: pointer;
-	height: 35px;
 	margin-bottom: 8px;
 	position: relative;
 	padding: 5px;
+}
+
+.formListItem {
+	height: 39px;
 }
 
 .formListItem > div {
@@ -269,6 +276,7 @@ html>body .fbBottomButtonsContainer a {
 
 .processItem {
 	overflow: hidden;
+	padding-bottom: 9px;
 }
 
 .processItem .formTitle {
@@ -281,6 +289,8 @@ html>body .fbBottomButtonsContainer a {
 	margin: 0;
 	padding: 0;
 	display: block;
+	margin-top: 44px;
+	padding-bottom: 20px;
 }
 
 .taskFormList > li {
@@ -544,11 +554,8 @@ html>body .fbBottomButtonsContainer a {
 	height: 20px;
 	font-weight: Bold							!important;
 	padding-bottom: 4px;
-	padding-top: 2px;
 	color: #0096ff;
 	text-align: right;
-	top: 0px;
-	
 }
 .buttonList li.casesButton {
 	background: url(images/application_view_list.png) left no-repeat;
@@ -607,8 +614,11 @@ html>body .fbBottomButtonsContainer a {
 }
 
 .processSummaryText {
+	position: absolute;
+	top: 25px;
+	left: 50px;
+	color: #666;
 }
-
 
 #formListContainer .mootabs_title .stateFullTab img {
 	position: absolute;

@@ -244,16 +244,12 @@ function resizeAccordion(reservedHeight, containerId) {
 			siteTreeContainer.setStyle('height', height + 'px');
 		}
 
-		var heightForAccordion = totalHeight - 225;
+		var heightForAccordion = totalHeight - 188;
 		if (heightForAccordion > 0) {
-			$$('.selectedElement').setStyle('height', heightForAccordion + 'px');
+			var el = $$('.selectedAccElement');
+			el.each(function (element) {element.setStyle('height', heightForAccordion + 'px');});
 		}
 	}
-	
-	/*if (!isSiteMap()) {
-		resizeFrame();
-		resizeSlider();
-	}*/
 }
 function initializeDesignView(initializeInline) {
 	FormComponent.getId(markSelectedComponent);
@@ -731,7 +727,6 @@ function loadButtonInfo(button) {
 		if(button.id) {
 			if(pressedButtonDelete == false) {
 				PropertyManager.selectComponent(button.id, 'button', {
-				//FormComponent.getFormButtonInfo(button.id, {
 					callback: function(resultDOM) {
 						currentCallback = buttonRerenderCallback;
 						CURRENT_ELEMENT = button.id;
@@ -1154,8 +1149,11 @@ function saveValue(parameter) {
 }
 function switchDataSource() {
 	PropertyManager.switchDataSource({
-		callback: function(resultDOM) {
-			placeComponentInfo(resultDOM, 1, null);
+		callback: function(results) {
+			if(results != null) {
+				placeComponentInfo(results[2], 1, null);
+				componentRerenderCallback(results);
+			}
 		}
 	});
 }
@@ -1188,6 +1186,19 @@ function deleteThisItem(ind) {
 		node2.removeChild(currRow);
 	}
 	PropertyManager.removeSelectOption(index,currentCallback);
+	var rows = $('selectOptsInner').getChildren();
+	for(var i = 0; i < rows.length; i++) {
+		var row = rows[i];
+		row.setProperty('id', 'rowDiv_' + i);
+		var delB = row.getFirst();
+		delB.setProperty('id', 'delB_' + i);
+		var labelF = delB.getNext();
+		labelF.setProperty('id', 'labelF_' + i);
+		var valueF = labelF.getNext();
+		valueF.setProperty('id', 'valueF_' + i);
+		var expB = valueF.getNext();
+		expB.setProperty('id', 'expB_' + i);
+	}
 }
 function getNextRowIndex(parameter) {
 	var lastC = parameter.getLast();

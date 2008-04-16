@@ -214,8 +214,8 @@ public class FBComponentProperties extends FBComponentBase {
 			line = createPropertyContainer(TWO_LINE_PROPERTY);
 			
 			TextArea helpMsg = new TextArea(PROPERTY_HELP_TEXT_NAME, properties.getHelpText().getString(locale));
-			errorMsg.setOnBlur("saveComponentProperty('" + componentId + "','compHelp',this.value, event)");
-			errorMsg.setOnKeyDown("saveComponentProperty('" + componentId + "','compHelp',this.value, event)");
+			helpMsg.setOnBlur("saveComponentProperty('" + componentId + "','compHelp',this.value, event)");
+			helpMsg.setOnKeyDown("saveComponentProperty('" + componentId + "','compHelp',this.value, event)");
 			
 			line.add(new Label(getLocalizedString(iwc, "comp_prop_helpmsg", "Help text"), helpMsg));
 			line.add(helpMsg);
@@ -242,8 +242,6 @@ public class FBComponentProperties extends FBComponentBase {
 			TextInput autofillValue = new TextInput();
 			autofillValue.setValue(autofillKey);
 			autofillValue.setId("propertyAutofill");
-//			autofillValue.setOnBlur("saveAutofill(this.value);");
-//			autofillValue.setOnKeyDown("savePropertyOnEnter(this.value,'compAuto',event);");
 			autofillValue.setOnBlur("saveComponentProperty('" + componentId + "','compAuto',this.value, event)");
 			autofillValue.setOnKeyDown("saveComponentProperty('" + componentId + "','compAuto',this.value, event)");
 			
@@ -317,7 +315,7 @@ public class FBComponentProperties extends FBComponentBase {
 					
 					
 					select.setId("propertyExternal");
-					select.setOnChange("saveExternalSrc(this.value);");
+					select.setOnChange("saveComponentProperty('" + componentId + "','externalSrc',this.value, event)");
 					List<SelectOption> options = ((DataSourceList) WFUtil.getBeanInstance("dataSources")).getExternalDataSources();
 					for(Iterator<SelectOption> it = options.iterator(); it.hasNext(); ) { 
 						select.addOption(it.next());

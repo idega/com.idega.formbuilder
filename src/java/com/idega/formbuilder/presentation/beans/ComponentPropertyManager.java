@@ -40,14 +40,22 @@ public class ComponentPropertyManager {
 		this.component = component;
 	}
 	
-	public Document switchDataSource() {
+	public Object[] switchDataSource() {
 		if(component.getDataSrc().equals(DataSourceList.externalDataSrc)) {
 			component.setDataSrc(DataSourceList.localDataSrc);
+			List<ItemBean> itemSet = component.getItems();
+			itemSet.clear();
+			component.setItems(itemSet);
 		} else {
 			component.setDataSrc(DataSourceList.externalDataSrc);
-			component.getItems().clear();
+			List<ItemBean> itemSet = component.getItems();
+			itemSet.clear();
+			component.setItems(itemSet);
 		}
-		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentProperties(component), true);
+		Document properties = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentProperties(component), true);
+		Document comp = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component.getComponent()), true);
+		Object[] result = {component.getComponent().getId(), comp, properties};
+		return result;
 	}
 	
 	public Document selectComponent(String id, String type) {
@@ -99,9 +107,11 @@ public class ComponentPropertyManager {
 	}
 	
 	public void removeItem(int index) {
-		if(index < component.getItems().size()) {
-			component.getItems().remove(index);
+		List<ItemBean> itemSet = component.getItems();
+		if(index < itemSet.size()) {
+			itemSet.remove(index);
 		}
+		component.setItems(itemSet);
 	}
 	
 	public Object[] saveSelectOptionLabel(int index, String value) {
@@ -146,48 +156,33 @@ public class ComponentPropertyManager {
 			component.setLabel(propertyValue);
 			Object[] result = {componentId, propertyValue};
 			return result;
-		} else if(propertyName.equals("compLabel")) {
-			component.setLabel(propertyValue);
-			Document doc = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component.getComponent()), true);
-			Object[] result = {componentId, doc};
-			return result;
-		} else if(propertyName.equals("compError")) {
-			component.setErrorMessage(propertyValue);
-			Document doc = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component.getComponent()), true);
-			Object[] result = {componentId, doc};
-			return result;
-		} else if(propertyName.equals("compHelp")) {
-			component.setErrorMessage(propertyValue);
-			Document doc = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component.getComponent()), true);
-			Object[] result = {componentId, doc};
-			return result;
-		} else if(propertyName.equals("compRequired")) {
-			component.setRequired(Boolean.parseBoolean(propertyValue));
-			Document doc = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component.getComponent()), true);
-			Object[] result = {componentId, doc};
-			return result;
-		} else if(propertyName.equals("plainText")) {
-			component.setPlainText(propertyValue);
-			Document doc = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component.getComponent()), true);
-			Object[] result = {componentId, doc};
-			return result;
-		} else if(propertyName.equals("plainLabel")) {
-			component.setLabel(propertyValue);
-			Document doc = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component.getComponent()), true);
-			Object[] result = {componentId, doc};
-			return result;
-		} else if(propertyName.equals("compAddButton")) {
-			component.setAddButtonLabel(propertyValue);
-			Document doc = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component.getComponent()), true);
-			Object[] result = {componentId, doc};
-			return result;
-		} else if(propertyName.equals("compRemoveButton")) {
-			component.setRemoveButtonLabel(propertyValue);
+		} else {
+			if(propertyName.equals("compLabel")) {
+				component.setLabel(propertyValue);
+			} else if(propertyName.equals("compError")) {
+				component.setErrorMessage(propertyValue);
+			} else if(propertyName.equals("compHelp")) {
+				component.setHelpMessage(propertyValue);
+			} else if(propertyName.equals("compRequired")) {
+				component.setRequired(Boolean.parseBoolean(propertyValue));
+			} else if(propertyName.equals("plainText")) {
+				component.setPlainText(propertyValue);
+			} else if(propertyName.equals("plainLabel")) {
+				component.setLabel(propertyValue);
+			} else if(propertyName.equals("compAddButton")) {
+				component.setAddButtonLabel(propertyValue);
+			} else if(propertyName.equals("compRemoveButton")) {
+				component.setRemoveButtonLabel(propertyValue);
+			} else if(propertyName.equals("externalSrc")) {
+				if("".equals(propertyValue)) {
+					propertyValue = null;
+				}
+				component.setExternalSrc(propertyValue);
+			}
 			Document doc = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component.getComponent()), true);
 			Object[] result = {componentId, doc};
 			return result;
 		}
-		return null;
 	}
 
 }
