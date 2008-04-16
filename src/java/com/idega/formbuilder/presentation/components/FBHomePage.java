@@ -32,14 +32,6 @@ public class FBHomePage extends FBComponentBase {
 	
 	public static final String COMPONENT_TYPE = "HomePage";
 	
-//	public static final String delete_button_postfix = "_delete";
-//	public static final String entries_button_postfix = "_entries";
-//	public static final String duplicate_button_postfix = "_duplicate";
-//	public static final String edit_button_postfix = "_edit";
-//	public static final String code_button_postfix = "_code";
-//	public static final String edit_process_mode_button_postfix = "_process";
-//	public static final String try_button_postfix = "_try";
-	
 	private static final String CONTAINER_DIV_ID = "fbHomePage";
 	private static final String CONTAINER_HEADER_ID = "fbHomePageHeaderBlock";
 	private static final String HEADER_LEFT = "fbHPLeft";
@@ -203,6 +195,7 @@ public class FBHomePage extends FBComponentBase {
 			
 			Lists list = new Lists();
 			list.setStyleClass(TASK_FORM_LIST_CLASS);
+			list.setStyleAttribute("display", "none");
 			
 			for (TaskForm taskForm : processForms.getTaskForms()) {
 

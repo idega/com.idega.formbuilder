@@ -146,10 +146,15 @@ function registerFormsHomeActions() {
 	});
 	$ES('div.processItem').each(function(item) {
 		item.setStyle('cursor', 'pointer');
+		var taskList = item.getElement('.taskFormList');
 		item.addEvent('click', function(e){
 			var link = item.getElement('ul.processButtonList').getLast().getFirst();
-			var transition = new Fx.Style(item, 'height' ,{duration: TRANSITION_DURATION, onComplete: function() {transitionButtons(item, link, false);}});
-			if(item.getStyle('height').toInt() == 35) {
+			var transition = new Fx.Style(item, 'height' ,{
+				duration: TRANSITION_DURATION, onComplete: function() {
+					transitionButtons(item, link, false);
+				}
+			});
+			if(taskList.getStyle('display') == 'none') {
 				var listSize = item.getLast().getChildren().length;
 				transition.start((listSize * 55) + 53);
 			} else {
@@ -162,17 +167,22 @@ function registerFormsHomeActions() {
 	});
 	$ES('a.transitionButton').each(function(item) {
 		var container = item.getParent().getParent().getParent();
+		var taskList = container.getElement('.taskFormList');
 		container.getElements('li.procBtnClass').each(function(button) {
 			button.setStyle('visibility', 'hidden');
 		});
 		item.addEvent('click', function(e){
 			new Event(e).stop();
-			var transition = new Fx.Style(item.getParent().getParent().getParent(), 'height' ,{duration: TRANSITION_DURATION, onComplete: function() {transitionButtons(container, item, true);}});
-			if(container.getStyle('height').toInt() == 35) {
+			var transition = new Fx.Style(item.getParent().getParent().getParent(), 'height' ,{
+				duration: TRANSITION_DURATION, onComplete: function() {
+					transitionButtons(container, item, true);
+				}
+			});
+			if(taskList.getStyle('display') == 'none') {
 				var listSize = container.getLast().getChildren().length;
 				transition.start((listSize * 55) + 53);
 			} else {
-					container.getElements('li.procBtnClass').each(function(button) {
+				container.getElements('li.procBtnClass').each(function(button) {
 					button.setStyle('visibility', 'hidden');
 				});
 				transition.start(35);
@@ -287,6 +297,8 @@ function transitionButtons(container, item, linkTarget) {
 		item.addClass('collapseButton');
 		item.setText('Collapse');
 		
+		container.getElement('.taskFormList').setStyle('display', 'block');
+		
 		if(linkTarget) {
 			container.getElements('li.procBtnClass').each(function(button) {
 				button.setStyle('visibility', 'visible');
@@ -297,6 +309,7 @@ function transitionButtons(container, item, linkTarget) {
 			});
 		}
 	} else {
+		container.getElement('.taskFormList').setStyle('display', 'none');
 		item.removeClass('collapseButton');
 		item.addClass('expandButton');
 		item.setText('Expand');
