@@ -1,11 +1,9 @@
 package com.idega.formbuilder.presentation.components;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
 
 import com.idega.documentmanager.component.beans.ItemBean;
 import com.idega.formbuilder.presentation.FBComponentBase;
@@ -13,7 +11,6 @@ import com.idega.formbuilder.presentation.beans.FormComponent;
 import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
 import com.idega.presentation.ui.TextInput;
-import com.idega.webface.WFUtil;
 
 public class FBSelectValuesList extends FBComponentBase {
 	
@@ -33,28 +30,54 @@ public class FBSelectValuesList extends FBComponentBase {
 	private static final String EXPAND_BUTTON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow_right.png";
 	private static final String COLLAPSE_BUTTON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow_left.png";
 
-	private static final String ADD_NEW_BUTTON = "ADD_NEW_BUTTON";
-	private static final String EXPAND_ALL_BUTTON = "EXPAND_ALL_BUTTON";
-	private static final String COLLAPSE_ALL_BUTTON = "COLLAPSE_ALL_BUTTON";
+	private FormComponent component;
+	
+	public FBSelectValuesList() {
+		this(null);
+	}
+	
+	public FBSelectValuesList(FormComponent component) {
+		this.component = component;
+	}
 	
 	protected void initializeComponent(FacesContext context) {
+		Layer container = new Layer(Layer.DIV);
+		container.setId("selectOpts");
+		container.setStyleClass(getStyleClass());
+		
 		Image addButton = new Image();
 		addButton.setId("addButton");
 		addButton.setSrc(ADD_BUTTON_IMG);
-		addButton.setOnClick("addNewItem('" + getId() + "');");
-		addFacet(ADD_NEW_BUTTON, addButton);
+		addButton.setOnClick("addNewItem('selectOpts');");
+		
+		container.add(addButton);
 		
 		Image expandAllButton = new Image();
 		expandAllButton.setId("expandAllButton");
 		expandAllButton.setSrc(EXPAND_BUTTON_IMG);
 		expandAllButton.setOnClick("expandAllItems();");
-		addFacet(EXPAND_ALL_BUTTON, expandAllButton);
+		container.add(expandAllButton);
 		
 		Image collapseAllButton = new Image();
 		collapseAllButton.setId("collapseAllButton");
 		collapseAllButton.setSrc(COLLAPSE_BUTTON_IMG);
 		collapseAllButton.setOnClick("collapseAllItems();");
-		addFacet(COLLAPSE_ALL_BUTTON, collapseAllButton);
+		container.add(collapseAllButton);
+		
+		Layer inner = new Layer(Layer.DIV);
+		inner.setId("selectOptsInner");
+		inner.setStyleClass(getStyleClass() + "Inner");
+		
+		List<ItemBean> itemSet = component.getItems();
+		for(int i = 0; i < itemSet.size(); i++) {
+			String label = itemSet.get(i).getLabel();
+			String value = itemSet.get(i).getValue();
+			inner.add(getNextSelectRow(label, value, i, context));
+		}
+		
+		container.add(inner);
+		
+		add(container);
 	}
 	
 	private UIComponent getNextSelectRow(String field, String value, int index, FacesContext context) {
@@ -65,7 +88,7 @@ public class FBSelectValuesList extends FBComponentBase {
 		deleteButton.setSrc(DELETE_BUTTON_IMG);
 		deleteButton.setId(DELETE_BUTTON_PREFIX + index);
 		deleteButton.setStyleClass(INLINE_DIV_STYLE);
-		deleteButton.setOnClick("deleteThisItem(this.parentNode.id)");
+		deleteButton.setOnClick("deleteThisItem(this.getParent().getProperty('id'))");
 		row.add(deleteButton);
 		
 		TextInput labelF = new TextInput();
@@ -94,49 +117,11 @@ public class FBSelectValuesList extends FBComponentBase {
 		return row;
 	}
 	
-	public void encodeBegin(FacesContext context) throws IOException {
-		super.encodeBegin(context);
-		ResponseWriter writer = context.getResponseWriter();
-		
-		writer.startElement("DIV", this);
-		writer.writeAttribute("id", getId(), "id");
-		writer.writeAttribute("class", getStyleClass(), "styleClass");
-		
-		UIComponent addOptionButton = getFacet(ADD_NEW_BUTTON);
-		if(addOptionButton != null) {
-			renderChild(context, addOptionButton);
-		}
-		UIComponent expandAllButton = getFacet(EXPAND_ALL_BUTTON);
-		if(expandAllButton != null) {
-			renderChild(context, expandAllButton);
-		}
-		UIComponent collapseAllButton = getFacet(COLLAPSE_ALL_BUTTON);
-		if(collapseAllButton != null) {
-			renderChild(context, collapseAllButton);
-		}
-		
-		writer.startElement("DIV", null);
-		writer.writeAttribute("id", getId() + "Inner", null);
-		writer.writeAttribute("class", getStyleClass() + "Inner", null);
+	public FormComponent getComponent() {
+		return component;
 	}
-	
-	public void encodeEnd(FacesContext context) throws IOException {
-		ResponseWriter writer = context.getResponseWriter();
-		
-		writer.endElement("DIV");
-		writer.endElement("DIV");
-		super.encodeEnd(context);
-	}
-	
-	public void encodeChildren(FacesContext context) throws IOException {
-		if (!isRendered()) {
-			return;
-		}
-		List<ItemBean> itemSet = (List<ItemBean>) ((FormComponent) WFUtil.getBeanInstance(FormComponent.BEAN_ID)).getItems();
-		for(int i = 0; i < itemSet.size(); i++) {
-			String label = itemSet.get(i).getLabel();
-			String value = itemSet.get(i).getValue();
-			renderChild(context, getNextSelectRow(label, value, i, context));
-		}
+
+	public void setComponent(FormComponent component) {
+		this.component = component;
 	}
 }

@@ -206,7 +206,7 @@ public class FBWorkspace extends FBComponentBase {
 		pages.setComponentStyleClass(FORM_PAGE_ICON_CLASS);
 		pages.setGeneralPartStyleClass(PAGES_GENERAL_CONTAINER_CLASS);
 		pages.setSpecialPartStyleClass(PAGES_SPECIAL_CONTAINER_CLASS);
-		pages.setSelectedStyleClass(SELECTED_ELEMENT_CLASS);
+		pages.setSelectedStyleClass("selectedPage");
 		
 		panel2.add(pages);
 		

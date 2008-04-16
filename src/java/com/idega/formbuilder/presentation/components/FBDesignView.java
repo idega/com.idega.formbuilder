@@ -4,7 +4,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import javax.faces.application.Application;
 import javax.faces.context.FacesContext;
 
 import com.idega.core.localisation.business.ICLocaleBusiness;
@@ -97,7 +96,6 @@ public class FBDesignView extends FBComponentBase {
 	}
 	
 	protected void initializeComponent(FacesContext context) {
-		Application application = context.getApplication();
 		IWContext iwc = CoreUtil.getIWContext();
 		
 		Layer component = new Layer(Layer.DIV);
@@ -216,11 +214,8 @@ public class FBDesignView extends FBComponentBase {
 					for(Iterator<String> it = ids.iterator(); it.hasNext(); ) {
 						String nextId = it.next();
 						Component comp = page.getComponent(nextId);
-						if(comp instanceof Container) {
-							continue;
-						} else {
-							FBFormComponent formComponent = (FBFormComponent) application.createComponent(FBFormComponent.COMPONENT_TYPE);
-							formComponent.setId(nextId);
+						if(!(comp instanceof Container)) {
+							FBFormComponent formComponent = new FBFormComponent(comp);
 							formComponent.setStyleClass(componentStyleClass);
 							formComponent.setOnLoad(LOAD_COMPONENT_ACTION);
 							formComponent.setOnDelete(REMOVE_COMPONENT_ACTION);
@@ -234,12 +229,10 @@ public class FBDesignView extends FBComponentBase {
 		
 		component.add(dropBoxInner);
 		
-		if(page != null) {
-			FBButtonArea area = (FBButtonArea) application.createComponent(FBButtonArea.COMPONENT_TYPE);
-			area.setStyleClass(componentStyleClass);
-			area.setComponentStyleClass(FORM_BUTTON_CLASS);
-			component.add(area);
-		}
+		FBButtonArea area = new FBButtonArea();
+		area.setStyleClass(componentStyleClass);
+		area.setComponentStyleClass(FORM_BUTTON_CLASS);
+		component.add(area);
 		
 		add(component);
 	}

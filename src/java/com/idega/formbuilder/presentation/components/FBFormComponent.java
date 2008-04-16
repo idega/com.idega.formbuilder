@@ -12,11 +12,9 @@ import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Element;
 
 import com.idega.documentmanager.business.component.Component;
-import com.idega.documentmanager.business.component.Page;
 import com.idega.documentmanager.business.component.properties.PropertiesComponent;
 import com.idega.formbuilder.dom.DOMTransformer;
 import com.idega.formbuilder.presentation.FBComponentBase;
-import com.idega.formbuilder.presentation.beans.FormPage;
 import com.idega.formbuilder.presentation.beans.ProcessPalette;
 import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.formbuilder.util.FBUtil;
@@ -58,6 +56,15 @@ public class FBFormComponent extends FBComponentBase {
 	private String speedButtonStyleClass;
 	private String value;
 	private String type;
+	private Component component;
+
+	public Component getComponent() {
+		return component;
+	}
+
+	public void setComponent(Component component) {
+		this.component = component;
+	}
 
 	public String getValue() {
 		return value;
@@ -95,6 +102,15 @@ public class FBFormComponent extends FBComponentBase {
 		super();
 	}
 	
+	public FBFormComponent(Component component) {
+		this.component = component;
+		setId(component.getId());
+		setStyleClass(DEFAULT_CLASS);
+		this.speedButtonStyleClass = DEFAULT_SPEED_CLASS;
+		this.onDelete = DEFAULT_DELETE_ACTION;
+		this.onLoad = DEFAULT_LOAD_ACTION;
+	}
+	
 	public FBFormComponent(String componentId) {
 		super();
 		setId(componentId);
@@ -105,67 +121,63 @@ public class FBFormComponent extends FBComponentBase {
 	}
 	
 	protected void initializeComponent(FacesContext context) {
-		Page page = ((FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID)).getPage();
-		if(page != null) {
-			Component component = page.getComponent(getId());
-			if(component != null) {
-				try {
-					Locale current = FBUtil.getUILocale();
-					Element element = (Element) component.getHtmlRepresentation(current).cloneNode(true);
-					
-					if(element != null) {
-						IWContext iwc = IWContext.getIWContext(context);
-						
-						element.removeAttribute(ID_ATTRIBUTE);
-						setElement(element);
-						
-						Layer handleLayer = new Layer(Layer.DIV);
-						handleLayer.setStyleClass(HANDLER_LAYER_CLASS);
-						
-						PropertiesComponent properties = component.getProperties();
-						type = component.getType();
-						if(type.startsWith("xf:")) {
-							ProcessPalette processPalette = (ProcessPalette) WFUtil.getBeanInstance(ProcessPalette.BEAN_ID);
-							type = processPalette.getComponentInternalTypeMappings().get(type);
-						}
-						if(properties.getVariable() != null) {
-							value = properties.getVariable().getName();
-						}
-						
-						Layer assignVariable = new Layer(Layer.DIV);
-						assignVariable.setStyleClass(ASSIGN_VAR_BOX_CLASS);
-						assignVariable.setMarkupAttribute(REL_ATTRIBUTE, type);
-						assignVariable.setId(LETTER_A + getId());
-						
-						Link assignLabel = new Link();
-						assignLabel.setStyleClass(ASSIGN_LABEL_CLASS);
-						if(value == null) {
-							assignLabel.setText(getLocalizedString(iwc, "fb_no_assign_label", "Not assigned"));
-						} else {
-							assignLabel.setText(getLocalizedString(iwc, "fb_assigned_to_label", "Assigned to: ") + value);
-						}
-							
-						Image icon = new Image();
-						icon.setSrc(EDIT_ICON);
-							
-						assignVariable.add(icon);
-						assignVariable.add(assignLabel);
-						
-						Image deleteButton = new Image();
-						deleteButton.setId(DELETE_BUTTON_PREFIX + getId());
-						deleteButton.setSrc(DELETE_BUTTON_ICON);
-						deleteButton.setOnClick(onDelete);
-						deleteButton.setStyleClass(speedButtonStyleClass);
-						
-						addFacet(VARIABLE_NAME_FACET, assignVariable);
-						addFacet(DELETE_BUTTON_FACET, deleteButton);
-						addFacet(HANDLE_LAYER_FACET, handleLayer);
-					}
-				} catch(Exception e) {
-					logger.error("Could not get HTML representation of component: " + getId(), e);
-				}
-			}
+		if(component == null) {
+			return;
 		}
+		IWContext iwc = IWContext.getIWContext(context);
+		
+		Locale current = FBUtil.getUILocale();
+		try {
+			Element element = (Element) component.getHtmlRepresentation(current).cloneNode(true);
+			if(element != null) {
+				element.removeAttribute(ID_ATTRIBUTE);
+				setElement(element);
+			}
+		} catch(Exception e) {
+			logger.error("Could not get HTML representation of component: " + getId(), e);
+		}
+						
+		Layer handleLayer = new Layer(Layer.DIV);
+		handleLayer.setStyleClass(HANDLER_LAYER_CLASS);
+						
+		PropertiesComponent properties = component.getProperties();
+		type = component.getType();
+		if(type.startsWith("xf:")) {
+			ProcessPalette processPalette = (ProcessPalette) WFUtil.getBeanInstance(ProcessPalette.BEAN_ID);
+			type = processPalette.getComponentInternalTypeMappings().get(type);
+		}
+		if(properties.getVariable() != null) {
+			value = properties.getVariable().getName();
+		}
+						
+		Layer assignVariable = new Layer(Layer.DIV);
+		assignVariable.setStyleClass(ASSIGN_VAR_BOX_CLASS);
+		assignVariable.setMarkupAttribute(REL_ATTRIBUTE, type);
+		assignVariable.setId(LETTER_A + getId());
+						
+		Link assignLabel = new Link();
+		assignLabel.setStyleClass(ASSIGN_LABEL_CLASS);
+		if(value == null) {
+			assignLabel.setText(getLocalizedString(iwc, "fb_no_assign_label", "Not assigned"));
+		} else {
+			assignLabel.setText(getLocalizedString(iwc, "fb_assigned_to_label", "Assigned to: ") + value);
+		}
+							
+		Image icon = new Image();
+		icon.setSrc(EDIT_ICON);
+							
+		assignVariable.add(icon);
+		assignVariable.add(assignLabel);
+						
+		Image deleteButton = new Image();
+		deleteButton.setId(DELETE_BUTTON_PREFIX + getId());
+		deleteButton.setSrc(DELETE_BUTTON_ICON);
+		deleteButton.setOnClick(onDelete);
+		deleteButton.setStyleClass(speedButtonStyleClass);
+						
+		addFacet(VARIABLE_NAME_FACET, assignVariable);
+		addFacet(DELETE_BUTTON_FACET, deleteButton);
+		addFacet(HANDLE_LAYER_FACET, handleLayer);
 	}
 	
 	public void encodeBegin(FacesContext context) throws IOException {
@@ -189,15 +201,11 @@ public class FBFormComponent extends FBComponentBase {
 	}
 	
 	public void encodeChildren(FacesContext context) throws IOException {
-		if (!isRendered()) {
-			return;
-		}
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
 		
 		if(workspace.isProcessMode()) {
 			UIComponent facet = getFacet(VARIABLE_NAME_FACET);
 			if(facet != null) {
-				System.out.println("Rendering icon - " + facet.getChildCount());
 				renderChild(context, facet);
 			}
 		}
