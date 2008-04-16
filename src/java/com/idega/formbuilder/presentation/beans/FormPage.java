@@ -23,7 +23,7 @@ public class FormPage implements Serializable {
 	
 	public static final String BEAN_ID = "formPage";
 	
-	private static final String FORM_ELEMENT = "formElement";
+	private static final String FORM_ELEMENT = "formElement formElementHover";
 	
 	private Page page;
 	private String id;
