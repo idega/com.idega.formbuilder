@@ -2,36 +2,52 @@
 .fbSelectListItem {
 	width: 95px;
 }
+
 .fbc_simple_text {
 	margin-right: 150px;
 	margin-left: 15px;
 }
+
 #propertyAutofill {
 	display: none;
 }
+
 .activeAutofill {
 	display: block					!important;
 }
+
 #languageChooser {
 	position: absolute;
 	left: 85%;
 	top: 20px;
 }
+
 .fbVariablesLegend ul {
 	list-style: none;
+	margin: 10px;
+	padding: 0;
 }
-.fbVariablesLegend ul li.legenItem {
-	width: 100px;
+
+.fbVariablesLegend ul li {
+	margin-bottom: 3px;
 }
+
+.fbVariablesLegend ul li span {
+	padding-left: 14px;
+}
+
 span.unusedLegend {
 	background:transparent url(images/bullet_black.png) no-repeat left;
 }
+
 span.singleLegend {
 	background:transparent url(images/bullet_green.png) no-repeat left;
 }
+
 span.multipleLegend {
 	background:transparent url(images/bullet_red.png) no-repeat left;
 }
+
 .selectVariableDialogStyle {
 	position: fixed;
 	width: auto;
@@ -615,14 +631,20 @@ span.statusMsg {
 	position: absolute;
 	border:1px solid #AEAEAE;
 }
+
 .variableListSection {
 	height: auto;
-	padding-left: 20px;
+	padding: 3px 10px;
 }
+
 .varEntry {
 	display: block;
-	margin-top: 10px;
+	margin-bottom: 3px !important;
+	margin-top: 0;
+	font-weight: bold;
+	padding: 3px;
 }
+
 #fbLeftPanel {
 	position: relative;
 }
@@ -655,9 +677,6 @@ span.statusMsg {
 	z-index: 5;
 	border: 1px solid #AEAEAE;
 	overflow: auto;
-}
-#pagesPanelMain {
-	height: 654px;
 }
 /*.pagesPanel {
 	position: absolute;
@@ -756,10 +775,12 @@ span.statusMsg {
 }
 
 .fbMenuTabBar {
-	font-size: 12px					!important;
-	font-weight: bold				!important;
-	margin-left: 10px				!important;
-	cursor: pointer					!important;
+	font-size: 12px !important;
+	font-weight: bold !important;
+	margin-left: 10px !important;
+	cursor: pointer !important;
+	margin-top: 10px;
+	margin-right: 10px;
 }
 
 #mainPalette, ul.mainPalette {
@@ -770,7 +791,6 @@ span.statusMsg {
 	height: 19px; /* Height of main menu */
 	position: relative; /* Don't change this position attribute */
 	background: #FFF !important;
-	border-bottom: 1px solid #aeaeae;
 	padding: 0 6px !important;
 }
 
@@ -791,40 +811,26 @@ span.statusMsg {
 }
 
 #paletteBody {
-	/*height: 588px;*/
 	font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
 	/* Font  of sub menu items */
 	background: #FFF !important; /* Background color of sub menu items */
-	width: 100%; /* Don't change this option */
 }
 
 #paletteBody div {
 	white-space: nowrap; /* Don't change this option */
 }
 
-#mainPalette .activeMenuItem {
-	width: 40px;
-	padding-right: 10px;
-	border-left: 1px solid #000000;
-	border-top: 1px solid #000000;
-	border-right: 1px solid #000000;
-	cursor: pointer;
-	/* Cursor like a hand when the user moves the mouse over the menu item */
-	background: #fef9eb !important;
-	border-bottom: 1px solid #fef9eb;
-	margin-right: 0 !important;
-	margin-left: 0 !important;
-}
-
 .paletteRow {
 	width: 270px;
 	height: 30px;
-	padding-left: 10px;
-	padding-right: 10px;
+	padding-left: 6px;
+	padding-right: 6px;
 }
+
 .paletteRow .left {
 	float: left;
 }
+
 .paletteRow .right {
 	float: right;
 }
@@ -1143,7 +1149,7 @@ body#formbuilder .toolbarButton:hover {
 .componentsList {
 	margin-bottom: 10px;
 	margin-top: 10px;
-	height: 358px;
+	height: auto !important;
 }
 
 .paletteComponent,.paletteComponentBt {
@@ -1596,11 +1602,11 @@ div#sourceViewDiv textarea {
 }
 
 fieldset.full-group div.string {
-overflow: hidden;	
+	overflow: hidden;	
 }
 
 fieldset .trigger input {
-border: 0 !important;
+	border: 0 !important;
 }
 
 .datatypeGroup {
@@ -1662,5 +1668,10 @@ border: 0 !important;
 
 #optionsPanel .mootabs_panel {
 	background: transparent;
-padding-top: 4px;
+	padding-top: 4px;
+	width: auto !important;
+}
+
+#accordionRight .element, #accordionLeft .element {
+	overflow: auto !important;
 }
