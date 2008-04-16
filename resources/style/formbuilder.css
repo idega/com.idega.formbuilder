@@ -1638,3 +1638,29 @@ border: 0 !important;
 	margin-top: 6px;
 	background: url(images/add_16.png) center top no-repeat;
 }
+
+#optionsPanel .mootabs_title {
+	border-bottom: 1px #a8a8a8 solid;
+	height: 24px;
+	margin: 0 !important;
+}
+
+#optionsPanel .mootabs_title li {
+	border: 1px #a8a8a8 solid;
+	padding: 0 8px;
+	line-height: 22px;
+	height: 22px;
+	font-family: "Lucida Grande", "Lucida Sans", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
+#optionsPanel .mootabs_title li.active {
+	background-color: #fff;
+	height: 23px;
+	border-bottom: 1px #fff solid;
+}
+
+#optionsPanel .mootabs_panel {
+	background: transparent;
+padding-top: 4px;
+}
