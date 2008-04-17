@@ -9,6 +9,13 @@
     	<create creator="jsf" javascript="PropertyManager" scope="session">
 	    	<param name="managedBeanName" value="propertyManager"/>
 	    	<param name="class" value="com.idega.formbuilder.presentation.beans.ComponentPropertyManager"/>
+	    	<include method="switchDataSource" />
+	    	<include method="selectComponent" />
+	    	<include method="saveAutofill" />
+	    	<include method="removeSelectOption" />
+	    	<include method="saveSelectOptionLabel" />
+	    	<include method="saveSelectOptionValue" />
+	    	<include method="saveComponentProperty" />
     	</create>
     	<create creator="jsf" javascript="ProcessData" scope="session">
 	    	<param name="managedBeanName" value="processData"/>
@@ -67,17 +74,6 @@
     	<create creator="jsf" javascript="FormComponent" scope="session">
 	    	<param name="managedBeanName" value="formComponent"/>
 	    	<param name="class" value="com.idega.formbuilder.presentation.beans.FormComponent"/>
-	    	<include method="saveComponentLabel" />
-	    	<include method="saveComponentAction" />
-	    	<include method="saveComponentProcessVariableName" />
-	    	<include method="saveComponentExternalSrc" />
-	    	<include method="saveComponentRequired" />
-	    	<include method="saveSelectOptionLabel" />
-	    	<include method="saveSelectOptionValue" />
-	    	<include method="saveComponentErrorMessage" />
-	    	<include method="saveComponentHelpMessage" />
-	    	<include method="saveComponentPlainText" />
-	    	<include method="saveComponentAutofillKey" />
 	    	<include method="addComponent" />
 	    	<include method="moveComponent" />
 	    	<include method="addButton" />
@@ -86,12 +82,9 @@
 	    	<include method="assignVariable" />
 	    	<include method="assignTransition" />
 	    	<include method="getAvailableComponentVariables" />
-	    	<include method="removeSelectOption" />
 	    	<include method="getFormButtonInfo" />
 	    	<include method="getFormComponentInfo" />
-	    	<include method="switchDataSource" />
 	    	<include method="removeButton" />
-	    	<include method="saveAutofill" />
     	</create>
   	</allow>
 </dwr>

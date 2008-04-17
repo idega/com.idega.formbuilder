@@ -55,18 +55,41 @@ span.multipleLegend {
 	background-color: #fff;
 	border: 3px solid #a1a1a1;
 }
+
 .assignVariableBox {
 	float: right;
 }
+
 .unused {
-	background-color: Grey;
+	background-color: #777;
+	border: 1px #444 solid;
 }
+
+.unused:hover {
+	background-color: #aaa;
+	border: 1px #777 solid;
+}
+
 .single {
-	background-color: Green;
+	background-color: #292;
+	border: 1px #161 solid;
 }
+
+.single:hover {
+	background-color: #2b2;
+	border: 1px #292 solid;
+}
+
 .multiple {
-	background-color: Red;
+	background-color: #922;
+	border: 1px #611 solid;
 }
+
+.multiple:hover {
+	background-color: #b22;
+	border: 1px #922 solid;
+}
+
 .actionBox {
 	height: 30px;
 	position: relative;
@@ -642,7 +665,7 @@ span.statusMsg {
 	margin-bottom: 3px !important;
 	margin-top: 0;
 	font-weight: bold;
-	padding: 3px;
+	padding: 2px;
 }
 
 #fbLeftPanel {
@@ -1077,13 +1100,14 @@ span.statusMsg {
 }
 
 .sourceView textarea {
-	position: absolute;
-	top: 20px;
-	bottom: 20px;
-	left: 5px;
-	right: 5px;
-	height: 500px;
-	display: block;
+	position: absolute !important;
+	top: 86px !important;
+	bottom: 0px !important;
+	left: 0px !important;
+	right: 0px !important;
+	height: auto !important;
+	width: auto !important;
+	display: block !important;
 }
 
 .sourceView input {

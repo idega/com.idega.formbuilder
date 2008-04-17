@@ -5,10 +5,6 @@ import java.util.List;
 
 import javax.faces.context.FacesContext;
 
-import org.apache.myfaces.renderkit.html.util.AddResource;
-import org.apache.myfaces.renderkit.html.util.AddResourceFactory;
-
-import com.idega.block.web2.business.Web2Business;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.Palette;
 import com.idega.formbuilder.presentation.beans.PaletteComponent;
@@ -37,7 +33,6 @@ public class FBPalette extends FBComponentBase {
 	private static final String palette_row_class = "paletteRow";
 	private static final String palette_row_left_class = "left";
 	private static final String palette_row_right_class = "right";
-	private static final String web2BeanIdentifier = "web2bean";
 	private static final String MOOTABS_TITLE_CLASS = "mootabs_title";
 	private static final String TITLE_ATTRIBUTE = "title";
 	private static final String PROCESS_TAB_TITLE = "processes";
@@ -48,11 +43,6 @@ public class FBPalette extends FBComponentBase {
 
 	protected void initializeComponent(FacesContext context) {
 		IWContext iwc = CoreUtil.getIWContext();
-		
-		AddResource adder = AddResourceFactory.getInstance(iwc);
-		Web2Business web2 = (Web2Business) getBeanInstance(web2BeanIdentifier);
-		adder.addJavaScriptAtPosition(iwc, AddResource.HEADER_BEGIN, web2.getBundleUriToMootabsScript());
-		adder.addStyleSheet(iwc, AddResource.HEADER_BEGIN, web2.getBundleUriToMootabsStyle());
 		
 		Layer body = new Layer(Layer.DIV);
 		body.setId(BODY_ID);
