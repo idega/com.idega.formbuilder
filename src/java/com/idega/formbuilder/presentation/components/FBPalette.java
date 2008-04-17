@@ -72,7 +72,7 @@ public class FBPalette extends FBComponentBase {
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
 		Palette palette = (Palette) WFUtil.getBeanInstance(Palette.BEAN_ID);
 		
-		tab1Forms.add(getTab(TAB1_ID, context, palette.getAllComponents(), workspace.isProcessMode()));
+		tab1Forms.add(getTab(TAB1_ID, context, palette.getBasicComponents(), workspace.isProcessMode()));
 		
 		body.add(tab1Forms);
 		
@@ -80,7 +80,7 @@ public class FBPalette extends FBComponentBase {
 		tab2Forms.setStyleClass(MOOTABS_PANEL_CLASS);
 		tab2Forms.setId(STANDALONE_TAB_TITLE);
 		
-		tab2Forms.add(getTab(TAB2_ID, context, null, workspace.isProcessMode()));
+		tab2Forms.add(getTab(TAB2_ID, context, palette.getAdvancedComponents(), workspace.isProcessMode()));
 		
 		body.add(tab2Forms);
 		

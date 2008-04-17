@@ -47,7 +47,7 @@ public class FBDesignView extends FBComponentBase {
 	private static final String INFO_CLASS = "info";
 	private static final String INLINE_EDIT_CLASS = "inlineEdit";
 	private static final String REL_ATTRIBUTE = "rel";
-	private static final String FORM_TITLE_REL = "FormDocument.setFormTitle";
+	private static final String FORM_TITLE_REL = "FormDocument.saveFormTitle";
 	private static final String FORM_HEADING_HEADER_ID = "formHeadingHeader";
 	private static final String MESSAGE_DIALOG_ID = "messageDialog";
 	private static final String DISPLAY_NONE = "display: none;";

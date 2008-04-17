@@ -21,6 +21,7 @@ public class Palette implements Serializable {
 	private List<PaletteComponent> basic = new ArrayList<PaletteComponent>();
 	private List<PaletteComponent> buttons = new ArrayList<PaletteComponent>();
 	private List<PaletteComponent> plain = new ArrayList<PaletteComponent>();
+	private List<PaletteComponent> autofill = new ArrayList<PaletteComponent>();
 	
 	private InstanceManager instanceManager;
 	
@@ -70,11 +71,17 @@ public class Palette implements Serializable {
 		this.buttons = buttons;
 	}
 	
-	public List<PaletteComponent> getAllComponents() {
+	public List<PaletteComponent> getBasicComponents() {
 		List<PaletteComponent> components = new ArrayList<PaletteComponent>();
 		components.addAll(getBasic());
 		components.addAll(getPlain());
 		components.addAll(getButtons());
+		return components;
+	}
+	
+	public List<PaletteComponent> getAdvancedComponents() {
+		List<PaletteComponent> components = new ArrayList<PaletteComponent>();
+		components.addAll(getAutofill());
 		return components;
 	}
 
@@ -84,6 +91,14 @@ public class Palette implements Serializable {
 			plain = populatePaletteComponentList(plains, "fbc");
 		}
 		return plain;
+	}
+	
+	public List<PaletteComponent> getAutofill() {
+		if(autofill == null || autofill.isEmpty()) {
+			List<String> comps = instanceManager.getDocumentManagerInstance().getAvailableFormComponentsTypesList(new ConstComponentCategory(ConstComponentCategory.AUTOFILL));
+			autofill = populatePaletteComponentList(comps, "fbc");
+		}
+		return autofill;
 	}
 
 	public void setPlain(List<PaletteComponent> plain) {

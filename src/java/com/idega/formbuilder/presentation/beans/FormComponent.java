@@ -1,7 +1,6 @@
 package com.idega.formbuilder.presentation.beans;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -104,16 +103,10 @@ public class FormComponent extends GenericComponent {
 //			component.getProperties().setVariable(value);
 //	}
 	
-//	public Document saveComponentAutofillKey(String value) {
-//		setAutofillKey(value);
-//		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(id), true);
-//	}
-	
 	public List<AdvancedProperty> getAvailableComponentVariables(String type) {
 		Set<String> variables = getProcessData().getComponentTypeVariables(type);
 		List<AdvancedProperty> result = new ArrayList<AdvancedProperty>();
-		for(Iterator<String> it = variables.iterator(); it.hasNext(); ) {
-			String var = it.next();
+		for(String var : variables) {
 			result.add(new AdvancedProperty(var, var));
 		}
 		return result;

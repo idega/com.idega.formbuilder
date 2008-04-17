@@ -1,3 +1,6 @@
+.selectedPage {
+	background-color: #E4E4E4		!important;
+}
 /*---Home page styles-----*/
 .fbSelectListItem {
 	width: 95px;
@@ -61,33 +64,36 @@ span.multipleLegend {
 }
 
 .unused {
-	background-color: #777;
-	border: 1px #444 solid;
+	background-color: #999;
+	border: 1px #666 solid;
+	color: #222;
 }
 
 .unused:hover {
-	background-color: #aaa;
-	border: 1px #777 solid;
+	background-color: #ccc;
+	border: 1px #999 solid;
 }
 
 .single {
-	background-color: #292;
-	border: 1px #161 solid;
+	background-color: #090;
+	border: 1px #060 solid;
+	color: #222;
 }
 
 .single:hover {
-	background-color: #2b2;
-	border: 1px #292 solid;
+	background-color: #0c0;
+	border: 1px #090 solid;
 }
 
 .multiple {
-	background-color: #922;
-	border: 1px #611 solid;
+	background-color: #009;
+	border: 1px #006 solid;
+	color: #ddd;
 }
 
 .multiple:hover {
-	background-color: #b22;
-	border: 1px #922 solid;
+	background-color: #00c;
+	border: 1px #009 solid;
 }
 
 .actionBox {
@@ -156,9 +162,16 @@ div.label span, div.label input {
 	color:#002243;
 	float:left;
 	font-size:13px;
-	margin:0pt;
-	padding:7px 0pt 0pt 14px;
+	margin:0;
+	padding:7px 0 0 14px;
 	text-transform:uppercase;
+	margin: 0;
+}
+
+div.label input {
+	border: 1px #a8a8a8 solid !important;
+	padding: 0;
+	background-color: #ccc !important;
 }
 
 .fbViewTabBar {
@@ -665,7 +678,8 @@ span.statusMsg {
 	margin-bottom: 3px !important;
 	margin-top: 0;
 	font-weight: bold;
-	padding: 2px;
+	padding: 1px 3px;
+	overflow: hidden;
 }
 
 #fbLeftPanel {
@@ -891,11 +905,23 @@ span.statusMsg {
 }
 
 .formElement {
-	min-height: 35px;
+	min-height: 45px;
 	margin-right: 0px;
 	margin-left: 0px;
 	padding: 10px 30px;
 	position: relative;
+}
+
+.formElement label {
+	float: left;
+	width: 180px;
+	font-size: 12px;
+	margin-right: 10px;
+}
+
+.formElement input, .formElement textarea {
+	margin: 0;
+	padding: 4px;
 }
 
 .fbCompHandler {
@@ -987,23 +1013,42 @@ span.statusMsg {
 
 .formElement:hover .speedButton {
 	position: absolute;
-	left: 90%;
+	right: 10px;
 	top: 10px;
 	display: inline;
 	cursor: pointer;
 }
+
 .assignVariableBox {
 	display: none;
 }
+
+.assignVariableBox a {
+	color: #1f1f1f;
+}
+
 .assignVariableBox a:hover {
 	text-decoration: none;
 }
+
 .formElement:hover .assignVariableBox {
 	position: absolute;
-	left: 70%;
-	top: 10px;
+	right: 4px;
+	bottom: 4px;
 	display: inline;
 	cursor: pointer;
+	border: 1px #a8a8a8 solid;
+	background: #fff;
+	font-size: 12px;
+	padding: 3px 8px;
+	line-height: 20px;
+	opacity: 0.7;
+	moz-opacity: 0.7;
+}
+
+.formElement:hover .assignVariableBox img {
+	vertical-align: middle;
+	margin-right: 6px;
 }
 
 .formButton:hover .speedButton {
@@ -1100,14 +1145,13 @@ span.statusMsg {
 }
 
 .sourceView textarea {
-	position: absolute !important;
-	top: 86px !important;
-	bottom: 0px !important;
-	left: 0px !important;
-	right: 0px !important;
-	height: auto !important;
-	width: auto !important;
-	display: block !important;
+	position: absolute;
+	top: 20px;
+	bottom: 20px;
+	left: 5px;
+	right: 5px;
+	height: 500px;
+	display: block;
 }
 
 .sourceView input {
@@ -1130,7 +1174,11 @@ div.info span,div.info input {
 	font-size: 22px;
 }
 
-
+div.info input {
+	border: 1px #a8a8a8 solid !important;
+	width: 70% !important;
+	background-color: #ccc !important;
+}
 
 /*legend.label span,legend.label input {
 	float: left;
@@ -1379,13 +1427,13 @@ body#formbuilder .acStretch{
 	margin-right: 3px !important;
 }
 #mainPalette .inactiveMenuItem{
-	background: #fff 		!important;
-	margin-left: 0 			!important;
-	color: #000;			/* Text color */
-	cursor:pointer;			/* Cursor like a hand when the user moves the mouse over the menu item */
+	background: #fff !important;
+	margin-left: 0 !important;
+	color: #000; /* Text color */
+	cursor:pointer; /* Cursor like a hand when the user moves the mouse over the menu item */
 }
 #pageButtonArea{
-	position: relative 		!important;
+	position: relative !important;
 	/*display: block;*/
 	width: auto; 			
 	border: 1px solid transparent;
@@ -1399,9 +1447,9 @@ body#formbuilder .acStretch{
 .formButton {
 	min-width: 100px;		
 	width: auto ;			
-	padding: 10px 0 10px 15px ;
+	padding: 10px 0 10px ;
 	margin-left: 0; 			
-	margin-right: 16px;		
+	margin-right: 16px;
 }
 .formButton input {
 	padding: 5px 8px;
@@ -1698,4 +1746,8 @@ fieldset .trigger input {
 
 #accordionRight .element, #accordionLeft .element {
 	overflow: auto !important;
+}
+
+.selectedAccElement {
+	border-bottom: 1px #bdbdbd solid;
 }

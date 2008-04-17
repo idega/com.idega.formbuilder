@@ -29,6 +29,7 @@ public class ProcessPalette extends Palette implements Serializable {
 		if(componentInternalTypeMappings.isEmpty()) {
 			componentInternalTypeMappings.put("xf:input", "fbc_text");
 			componentInternalTypeMappings.put("xf:textarea", "fbc_textarea");
+			componentInternalTypeMappings.put("xf:group", "fbc_multi_upload_file");
 		}
 		return componentInternalTypeMappings;
 	}
@@ -69,12 +70,10 @@ public class ProcessPalette extends Palette implements Serializable {
 	
 	public String getComponentDatatype(String componentType) {
 		Set<String> datatypesSet = getDatatypes();
-		for(Iterator<String> it = datatypesSet.iterator(); it.hasNext(); ) {
-			String datatype = it.next();
+		for(String datatype : datatypesSet) {
 			List<PaletteComponent> comps = getComponents(datatype);
-			for(Iterator<PaletteComponent> it2 = comps.iterator(); it2.hasNext(); ) {
-				PaletteComponent comp = it2.next();
-				if(comp.getType().equals(componentType)) {
+			for(PaletteComponent component : comps) {
+				if(component.getType().equals(componentType)) {
 					return datatype;
 				}
 			}
@@ -92,6 +91,9 @@ public class ProcessPalette extends Palette implements Serializable {
 		compTypes = getInstanceManager().getDocumentManagerInstance().getComponentsByDatatype(new ConstComponentDatatype(ConstComponentDatatype.LIST));
 		paletteComps = populatePaletteComponentList(compTypes);
 		components.put(ConstComponentDatatype.LIST, paletteComps);
+		compTypes = getInstanceManager().getDocumentManagerInstance().getComponentsByDatatype(new ConstComponentDatatype(ConstComponentDatatype.FILES));
+		paletteComps = populatePaletteComponentList(compTypes);
+		components.put(ConstComponentDatatype.FILES, paletteComps);
 	}
 
 	public List<PaletteComponent> getString() {
@@ -114,6 +116,17 @@ public class ProcessPalette extends Palette implements Serializable {
 
 	public void setFile(List<PaletteComponent> file) {
 		components.put(ConstComponentDatatype.FILE, file);
+	}
+	
+	public List<PaletteComponent> getFiles() {
+		if(components == null || components.isEmpty()) {
+			populateComponentMap();
+		}
+		return components.get(ConstComponentDatatype.FILES);
+	}
+
+	public void setFiles(List<PaletteComponent> files) {
+		components.put(ConstComponentDatatype.FILES, files);
 	}
 
 	public List<PaletteComponent> getList() {

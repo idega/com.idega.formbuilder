@@ -244,7 +244,7 @@ function resizeAccordion(reservedHeight, containerId) {
 			siteTreeContainer.setStyle('height', height + 'px');
 		}
 
-		var heightForAccordion = totalHeight - 188;
+		var heightForAccordion = totalHeight - 186;
 		if (heightForAccordion > 0) {
 			var el = $$('.selectedAccElement');
 			el.each(function (element) {element.setStyle('height', heightForAccordion + 'px');});
@@ -675,37 +675,6 @@ function getPageComponents() {
 	}
 	return result;
 }
-function savePropertyOnEnter(value,attribute,event) {
-	if(event.type == 'blur' || isEnterEvent(event)) {
-		switch(attribute) {
-			case 'compText':
-				savePlaintext(value);
-				break;
-		  	case 'compTitle':
-		  		saveComponentLabel(value);
-		    	break;
-		    case 'btnTitle':
-		    	saveButtonLabel(value);
-		    	break;
-		    case 'compProcVar':
-		  		saveComponentProcessVariableName(value);
-		    	break;	
-		  	case 'compErr':
-		    	saveErrorMessage(value);
-		    	break;
-		 	case 'compHelp':
-		 		saveHelpMessage(value);
-		 		break;
-		 	case 'compAuto':
-		 		saveAutofill(value);
-		 		break;
-		 	case 'compExt':
-		  		saveExternalSrc(value);
-		  		break;
-		  	default:
-		}
-	}
-}
 function removeButton(parameter) {
 	if(parameter != null) {
 		if(parameter.parentNode) {
@@ -929,7 +898,6 @@ function markSelectedComponent(parameter) {
 function loadComponentInfo(component) {
 	if(component != null) {
 		if(pressedComponentDelete == false && draggingComponent == false) {
-			//FormComponent.getFormComponentInfo(component.id, {
 			PropertyManager.selectComponent(component.id, 'component', {
 				callback: function(resultDOM) {
 					currentCallback = componentRerenderCallback;
@@ -953,7 +921,7 @@ function createLeftAccordion() {
 			element.removeClass('hiddenElement');
 			element.addClass('selectedAccElement');
 
-			var heightForAccordion = getTotalHeight() - 187;
+			var heightForAccordion = getTotalHeight() - 185;
 			if (heightForAccordion > 0) {
 				element.setStyle('height', heightForAccordion + 'px');
 			}
@@ -979,7 +947,7 @@ function createLeftAccordion() {
 			element.removeClass('hiddenElement');
 			element.addClass('selectedAccElement');
 
-			var heightForAccordion = getTotalHeight() - 187;
+			var heightForAccordion = getTotalHeight() - 185;
 			if (heightForAccordion > 0) {
 				element.setStyle('height', heightForAccordion + 'px');
 			}
@@ -1091,47 +1059,8 @@ function saveButtonAction(value) {
         FormComponent.saveComponentAction(value);
     }
 }
-function saveComponentLabel(value) {
-	if(value != null) {
-		FormComponent.saveComponentLabel(value, {
-			callback: function(resultDOM) {
-				replaceChangedComponent(resultDOM);
-			}
-		});
-	}
-}
 function saveComponentProcessVariableName(value) {
 	FormComponent.saveComponentProcessVariableName(value);
-}
-function saveRequired(parameter) {
-	if(parameter != null) {
-		FormComponent.saveComponentRequired(parameter, replaceChangedComponent);
-	}
-}
-function saveErrorMessage(parameter) {
-	if(parameter != null) {
-		FormComponent.saveComponentErrorMessage(parameter, replaceChangedComponent);
-	}
-}
-function saveExternalSrc(parameter) {
-	if(parameter != null) {
-		FormComponent.saveComponentExternalSrc(parameter, replaceChangedComponent);
-	}
-}
-function saveAutofill(parameter) {
-	if(parameter != null) {
-		FormComponent.saveComponentAutofillKey(parameter, replaceChangedComponent);
-	}
-}
-function savePlaintext(parameter) {
-	if(parameter != null) {
-		FormComponent.saveComponentPlainText(parameter, replaceChangedComponent);
-	}
-}
-function saveHelpMessage(parameter) {
-	if(parameter != null) {
-		FormComponent.saveComponentHelpMessage(parameter, replaceChangedComponent);
-	}
 }
 function saveLabel(parameter) {
 	var index = parameter.id.split('_')[1];
