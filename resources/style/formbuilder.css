@@ -1144,14 +1144,16 @@ span.statusMsg {
 	position: relative;
 }
 
-.sourceView textarea {
-	position: absolute;
-	top: 20px;
-	bottom: 20px;
-	left: 5px;
-	right: 5px;
-	height: 500px;
+.sourceView textarea#sourceTextarea {
+	position: absolute !important;
+	top: 89px !important;
+	bottom: 0px !important;
+	left: 0px !important;
+	right: 0px !important;
+	height: auto !important;
 	display: block;
+	width: auto !important;
+	margin: 0;
 }
 
 .sourceView input {

@@ -171,6 +171,8 @@ public class ComponentPropertyManager {
 				component.setLabel(propertyValue);
 			} else if(propertyName.equals("compAddButton")) {
 				component.setAddButtonLabel(propertyValue);
+			} else if(propertyName.equals("compAuto")) {
+				component.setAutofillKey(propertyValue);
 			} else if(propertyName.equals("compRemoveButton")) {
 				component.setRemoveButtonLabel(propertyValue);
 			} else if(propertyName.equals("externalSrc")) {

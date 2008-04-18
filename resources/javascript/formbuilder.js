@@ -936,6 +936,12 @@ function createLeftAccordion() {
 		}
 	}, $('accordionLeft'));
 	
+	var diff = 0;
+	var rightTabsCount = $('accordionRight').getElements('span.toggler').length;
+	if(rightTabsCount == 1) {
+		diff = 18;
+	}
+	
 	fbRightAccordion = new Accordion('span.atStartRight', 'div.atStartRight', {
 		opacity: false,
 		display: 0,
@@ -947,7 +953,7 @@ function createLeftAccordion() {
 			element.removeClass('hiddenElement');
 			element.addClass('selectedAccElement');
 
-			var heightForAccordion = getTotalHeight() - 185;
+			var heightForAccordion = getTotalHeight() - (185 - diff);
 			if (heightForAccordion > 0) {
 				element.setStyle('height', heightForAccordion + 'px');
 			}
@@ -997,6 +1003,7 @@ function loadItemset(container,list) {
 function toggleAutofill(parameter) {
 	if(parameter != null) {
 		var node = $('propertyAutofill');
+		PropertyManager.saveAutofill(parameter);
 		if(parameter == false) {
 			node.removeClass('activeAutofill');
 		} else {
