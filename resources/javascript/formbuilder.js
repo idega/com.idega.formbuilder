@@ -163,29 +163,15 @@ var FBDraggable = Element.extend({
 					});
 					if(draggingComponent == false) {
 						var componentType = this.elementOrg.id;
-						dwr.engine.beginBatch();
-   						FormComponent.addComponent(componentType, {
-							callback: function(resultDOM) {
-								if(resultDOM != null) {
-									currentElement = resultDOM;
-									var temp = currentElement;
-									var temp2 = 2 + 2;
+   						FormComponent.addTaskComponent(componentType, {
+							callback: function(results) {
+								if(results != null && results.length == 3) {
+									currentElement = results[0];
+									COMPONENT_DATATYPE = results[1];
+									VARIABLE_LIST = results[2];
 								}
 							}
 						});
-						ProcessPalette.getComponentDatatype(componentType, {
-							callback: function(datatype) {
-								if(datatype != null) {
-									COMPONENT_DATATYPE = datatype;
-								}
-							}
-						});
-						ProcessData.getComponentTypeVariables(componentType, {
-							callback: function(list) {
-								VARIABLE_LIST = list;
-							}
-						});
-						dwr.engine.endBatch();
    						draggingComponent = true;
 					}
 				}
@@ -419,11 +405,32 @@ function registerFormbuilderActions() {
 	var noVariableBtn = $('noVariableBtn');
 	setHrefToVoidFunction(noVariableBtn);
 	noVariableBtn.addEvent('click', function(e) {
+		var currentId = currentElement.documentElement.getAttribute('id');
+		if(CURRENT_ELEMENT_UNDER != null) {
+			FormComponent.moveComponent(currentId, CURRENT_ELEMENT_UNDER, {
+				callback: function(result) {
+					if($('emptyForm') != null) {
+						$('emptyForm').remove();
+					}
+					dropBoxinner = $('dropBoxinner');
+					if(result == 'append') {
+						insertNodesToContainer(currentElement, dropBoxinner);
+					} else {
+						var node = $(result);
+						insertNodesToContainerBefore(currentElement, dropBoxinner, node);
+					}
+					currentElement = null;
+					initializeDesignView(false);
+				}
+			});
+		}
 		closeVariableListDialog($('selectVariableDialog'));
 	});
 	var cancelVariableBtn = $('cancelVariableBtn');
 	setHrefToVoidFunction(cancelVariableBtn);
 	cancelVariableBtn.addEvent('click', function(e) {
+		var currentId = currentElement.documentElement.getAttribute('id');
+		FormComponent.removeComponent(currentId);
 		closeVariableListDialog($('selectVariableDialog'));
 	});
 }
@@ -464,12 +471,18 @@ function handleAssignLabelWidget(e) {
 			
 	FormComponent.getAvailableComponentVariables(compType, {
 		callback: function(resultItems) {
-			var icon = labelContainer.getFirst();
-			icon.remove();
-			var label = labelContainer.getFirst();
+			var icon = labelContainer.getElement('img');
+			icon.setStyle('display', 'none');
+			var label = labelContainer.getElement('a');
 			var labelText = label.getText().substring(label.getText().indexOf(':') + 2);
-			label.remove();
-			var select = new Element('select');
+			label.setStyle('display', 'none');
+			var select = labelContainer.getElement('select');
+			if(select == null) {
+				select = new Element('select');
+				select.injectInside(labelContainer);
+			}
+			removeChildren(select);
+			select.setStyle('display', 'inline');
 			var option = new Element('option',{
 				'value': ''
 			}).setText('Not assigned');
@@ -485,30 +498,31 @@ function handleAssignLabelWidget(e) {
 				option.injectInside(select);
 			}
 			select.addEvent('change', function(e) {
-				var selValue = select.options[select.selectedIndex].getText();
-				FormComponent.assignVariable(null, selValue, 'string', {
-					callback: function(result) {
+				var selValue = select.options[select.selectedIndex].getProperty('value');
+				var selText = select.options[select.selectedIndex].getText();
+				var compId = select.getParent().getParent().getProperty('id');
+				FormComponent.assignVariable(compId, selValue, {
+					callback: function(resultDOM) {
 						select.setStyle('display', 'none');
-						icon.injectInside(labelContainer);
-						label.injectInside(labelContainer);
-						label.setText('Assigned to: ' + selValue);
-						label.removeEvents('click');
+						label.setStyle('display', 'inline');
+						icon.setStyle('display', 'inline');
+						label.setText('Assigned to: ' + selText);
 						setHrefToVoidFunction(label);
+						var parentNode = $('panel0Content2');
+						if(parentNode != null && resultDOM != null) {
+							removeChildren(parentNode);
+							insertNodesToContainer(resultDOM, parentNode);
+						}
 					}
 				});
 			});
 			select.addEvent('blur', function(e) {
-				this.setStyle('display', 'none');
-				icon.injectInside(labelContainer);
-				label.injectInside(labelContainer);
-				label.removeEvents('click');
+				select.setStyle('display', 'none');
+				label.setStyle('display', 'inline');
+				icon.setStyle('display', 'inline');
 				setHrefToVoidFunction(label);
-				/*label.addEvent('click', function(event) {
-					handleAssignLabelWidget(event);
-				});*/
 				initializeVariableViewer();
 			});
-			select.injectInside(labelContainer);
 			select.focus();
 		}
 	});
@@ -540,6 +554,9 @@ function reloadWorkspace(locale) {
 function setHrefToVoidFunction(element) {
 	element.setProperty('href', 'javascript:void(0)');
 }
+function handleVariablePopupSelect(e) {
+	
+}
 function showVariableList(containerId, positionLeft, positionTop, list, transition) {
 	var container = $(containerId);
 	if (container == null) {
@@ -553,74 +570,77 @@ function showVariableList(containerId, positionLeft, positionTop, list, transiti
 	
 	var vlist = container.getFirst().getNext();
 	vlist.empty();
-	for(var i = 0; i < list.length; i++) {
-		var variable = list[i];
-		var li = new Element('li');
-		var link = new Element('a');
-		link.setText(variable);
-		link.injectInside(li);
-		link.addEvent('click', function(e) {
-			new Event(e).stop();
-			var target = e.target;
-			var variableName = target.getText();
-			if(transition == true) {
-				if(CURRENT_BUTTON != null) {
-					if(CURRENT_BUTTON.documentElement) {
-						var buttonId = CURRENT_BUTTON.documentElement.getAttribute('id');
-						if(buttonId != null) {
-							FormComponent.assignTransition(buttonId, variableName, {
-								callback: function(result) {
-									if(result != null) {
-										toggleVariableStatus(variableName + '_trans', result);
+	if(list.length > 0) {
+		for(var i = 0; i < list.length; i++) {
+			var variable = list[i];
+			var li = new Element('li');
+			var link = new Element('a');
+			var tokens = variable.split(':');
+			link.setText(tokens[1]);
+			link.setProperty('rel', variable);
+			link.injectInside(li);
+			link.addEvent('click', function(e) {
+				new Event(e).stop();
+				var target = e.target;
+				var variableName = target.getProperty('rel');
+				if(transition == true) {
+					if(CURRENT_BUTTON != null) {
+						if(CURRENT_BUTTON.documentElement) {
+							var buttonId = CURRENT_BUTTON.documentElement.getAttribute('id');
+							if(buttonId != null) {
+								FormComponent.assignTransition(buttonId, variableName, {
+									callback: function(result) {
+										if(result != null) {
+											toggleVariableStatus(variableName + '_trans', result);
+										}
 									}
-								}
-							});
-							insertNodesToContainer(CURRENT_BUTTON, $('pageButtonArea'));
+								});
+								insertNodesToContainer(CURRENT_BUTTON, $('pageButtonArea'));
+							}
+						}
+					}
+				} else {
+					if(currentElement != null) {
+						if(currentElement.documentElement) {
+							var componentId = currentElement.documentElement.getAttribute('id');
+							if(componentId != null && CURRENT_ELEMENT_UNDER != null) {
+								FormComponent.assignVariableAndMoveComponent(componentId, variableName, CURRENT_ELEMENT_UNDER, {
+									callback: function(results) {
+										if(results != null && results.length == 3) {
+											var parentNode = $('panel0Content2');
+											if(parentNode != null && results[0] != null) {
+												removeChildren(parentNode);
+												insertNodesToContainer(results[0], parentNode);
+											}
+													
+											if($('emptyForm') != null) {
+												$('emptyForm').remove();
+											}
+											if(results[1] == 'append') {
+												insertNodesToContainer(results[2], $('dropBoxinner'));
+												currentElement = null;
+											} else {
+												var node = $(results[1]);
+												insertNodesToContainerBefore(results[2], $('dropBoxinner'), node);
+												currentElement = null;
+											}
+											initializeDesignView(false);
+										}
+									}
+								});
+							}
 						}
 					}
 				}
-			} else {
-				if(currentElement != null) {
-					if(currentElement.documentElement) {
-						var componentId = currentElement.documentElement.getAttribute('id');
-						if(componentId != null && CURRENT_ELEMENT_UNDER != null) {
-							dwr.engine.beginBatch();
-							FormComponent.assignVariable(componentId, variableName, COMPONENT_DATATYPE, {
-								callback: function(result) {
-									if(result != null) {
-										 var componentDOM = currentElement.documentElement;
-										 var varName = componentDOM.childNodes[2];
-										 if(varName != null) {
-										 	varName.textContent = variableName;
-										 }
-										 toggleVariableStatus(variableName + '_var', result);
-									}
-								}
-							});
-							FormComponent.moveComponent(componentId, CURRENT_ELEMENT_UNDER, {
-								callback: function(result) {
-									if($('emptyForm') != null) {
-										$('emptyForm').remove();
-									}
-									if(result == 'append') {
-										insertNodesToContainer(currentElement, $('dropBoxinner'));
-										currentElement = null;
-									} else {
-										var node = $(result);
-										insertNodesToContainerBefore(currentElement, $('dropBoxinner'), node);
-										currentElement = null;
-									}
-									initializeDesignView(false);
-								}
-							});
-							dwr.engine.endBatch();
-						}
-					}
-				}
-			}
-			closeVariableListDialog(container);
-		});
-		li.injectInside(vlist);
+				closeVariableListDialog(container);
+			});
+			li.injectInside(vlist);
+		}
+	} else {
+		var message = new Element('span');
+		message.setText('No variables for this component');
+		message.addClass('vPopupMessage');
+		message.injectAfter(vlist);
 	}
 }
 function toggleVariableStatus(componentId, status) {
@@ -961,7 +981,7 @@ function createLeftAccordion() {
 			element.removeClass('hiddenElement');
 			element.addClass('selectedAccElement');
 
-			var heightForAccordion = getTotalHeight() - (186 - diff);
+			var heightForAccordion = getTotalHeight() - (187 - diff);
 			if (heightForAccordion > 0) {
 				element.setStyle('height', heightForAccordion + 'px');
 			}

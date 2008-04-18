@@ -25,7 +25,7 @@ public class FBWorkspace extends FBComponentBase {
 	private static final String FORM_PAGE_ICON_CLASS = "formPageIcon";
 	private static final String PAGES_GENERAL_CONTAINER_CLASS = "pagesGeneralContainer";
 	private static final String PAGES_SPECIAL_CONTAINER_CLASS = "pagesSpecialContainer";
-	private static final String SELECTED_ELEMENT_CLASS = "selectedElement";
+	private static final String SELECTED_PAGE_CLASS = "selectedPage";
 	private static final String OPTIONS_PANEL_ID = "optionsPanel";
 	private static final String FORM_LIST_URL = "/workspace/forms";
 	private static final String TAB_TITLE_CLASS = "title";
@@ -43,6 +43,7 @@ public class FBWorkspace extends FBComponentBase {
 	private static final String LEFT_PANEL_1 = "panel1Content";
 	private static final String RIGHT_PANEL_0 = "panel0Content2";
 	private static final String RIGHT_PANEL_1 = "panel1Content2";
+	private static final String LAST_CLASS = "last";
 
 	public FBWorkspace() {
 		this(null);
@@ -139,7 +140,7 @@ public class FBWorkspace extends FBComponentBase {
 		panel2.setStyleClass(ELEMENT_CLASS);
 		panel2.setStyleClass(AT_START_CLASS);
 		panel2.setId(LEFT_PANEL_1);
-		panel2.setStyleClass("last");
+		panel2.setStyleClass(LAST_CLASS);
 		
 		FBComponentProperties simpleProperties = new FBComponentProperties();
 		
@@ -201,14 +202,14 @@ public class FBWorkspace extends FBComponentBase {
 		panel2.setStyleClass(ELEMENT_CLASS);
 		panel2.setStyleClass(AT_START_RIGHT_CLASS);
 		panel2.setId(RIGHT_PANEL_1);
-		panel2.setStyleClass("last");
+		panel2.setStyleClass(LAST_CLASS);
 		
 		FBPagesPanel pages = new FBPagesPanel();
 		pages.setStyleClass(PAGES_PANEL);
 		pages.setComponentStyleClass(FORM_PAGE_ICON_CLASS);
 		pages.setGeneralPartStyleClass(PAGES_GENERAL_CONTAINER_CLASS);
 		pages.setSpecialPartStyleClass(PAGES_SPECIAL_CONTAINER_CLASS);
-		pages.setSelectedStyleClass("selectedPage");
+		pages.setSelectedStyleClass(SELECTED_PAGE_CLASS);
 		
 		panel2.add(pages);
 		

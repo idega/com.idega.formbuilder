@@ -186,8 +186,8 @@ public class ProcessData implements Serializable {
 	
 	public Set<String> getComponentTypeVariables(String componentType) {
 		ProcessPalette processPalette = (ProcessPalette) WFUtil.getBeanInstance(ProcessPalette.BEAN_ID);
-		String datatype = processPalette.getComponentDatatype(componentType);
-		return jbpmProcessBusiness.getProcessVariablesByDatatype(getProcessId(), datatype);
+		Set<String> datatypes = processPalette.getComponentDatatype(componentType);
+		return jbpmProcessBusiness.getProcessVariablesByDatatypes(getProcessId(), datatypes);
 	}
 	
 	public ConstVariableStatus getTransitionStatus(String transition) {

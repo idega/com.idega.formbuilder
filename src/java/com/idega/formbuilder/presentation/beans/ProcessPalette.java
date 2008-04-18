@@ -3,6 +3,7 @@ package com.idega.formbuilder.presentation.beans;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -68,17 +69,18 @@ public class ProcessPalette extends Palette implements Serializable {
 		return components.get(datatype);
 	}
 	
-	public String getComponentDatatype(String componentType) {
+	public Set<String> getComponentDatatype(String componentType) {
 		Set<String> datatypesSet = getDatatypes();
+		Set<String> datatypes = new HashSet<String>();
 		for(String datatype : datatypesSet) {
 			List<PaletteComponent> comps = getComponents(datatype);
 			for(PaletteComponent component : comps) {
 				if(component.getType().equals(componentType)) {
-					return datatype;
+					datatypes.add(datatype);
 				}
 			}
 		}
-		return null;
+		return datatypes;
 	}
 	
 	private void populateComponentMap() {

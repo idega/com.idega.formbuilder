@@ -125,6 +125,8 @@ public class FBVariableViewer extends FBComponentBase {
 		
 		Layer legend = new Layer(Layer.DIV);
 		legend.setStyleClass(FB_VARIABLES_LEGEND);
+		headerText = new Text(getLocalizedString(iwc, "fb_var_legend_label", "Legend"));
+		legend.add(headerText);
 		
 		Lists topList = new Lists();
 		ListItem item2 = new ListItem();

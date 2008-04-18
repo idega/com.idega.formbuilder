@@ -75,11 +75,13 @@
 	    	<param name="managedBeanName" value="formComponent"/>
 	    	<param name="class" value="com.idega.formbuilder.presentation.beans.FormComponent"/>
 	    	<include method="addComponent" />
+	    	<include method="addTaskComponent" />
 	    	<include method="moveComponent" />
 	    	<include method="addButton" />
 	    	<include method="removeComponent" />
 	    	<include method="getId" />
 	    	<include method="assignVariable" />
+	    	<include method="assignVariableAndMoveComponent" />
 	    	<include method="assignTransition" />
 	    	<include method="getAvailableComponentVariables" />
 	    	<include method="getFormButtonInfo" />
