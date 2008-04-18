@@ -139,6 +139,7 @@ public class FBWorkspace extends FBComponentBase {
 		panel2.setStyleClass(ELEMENT_CLASS);
 		panel2.setStyleClass(AT_START_CLASS);
 		panel2.setId(LEFT_PANEL_1);
+		panel2.setStyleClass("last");
 		
 		FBComponentProperties simpleProperties = new FBComponentProperties();
 		
@@ -200,6 +201,7 @@ public class FBWorkspace extends FBComponentBase {
 		panel2.setStyleClass(ELEMENT_CLASS);
 		panel2.setStyleClass(AT_START_RIGHT_CLASS);
 		panel2.setId(RIGHT_PANEL_1);
+		panel2.setStyleClass("last");
 		
 		FBPagesPanel pages = new FBPagesPanel();
 		pages.setStyleClass(PAGES_PANEL);

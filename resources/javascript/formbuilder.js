@@ -232,10 +232,10 @@ var FBDraggable = Element.extend({
 	}
 });
 function controlFormbuilderAppWindow() {
-	resizeAccordion(RESERVED_HEIGHT_FOR_FB, 'firstList');
-	resizeAccordion(RESERVED_HEIGHT_FOR_FB, 'pagesPanelMain');
+	resizeAccordion(RESERVED_HEIGHT_FOR_FB, 'firstList', false);
+	resizeAccordion(RESERVED_HEIGHT_FOR_FB, 'pagesPanelMain', true);
 }
-function resizeAccordion(reservedHeight, containerId) {
+function resizeAccordion(reservedHeight, containerId, variableTabs) {
 	var siteTreeContainer = $(containerId);
 	if (siteTreeContainer) {
 		var totalHeight = getTotalHeight();
@@ -243,8 +243,16 @@ function resizeAccordion(reservedHeight, containerId) {
 		if (height > 0) {
 			siteTreeContainer.setStyle('height', height + 'px');
 		}
+		
+		var diff = 0;
+		if(variableTabs) {
+			var rightTabsCount = $('accordionRight').getElements('span.toggler').length;
+			if(rightTabsCount == 1) {
+				diff = 18;
+			}
+		}
 
-		var heightForAccordion = totalHeight - 186;
+		var heightForAccordion = totalHeight - (186 - diff);
 		if (heightForAccordion > 0) {
 			var el = $$('.selectedAccElement');
 			el.each(function (element) {element.setStyle('height', heightForAccordion + 'px');});
@@ -921,7 +929,7 @@ function createLeftAccordion() {
 			element.removeClass('hiddenElement');
 			element.addClass('selectedAccElement');
 
-			var heightForAccordion = getTotalHeight() - 185;
+			var heightForAccordion = getTotalHeight() - 187;
 			if (heightForAccordion > 0) {
 				element.setStyle('height', heightForAccordion + 'px');
 			}
@@ -953,7 +961,7 @@ function createLeftAccordion() {
 			element.removeClass('hiddenElement');
 			element.addClass('selectedAccElement');
 
-			var heightForAccordion = getTotalHeight() - (185 - diff);
+			var heightForAccordion = getTotalHeight() - (186 - diff);
 			if (heightForAccordion > 0) {
 				element.setStyle('height', heightForAccordion + 'px');
 			}
