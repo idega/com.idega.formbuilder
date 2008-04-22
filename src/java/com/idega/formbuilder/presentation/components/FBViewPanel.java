@@ -17,9 +17,9 @@ public class FBViewPanel extends FBComponentBase {
 	public static final int DESIGN_VIEW_INDEX = 0;
 	public static final int PREVIEW_VIEW_INDEX = 1;
 	public static final int SOURCE_VIEW_INDEX = 2;
-	public static final String PREVIEW_VIEW = "preview";
-	public static final String SOURCE_VIEW = "source";
-	public static final String DESIGN_VIEW = "design";
+	public static final String PREVIEW_VIEW = "Preview";
+	public static final String SOURCE_VIEW = "Source";
+	public static final String DESIGN_VIEW = "Design";
 	
 	private static final String PREVIEW_IFRAME_NAME = "previewIFrame";
 	private static final String PREVIEW_VIEW_ID = "previewView";

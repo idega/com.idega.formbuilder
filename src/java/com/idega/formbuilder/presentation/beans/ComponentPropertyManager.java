@@ -20,6 +20,18 @@ import com.idega.util.CoreUtil;
 
 public class ComponentPropertyManager {
 	
+	private static final String BUTTON_LABEL_PROP = "buttonLabel";
+	private static final String COMP_LABEL_PROP = "compLabel";
+	private static final String COMP_ERROR_PROP = "compError";
+	private static final String COMP_HELP_PROP = "compHelp";
+	private static final String COMP_REQ_PROP = "compRequired";
+	private static final String PLAIN_LABEL_PROP = "plainLabel";
+	private static final String PLAIN_TEXT_PROP = "plainText";
+	private static final String COMP_AUTO_PROP = "compAuto";
+	private static final String COMP_ADD_BUTTON_PROP = "compAddButton";
+	private static final String COMP_REMOVE_BUTTON_PROP = "compRemoveButton";
+	private static final String COMP_EXT_SRC_PROP = "externalSrc";
+	
 	private GenericComponent component;
 	
 	private FormPage formPage;
@@ -152,31 +164,31 @@ public class ComponentPropertyManager {
 			return null;
 		}
 		
-		if(propertyName.equals("buttonLabel")) {
+		if(propertyName.equals(BUTTON_LABEL_PROP)) {
 			component.setLabel(propertyValue);
 			Object[] result = {componentId, propertyValue};
 			return result;
 		} else {
-			if(propertyName.equals("compLabel")) {
+			if(propertyName.equals(COMP_LABEL_PROP)) {
 				component.setLabel(propertyValue);
-			} else if(propertyName.equals("compError")) {
+			} else if(propertyName.equals(COMP_ERROR_PROP)) {
 				component.setErrorMessage(propertyValue);
-			} else if(propertyName.equals("compHelp")) {
+			} else if(propertyName.equals(COMP_HELP_PROP)) {
 				component.setHelpMessage(propertyValue);
-			} else if(propertyName.equals("compRequired")) {
+			} else if(propertyName.equals(COMP_REQ_PROP)) {
 				component.setRequired(Boolean.parseBoolean(propertyValue));
-			} else if(propertyName.equals("plainText")) {
+			} else if(propertyName.equals(PLAIN_TEXT_PROP)) {
 				component.setPlainText(propertyValue);
-			} else if(propertyName.equals("plainLabel")) {
+			} else if(propertyName.equals(PLAIN_LABEL_PROP)) {
 				component.setLabel(propertyValue);
-			} else if(propertyName.equals("compAddButton")) {
+			} else if(propertyName.equals(COMP_ADD_BUTTON_PROP)) {
 				component.setAddButtonLabel(propertyValue);
-			} else if(propertyName.equals("compAuto")) {
+			} else if(propertyName.equals(COMP_AUTO_PROP)) {
 				component.setAutofillKey(propertyValue);
-			} else if(propertyName.equals("compRemoveButton")) {
+			} else if(propertyName.equals(COMP_REMOVE_BUTTON_PROP)) {
 				component.setRemoveButtonLabel(propertyValue);
-			} else if(propertyName.equals("externalSrc")) {
-				if("".equals(propertyValue)) {
+			} else if(propertyName.equals(COMP_EXT_SRC_PROP)) {
+				if(CoreConstants.EMPTY.equals(propertyValue)) {
 					propertyValue = null;
 				}
 				component.setExternalSrc(propertyValue);

@@ -47,6 +47,7 @@
 						window.addEvent('domready', initializeDesign);
 						window.addEvent('domready', registerFormbuilderActions);
 						window.addEvent('domready', initializeVariableViewer);
+						window.addEvent('domready', initializeBottomToolbar);
 						window.addEvent('resize', controlFormbuilderAppWindow);
                 	</script>
                 </f:verbatim>
@@ -72,11 +73,11 @@
 					<t:commandLink id="noVariableBtn" forceId="true"  value="None"></t:commandLink>
 					<t:commandLink id="cancelVariableBtn" forceId="true"  value="Cancel"></t:commandLink>
 				</t:div>
-				<t:div styleClass="fbBottomButtonsContainer">
+				<t:div id="bottomButtonsContainer" forceId="true" styleClass="fbBottomButtonsContainer">
 					
-	                <t:commandLink id="previewButton" styleClass="leftButton" forceId="true" onclick="switchView('preview', this.id);return false" value="Preview"></t:commandLink>
-					<t:commandLink id="sourceCodeButton" styleClass="leftButton" forceId="true" onclick="switchView('source', this.id);return false" value="Source"></t:commandLink>
-					<t:commandLink id="designButton" styleClass="leftButton" forceId="true" onclick="switchView('design', this.id);return false" value="Design"></t:commandLink>
+	                <t:commandLink id="previewButton" styleClass="leftButton viewSwitchBtn" forceId="true" value="Preview"></t:commandLink>
+					<t:commandLink id="sourceCodeButton" styleClass="leftButton viewSwitchBtn" forceId="true" value="Source"></t:commandLink>
+					<t:commandLink id="designButton" styleClass="leftButton viewSwitchBtn" forceId="true" value="Design"></t:commandLink>
 					<t:commandLink id="newFormButton" styleClass="rightButton smoothbox" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}"></t:commandLink>
 					<t:commandLink id="saveFormButton" styleClass="rightButton" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"></t:commandLink>
 					<t:commandLink id="homeButton" styleClass="rightButton smoothbox" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_home']}"></t:commandLink>

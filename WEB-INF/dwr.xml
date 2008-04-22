@@ -20,6 +20,8 @@
     	<create creator="jsf" javascript="ProcessData" scope="session">
 	    	<param name="managedBeanName" value="processData"/>
 	    	<param name="class" value="com.idega.formbuilder.presentation.beans.ProcessData"/>
+	    	<include method="getAvailableTransitions" />
+	    	<include method="createVariable" />
     	</create>
   		<create creator="jsf" javascript="XFormsProcess" scope="application">
 	    	<param name="managedBeanName" value="xformsProcessManager"/>
@@ -55,6 +57,7 @@
 	    	<include method="getWorkspace" />
 	    	<include method="switchView" />
 	    	<include method="getDesignView" />
+	    	<include method="getView" />
     	</create>
     	<create creator="jsf" javascript="FormPage" scope="session">
 	    	<param name="managedBeanName" value="formPage"/>

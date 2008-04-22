@@ -145,7 +145,7 @@ public class FormDocument implements Serializable {
 //		if(getFormId() != null)
 //			getFormsService().unlockForm(getFormId());
 			
-		workspace.setView("design");
+		workspace.setView(FBViewPanel.DESIGN_VIEW);
 		
 		initializeBeanInstance(getDocument());
 		processData.initializeBeanInstance(getDocument(), new Long(processId), taskName);
@@ -178,7 +178,7 @@ public class FormDocument implements Serializable {
 				FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 				formPage.initializeBeanInstance(firstP);
 					
-				getWorkspace().setView("design");
+				getWorkspace().setView(FBViewPanel.DESIGN_VIEW);
 				getWorkspace().setProcessMode(true);
 				initializeBeanInstance(getDocument());
 				getProcessData().initializeBeanInstance(getDocument(), new Long(processId), taskName);
@@ -214,7 +214,7 @@ public class FormDocument implements Serializable {
 			FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 			formPage.initializeBeanInstance(firstP);
 				
-			getWorkspace().setView("design");
+			getWorkspace().setView(FBViewPanel.DESIGN_VIEW);
 			initializeBeanInstance(getDocument());
 			getProcessData().initializeBeanInstance(getDocument(), new Long(processId), taskName);
 		} catch(Exception e) {
@@ -243,7 +243,7 @@ public class FormDocument implements Serializable {
 //		if(getFormId() != null)
 //			getFormsService().unlockForm(getFormId());
 			
-		workspace.setView("design");
+		workspace.setView(FBViewPanel.DESIGN_VIEW);
 		
 		initializeBeanInstance(document);
 			
@@ -401,12 +401,6 @@ public class FormDocument implements Serializable {
 		primary_form_name = null;
 	}
 	
-//	private boolean isProcessForm(String formId) {
-//		if(formId.endsWith("_process")) 
-//			return true;
-//		return false;
-//	}
-	
 	@SuppressWarnings("unchecked")
 	public boolean loadFormDocument(Long formId) {
 		
@@ -424,7 +418,7 @@ public class FormDocument implements Serializable {
 				FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 				formPage.initializeBeanInstance(firstP);
 				
-				getWorkspace().setView("design");
+				getWorkspace().setView(FBViewPanel.DESIGN_VIEW);
 				initializeBeanInstance(document);
 			}
 		} catch(Exception e) {
@@ -624,17 +618,12 @@ public class FormDocument implements Serializable {
 			} else {
 				page = document.addConfirmationPage(null);
 			}
-			if(page == null) {
-				throw new Exception("Confirmation page does not exist in the document");
-			}
 			setOverviewPage(page);
 		} else {
 			page = document.getConfirmationPage();
 			if(page != null) {
 				setOverviewPage(null);
 				page.remove();
-			} else {
-				throw new Exception("Confirmation page does not exist in the document");
 			}
 		}
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormPage(page.getId(), page.getProperties().getLabel().getString(new Locale("en")), true, "formPageIcon Special preview"), true);

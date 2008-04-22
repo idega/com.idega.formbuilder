@@ -15,6 +15,18 @@
 #propertyAutofill {
 	display: none;
 }
+#pagesPanelMessageBox {
+	background-color:#F9FF9E;
+	border:2px solid #FFFF00;
+	font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
+	font-size:11px;
+	font-weight: bold;
+	height:25px;
+	margin: 5px;
+	padding:2px 3px 5px;
+	text-align:center;
+	vertical-align:middle;
+}
 
 .activeAutofill {
 	display: block					!important;
@@ -1107,6 +1119,11 @@ span.statusMsg {
 	display: inline;
 }
 
+#emptyForm {
+	background-color: #F9FFEE							!important;
+	border: 2px solid #FFAC00							!important;
+}
+
 #noFormNotice,#emptyForm {
 	background-color: #F9FF9E;
 	padding-left: 30px;
@@ -1568,7 +1585,7 @@ h1.title {
 }
 
 #pagesPanelSpecial {
-	height: auto !important;
+	height: 130px !important;
 }
 
 #pagesPanelSpecial span {

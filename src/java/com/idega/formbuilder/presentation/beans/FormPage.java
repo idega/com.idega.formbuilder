@@ -13,6 +13,7 @@ import com.idega.documentmanager.business.component.Page;
 import com.idega.documentmanager.component.beans.LocalizedStringBean;
 import com.idega.formbuilder.presentation.components.FBDesignView;
 import com.idega.formbuilder.presentation.components.FBFormPage;
+import com.idega.formbuilder.presentation.components.FBViewPanel;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
@@ -129,7 +130,7 @@ public class FormPage implements Serializable {
 				properties.add(id);
 				properties.add(newPageId);
 				properties.add(BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView(FORM_ELEMENT), false));
-				workspace.setView("design");
+				workspace.setView(FBViewPanel.DESIGN_VIEW);
 			}
 		}
 		return properties;
@@ -173,7 +174,7 @@ public class FormPage implements Serializable {
 			if(page != null) {
 				special = false;
 				initializeBeanInstance(page);
-				workspace.setView("design");
+				workspace.setView(FBViewPanel.DESIGN_VIEW);
 				doms.add(BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView(FORM_ELEMENT), false));
 				doms.add(BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormPage(id + "_P", page.getProperties().getLabel().getString(FBUtil.getUILocale())), true));
 			}

@@ -119,7 +119,6 @@ public class FBFormPage extends FBComponentBase {
 			Image deleteButton = new Image();
 			deleteButton.setId(getId() + SPEED_BUTTON_ID_POSTFIX);
 			deleteButton.setSrc(DELETE_ICON_IMG);
-			deleteButton.setOnClick(onDelete);
 			deleteButton.setStyleClass(DEFAULT_SPEED_BUTTON_STYLE_CLASS);
 			pageLayer.add(deleteButton);
 		}

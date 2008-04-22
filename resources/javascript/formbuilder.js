@@ -47,170 +47,178 @@ var fbLeftAccordion = null;
 var fbRightAccordion = null;
 
 var currentCallback = null;
+var selectedPaletteTab = null;
+var fbPageSort = null;
 
 var FBDraggable = Element.extend({
-	draggableTag: function(droppables, handle, type) {
+	draggableTag: function(droppables, handle, type, makeDrag) {
 		type = type;
 		handle = handle || this;
-		this.makeDraggable({
-			'handle': handle,
-			'droppables': droppables,
-			onStart: function() {
-				this.elementOrg = this.element;
-				var now = {'x': this.element.getLeft(), 'y': this.element.getTop()};
-				this.element = this.element.clone().setStyles({
-					'position': 'absolute',
-					'left': now.x + 'px',
-					'top':  now.y + 'px',
-					'opacity': '0.75'
-				}).injectInside(document.body);
-				this.value.now = now;
-				if(type == 'fbc') {
-					var dropBox = $('dropBoxinner');
-					dropBox.setStyle('background-color', '#F9FF9E');
-					CURRENT_ELEMENT_UNDER = -1;
-		   			childBoxes = [];
-					var childNodes = $$('#dropBoxinner div.formElement');
-					for(var i = 0; i < childNodes.length; i++){
-						var child = childNodes[i];
-						var pos = child.getCoordinates();
-						childBoxes.push({top: pos.top, bottom: pos.bottom, left: pos.left, right: pos.right, height: pos.height, width: pos.width, node: child});
-					}
-					this.element.addEvent('mousemove', function(e) {
-						if(!e) e = window.event;
-						for(var i = 0, child; i < childBoxes.length; i++){
-							with(childBoxes[i]){
-								if (e.pageX >= left && e.pageX <= right && e.pageY >= top && e.pageY <= bottom) {
-									CURRENT_ELEMENT_UNDER = i;
-									if(CURRENT_ELEMENT_UNDER != LAST_ELEMENT_UNDER) {
-										LAST_ELEMENT_UNDER = CURRENT_ELEMENT_UNDER;
-									}
-								}
-							}
+		if(makeDrag) {
+			this.makeDraggable({
+				'handle': handle,
+				'droppables': droppables,
+				onStart: function() {
+					this.elementOrg = this.element;
+					var now = {'x': this.element.getLeft(), 'y': this.element.getTop()};
+					this.element = this.element.clone().setStyles({
+						'position': 'absolute',
+						'left': now.x + 'px',
+						'top':  now.y + 'px',
+						'opacity': '0.75'
+					}).injectInside(document.body);
+					this.value.now = now;
+					if(type == 'fbc') {
+						var dropBox = $('dropBoxinner');
+						dropBox.setStyle('background-color', '#F9FF9E');
+						CURRENT_ELEMENT_UNDER = -1;
+			   			childBoxes = [];
+						var childNodes = $$('#dropBoxinner div.formElement');
+						for(var i = 0; i < childNodes.length; i++){
+							var child = childNodes[i];
+							var pos = child.getCoordinates();
+							childBoxes.push({top: pos.top, bottom: pos.bottom, left: pos.left, right: pos.right, height: pos.height, width: pos.width, node: child});
 						}
-					});
-					if(draggingComponent == false) {
-						var componentType = this.elementOrg.id;
-   						FormComponent.addComponent(componentType, {
-							callback: function(resultDOM) {
-								if(resultDOM != null) {
-									currentElement = resultDOM;
-								} else {
-									var messagePanel = $('messageDialog');
-									if(messagePanel != null) {
-										messagePanel.removeProperty('style');
+						this.element.addEvent('mousemove', function(e) {
+							if(!e) e = window.event;
+							for(var i = 0, child; i < childBoxes.length; i++){
+								with(childBoxes[i]){
+									if (e.pageX >= left && e.pageX <= right && e.pageY >= top && e.pageY <= bottom) {
+										CURRENT_ELEMENT_UNDER = i;
+										if(CURRENT_ELEMENT_UNDER != LAST_ELEMENT_UNDER) {
+											LAST_ELEMENT_UNDER = CURRENT_ELEMENT_UNDER;
+										}
 									}
 								}
 							}
 						});
-   						draggingComponent = true;
-					}
-				} else if(type == 'fbb') {
-					$('pageButtonArea').setStyle('background-color', '#F9FF9E');
-					if(draggingButton == false) {
-						FormComponent.addButton(this.elementOrg.id, {
-							callback: function(resultDOM) {
-								if(resultDOM != null) {
-									CURRENT_BUTTON = resultDOM;
-								}
-							}
-						});
-						draggingButton = true;
-					}
-				} else if(type == 'fbbp') {
-					$('pageButtonArea').setStyle('background-color', '#F9FF9E');
-					if(draggingButton == false) {
-						var componentType = this.elementOrg.id;
-						dwr.engine.beginBatch();
-						FormComponent.addButton(componentType, {
-							callback: function(resultDOM) {
-								if(resultDOM != null) {
-									CURRENT_BUTTON = resultDOM;
-								}
-							}
-						});
-						ProcessData.getAvailableTransitions(componentType, {
-							callback: function(list) {
-								VARIABLE_LIST = list;
-							}
-						});
-						dwr.engine.endBatch();
-						draggingButton = true;
-					}
-				} else if(type == 'fbcp') {
-					var dropBox = $('dropBoxinner');
-					dropBox.setStyle('background-color', '#F9FF9E');
-					CURRENT_ELEMENT_UNDER = -1;
-		   			childBoxes = [];
-					var childNodes = $$('#dropBoxinner div.formElement');
-					for(var i = 0; i < childNodes.length; i++){
-						var child = childNodes[i];
-						var pos = child.getCoordinates();
-						childBoxes.push({top: pos.top, bottom: pos.bottom, left: pos.left, right: pos.right, height: pos.height, width: pos.width, node: child});
-					}
-					this.element.addEvent('mousemove', function(e) {
-						if(!e) e = window.event;
-						for(var i = 0, child; i < childBoxes.length; i++){
-							with(childBoxes[i]){
-								if (e.pageX >= left && e.pageX <= right && e.pageY >= top && e.pageY <= bottom) {
-									CURRENT_ELEMENT_UNDER = i;
-									if(CURRENT_ELEMENT_UNDER != LAST_ELEMENT_UNDER) {
-										LAST_ELEMENT_UNDER = CURRENT_ELEMENT_UNDER;
+						if(draggingComponent == false) {
+							var componentType = this.elementOrg.id;
+	   						FormComponent.addComponent(componentType, {
+								callback: function(resultDOM) {
+									if(resultDOM != null) {
+										currentElement = resultDOM;
+									} else {
+										var messagePanel = $('messageDialog');
+										if(messagePanel != null) {
+											messagePanel.removeProperty('style');
+										}
 									}
 								}
-							}
+							});
+	   						draggingComponent = true;
 						}
-					});
-					if(draggingComponent == false) {
-						var componentType = this.elementOrg.id;
-   						FormComponent.addTaskComponent(componentType, {
-							callback: function(results) {
-								if(results != null && results.length == 3) {
-									currentElement = results[0];
-									COMPONENT_DATATYPE = results[1];
-									VARIABLE_LIST = results[2];
+					} else if(type == 'fbb') {
+						$('pageButtonArea').setStyle('background-color', '#F9FF9E');
+						if(draggingButton == false) {
+							FormComponent.addButton(this.elementOrg.id, {
+								callback: function(resultDOM) {
+									if(resultDOM != null) {
+										CURRENT_BUTTON = resultDOM;
+									}
+								}
+							});
+							draggingButton = true;
+						}
+					} else if(type == 'fbbp') {
+						$('pageButtonArea').setStyle('background-color', '#F9FF9E');
+						if(draggingButton == false) {
+							var componentType = this.elementOrg.id;
+							dwr.engine.beginBatch();
+							FormComponent.addButton(componentType, {
+								callback: function(resultDOM) {
+									if(resultDOM != null) {
+										CURRENT_BUTTON = resultDOM;
+									}
+								}
+							});
+							ProcessData.getAvailableTransitions(componentType, {
+								callback: function(list) {
+									VARIABLE_LIST = list;
+								}
+							});
+							dwr.engine.endBatch();
+							draggingButton = true;
+						}
+					} else if(type == 'fbcp') {
+						var dropBox = $('dropBoxinner');
+						dropBox.setStyle('background-color', '#F9FF9E');
+						CURRENT_ELEMENT_UNDER = -1;
+			   			childBoxes = [];
+						var childNodes = $$('#dropBoxinner div.formElement');
+						for(var i = 0; i < childNodes.length; i++){
+							var child = childNodes[i];
+							var pos = child.getCoordinates();
+							childBoxes.push({top: pos.top, bottom: pos.bottom, left: pos.left, right: pos.right, height: pos.height, width: pos.width, node: child});
+						}
+						this.element.addEvent('mousemove', function(e) {
+							if(!e) e = window.event;
+							for(var i = 0, child; i < childBoxes.length; i++){
+								with(childBoxes[i]){
+									if (e.pageX >= left && e.pageX <= right && e.pageY >= top && e.pageY <= bottom) {
+										CURRENT_ELEMENT_UNDER = i;
+										if(CURRENT_ELEMENT_UNDER != LAST_ELEMENT_UNDER) {
+											LAST_ELEMENT_UNDER = CURRENT_ELEMENT_UNDER;
+										}
+									}
 								}
 							}
 						});
-   						draggingComponent = true;
+						if(draggingComponent == false) {
+							var componentType = this.elementOrg.id;
+	   						FormComponent.addTaskComponent(componentType, {
+								callback: function(results) {
+									if(results != null && results.length == 3) {
+										currentElement = results[0];
+										COMPONENT_DATATYPE = results[1];
+										VARIABLE_LIST = results[2];
+									}
+								}
+							});
+	   						draggingComponent = true;
+						}
 					}
-				}
-			},
-			onComplete: function(event) {
-				this.element.remove();
-				this.element = this.elementOrg;
-				this.elementOrg = null;
-				if(type == 'fbc') {
-					$('dropBoxinner').removeProperty('style');
-					if(insideDropzone == false && currentElement != null && draggingComponent == true) {
-						var currentId = currentElement.documentElement.getAttribute('id');
-						this.element.removeEvents('mousemove');
-						FormComponent.removeComponent(currentId);
-						draggingComponent = false;
+				},
+				onComplete: function(event) {
+					this.element.removeEvents('mousemove');
+					this.element.remove();
+					this.element = this.elementOrg;
+					this.elementOrg = null;
+					if(type == 'fbc') {
+						$('dropBoxinner').removeProperty('style');
+						if(insideDropzone == false && currentElement != null && draggingComponent == true) {
+							var currentId = currentElement.documentElement.getAttribute('id');
+							FormComponent.removeComponent(currentId);
+							draggingComponent = false;
+						}
+					} else if(type == 'fbb') {
+						$('pageButtonArea').removeProperty('style');
+						if(draggingButton == true && insideDropzone == false && CURRENT_BUTTON != null) {
+							FormComponent.removeButton(CURRENT_BUTTON.documentElement.getAttribute('id'));
+							draggingButton = false;
+						}
+					} else if(type == 'fbcp') {
+						$('dropBoxinner').removeProperty('style');
+						if(insideDropzone == false && currentElement != null && draggingComponent == true) {
+							var currentId = currentElement.documentElement.getAttribute('id');
+							this.element.removeEvents('mousemove');
+							FormComponent.removeComponent(currentId);
+							draggingComponent = false;
+						}
+					} else if(type == 'fbbp') {
+						$('pageButtonArea').removeProperty('style');
+						if(draggingButton == true && insideDropzone == false && CURRENT_BUTTON != null) {
+							FormComponent.removeButton(CURRENT_BUTTON.documentElement.getAttribute('id'));
+							draggingButton = false;
+						}
 					}
-				} else if(type == 'fbb') {
-					$('pageButtonArea').removeProperty('style');
-					if(draggingButton == true && insideDropzone == false && CURRENT_BUTTON != null) {
-						FormComponent.removeButton(CURRENT_BUTTON.documentElement.getAttribute('id'));
-						draggingButton = false;
-					}
-				} else if(type == 'fbcp') {
-					$('dropBoxinner').removeProperty('style');
-					if(insideDropzone == false && currentElement != null && draggingComponent == true) {
-						var currentId = currentElement.documentElement.getAttribute('id');
-						this.element.removeEvents('mousemove');
-						FormComponent.removeComponent(currentId);
-						draggingComponent = false;
-					}
-				} else if(type == 'fbbp') {
-					$('pageButtonArea').removeProperty('style');
-					if(draggingButton == true && insideDropzone == false && CURRENT_BUTTON != null) {
-						FormComponent.removeButton(CURRENT_BUTTON.documentElement.getAttribute('id'));
-						draggingButton = false;
-					}
-				}
-			}
-		});
+				},
+			});
+		} else {
+			this.removeEvent('mousedown');
+			handle.removeEvent('mousedown');
+		}
+		
 		this.setStyles({
 			'position': ''
 		});
@@ -321,8 +329,8 @@ function initializeDesignView(initializeInline) {
 							    if(CURRENT_ELEMENT_UNDER != null) {
 									FormComponent.moveComponent(currentId, CURRENT_ELEMENT_UNDER, {
 										callback: function(result) {
-											if($('emptyForm') != null) {
-												$('emptyForm').remove();
+											if($('noFormNotice') != null) {
+												$('noFormNotice').remove();
 											}
 											if(result == 'append') {
 												insertNodesToContainer(currentElement, dropBoxinner);
@@ -346,21 +354,27 @@ function initializeDesignView(initializeInline) {
 			}
 		});
 	}
-	$$('.fbc').each(function(el){
-		el.draggableTag(dropBoxinner, null, 'fbc');
-	});
-	$$('.fbcp').each(function(el){
-		el.draggableTag(dropBoxinner, null, 'fbcp');
-	});
-	$$('.fbb').each(function(el){
-		el.draggableTag(pageButtonArea, null, 'fbb');
-	});
-	$$('.fbbp').each(function(el){
-		el.draggableTag(pageButtonArea, null, 'fbbp');
-	});
+	if(selectedPaletteTab == null) {
+		selectedPaletteTab = 'processes';
+	}
+	initializePaletteComponents(selectedPaletteTab, dropBoxinner, pageButtonArea, true);
 	if(initializeInline == true) {
 		initializeInlineEdits();
 	}
+}
+function initializePaletteComponents(tab, dropBoxinner, pageButtonArea, enable) {
+	$(tab).getElements('.fbc').each(function(el){
+		el.draggableTag(dropBoxinner, null, 'fbc', enable);
+	});
+	$(tab).getElements('.fbcp').each(function(el){
+		el.draggableTag(dropBoxinner, null, 'fbcp', enable);
+	});
+	$(tab).getElements('.fbb').each(function(el){
+		el.draggableTag(pageButtonArea, null, 'fbb', enable);
+	});
+	$(tab).getElements('.fbbp').each(function(el){
+		el.draggableTag(pageButtonArea, null, 'fbbp', enable);
+	});
 }
 function createNewForm() {
 	FormDocument.createFormDocument(modalFormName, {
@@ -436,6 +450,12 @@ function registerFormbuilderActions() {
 }
 function initializePalette() {
 	var tabs = new mootabs('firstList', {width: '100%', height: '358px', changeTransition: 'none'});
+	$ES("li.stateFullTab").each(function(item) {
+		item.addEvent('click', function(e){
+			selectedPaletteTab = e.target.getProperty('title');
+			initializePaletteComponents(selectedPaletteTab, $('dropBoxinner'), $('pageButtonArea'), true);
+		});
+	});
 }
 function initializeVariableViewer() {
 	$$('.addVariableIcon').each(function(el){
@@ -771,30 +791,6 @@ function saveThankYouText(parameter) {
 		FormDocument.setThankYouText(parameter);
 	}
 }
-function saveHasPreview(event) {
-	new Event(event).stop();
-	var target = event.target;
-	var checked;
-	if(target.hasClass('addPreviewPageBtn')) {
-		checked = true;
-	} else {
-		checked = false;
-	}
-	FormDocument.togglePreviewPage(checked, {
-		callback: function(resultDOM) {
-			if(resultDOM != null) {
-				if(checked == true) {
-					$('previewPageButton').removeClass('addPreviewPageBtn').addClass('removePreviewPageBtn');
-					insertNodesToContainerBefore(resultDOM, $('pagesPanelSpecial'), $('pagesPanelSpecial').childNodes[0]);
-					initialiazePreviewPage();
-				} else {
-					$('previewPageButton').removeClass('removePreviewPageBtn').addClass('addPreviewPageBtn');
-					$('pagesPanelSpecial').getFirst().remove();
-				}
-			}
-		}
-	});
-}
 function markSelectedPage(parameter) {
 	var pagesPanel = $('pagesPanelMain');
 	if(pagesPanel != null) {
@@ -825,8 +821,70 @@ function placePageTitle(parameter) {
 		}
 	}
 }
-function initializePagesPanel() {
-	var myPagesSort = new Sortables($(PAGES_PANEL_ID), {
+function enablePagesPanelActions(enable) {
+	if(enable == true) {
+		initializePagesPanelActions();
+		$('pagesPanelMessageBox').setStyle('display', 'none');
+	} else {
+		if(fbPageSort) {
+			fbPageSort.detach();
+			fbPageSort = null;
+		}
+		
+		$('pagesPanelMessageBox').setStyle('display', 'block');
+		
+		$('newPageButton').removeEvents('click');
+		setHrefToVoidFunction($('newPageButton'));
+		
+		$('previewPageButton').removeEvents('click');
+		setHrefToVoidFunction($('previewPageButton'));
+		
+		var pagesPanel = $('pagesPanel');
+		if(pagesPanel != null) {
+			pagesPanel.getElements("div.formPageIcon").each(function(item) {
+				item.removeEvents('click');
+				item.getElement('img.pageSpeedButton').removeEvents('click');
+			});
+		}
+		
+		var thankyoupage = $E('div.thankyou');
+		if(thankyoupage != null) {
+			thankyoupage.removeEvents('click');
+		}
+		
+		var previewp = $E('div.preview');
+		if(previewp != null) {
+			previewp.removeEvents('click');
+		}
+	}
+}
+function initializeBottomToolbar() {
+	var toolbar = $('bottomButtonsContainer');
+	if(toolbar != null) {
+		toolbar.getElements("a.viewSwitchBtn").each(function(item) {
+			item.addEvent('click', function(e){
+				new Event(e).stop();
+				showLoadingMessage('Switching...');
+				var view = item.getText();
+				Workspace.switchView(view, {
+					callback: function(resultDOM) {
+						var viewPanel = $('viewPanel');
+						var mainWorkspace = viewPanel.getParent();
+						replaceNode(resultDOM, viewPanel, mainWorkspace);
+						if(view != 'Design') {
+							enablePagesPanelActions(false);
+						} else {
+							enablePagesPanelActions(true);
+						}
+						closeLoadingMessage();
+					}
+				});
+			});
+		});
+	}
+}
+function initializePagesPanelActions() {
+	fbPageSort = new Sortables($(PAGES_PANEL_ID), {
 		onComplete: function(el){
 			var children = $(PAGES_PANEL_ID).getChildren();
 			var orderList = [];
@@ -838,12 +896,107 @@ function initializePagesPanel() {
 		},
 		handles: '.fbPageHandler'
 	});
+	$('newPageButton').removeEvents('click');
+	$('previewPageButton').removeEvents('click');
+	$('previewPageButton').addEvent('click', function(e){
+		new Event(e).stop();
+		var target = e.target;
+		var checked;
+		if(target.hasClass('addPreviewPageBtn')) {
+			checked = true;
+		} else {
+			checked = false;
+		}
+		FormDocument.togglePreviewPage(checked, {
+			callback: function(resultDOM) {
+				if(resultDOM != null) {
+					if(checked == true) {
+						$('previewPageButton').removeClass('addPreviewPageBtn').addClass('removePreviewPageBtn');
+						insertNodesToContainerBefore(resultDOM, $('pagesPanelSpecial'), $('pagesPanelSpecial').childNodes[0]);
+						initialiazePreviewPage();
+					} else {
+						$('previewPageButton').removeClass('removePreviewPageBtn').addClass('addPreviewPageBtn');
+						$('pagesPanelSpecial').getFirst().remove();
+					}
+				}
+			}
+		});
+	});
+	$('newPageButton').addEvent('click', function(e){
+		new Event(e).stop();
+		FormPage.createNewPage({
+			callback: function(resultDOMs) {
+				insertNodesToContainer(resultDOMs[1], $(PAGES_PANEL_ID));
+				var panel = $('pagesPanel');
+				if(panel != null) {
+					panel.getLast().addEvent('click', function(e){
+						initializeGeneralPage(e);
+					});
+				}
+				var dropBox = $('dropBox');
+				if(dropBox != null) {
+					var parentNode = dropBox.getParent();
+					var node = parentNode.getLast();
+					if(node != null) {
+						node.remove();
+					}
+					insertNodesToContainer(resultDOMs[0], parentNode);
+					initializeDesignView(true);
+					initializePagesPanel();
+					var newIcon = $(PAGES_PANEL_ID).getLast();
+					markSelectedPage(newIcon);
+				}
+			}
+		});
+	});
 	FormPage.getId(markSelectedPage);
 	var pagesPanel = $('pagesPanel');
 	if(pagesPanel != null) {
-		pagesPanel.getElements("div.formPageIcon").each(function(item) {
+		pagesPanel.getElements('div.formPageIcon').each(function(item) {
 			item.addEvent('click', function(e){
 				initializeGeneralPage(e);
+			});
+			item.getElement('img.pageSpeedButton').removeEvents('click');
+			item.getElement('img.pageSpeedButton').addEvent('click', function(e) {
+				new Event(e).stopPropagation();
+				var root = $(PAGES_PANEL_ID);
+				if(root != null) {
+					var nodes = root.getChildren();
+					if(nodes.length == 1) {
+						return;
+					}
+				}
+				var node = e.target;
+				var parentNode = node.getParent();
+				if(parentNode != null) {
+					var targetId = parentNode.getProperty('id');
+					if(targetId.indexOf('_P_page') != -1) {
+						var actualId = targetId.substring(0, targetId.indexOf('_P_page'));
+						FormPage.removePage(actualId, {
+							callback: function(result) {
+								if(result != null) {
+									showLoadingMessage('Loading section...');
+									var iconNode = $(result[0] + '_P_page');
+									if(iconNode != null) {
+										iconNode.remove();
+									}
+									markSelectedPage(result[1])
+									var designViewDOM = result[2];
+									var dropBox = $('dropBox');
+									if(dropBox != null) {
+										var parentNode = dropBox.getParent();
+										var node = parentNode.getLast();
+										node.remove();
+										insertNodesToContainer(designViewDOM, parentNode);
+										initializeDesignView(true);
+									}
+									closeLoadingMessage();
+								}
+							}
+						});
+					}
+				}
+				initializePagesPanel();
 			});
 		});
 	}
@@ -860,6 +1013,21 @@ function initializePagesPanel() {
 		});
 	}
 	initialiazePreviewPage();
+}
+function initializePagesPanel() {
+	Workspace.getView({
+		callback: function(result) {
+			if(result == 'Design') {
+				initializePagesPanelActions();
+			} else {
+				$('newPageButton').removeEvents('click');
+				setHrefToVoidFunction($('newPageButton'));
+				
+				$('previewPageButton').removeEvents('click');
+				setHrefToVoidFunction($('previewPageButton'));
+			}
+		}
+	});
 }
 function getTotalHeight() {
 	return window.getHeight();
@@ -1223,15 +1391,6 @@ function getEmptySelect(index,lbl,vl) {
 	result.appendChild(expB);
 	return result;
 }
-function switchView(view, id) {
-	showLoadingMessage('Switching...');
-	Workspace.switchView(view, {
-		callback: function(resultDOM) {
-			replaceNode(resultDOM, $('viewPanel'), $('mainWorkspace'));
-			closeLoadingMessage();
-		}
-	});
-}
 function fbsave() {
 	var node = $('sourceViewDiv');
 	if(node != null) {
@@ -1357,143 +1516,6 @@ function reloadAssignVariable(event) {
 			});
 		}
 	});
-}
-function showNewVariableDialog(parameter) {
-	if(parameter != null) {
-		var index = parameter.indexOf('_');
-		if(index != -1) {
-			var datatype = parameter.substring(index + 1);
-			if(datatype != null) {
-				ProcessPalette.getAddVariableBox(false, datatype, {
-					callback: function(resultDOM) {
-						replaceNode(resultDOM, $(datatype + '_box'), $(datatype + '_vContainer'));
-						$(datatype + '_box').getFirst().focus();
-						$('add_' + datatype).addEvent('keypress', function(e){
-							if(isEnterEvent(e)) {
-								new Event(e).stop();
-								var target = e.target;
-								var value = target.value;
-								var id = target.id
-								var index = id.indexOf('_');
-								if(index != -1) {
-									var datatype = id.substring(index + 1);
-									if(datatype != null) {
-										FormDocument.addNewVariable(value, datatype, {
-											callback: function(resultDOM) {
-												replaceNode(resultDOM, $(datatype + '_vContainer'), $(datatype + '_datatypeGroup'));
-											}
-										});
-									}
-								}
-							}
-						});
-						$('add_' + datatype).addEvent('blur', function(e){
-							new Event(e).stop();
-							var target = e.target;
-							var id = target.id
-							var index = id.indexOf('_');
-							if(index != -1) {
-								var datatype = id.substring(index + 1);
-								if(datatype != null) {
-									ProcessPalette.getAddVariableBox(true, datatype, {
-										callback: function(resultDOM) {
-											replaceNode(resultDOM, $(datatype + '_box'), $(datatype + '_vContainer'));
-										}
-									});
-								}
-							}
-						});
-					}
-				});
-			}
-		}
-	}
-}
-function addNewVariable(event) {
-	if(isEnterEvent(event)) {
-		new Event(event).stop();
-		var target = event.target;
-		var value = target.value;
-		var id = target.id;
-		var index = id.indexOf('_');
-		if(index != -1) {
-			var datatype = id.substring(index + 1);
-			if(datatype != null) {
-				FormDocument.addNewVariable(value, datatype, {
-					callback: function(resultDOM) {
-						replaceNode(resultDOM, $(datatype + '_vContainer'), $(datatype + '_datatypeGroup'));
-					}
-				});
-			}
-		}
-	}
-}
-function createNewPage() {
-	FormPage.createNewPage({
-		callback: function(resultDOMs) {
-			insertNodesToContainer(resultDOMs[1], $(PAGES_PANEL_ID));
-			var panel = $('pagesPanel');
-			if(panel != null) {
-				panel.getLast().addEvent('click', function(e){
-					initializeGeneralPage(e);
-				});
-			}
-			var dropBox = $('dropBox');
-			if(dropBox != null) {
-				var parentNode = dropBox.getParent();
-				var node = parentNode.getLast();
-				if(node != null) {
-					node.remove();
-				}
-				insertNodesToContainer(resultDOMs[0], parentNode);
-				initializeDesignView(true);
-				initializePagesPanel();
-				var newIcon = $(PAGES_PANEL_ID).getLast();
-				markSelectedPage(newIcon);
-			}
-		}
-	});
-}
-function deletePage(event) {
-	new Event(event).stopPropagation();
-	var root = $(PAGES_PANEL_ID);
-	if(root != null) {
-		var nodes = root.getChildren();
-		if(nodes.length == 1) {
-			return;
-		}
-	}
-	var node = event.target;
-	var parentNode = node.getParent();
-	if(parentNode != null) {
-		var targetId = parentNode.getProperty('id');
-		if(targetId.indexOf('_P_page') != -1) {
-			var actualId = targetId.substring(0, targetId.indexOf('_P_page'));
-			FormPage.removePage(actualId, {
-				callback: function(result) {
-					if(result != null) {
-						showLoadingMessage('Loading section...');
-						var iconNode = $(result[0] + '_P_page');
-						if(iconNode != null) {
-							iconNode.remove();
-						}
-						markSelectedPage(result[1])
-						var designViewDOM = result[2];
-						var dropBox = $('dropBox');
-						if(dropBox != null) {
-							var parentNode = dropBox.getParent();
-							var node = parentNode.getLast();
-							node.remove();
-							insertNodesToContainer(designViewDOM, parentNode);
-							initializeDesignView(true);
-						}
-						closeLoadingMessage();
-					}
-				}
-			});
-		}
-	}
-	initializePagesPanel();
 }
 function initializeDesign() {
 	initializeDesignView(true);

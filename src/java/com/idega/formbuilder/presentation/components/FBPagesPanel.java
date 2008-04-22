@@ -12,6 +12,7 @@ import com.idega.documentmanager.business.component.properties.PropertiesPage;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.presentation.beans.FormPage;
+import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
@@ -73,6 +74,22 @@ public class FBPagesPanel extends FBComponentBase {
 		body.setId("pagesPanelMain");
 		body.setStyleClass("pagesPanel");
 		
+		Layer messageBox = new Layer(Layer.DIV);
+		messageBox.setId("pagesPanelMessageBox");
+		
+		Text headline = new Text(getLocalizedString(iwc, "labels_pages_disabled", "Section actions disabled in this view"));
+		messageBox.add(headline);
+		
+		body.add(messageBox);
+		
+		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
+		String view = workspace.getView();
+		if(!FBViewPanel.DESIGN_VIEW.equals(view)) {
+			messageBox.setStyleAttribute("display", "block");
+		} else {
+			messageBox.setStyleAttribute("display", "none");
+		}
+		
 		Layer generalPagesHeader = new Layer(Layer.DIV);
 		generalPagesHeader.setStyleClass(PAGES_PANEL_TOOLBAR_CLASS);
 		Text generalPagesHeaderText = new Text(getLocalizedString(iwc, "fb_pages_general_section", "General sections"));
@@ -88,17 +105,14 @@ public class FBPagesPanel extends FBComponentBase {
 		Link newSectionBtn = new Link(getLocalizedString(iwc, "fb_add_page_link", "New section"));
 		newSectionBtn.setId("newPageButton");
 		newSectionBtn.setStyleClass("toolbarBtn");
-		newSectionBtn.setOnClick("createNewPage();return false;");
 		
 		Link previewSectionBtn = new Link(getLocalizedString(iwc, "fb_preview_page_link", "Preview"));
 		previewSectionBtn.setId("previewPageButton");
-		previewSectionBtn.setOnClick("saveHasPreview(event);return false;");
 		if(formDocument.isHasPreview()) {
 			previewSectionBtn.setStyleClass("toolbarBtn removePreviewPageBtn");
 		} else {
 			previewSectionBtn.setStyleClass("toolbarBtn addPreviewPageBtn");
 		}
-		
 		
 		actionBox.add(newSectionBtn);
 		actionBox.add(previewSectionBtn);

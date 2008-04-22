@@ -55,10 +55,12 @@ public class FBPalette extends FBComponentBase {
 		ListItem tab1 = new ListItem();
 		tab1.setMarkupAttribute(TITLE_ATTRIBUTE, PROCESS_TAB_TITLE);
 		tab1.add(new Text(getLocalizedString(iwc, fb_palette_simple, "Simple")));
+		tab1.setStyleClass("stateFullTab");
 		
 		ListItem tab2 = new ListItem();
 		tab2.add(new Text(getLocalizedString(iwc, fb_palette_advanced, "Advanced")));
 		tab2.setMarkupAttribute(TITLE_ATTRIBUTE, STANDALONE_TAB_TITLE);
+		tab2.setStyleClass("stateFullTab");
 		
 		tabsList.add(tab1);
 		tabsList.add(tab2);

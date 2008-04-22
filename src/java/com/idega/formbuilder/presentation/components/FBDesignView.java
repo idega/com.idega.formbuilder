@@ -123,7 +123,6 @@ public class FBDesignView extends FBComponentBase {
 		messageBoxContent.setText(getLocalizedString(iwc, "fb_no_content", "No content"));
 		
 		messageBox.add(messageBoxContent);
-//		formHeading.add(messageBox);
 		
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
 		Locale locale = workspace.getLocale();
@@ -161,19 +160,18 @@ public class FBDesignView extends FBComponentBase {
 		Page page = formPage.getPage();
 		if(page != null) {
 			if(page instanceof PageThankYou) {
-//				Layer thankYouTextBox = new Layer(Layer.DIV);
-//				thankYouTextBox.setId("noFormNotice2");
-//				
-//				Text headline = new Text(getLocalizedString(iwc, "labels_confirmation_page", "This is the confirmation page of the form"));
-//				headline.setId("designViewThankYou2");
-//				thankYouTextBox.add(headline);
-//				
-//				Paragraph emptyFormBody = new Paragraph();
-//				emptyFormBody.add(getLocalizedString(iwc, "labels_confirmation_page_body", "You can only add buttons to this page"));
-//				thankYouTextBox.add(emptyFormBody);
+				Layer thankYouTextBox = new Layer(Layer.DIV);
+				thankYouTextBox.setId(NOFORM_NOTICE_ID);
+				
+				Text headline = new Text(getLocalizedString(iwc, "labels_submit_page", "This is the submition page of the form"));
+				thankYouTextBox.add(headline);
+				
+				Paragraph emptyFormBody = new Paragraph();
+				emptyFormBody.add(getLocalizedString(iwc, "labels_submit_page_body", "You cannot add components or buttons to this page"));
+				thankYouTextBox.add(emptyFormBody);
 				
 				Layer noFormNotice = new Layer(Layer.DIV);
-				noFormNotice.setId(NOFORM_NOTICE_ID);
+				noFormNotice.setId(EMPTY_FORM_ID);
 				noFormNotice.setStyleClass(INLINE_EDIT_CLASS);
 				noFormNotice.setMarkupAttribute(REL_ATTRIBUTE, THANK_YOU_TEXT_REL);
 				
@@ -181,7 +179,7 @@ public class FBDesignView extends FBComponentBase {
 				thankYouText.setId(DESIGN_VIEW_THANK_YOU_ID);
 				noFormNotice.add(thankYouText);
 				
-//				component.add(thankYouTextBox);
+				component.add(thankYouTextBox);
 				component.add(noFormNotice);
 			} else if (formDocument.getOverviewPage() != null && page.getId().equals(formDocument.getOverviewPage().getId())) {
 				Layer thankYouTextBox = new Layer(Layer.DIV);
@@ -200,7 +198,7 @@ public class FBDesignView extends FBComponentBase {
 				List<String> ids = page.getContainedComponentsIdList();
 				if(!hasComponents(ids, page)) {
 					Layer emptyForm = new Layer(Layer.DIV);
-					emptyForm.setId(EMPTY_FORM_ID);
+					emptyForm.setId(NOFORM_NOTICE_ID);
 					
 					Text emptyFormHeader = new Text(getLocalizedString(iwc, "labels_empty_form_header", "This page is empty right now"));
 					emptyForm.add(emptyFormHeader);
