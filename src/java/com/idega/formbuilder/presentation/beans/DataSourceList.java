@@ -53,7 +53,6 @@ public class DataSourceList implements Serializable {
 			extDataSources.add(new SelectOption("Choose", ""));
 			
 			try {
-				@SuppressWarnings("unchecked")
 				Map<String, String> localizedStrings = (BundleLocalizationMap) ((HashMap) WFUtil.getBeanInstance("localizedStrings")).get(IWBundleStarter.IW_BUNDLE_IDENTIFIER);
 				
 				Config cfg = ConfigFactory.getInstance().getConfig(IWBundleStarter.IW_BUNDLE_IDENTIFIER, IWBundleStarter.FB_CFG_FILE);
@@ -62,7 +61,7 @@ public class DataSourceList implements Serializable {
 				if(properties != null) {
 					
 					for (String srcKey : properties.keySet())
-						extDataSources.add(new SelectOption((String)localizedStrings.get(srcKey+".label"), properties.get(srcKey)));
+						extDataSources.add(new SelectOption(localizedStrings.get(srcKey+".label"), properties.get(srcKey)));
 				}
 					
 				

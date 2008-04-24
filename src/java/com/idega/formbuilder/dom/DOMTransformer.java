@@ -9,8 +9,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.idega.util.xml.XPathUtil;
-
 public class DOMTransformer {
 	
 	public static void renderNode(Node node, UIComponent component, ResponseWriter writer) throws IOException {

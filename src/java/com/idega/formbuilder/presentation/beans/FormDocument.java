@@ -195,7 +195,6 @@ public class FormDocument implements Serializable {
 		return true;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public boolean loadTaskFormDocument(String processId, String taskName, Long formId) {
 		
 		if(processId == null || taskName == null || formId == null)
@@ -224,7 +223,6 @@ public class FormDocument implements Serializable {
 		return true;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public boolean createFormDocument(String parameter) throws Exception {
 		Locale locale = workspace.getLocale();
 		
@@ -316,8 +314,8 @@ public class FormDocument implements Serializable {
 					key = String.valueOf(created_page_key); 
 				}
 				
-				String template_id = (String)iwma.getSettings().getProperty(form_template_id_property_key);
-				String region_id = (String)iwma.getSettings().getProperty(form_region_id_property_key);
+				String template_id = iwma.getSettings().getProperty(form_template_id_property_key);
+				String region_id = iwma.getSettings().getProperty(form_region_id_property_key);
 				
 				template_id = "".equals(template_id) ? null : template_id;
 				region_id = "".equals(region_id) ? null : region_id;
@@ -401,9 +399,7 @@ public class FormDocument implements Serializable {
 		primary_form_name = null;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public boolean loadFormDocument(Long formId) {
-		
 		System.out.println("loadigndsd: "+formId);
 		
 		clearAppsRelatedMetaData();

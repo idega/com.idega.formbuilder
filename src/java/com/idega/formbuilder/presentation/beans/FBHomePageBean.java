@@ -26,9 +26,9 @@ import com.idega.util.IWTimestamp;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
- * Last modified: $Date: 2008/04/11 01:27:07 $ by $Author: civilis $
+ * Last modified: $Date: 2008/04/24 23:53:11 $ by $Author: laddi $
  */
 @Scope("singleton")
 @Service(FBHomePageBean.beanIdentifier)
@@ -45,7 +45,6 @@ public class FBHomePageBean {
 		JbpmContext jbpmContext = getIdegaJbpmContext().createJbpmContext();
 		
 		try {
-			@SuppressWarnings("unchecked")
 			List<ProcessDefinition> defs = jbpmContext.getGraphSession().findLatestProcessDefinitions();
 			HashSet<Long> defsIds = new HashSet<Long>(defs.size());
 			

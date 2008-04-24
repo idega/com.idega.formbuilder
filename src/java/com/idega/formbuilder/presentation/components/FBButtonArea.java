@@ -22,6 +22,7 @@ public class FBButtonArea extends FBComponentBase {
 	
 	public String componentStyleClass;
 	
+	@Override
 	protected void initializeComponent(FacesContext context) {
 		Layer container = new Layer(Layer.DIV);
 		container.setId("pageButtonArea");
@@ -32,7 +33,7 @@ public class FBButtonArea extends FBComponentBase {
 			List<String> ids = buttonArea.getContainedComponentsIdList();
 			if(ids != null) {
 				for(Iterator<String> it = ids.iterator(); it.hasNext(); ) {
-					String nextId = (String) it.next();
+					String nextId = it.next();
 					Button bt = (Button) buttonArea.getComponent(nextId);
 					if(bt != null) {
 						FBButton button = new FBButton();
@@ -48,6 +49,7 @@ public class FBButtonArea extends FBComponentBase {
 		add(container);
 	}
 	
+	@Override
 	public Object saveState(FacesContext context) {
 		Object values[] = new Object[2];
 		values[0] = super.saveState(context);
@@ -55,6 +57,7 @@ public class FBButtonArea extends FBComponentBase {
 		return values;
 	}
 	
+	@Override
 	public void restoreState(FacesContext context, Object state) {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);

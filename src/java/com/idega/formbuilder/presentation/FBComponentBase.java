@@ -35,10 +35,12 @@ public class FBComponentBase extends IWBaseComponent {
 		this.styleClass = styleClass;
 	}
 	
+	@Override
 	public String getId() {
 		return id;
 	}
 
+	@Override
 	public void setId(String id) {
 		this.id = id;
 	}
@@ -51,6 +53,7 @@ public class FBComponentBase extends IWBaseComponent {
 		this.styleClass = styleClass;
 	}
 
+	@Override
 	public void renderChild(FacesContext context, UIComponent component) throws IOException {
 		if(component.isRendered()) {
 			component.encodeBegin(context);
@@ -59,28 +62,30 @@ public class FBComponentBase extends IWBaseComponent {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void addFacet(String name, UIComponent component) {
 		getFacets().put(name, component);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void addChild(UIComponent child, UIComponent parent) {
 		parent.getChildren().add(child);
 	}
 	
+	@Override
 	public String getFamily() {
 		return COMPONENT_FAMILY;
 	}
 	
+	@Override
 	public boolean getRendersChildren() {
 		return true;
 	}
 	
+	@Override
 	public String getRendererType() {
 		return null;
 	}
 	
+	@Override
 	public Object saveState(FacesContext context) {
 		Object values[] = new Object[3];
 		values[0] = super.saveState(context); 
@@ -89,6 +94,7 @@ public class FBComponentBase extends IWBaseComponent {
 		return values;
 	}
 	
+	@Override
 	public void restoreState(FacesContext context, Object state) {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);
@@ -112,11 +118,10 @@ public class FBComponentBase extends IWBaseComponent {
 		return bundle.getResourceBundle(iwc.getCurrentLocale()).getLocalizedString(localizationKey, defaultString);
 	}
 	
-	@SuppressWarnings("unchecked")
+	@Override
 	public void encodeChildren(FacesContext context) throws IOException {
 		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
 			RenderUtils.renderChild(context, (UIComponent) it.next());
 		}
 	}
-
 }

@@ -8,7 +8,6 @@ import javax.faces.context.FacesContext;
 
 import com.idega.documentmanager.business.Document;
 import com.idega.documentmanager.business.component.Page;
-import com.idega.documentmanager.business.component.properties.PropertiesPage;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.presentation.beans.FormPage;
@@ -65,6 +64,7 @@ public class FBPagesPanel extends FBComponentBase {
 		this.specialPartStyleClass = specialPartStyleClass;
 	}
 
+	@Override
 	protected void initializeComponent(FacesContext context) {
 		IWContext iwc = CoreUtil.getIWContext();
 		
@@ -142,7 +142,7 @@ public class FBPagesPanel extends FBComponentBase {
 						formPage.setId(nextId + P);
 						formPage.setStyleClass(generateClassAttribute(false, nextId.equals(selectedPageId), null));
 						formPage.setOnDelete(DEFAULT_PAGE_REMOVE_ACTION);
-						String label = ((PropertiesPage)currentPage.getProperties()).getLabel().getString(locale);
+						String label = (currentPage.getProperties()).getLabel().getString(locale);
 						formPage.setLabel(label);
 						formPage.setActive(false);
 						general.add(formPage);
@@ -171,7 +171,7 @@ public class FBPagesPanel extends FBComponentBase {
 				FBFormPage formPage = new FBFormPage();
 				formPage.setId(confirmation.getId() + P);
 				formPage.setStyleClass(generateClassAttribute(true, confirmation.getId().equals(selectedPageId), SPECIAL_PREVIEW));	
-				String label = ((PropertiesPage)confirmation.getProperties()).getLabel().getString(locale);
+				String label = (confirmation.getProperties()).getLabel().getString(locale);
 				formPage.setLabel(label);
 				formPage.setActive(false);
 				formPage.setOnLoad(DEFAULT_CONFIRM_LOAD_ACTION);
@@ -183,7 +183,7 @@ public class FBPagesPanel extends FBComponentBase {
 			FBFormPage formPage = new FBFormPage();
 			formPage.setId(thanks.getId() + P);
 			formPage.setStyleClass(generateClassAttribute(true, thanks.getId().equals(selectedPageId), SPECIAL_THANKYOU));	
-			String label = ((PropertiesPage)thanks.getProperties()).getLabel().getString(locale);
+			String label = (thanks.getProperties()).getLabel().getString(locale);
 			formPage.setLabel(label);
 			formPage.setActive(false);
 			formPage.setOnLoad(DEFAULT_THX_LOAD_ACTION);
@@ -211,6 +211,7 @@ public class FBPagesPanel extends FBComponentBase {
 		return style.toString();
 	}
 	
+	@Override
 	public Object saveState(FacesContext context) {
 		Object values[] = new Object[5];
 		values[0] = super.saveState(context); 
@@ -221,6 +222,7 @@ public class FBPagesPanel extends FBComponentBase {
 		return values;
 	}
 	
+	@Override
 	public void restoreState(FacesContext context, Object state) {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);

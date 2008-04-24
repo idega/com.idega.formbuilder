@@ -53,9 +53,8 @@ public class FBWorkspace extends FBComponentBase {
 		super(id, null);
 	}
 
-	@SuppressWarnings("unchecked")
+	@Override
 	protected void initializeComponent(FacesContext context) {
-		
 		IWContext iwc = CoreUtil.getIWContext();
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
 		FormDocument fd = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);

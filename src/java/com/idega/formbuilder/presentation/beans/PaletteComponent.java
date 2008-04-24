@@ -1,15 +1,10 @@
 package com.idega.formbuilder.presentation.beans;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
-import com.idega.formbuilder.IWBundleStarter;
 import com.idega.formbuilder.presentation.FBComponentBase;
-import com.idega.idegaweb.BundleLocalizationMap;
 import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
-import com.idega.webface.WFUtil;
 
 public class PaletteComponent implements Serializable {
 	
@@ -19,7 +14,7 @@ public class PaletteComponent implements Serializable {
 	
 	private static final String ICON_PATH_POSTFIX = "_icon";
 	
-	private static Map localizedStrings = (BundleLocalizationMap) ((HashMap) WFUtil.getBeanInstance("localizedStrings")).get(IWBundleStarter.IW_BUNDLE_IDENTIFIER);
+	//private static Map localizedStrings = (BundleLocalizationMap) ((HashMap) WFUtil.getBeanInstance("localizedStrings")).get(IWBundleStarter.IW_BUNDLE_IDENTIFIER);
 	
 	private String type;
 	private String name;

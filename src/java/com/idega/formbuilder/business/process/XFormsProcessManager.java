@@ -18,7 +18,7 @@ import com.idega.jbpm.def.ViewToTaskType;
 
 public class XFormsProcessManager {
 	
-	private static final String JBPM_XFORM_VIEW_NAME = "jbpm_view_name";
+	//private static final String JBPM_XFORM_VIEW_NAME = "jbpm_view_name";
 	
 	private ViewToTask viewToTaskBinder;
 	private ViewFactory viewFactory;
@@ -58,7 +58,7 @@ public class XFormsProcessManager {
 		try {
 			ProcessDefinition pd = ctx.getGraphSession().getProcessDefinition(Long.parseLong(processId));
 			TaskMgmtDefinition mgmt = pd.getTaskMgmtDefinition();
-			Task task = mgmt.getTask(taskId);
+			/*Task task =*/ mgmt.getTask(taskId);
 			/*
 			View view = getViewToTaskBinder().getView(task.getId());
 			AdvancedProperty taskForm = new AdvancedProperty(JBPM_XFORM_VIEW_NAME, view == null ? "" : view.getViewId());

@@ -41,7 +41,7 @@ public class FBFormComponent extends FBComponentBase {
 	private static final String HANDLER_LAYER_CLASS = "fbCompHandler";
 	private static final String DELETE_BUTTON_PREFIX = "db";
 	private static final String ID_ATTRIBUTE = "id";
-	private static final String ONCLICK_ATTRIBUTE = "onclick";
+	//private static final String ONCLICK_ATTRIBUTE = "onclick";
 	private static final String CLASS_ATTRIBUTE = "class";
 	private static final String STYLECLASS_ATTRIBUTE = "styleClass";
 	private static final String EDIT_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit_16.png";
@@ -120,6 +120,7 @@ public class FBFormComponent extends FBComponentBase {
 		this.onLoad = DEFAULT_LOAD_ACTION;
 	}
 	
+	@Override
 	protected void initializeComponent(FacesContext context) {
 		if(component == null) {
 			return;
@@ -180,6 +181,7 @@ public class FBFormComponent extends FBComponentBase {
 		addFacet(HANDLE_LAYER_FACET, handleLayer);
 	}
 	
+	@Override
 	public void encodeBegin(FacesContext context) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		super.encodeBegin(context);
@@ -194,12 +196,14 @@ public class FBFormComponent extends FBComponentBase {
 		DOMTransformer.renderNode(element, this, writer);
 	}
 	
+	@Override
 	public void encodeEnd(FacesContext context) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		writer.endElement(Layer.DIV);
 		super.encodeEnd(context);
 	}
 	
+	@Override
 	public void encodeChildren(FacesContext context) throws IOException {
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
 		
@@ -215,6 +219,7 @@ public class FBFormComponent extends FBComponentBase {
 		}
 	}
 	
+	@Override
 	public Object saveState(FacesContext context) {
 		Object values[] = new Object[5];
 		values[0] = super.saveState(context);
@@ -225,6 +230,7 @@ public class FBFormComponent extends FBComponentBase {
 		return values;
 	}
 	
+	@Override
 	public void restoreState(FacesContext context, Object state) {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);
