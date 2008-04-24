@@ -86,7 +86,7 @@ public class ComponentPropertyManager {
 					component = new FormPlainComponent((ComponentPlain) comp);
 				} else if(comp instanceof ComponentSelect) {
 					component = new FormSelectComponent((ComponentSelect) comp);
-				} else if(comp instanceof Component) {
+				} else {
 					component = new FormComponent(comp);
 				}
 			} else if(type.equals(FormComponent.BUTTON_TYPE)) {
