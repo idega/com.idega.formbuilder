@@ -353,6 +353,52 @@ function initializeDesignView(initializeInline) {
 				insideDropzone = false;
 			}
 		});
+		dropBoxinner.getElements('div.formElement').each(function(item) {
+			item.addEvent('click', function(e) {
+				var componentId = item.getProperty('id');
+				PropertyManager.selectComponent(componentId, 'component', {
+					callback: function(resultDOM) {
+						currentCallback = componentRerenderCallback;
+						placeComponentInfo(resultDOM, 1, componentId);
+					}
+				});
+			});
+			item.getElement('img.speedButton').removeEvents('click');
+			item.getElement('img.speedButton').addEvent('click', function(e) {
+				new Event(e).stopPropagation();
+				var node = e.target.getParent();
+				if(node != null) {
+					FormComponent.removeComponent(node.getProperty('id'), {
+						callback: function(result) {
+							var node = $(result);
+							if(node != null) {
+								node.remove();
+								var nodes = $('dropBoxinner').getElements('div.formElement');
+								if(nodes.length == 0) {
+									Workspace.getDesignView({
+										callback: function(resultDOM) {
+											if(resultDOM != null) {
+												var dropBox = $('dropBox');
+												if(dropBox != null) {
+													var parentNode = dropBox.getParent();
+													var node2 = parentNode.getLast();
+													if(node2 != null) {
+														node2.remove();
+													}
+													insertNodesToContainer(resultDOM, parentNode);
+													initializeDesignView(true);
+													initializePagesPanel();
+												}
+											}
+										}
+									});
+								}
+							}
+						}
+					});
+				}
+			});
+		});
 	}
 	if(selectedPaletteTab == null) {
 		selectedPaletteTab = 'processes';
@@ -574,9 +620,6 @@ function reloadWorkspace(locale) {
 function setHrefToVoidFunction(element) {
 	element.setProperty('href', 'javascript:void(0)');
 }
-function handleVariablePopupSelect(e) {
-	
-}
 function showVariableList(containerId, positionLeft, positionTop, list, transition) {
 	var container = $(containerId);
 	if (container == null) {
@@ -767,13 +810,6 @@ function saveThankYouTitle(parameter) {
 		FormDocument.setThankYouTitle(parameter, placeThankYouTitle);
 	}
 }
-function saveEnableBubbles(parameter) {
-	if(parameter != null) {
-		if(parameter.checked) {
-			FormDocument.setEnableBubbles(parameter.checked);
-		}
-	}
-}
 function placeThankYouTitle(parameter) {
 	var container = $('pagesPanelSpecial');
 	if(container != null) {
@@ -861,7 +897,7 @@ function enablePagesPanelActions(enable) {
 function initializeBottomToolbar() {
 	var toolbar = $('bottomButtonsContainer');
 	if(toolbar != null) {
-		toolbar.getElements("a.viewSwitchBtn").each(function(item) {
+		toolbar.getElements('a.viewSwitchBtn').each(function(item) {
 			item.addEvent('click', function(e){
 				new Event(e).stop();
 				showLoadingMessage('Switching...');
@@ -875,6 +911,12 @@ function initializeBottomToolbar() {
 							enablePagesPanelActions(false);
 						} else {
 							enablePagesPanelActions(true);
+						}
+						if(view == 'Source') {
+							var area = $('sourceTextarea');
+							if(area != null) {
+								area.setText(area.innerHTML);
+							}
 						}
 						closeLoadingMessage();
 					}
@@ -1091,22 +1133,8 @@ function markSelectedComponent(parameter) {
 		}
 	}
 }
-function loadComponentInfo(component) {
-	if(component != null) {
-		if(pressedComponentDelete == false && draggingComponent == false) {
-			PropertyManager.selectComponent(component.id, 'component', {
-				callback: function(resultDOM) {
-					currentCallback = componentRerenderCallback;
-					placeComponentInfo(resultDOM, 1, component.id);
-				}
-			});
-		}
-		pressedComponentDelete = false;
-		draggingComponent = false;
-	}
-}
-function createLeftAccordion() {
-	fbLeftAccordion = new Accordion('span.atStart', 'div.atStart', {
+function createAccordion(tabClass, containerClass, heightOffset, componentId) {
+	return new Accordion(tabClass, containerClass, {
 		opacity: false,
 		display: 0,
 		height: false,
@@ -1117,7 +1145,7 @@ function createLeftAccordion() {
 			element.removeClass('hiddenElement');
 			element.addClass('selectedAccElement');
 
-			var heightForAccordion = getTotalHeight() - 187;
+			var heightForAccordion = getTotalHeight() - heightOffset;
 			if (heightForAccordion > 0) {
 				element.setStyle('height', heightForAccordion + 'px');
 			}
@@ -1130,7 +1158,10 @@ function createLeftAccordion() {
 			element.addClass('hiddenElement');
 			element.setStyle('height', '0px');
 		}
-	}, $('accordionLeft'));
+	}, $(componentId));
+}
+function initializeAccordions() {
+	fbLeftAccordion = createAccordion('span.atStart', 'div.atStart', 187, 'accordionLeft');
 	
 	var diff = 0;
 	var rightTabsCount = $('accordionRight').getElements('span.toggler').length;
@@ -1138,31 +1169,7 @@ function createLeftAccordion() {
 		diff = 18;
 	}
 	
-	fbRightAccordion = new Accordion('span.atStartRight', 'div.atStartRight', {
-		opacity: false,
-		display: 0,
-		height: false,
-		transition: Fx.Transitions.quadOut,
-		onActive: function(toggler, element){
-			toggler.addClass('selectedToggler');
-
-			element.removeClass('hiddenElement');
-			element.addClass('selectedAccElement');
-
-			var heightForAccordion = getTotalHeight() - (187 - diff);
-			if (heightForAccordion > 0) {
-				element.setStyle('height', heightForAccordion + 'px');
-			}
-		},
- 
-		onBackground: function(toggler, element){
-			toggler.removeClass('selectedToggler');
-
-			element.removeClass('selectedAccElement');
-			element.addClass('hiddenElement');
-			element.setStyle('height', '0px');
-		}
-	}, $('accordionRight'));
+	fbRightAccordion = createAccordion('span.atStartRight', 'div.atStartRight', (187 - diff), 'accordionRight');
 }
 function placeComponentInfo(resultDOM, tabIndex, component) {
 	var parentNode = $('panel' + tabIndex + 'Content');
@@ -1359,6 +1366,71 @@ function collapseAllItems() {
 	}
 }
 function getEmptySelect(index,lbl,vl) {
+	var parentId = 'workspaceform1:rowDiv_' + index;
+
+	var result = new Element('div', {
+		'id' : parentId,
+	});
+	
+	var remB = new Element('img', {
+		'id' : 'delB_' + index,
+		'src': '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete-tiny.png',
+		'styles': {
+	        'display': 'inline'
+	    },
+	    'events': {
+	    	'click': function() {
+	    		deleteThisItem(parentId);
+	    	}
+	    }
+	}).injectInside(result);
+	
+	var label = new Element('input', {
+		'id' : 'labelF_' + index,
+		'type':'text',
+		'value' : lbl,
+		'class' : 'fbSelectListItem',
+		'styles': {
+	        'display': 'inline'
+	    },
+	    'events': {
+	    	'blur': function() {
+	    		saveLabel(this);
+	    	}
+	    }
+	}).injectInside(result);
+	
+	var value = new Element('input', {
+		'id' : 'valueF_' + index,
+		'type':'text',
+		'value' : vl,
+		'class' : 'fbSelectListItem',
+		'styles': {
+	        'display': 'inline'
+	    },
+	    'events': {
+	    	'blur': function() {
+	    		saveValue(this);
+	    	}
+	    }
+	}).injectInside(result);
+	
+	var expB = new Element('img', {
+		'id' : 'expB_' + index,
+		'src': '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow_right-tiny.png',
+		'styles': {
+	        'display': 'inline'
+	    },
+	    'events': {
+	    	'click': function() {
+	    		expandOrCollapse(this,true);
+	    	}
+	    }
+	}).injectInside(result);
+	
+	return result;
+	
+	/*result.setProperty('id', 'workspaceform1:rowDiv_' + index);
 	var result = document.createElement('div');
 	result.id = 'workspaceform1:rowDiv_' + index;
 	var remB = document.createElement('img');
@@ -1389,7 +1461,7 @@ function getEmptySelect(index,lbl,vl) {
 	result.appendChild(label);
 	result.appendChild(value);
 	result.appendChild(expB);
-	return result;
+	return result;*/
 }
 function fbsave() {
 	var node = $('sourceViewDiv');
@@ -1519,38 +1591,4 @@ function reloadAssignVariable(event) {
 }
 function initializeDesign() {
 	initializeDesignView(true);
-}
-function removeComponent(parameter) {
-	var node = parameter.getParent();
-	if(node != null) {
-		pressedComponentDelete = true;
-		FormComponent.removeComponent(node.id, {
-			callback: function(result) {
-				var node = $(result);
-				if(node != null) {
-					node.remove();
-					var nodes = getElementsByClassName($('dropBoxinner'), 'div', 'formElement');
-					if(nodes.length == 0) {
-						Workspace.getDesignView({
-							callback: function(resultDOM) {
-								if(resultDOM != null) {
-									var dropBox = $('dropBox');
-									if(dropBox != null) {
-										var parentNode = dropBox.getParent();
-										var node2 = parentNode.getLast();
-										if(node2 != null) {
-											node2.remove();
-										}
-										insertNodesToContainer(resultDOM, parentNode);
-										initializeDesignView(true);
-										initializePagesPanel();
-									}
-								}
-							}
-						});
-					}
-				}
-			}
-		});
-	}
 }

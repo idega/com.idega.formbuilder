@@ -41,7 +41,7 @@
 							}
 							DWREngine.setErrorHandler(errorHanlder);
 						});
-						window.addEvent('domready', createLeftAccordion);
+						window.addEvent('domready', initializeAccordions);
 						window.addEvent('domready', initializePalette);
 						window.addEvent('domready', initializePagesPanel);
 						window.addEvent('domready', initializeDesign);

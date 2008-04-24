@@ -172,7 +172,7 @@ public class FBFormComponent extends FBComponentBase {
 		Image deleteButton = new Image();
 		deleteButton.setId(DELETE_BUTTON_PREFIX + getId());
 		deleteButton.setSrc(DELETE_BUTTON_ICON);
-		deleteButton.setOnClick(onDelete);
+//		deleteButton.setOnClick(onDelete);
 		deleteButton.setStyleClass(speedButtonStyleClass);
 						
 		addFacet(VARIABLE_NAME_FACET, assignVariable);
@@ -186,7 +186,7 @@ public class FBFormComponent extends FBComponentBase {
 		writer.startElement(Layer.DIV, this);
 		writer.writeAttribute(CLASS_ATTRIBUTE, getStyleClass(), STYLECLASS_ATTRIBUTE);
 		writer.writeAttribute(ID_ATTRIBUTE, getId(), ID_ATTRIBUTE);
-		writer.writeAttribute(ONCLICK_ATTRIBUTE, onLoad, ONCLICK_ATTRIBUTE);
+//		writer.writeAttribute(ONCLICK_ATTRIBUTE, onLoad, ONCLICK_ATTRIBUTE);
 		UIComponent handleLayer = getFacet(HANDLE_LAYER_FACET);
 		if(handleLayer != null) {
 			renderChild(context, handleLayer);
