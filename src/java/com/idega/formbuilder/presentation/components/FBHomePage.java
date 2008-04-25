@@ -173,8 +173,8 @@ public class FBHomePage extends FBComponentBase {
 			topList.setStyleClass(BUTTON_LIST_CLASS);
 			topList.setStyleClass(PROCESS_BUTTON_LIST_CLASS);
 			
-			topList.add(addProcessButton(iwc, CASES_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_view_cases_link", "View cases")));
-			topList.add(addProcessButton(iwc, DELETE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_delete_process_link", "Delete")));
+//			topList.add(addProcessButton(iwc, CASES_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_view_cases_link", "View cases")));
+//			topList.add(addProcessButton(iwc, DELETE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_delete_process_link", "Delete")));
 			
 			ListItem item2 = new ListItem();
 			Link expandButton = new Link(getLocalizedString(iwc, "fb_home_expand_process_link", "Expand"));
@@ -328,7 +328,7 @@ public class FBHomePage extends FBComponentBase {
 		list.add(addButton(iwc, EDIT_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_edit_link", "Edit"), formId, clickEvent.toString()));
 		list.add(addButton(iwc, TRY_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_try_link", "Try"), formId, null));
 		list.add(addButton(iwc, CODE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_code_link", "Code"), formId, null));
-		list.add(addButton(iwc, DELETE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_delete_link", "Delete"), formId, null));
+//		list.add(addButton(iwc, DELETE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_delete_link", "Delete"), formId, null));
 		
 		body.add(list);
 		
@@ -378,7 +378,7 @@ public class FBHomePage extends FBComponentBase {
 		list.add(addButton(iwc, EDIT_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_edit_link", "Edit"), formId, null));
 		list.add(addButton(iwc, TRY_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_try_link", "Try"), formId, null));
 		list.add(addButton(iwc, CODE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_code_link", "Code"), formId, null));
-		list.add(addButton(iwc, DELETE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_delete_link", "Delete"), formId, null));
+//		list.add(addButton(iwc, DELETE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_delete_link", "Delete"), formId, null));
 		
 		return body;
 	}

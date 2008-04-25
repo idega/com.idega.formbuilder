@@ -1,6 +1,12 @@
 .selectedPage {
 	background-color: #E4E4E4		!important;
 }
+.selectedComponent {
+	background-color: #E4E4E4		!important;
+}
+.selectedComponent .fbCompHandler {
+	background: Yellow;
+}
 /*---Home page styles-----*/
 .fbSelectListItem {
 	width: 95px;
@@ -1770,4 +1776,8 @@ fieldset .trigger input {
 
 .selectedAccElement {
 	border-bottom: 1px #bdbdbd solid;
+}
+
+.selectedAccElement.last {
+	border-bottom: 0 !important;
 }

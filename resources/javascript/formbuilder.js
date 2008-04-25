@@ -254,7 +254,20 @@ function resizeAccordion(reservedHeight, containerId, variableTabs) {
 	}
 }
 function initializeDesignView(initializeInline) {
-	FormComponent.getId(markSelectedComponent);
+	PropertyManager.getSelectedComponentId({
+		callback: function(result) {
+			if(result != null && result != '') {
+				var old = $('dropBoxinner').getElement('div.selectedComponent');
+				if(old != null) {
+					old.removeClass('selectedComponent');
+				}
+				var newNode = $(result);
+				if(newNode != null) {
+					newNode.addClass('selectedComponent');
+				}
+			}							
+		}
+	});
 	var myComponentSort = new Sortables($('dropBoxinner'), {
 		onComplete: function(el){
 			var children = $('dropBoxinner').getChildren();
@@ -360,6 +373,11 @@ function initializeDesignView(initializeInline) {
 					callback: function(resultDOM) {
 						currentCallback = componentRerenderCallback;
 						placeComponentInfo(resultDOM, 1, componentId);
+						var old = dropBoxinner.getElement('div.selectedComponent');
+						if(old != null) {
+							old.removeClass('selectedComponent');
+						}
+						item.addClass('selectedComponent');
 					}
 				});
 			});
@@ -1250,27 +1268,6 @@ function saveComponentProperty(id,type,value,event) {
 	if(event.type == 'blur' || event.type == 'change' || isEnterEvent(event)) {
 		PropertyManager.saveComponentProperty(id,type,value,currentCallback);
 	}
-}
-function saveButtonLabel(value) {
-	if(value != null) {
-		FormComponent.saveComponentLabel(value, {
-			callback: function(resultDOM) {
-				var btn = $(CURRENT_ELEMENT);
-				if(btn != null) {
-					var nodes = btn.getChildren();
-					nodes[0].setProperty('value', value);
-				}
-			}
-		});
-	}
-}
-function saveButtonAction(value) {
-    if(value != null) {
-        FormComponent.saveComponentAction(value);
-    }
-}
-function saveComponentProcessVariableName(value) {
-	FormComponent.saveComponentProcessVariableName(value);
 }
 function saveLabel(parameter) {
 	var index = parameter.id.split('_')[1];

@@ -16,6 +16,8 @@
 				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/inlineEdit/1.1/inlineEdit.js,
 				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/mootabs/1.2/mootabs.js,
 				 				
+				 				/idegaweb/bundles/org.chiba.web.bundle/resources/javascript/PresentationContext.js,
+				 				
 				 				/dwr/engine.js,
 				 				/dwr/util.js,
 								/dwr/interface/FormComponent.js,
@@ -37,7 +39,8 @@
                 	<script type="text/javascript">
                 		window.addEvent('domready', function() {
 							var errorHanlder = function(errorString, exception) {
-								reloadPage();
+								//reloadPage();
+								alert(errorString +  ' ' +  exception);
 							}
 							DWREngine.setErrorHandler(errorHanlder);
 						});
