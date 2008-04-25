@@ -172,6 +172,10 @@ html>body .fbBottomButtonsContainer a {
 	border-left-color: #a9dcac !important;
 	padding: 8px 18px;
 	color: #1f1f1f !important;
+	display: block;
+	position: absolute;
+	right: 15px;
+	bottom: 15px;
 }
 
 #createFormBtn:hover {
@@ -650,6 +654,9 @@ html>body .fbBottomButtonsContainer a {
 
 .forms #TB_ajaxContent label {
 	font-family: "Lucida Grande", "Lucida Sans", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
+}
+
+.forms #TB_ajaxContent label.simplePopupLabel {
 	display: block;
 	margin-bottom: 3px;
 }
@@ -661,6 +668,14 @@ html>body .fbBottomButtonsContainer a {
 	font-size: 16px;
 	padding: 3px;
 	width: 285px;
+}
+
+.forms #TB_ajaxContent input#designerCheckbox2 {
+	width: 16px;
+	height: 16px;
+	float: left;
+	margin: 0;
+	margin-right: 6px;
 }
 
 .forms #TB_title{
