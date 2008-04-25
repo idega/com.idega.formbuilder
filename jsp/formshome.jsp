@@ -51,7 +51,7 @@
 				<t:div id="newFormDialog" forceId="true" style="display: none;">
 					<t:div styleClass="simplePopupLayer">
 						<t:outputLabel styleClass="simplePopupLabel" for="formNameInput" value="Form name" />
-						<t:inputText styleClass="simplePopupInput" id="formNameInput" onkeyup="modalFormName = this.value;" onblur="modalFormName = this.value;" forceId="true" />
+						<t:inputText styleClass="simplePopupInput" id="formNameInput" onkeydown="if(isEnterEvent(event)) {createNewForm(modalFormName, modalGoToDesigner);}" onkeyup="modalFormName = this.value;" onblur="modalFormName = this.value;" forceId="true" />
 					</t:div>
 					<t:htmlTag value="br" />
 					<t:selectBooleanCheckbox onchange="modalGoToDesigner = this.checked;" id="designerCheckbox2" forceId="true" value="true" />

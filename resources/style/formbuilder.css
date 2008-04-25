@@ -7,6 +7,36 @@
 .selectedPage {
 	background-color: #E4E4E4		!important;
 }
+
+.fbBottomButtonsContainer .states {
+	float: left;
+}
+.states a {
+	height:55px;
+	margin:0pt;
+	padding:0pt 0pt 0pt 2px;
+}
+.states a .outerSpan {
+	display:block;
+	float:left;
+	height:55px;
+	padding-left:6px;
+	padding-right:8px;
+}
+.states a .innerSpan {
+	display:block;
+	float:left;
+	margin-top:7px;
+	padding-top:30px;
+	text-align:center;
+	width:30px;
+}
+.activeViewButton {
+	background: transparent url(images/selected_button_left.png) no-repeat scroll left center;
+}
+.activeViewButton .outerSpan {
+	background: transparent url(images/selected_button_right.png) no-repeat scroll left center;
+}
 /*---Home page styles-----*/
 .fbSelectListItem {
 	width: 95px;
@@ -1042,8 +1072,6 @@ span.statusMsg {
 }
 
 .formElementHover:hover {
-	border-top: 1px solid #a1a1a1;
-	border-bottom: 1px solid #a1a1a1;
 	cursor: pointer;
 	background-color: Silver;
 }
@@ -1560,7 +1588,7 @@ html>body .fbBottomButtonsContainer a, html>body div#sourceViewDiv a {
 	border: 1px solid #a1a1a1;
 }
 
-.fbBottomButtonsContainer a#designButton {
+.fbBottomButtonsContainer a#designButton .innerSpan {
 	background: url(images/wiz_32.png) center top no-repeat;
 }
 
@@ -1576,11 +1604,11 @@ html>body .fbBottomButtonsContainer a, html>body div#sourceViewDiv a {
 	background: url(images/notep_32.png) center top no-repeat;
 }
 
-.fbBottomButtonsContainer a#previewButton {
+.fbBottomButtonsContainer a#previewButton .innerSpan {
 	background: url(images/smicn_32.png) center top no-repeat;
 }
 
-.fbBottomButtonsContainer a#sourceCodeButton {
+.fbBottomButtonsContainer a#sourceCodeButton .innerSpan {
 	background: url(images/editscript_32.png) center top no-repeat;
 }
 

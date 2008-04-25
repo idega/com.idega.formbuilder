@@ -929,6 +929,7 @@ function initializeBottomToolbar() {
 							enablePagesPanelActions(false);
 						} else {
 							enablePagesPanelActions(true);
+							initializeDesignView(true);
 						}
 						if(view == 'Source') {
 							var area = $('sourceTextarea');

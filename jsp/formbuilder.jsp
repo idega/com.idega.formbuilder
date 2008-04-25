@@ -60,7 +60,7 @@
 				<t:div id="newFormDialog" forceId="true" style="display: none;">
 					<t:div styleClass="simplePopupLayer">
 						<t:outputLabel styleClass="simplePopupLabel" for="formNameInput" value="Form name" />
-						<t:inputText styleClass="simplePopupInput" id="formNameInput" onkeyup="modalFormName = this.value;" onblur="modalFormName = this.value;" forceId="true" />
+						<t:inputText styleClass="simplePopupInput" id="formNameInput" onkeydown="if(isEnterEvent(event)) {createNewForm(modalFormName, modalGoToDesigner);}" onkeyup="modalFormName = this.value;" onblur="modalFormName = this.value;" forceId="true" />
 					</t:div>
 					<t:htmlTag value="br" />
 					<t:commandLink id="createFormBtn" onclick="createNewForm(modalFormName, modalGoToDesigner);" forceId="true" value="Create" />
@@ -79,10 +79,23 @@
 					<t:commandLink id="cancelVariableBtn" forceId="true"  value="Cancel"></t:commandLink>
 				</t:div>
 				<t:div id="bottomButtonsContainer" forceId="true" styleClass="fbBottomButtonsContainer">
-					
-	                <t:commandLink id="previewButton" styleClass="leftButton viewSwitchBtn" forceId="true" value="Preview"></t:commandLink>
-					<t:commandLink id="sourceCodeButton" styleClass="leftButton viewSwitchBtn" forceId="true" value="Source"></t:commandLink>
-					<t:commandLink id="designButton" styleClass="leftButton viewSwitchBtn" forceId="true" value="Design"></t:commandLink>
+					<t:div styleClass="states">
+						<t:commandLink id="previewButton" styleClass="leftButton viewSwitchBtn activeViewButton" forceId="true">
+							<t:htmlTag styleClass="outerSpan" value="span">
+								<t:outputText value="Preview" styleClass="innerSpan"/>
+							</t:htmlTag>
+						</t:commandLink>
+						<t:commandLink id="sourceCodeButton" styleClass="leftButton viewSwitchBtn" forceId="true">
+							<t:htmlTag styleClass="outerSpan" value="span">
+								<t:outputText value="Source" styleClass="innerSpan"/>
+							</t:htmlTag>
+						</t:commandLink>
+						<t:commandLink id="designButton" styleClass="leftButton viewSwitchBtn" forceId="true">
+							<t:htmlTag styleClass="outerSpan" value="span">
+								<t:outputText value="Design" styleClass="innerSpan"/>
+							</t:htmlTag>
+						</t:commandLink>
+					</t:div>
 					<t:commandLink id="newFormButton" styleClass="rightButton smoothbox" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}"></t:commandLink>
 					<t:commandLink id="saveFormButton" styleClass="rightButton" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"></t:commandLink>
 					<t:commandLink id="homeButton" styleClass="rightButton smoothbox" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_home']}"></t:commandLink>
