@@ -80,7 +80,7 @@
 				</t:div>
 				<t:div id="bottomButtonsContainer" forceId="true" styleClass="fbBottomButtonsContainer">
 					<t:div styleClass="states">
-						<t:commandLink id="previewButton" styleClass="leftButton viewSwitchBtn activeViewButton" forceId="true">
+						<t:commandLink id="previewButton" styleClass="leftButton viewSwitchBtn" forceId="true">
 							<t:htmlTag styleClass="outerSpan" value="span">
 								<t:outputText value="Preview" styleClass="innerSpan"/>
 							</t:htmlTag>

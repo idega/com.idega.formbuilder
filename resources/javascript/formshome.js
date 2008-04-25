@@ -27,6 +27,9 @@ function loadTaskFormDocument(processName, processId, taskName, formId) {
 	return false;
 }
 function createNewForm() {
+	if(modalFormName == null || modalFormName == '') {
+		return;
+	}
 	FormDocument.createFormDocument(modalFormName, {
 		callback: function(result) {
 			if(result == true) {

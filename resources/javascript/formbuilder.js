@@ -441,6 +441,9 @@ function initializePaletteComponents(tab, dropBoxinner, pageButtonArea, enable) 
 	});
 }
 function createNewForm() {
+	if(modalFormName == null || modalFormName == '') {
+		return;
+	}
 	FormDocument.createFormDocument(modalFormName, {
 		callback: function(result) {
 			if(result == true) {
@@ -937,6 +940,11 @@ function initializeBottomToolbar() {
 								area.setText(area.innerHTML);
 							}
 						}
+						var selView = toolbar.getElement('a.activeViewButton');
+						if(selView != null) {
+							selView.removeClass('activeViewButton');
+						}
+						item.addClass('activeViewButton');
 						closeLoadingMessage();
 					}
 				});
@@ -1080,12 +1088,19 @@ function initializePagesPanel() {
 		callback: function(result) {
 			if(result == 'Design') {
 				initializePagesPanelActions();
+				$('designButton').addClass('activeViewButton');
 			} else {
 				$('newPageButton').removeEvents('click');
 				setHrefToVoidFunction($('newPageButton'));
 				
 				$('previewPageButton').removeEvents('click');
 				setHrefToVoidFunction($('previewPageButton'));
+				
+				if(result == 'Source') {
+					$('sourceCodeButton').addClass('activeViewButton');
+				} else if(result == 'Preview') {
+					$('previewButton').addClass('activeViewButton');
+				}
 			}
 		}
 	});

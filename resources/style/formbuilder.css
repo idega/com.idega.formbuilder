@@ -35,7 +35,7 @@
 	background: transparent url(images/selected_button_left.png) no-repeat scroll left center;
 }
 .activeViewButton .outerSpan {
-	background: transparent url(images/selected_button_right.png) no-repeat scroll left center;
+	background: transparent url(images/selected_button_right.png) no-repeat scroll right center;
 }
 /*---Home page styles-----*/
 .fbSelectListItem {
@@ -231,6 +231,9 @@ div.biglabel {
 	height:60px;
 	position:relative;
 }
+div.label span {
+	width: 90%;
+}
 div.label span, div.label input {
 	color:#002243;
 	float:left;
@@ -245,7 +248,7 @@ div.label input {
 	border: 1px #a8a8a8 solid !important;
 	padding: 0;
 	background-color: #ccc !important;
-	width: 90% !important;
+	width: 100% !important;
 }
 
 span#designViewThankYou input {
@@ -253,6 +256,7 @@ span#designViewThankYou input {
 	padding: 0;
 	background-color: #ccc !important;
 	text-align: center;
+	width: 95% !important;
 }
 
 .fbViewTabBar {
@@ -1581,8 +1585,11 @@ html>body .fbBottomButtonsContainer a, html>body div#sourceViewDiv a {
 }
 
 .fbBottomButtonsContainer a.leftButton {
-	margin-left: 24px;
+	margin-left: 0px;
 	float: left;
+	padding-top: 0;
+	margin-top: 0;
+	margin-right: 0;
 }
 .fbBottomButtonsContainer a.currentView {
 	border: 1px solid #a1a1a1;
@@ -1651,7 +1658,7 @@ h1.title {
 }
 
 #pagesPanelSpecial {
-	height: 130px !important;
+	height: 110px !important;
 }
 
 #pagesPanelSpecial span {
