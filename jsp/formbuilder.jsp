@@ -58,8 +58,10 @@
 					<fb:workspace id="mainWorkspace"/>
 				</t:div>
 				<t:div id="newFormDialog" forceId="true" style="display: none;">
-					<t:outputLabel for="formNameInput" value="Form name" />
-					<t:inputText id="formNameInput" onkeyup="modalFormName = this.value;" onblur="modalFormName = this.value;" forceId="true" />
+					<t:div styleClass="simplePopupLayer">
+						<t:outputLabel styleClass="simplePopupLabel" for="formNameInput" value="Form name" />
+						<t:inputText styleClass="simplePopupInput" id="formNameInput" onkeyup="modalFormName = this.value;" onblur="modalFormName = this.value;" forceId="true" />
+					</t:div>
 					<t:htmlTag value="br" />
 					<t:commandLink id="createFormBtn" onclick="createNewForm(modalFormName, modalGoToDesigner);" forceId="true" value="Create" />
 				</t:div>

@@ -29,11 +29,13 @@
                 </f:verbatim>
 				<fb:homePage />
 				<t:div id="newTaskFormDialog" forceId="true" style="display: none;">
-					<t:outputLabel for="taskFormNameInput" value="Form name" />
-					<t:inputText id="taskFormNameInput" onkeyup="modalFormName = this.value;" onblur="modalFormName = this.value;" forceId="true" />
+					<t:div styleClass="simplePopupLayer">
+						<t:outputLabel styleClass="simplePopupLabel" for="taskFormNameInput" value="Form name" />
+						<t:inputText styleClass="simplePopupInput" id="taskFormNameInput" onkeyup="modalFormName = this.value;" onblur="modalFormName = this.value;" forceId="true" />
+					</t:div>
 					<t:htmlTag value="br" />
-					<t:outputLabel for="designerCheckbox" value="Go to designer" />
 					<t:selectBooleanCheckbox onchange="modalGoToDesigner = this.checked;" id="designerCheckbox" forceId="true" value="true" />
+					<t:outputLabel for="designerCheckbox" value="Go to designer" />
 					<t:htmlTag value="br" />
 					<t:commandLink id="createTaskFormBtn" onclick="createNewTaskForm(modalFormName, modalGoToDesigner);" forceId="true" value="Create" />
 				</t:div>
@@ -41,17 +43,19 @@
 					<t:outputLabel for="formSelector" value="Choose form" />
 					<t:selectOneMenu id="formSelector" onchange="var selFormVal = this.options[this.selectedIndex].getProperty('value');if(selFormVal != ''){modalSelectedForm = selFormVal;}" forceId="true" />
 					<t:htmlTag value="br" />
-					<t:outputLabel for="designerCheckbox" value="Go to designer" />
 					<t:selectBooleanCheckbox onchange="modalGoToDesigner = this.checked;" id="designerCheckbox" forceId="true" value="true" />
+					<t:outputLabel for="designerCheckbox" value="Go to designer" />
 					<t:htmlTag value="br" />
 					<t:commandLink id="attachTaskFormBtn" onclick="attachTaskForm(modalFormName, modalGoToDesigner);" forceId="true" value="Attach" />
 				</t:div>
 				<t:div id="newFormDialog" forceId="true" style="display: none;">
-					<t:outputLabel for="formNameInput" value="Form name" />
-					<t:inputText id="formNameInput" onkeyup="modalFormName = this.value;" onblur="modalFormName = this.value;" forceId="true" />
+					<t:div styleClass="simplePopupLayer">
+						<t:outputLabel styleClass="simplePopupLabel" for="formNameInput" value="Form name" />
+						<t:inputText styleClass="simplePopupInput" id="formNameInput" onkeyup="modalFormName = this.value;" onblur="modalFormName = this.value;" forceId="true" />
+					</t:div>
 					<t:htmlTag value="br" />
-					<t:outputLabel for="designerCheckbox2" value="Go to designer" />
 					<t:selectBooleanCheckbox onchange="modalGoToDesigner = this.checked;" id="designerCheckbox2" forceId="true" value="true" />
+					<t:outputLabel for="designerCheckbox2" value="Go to designer" />
 					<t:htmlTag value="br" />
 					<t:commandLink id="createFormBtn" onclick="createNewForm(modalFormName, modalGoToDesigner);" forceId="true" value="Create" />
 				</t:div>

@@ -1426,39 +1426,6 @@ function getEmptySelect(index,lbl,vl) {
 	}).injectInside(result);
 	
 	return result;
-	
-	/*result.setProperty('id', 'workspaceform1:rowDiv_' + index);
-	var result = document.createElement('div');
-	result.id = 'workspaceform1:rowDiv_' + index;
-	var remB = document.createElement('img');
-	remB.style.display = 'inline';
-	remB.setAttribute('onclick','deleteThisItem(this.parentNode.id);');
-	remB.id = 'delB_' + index;
-	remB.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete-tiny.png';
-	var label = document.createElement('input');
-	label.id = 'labelF_' + index;
-	label.setAttribute('type','text');
-	label.style.display = 'inline';
-	label.value = lbl;
-	label.setAttribute('onblur','saveLabel(this);');
-	label.setAttribute('class','fbSelectListItem');
-	var value = document.createElement('input');
-	value.id = 'valueF_' + index;
-	value.setAttribute('type','text');
-	value.value = vl;
-	value.style.display = 'none';
-	value.setAttribute('onblur','saveValue(this);');
-	value.setAttribute('class','fbSelectListItem');
-	var expB = document.createElement('img');
-	expB.style.display = 'inline';
-	expB.id = 'expB_' + index;
-	expB.src = '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow_right.png';
-	expB.setAttribute('onclick','expandOrCollapse(this,true);');
-	result.appendChild(remB);
-	result.appendChild(label);
-	result.appendChild(value);
-	result.appendChild(expB);
-	return result;*/
 }
 function fbsave() {
 	var node = $('sourceViewDiv');

@@ -163,16 +163,21 @@ html>body .fbBottomButtonsContainer a {
 }
 
 #createFormBtn {
-	padding-top: 30px;
-	margin-top: 7px;
-	font-family: "Lucida Grande", "Lucida Sans", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
-	font-size: 13px;
-	font-weight: Bold;
-	color: #131313;
-	margin-left: 13px;
-	margin-right: 13px;
-	width: 24px;
+	font-family: "Lucida Grande", "Lucida Sans", "Lucida Sans Unicode", Arial, Helvetica, sans-serif !important;
+	font-size: 16px !important;
+	background-color: #cef3cf;
+	border: 1px #b5e1b7 solid !important;
+	border-right-color: #80b082 !important;
+	border-bottom-color: #6e9870 !important;
+	border-left-color: #a9dcac !important;
+	padding: 8px 18px;
+	color: #1f1f1f !important;
 }
+
+#createFormBtn:hover {
+	text-decoration: none;
+}
+
 #cancelBt:hover {
 	color: Black;
 	text-decoration: none;
@@ -628,4 +633,51 @@ html>body .fbBottomButtonsContainer a {
 #formListContainer .mootabs_title .stateFullTab span {
 	font-size: 14px;
 	padding-left: 28px;
+}
+
+.forms #TB_ajaxContent{
+	padding: 15px;
+}
+
+.simplePopupLayer {
+}
+
+.simplePopupLabel {
+}
+
+.simplePopupInput {
+}
+
+.forms #TB_ajaxContent label {
+	font-family: "Lucida Grande", "Lucida Sans", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
+	display: block;
+	margin-bottom: 3px;
+}
+
+.forms #TB_ajaxContent input#formNameInput {
+	display: block;
+	font-family: "Lucida Grande", "Lucida Sans", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
+	margin: 0 !important;
+	font-size: 16px;
+	padding: 3px;
+	width: 285px;
+}
+
+.forms #TB_title{
+	height: 30px;
+}
+
+.forms #TB_ajaxWindowTitle {
+	font-family: "Lucida Grande", "Lucida Sans", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	padding: 0;
+	padding-left: 8px;
+	line-height: 30px;
+}
+
+.forms #TB_closeAjaxWindow{
+	padding: 0;
+	font-size: 9px;
+	padding-right: 3px;
+	padding-top: 3px;
 }
