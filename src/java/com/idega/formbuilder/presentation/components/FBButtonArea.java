@@ -37,7 +37,7 @@ public class FBButtonArea extends FBComponentBase {
 					Button bt = (Button) buttonArea.getComponent(nextId);
 					if(bt != null) {
 						FBButton button = new FBButton();
-						button.setLabel(bt.getProperties().getLabel().getString(FBUtil.getUILocale()));
+						button.setLabel(FBUtil.getPropertyString(bt.getProperties().getLabel().getString(FBUtil.getUILocale())));
 						button.setButtonId(nextId);
 						button.setOnSelect(DEFAULT_LOAD_ACTION);
 						button.setOnDelete(DEFAULT_DELETE_ACTION);

@@ -31,6 +31,7 @@
 								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js"
 								
 				stylesheeturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formbuilder.css,
+								/idegaweb/bundles/is.idega.idegaweb.egov.application.bundle/resources/style/application.css,
 								/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/smoothbox/smoothbox.css,
 								/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/moodalbox/1.2.1/css/moodalbox.css,
 								/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/mootabs/1.2/mootabs.css">

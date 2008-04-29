@@ -2,7 +2,6 @@ package com.idega.formbuilder.presentation.components;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 import javax.faces.context.FacesContext;
 
@@ -123,8 +122,6 @@ public class FBPagesPanel extends FBComponentBase {
 		general.setId("pagesPanel");
 		general.setStyleClass("pagesGeneralContainer");
 		
-		Locale locale = FBUtil.getUILocale();
-		
 		String selectedPageId = null;
 		Page selectedPage = ((FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID)).getPage();
 		if(selectedPage != null) {
@@ -142,7 +139,7 @@ public class FBPagesPanel extends FBComponentBase {
 						formPage.setId(nextId + P);
 						formPage.setStyleClass(generateClassAttribute(false, nextId.equals(selectedPageId), null));
 						formPage.setOnDelete(DEFAULT_PAGE_REMOVE_ACTION);
-						String label = (currentPage.getProperties()).getLabel().getString(locale);
+						String label = FBUtil.getPropertyString(currentPage.getProperties().getLabel().getString(FBUtil.getUILocale()));
 						formPage.setLabel(label);
 						formPage.setActive(false);
 						general.add(formPage);
@@ -170,8 +167,8 @@ public class FBPagesPanel extends FBComponentBase {
 			if(confirmation != null) {
 				FBFormPage formPage = new FBFormPage();
 				formPage.setId(confirmation.getId() + P);
-				formPage.setStyleClass(generateClassAttribute(true, confirmation.getId().equals(selectedPageId), SPECIAL_PREVIEW));	
-				String label = (confirmation.getProperties()).getLabel().getString(locale);
+				formPage.setStyleClass(generateClassAttribute(true, confirmation.getId().equals(selectedPageId), SPECIAL_PREVIEW));
+				String label = FBUtil.getPropertyString(confirmation.getProperties().getLabel().getString(FBUtil.getUILocale()));
 				formPage.setLabel(label);
 				formPage.setActive(false);
 				formPage.setOnLoad(DEFAULT_CONFIRM_LOAD_ACTION);
@@ -182,8 +179,8 @@ public class FBPagesPanel extends FBComponentBase {
 		if(thanks != null) {
 			FBFormPage formPage = new FBFormPage();
 			formPage.setId(thanks.getId() + P);
-			formPage.setStyleClass(generateClassAttribute(true, thanks.getId().equals(selectedPageId), SPECIAL_THANKYOU));	
-			String label = (thanks.getProperties()).getLabel().getString(locale);
+			formPage.setStyleClass(generateClassAttribute(true, thanks.getId().equals(selectedPageId), SPECIAL_THANKYOU));
+			String label = FBUtil.getPropertyString(thanks.getProperties().getLabel().getString(FBUtil.getUILocale()));
 			formPage.setLabel(label);
 			formPage.setActive(false);
 			formPage.setOnLoad(DEFAULT_THX_LOAD_ACTION);

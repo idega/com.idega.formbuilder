@@ -271,6 +271,15 @@ function initializeDesignView(initializeInline) {
 			}							
 		}
 	});
+	var languageChooser = $('languageChooser');
+	if(languageChooser != null) {
+		languageChooser.addEvent('change', function(e) {
+			var locale = e.target.value;
+			if(locale != '') {
+				reloadWorkspace(locale);
+			}
+		});
+	}
 	var myComponentSort = new Sortables($('dropBoxinner'), {
 		onComplete: function(el){
 			var children = $('dropBoxinner').getChildren();
@@ -477,15 +486,6 @@ function registerFormbuilderActions() {
 		formListButton.setProperty('Title', 'Save form?');
 		formListButton.setProperty('href', '#TB_inline?height=100&width=300&inlineId=formListDialog');
 	}
-	var languageChooser = $('languageChooser');
-	if(languageChooser != null) {
-		languageChooser.addEvent('change', function(e) {
-			var locale = e.target.value;
-			if(locale != '') {
-				reloadWorkspace(locale);
-			}
-		});
-	}
 	var noVariableBtn = $('noVariableBtn');
 	setHrefToVoidFunction(noVariableBtn);
 	noVariableBtn.addEvent('click', function(e) {
@@ -635,7 +635,13 @@ function reloadWorkspace(locale) {
 	Workspace.getWorkspace(locale, {
 		callback: function(resultDOM) {
 			if(resultDOM != null) {
-				replaceNode(resultDOM, $('mainWorkspace'), $('mainApplication'));
+				replaceNode(resultDOM, $('mainApplication').getFirst(), $('mainApplication'));
+				initializeAccordions();
+				initializePalette();
+				initializePagesPanel();
+				initializeDesign();
+				initializeVariableViewer();
+				initializeBottomToolbar();
 			}
 			closeLoadingMessage();
 		}
@@ -1342,16 +1348,11 @@ function expandOrCollapse(node,expand) {
 function addNewItem(parameter) {
 	var par = $(parameter).getLast();
 	var newInd = getNextRowIndex(par);
-	par.appendChild(getEmptySelect(newInd,'',''));
+	getEmptySelect(newInd,'','').injectInside(par);
 }
 function deleteThisItem(ind) {
 	var index = ind.split('_')[1];
-	var currRow = $(ind);
-	var node = $(ind);
-	if(node != null) {
-		var node2 = node.getParent();
-		node2.removeChild(currRow);
-	}
+	var currRow = $(ind).remove();
 	PropertyManager.removeSelectOption(index,currentCallback);
 	var rows = $('selectOptsInner').getChildren();
 	for(var i = 0; i < rows.length; i++) {
@@ -1474,24 +1475,6 @@ function fbsave() {
 	} else {
 		showLoadingMessage('Saving document...');
 		FormDocument.save(closeLoadingMessage);
-	}
-}
-function fbsavesource() {
-	showLoadingMessage('Saving');
-	/*var area = $('sourceTextarea');
-	var text = area.getText();
-	var html = area.innerHTML;
-	FormDocument.saveSrc(html, closeLoadingMessage);*/
-	alert(sourceTextarea.getCode());
-}
-function saveFormDocument() {
-	showLoadingMessage('Saving document...');
-	FormDocument.save(closeLoadingMessage);
-}
-function saveSourceCode(source_code) {
-	if(source_code != null) {
-		showLoadingMessage('Saving');
-		FormDocument.saveSrc(source_code, closeLoadingMessage);
 	}
 }
 function initializeInlineEdits() {

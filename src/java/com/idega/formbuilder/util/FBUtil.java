@@ -27,6 +27,10 @@ public class FBUtil {
 	
 	private FBUtil() { }
 	
+	public static String getPropertyString(String value) {
+		return value == null ? FBConstants.NO_VALUE : value;
+	}
+	
 	public static IWBundle getBundle(){
 		return getBundle(FacesContext.getCurrentInstance());
 	}

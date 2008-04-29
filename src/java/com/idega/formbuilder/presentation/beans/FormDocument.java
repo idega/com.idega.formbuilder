@@ -664,9 +664,9 @@ public class FormDocument implements Serializable {
 	
 	public String getFormTitle() {
 		if(document == null) {
-			return null;
+			return CoreConstants.EMPTY;
 		}
-		return document.getFormTitle().getString(FBUtil.getUILocale());
+		return FBUtil.getPropertyString(document.getFormTitle().getString(FBUtil.getUILocale()));
 	}
 	
 	public void setFormTitle(String formTitle) throws Exception {
@@ -721,7 +721,10 @@ public class FormDocument implements Serializable {
 	}
 
 	public String getThankYouText() {
-		return submitPage.getProperties().getText().getString(FBUtil.getUILocale());
+		if(submitPage == null) {
+			return CoreConstants.EMPTY;
+		}
+		return FBUtil.getPropertyString(submitPage.getProperties().getText().getString(FBUtil.getUILocale()));
 	}
 
 	public void setThankYouText(String thankYouText) {

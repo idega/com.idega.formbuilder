@@ -965,10 +965,13 @@ span.statusMsg {
 
 #selectOpts {
 	width: 100%;
-	overflow: auto;
-	max-height: 200px;
-	min-height: 150px;
 	margin: 0px;
+}
+
+#selectOptsInner {
+	overflow: auto;
+	max-height:200px;
+	min-height:150px;
 }
 
 .dropBox {

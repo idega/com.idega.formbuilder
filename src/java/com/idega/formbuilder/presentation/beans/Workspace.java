@@ -9,6 +9,7 @@ import com.idega.builder.business.BuilderLogic;
 import com.idega.formbuilder.presentation.components.FBDesignView;
 import com.idega.formbuilder.presentation.components.FBViewPanel;
 import com.idega.formbuilder.presentation.components.FBWorkspace;
+import com.idega.presentation.IWContext;
 import com.idega.util.CoreUtil;
 
 public class Workspace implements Serializable {
@@ -16,8 +17,6 @@ public class Workspace implements Serializable {
 	private static final long serialVersionUID = -7539955904708793992L;
 	
 	public static final String BEAN_ID = "workspace";
-	
-	private static final String DEFAULT_LOCALE = "en";
 	
 	private String view;
 	private Locale locale;
@@ -50,7 +49,7 @@ public class Workspace implements Serializable {
 
 	public Workspace() {
 		this.view = FBViewPanel.DESIGN_VIEW;
-		this.locale = new Locale(DEFAULT_LOCALE);
+		this.locale = IWContext.getInstance().getCurrentLocale();
 		this.processMode = false;
 	}
 	

@@ -89,7 +89,7 @@ public class FBButton extends FBComponentBase {
 				if(area != null) {
 					Button button = (Button) area.getComponent(buttonId);
 					if(button != null) {
-						this.label = button.getProperties().getLabel().getString(FBUtil.getUILocale());
+						this.label = FBUtil.getPropertyString(button.getProperties().getLabel().getString(FBUtil.getUILocale()));
 					}
 				}
 			}
