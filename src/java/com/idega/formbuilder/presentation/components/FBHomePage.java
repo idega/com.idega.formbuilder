@@ -54,7 +54,7 @@ public class FBHomePage extends FBComponentBase {
 	private static final String EDIT_BUTTON_CLASS = "editButton";
 	private static final String TRY_BUTTON_CLASS = "tryButton";
 	private static final String CODE_BUTTON_CLASS = "codeButton";
-	private static final String DELETE_BUTTON_CLASS = "deleteButton";
+//	private static final String DELETE_BUTTON_CLASS = "deleteButton";
 //	private static final String DELETE_TF_BUTTON_CLASS = "deleteTFButton";
 	private static final String web2BeanIdentifier = "web2bean";
 	private static final String MOOTABS_TITLE_CLASS = "mootabs_title";
@@ -66,7 +66,7 @@ public class FBHomePage extends FBComponentBase {
 	private static final String MOOTABS_PANEL_CLASS = "mootabs_panel";
 	private static final String PROCESS_BUTTON_LIST_CLASS = "processButtonList";
 	private static final String TAB_TITLE_CLASS = "tabTitle";
-	private static final String PROC_BTN_CLASS = "procBtnClass";
+//	private static final String PROC_BTN_CLASS = "procBtnClass";
 	private static final String TRANSITION_BTN_CLASS = "transitionButton";
 	private static final String EXPAND_BTN_CLASS = "expandButton";
 //	private static final String ATTACH_BTN_CLASS = "attachButton";
@@ -231,18 +231,18 @@ public class FBHomePage extends FBComponentBase {
 		return tab1;
 	}
 	
-	private ListItem addProcessButton(IWContext iwc, String buttonClass, String buttonTitle) {
-		ListItem item2 = new ListItem();
-		item2.setStyleClass(buttonClass);
-		item2.setStyleClass(PROC_BTN_CLASS);
-		
-		Link casesButton = new Link(buttonTitle);
-		casesButton.setStyleClass(buttonClass);
-		casesButton.setStyleClass(PROCESS_BUTTON_CLASS);
-		item2.add(casesButton);
-		
-		return item2;
-	}
+//	private ListItem addProcessButton(IWContext iwc, String buttonClass, String buttonTitle) {
+//		ListItem item2 = new ListItem();
+//		item2.setStyleClass(buttonClass);
+//		item2.setStyleClass(PROC_BTN_CLASS);
+//		
+//		Link casesButton = new Link(buttonTitle);
+//		casesButton.setStyleClass(buttonClass);
+//		casesButton.setStyleClass(PROCESS_BUTTON_CLASS);
+//		item2.add(casesButton);
+//		
+//		return item2;
+//	}
 	
 	/*
 	private ListItem addSmoothboxButton(IWContext iwc, String buttonClass, String buttonText, String href, String titleAttribute, String relAttribute) {
@@ -374,10 +374,10 @@ public class FBHomePage extends FBComponentBase {
 		
 		body.add(list);
 		
-		list.add(addButton(iwc, ENTRIES_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_entries_link", "Entries"), formId, null));
 		list.add(addButton(iwc, EDIT_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_edit_link", "Edit"), formId, null));
 		list.add(addButton(iwc, TRY_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_try_link", "Try"), formId, null));
 		list.add(addButton(iwc, CODE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_code_link", "Code"), formId, null));
+		list.add(addButton(iwc, ENTRIES_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_entries_link", "Entries"), formId, null));
 //		list.add(addButton(iwc, DELETE_BUTTON_CLASS, getLocalizedString(iwc, "fb_home_delete_link", "Delete"), formId, null));
 		
 		return body;

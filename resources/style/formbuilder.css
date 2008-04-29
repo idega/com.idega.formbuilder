@@ -1756,7 +1756,7 @@ div#sourceViewDiv iframe {
 }
 div#sourceViewDiv textarea {
 	height: 89% !important;
-	display: block !important;
+	display: block;
 	position: absolute !important;
 	width: 100% !important;
 	top: 78px;

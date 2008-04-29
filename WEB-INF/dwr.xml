@@ -49,6 +49,7 @@
 	    	<include method="setThankYouText" />
 	    	<include method="setThankYouTitle" />
 	    	<include method="getStandaloneForms" />
+	    	<include method="getSourceCode" />
     	</create>
     	<create creator="jsf" javascript="Workspace" scope="session">
 	    	<param name="managedBeanName" value="workspace"/>

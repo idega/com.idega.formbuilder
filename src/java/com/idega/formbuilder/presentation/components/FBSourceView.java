@@ -18,24 +18,12 @@ public class FBSourceView extends FBComponentBase {
 	private static final String INFO_CLASS = "info";
 	private static final String FORM_HEADING_HEADER_ID = "formHeadingHeader";
 	private static final String SOURCE_BOX_ID = "sourceTextarea";
-//	private static final String CODEPRESS_BOX_CLASS = "codepress html linenumbers-on";
 	
 	protected void initializeComponent(FacesContext context) {
-//		IWContext iwc = CoreUtil.getIWContext();
-		
 		Layer content = new Layer(Layer.DIV);
 		content.setStyleClass(getStyleClass());
 		content.setId(getId() + DIV_POSTFIX);
 		
-//		Web2Business web2 = (Web2Business) getBeanInstance("web2bean");
-//		
-//		List<String> scriptFiles = new ArrayList<String>();
-//		scriptFiles.add(web2.getCodePressScriptFilePath());
-//		
-//		content.add(PresentationUtil.getJavaScriptSourceLines(scriptFiles));
-		
-//		Script script = new Script();
-//		script.addScriptLine("CodePress.run();");
 		FormDocument formDocument = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
 		
 		Layer formHeading = new Layer(Layer.DIV);
@@ -46,23 +34,12 @@ public class FBSourceView extends FBComponentBase {
 		formHeadingHeader.setId(FORM_HEADING_HEADER_ID);
 		formHeading.add(formHeadingHeader);
 		
-//		Link saveLink = new Link(getLocalizedString(iwc, "fb_source_save_button", "Save changes"));
-//		saveLink.setNoURL();
-//		saveLink.setOnClick("fbsavesource();");
-//		saveLink.setId("saveCodeButton");
-//		saveLink.setStyleClass("rightButton");
-//		
-////		formHeading.add(saveLink);
-		
 		TextArea textarea = new TextArea();
 		textarea.setRendered(true);
-		textarea.setValue(formDocument.getSourceCode());
 		textarea.setId(SOURCE_BOX_ID);
-//		textarea.setStyleClass(CODEPRESS_BOX_CLASS);
 		
 		content.add(formHeading);
 		content.add(textarea);
-//		content.add(script);
 		
 		add(content);
 	}

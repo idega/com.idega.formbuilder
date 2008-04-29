@@ -257,9 +257,12 @@ function initializeDesignView(initializeInline) {
 	PropertyManager.getSelectedComponentId({
 		callback: function(result) {
 			if(result != null && result != '') {
-				var old = $('dropBoxinner').getElement('div.selectedComponent');
-				if(old != null) {
-					old.removeClass('selectedComponent');
+				var box = $('dropBoxinner');
+				if(box != null) {
+					var old = box.getElement('div.selectedComponent');
+					if(old != null) {
+						old.removeClass('selectedComponent');
+					}
 				}
 				var newNode = $(result);
 				if(newNode != null) {
@@ -935,10 +938,7 @@ function initializeBottomToolbar() {
 							initializeDesignView(true);
 						}
 						if(view == 'Source') {
-							var area = $('sourceTextarea');
-							if(area != null) {
-								area.setText(area.innerHTML);
-							}
+							initializeSourceView();
 						}
 						var selView = toolbar.getElement('a.activeViewButton');
 						if(selView != null) {
@@ -1098,9 +1098,24 @@ function initializePagesPanel() {
 				
 				if(result == 'Source') {
 					$('sourceCodeButton').addClass('activeViewButton');
+					initializeSourceView();
 				} else if(result == 'Preview') {
 					$('previewButton').addClass('activeViewButton');
 				}
+			}
+		}
+	});
+}
+function initializeSourceView() {
+	FormDocument.getSourceCode({
+		callback : function(code) {
+			var textarea = $('sourceTextarea');
+			if(textarea != null) {
+				textarea.setText(code);
+				textarea.addClass('codepress');
+				textarea.addClass('html');
+				textarea.addClass('linenumbers-on');
+				CodePress.run();
 			}
 		}
 	});
@@ -1463,10 +1478,11 @@ function fbsave() {
 }
 function fbsavesource() {
 	showLoadingMessage('Saving');
-	var area = $('sourceTextarea');
+	/*var area = $('sourceTextarea');
 	var text = area.getText();
 	var html = area.innerHTML;
-	FormDocument.saveSrc(html, closeLoadingMessage);
+	FormDocument.saveSrc(html, closeLoadingMessage);*/
+	alert(sourceTextarea.getCode());
 }
 function saveFormDocument() {
 	showLoadingMessage('Saving document...');
