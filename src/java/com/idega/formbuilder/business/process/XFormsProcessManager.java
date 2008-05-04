@@ -3,6 +3,8 @@ package com.idega.formbuilder.business.process;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.taskmgmt.def.Task;
@@ -28,6 +30,7 @@ public class XFormsProcessManager {
 		return viewFactory;
 	}
 
+	@Resource(name="process_xforms_viewFactory")
 	public void setViewFactory(ViewFactory viewFactory) {
 		this.viewFactory = viewFactory;
 	}

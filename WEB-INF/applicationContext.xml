@@ -2,9 +2,8 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 
 <beans>
-    <bean id="xformsProcessManager" class="com.idega.formbuilder.business.process.XFormsProcessManager" scope="session">
-        <property name="viewFactory" ref="process_xforms_viewFactory" />
-    </bean>
+    <bean id="xformsProcessManager" class="com.idega.formbuilder.business.process.XFormsProcessManager" scope="session" />
+    
     <bean id="formDocument" class="com.idega.formbuilder.presentation.beans.FormDocument" scope="session">
         <property name="workspace" ref="workspace" />
         <property name="xformsProcessManager" ref="xformsProcessManager" />
