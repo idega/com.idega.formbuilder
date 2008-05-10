@@ -11,6 +11,7 @@ toolbar_new=New form
 toolbar_save=Save form
 toolbar_home=Form list
 
+fbc_multi_upload_description_file=Multi description
 fbc_identifier_number=Identifier
 fbc_autofill_name=Name
 fbc_autofill_first_name=First name
@@ -43,6 +44,7 @@ fbc_header_text=Header
 fbc_separator=Separator
 fbc_text-loginSession.user.name=User name
 
+fbc_multi_upload_description_file_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/attach.png
 fbc_autofill_name_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield.png
 fbc_autofill_first_name_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield.png
 fbc_autofill_last_name_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield.png
