@@ -72,6 +72,10 @@ public class FormButton extends GenericComponent {
 
 	public void setAutofillKey(String autofillKey) {}
 	
+	public String getUploadDescription() {return null;}
+	
+	public void setUploadDescription(String value) {}
+	
 	private FormPage formPage;
 	
 	public FormPage getFormPage() {

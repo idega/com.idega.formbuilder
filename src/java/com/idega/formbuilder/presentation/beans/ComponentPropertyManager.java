@@ -9,6 +9,7 @@ import com.idega.documentmanager.business.component.Button;
 import com.idega.documentmanager.business.component.ButtonArea;
 import com.idega.documentmanager.business.component.Component;
 import com.idega.documentmanager.business.component.ComponentMultiUpload;
+import com.idega.documentmanager.business.component.ComponentMultiUploadDescription;
 import com.idega.documentmanager.business.component.ComponentPlain;
 import com.idega.documentmanager.business.component.ComponentSelect;
 import com.idega.documentmanager.business.component.Page;
@@ -31,6 +32,7 @@ public class ComponentPropertyManager {
 	private static final String COMP_ADD_BUTTON_PROP = "compAddButton";
 	private static final String COMP_REMOVE_BUTTON_PROP = "compRemoveButton";
 	private static final String COMP_EXT_SRC_PROP = "externalSrc";
+	private static final String COMP_UPL_DESC_PROP = "uploadDesc";
 	
 	private GenericComponent component;
 	
@@ -87,7 +89,9 @@ public class ComponentPropertyManager {
 		if(page != null) {
 			if(type.equals(FormComponent.COMPONENT_TYPE)) {
 				Component comp = page.getComponent(id);
-				if(comp instanceof ComponentMultiUpload) {
+				if(comp instanceof ComponentMultiUploadDescription) {
+					component = new FormMultiUploadDescriptionComponent((ComponentMultiUploadDescription) comp);
+				} else if(comp instanceof ComponentMultiUpload) {
 					component = new FormMultiUploadComponent((ComponentMultiUpload) comp);
 				} else if(comp instanceof ComponentPlain) {
 					component = new FormPlainComponent((ComponentPlain) comp);
@@ -199,6 +203,8 @@ public class ComponentPropertyManager {
 					propertyValue = null;
 				}
 				component.setExternalSrc(propertyValue);
+			} else if(propertyName.equals(COMP_UPL_DESC_PROP)) {
+				component.setUploadDescription(propertyValue);
 			}
 			Document doc = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component.getComponent()), true);
 			Object[] result = {componentId, doc};

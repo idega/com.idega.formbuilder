@@ -9,9 +9,6 @@ var modalSelectedForm = null;
 var SELECTED_PROCESS = null;
 var SELECTED_TASK = null;
 
-function setHrefToVoidFunction(element) {
-	element.setProperty('href', 'javascript:void(0)');
-}
 function loadTaskFormDocument(processName, processId, taskName, formId) {
 	showLoadingMessage('Loading');
 	FormDocument.loadTaskFormDocument(processId, taskName, formId, {

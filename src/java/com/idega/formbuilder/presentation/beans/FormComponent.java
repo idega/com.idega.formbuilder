@@ -306,6 +306,10 @@ public class FormComponent extends GenericComponent {
 	public String getRemoveButtonLabel() {return null;}
 	
 	public String getAddButtonLabel() {return null;}
+	
+	public String getUploadDescription() {return null;}
+	
+	public void setUploadDescription(String value) {}
 
 	public ProcessPalette getProcessPalette() {
 		return processPalette;

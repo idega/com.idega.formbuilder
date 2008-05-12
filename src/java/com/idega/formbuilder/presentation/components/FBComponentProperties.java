@@ -19,6 +19,7 @@ import com.idega.formbuilder.presentation.beans.DataSourceList;
 import com.idega.formbuilder.presentation.beans.FormButton;
 import com.idega.formbuilder.presentation.beans.FormComponent;
 import com.idega.formbuilder.presentation.beans.FormMultiUploadComponent;
+import com.idega.formbuilder.presentation.beans.FormMultiUploadDescriptionComponent;
 import com.idega.formbuilder.presentation.beans.FormPlainComponent;
 import com.idega.formbuilder.presentation.beans.FormSelectComponent;
 import com.idega.formbuilder.presentation.beans.GenericComponent;
@@ -188,6 +189,61 @@ public class FBComponentProperties extends FBComponentBase {
 				add(layer);
 				
 				return;
+			}
+			
+			if(component instanceof FormMultiUploadDescriptionComponent) {
+				
+				layer.add(body);
+				
+				body = createPanelSection("multiUpPropertiesPanel");
+				
+				line = createPropertyContainer(SINGLE_LINE_PROPERTY);
+				
+				CheckBox required = new CheckBox();
+				required.setId(PROPERTY_REQUIRED_ID);
+				required.setChecked(properties.isRequired());
+				required.setOnChange("saveComponentProperty('" + componentId + "','compRequired',this.checked, event)");
+				
+				line.add(required);
+				line.add(new Label(getLocalizedString(iwc, "comp_prop_requiredfield", "Required field"), required));
+				body.add(line);
+				
+				line = createPropertyContainer(TWO_LINE_PROPERTY);
+				
+				TextInput addButtonLabel = new TextInput("propertyAddButtonLabel", component.getAddButtonLabel());
+				addButtonLabel.setOnBlur("saveComponentProperty('" + componentId + "','compAddButton',this.value, event)");
+				addButtonLabel.setOnKeyDown("saveComponentProperty('" + componentId + "','compAddButton',this.value, event)");
+				
+				line.add(new Label(getLocalizedString(iwc, "comp_prop_add_button_label", "Add button label"), addButtonLabel));
+				line.add(addButtonLabel);
+				body.add(line);
+				
+				line = createPropertyContainer(TWO_LINE_PROPERTY);
+				
+				TextInput removeButtonLabel = new TextInput("propertyRemoveButtonLabel", component.getRemoveButtonLabel());
+				removeButtonLabel.setOnBlur("saveComponentProperty('" + componentId + "','compRemoveButton',this.value, event)");
+				removeButtonLabel.setOnKeyDown("saveComponentProperty('" + componentId + "','compRemoveButton',this.value, event)");
+				
+				line.add(new Label(getLocalizedString(iwc, "comp_prop_remove_button_label", "Remove button label"), removeButtonLabel));
+				line.add(removeButtonLabel);
+				body.add(line);
+				
+				line = createPropertyContainer(TWO_LINE_PROPERTY);
+				
+				TextInput descriptionLabel = new TextInput("propertyUploadDescription", component.getUploadDescription());
+				descriptionLabel.setOnBlur("saveComponentProperty('" + componentId + "','uploadDesc',this.value, event)");
+				descriptionLabel.setOnKeyDown("saveComponentProperty('" + componentId + "','uploadDesc',this.value, event)");
+				
+				line.add(new Label(getLocalizedString(iwc, "comp_prop_upload_description", "Upload description label"), descriptionLabel));
+				line.add(descriptionLabel);
+				body.add(line);
+				
+				layer.add(body);
+				
+				add(layer);
+				
+				return;
+				
 			}
 			
 			line = createPropertyContainer(SINGLE_LINE_PROPERTY);

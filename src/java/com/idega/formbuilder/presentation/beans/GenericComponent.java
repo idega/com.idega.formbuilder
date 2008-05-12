@@ -52,5 +52,9 @@ public abstract class GenericComponent {
 	public abstract void setAutofillKey(String key);
 	
 	public abstract String getAutofillKey();
+	
+	public abstract String getUploadDescription();
+	
+	public abstract void setUploadDescription(String value);
 
 }
