@@ -18,17 +18,17 @@ import com.idega.documentmanager.business.PersistedForm;
 import com.idega.documentmanager.business.PersistenceManager;
 import com.idega.documentmanager.business.XFormPersistenceType;
 import com.idega.jbpm.IdegaJbpmContext;
-import com.idega.jbpm.def.TaskView;
-import com.idega.jbpm.def.ViewFactory;
-import com.idega.jbpm.def.ViewFactoryType;
+import com.idega.jbpm.view.TaskView;
+import com.idega.jbpm.view.ViewFactory;
+import com.idega.jbpm.view.ViewFactoryType;
 import com.idega.presentation.IWContext;
 import com.idega.util.IWTimestamp;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
- * Last modified: $Date: 2008/04/24 23:53:11 $ by $Author: laddi $
+ * Last modified: $Date: 2008/05/19 15:27:26 $ by $Author: civilis $
  */
 @Scope("singleton")
 @Service(FBHomePageBean.beanIdentifier)

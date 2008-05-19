@@ -22,7 +22,7 @@ import com.idega.formbuilder.presentation.components.FBFormComponent;
 import com.idega.formbuilder.presentation.components.FBVariableViewer;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
-import com.idega.jbpm.def.Variable;
+import com.idega.jbpm.variables.Variable;
 import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
 

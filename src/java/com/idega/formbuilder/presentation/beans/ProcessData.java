@@ -17,7 +17,7 @@ import com.idega.documentmanager.business.component.Page;
 import com.idega.documentmanager.business.component.properties.PropertiesButton;
 import com.idega.documentmanager.business.component.properties.PropertiesComponent;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
-import com.idega.jbpm.def.Variable;
+import com.idega.jbpm.variables.Variable;
 import com.idega.webface.WFUtil;
 
 public class ProcessData implements Serializable {

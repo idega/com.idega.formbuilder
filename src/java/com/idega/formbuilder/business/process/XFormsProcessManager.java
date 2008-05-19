@@ -13,10 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.idega.builder.bean.AdvancedProperty;
 import com.idega.jbpm.IdegaJbpmContext;
-import com.idega.jbpm.def.View;
-import com.idega.jbpm.def.ViewFactory;
-import com.idega.jbpm.def.ViewToTask;
-import com.idega.jbpm.def.ViewToTaskType;
+import com.idega.jbpm.view.View;
+import com.idega.jbpm.view.ViewFactory;
+import com.idega.jbpm.view.ViewToTask;
+import com.idega.jbpm.view.ViewToTaskType;
 
 public class XFormsProcessManager {
 	
