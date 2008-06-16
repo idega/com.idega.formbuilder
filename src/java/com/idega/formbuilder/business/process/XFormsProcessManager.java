@@ -12,7 +12,7 @@ import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.idega.builder.bean.AdvancedProperty;
-import com.idega.jbpm.IdegaJbpmContext;
+import com.idega.jbpm.BPMContext;
 import com.idega.jbpm.view.View;
 import com.idega.jbpm.view.ViewFactory;
 import com.idega.jbpm.view.ViewToTask;
@@ -24,7 +24,7 @@ public class XFormsProcessManager {
 	
 	private ViewToTask viewToTaskBinder;
 	private ViewFactory viewFactory;
-	private IdegaJbpmContext idegaJbpmContext;
+	private BPMContext idegaJbpmContext;
 	
 	public ViewFactory getViewFactory() {
 		return viewFactory;
@@ -108,12 +108,12 @@ public class XFormsProcessManager {
 		this.viewToTaskBinder = viewToTaskBinder;
 	}
 
-	public IdegaJbpmContext getIdegaJbpmContext() {
+	public BPMContext getIdegaJbpmContext() {
 		return idegaJbpmContext;
 	}
 
 	@Autowired
-	public void setIdegaJbpmContext(IdegaJbpmContext idegaJbpmContext) {
+	public void setIdegaJbpmContext(BPMContext idegaJbpmContext) {
 		this.idegaJbpmContext = idegaJbpmContext;
 	}
 }

@@ -17,7 +17,7 @@ import com.google.common.collect.Multimap;
 import com.idega.documentmanager.business.PersistedForm;
 import com.idega.documentmanager.business.PersistenceManager;
 import com.idega.documentmanager.business.XFormPersistenceType;
-import com.idega.jbpm.IdegaJbpmContext;
+import com.idega.jbpm.BPMContext;
 import com.idega.jbpm.view.TaskView;
 import com.idega.jbpm.view.ViewFactory;
 import com.idega.jbpm.view.ViewFactoryType;
@@ -26,16 +26,16 @@ import com.idega.util.IWTimestamp;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
- * Last modified: $Date: 2008/05/19 15:27:26 $ by $Author: civilis $
+ * Last modified: $Date: 2008/06/16 13:00:52 $ by $Author: civilis $
  */
 @Scope("singleton")
 @Service(FBHomePageBean.beanIdentifier)
 public class FBHomePageBean {
 	
 	public static final String beanIdentifier = "FBHomePageBean";
-	private IdegaJbpmContext idegaJbpmContext;
+	private BPMContext idegaJbpmContext;
 	private PersistenceManager persistenceManager;
 	private ViewFactory viewFactory;
 	
@@ -100,12 +100,12 @@ public class FBHomePageBean {
 		return getPersistenceManager().getStandaloneForms();
 	}
 	
-	public IdegaJbpmContext getIdegaJbpmContext() {
+	public BPMContext getIdegaJbpmContext() {
 		return idegaJbpmContext;
 	}
 
 	@Autowired
-	public void setIdegaJbpmContext(IdegaJbpmContext idegaJbpmContext) {
+	public void setIdegaJbpmContext(BPMContext idegaJbpmContext) {
 		this.idegaJbpmContext = idegaJbpmContext;
 	}
 	
