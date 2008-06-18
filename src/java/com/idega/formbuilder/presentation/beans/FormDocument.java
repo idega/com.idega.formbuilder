@@ -400,7 +400,6 @@ public class FormDocument implements Serializable {
 	}
 	
 	public boolean loadFormDocument(Long formId) {
-		System.out.println("loadigndsd: "+formId);
 		
 		clearAppsRelatedMetaData();
 		
