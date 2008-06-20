@@ -39,6 +39,7 @@ fbc_email=Email
 fbc_button_next=Next
 fbc_button_previous=Previous
 fbc_button_submit=Submit
+fbc_button_save=Save
 fbc_simple_text=Paragraph
 fbc_header_text=Header
 fbc_separator=Separator
@@ -72,6 +73,7 @@ fbc_email_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/c
 fbc_button_next_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/resultset_next.png
 fbc_button_previous_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/resultset_previous.png
 fbc_button_submit_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield.png
+fbc_button_save_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield.png
 
 fbc_simple_text_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/pencil.png
 fbc_header_text_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/font.png
