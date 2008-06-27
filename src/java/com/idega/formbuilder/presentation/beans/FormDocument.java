@@ -674,6 +674,22 @@ public class FormDocument implements Serializable {
 		document.setFormTitle(bean);
 	}
 	
+	public void setFormErrorMessage(String message) throws Exception {
+		LocalizedStringBean bean = document.getFormErrorMsg();
+		bean.setString(FBUtil.getUILocale(), message);
+		document.setFormErrorMsg(bean);
+	}
+	
+	public String saveFormErrorMessage(String message) {
+		try {
+			setFormErrorMessage(message);
+			return message;
+		} catch(Exception e) {
+			logger.error("Could not save form title: ", e);
+			return null;
+		}
+	}
+	
 	public String saveFormTitle(String formTitle) {
 		try {
 			setFormTitle(formTitle);
@@ -724,6 +740,13 @@ public class FormDocument implements Serializable {
 			return CoreConstants.EMPTY;
 		}
 		return FBUtil.getPropertyString(submitPage.getProperties().getText().getString(FBUtil.getUILocale()));
+	}
+	
+	public String getFormErrorMessage() {
+		if(document == null) {
+			return CoreConstants.EMPTY;
+		}
+		return FBUtil.getPropertyString(document.getFormErrorMsg().getString(FBUtil.getUILocale()));
 	}
 
 	public void setThankYouText(String thankYouText) {

@@ -46,6 +46,7 @@
 	    	<include method="togglePreviewPage" />
 	    	<include method="saveSrc" />
 	    	<include method="saveFormTitle" />
+	    	<include method="saveFormErrorMessage" />
 	    	<include method="setThankYouText" />
 	    	<include method="setThankYouTitle" />
 	    	<include method="getStandaloneForms" />

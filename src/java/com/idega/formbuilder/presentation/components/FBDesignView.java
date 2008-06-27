@@ -48,12 +48,14 @@ public class FBDesignView extends FBComponentBase {
 	private static final String INLINE_EDIT_CLASS = "inlineEdit";
 	private static final String REL_ATTRIBUTE = "rel";
 	private static final String FORM_TITLE_REL = "FormDocument.saveFormTitle";
+	private static final String FORM_ERROR_MESSAGE_REL = "FormDocument.saveFormErrorMessage";
 	private static final String FORM_HEADING_HEADER_ID = "formHeadingHeader";
 	private static final String MESSAGE_DIALOG_ID = "messageDialog";
 	private static final String DISPLAY_NONE = "display: none;";
 	private static final String MESSAGE_BOX_CONTENT_CLASS = "messageBoxContent";
 	private static final String LANGUAGE_CHOOSER_ID = "languageChooser";
 	private static final String DESIGN_VIEW_PAGE_TITLE_ID = "designViewPageTitle";
+	private static final String DESIGN_VIEW_FORM_ERROR_MESSAGE_ID = "designViewFormErrorMsg";
 	private static final String LABEL_CLASS = "label";
 	private static final String PAGE_TITLE_REL = "FormPage.saveTitle updatePageIconText";
 	private static final String DESIGN_VIEW_CURRENT_PAGE_TITLE_ID = "designViewCurrentPageTitle";
@@ -150,6 +152,19 @@ public class FBDesignView extends FBComponentBase {
 		Text currentPageTitle = new Text(formPage.getTitle());
 		currentPageTitle.setId(DESIGN_VIEW_CURRENT_PAGE_TITLE_ID);
 		pageNotice.add(currentPageTitle);
+		
+		component.add(pageNotice);
+		
+		pageNotice = new Layer(Layer.DIV);
+		pageNotice.setId(DESIGN_VIEW_FORM_ERROR_MESSAGE_ID);
+		pageNotice.setStyleClass(INLINE_EDIT_CLASS);
+		pageNotice.setStyleClass("modifiedLabel");
+		pageNotice.setStyleClass(LABEL_CLASS);
+		pageNotice.setMarkupAttribute(REL_ATTRIBUTE, FORM_ERROR_MESSAGE_REL);
+		
+		Text formErrorMessage = new Text(formDocument.getFormErrorMessage());
+		formErrorMessage.setStyleClass("modifiedLabel");
+		pageNotice.add(formErrorMessage);
 		
 		component.add(pageNotice);
 		

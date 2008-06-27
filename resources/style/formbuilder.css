@@ -223,6 +223,11 @@ div.label {
 	height:28px;
 	position:relative;
 }
+div.modifiedLabel {
+	background:#FFF9D7 none repeat scroll 0% 0%		!important;
+	height:50px										!important;;
+	border-bottom:1px solid #E2C822 				!important;
+}
 div.biglabel {
 	background:#FFFFFF url(images/header_tiler.gif) repeat-x scroll 0% 50%;
 	border-bottom:1px solid #B2B6B8;
@@ -242,6 +247,9 @@ div.label span, div.label input {
 	padding:7px 0 0 14px;
 	text-transform:uppercase;
 	margin: 0;
+}
+div.label span.modifiedLabel {
+	text-transform:none								!important;
 }
 
 div.label input {
