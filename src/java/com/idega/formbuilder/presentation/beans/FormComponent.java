@@ -93,7 +93,8 @@ public class FormComponent extends GenericComponent {
 		return results;
 	}
 	
-	public String assignTransition(String buttonId, String transition) {
+	public Object[] assignTransitionAndRenderButton(String buttonId, String transition) {
+		Object[] result = new Object[2];
 		Page page = formPage.getPage();
 		if(page != null) {
 			ButtonArea area = page.getButtonArea();
@@ -102,11 +103,12 @@ public class FormComponent extends GenericComponent {
 				PropertiesButton properties = button.getProperties();
 				if(properties != null) {
 					properties.setReferAction(transition);
-					return processData.bindTransition(buttonId, transition).getStatus();
+					result[0] = processData.bindTransition(buttonId, transition).getStatus();
+					result[1] = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBButton(button.getId(), "formButton", "loadButtonInfo(this);", "removeButton(this);"), true);
 				}
 			}
 		}
-		return null;
+		return result;
 	}
 	
 	public List<AdvancedProperty> getAvailableComponentVariables(String type) {
@@ -124,7 +126,7 @@ public class FormComponent extends GenericComponent {
 
 	public void setDataSrc(String dataSrc) {}
 	
-	public Document addComponent(String type) throws Exception {
+	public String addComponent(String type) throws Exception {
 		if(type == null) {
 			return null;
 		}
@@ -141,8 +143,8 @@ public class FormComponent extends GenericComponent {
 			}
 			Component component = page.addComponent(type, before);
 			if(component != null) {
-				Document doc = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component), true);
-				return doc;
+//				Document doc = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component), true);
+				return component.getId();
 			}
 		}
 		return null;
@@ -151,7 +153,7 @@ public class FormComponent extends GenericComponent {
 	public Object[] addTaskComponent(String type) throws Exception {
 		Object[] result = new Object[3];
 		
-		Document doc = addComponent(type);
+		String doc = addComponent(type);
 		result[0] = doc;
 		
 		Set<String> datatype = getProcessPalette().getComponentDatatype(type);
@@ -160,6 +162,46 @@ public class FormComponent extends GenericComponent {
 		Set<String> vars = getProcessData().getComponentTypeVariables(type);
 		result[2] = vars;
 		
+		return result;
+	}
+	
+	public Document getRenderedButton(String id) {
+		if(id == null) {
+			return null;
+		}
+		Page page = formPage.getPage();
+		if(page != null) {
+			ButtonArea area = page.getButtonArea();
+			if(area != null) {
+				Button button = (Button) area.getComponent(id);
+				if(button != null) {
+					return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBButton(id, "formButton", "loadButtonInfo(this);", "removeButton(this);"), true);
+				}
+			}
+		}
+		return null;
+	}
+	
+	public Object[] moveAndRenderComponent(String id, int before) throws Exception {
+		Object[] result = new Object[2];
+		Page page = formPage.getPage();
+		if(before == -1) {
+			result[0] = "append";
+		} else {
+			String beforeId = CoreConstants.EMPTY;
+			if(page != null) {
+				List<String> ids = page.getContainedComponentsIdList();
+				if(ids.contains(id)) {
+					beforeId = ids.get(before);
+					ids.remove(id);
+					ids.add(before, id);
+				}
+				page.rearrangeComponents();
+			}
+			result[0] = beforeId;
+		}
+		Component component = page.getComponent(id);
+		result[1] = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component), true);
 		return result;
 	}
 	
@@ -182,7 +224,7 @@ public class FormComponent extends GenericComponent {
 		}
 	}
 	
-	public Document addButton(String type) {
+	public String addButton(String type) {
 		Page page = formPage.getPage();
 		if(page != null) {
 			ButtonArea area = page.getButtonArea();
@@ -193,7 +235,8 @@ public class FormComponent extends GenericComponent {
 				area = page.createButtonArea(null);
 				button = area.addButton(ConstButtonType.getByStringType(type), null);
 			}
-			return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBButton(button.getId(), "formButton", "loadButtonInfo(this);", "removeButton(this);"), true);
+			return button.getId();
+//			return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBButton(button.getId(), "formButton", "loadButtonInfo(this);", "removeButton(this);"), true);
 		}
 		return null;
 	}

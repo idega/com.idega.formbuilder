@@ -83,12 +83,14 @@
 	    	<include method="addComponent" />
 	    	<include method="addTaskComponent" />
 	    	<include method="moveComponent" />
+	    	<include method="moveAndRenderComponent" />
 	    	<include method="addButton" />
+	    	<include method="getRenderedButton" />
 	    	<include method="removeComponent" />
 	    	<include method="getId" />
 	    	<include method="assignVariable" />
 	    	<include method="assignVariableAndMoveComponent" />
-	    	<include method="assignTransition" />
+	    	<include method="assignTransitionAndRenderButton" />
 	    	<include method="getAvailableComponentVariables" />
 	    	<include method="getFormButtonInfo" />
 	    	<include method="getFormComponentInfo" />

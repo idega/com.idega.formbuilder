@@ -27,6 +27,11 @@ function createNewForm() {
 	if(modalFormName == null || modalFormName == '') {
 		return;
 	}
+	var dialog = $('TB_window');
+	if(dialog != null) {
+		dialog.setStyle('visibility', 'hidden');
+		showLoadingMessage('Creating form');
+	}
 	FormDocument.createFormDocument(modalFormName, {
 		callback: function(result) {
 			if(result == true) {

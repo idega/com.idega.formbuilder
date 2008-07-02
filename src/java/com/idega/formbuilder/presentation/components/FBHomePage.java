@@ -54,7 +54,7 @@ public class FBHomePage extends FBComponentBase {
 	private static final String EDIT_BUTTON_CLASS = "editButton";
 	private static final String TRY_BUTTON_CLASS = "tryButton";
 	private static final String CODE_BUTTON_CLASS = "codeButton";
-//	private static final String DELETE_BUTTON_CLASS = "deleteButton";
+	private static final String DELETE_BUTTON_CLASS = "deleteButton";
 //	private static final String DELETE_TF_BUTTON_CLASS = "deleteTFButton";
 	private static final String web2BeanIdentifier = "web2bean";
 	private static final String MOOTABS_TITLE_CLASS = "mootabs_title";

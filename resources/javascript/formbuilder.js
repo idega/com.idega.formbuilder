@@ -16,11 +16,11 @@ var CURRENT_ELEMENT = null;
 var FORM_TITLE = 'formHeadingHeader';
 var PAGE_TITLE = 'currentPageTitle';
 
-var CURRENT_BUTTON = null;
 var VARIABLE_LIST;
 var COMPONENT_DATATYPE;
 
-var currentElement = null;
+var newComponentId = null;
+var newButtonLabel = null;
 var pressedComponentDelete = false;
 var pressedButtonDelete = false;
 var pressedPageDelete = false;
@@ -95,14 +95,9 @@ var FBDraggable = Element.extend({
 						if(draggingComponent == false) {
 							var componentType = this.elementOrg.id;
 	   						FormComponent.addComponent(componentType, {
-								callback: function(resultDOM) {
-									if(resultDOM != null) {
-										currentElement = resultDOM;
-									} else {
-										var messagePanel = $('messageDialog');
-										if(messagePanel != null) {
-											messagePanel.removeProperty('style');
-										}
+								callback: function(result) {
+									if(result != null) {
+										newComponentId = result;
 									}
 								}
 							});
@@ -112,9 +107,9 @@ var FBDraggable = Element.extend({
 						$('pageButtonArea').setStyle('background-color', '#F9FF9E');
 						if(draggingButton == false) {
 							FormComponent.addButton(this.elementOrg.id, {
-								callback: function(resultDOM) {
-									if(resultDOM != null) {
-										CURRENT_BUTTON = resultDOM;
+								callback: function(result) {
+									if(result != null) {
+										newComponentId = result;
 									}
 								}
 							});
@@ -126,9 +121,9 @@ var FBDraggable = Element.extend({
 							var componentType = this.elementOrg.id;
 							dwr.engine.beginBatch();
 							FormComponent.addButton(componentType, {
-								callback: function(resultDOM) {
-									if(resultDOM != null) {
-										CURRENT_BUTTON = resultDOM;
+								callback: function(result) {
+									if(result != null) {
+										newComponentId = result;
 									}
 								}
 							});
@@ -169,7 +164,7 @@ var FBDraggable = Element.extend({
 	   						FormComponent.addTaskComponent(componentType, {
 								callback: function(results) {
 									if(results != null && results.length == 3) {
-										currentElement = results[0];
+										newComponentId = results[0];
 										COMPONENT_DATATYPE = results[1];
 										VARIABLE_LIST = results[2];
 									}
@@ -186,29 +181,27 @@ var FBDraggable = Element.extend({
 					this.elementOrg = null;
 					if(type == 'fbc') {
 						$('dropBoxinner').removeProperty('style');
-						if(insideDropzone == false && currentElement != null && draggingComponent == true) {
-							var currentId = currentElement.documentElement.getAttribute('id');
-							FormComponent.removeComponent(currentId);
+						if(insideDropzone == false && newComponentId != null && draggingComponent == true) {
+							FormComponent.removeComponent(newComponentId);
 							draggingComponent = false;
 						}
 					} else if(type == 'fbb') {
 						$('pageButtonArea').removeProperty('style');
-						if(draggingButton == true && insideDropzone == false && CURRENT_BUTTON != null) {
-							FormComponent.removeButton(CURRENT_BUTTON.documentElement.getAttribute('id'));
+						if(draggingButton == true && insideDropzone == false && newComponentId != null) {
+							FormComponent.removeButton(newComponentId);
 							draggingButton = false;
 						}
 					} else if(type == 'fbcp') {
 						$('dropBoxinner').removeProperty('style');
-						if(insideDropzone == false && currentElement != null && draggingComponent == true) {
-							var currentId = currentElement.documentElement.getAttribute('id');
+						if(insideDropzone == false && newComponentId != null && draggingComponent == true) {
 							this.element.removeEvents('mousemove');
-							FormComponent.removeComponent(currentId);
+							FormComponent.removeComponent(newComponentId);
 							draggingComponent = false;
 						}
 					} else if(type == 'fbbp') {
 						$('pageButtonArea').removeProperty('style');
-						if(draggingButton == true && insideDropzone == false && CURRENT_BUTTON != null) {
-							FormComponent.removeButton(CURRENT_BUTTON.documentElement.getAttribute('id'));
+						if(draggingButton == true && insideDropzone == false && newComponentId != null) {
+							FormComponent.removeButton(newComponentId);
 							draggingButton = false;
 						}
 					}
@@ -307,11 +300,19 @@ function initializeDesignView(initializeInline) {
 				insideDropzone = false;
 			},
 			'drop': function(el, drag){
+				pageButtonArea.removeProperty('style');
 				if(draggingButton == true) {
 					draggingButton = false;
 					if(el.hasClass('fbb')) {
-						if(CURRENT_BUTTON != null) {
-							insertNodesToContainer(CURRENT_BUTTON, pageButtonArea);
+						if(newComponentId != null) {
+							FormComponent.getRenderedButton(newComponentId, {
+								callback: function(result) {
+									if(result != null) {
+										insertNodesToContainer(result, pageButtonArea);
+									}
+									newComponentId = null;
+								}
+							});
 						}
 					} else if(el.hasClass('fbbp')) {
 						showVariableList('selectVariableDialog', el.getLeft(), el.getTop(), VARIABLE_LIST, true);
@@ -342,34 +343,29 @@ function initializeDesignView(initializeInline) {
 				});
 			},
 			'drop': function(el, drag){
+				dropBoxinner.removeProperty('style');
 				dropBoxinner.getElements('div.formElement').each(function(element) {
 					element.addClass('formElementHover');
 				});
 				if(draggingComponent == true) {
 					draggingComponent = false;
 					if(el.hasClass('fbc')) {
-						if(currentElement != null) {
-							if(currentElement.documentElement) {
-								var currentId = currentElement.documentElement.getAttribute('id');
-							    if(CURRENT_ELEMENT_UNDER != null) {
-									FormComponent.moveComponent(currentId, CURRENT_ELEMENT_UNDER, {
-										callback: function(result) {
-											if($('noFormNotice') != null) {
-												$('noFormNotice').remove();
-											}
-											if(result == 'append') {
-												insertNodesToContainer(currentElement, dropBoxinner);
-												currentElement = null;
-											} else {
-												var node = $(result);
-												insertNodesToContainerBefore(currentElement, dropBoxinner, node);
-												currentElement = null;
-											}
-											initializeDesignView(false);
-										}
-									});
-							    }
-							}
+						if(CURRENT_ELEMENT_UNDER != null) {
+							FormComponent.moveAndRenderComponent(newComponentId, CURRENT_ELEMENT_UNDER, {
+								callback: function(result) {
+									if($('noFormNotice') != null) {
+										$('noFormNotice').remove();
+									}
+									if(result[0] == 'append') {
+										insertNodesToContainer(result[1], dropBoxinner);
+									} else {
+										var node = $(result[0]);
+										insertNodesToContainerBefore(result[1], dropBoxinner, node);
+									}
+									newComponentId = null;
+									initializeDesignView(false);
+								}
+							});
 						}
 					} else if(el.hasClass('fbcp')) {
 						showVariableList('selectVariableDialog', el.getLeft(), el.getTop(), VARIABLE_LIST, false);
@@ -489,21 +485,20 @@ function registerFormbuilderActions() {
 	var noVariableBtn = $('noVariableBtn');
 	setHrefToVoidFunction(noVariableBtn);
 	noVariableBtn.addEvent('click', function(e) {
-		var currentId = currentElement.documentElement.getAttribute('id');
 		if(CURRENT_ELEMENT_UNDER != null) {
-			FormComponent.moveComponent(currentId, CURRENT_ELEMENT_UNDER, {
+			FormComponent.moveAndRenderComponent(newComponentId, CURRENT_ELEMENT_UNDER, {
 				callback: function(result) {
 					if($('emptyForm') != null) {
 						$('emptyForm').remove();
 					}
 					dropBoxinner = $('dropBoxinner');
-					if(result == 'append') {
-						insertNodesToContainer(currentElement, dropBoxinner);
+					if(result[0] == 'append') {
+						insertNodesToContainer(result[1], dropBoxinner);
 					} else {
-						var node = $(result);
-						insertNodesToContainerBefore(currentElement, dropBoxinner, node);
+						var node = $(result[0]);
+						insertNodesToContainerBefore(result[1], dropBoxinner, node);
 					}
-					currentElement = null;
+					newComponentId = null;
 					initializeDesignView(false);
 				}
 			});
@@ -513,8 +508,7 @@ function registerFormbuilderActions() {
 	var cancelVariableBtn = $('cancelVariableBtn');
 	setHrefToVoidFunction(cancelVariableBtn);
 	cancelVariableBtn.addEvent('click', function(e) {
-		var currentId = currentElement.documentElement.getAttribute('id');
-		FormComponent.removeComponent(currentId);
+		FormComponent.removeComponent(newComponentId);
 		closeVariableListDialog($('selectVariableDialog'));
 	});
 }
@@ -677,52 +671,41 @@ function showVariableList(containerId, positionLeft, positionTop, list, transiti
 				var target = e.target;
 				var variableName = target.getProperty('rel');
 				if(transition == true) {
-					if(CURRENT_BUTTON != null) {
-						if(CURRENT_BUTTON.documentElement) {
-							var buttonId = CURRENT_BUTTON.documentElement.getAttribute('id');
-							if(buttonId != null) {
-								FormComponent.assignTransition(buttonId, variableName, {
-									callback: function(result) {
-										if(result != null) {
-											toggleVariableStatus(variableName + '_trans', result);
-										}
-									}
-								});
-								insertNodesToContainer(CURRENT_BUTTON, $('pageButtonArea'));
+					if(newComponentId != null) {
+						FormComponent.assignTransitionAndRenderButton(newComponentId, variableName, {
+							callback: function(result) {
+								if(result != null) {
+									toggleVariableStatus(variableName + '_trans', result[0]);
+									insertNodesToContainer(result[1], $('pageButtonArea'));
+								}
 							}
-						}
+						});
 					}
 				} else {
-					if(currentElement != null) {
-						if(currentElement.documentElement) {
-							var componentId = currentElement.documentElement.getAttribute('id');
-							if(componentId != null && CURRENT_ELEMENT_UNDER != null) {
-								FormComponent.assignVariableAndMoveComponent(componentId, variableName, CURRENT_ELEMENT_UNDER, {
-									callback: function(results) {
-										if(results != null && results.length == 3) {
-											var parentNode = $('panel0Content2');
-											if(parentNode != null && results[0] != null) {
-												removeChildren(parentNode);
-												insertNodesToContainer(results[0], parentNode);
-											}
-													
-											if($('emptyForm') != null) {
-												$('emptyForm').remove();
-											}
-											if(results[1] == 'append') {
-												insertNodesToContainer(results[2], $('dropBoxinner'));
-												currentElement = null;
-											} else {
-												var node = $(results[1]);
-												insertNodesToContainerBefore(results[2], $('dropBoxinner'), node);
-												currentElement = null;
-											}
-											initializeDesignView(false);
-										}
+					if(newComponentId != null && CURRENT_ELEMENT_UNDER != null) {
+						FormComponent.assignVariableAndMoveComponent(newComponentId, variableName, CURRENT_ELEMENT_UNDER, {
+							callback: function(results) {
+								if(results != null && results.length == 3) {
+									var parentNode = $('panel0Content2');
+									if(parentNode != null && results[0] != null) {
+										removeChildren(parentNode);
+										insertNodesToContainer(results[0], parentNode);
 									}
-								});
+													
+									if($('emptyForm') != null) {
+										$('emptyForm').remove();
+									}
+									if(results[1] == 'append') {
+										insertNodesToContainer(results[2], $('dropBoxinner'));
+									} else {
+										var node = $(results[1]);
+										insertNodesToContainerBefore(results[2], $('dropBoxinner'), node);
+									}
+									newComponentId = null;
+									initializeDesignView(false);
+								}
 							}
-						}
+						});
 					}
 				}
 				closeVariableListDialog(container);

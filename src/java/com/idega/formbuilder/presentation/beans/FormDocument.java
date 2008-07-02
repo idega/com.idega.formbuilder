@@ -32,9 +32,11 @@ import com.idega.data.IDOLookup;
 import com.idega.data.IDOLookupException;
 import com.idega.documentmanager.business.Document;
 import com.idega.documentmanager.business.DocumentManager;
+import com.idega.documentmanager.business.FormLockException;
 import com.idega.documentmanager.business.component.Page;
 import com.idega.documentmanager.business.component.PageThankYou;
 import com.idega.documentmanager.component.beans.LocalizedStringBean;
+import com.idega.documentmanager.component.impl.FormComponentFactory;
 import com.idega.formbuilder.business.egov.Application;
 import com.idega.formbuilder.business.egov.ApplicationBusiness;
 import com.idega.formbuilder.business.process.XFormsProcessManager;
@@ -234,6 +236,7 @@ public class FormDocument implements Serializable {
 		try {
 			document = formManagerInstance.createForm(formName, null);
 			document.save();
+			FormComponentFactory.getInstance();
 		} catch(Exception e) {
 			logger.error("Could not crea XForms document");
 		}
@@ -474,7 +477,7 @@ public class FormDocument implements Serializable {
 	}
 	
 	public boolean deleteFormDocument(Long formId) {
-		//boolean delete_submitted_data = true;
+//		boolean delete_submitted_data = true;
 		
 		if(formId == null || true)		
 			return false;
@@ -482,7 +485,7 @@ public class FormDocument implements Serializable {
 //		TODO: implement in persistence manager 
 		/*
 		try {
-			getPersistenceManager().removeForm(documentId, delete_submitted_data);
+			getPersistenceManager().removeForm(formId, delete_submitted_data);
 		} catch (FormLockException e) {
 			logger.info("Form was locked when tried to delete it", e);
 			return false;
@@ -490,7 +493,7 @@ public class FormDocument implements Serializable {
 			logger.error("Exception while removing form", e);
 			return false;
 		}
-		*/
+		*?
 		return true;
 	}
 	
@@ -743,7 +746,7 @@ public class FormDocument implements Serializable {
 	}
 	
 	public String getFormErrorMessage() {
-		if(document == null) {
+		if(document == null || document.getFormErrorMsg() == null) {
 			return CoreConstants.EMPTY;
 		}
 		return FBUtil.getPropertyString(document.getFormErrorMsg().getString(FBUtil.getUILocale()));
