@@ -133,7 +133,7 @@ public class FBDesignView extends FBComponentBase {
 		languageChooserLayer.setId(LANGUAGE_CHOOSER_ID);
 		
 		DropdownMenu languageChooser = ICLocaleBusiness.getAvailableLocalesDropdownStringKeyed(iwc.getIWMainApplication(), LANGUAGE_CHOOSER_ID, false);
-		languageChooser.setSelectedElement(locale.getLanguage());
+		languageChooser.setSelectedElement(locale.toString());
 		
 		languageChooserLayer.add(new Label(getLocalizedString(iwc, "fb_choose_language", "Form language"), languageChooser));
 		languageChooserLayer.add(languageChooser);

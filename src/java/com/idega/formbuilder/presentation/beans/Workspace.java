@@ -75,7 +75,12 @@ public class Workspace implements Serializable {
 	}
 	
 	public Document getWorkspace(String locale) {
-		Locale loc = new Locale(locale);
+		Locale loc = null;
+		if(locale.indexOf("_") == -1) {
+			loc = new Locale(locale);
+		} else {
+			loc = new Locale(locale.substring(0, 2), locale.substring(3));
+		}
 		this.locale = loc;
 		this.view = FBViewPanel.DESIGN_VIEW;
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBWorkspace("mainWorkspace"), false);
