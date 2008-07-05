@@ -11,6 +11,7 @@ import com.idega.formbuilder.presentation.components.FBViewPanel;
 import com.idega.formbuilder.presentation.components.FBWorkspace;
 import com.idega.presentation.IWContext;
 import com.idega.util.CoreUtil;
+import com.idega.util.LocaleUtil;
 
 public class Workspace implements Serializable {
 	
@@ -74,14 +75,9 @@ public class Workspace implements Serializable {
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView("formElement"), false);
 	}
 	
-	public Document getWorkspace(String locale) {
-		Locale loc = null;
-		if(locale.indexOf("_") == -1) {
-			loc = new Locale(locale);
-		} else {
-			loc = new Locale(locale.substring(0, 2), locale.substring(3));
-		}
-		this.locale = loc;
+	public Document getWorkspace(String langCode) {
+		
+		this.locale = LocaleUtil.getLocale(langCode);
 		this.view = FBViewPanel.DESIGN_VIEW;
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBWorkspace("mainWorkspace"), false);
 	}
