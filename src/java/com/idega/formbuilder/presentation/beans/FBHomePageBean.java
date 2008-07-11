@@ -26,9 +26,9 @@ import com.idega.util.IWTimestamp;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *
- * Last modified: $Date: 2008/06/16 13:00:52 $ by $Author: civilis $
+ * Last modified: $Date: 2008/07/11 14:16:01 $ by $Author: anton $
  */
 @Scope("singleton")
 @Service(FBHomePageBean.beanIdentifier)
@@ -78,7 +78,7 @@ public class FBHomePageBean {
 					TaskForm form = new TaskForm();
 					form.setDateCreatedStr(dateCreatedStr);
 					form.setFormId(taskView.getViewId());
-					form.setFormName(taskView.getDisplayName());
+					form.setFormName(taskView.getDefaultDisplayName());
 					form.setTaskName(taskView.getTask().getName());
 					taskForms.add(form);
 				}
