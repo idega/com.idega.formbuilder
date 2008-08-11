@@ -59,6 +59,7 @@ public class FBComponentProperties extends FBComponentBase {
 	private static final String PROPERTY_REQUIRED_ID = "propertyRequired";
 	private static final String PROPERTY_ERROR_MESSAGE_NAME = "propertyErrorMessage";
 	private static final String PROPERTY_HELP_TEXT_NAME = "propertyHelpText";
+	private static final String PROPERTY_TEXT_NAME = "propertyText";
 	private static final String PROPERTY_AUTOFILL_CHECKBOX = "propertyHasAutofill";
 	
 	public String getComponentId() {
@@ -244,6 +245,59 @@ public class FBComponentProperties extends FBComponentBase {
 				
 				return;
 				
+			}
+// 			TODO
+			com.idega.documentmanager.component.FormComponent docComponentent = (com.idega.documentmanager.component.FormComponent) comp;
+			
+			if (docComponentent.getType().equals("fbc_text_output")) {
+			    
+			    layer.add(body);
+			    
+			    line = createPropertyContainer(TWO_LINE_PROPERTY);
+				
+			    TextArea compTextValue = new TextArea(PROPERTY_TEXT_NAME, properties.getText().getString(locale));
+			    compTextValue.setOnBlur("saveComponentProperty('" + componentId + "','compText',this.value, event)");
+			    compTextValue.setOnKeyDown("saveComponentProperty('" + componentId + "','compText',this.value, event)");
+				
+			    line.add(new Label(getLocalizedString(iwc, "comp_prop_plaintext", "Text"), compTextValue));
+			    line.add(compTextValue);
+			    body.add(line);
+			    
+			    line = createPropertyContainer(SINGLE_LINE_PROPERTY);
+				
+			    CheckBox hasAutoFill = new CheckBox();
+			    hasAutoFill.setId(PROPERTY_AUTOFILL_CHECKBOX);
+			    hasAutoFill.setOnClick("toggleAutofill(this.checked);");
+			    String autofillKey = properties.getAutofillKey();
+			    hasAutoFill.setChecked(autofillKey != null ? true : false);
+				
+			    line.add(hasAutoFill);
+			    line.add(new Label(getLocalizedString(iwc, "comp_prop_autofill", "Autofill field"), hasAutoFill));
+			    body.add(line);
+				
+				
+			    body = createPanelSection("autoPropertiesPanel");
+				
+			    line = createPropertyContainer(FBComponentProperties.SINGLE_LINE_PROPERTY);
+				
+			    TextInput autofillValue = new TextInput();
+			    autofillValue.setValue(autofillKey);
+			    autofillValue.setId("propertyAutofill");
+			    autofillValue.setOnBlur("saveComponentProperty('" + componentId + "','compAuto',this.value, event)");
+			    autofillValue.setOnKeyDown("saveComponentProperty('" + componentId + "','compAuto',this.value, event)");
+				
+			    if(autofillKey != null)
+				autofillValue.setStyleClass("activeAutofill");
+				
+			    line.add(new Text(CoreConstants.EMPTY));
+			    line.add(autofillValue);
+			    body.add(line);
+			    
+			   layer.add(body);
+			   
+			   add(layer);
+			   return;
+			    
 			}
 			
 			line = createPropertyContainer(SINGLE_LINE_PROPERTY);

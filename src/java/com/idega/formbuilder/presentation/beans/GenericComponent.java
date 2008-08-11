@@ -25,6 +25,10 @@ public abstract class GenericComponent {
 	
 	public abstract boolean getRequired();
 	
+	public abstract void setCompText(String value);
+	
+	public abstract String getCompText();
+	
 	public abstract void setPlainText(String value);
 	
 	public abstract String getPlainText();

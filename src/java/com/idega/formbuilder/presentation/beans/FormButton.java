@@ -49,6 +49,10 @@ public class FormButton extends GenericComponent {
 	public void setPlainText(String value) {}
 	
 	public String getPlainText() {return null;}
+
+	public String getCompText() {return null;}
+	
+	public void setCompText(String value) { }
 	
 	public void setAddButtonLabel(String value) {}
 	
