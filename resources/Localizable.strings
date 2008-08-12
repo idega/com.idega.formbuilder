@@ -112,6 +112,7 @@ fbc_text-loginSession.user.name=User name
 fbc_text_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield.png
 fbc_text_label=Component
 fbc_text_label_icon=fdfgdfg
+fbc_text_output=Component
 fbc_text_output_icon=fdfgdfg
 fbc_text_outputs=Component
 fbc_text_outputs_icon=fdfgdfg

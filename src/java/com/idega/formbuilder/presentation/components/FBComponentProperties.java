@@ -157,6 +157,50 @@ public class FBComponentProperties extends FBComponentBase {
 			line.add(labelValue);
 			body.add(line);
 			
+// 			TODO better... 
+			com.idega.documentmanager.component.FormComponent docComponentent = (com.idega.documentmanager.component.FormComponent) comp;
+			
+			if (docComponentent.getType().equals("fbc_text_output") || docComponentent.getType().equals("xf:output")) {
+			    
+			    layer.add(body);
+			    
+			    line = createPropertyContainer(SINGLE_LINE_PROPERTY);
+			
+			    CheckBox hasAutoFill = new CheckBox();
+			    hasAutoFill.setId(PROPERTY_AUTOFILL_CHECKBOX);
+			    hasAutoFill.setOnClick("toggleAutofill(this.checked);");
+			    String autofillKey = properties.getAutofillKey();
+			    hasAutoFill.setChecked(autofillKey != null ? true : false);
+				
+			    line.add(hasAutoFill);
+			    line.add(new Label(getLocalizedString(iwc, "comp_prop_autofill", "Autofill field"), hasAutoFill));
+			    body.add(line);
+				
+				
+			    body = createPanelSection("autoPropertiesPanel");
+				
+			    line = createPropertyContainer(FBComponentProperties.SINGLE_LINE_PROPERTY);
+				
+			    TextInput autofillValue = new TextInput();
+			    autofillValue.setValue(autofillKey);
+			    autofillValue.setId("propertyAutofill");
+			    autofillValue.setOnBlur("saveComponentProperty('" + componentId + "','compAuto',this.value, event)");
+			    autofillValue.setOnKeyDown("saveComponentProperty('" + componentId + "','compAuto',this.value, event)");
+				
+			    if(autofillKey != null)
+				autofillValue.setStyleClass("activeAutofill");
+				
+			    line.add(new Text(CoreConstants.EMPTY));
+			    line.add(autofillValue);
+			    body.add(line);
+			    
+			   layer.add(body);
+			   
+			   add(layer);
+			   return;
+			    
+			}
+			
 			if(component instanceof FormMultiUploadComponent) {
 				layer.add(body);
 				

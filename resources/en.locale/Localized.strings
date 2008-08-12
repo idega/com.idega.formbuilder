@@ -13,6 +13,7 @@ toolbar_home=Form list
 
 fbc_text=Text Field
 fbc_static_output=Static output
+fbc_text_output=Text output
 fbc_textarea=Textarea
 fbc_rich_textarea=Rich textarea
 fbc_secret=Secret Field
@@ -34,6 +35,7 @@ fbc_text-loginSession.user.name=User name
 
 fbc_text_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield.png
 fbc_static_output_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/font.png
+fbc_text_output_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/font.png
 fbc_textarea_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/font.png
 fbc_rich_textarea_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/font.png
 fbc_secret_icon=/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/controls/textfield_key.png
