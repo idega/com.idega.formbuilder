@@ -323,17 +323,6 @@ public class FormComponent extends GenericComponent {
 		getComponent().getProperties().setHelpText(bean);
 	}
 
-	public String getCompText() {
-		return getComponent().getProperties().getText().getString(FBUtil.getUILocale());
-	}
-	
-	public void setCompText(String text) {
-
-		LocalizedStringBean bean = getComponent().getProperties().getText();
-		bean.setString(FBUtil.getUILocale(), text);
-		getComponent().getProperties().setText(bean);
-	}
-
 	public String getAutofillKey() {
 			return getComponent().getProperties().getAutofillKey();
 	}
