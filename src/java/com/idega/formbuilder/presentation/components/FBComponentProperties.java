@@ -58,6 +58,8 @@ public class FBComponentProperties extends FBComponentBase {
 	private static final String LABEL_PROPERTIES_PANEL = "labelPropertiesPanel";
 	private static final String PROPERTY_REQUIRED_ID = "propertyRequired";
 	private static final String PROPERTY_ERROR_MESSAGE_NAME = "propertyErrorMessage";
+	private static final String PROPERTY_VALIDATION_TEXT = "propertyValidationText";
+	
 	private static final String PROPERTY_HELP_TEXT_NAME = "propertyHelpText";
 	private static final String PROPERTY_AUTOFILL_CHECKBOX = "propertyHasAutofill";
 	
@@ -296,10 +298,34 @@ public class FBComponentProperties extends FBComponentBase {
 			required.setId(PROPERTY_REQUIRED_ID);
 			required.setChecked(properties.isRequired());
 			required.setOnChange("saveComponentProperty('" + componentId + "','compRequired',this.checked, event)");
+			required.setOnClick("toggleValidationText(this.checked);");
 			
 			line.add(required);
 			line.add(new Label(getLocalizedString(iwc, "comp_prop_requiredfield", "Required field"), required));
 			body.add(line);
+//			validation text
+			
+			    line = createPropertyContainer(TWO_LINE_PROPERTY);
+				
+			    TextArea validationText = new TextArea(PROPERTY_VALIDATION_TEXT, properties.getValidationText().getString(locale));
+			    
+			    validationText.setId("propertyValidationText");
+			    
+			    validationText.setOnBlur("saveComponentProperty('" + componentId + "','compValidation',this.value, event)");
+			    validationText.setOnKeyDown("saveComponentProperty('" + componentId + "','compValidation',this.value, event)");
+			    
+			    Label validationLabel = new Label(getLocalizedString(iwc, "comp_prop_validation", "Validation text"), validationText);
+			    validationLabel.setID("propertyValidationLabel");
+			    
+			    if (properties.isRequired()){
+				validationText.setStyleClass("activeValidationText");
+				validationLabel.setStyleClass("activeValidationLabel");
+			    }
+			    
+			    line.add(validationLabel);
+			    line.add(validationText);
+			    body.add(line);
+			
 			
 			line = createPropertyContainer(TWO_LINE_PROPERTY);
 			

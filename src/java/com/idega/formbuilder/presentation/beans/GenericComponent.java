@@ -21,6 +21,10 @@ public abstract class GenericComponent {
 	
 	public abstract String getHelpMessage();
 	
+	public abstract void setValidationText(String value);
+	
+	public abstract String getValidationText();
+	
 	public abstract void setRequired(boolean value);
 	
 	public abstract boolean getRequired();

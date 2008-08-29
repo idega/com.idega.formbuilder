@@ -26,6 +26,7 @@ public class ComponentPropertyManager {
 	private static final String COMP_ERROR_PROP = "compError";
 	private static final String COMP_HELP_PROP = "compHelp";
 	private static final String COMP_REQ_PROP = "compRequired";
+	private static final String COMP_VALIDATATION_PROP = "compValidation";		
 	private static final String PLAIN_LABEL_PROP = "plainLabel";
 	private static final String PLAIN_TEXT_PROP = "plainText"; 
 	private static final String COMP_AUTO_PROP = "compAuto";
@@ -188,6 +189,8 @@ public class ComponentPropertyManager {
 				component.setHelpMessage(propertyValue);
 			} else if(propertyName.equals(COMP_REQ_PROP)) {
 				component.setRequired(Boolean.parseBoolean(propertyValue));
+			} else if(propertyName.equals(COMP_VALIDATATION_PROP)) {
+				component.setValidationText(propertyValue);
 			} else if(propertyName.equals(PLAIN_TEXT_PROP)) {
 				component.setPlainText(propertyValue);
 			} else if(propertyName.equals(PLAIN_LABEL_PROP)) {

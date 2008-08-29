@@ -1252,6 +1252,20 @@ function toggleAutofill(parameter) {
 		}
 	}
 }
+
+function toggleValidationText(parameter) {
+	if(parameter != null) {
+		var node = $('propertyValidationText');
+		var nodeLabel = $('propertyValidationLabel');
+		if(parameter == false) {
+			node.removeClass('activeValidationText');
+			nodeLabel.removeClass('activeValidationLabel');
+		} else {
+			node.addClass('activeValidationText');
+			nodeLabel.addClass('activeValidationLabel');
+		}
+	}
+}
 function replaceChangedComponent(resultDOM) {
 	if(resultDOM != null) {
 		var componentNode = resultDOM.documentElement;

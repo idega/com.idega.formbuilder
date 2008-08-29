@@ -46,6 +46,10 @@ public class FormButton extends GenericComponent {
 	
 	public String getHelpMessage() {return null;}
 	
+	public void setValidationText(String value) {}
+	
+	public String getValidationText() {return null;}
+	
 	public void setPlainText(String value) {}
 	
 	public String getPlainText() {return null;}

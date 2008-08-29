@@ -51,6 +51,13 @@
 #propertyAutofill {
 	display: none;
 }
+
+#propertyValidationText {
+	display: none;
+}
+#propertyValidationLabel {
+	display: none;
+}
 #pagesPanelMessageBox {
 	background-color:#F9FF9E;
 	border:2px solid #FFFF00;
@@ -67,6 +74,15 @@
 .activeAutofill {
 	display: block					!important;
 }
+
+.activeValidationText {
+	display: block					!important;
+}
+
+.activeValidationLabel {
+	display: block					!important;
+}
+
 
 #languageChooser {
 	position: absolute;
