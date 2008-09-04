@@ -18,8 +18,10 @@ import com.idega.documentmanager.business.component.properties.PropertiesButton;
 import com.idega.documentmanager.business.component.properties.PropertiesComponent;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
 import com.idega.jbpm.variables.Variable;
+import com.idega.util.CoreConstants;
 import com.idega.webface.WFUtil;
 
+//TODO: remake this, use standard way of resolving variables
 public class ProcessData implements Serializable {
 	
 	private static final long serialVersionUID = -1462694112346788168L;
@@ -40,7 +42,7 @@ public class ProcessData implements Serializable {
 		if(variables != null) {
 			for(Iterator<String> it = variables.keySet().iterator(); it.hasNext(); ) {
 				String variableFullname = it.next();
-				StringTokenizer stk = new StringTokenizer(variableFullname, ":");
+				StringTokenizer stk = new StringTokenizer(variableFullname, CoreConstants.UNDER);
 				String type = stk.nextToken();
 				String name = null;
 				if(stk.hasMoreTokens()) {

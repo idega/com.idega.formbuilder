@@ -558,7 +558,7 @@ function handleAssignLabelWidget(e) {
 			var icon = labelContainer.getElement('img');
 			icon.setStyle('display', 'none');
 			var label = labelContainer.getElement('a');
-			var labelText = label.getText().substring(label.getText().indexOf(':') + 2);
+			var labelText = label.getText().substring(label.getText().indexOf('_') + 2);
 			label.setStyle('display', 'none');
 			var select = labelContainer.getElement('select');
 			if(select == null) {
@@ -662,7 +662,7 @@ function showVariableList(containerId, positionLeft, positionTop, list, transiti
 			var variable = list[i];
 			var li = new Element('li');
 			var link = new Element('a');
-			var tokens = variable.split(':');
+			var tokens = variable.split('_');
 			link.setText(tokens[1]);
 			link.setProperty('rel', variable);
 			link.injectInside(li);
