@@ -16,8 +16,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.idega.bpm.xformsview.XFormsView;
 import com.idega.block.form.presentation.FormViewer;
-import com.idega.block.form.process.XFormsView;
 import com.idega.block.formadmin.presentation.actions.GetAvailableFormsAction;
 import com.idega.builder.bean.AdvancedProperty;
 import com.idega.builder.business.BuilderLogic;
@@ -32,7 +32,6 @@ import com.idega.data.IDOLookup;
 import com.idega.data.IDOLookupException;
 import com.idega.documentmanager.business.Document;
 import com.idega.documentmanager.business.DocumentManager;
-import com.idega.documentmanager.business.FormLockException;
 import com.idega.documentmanager.business.component.Page;
 import com.idega.documentmanager.business.component.PageThankYou;
 import com.idega.documentmanager.component.beans.LocalizedStringBean;
