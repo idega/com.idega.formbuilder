@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.jdom.Document;
 
+import com.idega.block.process.variables.Variable;
 import com.idega.builder.bean.AdvancedProperty;
 import com.idega.builder.business.BuilderLogic;
 import com.idega.documentmanager.business.component.Button;
@@ -22,7 +23,6 @@ import com.idega.formbuilder.presentation.components.FBFormComponent;
 import com.idega.formbuilder.presentation.components.FBVariableViewer;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
-import com.idega.jbpm.variables.Variable;
 import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
 

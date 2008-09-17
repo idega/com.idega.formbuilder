@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import com.idega.block.process.variables.Variable;
 import com.idega.documentmanager.business.Document;
 import com.idega.documentmanager.business.component.Button;
 import com.idega.documentmanager.business.component.ButtonArea;
@@ -17,7 +18,6 @@ import com.idega.documentmanager.business.component.Page;
 import com.idega.documentmanager.business.component.properties.PropertiesButton;
 import com.idega.documentmanager.business.component.properties.PropertiesComponent;
 import com.idega.jbpm.business.JbpmProcessBusinessBean;
-import com.idega.jbpm.variables.Variable;
 import com.idega.util.CoreConstants;
 import com.idega.webface.WFUtil;
 
