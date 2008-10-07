@@ -16,9 +16,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.idega.bpm.xformsview.XFormsView;
 import com.idega.block.form.presentation.FormViewer;
 import com.idega.block.formadmin.presentation.actions.GetAvailableFormsAction;
+import com.idega.bpm.xformsview.XFormsView;
 import com.idega.builder.bean.AdvancedProperty;
 import com.idega.builder.business.BuilderLogic;
 import com.idega.content.themes.business.TemplatesLoader;
@@ -92,6 +92,8 @@ public class FormDocument implements Serializable {
 	public static final String APP_FORM_NAME_PARAM = "appform_name";
 	public static final String APP_ID_PARAM = "appid";
 	public static final String FROM_APP_REQ_PARAM = "fapp";
+	public static final String FORM_ID_OPEN_TAG = "<form_id>";
+	public static final String FORM_ID_CLOSE_TAG = "</form_id>";
 	
 	public List<String> getCommonPagesIdList() {
 		List<String> result = new LinkedList<String>();
@@ -632,6 +634,10 @@ public class FormDocument implements Serializable {
 		
 		try {
 			if(document != null) {
+				String formIdSearchRegex = FORM_ID_OPEN_TAG + CoreConstants.DOT + CoreConstants.PLUS + FORM_ID_CLOSE_TAG;
+				String formIdReplacement = FORM_ID_OPEN_TAG + getFormId() + FORM_ID_CLOSE_TAG;
+				sourceCode = sourceCode.replaceAll(formIdSearchRegex, formIdReplacement);
+				
 				document.setFormSourceCode(sourceCode);
 				FormPage currentPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 				if(currentPage != null) {
