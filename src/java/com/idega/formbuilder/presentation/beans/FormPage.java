@@ -84,7 +84,7 @@ public class FormPage implements Serializable {
 	
 	public void updateComponentList(List<String> idSequence) throws Exception {
 		if(page != null) {
-			List<String> ids = page.getContainedComponentsIdList();
+			List<String> ids = page.getContainedComponentsIds();
 			ids.clear();
 			for(Iterator<String> it = idSequence.iterator(); it.hasNext(); )
 				ids.add(it.next());
@@ -97,7 +97,7 @@ public class FormPage implements Serializable {
 	public void updateButtonList(List<String> idSequence) throws Exception {
 		ButtonArea area = page.getButtonArea();
 		if(area != null) {
-			List<String> ids = area.getContainedComponentsIdList();
+			List<String> ids = area.getContainedComponentsIds();
 			ids.clear();
 			for(Iterator<String> it = idSequence.iterator(); it.hasNext(); )
 				ids.add(it.next());
@@ -185,7 +185,7 @@ public class FormPage implements Serializable {
 	public List<String> getAssignedVariables(Page page) {
 		List<String> list = new ArrayList<String>();
 		if(page != null) {
-			List<String> components = page.getContainedComponentsIdList();
+			List<String> components = page.getContainedComponentsIds();
 			for(Iterator<String> it = components.iterator(); it.hasNext(); ) {
 				String componentId = it.next();
 				Component component = page.getComponent(componentId);

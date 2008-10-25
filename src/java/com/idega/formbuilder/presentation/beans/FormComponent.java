@@ -190,7 +190,7 @@ public class FormComponent extends GenericComponent {
 		} else {
 			String beforeId = CoreConstants.EMPTY;
 			if(page != null) {
-				List<String> ids = page.getContainedComponentsIdList();
+				List<String> ids = page.getContainedComponentsIds();
 				if(ids.contains(id)) {
 					beforeId = ids.get(before);
 					ids.remove(id);
@@ -212,7 +212,7 @@ public class FormComponent extends GenericComponent {
 			Page page = formPage.getPage();
 			String beforeId = CoreConstants.EMPTY;
 			if(page != null) {
-				List<String> ids = page.getContainedComponentsIdList();
+				List<String> ids = page.getContainedComponentsIds();
 				if(ids.indexOf(id) != -1) {
 					beforeId = ids.get(before);
 					ids.remove(id);

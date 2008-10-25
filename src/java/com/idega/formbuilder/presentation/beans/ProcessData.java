@@ -70,7 +70,7 @@ public class ProcessData implements Serializable {
 		List<String> pages = document.getContainedPagesIdList();
 		for(Iterator<String> it = pages.iterator(); it.hasNext(); ) {
 			Page page = document.getPage(it.next());
-			List<String> components = page.getContainedComponentsIdList();
+			List<String> components = page.getContainedComponentsIds();
 			for(Iterator<String> it2 = components.iterator(); it2.hasNext(); ) {
 				Component component = page.getComponent(it2.next());
 				PropertiesComponent properties = component.getProperties();
@@ -90,7 +90,7 @@ public class ProcessData implements Serializable {
 			}
 			ButtonArea buttonArea = page.getButtonArea();
 			if(buttonArea != null) {
-				List<String> buttons = buttonArea.getContainedComponentsIdList();
+				List<String> buttons = buttonArea.getContainedComponentsIds();
 				for(Iterator<String> it4 = buttons.iterator(); it4.hasNext(); ) {
 					String buttonId = it4.next();
 					Button button = (Button) buttonArea.getComponent(buttonId);

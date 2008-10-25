@@ -30,7 +30,7 @@ public class FBButtonArea extends FBComponentBase {
 		
 		ButtonArea buttonArea = ((FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID)).getPage().getButtonArea();
 		if(buttonArea != null) {
-			List<String> ids = buttonArea.getContainedComponentsIdList();
+			List<String> ids = buttonArea.getContainedComponentsIds();
 			if(ids != null) {
 				for(Iterator<String> it = ids.iterator(); it.hasNext(); ) {
 					String nextId = it.next();
