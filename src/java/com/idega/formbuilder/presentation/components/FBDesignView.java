@@ -210,7 +210,7 @@ public class FBDesignView extends FBComponentBase {
 				
 				component.add(thankYouTextBox);
 			} else {
-				List<String> ids = page.getContainedComponentsIds();
+				List<String> ids = page.getContainedComponentsIdList();
 				if(!hasComponents(ids, page)) {
 					Layer emptyForm = new Layer(Layer.DIV);
 					emptyForm.setId(NOFORM_NOTICE_ID);
