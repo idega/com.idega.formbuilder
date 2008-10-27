@@ -6,9 +6,6 @@ import java.util.Locale;
 
 import javax.faces.context.FacesContext;
 
-import org.apache.myfaces.renderkit.html.util.AddResource;
-import org.apache.myfaces.renderkit.html.util.AddResourceFactory;
-
 import com.idega.block.web2.business.Web2Business;
 import com.idega.builder.bean.AdvancedProperty;
 import com.idega.documentmanager.business.PersistedForm;
@@ -26,6 +23,7 @@ import com.idega.presentation.text.Lists;
 import com.idega.presentation.text.Text;
 import com.idega.util.CoreConstants;
 import com.idega.util.IWTimestamp;
+import com.idega.util.PresentationUtil;
 import com.idega.webface.WFUtil;
 
 public class FBHomePage extends FBComponentBase {
@@ -54,7 +52,7 @@ public class FBHomePage extends FBComponentBase {
 	private static final String EDIT_BUTTON_CLASS = "editButton";
 	private static final String TRY_BUTTON_CLASS = "tryButton";
 	private static final String CODE_BUTTON_CLASS = "codeButton";
-	private static final String DELETE_BUTTON_CLASS = "deleteButton";
+//	private static final String DELETE_BUTTON_CLASS = "deleteButton";
 //	private static final String DELETE_TF_BUTTON_CLASS = "deleteTFButton";
 	private static final String web2BeanIdentifier = "web2bean";
 	private static final String MOOTABS_TITLE_CLASS = "mootabs_title";
@@ -71,30 +69,36 @@ public class FBHomePage extends FBComponentBase {
 	private static final String EXPAND_BTN_CLASS = "expandButton";
 //	private static final String ATTACH_BTN_CLASS = "attachButton";
 //	private static final String CREATE_BTN_CLASS = "createButton";
-//	private static final String SMOOTHBOX_LINK_CLASS = "smoothbox";
 	private static final String STATEFULL_TAB_CLASS = "stateFullTab";
 	private static final String TASK_TEXT = "    Task: ";
 	
 	private static final String PROCESS_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/orbz-machine-32x32.png";
 	private static final String STANDALONE_FORM_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/fields_32.png";
+	private static final String FORMSHOME_JS = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formshome.js";
+	private static final String FORMSHOME_CSS = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formshome.css";
 	
 	private static final String formIdAtt = "formId";
 	
 	protected void initializeComponent(FacesContext context) {
 		IWContext iwc = IWContext.getIWContext(context);
 		
-		AddResource adder = AddResourceFactory.getInstance(iwc);
 		Web2Business web2 = (Web2Business) getBeanInstance(web2BeanIdentifier);
 		try {
-			adder.addJavaScriptAtPosition(iwc, AddResource.HEADER_BEGIN, web2.getBundleURIToMootoolsLib());
-			adder.addJavaScriptAtPosition(iwc, AddResource.HEADER_BEGIN, web2.getBundleUriToSmoothboxScript());
-			adder.addStyleSheet(iwc, AddResource.HEADER_BEGIN, web2.getBundleUriToSmoothboxStylesheet());
+			PresentationUtil.addJavaScriptSourceLineToHeader(iwc, web2.getBundleURIToMootoolsLib());
+			PresentationUtil.addJavaScriptSourceLineToHeader(iwc, web2.getBundleUriToSmoothboxScript());
+			PresentationUtil.addJavaScriptSourceLineToHeader(iwc, web2.getBundleUriToMootabsScript());
+			PresentationUtil.addJavaScriptSourceLineToHeader(iwc, CoreConstants.DWR_ENGINE_SCRIPT);
+			PresentationUtil.addJavaScriptSourceLineToHeader(iwc, "/dwr/interface/Workspace.js");
+			PresentationUtil.addJavaScriptSourceLineToHeader(iwc, "/dwr/interface/FormDocument.js");
+			PresentationUtil.addJavaScriptSourceLineToHeader(iwc, FORMSHOME_JS);
+			
+			PresentationUtil.addStyleSheetToHeader(iwc, web2.getBundleUriToSmoothboxStylesheet());
+			PresentationUtil.addStyleSheetToHeader(iwc, web2.getBundleUriToMootabsStyle());
+			PresentationUtil.addStyleSheetToHeader(iwc, FORMSHOME_CSS);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-		adder.addJavaScriptAtPosition(iwc, AddResource.HEADER_BEGIN, web2.getBundleUriToMootabsScript());
-		adder.addStyleSheet(iwc, AddResource.HEADER_BEGIN, web2.getBundleUriToMootabsStyle());
-		
+
 		Layer fbHomePage = new Layer(Layer.DIV);
 		fbHomePage.setId(CONTAINER_DIV_ID);
 		
@@ -382,14 +386,5 @@ public class FBHomePage extends FBComponentBase {
 		
 		return body;
 	}
-	
-//	private String getCreatedDate(String formId) {
-//		String interm1 = formId.substring(formId.indexOf(CoreConstants.MINUS) + 5);
-//		String month = interm1.substring(0, 3);
-//		String interm2 = interm1.substring(interm1.indexOf(CoreConstants.UNDER) + 1);
-//		String day = interm2.substring(0, 2);
-//		String year = interm2.substring(interm2.length() - 4);
-//		return new StringBuilder(month).append(CoreConstants.SPACE).append(day).append(CoreConstants.COMMA).append(CoreConstants.SPACE).append(year).toString();
-//	}
 	
 }

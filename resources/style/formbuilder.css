@@ -1232,7 +1232,8 @@ span.statusMsg {
 	border: 2px solid #FFFF00;
 	font-size: 18px;
 	margin: 20px;
-	height: 50px;
+	height: auto;
+	min-height: 50px;
 	display: block;
 	font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
 }
@@ -1685,7 +1686,7 @@ h1.title {
 }
 
 #pagesPanelSpecial {
-	height: 110px !important;
+	height: 150px !important;
 }
 
 #pagesPanelSpecial span {

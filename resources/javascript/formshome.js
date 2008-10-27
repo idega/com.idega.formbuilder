@@ -94,7 +94,7 @@ function registerFormsHomeActions() {
 			createNewForm(event.target.value);
 		}
 	});
-	$ES("a.smoothbox").each(function(item) {
+	$$("a.smoothbox").each(function(item) {
 		item.addEvent('click', function(e){
 			var relAttribute = item.getProperty('rel');
 			if(relAttribute != null) {
@@ -111,20 +111,20 @@ function registerFormsHomeActions() {
 				if(select != null) {
 					var option = new Element('option',{
 						'value': ''
-					}).setText('');
+					}).setText( '');
 					option.injectInside(select);
 					for(var i = 0; i < resultList.length; i++) {
 						var it = resultList[i];
 						var option = new Element('option',{
 							'value': it.id
-						}).setText(it.value);
+						}).setText( it.value);
 						option.injectInside(select);
 					}
 				}
 			}
 		}
 	});
-	$ES("a.entriesButton").each(function(item) {
+	$$("a.entriesButton").each(function(item) {
 		item.addEvent('click', function(e){
 			new Event(e).stop();
 			showLoadingMessage('Loading');
@@ -143,13 +143,13 @@ function registerFormsHomeActions() {
 			});
 		});
 	});
-	$ES("li.stateFullTab").each(function(item) {
+	$$("li.stateFullTab").each(function(item) {
 		item.addEvent('click', function(e){
 			var title = e.target.getProperty('title');
 			Workspace.setActiveHomepageTab(title);
 		});
 	});
-	$ES('div.processItem').each(function(item) {
+	$$('div.processItem').each(function(item) {
 		item.setStyle('cursor', 'pointer');
 		var taskList = item.getElement('.taskFormList');
 		item.addEvent('click', function(e){
@@ -170,7 +170,7 @@ function registerFormsHomeActions() {
 			}
 		});
 	});
-	$ES('a.transitionButton').each(function(item) {
+	$$('a.transitionButton').each(function(item) {
 		var container = item.getParent().getParent().getParent();
 		var taskList = container.getElement('.taskFormList');
 		container.getElements('li.procBtnClass').each(function(button) {
@@ -194,7 +194,7 @@ function registerFormsHomeActions() {
 			}
 		});
 	});
-	$ES("a.editButton").each(function(item) {
+	$$("a.editButton").each(function(item) {
 		item.addEvent('click', function(e){
 			new Event(e).stop();
 			showLoadingMessage('Loading');
@@ -213,7 +213,7 @@ function registerFormsHomeActions() {
 			});
 		});
 	});
-	$ES("a.tryButton").each(function(item) {
+	$$("a.tryButton").each(function(item) {
 		item.addEvent('click', function(e){
 			new Event(e).stop();
 			showLoadingMessage('Loading');
@@ -232,7 +232,7 @@ function registerFormsHomeActions() {
 			});
 		});
 	});
-	$ES("a.codeButton").each(function(item) {
+	$$("a.codeButton").each(function(item) {
 		item.addEvent('click', function(e){
 			new Event(e).stop();
 			showLoadingMessage('Loading');
@@ -251,7 +251,7 @@ function registerFormsHomeActions() {
 			});
 		});
 	});
-	$ES("a.deleteButton").each(function(item) {
+	$$("a.deleteButton").each(function(item) {
 		item.addEvent('click', function(e){
 			new Event(e).stop();
 			var answer = confirm("Delete form?")
@@ -273,7 +273,7 @@ function registerFormsHomeActions() {
 			}
 		});
 	});
-	$ES("a.deleteTFButton").each(function(item) {
+	$$("a.deleteTFButton").each(function(item) {
 		item.addEvent('click', function(e){
 			new Event(e).stop();
 			var answer = confirm("Delete form?")
@@ -300,7 +300,7 @@ function transitionButtons(container, item, linkTarget) {
 	if(item.hasClass('expandButton')) {
 		item.removeClass('expandButton');
 		item.addClass('collapseButton');
-		item.setText('Collapse');
+		item.setText( 'Collapse');
 		
 		container.getElement('.taskFormList').setStyle('display', 'block');
 		
@@ -317,6 +317,6 @@ function transitionButtons(container, item, linkTarget) {
 		container.getElement('.taskFormList').setStyle('display', 'none');
 		item.removeClass('collapseButton');
 		item.addClass('expandButton');
-		item.setText('Expand');
+		item.setText( 'Expand');
 	}
 }

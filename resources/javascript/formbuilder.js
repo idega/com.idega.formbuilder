@@ -180,26 +180,26 @@ var FBDraggable = Element.extend({
 					this.element = this.elementOrg;
 					this.elementOrg = null;
 					if(type == 'fbc') {
-						$('dropBoxinner').removeProperty('style');
+						$('dropBoxinner').setStyle('background-color', '#FFF');
 						if(insideDropzone == false && newComponentId != null && draggingComponent == true) {
 							FormComponent.removeComponent(newComponentId);
 							draggingComponent = false;
 						}
 					} else if(type == 'fbb') {
-						$('pageButtonArea').removeProperty('style');
+						$('pageButtonArea').setStyle('background-color', '#FFF');
 						if(draggingButton == true && insideDropzone == false && newComponentId != null) {
 							FormComponent.removeButton(newComponentId);
 							draggingButton = false;
 						}
 					} else if(type == 'fbcp') {
-						$('dropBoxinner').removeProperty('style');
+						$('dropBoxinner').setStyle('background-color', '#FFF');
 						if(insideDropzone == false && newComponentId != null && draggingComponent == true) {
 							this.element.removeEvents('mousemove');
 							FormComponent.removeComponent(newComponentId);
 							draggingComponent = false;
 						}
 					} else if(type == 'fbbp') {
-						$('pageButtonArea').removeProperty('style');
+						$('pageButtonArea').setStyle('background-color', '#FFF');
 						if(draggingButton == true && insideDropzone == false && newComponentId != null) {
 							FormComponent.removeButton(newComponentId);
 							draggingButton = false;
@@ -267,7 +267,11 @@ function initializeDesignView(initializeInline) {
 	var languageChooser = $('languageChooser');
 	if(languageChooser != null) {
 		languageChooser.addEvent('change', function(e) {
-			var locale = e.target.value;
+			if(languageChooser.id == null) {
+				return;
+			}
+			
+			var locale = dwr.util.getValue(languageChooser.id);
 			if(locale != '') {
 				reloadWorkspace(locale);
 			}
@@ -436,15 +440,19 @@ function initializeDesignView(initializeInline) {
 }
 function initializePaletteComponents(tab, dropBoxinner, pageButtonArea, enable) {
 	$(tab).getElements('.fbc').each(function(el){
+		el.removeEvents();
 		el.draggableTag(dropBoxinner, null, 'fbc', enable);
 	});
 	$(tab).getElements('.fbcp').each(function(el){
+		el.removeEvents();
 		el.draggableTag(dropBoxinner, null, 'fbcp', enable);
 	});
 	$(tab).getElements('.fbb').each(function(el){
+		el.removeEvents();
 		el.draggableTag(pageButtonArea, null, 'fbb', enable);
 	});
 	$(tab).getElements('.fbbp').each(function(el){
+		el.removeEvents();
 		el.draggableTag(pageButtonArea, null, 'fbbp', enable);
 	});
 }
@@ -514,7 +522,7 @@ function registerFormbuilderActions() {
 }
 function initializePalette() {
 	var tabs = new mootabs('firstList', {width: '100%', height: '358px', changeTransition: 'none'});
-	$ES("li.stateFullTab").each(function(item) {
+	$$("li.stateFullTab").each(function(item) {
 		item.addEvent('click', function(e){
 			selectedPaletteTab = e.target.getProperty('title');
 			initializePaletteComponents(selectedPaletteTab, $('dropBoxinner'), $('pageButtonArea'), true);

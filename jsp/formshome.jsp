@@ -7,19 +7,13 @@
 	xmlns:t="http://myfaces.apache.org/tomahawk">
 	<jsp:directive.page contentType="text/html" />
 	<f:view>
-		<ws:page 	id="formbuilder" 
-					showFunctionMenu="false"
-					javascripturls="/dwr/interface/FormDocument.js,
-									/dwr/interface/Workspace.js,
-									/dwr/engine.js,
-												
-									/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formshome.js"
-					stylesheeturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formshome.css">
+		<ws:page id="formbuilder" showFunctionMenu="false">
 			<h:form id="workspaceform1" onsubmit="return false;">
 				<f:verbatim>
                 	<script type="text/javascript">
                 		window.addEvent('domready', function() {
-							var errorHanlder = function() {
+							var errorHanlder = function(errorString, exception) {
+								alert(errorString + ', ' + exception);
 								reloadPage();
 							}
 							DWREngine.setErrorHandler(errorHanlder);
