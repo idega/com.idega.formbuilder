@@ -8,7 +8,7 @@ import javax.faces.context.FacesContext;
 
 import com.idega.block.web2.business.Web2Business;
 import com.idega.builder.bean.AdvancedProperty;
-import com.idega.documentmanager.business.PersistedForm;
+import com.idega.documentmanager.business.Form;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FBHomePageBean;
 import com.idega.formbuilder.presentation.beans.FormDocument;
@@ -145,11 +145,11 @@ public class FBHomePage extends FBComponentBase {
 		formDocument.getStandaloneForms().clear();
 		
 		FBHomePageBean homePageBean = (FBHomePageBean) WFUtil.getBeanInstance(FBHomePageBean.beanIdentifier);
-		List<PersistedForm> forms = homePageBean.getStandaloneForms();
+		List<Form> forms = homePageBean.getStandaloneForms();
 		
 		Locale locale = iwc.getCurrentLocale();
 		
-		for (PersistedForm persistedForm : forms) {
+		for (Form persistedForm : forms) {
 
 			String dateCreatedStr = new IWTimestamp(persistedForm.getDateCreated()).getLocaleDateAndTime(locale, IWTimestamp.SHORT, IWTimestamp.SHORT);
 			formDocument.getStandaloneForms().add(new AdvancedProperty(persistedForm.getFormId().toString(), persistedForm.getDisplayName()));

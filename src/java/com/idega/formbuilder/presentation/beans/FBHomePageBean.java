@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Multimap;
-import com.idega.documentmanager.business.PersistedForm;
+import com.idega.documentmanager.business.Form;
 import com.idega.documentmanager.business.PersistenceManager;
 import com.idega.documentmanager.business.XFormPersistenceType;
 import com.idega.jbpm.BPMContext;
@@ -26,9 +26,9 @@ import com.idega.util.IWTimestamp;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *
- * Last modified: $Date: 2008/07/11 14:16:01 $ by $Author: anton $
+ * Last modified: $Date: 2008/10/27 20:22:46 $ by $Author: civilis $
  */
 @Scope("singleton")
 @Service(FBHomePageBean.beanIdentifier)
@@ -95,7 +95,7 @@ public class FBHomePageBean {
 		}
 	}
 	
-	public List<PersistedForm> getStandaloneForms() {
+	public List<Form> getStandaloneForms() {
 		
 		return getPersistenceManager().getStandaloneForms();
 	}
