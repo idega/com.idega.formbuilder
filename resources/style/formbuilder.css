@@ -1237,7 +1237,8 @@ span.statusMsg {
 	border: 2px solid #FFFF00;
 	font-size: 18px;
 	margin: 20px;
-	height: 50px;
+	min-height: 50px;
+	height: auto;
 	display: block;
 	font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
 }
