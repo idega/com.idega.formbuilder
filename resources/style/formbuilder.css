@@ -438,15 +438,14 @@ span.statusMsg {
 }
 
 #fbAdminPage {
-	margin: 15px;
 	background-color: White;
 	border: 1px solid LightGrey;
 	padding: 25px;
 	position: absolute;
 	top: 85px;
-	bottom: 59px;
-	left: 3px;
-	right: 3px;
+	bottom: 61px;
+	left: 5px;
+	right: 5px;
 }
 
 .fbBottomRightButtonsContainer {
