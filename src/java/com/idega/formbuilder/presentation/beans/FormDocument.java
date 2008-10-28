@@ -17,7 +17,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.idega.block.form.presentation.FormViewer;
-import com.idega.block.formadmin.presentation.actions.GetAvailableFormsAction;
 import com.idega.bpm.xformsview.XFormsView;
 import com.idega.builder.bean.AdvancedProperty;
 import com.idega.builder.business.BuilderLogic;
@@ -523,8 +522,8 @@ public class FormDocument implements Serializable {
 		
 		if(formId != null) {
 			
-			GetAvailableFormsAction admin = (GetAvailableFormsAction) WFUtil.getBeanInstance("availableFormsAction");
-			admin.setSelectedRow(formId.toString());
+//			GetAvailableFormsAction admin = (GetAvailableFormsAction) WFUtil.getBeanInstance("availableFormsAction");
+//			admin.setSelectedRow(formId.toString());
 			
 			return true;
 		}
