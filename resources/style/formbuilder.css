@@ -10,6 +10,7 @@
 
 .fbBottomButtonsContainer .states {
 	float: left;
+	margin-left: 5px;
 }
 .states a {
 	height:55px;
@@ -29,7 +30,6 @@
 	margin-top:7px;
 	padding-top:30px;
 	text-align:center;
-	width:30px;
 }
 .activeViewButton {
 	background: transparent url(images/selected_button_left.png) no-repeat scroll left center;
@@ -1232,8 +1232,7 @@ span.statusMsg {
 	border: 2px solid #FFFF00;
 	font-size: 18px;
 	margin: 20px;
-	height: auto;
-	min-height: 50px;
+	height: 50px;
 	display: block;
 	font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
 }
@@ -1686,7 +1685,7 @@ h1.title {
 }
 
 #pagesPanelSpecial {
-	height: 150px !important;
+	height: 110px !important;
 }
 
 #pagesPanelSpecial span {
