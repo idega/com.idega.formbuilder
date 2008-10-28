@@ -50,6 +50,24 @@ var currentCallback = null;
 var selectedPaletteTab = null;
 var fbPageSort = null;
 
+function lockButtonArea(lock, buttonArea) {
+	if(lock == true) {
+		buttonArea.setProperty('rel', 'locked');
+		buttonArea.setStyle('background-color', '#FFFFFF');
+	} else {
+		buttonArea.removeProperty('rel');
+		buttonArea.setStyle('background-color', '#F9FF9E');
+	}
+}
+
+function isButtonAreaLocked(buttonArea) {
+	if(buttonArea.getProperty('rel') == 'locked') {
+		return true;
+	} else {
+	 return false;
+	}
+}
+
 var FBDraggable = Element.extend({
 	draggableTag: function(droppables, handle, type, makeDrag) {
 		type = type;
@@ -104,7 +122,7 @@ var FBDraggable = Element.extend({
 	   						draggingComponent = true;
 						}
 					} else if(type == 'fbb') {
-						$('pageButtonArea').setStyle('background-color', '#F9FF9E');
+						lockButtonArea(false, $('pageButtonArea'));
 						if(draggingButton == false) {
 							FormComponent.addButton(this.elementOrg.id, {
 								callback: function(result) {
@@ -116,7 +134,7 @@ var FBDraggable = Element.extend({
 							draggingButton = true;
 						}
 					} else if(type == 'fbbp') {
-						$('pageButtonArea').setStyle('background-color', '#F9FF9E');
+						lockButtonArea(false, $('pageButtonArea'));
 						if(draggingButton == false) {
 							var componentType = this.elementOrg.id;
 							dwr.engine.beginBatch();
@@ -186,7 +204,7 @@ var FBDraggable = Element.extend({
 							draggingComponent = false;
 						}
 					} else if(type == 'fbb') {
-						$('pageButtonArea').setStyle('background-color', '#FFF');
+						lockButtonArea(true, $('pageButtonArea'));
 						if(draggingButton == true && insideDropzone == false && newComponentId != null) {
 							FormComponent.removeButton(newComponentId);
 							draggingButton = false;
@@ -199,7 +217,7 @@ var FBDraggable = Element.extend({
 							draggingComponent = false;
 						}
 					} else if(type == 'fbbp') {
-						$('pageButtonArea').setStyle('background-color', '#FFF');
+						lockButtonArea(true, $('pageButtonArea'));
 						if(draggingButton == true && insideDropzone == false && newComponentId != null) {
 							FormComponent.removeButton(newComponentId);
 							draggingButton = false;
@@ -246,6 +264,53 @@ function resizeAccordion(reservedHeight, containerId, variableTabs) {
 		}
 	}
 }
+function initializeButtonArea() {
+	var pageButtonArea = $('pageButtonArea');
+	if(pageButtonArea != null) {
+		pageButtonArea.setStyle('background-color', '#FFFFFF');
+		pageButtonArea.removeEvents();
+		pageButtonArea.addEvents({
+			'over': function(el){
+				if (!this.dragEffect) {
+					this.dragEffect = new Fx.Style(this, 'background-color');
+				}
+				if(isButtonAreaLocked(pageButtonArea) == false) {
+					this.dragEffect.stop().start('#F9FF9E', '#FFFF00');
+				}
+				insideDropzone = true;
+			},
+			'leave': function(el){
+				if(isButtonAreaLocked(pageButtonArea) == false) {
+					this.dragEffect.stop().start('#FFFF00', '#F9FF9E');
+				}
+				insideDropzone = false;
+			},
+			'drop': function(el, drag){
+				if(isButtonAreaLocked(pageButtonArea) == false) {
+					pageButtonArea.setStyle('background-color', '#FFF');
+				}
+				if(draggingButton == true) {
+					draggingButton = false;
+					if(el.hasClass('fbb')) {
+						if(newComponentId != null) {
+							FormComponent.getRenderedButton(newComponentId, {
+								callback: function(result) {
+									if(result != null) {
+										insertNodesToContainer(result, pageButtonArea);
+									}
+									newComponentId = null;
+								}
+							});
+						}
+					} else if(el.hasClass('fbbp')) {
+						showVariableList('selectVariableDialog', el.getLeft(), el.getTop(), VARIABLE_LIST, true);
+					}
+				}
+				insideDropzone = false;
+			}
+		});
+	}
+}
 function initializeDesignView(initializeInline) {
 	PropertyManager.getSelectedComponentId({
 		callback: function(result) {
@@ -289,43 +354,7 @@ function initializeDesignView(initializeInline) {
 		},
 		handles: '.fbCompHandler'
 	});
-	var pageButtonArea = $('pageButtonArea');
-	if(pageButtonArea != null) {
-		pageButtonArea.addEvents({
-			'over': function(el){
-				if (!this.dragEffect) {
-					this.dragEffect = new Fx.Style(this, 'background-color');
-				}
-				this.dragEffect.stop().start('#F9FF9E', '#FFFF00');
-				insideDropzone = true;
-			},
-			'leave': function(el){
-				this.dragEffect.stop().start('#FFFF00', '#F9FF9E');
-				insideDropzone = false;
-			},
-			'drop': function(el, drag){
-				pageButtonArea.removeProperty('style');
-				if(draggingButton == true) {
-					draggingButton = false;
-					if(el.hasClass('fbb')) {
-						if(newComponentId != null) {
-							FormComponent.getRenderedButton(newComponentId, {
-								callback: function(result) {
-									if(result != null) {
-										insertNodesToContainer(result, pageButtonArea);
-									}
-									newComponentId = null;
-								}
-							});
-						}
-					} else if(el.hasClass('fbbp')) {
-						showVariableList('selectVariableDialog', el.getLeft(), el.getTop(), VARIABLE_LIST, true);
-					}
-				}
-				insideDropzone = false;
-			}
-		});
-	}
+	initializeButtonArea();
 	var dropBoxinner = $('dropBoxinner');
 	if(dropBoxinner != null) {
 		dropBoxinner.addEvents({
@@ -347,7 +376,7 @@ function initializeDesignView(initializeInline) {
 				});
 			},
 			'drop': function(el, drag){
-				dropBoxinner.removeProperty('style');
+				dropBoxinner.setStyle('background-color', '#FFF');
 				dropBoxinner.getElements('div.formElement').each(function(element) {
 					element.addClass('formElementHover');
 				});
@@ -433,7 +462,7 @@ function initializeDesignView(initializeInline) {
 	if(selectedPaletteTab == null) {
 		selectedPaletteTab = 'processes';
 	}
-	initializePaletteComponents(selectedPaletteTab, dropBoxinner, pageButtonArea, true);
+	initializePaletteComponents(selectedPaletteTab, dropBoxinner, $('pageButtonArea'), true);
 	if(initializeInline == true) {
 		initializeInlineEdits();
 	}
@@ -797,6 +826,7 @@ function removeButton(parameter) {
 					var node = $(result);
 					if(node != null) {
 						node.remove();
+						initializeButtonArea();
 					}
 				}
 			});
@@ -1440,7 +1470,7 @@ function getEmptySelect(index,lbl,vl) {
 		'value' : vl,
 		'class' : 'fbSelectListItem',
 		'styles': {
-	        'display': 'inline'
+	        'display': 'none'
 	    },
 	    'events': {
 	    	'blur': function() {
@@ -1451,7 +1481,7 @@ function getEmptySelect(index,lbl,vl) {
 	
 	var expB = new Element('img', {
 		'id' : 'expB_' + index,
-		'src': '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow_right-tiny.png',
+		'src': '/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/arrow_right.png',
 		'styles': {
 	        'display': 'inline'
 	    },

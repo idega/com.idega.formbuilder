@@ -87,14 +87,14 @@ public class FBSelectValuesList extends FBComponentBase {
 		Image deleteButton = new Image();
 		deleteButton.setSrc(DELETE_BUTTON_IMG);
 		deleteButton.setId(DELETE_BUTTON_PREFIX + index);
-		deleteButton.setStyleClass(INLINE_DIV_STYLE);
+		deleteButton.setStyleAttribute(INLINE_DIV_STYLE);
 		deleteButton.setOnClick("deleteThisItem(this.getParent().getProperty('id'))");
 		row.add(deleteButton);
 		
 		TextInput labelF = new TextInput();
 		labelF.setValue(field);
 		labelF.setId(LABEL_FIELD_PREFIX + index);
-		labelF.setStyleClass(INLINE_DIV_STYLE);
+		labelF.setStyleAttribute(INLINE_DIV_STYLE);
 		labelF.setStyleClass("fbSelectListItem");
 		labelF.setOnBlur("saveLabel(this)");
 		row.add(labelF);
@@ -102,7 +102,7 @@ public class FBSelectValuesList extends FBComponentBase {
 		TextInput valueF = new TextInput();
 		valueF.setValue(value);
 		valueF.setId(VALUE_FIELD_PREFIX + index);
-		valueF.setStyleClass(HIDDEN_DIV_STYLE);
+		valueF.setStyleAttribute(HIDDEN_DIV_STYLE);
 		valueF.setStyleClass("fbSelectListItem");
 		valueF.setOnBlur("saveValue(this)");
 		row.add(valueF);
@@ -110,7 +110,7 @@ public class FBSelectValuesList extends FBComponentBase {
 		Image expandButton = new Image();
 		expandButton.setSrc(EXPAND_BUTTON_IMG);
 		expandButton.setId(EXPAND_BUTTON_PREFIX + index);
-		expandButton.setStyleClass(INLINE_DIV_STYLE);
+		expandButton.setStyleAttribute(INLINE_DIV_STYLE);
 		expandButton.setOnClick("expandOrCollapse(this,true)");
 		row.add(expandButton);
 		
