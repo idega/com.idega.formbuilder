@@ -384,6 +384,7 @@ function initializeDesignView(initializeInline) {
 					draggingComponent = false;
 					if(el.hasClass('fbc')) {
 						if(CURRENT_ELEMENT_UNDER != null) {
+							showLoadingMessage('Adding component');
 							FormComponent.moveAndRenderComponent(newComponentId, CURRENT_ELEMENT_UNDER, {
 								callback: function(result) {
 									if($('noFormNotice') != null) {
@@ -397,6 +398,7 @@ function initializeDesignView(initializeInline) {
 									}
 									newComponentId = null;
 									initializeDesignView(false);
+									closeLoadingMessage();
 								}
 							});
 						}
