@@ -13,7 +13,6 @@
                 	<script type="text/javascript">
                 		window.addEvent('domready', function() {
 							var errorHanlder = function(errorString, exception) {
-								alert(errorString + ', ' + exception);
 								reloadPage();
 							}
 							DWREngine.setErrorHandler(errorHanlder);
