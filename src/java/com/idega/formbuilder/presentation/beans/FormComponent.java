@@ -198,8 +198,14 @@ public class FormComponent extends GenericComponent {
 				}
 				page.rearrangeComponents();
 			}
-			result[0] = beforeId;
+			if(beforeId.length() > 0) {
+				result[0] = beforeId;
+			} else {
+				result[0] = "append";
+			}
+			
 		}
+		
 		Component component = page.getComponent(id);
 		result[1] = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component), true);
 		return result;
