@@ -443,12 +443,12 @@ span.statusMsg {
 	bottom: 0px;
 }
 
-#fbAdminPage {
+#fbAdminPage, #fbPreviewPage {
 	background-color: White;
 	border: 1px solid LightGrey;
 	padding: 25px;
 	position: absolute;
-	top: 85px;
+	top: 5px;
 	bottom: 61px;
 	left: 5px;
 	right: 5px;
@@ -1955,4 +1955,12 @@ fieldset .trigger input {
 
 label .required-symbol {
 	float: none;
+}
+
+div.info {
+	background: url(/idegaweb/bundles/is.idega.idegaweb.egov.application.bundle/resources/style/images/info_tiler.gif) repeat-x #ABBAC3 !important;
+}
+
+div.info h1 {
+	text-shadow: #fff 1px 1px 1px !important;
 }

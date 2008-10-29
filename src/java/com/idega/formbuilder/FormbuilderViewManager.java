@@ -71,6 +71,7 @@ public class FormbuilderViewManager implements Singleton  {
 		
 		node.setJspUri(contentBundle.getJSPURI("formshome.jsp"));
 		node.setKeyboardShortcut(new KeyboardShortcut("4"));
+		node.setName("Forms");
 		
 		this.rootNode = node;
 		return this.rootNode;
@@ -81,14 +82,21 @@ public class FormbuilderViewManager implements Singleton  {
 		initalizeContentNode(bundle);
 		ViewNode contentNode = initalizeContentNode(bundle);
 		
+		DefaultViewNode formsHomeNode = new DefaultViewNode("list",contentNode);
+		formsHomeNode.setJspUri(bundle.getJSPURI("formshome.jsp"));
+		formsHomeNode.setName("Formbuilder");
+		
 		DefaultViewNode formbuilderNode = new DefaultViewNode("formbuilder",contentNode);
 		formbuilderNode.setJspUri(bundle.getJSPURI("formbuilder.jsp"));
 		formbuilderNode.setName("Formbuilder");
 		formbuilderNode.setVisibleInMenus(false);
 		
-		DefaultViewNode adminNode = new DefaultViewNode("formadmin",contentNode);
+		DefaultViewNode adminNode = new DefaultViewNode("entries",contentNode);
 		adminNode.setJspUri(bundle.getJSPURI("formadmin.jsp"));
-		adminNode.setName("Form admin");
-		adminNode.setVisibleInMenus(false);
+		adminNode.setName("Entries");
+		
+		DefaultViewNode testerNode = new DefaultViewNode("preview",contentNode);
+		testerNode.setJspUri(bundle.getJSPURI("formpreview.jsp"));
+		testerNode.setName("Preview");
 	}
 }

@@ -16,6 +16,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.idega.block.form.entries.presentation.UIFormsEntriesViewer;
 import com.idega.block.form.presentation.FormViewer;
 import com.idega.bpm.xformsview.XFormsView;
 import com.idega.builder.bean.AdvancedProperty;
@@ -522,8 +523,8 @@ public class FormDocument implements Serializable {
 		
 		if(formId != null) {
 			
-//			GetAvailableFormsAction admin = (GetAvailableFormsAction) WFUtil.getBeanInstance("availableFormsAction");
-//			admin.setSelectedRow(formId.toString());
+			UIFormsEntriesViewer entries = (UIFormsEntriesViewer) WFUtil.getBeanInstance("formsEntries");
+			entries.setFormId(formId.toString());
 			
 			return true;
 		}

@@ -4,17 +4,21 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
 import com.idega.block.form.entries.presentation.UIFormsEntriesViewer;
+import com.idega.block.form.presentation.FormViewer;
+import com.idega.documentmanager.business.Document;
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
 import com.idega.presentation.text.Text;
 import com.idega.util.CoreUtil;
+import com.idega.webface.WFUtil;
 
-public class FBAdminPage extends FBComponentBase {
+public class FBPreviewPage extends FBComponentBase {
+	
+	public static final String COMPONENT_TYPE = "PreviewPage";
 
-	public static final String COMPONENT_TYPE = "AdminPage";
-
-	private static final String FB_ADMIN_PAGE_ID = "fbAdminPage";
+	private static final String FB_ADMIN_PAGE_ID = "fbPreviewPage";
 	private static final String FB_HP_HEADER_BLOCK_OD = "fbHomePageHeaderBlock";
 	private static final String FB_HP_LEFT = "fbHPLeft";
 	private static final String HEADER_NAME_ID = "headerName";
@@ -36,8 +40,7 @@ public class FBAdminPage extends FBComponentBase {
 		name.setText(getLocalizedString(iwc, "fb_admin_logo", "Formbuilder"));
 		name.setId(HEADER_NAME_ID);
 		Text slogan = new Text();
-		slogan.setText(getLocalizedString(iwc, "fb_admin_slogan",
-				"The easy way to build your forms"));
+		slogan.setText(getLocalizedString(iwc, "fb_admin_slogan", "The easy way to build your forms"));
 		slogan.setId(HEADER_SLOGAN_ID);
 
 		headerPartLeft.add(name);
@@ -45,11 +48,17 @@ public class FBAdminPage extends FBComponentBase {
 		header.add(headerPartLeft);
 
 		body.add(header);
-
-		UIComponent formsEntries = context.getApplication().createComponent(UIFormsEntriesViewer.COMPONENT_TYPE);
-		formsEntries.setRendered(true);
-		body.add(formsEntries);
-
+		
+		FormDocument formDocument = (FormDocument)WFUtil.getBeanInstance(FormDocument.BEAN_ID);
+		Document xformsDocument = formDocument.getDocument();
+		
+		if(xformsDocument != null) {
+			FormViewer formViewer = new FormViewer();
+			formViewer.setFormId(formDocument.getFormId());
+			formViewer.setXFormsDocument((org.w3c.dom.Document)xformsDocument.getXformsDocument().cloneNode(true));
+		}
+			
 		add(body);
 	}
+
 }

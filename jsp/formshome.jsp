@@ -5,9 +5,9 @@
 	xmlns:fb="http://xmlns.idega.com/com.idega.formbuilder"
 	xmlns:ws="http://xmlns.idega.com/com.idega.workspace" version="1.2"
 	xmlns:t="http://myfaces.apache.org/tomahawk">
-	<jsp:directive.page contentType="text/html" />
+	<jsp:directive.page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" />
 	<f:view>
-		<ws:page id="formbuilder" showFunctionMenu="false">
+		<ws:page id="formbuilder">
 			<h:form id="workspaceform1" onsubmit="return false;">
 				<f:verbatim>
                 	<script type="text/javascript">
@@ -20,7 +20,9 @@
 						window.addEvent('domready', registerFormsHomeActions);
                 	</script>
                 </f:verbatim>
-				<fb:homePage />
+				<div>
+					<fb:homePage />
+				</div>
 				<t:div id="newTaskFormDialog" forceId="true" style="display: none;">
 					<t:div styleClass="simplePopupLayer">
 						<t:outputLabel styleClass="simplePopupLabel" for="taskFormNameInput" value="Form name" />

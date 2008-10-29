@@ -9,7 +9,7 @@
 	<f:view>
 		<ws:page id="formbuilder" stylesheeturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formbuilder.css">
 			<h:form id="workspaceform1">
-				<fb:adminPage />
+				<fb:previewPage />
 				<t:div styleClass="fbBottomButtonsContainer">
 					<t:commandLink id="homeButton" forceId="true" styleClass="rightButton" onclick="window.location.href = '/workspace/forms/';return false;" value="#{localizedStrings['com.idega.formbuilder']['toolbar_home']}"></t:commandLink>
 				</t:div>
