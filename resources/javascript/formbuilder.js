@@ -30,8 +30,8 @@ var draggingPage = false;
 var insideDropzone = false;
 
 var FORMBUILDER_PATH = "/workspace/forms/formbuilder/";
-var FORMADMIN_PATH = "/workspace/forms/formadmin/";
-var FORMSHOME_PATH = "/workspace/forms/";
+var FORMADMIN_PATH = "/workspace/forms/entries/";
+var FORMSHOME_PATH = "/workspace/forms/list/";
 var TRANSITION_DURATION = 500;
 
 var RESERVED_HEIGHT = 82;

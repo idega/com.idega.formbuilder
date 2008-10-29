@@ -1,7 +1,7 @@
 var FORMBUILDER_PATH = "/workspace/forms/formbuilder/";
 var FORMADMIN_PATH = "/workspace/forms/entries/";
 var FORMPREVIEW_PATH = "/workspace/forms/preview/";
-var FORMSHOME_PATH = "/workspace/forms/";
+var FORMSHOME_PATH = "/workspace/forms/list/";
 var TRANSITION_DURATION = 500;
 
 var modalFormName = null;
