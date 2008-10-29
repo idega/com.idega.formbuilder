@@ -1,5 +1,6 @@
 var FORMBUILDER_PATH = "/workspace/forms/formbuilder/";
-var FORMADMIN_PATH = "/workspace/forms/formadmin/";
+var FORMADMIN_PATH = "/workspace/forms/entries/";
+var FORMPREVIEW_PATH = "/workspace/forms/preview/";
 var FORMSHOME_PATH = "/workspace/forms/";
 var TRANSITION_DURATION = 500;
 
@@ -223,7 +224,7 @@ function registerFormsHomeActions() {
 			FormDocument.loadFormDocumentPreview(formId, {
 				callback: function(result) {
 					if(result == true) {
-						window.location=FORMBUILDER_PATH;
+						window.location=FORMPREVIEW_PATH;
 					} else {
 						alert('Error occured trying to load preview mode');
 						closeLoadingMessage();

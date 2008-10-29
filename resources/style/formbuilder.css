@@ -1934,7 +1934,7 @@ fieldset .trigger input {
 	padding-top: 3px;
 }
 
-.select1 span {
+.select1 span, .select span {
 	float: left;
 }
 
@@ -1942,12 +1942,12 @@ fieldset .trigger input {
 	float: none;
 }
 
-.select1 span.selector-item {
+.select1 span.selector-item, .select span.selector-item {
 	clear: both;
 	margin-bottom: 3px;
 }
 
-.select1 input {
+.select1 input, .select span.selector-item input {
 	float: left;
 	margin: 0;
 	margin-right: 3px;
@@ -1963,4 +1963,39 @@ div.info {
 
 div.info h1 {
 	text-shadow: #fff 1px 1px 1px !important;
+}
+
+.fbc_header_text {
+	border-top: 1px #a4a4a4 solid;
+	border-bottom: 1px #a4a4a4 solid;
+	background: #d6d6d6;
+	height: 18px;
+	color: #222222;
+	font-size: 12px;
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	padding-left: 15px;
+	padding-top: 4px;
+	margin: 0;
+	clear: both;
+	font-weight: bold;
+}
+
+.fbc_simple_text {
+	padding: 0 !important;
+	font-size: 12px;
+	height: 28px;
+	color: #000 !important;
+	font-weight: normal !important;
+	border: 1px #EFD585 solid;
+	background: url(/content/files/public/style/images/attention_icon.png) 8px 8px no-repeat #fefbe1;
+	padding: 8px 8px 8px 40px !important;
+}
+
+html>body .fbc_simple_text {
+	height: auto;
+	min-height: 28px;
+}
+
+.fbc_simple_text span {
+	padding: 0 !important;
 }

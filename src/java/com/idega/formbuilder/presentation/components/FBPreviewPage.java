@@ -1,9 +1,7 @@
 package com.idega.formbuilder.presentation.components;
 
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
-import com.idega.block.form.entries.presentation.UIFormsEntriesViewer;
 import com.idega.block.form.presentation.FormViewer;
 import com.idega.documentmanager.business.Document;
 import com.idega.formbuilder.presentation.FBComponentBase;
@@ -52,11 +50,15 @@ public class FBPreviewPage extends FBComponentBase {
 		FormDocument formDocument = (FormDocument)WFUtil.getBeanInstance(FormDocument.BEAN_ID);
 		Document xformsDocument = formDocument.getDocument();
 		
+		FormViewer formViewer = new FormViewer();
+		
 		if(xformsDocument != null) {
-			FormViewer formViewer = new FormViewer();
+			
 			formViewer.setFormId(formDocument.getFormId());
 			formViewer.setXFormsDocument((org.w3c.dom.Document)xformsDocument.getXformsDocument().cloneNode(true));
 		}
+		
+		body.add(formViewer);
 			
 		add(body);
 	}

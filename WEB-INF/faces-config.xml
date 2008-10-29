@@ -44,6 +44,10 @@
 		<component-class>com.idega.formbuilder.presentation.components.FBAdminPage</component-class>
 	</component>
 	<component>
+		<component-type>PreviewPage</component-type>
+		<component-class>com.idega.formbuilder.presentation.components.FBPreviewPage</component-class>
+	</component>
+	<component>
 		<component-type>HomePage</component-type>
 		<component-class>com.idega.formbuilder.presentation.components.FBHomePage</component-class>
 	</component>
