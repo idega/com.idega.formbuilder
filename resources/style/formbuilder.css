@@ -1,9 +1,13 @@
 .selectedComponent {
-	background-color: #E4E4E4 !important;
+	background-color: #999 !important;
+	color: #fff;
+	font-weight: bold;
+	border-top: 1px #333 solid;
+	border-bottom: 1px #333 solid;
 }
 
 .selectedComponent .fbCompHandler {
-	background: Yellow;
+	background: #ff0;
 }
 
 .selectedPage {
