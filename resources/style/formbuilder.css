@@ -443,7 +443,7 @@ span.statusMsg {
 	bottom: 0px;
 }
 
-#fbAdminPage {
+#fbAdminPage, #fbPreviewPage {
 	background-color: White;
 	border: 1px solid LightGrey;
 	padding: 25px;
@@ -774,7 +774,7 @@ span.statusMsg {
 
 #optionsPanel {
 	left: 5px;
-	top: 85px;
+	top: 5px;
 	position: absolute;
 	background: #fff;
 	overflow: hidden;
@@ -806,7 +806,7 @@ span.statusMsg {
 }
 #viewPanel {
 	position: absolute;
-	top: 85px;
+	top: 5px;
 	left: 306px;
 	right: 216px;
 	bottom: 61px;
@@ -824,7 +824,7 @@ span.statusMsg {
 }
 #rightPanel {
 	position: absolute;
-	top: 85px !important;
+	top: 5px !important;
 	right: 5px !important;
 	display: inline;
 	background-color: #FFFFFF;

@@ -8,7 +8,6 @@
 	<jsp:directive.page contentType="text/html" />
 	<f:view>
 		<ws:page id="formbuilder" 
-				 showFunctionMenu="false"
 				 javascripturls="/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/mootools/1.11/mootools-all.js,
 				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/codepress/codepress.js,
 				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/smoothbox/smoothbox.js,
@@ -54,8 +53,10 @@
 						window.addEvent('resize', controlFormbuilderAppWindow);
                 	</script>
                 </f:verbatim>
-				<t:div id="mainApplication" forceId="true">
-					<fb:workspace id="mainWorkspace"/>
+				<t:div id="mainApplication">
+					<div>
+						<fb:workspace id="mainWorkspace"/>
+					</div>
 				</t:div>
 				<t:div id="newFormDialog" forceId="true" style="display: none;">
 					<t:div styleClass="simplePopupLayer">

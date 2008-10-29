@@ -16,7 +16,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.idega.block.form.entries.presentation.UIFormsEntriesViewer;
+import com.idega.block.form.entries.presentation.beans.FormsEntriesState;
 import com.idega.block.form.presentation.FormViewer;
 import com.idega.bpm.xformsview.XFormsView;
 import com.idega.builder.bean.AdvancedProperty;
@@ -519,16 +519,16 @@ public class FormDocument implements Serializable {
 		return true;
 	}
 	
-	public boolean loadFormDocumentEntries(Long formId) {
+	public String loadFormDocumentEntries(Long formId) {
 		
 		if(formId != null) {
 			
-			UIFormsEntriesViewer entries = (UIFormsEntriesViewer) WFUtil.getBeanInstance("formsEntries");
-			entries.setFormId(formId.toString());
+			DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
+			document = formManagerInstance.openForm(formId);
 			
-			return true;
+			return document == null ? null : document.getId();
 		}
-		return false;
+		return null;
 	}
 	
 	public String duplicateFormDocument(String documentId, String newTitle) {

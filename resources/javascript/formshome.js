@@ -134,8 +134,8 @@ function registerFormsHomeActions() {
 			
 			FormDocument.loadFormDocumentEntries(formId, {
 				callback: function(result) {
-					if(result == true) {
-						window.location=FORMADMIN_PATH;
+					if(result != null) {
+						window.location=FORMADMIN_PATH + '?formId=' + result;
 					} else {
 						alert('Error occured trying to load admin mode');
 						closeLoadingMessage();
