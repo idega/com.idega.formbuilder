@@ -1,11 +1,13 @@
 .selectedComponent {
-	background-color: #E4E4E4		!important;
+	background-color: #E4E4E4 !important;
 }
+
 .selectedComponent .fbCompHandler {
 	background: Yellow;
 }
+
 .selectedPage {
-	background-color: #E4E4E4		!important;
+	background-color: #E4E4E4 !important;
 }
 
 .fbBottomButtonsContainer .states {
@@ -364,7 +366,7 @@ span#designViewThankYou input {
 }
 
 .fbTwoLineProperty textarea {
-	width: 268px;
+	width: 250px;
 	height: 80px;
 }
 
@@ -1926,4 +1928,27 @@ fieldset .trigger input {
 	font-size: 9px;
 	padding-right: 3px;
 	padding-top: 3px;
+}
+
+.select1 span {
+	float: left;
+}
+
+.select1 .help-text, .select1 .help-text span, .select1 .alert, .select1 .alert span {
+	float: none;
+}
+
+.select1 span.selector-item {
+	clear: both;
+	margin-bottom: 3px;
+}
+
+.select1 input {
+	float: left;
+	margin: 0;
+	margin-right: 3px;
+}
+
+label .required-symbol {
+	float: none;
 }
