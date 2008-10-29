@@ -306,6 +306,7 @@ function initializeButtonArea() {
 						showVariableList('selectVariableDialog', el.getLeft(), el.getTop(), VARIABLE_LIST, true);
 					}
 				}
+				pageButtonArea.setStyle('background-color', '#FFFFFF');
 				insideDropzone = false;
 			}
 		});

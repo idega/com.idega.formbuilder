@@ -117,30 +117,33 @@ public class FBComponentProperties extends FBComponentBase {
 			ComponentPlain comp = (ComponentPlain) component.getComponent();
 			PropertiesPlain properties = comp.getProperties();
 			
-			String componentId = comp.getId();
+			if(properties.getText() != null) {
+				String componentId = comp.getId();
+				
+				Layer body = createPanelSection(PLAIN_PROPERTIES_PANEL);
+				Layer line = createPropertyContainer(TWO_LINE_PROPERTY);
+				
+				TextArea plainTextValue = new TextArea(PROPERTY_PLAIN_TEXT_NAME, properties.getText().getString(locale));
+				plainTextValue.setOnBlur("saveComponentProperty('" + componentId + "','plainText',this.value, event)");
+				plainTextValue.setOnKeyDown("saveComponentProperty('" + componentId + "','plainText',this.value, event)");
+				
+				line.add(new Label(getLocalizedString(iwc, "comp_prop_plaintext", "Text"), plainTextValue));
+				line.add(plainTextValue);
+				body.add(line);
+				
+				line = createPropertyContainer(TWO_LINE_PROPERTY);
+				
+				TextInput labelValue = new TextInput(PROPERTY_LABEL_NAME, properties.getLabel() == null ? "" : properties.getLabel().getString(locale));
+				labelValue.setOnBlur("saveComponentProperty('" + componentId + "','plainLabel',this.value, event)");
+				labelValue.setOnKeyDown("saveComponentProperty('" + componentId + "','plainLabel',this.value, event)");
+				
+				line.add(new Label(getLocalizedString(iwc, "comp_prop_fieldname", "Field name"), labelValue));
+				line.add(labelValue);
+				body.add(line);
+				
+				layer.add(body);
+			}
 			
-			Layer body = createPanelSection(PLAIN_PROPERTIES_PANEL);
-			Layer line = createPropertyContainer(TWO_LINE_PROPERTY);
-			
-			TextArea plainTextValue = new TextArea(PROPERTY_PLAIN_TEXT_NAME, properties.getText().getString(locale));
-			plainTextValue.setOnBlur("saveComponentProperty('" + componentId + "','plainText',this.value, event)");
-			plainTextValue.setOnKeyDown("saveComponentProperty('" + componentId + "','plainText',this.value, event)");
-			
-			line.add(new Label(getLocalizedString(iwc, "comp_prop_plaintext", "Text"), plainTextValue));
-			line.add(plainTextValue);
-			body.add(line);
-			
-			line = createPropertyContainer(TWO_LINE_PROPERTY);
-			
-			TextInput labelValue = new TextInput(PROPERTY_LABEL_NAME, properties.getLabel() == null ? "" : properties.getLabel().getString(locale));
-			labelValue.setOnBlur("saveComponentProperty('" + componentId + "','plainLabel',this.value, event)");
-			labelValue.setOnKeyDown("saveComponentProperty('" + componentId + "','plainLabel',this.value, event)");
-			
-			line.add(new Label(getLocalizedString(iwc, "comp_prop_fieldname", "Field name"), labelValue));
-			line.add(labelValue);
-			body.add(line);
-			
-			layer.add(body);
 		} else if(component instanceof FormComponent) {
 			Component comp = component.getComponent();
 			PropertiesComponent properties = comp.getProperties();
