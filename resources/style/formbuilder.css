@@ -443,7 +443,7 @@ span.statusMsg {
 	bottom: 0px;
 }
 
-#fbAdminPage, #fbPreviewPage {
+#fbAdminPage {
 	background-color: White;
 	border: 1px solid LightGrey;
 	padding: 25px;
