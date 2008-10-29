@@ -1032,6 +1032,7 @@ span.statusMsg {
 	margin-left: 0px;
 	padding: 10px 30px;
 	position: relative;
+cursor: pointer;
 }
 
 .formElement label {
@@ -1062,10 +1063,11 @@ span.statusMsg {
 	left: 80%;
 }
 
-.formElementHover:hover .fbCompHandler {
+div.formElementHover:hover .fbCompHandler {
 	background: url(images/move_16.png) center 3px no-repeat Yellow;
 }
-.formElementHover:hover .fbcCompVar {
+
+div.formElementHover:hover .fbcCompVar {
 	visibility: visible;
 }
 
@@ -1112,7 +1114,7 @@ span.statusMsg {
 	margin-right: 0px;
 }
 
-.formElementHover:hover {
+div.formElementHover:hover {
 	cursor: pointer;
 	background-color: Silver;
 }
@@ -1131,7 +1133,7 @@ span.statusMsg {
 	/*float: right;*/
 }
 
-.formElement:hover .speedButton {
+div.formElement:hover .speedButton {
 	position: absolute;
 	right: 10px;
 	top: 10px;
@@ -1151,7 +1153,7 @@ span.statusMsg {
 	text-decoration: none;
 }
 
-.formElement:hover .assignVariableBox {
+div.formElement:hover .assignVariableBox {
 	position: absolute;
 	right: 4px;
 	bottom: 4px;
@@ -1166,7 +1168,7 @@ span.statusMsg {
 	moz-opacity: 0.7;
 }
 
-.formElement:hover .assignVariableBox img {
+div.formElement:hover .assignVariableBox img {
 	vertical-align: middle;
 	margin-right: 6px;
 }
