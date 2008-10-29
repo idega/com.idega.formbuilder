@@ -508,6 +508,7 @@ html>body .fbBottomButtonsContainer a {
 	top:100px;
 	overflow: auto;
 	width: auto !important;
+	height: auto !important;
 }
 
 #forms {

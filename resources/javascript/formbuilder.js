@@ -398,6 +398,7 @@ function initializeDesignView(initializeInline) {
 									}
 									newComponentId = null;
 									initializeDesignView(false);
+									dropBoxinner.setStyle('background-color', '#FFFFFF');
 									closeLoadingMessage();
 								}
 							});

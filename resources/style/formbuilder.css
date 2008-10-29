@@ -1999,3 +1999,38 @@ html>body .fbc_simple_text {
 .fbc_simple_text span {
 	padding: 0 !important;
 }
+
+.formElement {
+	overflow: hidden;
+}
+
+.formElement .value {
+	float: left;
+}
+
+span.help-text {
+	width: 150px;
+	float: right !important;
+	font-weight: normal !important;
+}
+
+span.help-text span.disabled {
+	display: none !important;
+}
+
+span.help-text span.enabled {
+	float: none;
+	display: block;
+}
+
+span.help-text span span {
+	float: none !important;
+}
+
+span.alert {
+	display: block;
+	clear: both;
+	margin-left: 193px;
+	color: #f00;
+	font-weight: bold;
+}
