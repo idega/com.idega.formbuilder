@@ -904,7 +904,7 @@ span.statusMsg {
 	font-size: 12px 				!important;
 	font-weight: bold 				!important;
 }
-.formPageIcon:hover,.formPageIconSpecial:hover {
+div.formPageIcon:hover, div.formPageIconSpecial:hover {
 	border-color: Black;
 }
 .formPageIconSelected,.formPageIconSelectedSpecial {
@@ -924,7 +924,7 @@ span.statusMsg {
 	top: 14px;
 }
 
-#pagesPanel .formPageIcon:hover .pageSpeedButton,#pagesPanel .formPageIconSelected:hover .pageSpeedButton
+#pagesPanel div.formPageIcon:hover .pageSpeedButton,#pagesPanel div.formPageIconSelected:hover .pageSpeedButton
 	{
 	visibility: visible;
 	cursor: pointer;
@@ -1123,7 +1123,7 @@ div.formElementHover:hover {
 	display: none;
 }
 
-.formButton:hover .fbSpeedBButton {
+div.formButton:hover .fbSpeedBButton {
 	display: inline;
 	cursor: pointer;
 }
