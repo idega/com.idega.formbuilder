@@ -1071,7 +1071,7 @@ function initializeNewPageAction() {
 }
 
 function initializeThankyouPage() {
-	var thankyoupage = $E('div.thankyou');
+	var thankyoupage = $('pagesPanelSpecial').getElement('div.thankyou');
 	if(thankyoupage != null) {
 		thankyoupage.addEvent('click', function(e){
 			showLoadingMessage('Loading section...');
@@ -1103,7 +1103,7 @@ function initializePreviewPageAction() {
 						if(checked == true) {
 							previewPageButton.removeClass('addPreviewPageBtn').addClass('removePreviewPageBtn');
 							insertNodesToContainerBefore(resultDOM, $('pagesPanelSpecial'), $('pagesPanelSpecial').childNodes[0]);
-							initialiazePreviewPage();
+							initializePreviewPage();
 						} else {
 							previewPageButton.removeClass('removePreviewPageBtn').addClass('addPreviewPageBtn');
 							$('pagesPanelSpecial').getFirst().remove();
@@ -1228,7 +1228,7 @@ function initializeGeneralPage(element) {
 	}
 }
 function initializePreviewPage() {
-	var previewp = $('div.preview');
+	var previewp = $('pagesPanelSpecial').getElement('div.preview');
 	if(previewp != null) {
 		previewp.addEvent('click', function(e){
 			showLoadingMessage('Loading section...');

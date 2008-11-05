@@ -889,12 +889,12 @@ span.statusMsg {
 }
 .inlineEdit {
 }
-.inlineEdit .inlineEditIcon {
+div.inlineEdit .inlineEditIcon {
 	visibility: hidden;
 	margin-left: 10px;
 	margin-top: 5px;
 }
-.inlineEdit:hover .inlineEditIcon {
+div.inlineEdit:hover .inlineEditIcon {
 	visibility: visible;
 }
 .pageIconLabel {
