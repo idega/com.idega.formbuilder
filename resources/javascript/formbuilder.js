@@ -287,7 +287,25 @@ function initializeButtonArea() {
 		});
 	}
 }
-function initializeDesignView(initializeInline) {
+
+function initializeLanguageChooser() {
+	var languageChooser = $('languageChooser');
+	if(languageChooser != null) {
+		languageChooser.removeEvents();
+		languageChooser.addEvent('change', function(e) {
+			if(languageChooser.id == null) {
+				return;
+			}
+			
+			var locale = dwr.util.getValue(languageChooser.id);
+			if(locale != '') {
+				reloadWorkspace(locale);
+			}
+		});
+	}
+}
+
+function initializeSelectedComponent() {
 	PropertyManager.getSelectedComponentId({
 		callback: function(result) {
 			if(result != null && result != '') {
@@ -305,20 +323,9 @@ function initializeDesignView(initializeInline) {
 			}							
 		}
 	});
-	var languageChooser = $('languageChooser');
-	if(languageChooser != null) {
-		languageChooser.removeEvents();
-		languageChooser.addEvent('change', function(e) {
-			if(languageChooser.id == null) {
-				return;
-			}
-			
-			var locale = dwr.util.getValue(languageChooser.id);
-			if(locale != '') {
-				reloadWorkspace(locale);
-			}
-		});
-	}
+}
+
+function initializeComponentSorting(fbComponentSort) {
 	if(fbComponentSort) {
 		fbComponentSort.detach();
 		fbComponentSort = null;
@@ -335,7 +342,9 @@ function initializeDesignView(initializeInline) {
 		},
 		handles: '.fbCompHandler'
 	});
-	initializeButtonArea();
+}
+
+function initializeDropbox() {
 	var dropBoxinner = $('dropBoxinner');
 	if(dropBoxinner != null) {
 		dropBoxinner.removeEvents();
@@ -445,6 +454,14 @@ function initializeDesignView(initializeInline) {
 			});
 		});
 	}
+}
+
+function initializeDesignView(initializeInline) {
+	initializeSelectedComponent();
+	initializeLanguageChooser();
+	initializeComponentSorting(fbComponentSort);
+	initializeButtonArea();
+	initializeDropbox();
 	if(selectedPaletteTab == null) {
 		selectedPaletteTab = 'processes';
 	}
@@ -1349,6 +1366,9 @@ var componentRerenderCallback = function(result) {
 		var oldNode = $(result[0]);
 		if(oldNode != null) {
 			replaceNode(result[1], oldNode, $('dropBoxinner'));
+			initializeSelectedComponent();
+			initializeComponentSorting(fbComponentSort);
+			initializeDropbox();
 		}
 	}
 	if(result[2] != null) {
