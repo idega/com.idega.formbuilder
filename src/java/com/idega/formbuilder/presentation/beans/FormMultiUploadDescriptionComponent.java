@@ -6,14 +6,12 @@ import com.idega.formbuilder.util.FBUtil;
 
 public class FormMultiUploadDescriptionComponent extends FormComponent {
 	
-	private ComponentMultiUploadDescription component;
-	
 	public FormMultiUploadDescriptionComponent(ComponentMultiUploadDescription component) {
 		this.component = component;
 	}
 
 	public ComponentMultiUploadDescription getComponent() {
-		return component;
+		return (ComponentMultiUploadDescription) component;
 	}
 
 	public void setComponent(ComponentMultiUploadDescription component) {

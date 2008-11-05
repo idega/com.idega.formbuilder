@@ -59,8 +59,6 @@ public class FBComponentProperties extends FBComponentBase {
 	private static final String PROPERTY_LABEL_NAME = "propertyLabel";
 	private static final String LABEL_PROPERTIES_PANEL = "labelPropertiesPanel";
 	private static final String PROPERTY_REQUIRED_ID = "propertyRequired";
-	private static final String PROPERTY_ERROR_MESSAGE_NAME = "propertyErrorMessage";
-	private static final String PROPERTY_VALIDATION_TEXT = "propertyValidationText";
 	
 	private static final String PROPERTY_HELP_TEXT_NAME = "propertyHelpText";
 	private static final String PROPERTY_AUTOFILL_CHECKBOX = "propertyHasAutofill";

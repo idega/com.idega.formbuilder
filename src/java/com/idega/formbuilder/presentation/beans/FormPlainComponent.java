@@ -6,14 +6,12 @@ import com.idega.formbuilder.util.FBUtil;
 
 public class FormPlainComponent extends FormComponent {
 	
-	private ComponentPlain component;
-	
 	public FormPlainComponent(ComponentPlain component) {
 		this.component = component;
 	}
 	
 	public ComponentPlain getComponent() {
-		return component;
+		return (ComponentPlain) component;
 	}
 	
 	public void setPlainText(String value) {

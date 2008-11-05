@@ -34,7 +34,7 @@ public class FormComponent extends GenericComponent {
 	public static final String BUTTON_TYPE = "button";
 	public static final String COMPONENT_TYPE = "component";
 	
-	private Component component;
+	protected Component component;
 	
 	private ProcessPalette processPalette;
 	private JbpmProcessBusinessBean jbpmProcessBusiness;

@@ -9,14 +9,12 @@ import com.idega.formbuilder.util.FBUtil;
 
 public class FormSelectComponent extends FormComponent {
 	
-	private ComponentSelect component;
-	
 	public FormSelectComponent(ComponentSelect component) {
 		this.component = component;
 	}
 
 	public ComponentSelect getComponent() {
-		return component;
+		return (ComponentSelect) component;
 	}
 
 	public void setComponent(ComponentSelect component) {
