@@ -77,16 +77,10 @@ public class ComponentPropertyManager {
 			itemSet.clear();
 			component.setItems(itemSet);
 		}
-		Document properties = BuilderLogic.getInstance().getRenderedComponent(
-				CoreUtil.getIWContext(), new FBComponentProperties(component),
-				true);
-		Document comp = BuilderLogic.getInstance().getRenderedComponent(
-				CoreUtil.getIWContext(),
-				new FBFormComponent(component.getComponent()), true);
-		Object[] result = { component.getComponent().getId(), comp, properties };
+		Object[] result = { component.getComponent().getId(), getFormComponent(component), getPropertiesPanel(component) };
 		return result;
 	}
-
+	
 	public Document selectComponent(String id, String type) {
 		if (type == null || id == null) {
 			return null;
@@ -98,11 +92,9 @@ public class ComponentPropertyManager {
 			if (type.equals(FormComponent.COMPONENT_TYPE)) {
 				Component comp = page.getComponent(id);
 				if (comp instanceof ComponentMultiUploadDescription) {
-					component = new FormMultiUploadDescriptionComponent(
-							(ComponentMultiUploadDescription) comp);
+					component = new FormMultiUploadDescriptionComponent((ComponentMultiUploadDescription) comp);
 				} else if (comp instanceof ComponentMultiUpload) {
-					component = new FormMultiUploadComponent(
-							(ComponentMultiUpload) comp);
+					component = new FormMultiUploadComponent((ComponentMultiUpload) comp);
 				} else if (comp instanceof ComponentPlain) {
 					component = new FormPlainComponent((ComponentPlain) comp);
 				} else if (comp instanceof ComponentSelect) {
@@ -117,9 +109,7 @@ public class ComponentPropertyManager {
 					component = new FormButton(button);
 				}
 			}
-			componentPropertiesDOM = BuilderLogic.getInstance()
-					.getRenderedComponent(CoreUtil.getIWContext(),
-							new FBComponentProperties(component), true);
+			componentPropertiesDOM = getPropertiesPanel(component);
 		}
 
 		return componentPropertiesDOM;
@@ -131,17 +121,12 @@ public class ComponentPropertyManager {
 		} else {
 			component.setAutofillKey(CoreConstants.EMPTY);
 		}
-		return BuilderLogic.getInstance().getRenderedComponent(
-				CoreUtil.getIWContext(), new FBComponentProperties(component),
-				true);
+		return getPropertiesPanel(component);
 	}
 
 	public Object[] removeSelectOption(int index) {
 		removeItem(index);
-		Document doc = BuilderLogic.getInstance().getRenderedComponent(
-				CoreUtil.getIWContext(),
-				new FBFormComponent(component.getComponent()), true);
-		Object[] result = { component.getComponent().getId(), doc };
+		Object[] result = { component.getComponent().getId(), getFormComponent(component) };
 		return result;
 	}
 
@@ -166,10 +151,7 @@ public class ComponentPropertyManager {
 			itemSet.get(index).setValue(value);
 		}
 		component.setItems(itemSet);
-		Document doc = BuilderLogic.getInstance().getRenderedComponent(
-				CoreUtil.getIWContext(),
-				new FBFormComponent(component.getComponent()), true);
-		Object[] result = { component.getComponent().getId(), doc };
+		Object[] result = { component.getComponent().getId(), getFormComponent(component) };
 		return result;
 	}
 
@@ -183,41 +165,28 @@ public class ComponentPropertyManager {
 			itemSet.get(index).setValue(value);
 		}
 		component.setItems(itemSet);
-		Document doc = BuilderLogic.getInstance().getRenderedComponent(
-				CoreUtil.getIWContext(),
-				new FBFormComponent(component.getComponent()), true);
-		Object[] result = { component.getComponent().getId(), doc };
+		Object[] result = { component.getComponent().getId(), getFormComponent(component) };
 		return result;
 	}
 
-	public Object[] saveComponentErrorMessage(String errorTypeStr,
-			String errorMessage) {
+	public Object[] saveComponentErrorMessage(String errorTypeStr, String errorMessage) {
 
 		ErrorType errType = ErrorType.getByStringRepresentation(errorTypeStr);
 
 		if (errType != null) {
 			component.setErrorMessage(errType, errorMessage);
 		} else {
-			Logger
-					.getLogger(getClass().getName())
-					.log(
-							Level.WARNING,
-							"Tried to set error message, but no error type resolved by error type string provided="
-									+ errorTypeStr);
+			Logger.getLogger(getClass().getName()).log(Level.WARNING,"Tried to set error message, but no error type resolved by error type string provided="+ errorTypeStr);
 		}
 
-		return getResponse(component);
+		return getResponse(component, false);
 	}
 
 	// TODO: remove componentId param
-	public Object[] saveComponentProperty(String componentId,
-			String propertyName, String propertyValue) {
+	public Object[] saveComponentProperty(String componentId, String propertyName, String propertyValue) {
 		if (propertyName == null || propertyValue == null) {
-			Logger
-					.getLogger(getClass().getName())
-					.log(
-							Level.WARNING,
-							"Tried to save component property, but either property name or value not set. PropertyName="
+			Logger.getLogger(getClass().getName()).log(Level.WARNING,
+									"Tried to save component property, but either property name or value not set. PropertyName="
 									+ propertyName
 									+ ", propertyValue="
 									+ propertyValue
@@ -225,6 +194,8 @@ public class ComponentPropertyManager {
 									+ component.getId());
 			return null;
 		}
+		
+		boolean reloadProperties = false;
 
 		if (propertyName.equals(BUTTON_LABEL_PROP)) {
 			component.setLabel(propertyValue);
@@ -237,6 +208,7 @@ public class ComponentPropertyManager {
 				component.setHelpMessage(propertyValue);
 			} else if (propertyName.equals(COMP_REQ_PROP)) {
 				component.setRequired(Boolean.parseBoolean(propertyValue));
+				reloadProperties = true;
 //			} else if (propertyName.equals(COMP_VALIDATATION_PROP)) {
 //				component.setValidationText(propertyValue);
 			} else if (propertyName.equals(PLAIN_TEXT_PROP)) {
@@ -258,15 +230,23 @@ public class ComponentPropertyManager {
 				component.setUploadDescription(propertyValue);
 			}
 
-			return getResponse(component);
+			return getResponse(component, reloadProperties);
 		}
 	}
 
-	private Object[] getResponse(GenericComponent component) {
-
-		Document doc = BuilderLogic.getInstance().getRenderedComponent(
-				CoreUtil.getIWContext(),
-				new FBFormComponent(component.getComponent()), true);
-		return new Object[] { component.getId(), doc };
+	private Object[] getResponse(GenericComponent component, boolean reloadProperties) {
+		Document propertiesPanel = null;
+		if(reloadProperties) {
+			propertiesPanel = getPropertiesPanel(component);
+		}
+		return new Object[] { component.getId(), getFormComponent(component), propertiesPanel };
+	}
+	
+	private Document getPropertiesPanel(GenericComponent component) {
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentProperties(component),true);
+	}
+	
+	private Document getFormComponent(GenericComponent component) {
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(),new FBFormComponent(component.getComponent()), true);
 	}
 }

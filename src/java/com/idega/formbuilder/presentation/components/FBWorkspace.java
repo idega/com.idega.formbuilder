@@ -116,6 +116,21 @@ public class FBWorkspace extends FBComponentBase {
 		panel1.setStyleClass(ELEMENT_CLASS);
 		panel1.setStyleClass(AT_START_CLASS);
 		
+		Layer messageBox = new Layer(Layer.DIV);
+		messageBox.setId("optionsPanelMessageBox");
+		
+		Text headline = new Text(getLocalizedString(iwc, "labels_palette_disabled", "Palette actions disabled in this view"));
+		messageBox.add(headline);
+		
+		String view = workspace.getView();
+		if(!FBViewPanel.DESIGN_VIEW.equals(view)) {
+			messageBox.setStyleAttribute("display", "block");
+		} else {
+			messageBox.setStyleAttribute("display", "none");
+		}
+		
+		panel1.add(messageBox);
+		
 		FBPalette palette = new FBPalette();
 		palette.setItemStyleClass(PALETTE_COMPONENT_CLASS);
 		palette.setStyleClass(COMPONENTS_LIST_CLASS);

@@ -64,7 +64,7 @@
 #propertyValidationLabel {
 	display: none;
 }
-#pagesPanelMessageBox {
+#pagesPanelMessageBox, #optionsPanelMessageBox {
 	background-color:#F9FF9E;
 	border:2px solid #FFFF00;
 	font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
