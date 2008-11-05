@@ -7,20 +7,11 @@ import java.util.Locale;
 
 import javax.faces.context.FacesContext;
 
-import com.idega.xformsmanager.business.component.Button;
-import com.idega.xformsmanager.business.component.Component;
-import com.idega.xformsmanager.business.component.ComponentMultiUpload;
-import com.idega.xformsmanager.business.component.ComponentPlain;
-import com.idega.xformsmanager.business.component.ComponentSelect;
-import com.idega.xformsmanager.business.component.properties.PropertiesButton;
-import com.idega.xformsmanager.business.component.properties.PropertiesComponent;
-import com.idega.xformsmanager.business.component.properties.PropertiesPlain;
 import com.idega.chiba.web.xml.xforms.validation.ErrorType;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.DataSourceList;
 import com.idega.formbuilder.presentation.beans.FormButton;
 import com.idega.formbuilder.presentation.beans.FormComponent;
-import com.idega.formbuilder.presentation.beans.FormMultiUploadComponent;
 import com.idega.formbuilder.presentation.beans.FormMultiUploadDescriptionComponent;
 import com.idega.formbuilder.presentation.beans.FormPlainComponent;
 import com.idega.formbuilder.presentation.beans.FormSelectComponent;
@@ -40,6 +31,13 @@ import com.idega.presentation.ui.TextInput;
 import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
+import com.idega.xformsmanager.business.component.Button;
+import com.idega.xformsmanager.business.component.Component;
+import com.idega.xformsmanager.business.component.ComponentPlain;
+import com.idega.xformsmanager.business.component.ComponentSelect;
+import com.idega.xformsmanager.business.component.properties.PropertiesButton;
+import com.idega.xformsmanager.business.component.properties.PropertiesComponent;
+import com.idega.xformsmanager.business.component.properties.PropertiesPlain;
 
 public class FBComponentProperties extends FBComponentBase {
 
@@ -206,6 +204,7 @@ public class FBComponentProperties extends FBComponentBase {
 			    
 			}
 			
+			/* TODO: cleanup after this
 			if(component instanceof FormMultiUploadComponent) {
 				layer.add(body);
 				
@@ -239,6 +238,7 @@ public class FBComponentProperties extends FBComponentBase {
 				
 				return;
 			}
+			*/
 			
 			if(component instanceof FormMultiUploadDescriptionComponent) {
 				

@@ -1,20 +1,22 @@
 package com.idega.formbuilder.presentation.beans;
 
-import com.idega.xformsmanager.business.component.ComponentMultiUploadDescription;
+import com.idega.xformsmanager.business.component.ComponentMultiUpload;
 import com.idega.xformsmanager.component.beans.LocalizedStringBean;
 import com.idega.formbuilder.util.FBUtil;
 
 public class FormMultiUploadDescriptionComponent extends FormComponent {
 	
-	public FormMultiUploadDescriptionComponent(ComponentMultiUploadDescription component) {
+	private ComponentMultiUpload component;
+	
+	public FormMultiUploadDescriptionComponent(ComponentMultiUpload component) {
 		this.component = component;
 	}
 
-	public ComponentMultiUploadDescription getComponent() {
-		return (ComponentMultiUploadDescription) component;
+	public ComponentMultiUpload getComponent() {
+		return component;
 	}
 
-	public void setComponent(ComponentMultiUploadDescription component) {
+	public void setComponent(ComponentMultiUpload component) {
 		this.component = component;
 	}
 	

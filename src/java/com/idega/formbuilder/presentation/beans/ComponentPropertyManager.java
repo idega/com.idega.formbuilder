@@ -16,7 +16,6 @@ import com.idega.xformsmanager.business.component.Button;
 import com.idega.xformsmanager.business.component.ButtonArea;
 import com.idega.xformsmanager.business.component.Component;
 import com.idega.xformsmanager.business.component.ComponentMultiUpload;
-import com.idega.xformsmanager.business.component.ComponentMultiUploadDescription;
 import com.idega.xformsmanager.business.component.ComponentPlain;
 import com.idega.xformsmanager.business.component.ComponentSelect;
 import com.idega.xformsmanager.business.component.Page;
@@ -91,10 +90,8 @@ public class ComponentPropertyManager {
 		if (page != null) {
 			if (type.equals(FormComponent.COMPONENT_TYPE)) {
 				Component comp = page.getComponent(id);
-				if (comp instanceof ComponentMultiUploadDescription) {
-					component = new FormMultiUploadDescriptionComponent((ComponentMultiUploadDescription) comp);
-				} else if (comp instanceof ComponentMultiUpload) {
-					component = new FormMultiUploadComponent((ComponentMultiUpload) comp);
+				if (comp instanceof ComponentMultiUpload) {
+					component = new FormMultiUploadDescriptionComponent((ComponentMultiUpload) comp);
 				} else if (comp instanceof ComponentPlain) {
 					component = new FormPlainComponent((ComponentPlain) comp);
 				} else if (comp instanceof ComponentSelect) {
@@ -229,7 +226,7 @@ public class ComponentPropertyManager {
 			} else if (propertyName.equals(COMP_UPL_DESC_PROP)) {
 				component.setUploadDescription(propertyValue);
 			}
-
+			
 			return getResponse(component, reloadProperties);
 		}
 	}
