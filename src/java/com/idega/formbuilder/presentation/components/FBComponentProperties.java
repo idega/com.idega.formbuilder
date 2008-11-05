@@ -310,6 +310,7 @@ public class FBComponentProperties extends FBComponentBase {
 			body.add(line);
 //			validation text
 			
+/*
 			    line = createPropertyContainer(TWO_LINE_PROPERTY);
 				
 			    TextArea validationText = new TextArea(PROPERTY_VALIDATION_TEXT, properties.getValidationText().getString(locale));
@@ -330,6 +331,7 @@ public class FBComponentProperties extends FBComponentBase {
 			    line.add(validationLabel);
 			    line.add(validationText);
 			    body.add(line);
+*/
 			
 			Collection<ErrorType> errors = properties.getExistingErrors();
 			
