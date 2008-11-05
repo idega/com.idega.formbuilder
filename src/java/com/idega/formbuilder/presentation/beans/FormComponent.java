@@ -328,16 +328,15 @@ public class FormComponent extends GenericComponent {
 		getComponent().getProperties().setHelpText(bean);
 	}
 
-	public String getValidationText() {
-		return getComponent().getProperties().getValidationText().getString(FBUtil.getUILocale());
-	}
-	
-	public void setValidationText(String validationText) {
-		LocalizedStringBean bean = getComponent().getProperties().getValidationText();
-		bean.setString(FBUtil.getUILocale(), validationText);
-		getComponent().getProperties().setValidationText(bean);
-	}
-
+//	public String getValidationText() {
+//		return getComponent().getProperties().getValidationText().getString(FBUtil.getUILocale());
+//	}
+//	
+//	public void setValidationText(String validationText) {
+//		LocalizedStringBean bean = getComponent().getProperties().getValidationText();
+//		bean.setString(FBUtil.getUILocale(), validationText);
+//		getComponent().getProperties().setValidationText(bean);
+//	}
 	
 	public String getAutofillKey() {
 			return getComponent().getProperties().getAutofillKey();
