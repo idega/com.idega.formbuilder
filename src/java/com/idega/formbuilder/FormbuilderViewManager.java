@@ -84,12 +84,11 @@ public class FormbuilderViewManager implements Singleton  {
 		
 		DefaultViewNode formsHomeNode = new DefaultViewNode("list",contentNode);
 		formsHomeNode.setJspUri(bundle.getJSPURI("formshome.jsp"));
-		formsHomeNode.setName("Formbuilder");
+		formsHomeNode.setName("Form list");
 		
 		DefaultViewNode formbuilderNode = new DefaultViewNode("formbuilder",contentNode);
 		formbuilderNode.setJspUri(bundle.getJSPURI("formbuilder.jsp"));
-		formbuilderNode.setName("Formbuilder");
-		formbuilderNode.setVisibleInMenus(false);
+		formbuilderNode.setName("Designer");
 		
 		DefaultViewNode adminNode = new DefaultViewNode("entries",contentNode);
 		adminNode.setJspUri(bundle.getJSPURI("formadmin.jsp"));

@@ -498,14 +498,15 @@ function createNewForm() {
 	if(modalFormName == null || modalFormName == '') {
 		return;
 	}
+	var dialog = $('TB_window');
+	if(dialog != null) {
+		dialog.setStyle('visibility', 'hidden');
+		showLoadingMessage('Creating form');
+	}
 	FormDocument.createFormDocument(modalFormName, {
 		callback: function(result) {
 			if(result == true) {
-				if(modalGoToDesigner == true) {
-					window.location=FORMBUILDER_PATH;
-				} else {
-					window.location=FORMSHOME_PATH;
-				}
+				window.location=FORMBUILDER_PATH;
 			}
 		}
 	});
@@ -1018,7 +1019,8 @@ function initializeBottomToolbar() {
 		});
 	}
 }
-function initializePagesPanelActions() {
+
+function initializePageSorting(fbPageSort) {
 	fbPageSort = new Sortables($(PAGES_PANEL_ID), {
 		onComplete: function(el){
 			var children = $(PAGES_PANEL_ID).getChildren();
@@ -1031,59 +1033,93 @@ function initializePagesPanelActions() {
 		},
 		handles: '.fbPageHandler'
 	});
-	$('newPageButton').removeEvents('click');
-	$('previewPageButton').removeEvents('click');
-	$('previewPageButton').addEvent('click', function(e){
-		new Event(e).stop();
-		var target = e.target;
-		var checked;
-		if(target.hasClass('addPreviewPageBtn')) {
-			checked = true;
-		} else {
-			checked = false;
-		}
-		FormDocument.togglePreviewPage(checked, {
-			callback: function(resultDOM) {
-				if(resultDOM != null) {
-					if(checked == true) {
-						$('previewPageButton').removeClass('addPreviewPageBtn').addClass('removePreviewPageBtn');
-						insertNodesToContainerBefore(resultDOM, $('pagesPanelSpecial'), $('pagesPanelSpecial').childNodes[0]);
-						initialiazePreviewPage();
-					} else {
-						$('previewPageButton').removeClass('removePreviewPageBtn').addClass('addPreviewPageBtn');
-						$('pagesPanelSpecial').getFirst().remove();
+}
+
+function initializeNewPageAction() {
+	var newPageButton = $('newPageButton');
+	if(newPageButton != null) {
+		newPageButton.removeEvents('click');
+		newPageButton.addEvent('click', function(e) {
+			new Event(e).stop();
+			FormPage.createNewPage({
+				callback: function(resultDOMs) {
+					insertNodesToContainer(resultDOMs[1], $(PAGES_PANEL_ID));
+					var panel = $('pagesPanel');
+					if(panel != null) {
+						panel.getLast().addEvent('click', function(e){
+							initializeGeneralPage(e);
+						});
+					}
+					var dropBox = $('dropBox');
+					if(dropBox != null) {
+						var parentNode = dropBox.getParent();
+						var node = parentNode.getLast();
+						if(node != null) {
+							node.remove();
+						}
+						insertNodesToContainer(resultDOMs[0], parentNode);
+						initializeDesignView(true);
+						initializePagesPanel();
+						initializePaletteInner(true);
+						var newIcon = $(PAGES_PANEL_ID).getLast();
+						markSelectedPage(newIcon);
 					}
 				}
-			}
+			});
 		});
-	});
-	$('newPageButton').addEvent('click', function(e){
-		new Event(e).stop();
-		FormPage.createNewPage({
-			callback: function(resultDOMs) {
-				insertNodesToContainer(resultDOMs[1], $(PAGES_PANEL_ID));
-				var panel = $('pagesPanel');
-				if(panel != null) {
-					panel.getLast().addEvent('click', function(e){
-						initializeGeneralPage(e);
-					});
+	}
+}
+
+function initializeThankyouPage() {
+	var thankyoupage = $E('div.thankyou');
+	if(thankyoupage != null) {
+		thankyoupage.addEvent('click', function(e){
+			showLoadingMessage('Loading section...');
+			var targetId = getPageID(e);
+			FormPage.getThxPageInfo({
+				callback: function(resultDOM) {
+					reloadDesignView(resultDOM, targetId);
 				}
-				var dropBox = $('dropBox');
-				if(dropBox != null) {
-					var parentNode = dropBox.getParent();
-					var node = parentNode.getLast();
-					if(node != null) {
-						node.remove();
+			});
+		});
+	}
+}
+
+function initializePreviewPageAction() {
+	var previewPageButton = $('previewPageButton');
+	if(previewPageButton != null) {
+		previewPageButton.removeEvents('click');
+		previewPageButton.addEvent('click', function(e){
+			new Event(e).stop();
+			var checked;
+			if(previewPageButton.hasClass('addPreviewPageBtn')) {
+				checked = true;
+			} else {
+				checked = false;
+			}
+			FormDocument.togglePreviewPage(checked, {
+				callback: function(resultDOM) {
+					if(resultDOM != null) {
+						if(checked == true) {
+							previewPageButton.removeClass('addPreviewPageBtn').addClass('removePreviewPageBtn');
+							insertNodesToContainerBefore(resultDOM, $('pagesPanelSpecial'), $('pagesPanelSpecial').childNodes[0]);
+							initialiazePreviewPage();
+						} else {
+							previewPageButton.removeClass('removePreviewPageBtn').addClass('addPreviewPageBtn');
+							$('pagesPanelSpecial').getFirst().remove();
+						}
 					}
-					insertNodesToContainer(resultDOMs[0], parentNode);
-					initializeDesignView(true);
-					initializePagesPanel();
-					var newIcon = $(PAGES_PANEL_ID).getLast();
-					markSelectedPage(newIcon);
 				}
-			}
+			});
 		});
-	});
+	}
+}
+
+function initializePagesPanelActions() {
+	initializePageSorting(fbPageSort);
+	initializeNewPageAction();
+	initializePreviewPageAction();
+	
 	FormPage.getId(markSelectedPage);
 	var pagesPanel = $('pagesPanel');
 	if(pagesPanel != null) {
@@ -1135,19 +1171,8 @@ function initializePagesPanelActions() {
 			});
 		});
 	}
-	var thankyoupage = $E('div.thankyou');
-	if(thankyoupage != null) {
-		thankyoupage.addEvent('click', function(e){
-			showLoadingMessage('Loading section...');
-			var targetId = getPageID(e);
-			FormPage.getThxPageInfo({
-				callback: function(resultDOM) {
-					reloadDesignView(resultDOM, targetId);
-				}
-			});
-		});
-	}
-	initialiazePreviewPage();
+	initializeThankyouPage();
+	initializePreviewPage();
 }
 function initializePagesPanel() {
 	Workspace.getView({
@@ -1202,8 +1227,8 @@ function initializeGeneralPage(element) {
 		});
 	}
 }
-function initialiazePreviewPage() {
-	var previewp = $E('div.preview');
+function initializePreviewPage() {
+	var previewp = $('div.preview');
 	if(previewp != null) {
 		previewp.addEvent('click', function(e){
 			showLoadingMessage('Loading section...');
@@ -1236,6 +1261,7 @@ function reloadDesignView(resultDOM, targetId) {
 			}
 			insertNodesToContainer(resultDOM, parentNode);
 			initializeDesignView(true);
+			initializePaletteInner(true);
 		}
 		closeLoadingMessage();
 	}

@@ -19,7 +19,7 @@ public class FBButton extends FBComponentBase {
 	
 	private static final String DELETE_BUTTON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete-tiny.png";
 	private static final String SPEED_BUTTON_STYLE = "fbSpeedBButton";
-	private static final String INLINE_STYLE = "display: inline;";
+	private static final String INLINE_STYLE = "float: left;";
 	private static final String DEFAULT_BUTTON_CLASS = "formButton";
 	
 	public String selectedStyleClass;

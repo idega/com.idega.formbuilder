@@ -27,7 +27,7 @@ public class FBWorkspace extends FBComponentBase {
 	private static final String PAGES_SPECIAL_CONTAINER_CLASS = "pagesSpecialContainer";
 	private static final String SELECTED_PAGE_CLASS = "selectedPage";
 	private static final String OPTIONS_PANEL_ID = "optionsPanel";
-	private static final String FORM_LIST_URL = "/workspace/forms";
+	private static final String FORM_LIST_URL = "/workspace/forms/list/";
 	private static final String TAB_TITLE_CLASS = "title";
 	private static final String PALETTE_COMPONENT_CLASS = "paletteComponent";
 	private static final String COMPONENTS_LIST_CLASS = "componentsList";
