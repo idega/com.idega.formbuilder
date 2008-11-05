@@ -2,9 +2,9 @@ package com.idega.formbuilder.presentation.components;
 
 import javax.faces.context.FacesContext;
 
-import com.idega.documentmanager.business.component.Button;
-import com.idega.documentmanager.business.component.ButtonArea;
-import com.idega.documentmanager.business.component.Page;
+import com.idega.xformsmanager.business.component.Button;
+import com.idega.xformsmanager.business.component.ButtonArea;
+import com.idega.xformsmanager.business.component.Page;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormPage;
 import com.idega.formbuilder.util.FBUtil;

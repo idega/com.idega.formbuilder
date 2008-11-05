@@ -1345,6 +1345,11 @@ function saveComponentProperty(id,type,value,event) {
 		PropertyManager.saveComponentProperty(id,type,value,currentCallback);
 	}
 }
+function saveComponentErrorMessage(errorType, value, event) {
+    if(event.type == 'blur' || event.type == 'change' || isEnterEvent(event)) {
+        PropertyManager.saveComponentErrorMessage(errorType, value, currentCallback);
+    }
+}
 function saveLabel(parameter) {
 	var index = parameter.id.split('_')[1];
 	var value = parameter.getProperty('value');

@@ -6,8 +6,8 @@ import javax.faces.context.FacesContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.idega.documentmanager.business.DocumentManager;
-import com.idega.documentmanager.business.DocumentManagerFactory;
+import com.idega.xformsmanager.business.DocumentManager;
+import com.idega.xformsmanager.business.DocumentManagerFactory;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.webface.WFUtil;
 

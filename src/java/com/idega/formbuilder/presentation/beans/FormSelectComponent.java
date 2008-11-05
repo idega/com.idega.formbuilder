@@ -3,8 +3,8 @@ package com.idega.formbuilder.presentation.beans;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.idega.documentmanager.business.component.ComponentSelect;
-import com.idega.documentmanager.component.beans.ItemBean;
+import com.idega.xformsmanager.business.component.ComponentSelect;
+import com.idega.xformsmanager.component.beans.ItemBean;
 import com.idega.formbuilder.util.FBUtil;
 
 public class FormSelectComponent extends FormComponent {

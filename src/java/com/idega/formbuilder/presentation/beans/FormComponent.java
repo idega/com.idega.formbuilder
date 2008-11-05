@@ -9,15 +9,16 @@ import org.jdom.Document;
 import com.idega.block.process.variables.Variable;
 import com.idega.builder.bean.AdvancedProperty;
 import com.idega.builder.business.BuilderLogic;
-import com.idega.documentmanager.business.component.Button;
-import com.idega.documentmanager.business.component.ButtonArea;
-import com.idega.documentmanager.business.component.Component;
-import com.idega.documentmanager.business.component.ConstButtonType;
-import com.idega.documentmanager.business.component.Page;
-import com.idega.documentmanager.business.component.properties.PropertiesButton;
-import com.idega.documentmanager.business.component.properties.PropertiesComponent;
-import com.idega.documentmanager.component.beans.ItemBean;
-import com.idega.documentmanager.component.beans.LocalizedStringBean;
+import com.idega.chiba.web.xml.xforms.validation.ErrorType;
+import com.idega.xformsmanager.business.component.Button;
+import com.idega.xformsmanager.business.component.ButtonArea;
+import com.idega.xformsmanager.business.component.Component;
+import com.idega.xformsmanager.business.component.ConstButtonType;
+import com.idega.xformsmanager.business.component.Page;
+import com.idega.xformsmanager.business.component.properties.PropertiesButton;
+import com.idega.xformsmanager.business.component.properties.PropertiesComponent;
+import com.idega.xformsmanager.component.beans.ItemBean;
+import com.idega.xformsmanager.component.beans.LocalizedStringBean;
 import com.idega.formbuilder.presentation.components.FBButton;
 import com.idega.formbuilder.presentation.components.FBFormComponent;
 import com.idega.formbuilder.presentation.components.FBVariableViewer;
@@ -51,7 +52,7 @@ public class FormComponent extends GenericComponent {
 	}
 	
 	public String getId() {
-		return component == null ? "" : component.getId();
+		return component.getId();
 	}
 
 	public void setFormPage(FormPage formPage) {
@@ -190,7 +191,7 @@ public class FormComponent extends GenericComponent {
 		} else {
 			String beforeId = CoreConstants.EMPTY;
 			if(page != null) {
-				List<String> ids = page.getContainedComponentsIdList();
+				List<String> ids = page.getContainedComponentsIds();
 				if(ids.contains(id)) {
 					beforeId = ids.get(before);
 					ids.remove(id);
@@ -205,7 +206,6 @@ public class FormComponent extends GenericComponent {
 			}
 			
 		}
-		
 		Component component = page.getComponent(id);
 		result[1] = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component), true);
 		return result;
@@ -218,7 +218,7 @@ public class FormComponent extends GenericComponent {
 			Page page = formPage.getPage();
 			String beforeId = CoreConstants.EMPTY;
 			if(page != null) {
-				List<String> ids = page.getContainedComponentsIdList();
+				List<String> ids = page.getContainedComponentsIds();
 				if(ids.indexOf(id) != -1) {
 					beforeId = ids.get(before);
 					ids.remove(id);
@@ -276,14 +276,14 @@ public class FormComponent extends GenericComponent {
 		return null;
 	}
 
-	public String getErrorMessage() {
-		return getComponent().getProperties().getErrorMsg().getString(FBUtil.getUILocale());
+	public String getErrorMessage(ErrorType errorType) {
+		return getComponent().getProperties().getErrorMsg(errorType).getString(FBUtil.getUILocale());
 	}
 
-	public void setErrorMessage(String errorMessage) {
-		LocalizedStringBean bean = getComponent().getProperties().getErrorMsg();
+	public void setErrorMessage(ErrorType errorType, String errorMessage) {
+		LocalizedStringBean bean = getComponent().getProperties().getErrorMsg(errorType);
 		bean.setString(FBUtil.getUILocale(), errorMessage);
-		getComponent().getProperties().setErrorMsg(bean);
+		getComponent().getProperties().setErrorMsg(errorType, bean);
 	}
 
 	public String getLabel() {

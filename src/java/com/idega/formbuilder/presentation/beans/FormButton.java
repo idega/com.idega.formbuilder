@@ -5,13 +5,14 @@ import java.util.List;
 import org.jdom.Document;
 
 import com.idega.builder.business.BuilderLogic;
-import com.idega.documentmanager.business.component.Button;
-import com.idega.documentmanager.business.component.ButtonArea;
-import com.idega.documentmanager.business.component.Component;
-import com.idega.documentmanager.business.component.ConstButtonType;
-import com.idega.documentmanager.business.component.Page;
-import com.idega.documentmanager.component.beans.ItemBean;
-import com.idega.documentmanager.component.beans.LocalizedStringBean;
+import com.idega.chiba.web.xml.xforms.validation.ErrorType;
+import com.idega.xformsmanager.business.component.Button;
+import com.idega.xformsmanager.business.component.ButtonArea;
+import com.idega.xformsmanager.business.component.Component;
+import com.idega.xformsmanager.business.component.ConstButtonType;
+import com.idega.xformsmanager.business.component.Page;
+import com.idega.xformsmanager.component.beans.ItemBean;
+import com.idega.xformsmanager.component.beans.LocalizedStringBean;
 import com.idega.formbuilder.presentation.components.FBButton;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.util.CoreUtil;
@@ -32,15 +33,19 @@ public class FormButton extends GenericComponent {
 		getComponent().getProperties().setLabel(bean);
 	}
 	
+	public String getId() {
+		return button.getId();
+	}
+	
 	public List<ItemBean> getItems() {return null;}
 	
 	public void setItems(List<ItemBean> list) {}
 	
 	public void setExternalSrc(String externalSrc) {}
 	
-	public void setErrorMessage(String value) {}
+	public void setErrorMessage(ErrorType errorType, String value) {}
 	
-	public String getErrorMessage() {return null;}
+	public String getErrorMessage(ErrorType errorType) {return null;}
 	
 	public void setHelpMessage(String value) {}
 	

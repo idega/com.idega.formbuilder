@@ -12,8 +12,8 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.idega.documentmanager.component.datatypes.ComponentType;
-import com.idega.documentmanager.component.datatypes.ConstComponentDatatype;
+import com.idega.xformsmanager.component.datatypes.ComponentType;
+import com.idega.xformsmanager.component.datatypes.ConstComponentDatatype;
 
 public class ProcessPalette extends Palette implements Serializable {
 	

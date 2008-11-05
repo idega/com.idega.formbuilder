@@ -1,7 +1,7 @@
 package com.idega.formbuilder.presentation.beans;
 
-import com.idega.documentmanager.business.component.ComponentMultiUpload;
-import com.idega.documentmanager.component.beans.LocalizedStringBean;
+import com.idega.xformsmanager.business.component.ComponentMultiUpload;
+import com.idega.xformsmanager.component.beans.LocalizedStringBean;
 import com.idega.formbuilder.util.FBUtil;
 
 public class FormMultiUploadComponent extends FormComponent {

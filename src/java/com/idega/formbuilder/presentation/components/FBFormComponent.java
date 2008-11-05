@@ -11,8 +11,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Element;
 
-import com.idega.documentmanager.business.component.Component;
-import com.idega.documentmanager.business.component.properties.PropertiesComponent;
+import com.idega.xformsmanager.business.component.Component;
+import com.idega.xformsmanager.business.component.properties.PropertiesComponent;
 import com.idega.formbuilder.dom.DOMTransformer;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.ProcessPalette;

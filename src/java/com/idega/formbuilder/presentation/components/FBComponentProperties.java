@@ -1,19 +1,21 @@
 package com.idega.formbuilder.presentation.components;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
 import javax.faces.context.FacesContext;
 
-import com.idega.documentmanager.business.component.Button;
-import com.idega.documentmanager.business.component.Component;
-import com.idega.documentmanager.business.component.ComponentMultiUpload;
-import com.idega.documentmanager.business.component.ComponentPlain;
-import com.idega.documentmanager.business.component.ComponentSelect;
-import com.idega.documentmanager.business.component.properties.PropertiesButton;
-import com.idega.documentmanager.business.component.properties.PropertiesComponent;
-import com.idega.documentmanager.business.component.properties.PropertiesPlain;
+import com.idega.xformsmanager.business.component.Button;
+import com.idega.xformsmanager.business.component.Component;
+import com.idega.xformsmanager.business.component.ComponentMultiUpload;
+import com.idega.xformsmanager.business.component.ComponentPlain;
+import com.idega.xformsmanager.business.component.ComponentSelect;
+import com.idega.xformsmanager.business.component.properties.PropertiesButton;
+import com.idega.xformsmanager.business.component.properties.PropertiesComponent;
+import com.idega.xformsmanager.business.component.properties.PropertiesPlain;
+import com.idega.chiba.web.xml.xforms.validation.ErrorType;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.DataSourceList;
 import com.idega.formbuilder.presentation.beans.FormButton;
@@ -163,7 +165,7 @@ public class FBComponentProperties extends FBComponentBase {
 			body.add(line);
 			
 // 			TODO better... 
-			com.idega.documentmanager.component.FormComponent docComponentent = (com.idega.documentmanager.component.FormComponent) comp;
+			com.idega.xformsmanager.component.FormComponent docComponentent = (com.idega.xformsmanager.component.FormComponent) comp;
 			
 			if (docComponentent.getType().equals("fbc_text_output") || docComponentent.getType().equals("xf:output")) {
 			    
@@ -329,16 +331,21 @@ public class FBComponentProperties extends FBComponentBase {
 			    line.add(validationText);
 			    body.add(line);
 			
+			Collection<ErrorType> errors = properties.getExistingErrors();
 			
-			line = createPropertyContainer(TWO_LINE_PROPERTY);
-			
-			TextArea errorMsg = new TextArea(PROPERTY_ERROR_MESSAGE_NAME, properties.getErrorMsg().getString(locale));
-			errorMsg.setOnBlur("saveComponentProperty('" + componentId + "','compError',this.value, event)");
-			errorMsg.setOnKeyDown("saveComponentProperty('" + componentId + "','compError',this.value, event)");
-			
-			line.add(new Label(getLocalizedString(iwc, "comp_prop_errormsg", "Error message"), errorMsg));
-			line.add(errorMsg);
-			body.add(line);
+			for (ErrorType errorType : errors) {
+				
+				line = createPropertyContainer(TWO_LINE_PROPERTY);
+		
+				TextArea errorMsg = new TextArea();
+				errorMsg.setContent(properties.getErrorMsg(errorType).getString(locale));
+				errorMsg.setOnBlur("saveComponentErrorMessage('"+errorType+"', this.value, event)");
+				errorMsg.setOnKeyDown("saveComponentErrorMessage('"+errorType+"',this.value, event)");
+				
+				line.add(new Label(getErrorTypeLabel(iwc, errorType, locale), errorMsg));
+				line.add(errorMsg);
+				body.add(line);
+			}
 			
 			line = createPropertyContainer(TWO_LINE_PROPERTY);
 			
@@ -491,6 +498,11 @@ public class FBComponentProperties extends FBComponentBase {
 		}
 		
 		add(layer);
+	}
+	
+	private String getErrorTypeLabel(IWContext iwc, ErrorType errorType, Locale locale) {
+		
+		return "Error "+errorType;
 	}
 	
 	public String getComponentType() {

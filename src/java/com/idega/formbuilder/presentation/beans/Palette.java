@@ -8,7 +8,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.idega.documentmanager.business.component.ConstComponentCategory;
+import com.idega.xformsmanager.business.component.ConstComponentCategory;
 
 public class Palette implements Serializable {
 	

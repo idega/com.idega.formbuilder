@@ -7,11 +7,11 @@ import java.util.Locale;
 import javax.faces.context.FacesContext;
 
 import com.idega.core.localisation.business.ICLocaleBusiness;
-import com.idega.documentmanager.business.component.ButtonArea;
-import com.idega.documentmanager.business.component.Component;
-import com.idega.documentmanager.business.component.Container;
-import com.idega.documentmanager.business.component.Page;
-import com.idega.documentmanager.business.component.PageThankYou;
+import com.idega.xformsmanager.business.component.ButtonArea;
+import com.idega.xformsmanager.business.component.Component;
+import com.idega.xformsmanager.business.component.Container;
+import com.idega.xformsmanager.business.component.Page;
+import com.idega.xformsmanager.business.component.PageThankYou;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.presentation.beans.FormPage;
@@ -210,7 +210,7 @@ public class FBDesignView extends FBComponentBase {
 				
 				component.add(thankYouTextBox);
 			} else {
-				List<String> ids = page.getContainedComponentsIdList();
+				List<String> ids = page.getContainedComponentsIds();
 				if(!hasComponents(ids, page)) {
 					Layer emptyForm = new Layer(Layer.DIV);
 					emptyForm.setId(NOFORM_NOTICE_ID);

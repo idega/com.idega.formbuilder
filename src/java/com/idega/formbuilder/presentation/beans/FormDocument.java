@@ -16,7 +16,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.idega.block.form.entries.presentation.beans.FormsEntriesState;
 import com.idega.block.form.presentation.FormViewer;
 import com.idega.bpm.xformsview.XFormsView;
 import com.idega.builder.bean.AdvancedProperty;
@@ -30,12 +29,6 @@ import com.idega.core.builder.data.ICDomain;
 import com.idega.core.builder.data.ICDomainHome;
 import com.idega.data.IDOLookup;
 import com.idega.data.IDOLookupException;
-import com.idega.documentmanager.business.Document;
-import com.idega.documentmanager.business.DocumentManager;
-import com.idega.documentmanager.business.component.Page;
-import com.idega.documentmanager.business.component.PageThankYou;
-import com.idega.documentmanager.component.beans.LocalizedStringBean;
-import com.idega.documentmanager.component.impl.FormComponentFactory;
 import com.idega.formbuilder.business.egov.Application;
 import com.idega.formbuilder.business.egov.ApplicationBusiness;
 import com.idega.formbuilder.business.process.XFormsProcessManager;
@@ -51,6 +44,11 @@ import com.idega.presentation.IWContext;
 import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
+import com.idega.xformsmanager.business.Document;
+import com.idega.xformsmanager.business.DocumentManager;
+import com.idega.xformsmanager.business.component.Page;
+import com.idega.xformsmanager.business.component.PageThankYou;
+import com.idega.xformsmanager.component.beans.LocalizedStringBean;
 
 public class FormDocument implements Serializable {
 	
@@ -237,9 +235,9 @@ public class FormDocument implements Serializable {
 		try {
 			document = formManagerInstance.createForm(formName, null);
 			document.save();
-			FormComponentFactory.getInstance();
 		} catch(Exception e) {
-			logger.error("Could not crea XForms document");
+			logger.error("Could not create XForms document", e);
+			return false;
 		}
 			
 //		if(getFormId() != null)

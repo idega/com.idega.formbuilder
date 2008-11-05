@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.faces.context.FacesContext;
 
-import com.idega.documentmanager.business.Document;
-import com.idega.documentmanager.business.component.Page;
+import com.idega.xformsmanager.business.Document;
+import com.idega.xformsmanager.business.component.Page;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.presentation.beans.FormPage;

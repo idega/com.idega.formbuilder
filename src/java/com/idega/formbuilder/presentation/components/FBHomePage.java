@@ -8,7 +8,7 @@ import javax.faces.context.FacesContext;
 
 import com.idega.block.web2.business.Web2Business;
 import com.idega.builder.bean.AdvancedProperty;
-import com.idega.documentmanager.business.Form;
+import com.idega.xformsmanager.business.Form;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FBHomePageBean;
 import com.idega.formbuilder.presentation.beans.FormDocument;

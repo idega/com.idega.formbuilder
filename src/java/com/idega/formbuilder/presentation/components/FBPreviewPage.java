@@ -3,7 +3,7 @@ package com.idega.formbuilder.presentation.components;
 import javax.faces.context.FacesContext;
 
 import com.idega.block.form.presentation.FormViewer;
-import com.idega.documentmanager.business.Document;
+import com.idega.xformsmanager.business.Document;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.presentation.IWContext;
