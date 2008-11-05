@@ -144,7 +144,6 @@ public class FormComponent extends GenericComponent {
 			}
 			Component component = page.addComponent(type, before);
 			if(component != null) {
-//				Document doc = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component), true);
 				return component.getId();
 			}
 		}
