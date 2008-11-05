@@ -49,24 +49,7 @@ var fbRightAccordion = null;
 var currentCallback = null;
 var selectedPaletteTab = null;
 var fbPageSort = null;
-
-function lockButtonArea(lock, buttonArea) {
-	if(lock == true) {
-		buttonArea.setProperty('rel', 'locked');
-		buttonArea.setStyle('background-color', '#FFFFFF');
-	} else {
-		buttonArea.removeProperty('rel');
-		buttonArea.setStyle('background-color', '#F9FF9E');
-	}
-}
-
-function isButtonAreaLocked(buttonArea) {
-	if(buttonArea.getProperty('rel') == 'locked') {
-		return true;
-	} else {
-	 return false;
-	}
-}
+var fbComponentSort = null;
 
 var FBDraggable = Element.extend({
 	draggableTag: function(droppables, handle, type, makeDrag) {
@@ -91,12 +74,13 @@ var FBDraggable = Element.extend({
 						dropBox.setStyle('background-color', '#F9FF9E');
 						CURRENT_ELEMENT_UNDER = -1;
 			   			childBoxes = [];
-						var childNodes = $$('#dropBoxinner div.formElement');
+						var childNodes = dropBox.getElements('div.formElement');
 						for(var i = 0; i < childNodes.length; i++){
 							var child = childNodes[i];
 							var pos = child.getCoordinates();
 							childBoxes.push({top: pos.top, bottom: pos.bottom, left: pos.left, right: pos.right, height: pos.height, width: pos.width, node: child});
 						}
+						this.element.removeEvents();
 						this.element.addEvent('mousemove', function(e) {
 							if(!e) e = window.event;
 							for(var i = 0, child; i < childBoxes.length; i++){
@@ -122,7 +106,6 @@ var FBDraggable = Element.extend({
 	   						draggingComponent = true;
 						}
 					} else if(type == 'fbb') {
-						lockButtonArea(false, $('pageButtonArea'));
 						if(draggingButton == false) {
 							FormComponent.addButton(this.elementOrg.id, {
 								callback: function(result) {
@@ -134,7 +117,6 @@ var FBDraggable = Element.extend({
 							draggingButton = true;
 						}
 					} else if(type == 'fbbp') {
-						lockButtonArea(false, $('pageButtonArea'));
 						if(draggingButton == false) {
 							var componentType = this.elementOrg.id;
 							dwr.engine.beginBatch();
@@ -158,12 +140,13 @@ var FBDraggable = Element.extend({
 						dropBox.setStyle('background-color', '#F9FF9E');
 						CURRENT_ELEMENT_UNDER = -1;
 			   			childBoxes = [];
-						var childNodes = $$('#dropBoxinner div.formElement');
+						var childNodes = dropBox.getElements('div.formElement');
 						for(var i = 0; i < childNodes.length; i++){
 							var child = childNodes[i];
 							var pos = child.getCoordinates();
 							childBoxes.push({top: pos.top, bottom: pos.bottom, left: pos.left, right: pos.right, height: pos.height, width: pos.width, node: child});
 						}
+						this.element.removeEvents();
 						this.element.addEvent('mousemove', function(e) {
 							if(!e) e = window.event;
 							for(var i = 0, child; i < childBoxes.length; i++){
@@ -204,7 +187,6 @@ var FBDraggable = Element.extend({
 							draggingComponent = false;
 						}
 					} else if(type == 'fbb') {
-						lockButtonArea(true, $('pageButtonArea'));
 						if(draggingButton == true && insideDropzone == false && newComponentId != null) {
 							FormComponent.removeButton(newComponentId);
 							draggingButton = false;
@@ -217,7 +199,6 @@ var FBDraggable = Element.extend({
 							draggingComponent = false;
 						}
 					} else if(type == 'fbbp') {
-						lockButtonArea(true, $('pageButtonArea'));
 						if(draggingButton == true && insideDropzone == false && newComponentId != null) {
 							FormComponent.removeButton(newComponentId);
 							draggingButton = false;
@@ -274,21 +255,15 @@ function initializeButtonArea() {
 				if (!this.dragEffect) {
 					this.dragEffect = new Fx.Style(this, 'background-color');
 				}
-				if(isButtonAreaLocked(pageButtonArea) == false) {
-					this.dragEffect.stop().start('#F9FF9E', '#FFFF00');
-				}
+				this.dragEffect.stop().start('#F9FF9E', '#FFFF00');
 				insideDropzone = true;
 			},
 			'leave': function(el){
-				if(isButtonAreaLocked(pageButtonArea) == false) {
-					this.dragEffect.stop().start('#FFFF00', '#F9FF9E');
-				}
+				this.dragEffect.stop().start('#FFFF00', '#F9FF9E');
 				insideDropzone = false;
 			},
 			'drop': function(el, drag){
-				if(isButtonAreaLocked(pageButtonArea) == false) {
-					pageButtonArea.setStyle('background-color', '#FFF');
-				}
+				pageButtonArea.setStyle('background-color', '#FFF');
 				if(draggingButton == true) {
 					draggingButton = false;
 					if(el.hasClass('fbb')) {
@@ -332,6 +307,7 @@ function initializeDesignView(initializeInline) {
 	});
 	var languageChooser = $('languageChooser');
 	if(languageChooser != null) {
+		languageChooser.removeEvents();
 		languageChooser.addEvent('change', function(e) {
 			if(languageChooser.id == null) {
 				return;
@@ -343,7 +319,11 @@ function initializeDesignView(initializeInline) {
 			}
 		});
 	}
-	var myComponentSort = new Sortables($('dropBoxinner'), {
+	if(fbComponentSort) {
+		fbComponentSort.detach();
+		fbComponentSort = null;
+	}
+	fbComponentSort = new Sortables($('dropBoxinner'), {
 		onComplete: function(el){
 			var children = $('dropBoxinner').getChildren();
 			var orderList = [];
@@ -358,6 +338,7 @@ function initializeDesignView(initializeInline) {
 	initializeButtonArea();
 	var dropBoxinner = $('dropBoxinner');
 	if(dropBoxinner != null) {
+		dropBoxinner.removeEvents();
 		dropBoxinner.addEvents({
 			'over': function(el){
 				if (!this.dragEffect) {
@@ -412,6 +393,7 @@ function initializeDesignView(initializeInline) {
 			}
 		});
 		dropBoxinner.getElements('div.formElement').each(function(item) {
+			item.removeEvents();
 			item.addEvent('click', function(e) {
 				var componentId = item.getProperty('id');
 				PropertyManager.selectComponent(componentId, 'component', {
@@ -466,11 +448,17 @@ function initializeDesignView(initializeInline) {
 	if(selectedPaletteTab == null) {
 		selectedPaletteTab = 'processes';
 	}
-	initializePaletteComponents(selectedPaletteTab, dropBoxinner, $('pageButtonArea'), true);
 	if(initializeInline == true) {
 		initializeInlineEdits();
 	}
 }
+
+function saveComponentErrorMessage(errorType, value, event) {
+    if(event.type == 'blur' || event.type == 'change' || isEnterEvent(event)) {
+        PropertyManager.saveComponentErrorMessage(errorType, value, currentCallback);
+    }
+}
+
 function initializePaletteComponents(tab, dropBoxinner, pageButtonArea, enable) {
 	$(tab).getElements('.fbc').each(function(el){
 		el.removeEvents();
@@ -554,13 +542,32 @@ function registerFormbuilderActions() {
 	});
 }
 function initializePalette() {
+	Workspace.getView({
+		callback: function(result) {
+			if(result == 'Design') {
+				initializePaletteInner(true);
+			} else {
+				initializePaletteInner(false);
+			}
+		}
+	});
+}
+function initializePaletteInner(enable) {
+	$('firstList').getElements('li.stateFullTab').each(function(item) {
+		item.removeEvents();
+	});
 	var tabs = new mootabs('firstList', {width: '100%', height: '358px', changeTransition: 'none'});
-	$$("li.stateFullTab").each(function(item) {
+	var tabElements = $('firstList').getElements('li.stateFullTab');
+	tabElements.each(function(item) {
 		item.addEvent('click', function(e){
-			selectedPaletteTab = e.target.getProperty('title');
-			initializePaletteComponents(selectedPaletteTab, $('dropBoxinner'), $('pageButtonArea'), true);
+			selectedPaletteTab = item.getProperty('title');
+			initializePaletteComponents(selectedPaletteTab, $('dropBoxinner'), $('pageButtonArea'), enable);
 		});
 	});
+	if(tabElements.length > 0) {
+		var firstTab = tabElements[0];
+		initializePaletteComponents(firstTab.getProperty('title'), $('dropBoxinner'), $('pageButtonArea'), enable);
+	}
 }
 function initializeVariableViewer() {
 	$$('.addVariableIcon').each(function(el){
@@ -672,7 +679,7 @@ function reloadWorkspace(locale) {
 			if(resultDOM != null) {
 				replaceNode(resultDOM, $('mainApplication').getFirst(), $('mainApplication'));
 				initializeAccordions();
-				initializePalette();
+				initializePalette(true);
 				initializePagesPanel();
 				initializeDesign();
 				initializeVariableViewer();
@@ -912,6 +919,15 @@ function placePageTitle(parameter) {
 		}
 	}
 }
+function enablePalettePanelActions(enable) {
+	if(enable == true) {
+		$('optionsPanelMessageBox').setStyle('display', 'none');
+		initializePalette(false);
+	} else {
+		$('optionsPanelMessageBox').setStyle('display', 'block');
+		initializePalette(true);
+	}
+}
 function enablePagesPanelActions(enable) {
 	if(enable == true) {
 		initializePagesPanelActions();
@@ -964,8 +980,10 @@ function initializeBottomToolbar() {
 						replaceNode(resultDOM, viewPanel, mainWorkspace);
 						if(view != 'Design') {
 							enablePagesPanelActions(false);
+							enablePalettePanelActions(false);
 						} else {
 							enablePagesPanelActions(true);
+							enablePalettePanelActions(true);
 							initializeDesignView(true);
 						}
 						if(view == 'Source') {
@@ -1333,6 +1351,9 @@ var componentRerenderCallback = function(result) {
 			replaceNode(result[1], oldNode, $('dropBoxinner'));
 		}
 	}
+	if(result[2] != null) {
+		placeComponentInfo(result[2], 1, result[0]);
+	}
 }
 var buttonRerenderCallback = function(results) {
 	var btn = $(results[0]);
@@ -1344,11 +1365,6 @@ function saveComponentProperty(id,type,value,event) {
 	if(event.type == 'blur' || event.type == 'change' || isEnterEvent(event)) {
 		PropertyManager.saveComponentProperty(id,type,value,currentCallback);
 	}
-}
-function saveComponentErrorMessage(errorType, value, event) {
-    if(event.type == 'blur' || event.type == 'change' || isEnterEvent(event)) {
-        PropertyManager.saveComponentErrorMessage(errorType, value, currentCallback);
-    }
 }
 function saveLabel(parameter) {
 	var index = parameter.id.split('_')[1];

@@ -85,9 +85,16 @@ public class FormPage implements Serializable {
 	public void updateComponentList(List<String> idSequence) throws Exception {
 		if(page != null) {
 			List<String> ids = page.getContainedComponentsIds();
+			ButtonArea area = page.getButtonArea();
+			String buttonAreaId = null;
+			if(area != null) {
+				buttonAreaId = area.getId();
+			}
 			ids.clear();
-			for(Iterator<String> it = idSequence.iterator(); it.hasNext(); )
-				ids.add(it.next());
+			ids.addAll(idSequence);
+			if(buttonAreaId != null) {
+				ids.add(buttonAreaId);
+			}
 			page.rearrangeComponents();
 		} else {
 			throw new Exception("Page component missing");
