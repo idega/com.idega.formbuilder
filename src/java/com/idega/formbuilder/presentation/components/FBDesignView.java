@@ -1,17 +1,11 @@
 package com.idega.formbuilder.presentation.components;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
 import javax.faces.context.FacesContext;
 
 import com.idega.core.localisation.business.ICLocaleBusiness;
-import com.idega.xformsmanager.business.component.ButtonArea;
-import com.idega.xformsmanager.business.component.Component;
-import com.idega.xformsmanager.business.component.Container;
-import com.idega.xformsmanager.business.component.Page;
-import com.idega.xformsmanager.business.component.PageThankYou;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.presentation.beans.FormPage;
@@ -24,6 +18,11 @@ import com.idega.presentation.ui.DropdownMenu;
 import com.idega.presentation.ui.Label;
 import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
+import com.idega.xformsmanager.business.component.ButtonArea;
+import com.idega.xformsmanager.business.component.Component;
+import com.idega.xformsmanager.business.component.Container;
+import com.idega.xformsmanager.business.component.Page;
+import com.idega.xformsmanager.business.component.PageThankYou;
 
 public class FBDesignView extends FBComponentBase {
 	
@@ -86,8 +85,8 @@ public class FBDesignView extends FBComponentBase {
 		if(ids == null || page == null)
 			return false;
 		
-		for(Iterator<String> it = ids.iterator(); it.hasNext(); ) {
-			Component component = page.getComponent(it.next());
+		for(String nextId : ids) {
+			Component component = page.getComponent(nextId);
 			if(component instanceof ButtonArea) {
 				continue;
 			} else {
@@ -224,8 +223,7 @@ public class FBDesignView extends FBComponentBase {
 					
 					component.add(emptyForm);
 				} else {
-					for(Iterator<String> it = ids.iterator(); it.hasNext(); ) {
-						String nextId = it.next();
+					for(String nextId : ids) {
 						Component comp = page.getComponent(nextId);
 						if(!(comp instanceof Container)) {
 							FBFormComponent formComponent = new FBFormComponent(comp);

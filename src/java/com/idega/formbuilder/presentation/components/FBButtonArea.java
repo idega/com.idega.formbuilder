@@ -1,17 +1,16 @@
 package com.idega.formbuilder.presentation.components;
 
-import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.context.FacesContext;
 
-import com.idega.xformsmanager.business.component.Button;
-import com.idega.xformsmanager.business.component.ButtonArea;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormPage;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.presentation.Layer;
 import com.idega.webface.WFUtil;
+import com.idega.xformsmanager.business.component.Button;
+import com.idega.xformsmanager.business.component.ButtonArea;
 
 public class FBButtonArea extends FBComponentBase {
 
@@ -32,8 +31,7 @@ public class FBButtonArea extends FBComponentBase {
 		if(buttonArea != null) {
 			List<String> ids = buttonArea.getContainedComponentsIds();
 			if(ids != null) {
-				for(Iterator<String> it = ids.iterator(); it.hasNext(); ) {
-					String nextId = it.next();
+				for(String nextId : ids) {
 					Button bt = (Button) buttonArea.getComponent(nextId);
 					if(bt != null) {
 						FBButton button = new FBButton();

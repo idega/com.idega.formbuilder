@@ -309,16 +309,17 @@ function initializeSelectedComponent() {
 	PropertyManager.getSelectedComponentId({
 		callback: function(result) {
 			if(result != null && result != '') {
-				var box = $('dropBoxinner');
+				var box = $('dropBox');
 				if(box != null) {
-					var old = box.getElement('div.selectedComponent');
+					var old = $('div.selectedComponent');
 					if(old != null) {
 						old.removeClass('selectedComponent');
 					}
-				}
-				var newNode = $(result);
-				if(newNode != null) {
-					newNode.addClass('selectedComponent');
+					
+					var newElement = $(result);
+					if(newElement != null) {
+						newElement.addClass('selectedComponent');
+					}
 				}
 			}							
 		}

@@ -1,4 +1,12 @@
-.selectedComponent {
+div#dropBoxinner .selectedComponent {
+	background-color: #999 !important;
+	color: #fff;
+	font-weight: bold;
+	border-top: 1px #333 solid;
+	border-bottom: 1px #333 solid;
+}
+
+div#pageButtonArea .selectedComponent {
 	background-color: #999 !important;
 	color: #fff;
 	font-weight: bold;

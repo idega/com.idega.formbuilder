@@ -48,8 +48,9 @@ public class ComponentPropertyManager {
 	public String getSelectedComponentId() {
 		if (component != null) {
 			return component.getComponent().getId();
+		} else {
+			return CoreConstants.EMPTY;
 		}
-		return CoreConstants.EMPTY;
 	}
 
 	public void setFormPage(FormPage formPage) {
