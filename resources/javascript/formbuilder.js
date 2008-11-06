@@ -291,7 +291,7 @@ function initializeButtonArea() {
 }
 
 function initializeLanguageChooser() {
-	var languageChooser = $('languageChooser');
+	var languageChooser = $('languageChooserMenu');
 	if(languageChooser != null) {
 		languageChooser.removeEvents();
 		languageChooser.addEvent('change', function(e) {

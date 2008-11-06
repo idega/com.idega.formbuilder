@@ -13,6 +13,7 @@ comp_prop_remove_button_label=Remove button label
 comp_prop_requiredfield=Required field
 comp_prop_select_source=Select source
 comp_prop_upload_description=Upload description label
+comp_prop_upload_descriptive_name=Descriptive name
 comp_prop_validation=Validation text
 comp_prop_valuelist=List of values
 component_palette_panel=Field Palette

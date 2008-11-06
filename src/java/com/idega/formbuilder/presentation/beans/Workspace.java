@@ -41,6 +41,9 @@ public class Workspace implements Serializable {
 	}
 
 	public Locale getLocale() {
+		if(locale == null) {
+			locale = IWContext.getInstance().getCurrentLocale();
+		}
 		return locale;
 	}
 	

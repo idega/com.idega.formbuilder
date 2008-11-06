@@ -53,6 +53,7 @@ public class FBDesignView extends FBComponentBase {
 	private static final String DISPLAY_NONE = "display: none;";
 	private static final String MESSAGE_BOX_CONTENT_CLASS = "messageBoxContent";
 	private static final String LANGUAGE_CHOOSER_ID = "languageChooser";
+	private static final String LANGUAGE_CHOOSER_MENU_ID = "languageChooserMenu";
 	private static final String DESIGN_VIEW_PAGE_TITLE_ID = "designViewPageTitle";
 	private static final String DESIGN_VIEW_FORM_ERROR_MESSAGE_ID = "designViewFormErrorMsg";
 	private static final String LABEL_CLASS = "label";
@@ -133,6 +134,7 @@ public class FBDesignView extends FBComponentBase {
 		
 		DropdownMenu languageChooser = ICLocaleBusiness.getAvailableLocalesDropdownStringKeyed(iwc.getIWMainApplication(), LANGUAGE_CHOOSER_ID, false);
 		languageChooser.setSelectedElement(locale.toString());
+		languageChooser.setId(LANGUAGE_CHOOSER_MENU_ID);
 		
 		languageChooserLayer.add(new Label(getLocalizedString(iwc, "fb_choose_language", "Form language"), languageChooser));
 		languageChooserLayer.add(languageChooser);

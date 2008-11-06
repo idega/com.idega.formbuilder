@@ -39,6 +39,7 @@
                 	<script type="text/javascript">
                 		window.addEvent('domready', function() {
 							var errorHanlder = function(errorString, exception) {
+								alert(errorString);
 								reloadPage();
 							}
 							DWREngine.setErrorHandler(errorHanlder);
@@ -53,7 +54,7 @@
 						window.addEvent('resize', controlFormbuilderAppWindow);
                 	</script>
                 </f:verbatim>
-				<t:div id="mainApplication">
+				<t:div forceId="true" id="mainApplication">
 					<div>
 						<fb:workspace id="mainWorkspace"/>
 					</div>
