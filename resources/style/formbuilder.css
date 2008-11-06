@@ -1120,7 +1120,7 @@ div.formElementHover:hover .fbcCompVar {
 .previewMainLayer {
 }
 
-.formButton:hover {
+div.formButton:hover {
 	margin-right: 0px;
 }
 
