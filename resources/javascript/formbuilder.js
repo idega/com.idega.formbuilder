@@ -443,6 +443,7 @@ function initializeDropbox() {
 													insertNodesToContainer(resultDOM, parentNode);
 													initializeDesignView(true);
 													initializePagesPanel();
+													initializePaletteInner(true);
 												}
 											}
 										}
