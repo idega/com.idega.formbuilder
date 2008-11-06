@@ -12,7 +12,7 @@ import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.DataSourceList;
 import com.idega.formbuilder.presentation.beans.FormButton;
 import com.idega.formbuilder.presentation.beans.FormComponent;
-import com.idega.formbuilder.presentation.beans.FormMultiUploadDescriptionComponent;
+import com.idega.formbuilder.presentation.beans.FormMultiUploadComponent;
 import com.idega.formbuilder.presentation.beans.FormPlainComponent;
 import com.idega.formbuilder.presentation.beans.FormSelectComponent;
 import com.idega.formbuilder.presentation.beans.GenericComponent;
@@ -240,7 +240,7 @@ public class FBComponentProperties extends FBComponentBase {
 			}
 			*/
 			
-			if(component instanceof FormMultiUploadDescriptionComponent) {
+			if(component instanceof FormMultiUploadComponent) {
 				
 				layer.add(body);
 				

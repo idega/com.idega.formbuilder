@@ -4,16 +4,14 @@ import com.idega.xformsmanager.business.component.ComponentMultiUpload;
 import com.idega.xformsmanager.component.beans.LocalizedStringBean;
 import com.idega.formbuilder.util.FBUtil;
 
-public class FormMultiUploadDescriptionComponent extends FormComponent {
+public class FormMultiUploadComponent extends FormComponent {
 	
-	private ComponentMultiUpload component;
-	
-	public FormMultiUploadDescriptionComponent(ComponentMultiUpload component) {
+	public FormMultiUploadComponent(ComponentMultiUpload component) {
 		this.component = component;
 	}
 
 	public ComponentMultiUpload getComponent() {
-		return component;
+		return (ComponentMultiUpload) component;
 	}
 
 	public void setComponent(ComponentMultiUpload component) {
@@ -41,13 +39,13 @@ public class FormMultiUploadDescriptionComponent extends FormComponent {
 	}
 	
 	public String getUploadDescription() {
-		return getComponent().getProperties().getDescriptionLabel().getString(FBUtil.getUILocale());
+		return getComponent().getProperties().getUploadingFileDescription().getString(FBUtil.getUILocale());
 	}
 	
 	public void setUploadDescription(String value) {
-		LocalizedStringBean bean = getComponent().getProperties().getDescriptionLabel();
+		LocalizedStringBean bean = getComponent().getProperties().getUploadingFileDescription();
 		bean.setString(FBUtil.getUILocale(), value);
-		getComponent().getProperties().setDescriptionLabel(bean);
+		getComponent().getProperties().setUploadingFileDescription(bean);
 	}
 
 }

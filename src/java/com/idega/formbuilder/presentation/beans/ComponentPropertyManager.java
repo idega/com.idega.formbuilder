@@ -95,7 +95,7 @@ public class ComponentPropertyManager {
 			if (type.equals(FormComponent.COMPONENT_TYPE)) {
 				Component comp = page.getComponent(id);
 				if (comp instanceof ComponentMultiUpload) {
-					component = new FormMultiUploadDescriptionComponent((ComponentMultiUpload) comp);
+					component = new FormMultiUploadComponent((ComponentMultiUpload) comp);
 				} else if (comp instanceof ComponentPlain) {
 					component = new FormPlainComponent((ComponentPlain) comp);
 				} else if (comp instanceof ComponentSelect) {
