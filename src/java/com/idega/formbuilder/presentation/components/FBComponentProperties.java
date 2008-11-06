@@ -279,12 +279,24 @@ public class FBComponentProperties extends FBComponentBase {
 				
 				line = createPropertyContainer(TWO_LINE_PROPERTY);
 				
-				TextInput descriptionLabel = new TextInput("propertyUploadDescription", component.getUploadDescription());
-				descriptionLabel.setOnBlur("saveComponentProperty('" + componentId + "','uploadDesc',this.value, event)");
-				descriptionLabel.setOnKeyDown("saveComponentProperty('" + componentId + "','uploadDesc',this.value, event)");
+				TextInput descriptionLabel = new TextInput("propertyDescriptionLabel", component.getDescriptionLabel());
 				
-				line.add(new Label(getLocalizedString(iwc, "comp_prop_upload_description", "Upload description label"), descriptionLabel));
+				String updateAction = "saveComponentProperty('" + componentId + "','uploadDescLbl',this.value, event)";
+				descriptionLabel.setOnBlur(updateAction);
+				descriptionLabel.setOnKeyDown(updateAction);
+				
+				line.add(new Label(getLocalizedString(iwc, "comp_prop_upload_descriptive_name", "Descriptive name"), descriptionLabel));
 				line.add(descriptionLabel);
+				body.add(line);
+				
+				line = createPropertyContainer(TWO_LINE_PROPERTY);
+				
+				TextInput uploadDescriptionLabel = new TextInput("propertyUploadDescription", component.getUploadDescription());
+				uploadDescriptionLabel.setOnBlur("saveComponentProperty('" + componentId + "','uploadDesc',this.value, event)");
+				uploadDescriptionLabel.setOnKeyDown("saveComponentProperty('" + componentId + "','uploadDesc',this.value, event)");
+				
+				line.add(new Label(getLocalizedString(iwc, "comp_prop_upload_description", "Upload description label"), uploadDescriptionLabel));
+				line.add(uploadDescriptionLabel);
 				body.add(line);
 				
 				layer.add(body);

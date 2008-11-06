@@ -43,6 +43,13 @@ public abstract class GenericComponent {
 	public abstract void setRemoveButtonLabel(String value);
 
 	public abstract String getRemoveButtonLabel();
+	
+	public String getDescriptionLabel() {
+		return null;
+	}
+
+	public void setDescriptionLabel(String value) {
+	}
 
 	public abstract void setExternalSrc(String value);
 

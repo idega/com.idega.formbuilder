@@ -31,6 +31,7 @@ public class FormSelectComponent extends FormComponent {
 	
 	public List<ItemBean> getItems() {
 		if(getComponent() != null) {
+			System.out.println("items="+getComponent().getProperties().getItemset());
 			return getComponent().getProperties().getItemset().getItems(FBUtil.getUILocale());
 		}
 		return new ArrayList<ItemBean>();

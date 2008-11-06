@@ -42,10 +42,19 @@ public class FormMultiUploadComponent extends FormComponent {
 		return getComponent().getProperties().getUploadingFileDescription().getString(FBUtil.getUILocale());
 	}
 	
+	public String getDescriptionLabel() {
+		return getComponent().getProperties().getDescriptionLabel().getString(FBUtil.getUILocale());
+	}
+	
 	public void setUploadDescription(String value) {
 		LocalizedStringBean bean = getComponent().getProperties().getUploadingFileDescription();
 		bean.setString(FBUtil.getUILocale(), value);
 		getComponent().getProperties().setUploadingFileDescription(bean);
 	}
-
+	
+	public void setDescriptionLabel(String value) {
+		LocalizedStringBean bean = getComponent().getProperties().getUploadingFileDescription();
+		bean.setString(FBUtil.getUILocale(), value);
+		getComponent().getProperties().setDescriptionLabel(bean);
+	}
 }
