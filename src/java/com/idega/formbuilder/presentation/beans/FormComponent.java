@@ -127,29 +127,6 @@ public class FormComponent extends GenericComponent {
 
 	public void setDataSrc(String dataSrc) {}
 	
-	public String addComponent(String type) throws Exception {
-		if(type == null) {
-			return null;
-		}
-		
-		Page page = formPage.getPage();
-		if(formPage.isSpecial()) {
-			return null;
-		}
-		if(page != null) {
-			String before = null;
-			ButtonArea area = page.getButtonArea();
-			if(area != null) {
-				before = area.getId();
-			}
-			Component component = page.addComponent(type, before);
-			if(component != null) {
-				return component.getId();
-			}
-		}
-		return null;
-	}
-	
 	public Object[] addTaskComponent(String type) throws Exception {
 		Object[] result = new Object[3];
 		
@@ -182,31 +159,58 @@ public class FormComponent extends GenericComponent {
 		return null;
 	}
 	
-	public Object[] moveAndRenderComponent(String id, int before) throws Exception {
-		Object[] result = new Object[2];
-		Page page = formPage.getPage();
-		if(before == -1) {
-			result[0] = "append";
-		} else {
-			String beforeId = CoreConstants.EMPTY;
-			if(page != null) {
-				List<String> ids = page.getContainedComponentsIds();
-				if(ids.contains(id)) {
-					beforeId = ids.get(before);
-					ids.remove(id);
-					ids.add(before, id);
-				}
-				page.rearrangeComponents();
-			}
-			if(beforeId.length() > 0) {
-				result[0] = beforeId;
-			} else {
-				result[0] = "append";
-			}
-			
+	public String addComponent(String type) throws Exception {
+		if(type == null) {
+			return null;
 		}
-		Component component = page.getComponent(id);
-		result[1] = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component), true);
+		
+		Page page = formPage.getPage();
+		if(formPage.isSpecial()) {
+			return null;
+		}
+		if(page != null) {
+			String before = null;
+			ButtonArea area = page.getButtonArea();
+			if(area != null) {
+				before = area.getId();
+			}
+			Component component = page.addComponent(type, before);
+			if(component != null) {
+				return component.getId();
+			}
+		}
+		return null;
+	}
+	
+	public Object[] moveAndRenderComponent(String type, int before) throws Exception {
+		if(type == null) {
+			return null;
+		}
+		
+		Object[] result = new Object[2];
+		
+		Page page = formPage.getPage();
+		if(formPage.isSpecial()) {
+			return null;
+		}
+		if(page != null) {
+			String beforeId = null;
+			if(before == -1) {
+				result[0] = "append";
+				
+				ButtonArea area = page.getButtonArea();
+				if(area != null) {
+					beforeId = area.getId();
+				}
+			} else {
+				beforeId = page.getContainedComponentsIds().get(before);
+			}
+			Component component = page.addComponent(type, beforeId);
+			if(result[0] == null) {
+				result[0] = beforeId;
+			}
+			result[1] = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component), true);
+		}
 		return result;
 	}
 	

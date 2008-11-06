@@ -96,13 +96,14 @@ var FBDraggable = Element.extend({
 						});
 						if(draggingComponent == false) {
 							var componentType = this.elementOrg.id;
-	   						FormComponent.addComponent(componentType, {
+							newComponentId = componentType;
+	   						/*FormComponent.addComponent(componentType, {
 								callback: function(result) {
 									if(result != null) {
 										newComponentId = result;
 									}
 								}
-							});
+							});*/
 	   						draggingComponent = true;
 						}
 					} else if(type == 'fbb') {
