@@ -1097,7 +1097,7 @@ div.formElementHover:hover .fbcCompVar {
 	font-size:12px;
 }
 
-.formPageIcon:hover .fbPageHandler {
+div.formPageIcon:hover .fbPageHandler {
 	display: block;
 }
 

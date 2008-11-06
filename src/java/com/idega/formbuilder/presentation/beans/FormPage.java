@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.idega.builder.business.BuilderLogic;
 import com.idega.xformsmanager.business.Document;
 import com.idega.xformsmanager.business.component.ButtonArea;
@@ -75,11 +77,14 @@ public class FormPage implements Serializable {
 		if(document != null) {
 			Page page = document.getThxPage();
 			if(page != null) {
-				special = true;
 				initializeBeanInstance(page, true);
 			}
 		}
-		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView(FORM_ELEMENT), false);
+		return getDesignView(FORM_ELEMENT);
+	}
+	
+	private org.jdom.Document getDesignView(String elementStyleClass) {
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView(elementStyleClass), false);
 	}
 	
 	public void updateComponentList(List<String> idSequence) throws Exception {
@@ -106,8 +111,7 @@ public class FormPage implements Serializable {
 		if(area != null) {
 			List<String> ids = area.getContainedComponentsIds();
 			ids.clear();
-			for(Iterator<String> it = idSequence.iterator(); it.hasNext(); )
-				ids.add(it.next());
+			ids.addAll(idSequence);
 			area.rearrangeComponents();
 		}
 	}
@@ -120,7 +124,7 @@ public class FormPage implements Serializable {
 			if(page != null) {
 				List<String> ids = formDocument.getCommonPagesIdList();
 				int index = ids.indexOf(id);
-				String newPageId = "";
+				String newPageId = CoreConstants.EMPTY;
 				if(index < 1) {
 					if(ids.size() > 1) {
 						newPageId = ids.get(1);
@@ -136,7 +140,7 @@ public class FormPage implements Serializable {
 				}
 				properties.add(id);
 				properties.add(newPageId);
-				properties.add(BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView(FORM_ELEMENT), false));
+				properties.add(getDesignView(FORM_ELEMENT));
 				workspace.setView(FBViewPanel.DESIGN_VIEW);
 			}
 		}
@@ -144,7 +148,7 @@ public class FormPage implements Serializable {
 	}
 	
 	public org.jdom.Document getFormPageInfo(String id) {
-		if(id == null || CoreConstants.EMPTY.equals(id)) {
+		if(StringUtils.isEmpty(id)) {
 			return null;
 		}
 		
@@ -152,7 +156,7 @@ public class FormPage implements Serializable {
 		if(document != null) {
 			initializeBeanInstance(document.getPage(id));
 		}
-		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView(FORM_ELEMENT), false);
+		return getDesignView(FORM_ELEMENT);
 	}
 	
 	public org.jdom.Document getConfirmationPageInfo() throws Exception {
@@ -160,11 +164,10 @@ public class FormPage implements Serializable {
 		if(document != null) {
 			Page page = document.getConfirmationPage();
 			if(page != null) {
-				special = true;
 				initializeBeanInstance(page, true);
 			}
 		}
-		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView(FORM_ELEMENT), false);
+		return getDesignView(FORM_ELEMENT);
 	}
 	
 	public List<org.jdom.Document> createNewPage() throws Exception {
@@ -179,10 +182,9 @@ public class FormPage implements Serializable {
 			}
 			Page page = document.addPage(temp);
 			if(page != null) {
-				special = false;
-				initializeBeanInstance(page);
+				initializeBeanInstance(page, false);
 				workspace.setView(FBViewPanel.DESIGN_VIEW);
-				doms.add(BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView(FORM_ELEMENT), false));
+				doms.add(getDesignView(FORM_ELEMENT));
 				doms.add(BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormPage(id + "_P", page.getProperties().getLabel().getString(FBUtil.getUILocale())), true));
 			}
 		}
