@@ -81,11 +81,9 @@
     	<create creator="jsf" javascript="FormComponent" scope="session">
 	    	<param name="managedBeanName" value="formComponent"/>
 	    	<param name="class" value="com.idega.formbuilder.presentation.beans.FormComponent"/>
-	    	<include method="addComponent" />
 	    	<include method="addTaskComponent" />
 	    	<include method="moveComponent" />
 	    	<include method="moveAndRenderComponent" />
-	    	<include method="addButton" />
 	    	<include method="getRenderedButton" />
 	    	<include method="removeComponent" />
 	    	<include method="getId" />
@@ -96,6 +94,11 @@
 	    	<include method="getFormButtonInfo" />
 	    	<include method="getFormComponentInfo" />
 	    	<include method="removeButton" />
+	    	
+	    	<!-- 
+	    	<include method="addButton" />
+	    	<include method="addComponent" />
+	    	 -->
     	</create>
   	</allow>
 </dwr>

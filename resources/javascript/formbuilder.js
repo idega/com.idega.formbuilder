@@ -108,13 +108,14 @@ var FBDraggable = Element.extend({
 						}
 					} else if(type == 'fbb') {
 						if(draggingButton == false) {
-							FormComponent.addButton(this.elementOrg.id, {
+							newComponentId = this.elementOrg.id;
+							/*FormComponent.addButton(this.elementOrg.id, {
 								callback: function(result) {
 									if(result != null) {
 										newComponentId = result;
 									}
 								}
-							});
+							});*/
 							draggingButton = true;
 						}
 					} else if(type == 'fbbp') {
@@ -1539,6 +1540,11 @@ function fbsave() {
 			FormDocument.saveSrc(node.getLast().getProperty('value'), closeLoadingMessage);
 		}
 	} else {
+		var dialog = $('TB_window');
+		if(dialog != null) {
+			dialog.setStyle('visibility', 'hidden');
+			showLoadingMessage('Creating form');
+		}
 		showLoadingMessage('Saving document...');
 		FormDocument.save(closeLoadingMessage);
 	}

@@ -142,24 +142,43 @@ public class FormComponent extends GenericComponent {
 		return result;
 	}
 	
-	public Document getRenderedButton(String id) {
-		if(id == null) {
+//	public String addButton(String type) {
+//		Page page = formPage.getPage();
+//		if(page != null) {
+//			ButtonArea area = page.getButtonArea();
+//			Button button = null;
+//			if(area != null) {
+//				button = area.addButton(ConstButtonType.getByStringType(type), null);
+//			} else {
+//				area = page.createButtonArea(null);
+//				button = area.addButton(ConstButtonType.getByStringType(type), null);
+//			}
+//			return button.getId();
+////			return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBButton(button.getId(), "formButton", "loadButtonInfo(this);", "removeButton(this);"), true);
+//		}
+//		return null;
+//	}
+	
+	public Document getRenderedButton(String type) {
+		if(type == null) {
 			return null;
 		}
 		Page page = formPage.getPage();
 		if(page != null) {
 			ButtonArea area = page.getButtonArea();
+			Button button = null;
 			if(area != null) {
-				Button button = (Button) area.getComponent(id);
-				if(button != null) {
-					return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBButton(id, "formButton", "loadButtonInfo(this);", "removeButton(this);"), true);
-				}
+				button = area.addButton(ConstButtonType.getByStringType(type), null);
+			} else {
+				area = page.createButtonArea(null);
+				button = area.addButton(ConstButtonType.getByStringType(type), null);
 			}
+			return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBButton(button.getId(), "formButton", "loadButtonInfo(this);", "removeButton(this);"), true);
 		}
 		return null;
 	}
 	
-	public String addComponent(String type) throws Exception {
+	private String addComponent(String type) throws Exception {
 		if(type == null) {
 			return null;
 		}
@@ -231,23 +250,6 @@ public class FormComponent extends GenericComponent {
 			}
 			return beforeId;
 		}
-	}
-	
-	public String addButton(String type) {
-		Page page = formPage.getPage();
-		if(page != null) {
-			ButtonArea area = page.getButtonArea();
-			Button button = null;
-			if(area != null) {
-				button = area.addButton(ConstButtonType.getByStringType(type), null);
-			} else {
-				area = page.createButtonArea(null);
-				button = area.addButton(ConstButtonType.getByStringType(type), null);
-			}
-			return button.getId();
-//			return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBButton(button.getId(), "formButton", "loadButtonInfo(this);", "removeButton(this);"), true);
-		}
-		return null;
 	}
 	
 	public String removeComponent(String id) {
