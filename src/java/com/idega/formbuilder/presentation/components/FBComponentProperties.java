@@ -246,16 +246,16 @@ public class FBComponentProperties extends FBComponentBase {
 				
 				body = createPanelSection("multiUpPropertiesPanel");
 				
-				line = createPropertyContainer(SINGLE_LINE_PROPERTY);
-				
-				CheckBox required = new CheckBox();
-				required.setId(PROPERTY_REQUIRED_ID);
-				required.setChecked(properties.isRequired());
-				required.setOnChange("saveComponentProperty('" + componentId + "','compRequired',this.checked, event)");
-				
-				line.add(required);
-				line.add(new Label(getLocalizedString(iwc, "comp_prop_requiredfield", "Required field"), required));
-				body.add(line);
+//				line = createPropertyContainer(SINGLE_LINE_PROPERTY);
+//				
+//				CheckBox required = new CheckBox();
+//				required.setId(PROPERTY_REQUIRED_ID);
+//				required.setChecked(properties.isRequired());
+//				required.setOnChange("saveComponentProperty('" + componentId + "','compRequired',this.checked, event)");
+//				
+//				line.add(required);
+//				line.add(new Label(getLocalizedString(iwc, "comp_prop_requiredfield", "Required field"), required));
+//				body.add(line);
 				
 				line = createPropertyContainer(TWO_LINE_PROPERTY);
 				
@@ -307,17 +307,21 @@ public class FBComponentProperties extends FBComponentBase {
 				
 			}
 			
-			line = createPropertyContainer(SINGLE_LINE_PROPERTY);
+			if(!"fbc_upload".equals(component.getComponent().getType())) {
+				line = createPropertyContainer(SINGLE_LINE_PROPERTY);
+				
+				CheckBox required = new CheckBox();
+				required.setId(PROPERTY_REQUIRED_ID);
+				required.setChecked(properties.isRequired());
+				required.setOnChange("saveComponentProperty('" + componentId + "','compRequired',this.checked, event);");
+//				required.setOnClick("toggleValidationText(this.checked);");
+				
+				line.add(required);
+				line.add(new Label(getLocalizedString(iwc, "comp_prop_requiredfield", "Required field"), required));
+				body.add(line);
+			}
 			
-			CheckBox required = new CheckBox();
-			required.setId(PROPERTY_REQUIRED_ID);
-			required.setChecked(properties.isRequired());
-			required.setOnChange("saveComponentProperty('" + componentId + "','compRequired',this.checked, event);");
-//			required.setOnClick("toggleValidationText(this.checked);");
-			
-			line.add(required);
-			line.add(new Label(getLocalizedString(iwc, "comp_prop_requiredfield", "Required field"), required));
-			body.add(line);
+
 //			validation text
 			
 /*
