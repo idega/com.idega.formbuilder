@@ -1347,23 +1347,6 @@ function toggleValidationText(parameter) {
 		}
 	}
 }
-function replaceChangedComponent(resultDOM) {
-	if(resultDOM != null) {
-		var componentNode = resultDOM.documentElement;
-		var oldNode = $(CURRENT_ELEMENT);
-		if(oldNode != null) {
-			replaceNode(resultDOM, oldNode, $('dropBoxinner'));
-		}
-	}
-}
-function replaceChangedButton(parameter) {
-	if(parameter != null) {
-		var button = parameter.getFirst();
-		if(button != null) {
-			button.setProperty('value', parameter.label);
-		}
-	}
-}
 var componentRerenderCallback = function(result) {
 	if(result[1] != null) {
 		var componentNode = result[1].documentElement;
@@ -1462,19 +1445,17 @@ function getNextRowIndex(parameter) {
 		return 0;
 	}
 }
-function expandAllItems() {
-	var container = $('selectOptsInner');
-	if(container != null) {
-		for(var i=0;i<container.childNodes.length;i++) {
-			container.childNodes[i].childNodes[2].style.display = 'inline';
-		}
+function expandOrCollapseAllItems(expand) {
+	var styleValue = null;
+	if(expand == true) {
+		styleValue = 'inline';
+	} else {
+		styleValue = 'none';
 	}
-}
-function collapseAllItems() {
 	var container = $('selectOptsInner');
 	if(container != null) {
-		for(var i=0;i<container.childNodes.length;i++) {
-			container.childNodes[i].childNodes[2].style.display = 'none';
+		for(var i=0;i<container.getChildren().length;i++) {
+			container.childNodes[i].childNodes[2].style.display = styleValue;
 		}
 	}
 }

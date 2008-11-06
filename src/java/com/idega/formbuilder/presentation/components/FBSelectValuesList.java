@@ -55,13 +55,13 @@ public class FBSelectValuesList extends FBComponentBase {
 		Image expandAllButton = new Image();
 		expandAllButton.setId("expandAllButton");
 		expandAllButton.setSrc(EXPAND_BUTTON_IMG);
-		expandAllButton.setOnClick("expandAllItems();");
+		expandAllButton.setOnClick("expandOrCollapseAllItems(true);");
 		container.add(expandAllButton);
 		
 		Image collapseAllButton = new Image();
 		collapseAllButton.setId("collapseAllButton");
 		collapseAllButton.setSrc(COLLAPSE_BUTTON_IMG);
-		collapseAllButton.setOnClick("collapseAllItems();");
+		collapseAllButton.setOnClick("expandOrCollapseAllItems(false);");
 		container.add(collapseAllButton);
 		
 		Layer inner = new Layer(Layer.DIV);
