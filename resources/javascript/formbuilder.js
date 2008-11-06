@@ -879,17 +879,7 @@ function loadButtonInfo(button) {
 }
 function saveThankYouTitle(parameter) {
 	if(parameter != null) {
-		FormDocument.setThankYouTitle(parameter, placeThankYouTitle);
-	}
-}
-function placeThankYouTitle(parameter) {
-	var container = $('pagesPanelSpecial');
-	if(container != null) {
-		var node = $(parameter.pageId + '_P_page');
-		if(node != null) {
-			var parent = node.getFirst().getNext();
-			parent.setText(parameter.pageTitle);
-		}
+		FormDocument.setThankYouTitle(parameter, placePageTitle);
 	}
 }
 function saveThankYouText(parameter) {
@@ -921,9 +911,7 @@ function placePageTitle(parameter) {
 		var node = $(parameter.pageId + '_P_page');
 		if(node != null) {
 			var parent = node.getFirst().getNext();
-			var textNode = parent.getFirst();
-			var newTextNode = document.createTextNode(parameter.pageTitle);
-			parent.replaceChild(newTextNode, textNode);
+			parent.setText(parameter.pageTitle);
 		}
 	}
 }
