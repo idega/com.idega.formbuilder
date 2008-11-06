@@ -81,12 +81,15 @@ public class ComponentPropertyManager {
 		return result;
 	}
 	
-	public Document selectComponent(String id, String type) {
+	public Object[] selectComponent(String id, String type) {
 		if (type == null || id == null) {
 			return null;
 		}
 
-		Document componentPropertiesDOM = null;
+		Object[] values = new Object[2];
+		
+		values[1] = component == null ? null : component.getId();
+		
 		Page page = formPage.getPage();
 		if (page != null) {
 			if (type.equals(FormComponent.COMPONENT_TYPE)) {
@@ -107,10 +110,10 @@ public class ComponentPropertyManager {
 					component = new FormButton(button);
 				}
 			}
-			componentPropertiesDOM = getPropertiesPanel(component);
+			values[0] = getPropertiesPanel(component);
 		}
-
-		return componentPropertiesDOM;
+		
+		return values;
 	}
 
 	public Document saveAutofill(boolean autofill) {

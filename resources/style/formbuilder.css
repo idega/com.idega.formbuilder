@@ -932,8 +932,7 @@ div.formPageIcon:hover, div.formPageIconSpecial:hover {
 	top: 14px;
 }
 
-#pagesPanel div.formPageIcon:hover .pageSpeedButton,#pagesPanel div.formPageIconSelected:hover .pageSpeedButton
-	{
+#pagesPanel div.formPageIcon:hover .pageSpeedButton {
 	visibility: visible;
 	cursor: pointer;
 }
@@ -1105,7 +1104,7 @@ div.formElementHover:hover .fbcCompVar {
 	font-size:12px;
 }
 
-div.formPageIcon:hover .fbPageHandler {
+#pagesPanel div.formPageIcon:hover .fbPageHandler {
 	display: block;
 }
 

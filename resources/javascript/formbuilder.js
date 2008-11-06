@@ -305,23 +305,25 @@ function initializeLanguageChooser() {
 	}
 }
 
+function handleComponentSelection(oldId, componentId) {
+	if(oldId != null && oldId != '') {
+		var old = $(oldId);
+		if(old != null) {
+			old.removeClass('selectedComponent');
+		}
+	}
+	if(componentId != null && componentId != '') {
+		var newElement = $(componentId);
+		if(newElement != null) {
+			newElement.addClass('selectedComponent');
+		}
+	}	
+}
+
 function initializeSelectedComponent() {
 	PropertyManager.getSelectedComponentId({
 		callback: function(result) {
-			if(result != null && result != '') {
-				var box = $('dropBox');
-				if(box != null) {
-					var old = $('div.selectedComponent');
-					if(old != null) {
-						old.removeClass('selectedComponent');
-					}
-					
-					var newElement = $(result);
-					if(newElement != null) {
-						newElement.addClass('selectedComponent');
-					}
-				}
-			}							
+			handleComponentSelection(null, result);	
 		}
 	});
 }
@@ -407,14 +409,10 @@ function initializeDropbox() {
 			item.addEvent('click', function(e) {
 				var componentId = item.getProperty('id');
 				PropertyManager.selectComponent(componentId, 'component', {
-					callback: function(resultDOM) {
+					callback: function(result) {
 						currentCallback = componentRerenderCallback;
-						placeComponentInfo(resultDOM, 1, componentId);
-						var old = dropBoxinner.getElement('div.selectedComponent');
-						if(old != null) {
-							old.removeClass('selectedComponent');
-						}
-						item.addClass('selectedComponent');
+						placeComponentInfo(result[0], 1, componentId);
+						handleComponentSelection(result[1], componentId);
 					}
 				});
 			});
@@ -700,7 +698,7 @@ function reloadWorkspace(locale) {
 				initializeAccordions();
 				initializePalette(true);
 				initializePagesPanel();
-				initializeDesign();
+				initializeDesignView(true);
 				initializeVariableViewer();
 				initializeBottomToolbar();
 			}
@@ -868,17 +866,10 @@ function loadButtonInfo(button) {
 		if(button.id) {
 			if(pressedButtonDelete == false) {
 				PropertyManager.selectComponent(button.id, 'button', {
-					callback: function(resultDOM) {
+					callback: function(result) {
 						currentCallback = buttonRerenderCallback;
-						CURRENT_ELEMENT = button.id;
-						var tabIndex = 1;
-						var parentNode = $('panel' + tabIndex + 'Content');
-						if(parentNode != null && resultDOM != null) {
-							removeChildren(parentNode);
-							insertNodesToContainer(resultDOM, parentNode);
-							fbLeftAccordion.display(0);
-							fbLeftAccordion.display(tabIndex);
-						}
+						placeComponentInfo(result[0], 1, button.id);
+						handleComponentSelection(result[1], button.id);
 					}
 				});
 			}
@@ -896,10 +887,8 @@ function placeThankYouTitle(parameter) {
 	if(container != null) {
 		var node = $(parameter.pageId + '_P_page');
 		if(node != null) {
-			var parent = node.childNodes[1];
-			var textNode = parent.childNodes[0];
-			var newTextNode = document.createTextNode(parameter.pageTitle);
-			parent.replaceChild(newTextNode, textNode);
+			var parent = node.getFirst().getNext();
+			parent.setText(parameter.pageTitle);
 		}
 	}
 }
