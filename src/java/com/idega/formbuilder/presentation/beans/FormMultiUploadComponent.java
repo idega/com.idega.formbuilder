@@ -19,9 +19,9 @@ public class FormMultiUploadComponent extends FormComponent {
 	}
 	
 	public void setAddButtonLabel(String value) {
-		LocalizedStringBean bean = getComponent().getProperties().getAddButtonLabel();
+		LocalizedStringBean bean = getComponent().getProperties().getInsertButtonLabel();
 		bean.setString(FBUtil.getUILocale(), value);
-		getComponent().getProperties().setAddButtonLabel(bean);
+		getComponent().getProperties().setInsertButtonLabel(bean);
 	}
 	
 	public void setRemoveButtonLabel(String value) {
@@ -31,7 +31,7 @@ public class FormMultiUploadComponent extends FormComponent {
 	}
 	
 	public String getAddButtonLabel() {
-		return getComponent().getProperties().getAddButtonLabel().getString(FBUtil.getUILocale());
+		return getComponent().getProperties().getInsertButtonLabel().getString(FBUtil.getUILocale());
 	}
 	
 	public String getRemoveButtonLabel() {
