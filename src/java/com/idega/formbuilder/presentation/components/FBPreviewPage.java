@@ -18,6 +18,7 @@ public class FBPreviewPage extends FBComponentBase {
 
 	private static final String FB_ADMIN_PAGE_ID = "fbPreviewPage";
 	private static final String FB_HP_HEADER_BLOCK_OD = "fbHomePageHeaderBlock";
+	private static final String FB_HP_MAIN_BLOCK_OD = "fbHomePageMainBlock";
 	private static final String FB_HP_LEFT = "fbHPLeft";
 	private static final String HEADER_NAME_ID = "headerName";
 	private static final String HEADER_SLOGAN_ID = "headerSlogan";
@@ -50,6 +51,9 @@ public class FBPreviewPage extends FBComponentBase {
 		FormDocument formDocument = (FormDocument)WFUtil.getBeanInstance(FormDocument.BEAN_ID);
 		Document xformsDocument = formDocument.getDocument();
 		
+		Layer mainPart = new Layer(Layer.DIV);
+		mainPart.setId(FB_HP_MAIN_BLOCK_OD);
+		
 		FormViewer formViewer = new FormViewer();
 		
 		if(xformsDocument != null) {
@@ -58,7 +62,9 @@ public class FBPreviewPage extends FBComponentBase {
 			formViewer.setXFormsDocument((org.w3c.dom.Document)xformsDocument.getXformsDocument().cloneNode(true));
 		}
 		
-		body.add(formViewer);
+		mainPart.add(formViewer);
+		
+		body.add(mainPart);
 			
 		add(body);
 	}
