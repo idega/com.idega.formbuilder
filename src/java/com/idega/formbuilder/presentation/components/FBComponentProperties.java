@@ -448,18 +448,18 @@ public class FBComponentProperties extends FBComponentBase {
 				
 				dataSrcSwitch.setStyleClass("inlineRadioButton");
 				RadioButton lcl = new RadioButton(DataSourceList.localDataSrc, DataSourceList.localDataSrc);
-				RadioButton ext = new RadioButton(DataSourceList.externalDataSrc, DataSourceList.externalDataSrc);
+//				RadioButton ext = new RadioButton(DataSourceList.externalDataSrc, DataSourceList.externalDataSrc);
 				dataSrcSwitch.addRadioButton(lcl, new Text(getLocalizedString(iwc, "comp_prop_valuelist", "List of values")));
-				dataSrcSwitch.addRadioButton(ext, new Text(getLocalizedString(iwc, "comp_prop_external", "External")));
-				if(localDataSource) {
+//				dataSrcSwitch.addRadioButton(ext, new Text(getLocalizedString(iwc, "comp_prop_external", "External")));
+//				if(localDataSource) {
 					lcl.setSelected(true);
-					ext.setSelected(false);
-				} else {
-					ext.setSelected(true);
-					lcl.setSelected(false);
-				}
+//					ext.setSelected(false);
+//				} else {
+//					ext.setSelected(true);
+//					lcl.setSelected(false);
+//				}
 				lcl.setOnChange("switchDataSource();");
-				ext.setOnChange("switchDataSource();");
+//				ext.setOnChange("switchDataSource();");
 				
 				line.add(dataSrcSwitch);
 				body.add(line);

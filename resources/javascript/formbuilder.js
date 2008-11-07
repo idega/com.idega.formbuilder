@@ -276,6 +276,9 @@ function initializeButtonArea() {
 										insertNodesToContainer(result, pageButtonArea);
 									}
 									newComponentId = null;
+									if(fbLeftAccordion != null) {
+										fbLeftAccordion.display(0);
+									}
 								}
 							});
 						}
@@ -404,6 +407,9 @@ function initializeDropbox() {
 									initializeDesignView(false);
 									dropBoxinner.setStyle('background-color', '#FFFFFF');
 									closeLoadingMessage();
+									if(fbLeftAccordion != null) {
+										fbLeftAccordion.display(0);
+									}
 								}
 							});
 						}
