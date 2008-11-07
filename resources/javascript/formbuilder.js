@@ -1038,27 +1038,31 @@ function initializeNewPageAction(enable) {
 			newPageButton.addEvent('click', function(e) {
 				new Event(e).stop();
 				FormPage.createNewPage({
-					callback: function(resultDOMs) {
-						insertNodesToContainer(resultDOMs[1], $(PAGES_PANEL_ID));
-						var panel = $('pagesPanel');
-						if(panel != null) {
-							panel.getLast().addEvent('click', function(e){
-								initializeGeneralPage(e);
-							});
-						}
-						var dropBox = $('dropBox');
-						if(dropBox != null) {
-							var parentNode = dropBox.getParent();
-							var node = parentNode.getLast();
-							if(node != null) {
-								node.remove();
+					callback: function(result) {
+						if(result != null) {
+							insertNodesToContainer(result[1], $(PAGES_PANEL_ID));
+							var panel = $('pagesPanel');
+							if(panel != null) {
+								panel.getLast().addEvent('click', function(e){
+									initializeGeneralPage(panel.getLast());
+								});
 							}
-							insertNodesToContainer(resultDOMs[0], parentNode);
-							initializeDesignView(true);
-							initializePagesPanel();
-							initializePaletteInner(true);
-							var newIcon = $(PAGES_PANEL_ID).getLast();
-							markSelectedPage(newIcon);
+							var dropBox = $('dropBox');
+							if(dropBox != null) {
+								var parentNode = dropBox.getParent();
+								var node = parentNode.getLast();
+								if(node != null) {
+									node.remove();
+								}
+								insertNodesToContainer(result[0], parentNode);
+								initializeDesignView(true);
+								initializePagesPanel();
+								initializePaletteInner(true);
+								var newIcon = $(PAGES_PANEL_ID).getLast();
+								markSelectedPage(newIcon);
+							}
+							
+							placeComponentInfo(result[2], 1, null);
 						}
 					}
 				});
@@ -1072,10 +1076,13 @@ function initializeThankyouPage() {
 	if(thankyoupage != null) {
 		thankyoupage.addEvent('click', function(e){
 			showLoadingMessage('Loading section...');
-			var targetId = getPageID(e);
+			var targetId = getPageID(thankyoupage);
 			FormPage.getThxPageInfo({
-				callback: function(resultDOM) {
-					reloadDesignView(resultDOM, targetId);
+				callback: function(result) {
+					if(result != null) {
+						reloadDesignView(result[0], targetId);
+						placeComponentInfo(result[1], 1, null);
+					}
 				}
 			});
 		});
@@ -1126,7 +1133,7 @@ function initializePagesPanelActions() {
 	if(pagesPanel != null) {
 		pagesPanel.getElements('div.formPageIcon').each(function(item) {
 			item.addEvent('click', function(e){
-				initializeGeneralPage(e);
+				initializeGeneralPage(item);
 			});
 			item.getElement('img.pageSpeedButton').removeEvents('click');
 			item.getElement('img.pageSpeedButton').addEvent('click', function(e) {
@@ -1148,20 +1155,20 @@ function initializePagesPanelActions() {
 							callback: function(result) {
 								if(result != null) {
 									showLoadingMessage('Loading section...');
-									var iconNode = $(result[0] + '_P_page');
+									var iconNode = $(actualId + '_P_page');
 									if(iconNode != null) {
 										iconNode.remove();
 									}
-									markSelectedPage(result[1])
-									var designViewDOM = result[2];
+									markSelectedPage(result[0])
 									var dropBox = $('dropBox');
 									if(dropBox != null) {
 										var parentNode = dropBox.getParent();
 										var node = parentNode.getLast();
 										node.remove();
-										insertNodesToContainer(designViewDOM, parentNode);
+										insertNodesToContainer(result[1], parentNode);
 										initializeDesignView(true);
 									}
+									placeComponentInfo(result[2], 1, componentId);
 									closeLoadingMessage();
 								}
 							}
@@ -1220,8 +1227,11 @@ function initializeGeneralPage(element) {
 		var actualId = targetId.substring(0, targetId.indexOf('_P_page'));
 		showLoadingMessage('Loading section...');
 		FormPage.getFormPageInfo(actualId, {
-			callback: function(resultDOM) {
-				reloadDesignView(resultDOM, targetId);
+			callback: function(result) {
+				if(result != null) {
+					reloadDesignView(result[0], targetId);
+					placeComponentInfo(result[1], 1, null);
+				}
 			}
 		});
 	}
@@ -1231,21 +1241,23 @@ function initializePreviewPage() {
 	if(previewp != null) {
 		previewp.addEvent('click', function(e){
 			showLoadingMessage('Loading section...');
-			var targetId = getPageID(e);
+			var targetId = getPageID(previewp);
 			FormPage.getConfirmationPageInfo({
-				callback: function(resultDOM) {
-					reloadDesignView(resultDOM, targetId);
+				callback: function(result) {
+					if(result != null) {
+						reloadDesignView(result[0], targetId);
+						placeComponentInfo(result[1], 1, null);
+					}
 				}
 			});
 		});
 	}
 }
-function getPageID(event) {
-	var target = event.target;
-	if(target.hasClass('formPageIcon')) {
-		return target.getProperty('id');
+function getPageID(pageElement) {
+	if(pageElement.hasClass('formPageIcon')) {
+		return pageElement.getProperty('id');
 	} else {
-		return target.getParent().getProperty('id');
+		return pageElement.getParent().getProperty('id');
 	}
 }
 function reloadDesignView(resultDOM, targetId) {

@@ -8,11 +8,13 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import com.idega.builder.business.BuilderLogic;
+import com.idega.webface.WFUtil;
 import com.idega.xformsmanager.business.Document;
 import com.idega.xformsmanager.business.component.ButtonArea;
 import com.idega.xformsmanager.business.component.Component;
 import com.idega.xformsmanager.business.component.Page;
 import com.idega.xformsmanager.component.beans.LocalizedStringBean;
+import com.idega.formbuilder.presentation.components.FBComponentProperties;
 import com.idega.formbuilder.presentation.components.FBDesignView;
 import com.idega.formbuilder.presentation.components.FBFormPage;
 import com.idega.formbuilder.presentation.components.FBViewPanel;
@@ -65,6 +67,13 @@ public class FormPage implements Serializable {
 		return page;
 	}
 	
+	public Page initializeBeanInstance(Page page, boolean special) {
+		initializeBeanInstance(page);
+		this.special = special;
+		
+		return page;
+	}
+	
 	public boolean hasRegularComponents() {
 		if(page == null) {
 			return false;
@@ -78,14 +87,7 @@ public class FormPage implements Serializable {
 		}
 	}
 	
-	public Page initializeBeanInstance(Page page, boolean special) {
-		initializeBeanInstance(page);
-		this.special = special;
-		
-		return page;
-	}
-	
-	public org.jdom.Document getThxPageInfo() throws Exception {
+	public org.jdom.Document[] getThxPageInfo() throws Exception {
 		Document document = formDocument.getDocument();
 		if(document != null) {
 			Page page = document.getThxPage();
@@ -93,11 +95,23 @@ public class FormPage implements Serializable {
 				initializeBeanInstance(page, true);
 			}
 		}
-		return getDesignView(FORM_ELEMENT);
+		
+		ComponentPropertyManager propertyManager = (ComponentPropertyManager) WFUtil.getBeanInstance(ComponentPropertyManager.BEAN_ID);
+		propertyManager.resetComponent();
+		
+		org.jdom.Document[] result = new org.jdom.Document[2];
+		result[0] = getDesignView(FORM_ELEMENT);
+		result[1] = getPropertiesPanel(null);
+
+		return result;
 	}
 	
 	private org.jdom.Document getDesignView(String elementStyleClass) {
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView(elementStyleClass), false);
+	}
+	
+	private org.jdom.Document getPropertiesPanel(GenericComponent component) {
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentProperties(component),true);
 	}
 	
 	public void updateComponentList(List<String> idSequence) throws Exception {
@@ -129,8 +143,8 @@ public class FormPage implements Serializable {
 		}
 	}
 	
-	public List<Object> removePage(String id) throws Exception {
-		List<Object> properties = new ArrayList<Object>();
+	public Object[] removePage(String id) throws Exception {
+		Object[] result = new Object[3];
 		Document document = formDocument.getDocument();
 		if(document != null) {
 			Page page = document.getPage(id);
@@ -151,16 +165,20 @@ public class FormPage implements Serializable {
 					page = document.getPage(newPageId);
 					initializeBeanInstance(page);
 				}
-				properties.add(id);
-				properties.add(newPageId);
-				properties.add(getDesignView(FORM_ELEMENT));
 				workspace.setView(FBViewPanel.DESIGN_VIEW);
+				
+				ComponentPropertyManager propertyManager = (ComponentPropertyManager) WFUtil.getBeanInstance(ComponentPropertyManager.BEAN_ID);
+				propertyManager.resetComponent();
+				
+				result[0] = newPageId;
+				result[1] = getDesignView(FORM_ELEMENT);
+				result[2] = getPropertiesPanel(null);
 			}
 		}
-		return properties;
+		return result;
 	}
 	
-	public org.jdom.Document getFormPageInfo(String id) {
+	public org.jdom.Document[] getFormPageInfo(String id) {
 		if(StringUtils.isEmpty(id)) {
 			return null;
 		}
@@ -169,10 +187,18 @@ public class FormPage implements Serializable {
 		if(document != null) {
 			initializeBeanInstance(document.getPage(id));
 		}
-		return getDesignView(FORM_ELEMENT);
+		
+		ComponentPropertyManager propertyManager = (ComponentPropertyManager) WFUtil.getBeanInstance(ComponentPropertyManager.BEAN_ID);
+		propertyManager.resetComponent();
+		
+		org.jdom.Document[] result = new org.jdom.Document[2];
+		result[0] = getDesignView(FORM_ELEMENT);
+		result[1] = getPropertiesPanel(null);
+		
+		return result;
 	}
 	
-	public org.jdom.Document getConfirmationPageInfo() throws Exception {
+	public org.jdom.Document[] getConfirmationPageInfo() throws Exception {
 		Document document = formDocument.getDocument();
 		if(document != null) {
 			Page page = document.getConfirmationPage();
@@ -180,12 +206,21 @@ public class FormPage implements Serializable {
 				initializeBeanInstance(page, true);
 			}
 		}
-		return getDesignView(FORM_ELEMENT);
+		
+		ComponentPropertyManager propertyManager = (ComponentPropertyManager) WFUtil.getBeanInstance(ComponentPropertyManager.BEAN_ID);
+		propertyManager.resetComponent();
+		
+		org.jdom.Document[] result = new org.jdom.Document[2];
+		result[0] = getDesignView(FORM_ELEMENT);
+		result[1] = getPropertiesPanel(null);
+
+		return result;
 	}
 	
-	public List<org.jdom.Document> createNewPage() throws Exception {
+	public org.jdom.Document[] createNewPage() throws Exception {
 		Document document = formDocument.getDocument();
-		List<org.jdom.Document> doms = new ArrayList<org.jdom.Document>();
+		
+		org.jdom.Document[] result = new org.jdom.Document[3];
 		if(document != null) {
 			String temp = null;
 			if(document.getConfirmationPage() != null) {
@@ -197,11 +232,17 @@ public class FormPage implements Serializable {
 			if(page != null) {
 				initializeBeanInstance(page, false);
 				workspace.setView(FBViewPanel.DESIGN_VIEW);
-				doms.add(getDesignView(FORM_ELEMENT));
-				doms.add(BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormPage(id + "_P", page.getProperties().getLabel().getString(FBUtil.getUILocale())), true));
+				
+				ComponentPropertyManager propertyManager = (ComponentPropertyManager) WFUtil.getBeanInstance(ComponentPropertyManager.BEAN_ID);
+				propertyManager.resetComponent();
+				
+				result[0] = getDesignView(FORM_ELEMENT);
+				result[1] = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormPage(id + "_P", page.getProperties().getLabel().getString(FBUtil.getUILocale())), true);
+				result[2] = getPropertiesPanel(null);
 			}
 		}
-		return doms;
+		
+		return result;
 	}
 	
 	public List<String> getAssignedVariables(Page page) {

@@ -48,6 +48,10 @@ public class ComponentPropertyManager {
 		return formPage;
 	}
 	
+	public void resetComponent() {
+		component = null;
+	}
+	
 	public boolean resetComponent(Component comp) {
 		if(component != null && comp != null) {
 			if(component.getId().equals(comp.getId())) {
