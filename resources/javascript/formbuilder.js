@@ -1168,7 +1168,7 @@ function initializePagesPanelActions() {
 										insertNodesToContainer(result[1], parentNode);
 										initializeDesignView(true);
 									}
-									placeComponentInfo(result[2], 1, componentId);
+									placeComponentInfo(result[2], 1, null);
 									closeLoadingMessage();
 								}
 							}
@@ -1231,6 +1231,7 @@ function initializeGeneralPage(element) {
 				if(result != null) {
 					reloadDesignView(result[0], targetId);
 					placeComponentInfo(result[1], 1, null);
+					fbLeftAccordion.display(0);
 				}
 			}
 		});
