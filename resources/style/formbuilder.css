@@ -7,11 +7,10 @@ div#dropBoxinner .selectedComponent {
 }
 
 div#pageButtonArea .selectedComponent {
-	background-color: #999 !important;
-	color: #fff;
-	font-weight: bold;
-	border-top: 1px #333 solid;
-	border-bottom: 1px #333 solid;
+ 	background-color: #999 !important;
+ 	border: 1px #333 solid;
+ 	color: #fff;
+ 	font-weight: bold;
 }
 
 .selectedComponent .fbCompHandler {
@@ -487,8 +486,14 @@ span.statusMsg {
 	position: relative;
 }
 
-#fbHomePageMainBlock {
-	
+div#fbHomePageMainBlock {
+	 border: 1px #a8a8a8 solid;
+	 position: absolute;
+	 top: 102px;
+	 left: 25px;
+	 right: 25px;
+	 bottom: 25px;
+	 overflow: auto;
 }
 #fbHPLeft {
 	position: relative;
@@ -1117,10 +1122,6 @@ div.formElementHover:hover .fbcCompVar {
 	border: 1px solid #38485C;
 }
 
-.formButton {
-	
-}
-
 .previewMainLayer {
 }
 
@@ -1134,12 +1135,19 @@ div.formElementHover:hover {
 }
 
 .fbSpeedBButton {
-	display: none;
+ 	display: none;
+ 	position: absolute;
+ 	right: 0;
+ 	top: 0;
+}
+
+div.formButton {
+ 	position: relative;
 }
 
 div.formButton:hover .fbSpeedBButton {
-	display: inline;
-	cursor: pointer;
+ 	display: block;
+ 	cursor: pointer;
 }
 
 .speedButton {
@@ -1589,11 +1597,11 @@ body#formbuilder .acStretch{
 	border-color: #93b825;
 }
 .formButton {
-	min-width: 100px;		
-	width: auto ;			
-	padding: 10px 0 10px ;
-	margin-left: 0; 			
-	margin-right: 16px;
+	margin-left:0;
+	margin-right:16px;
+	min-width:60px;
+	padding:10px;
+	width:auto;
 }
 .formButton input {
 	padding: 5px 8px;
@@ -1790,24 +1798,29 @@ fieldset.group fieldset.group{
 }
 
 div#sourceViewDiv {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
+	 position: absolute;
+	 top: 0;
+	 bottom: 0;
+	 left: 0;
+	 right: 0;
+}
+
+div#sourceViewDiv div.info {
+ 	display: none;
 }
 
 div#sourceViewDiv iframe {
-	height: 100% !important;
-	display: block !important;
-	position: absolute !important;
-	width: 100% !important;
-	top: 81px;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	border: 0 !important;
+	 height: 100% !important;
+	 display: block !important;
+	 position: absolute !important;
+	 width: 100% !important;
+	 top: 0;
+	 left: 0;
+	 right: 0;
+	 bottom: 100px !important;
+	 border: 0 !important;
 }
+
 div#sourceViewDiv textarea {
 	height: 89% !important;
 	display: block;

@@ -6,12 +6,14 @@ import java.util.Locale;
 import org.jdom.Document;
 
 import com.idega.builder.business.BuilderLogic;
+import com.idega.formbuilder.presentation.components.FBComponentProperties;
 import com.idega.formbuilder.presentation.components.FBDesignView;
 import com.idega.formbuilder.presentation.components.FBViewPanel;
 import com.idega.formbuilder.presentation.components.FBWorkspace;
 import com.idega.presentation.IWContext;
 import com.idega.util.CoreUtil;
 import com.idega.util.LocaleUtil;
+import com.idega.webface.WFUtil;
 
 public class Workspace implements Serializable {
 	
@@ -69,9 +71,24 @@ public class Workspace implements Serializable {
 		this.view = view;
 	}
 	
-	public Document switchView(String view) {
-		setView(view);
+	private Document getPropertiesPanel() {
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentProperties(),true);
+	}
+	
+	private Document getViewPanel() {
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBViewPanel("viewPanel", "formContainer"), false);
+	}
+	
+	public Document[] switchView(String view) {
+		setView(view);
+		
+		ComponentPropertyManager propertyManager = (ComponentPropertyManager) WFUtil.getBeanInstance(ComponentPropertyManager.BEAN_ID);
+		propertyManager.resetComponent();
+		
+		Document[] result = {getViewPanel(), getPropertiesPanel()};
+		
+		return result;
+		
 	}
 	
 	public Document getDesignView() {

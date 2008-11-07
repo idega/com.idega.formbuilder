@@ -394,16 +394,22 @@ function initializeDropbox() {
 									if($('noFormNotice') != null) {
 										$('noFormNotice').remove();
 									}
+									console.log('step1');
 									if(result[0] == 'append' || result[0] == null) {
 										insertNodesToContainer(result[1], dropBoxinner);
+										console.log('step2');
 									} else {
 										var node = $(result[0]);
 										insertNodesToContainerBefore(result[1], dropBoxinner, node);
+										console.log('step2');
 									}
+									console.log('step3');
 									newComponentId = null;
 									initializeDesignView(false);
+									console.log('step4');
 									dropBoxinner.setStyle('background-color', '#FFFFFF');
 									closeLoadingMessage();
+									console.log('step5');
 								}
 							});
 						}
@@ -985,27 +991,31 @@ function initializeBottomToolbar() {
 				showLoadingMessage('Switching...');
 				var view = item.getText();
 				Workspace.switchView(view, {
-					callback: function(resultDOM) {
-						var viewPanel = $('viewPanel');
-						var mainWorkspace = viewPanel.getParent();
-						replaceNode(resultDOM, viewPanel, mainWorkspace);
-						if(view != 'Design') {
-							enablePagesPanelActions(false);
-							enablePalettePanelActions(false);
-						} else {
-							enablePagesPanelActions(true);
-							enablePalettePanelActions(true);
-							initializeDesignView(true);
+					callback: function(result) {
+						if(result != null) {
+							var viewPanel = $('viewPanel');
+							var mainWorkspace = viewPanel.getParent();
+							replaceNode(result[0], viewPanel, mainWorkspace);
+							if(view != 'Design') {
+								enablePagesPanelActions(false);
+								enablePalettePanelActions(false);
+							} else {
+								enablePagesPanelActions(true);
+								enablePalettePanelActions(true);
+								initializeDesignView(true);
+							}
+							placeComponentInfo(result[1], 1, null);
+							if(view == 'Source') {
+								initializeSourceView();
+							}
+							var selView = toolbar.getElement('a.activeViewButton');
+							if(selView != null) {
+								selView.removeClass('activeViewButton');
+							}
+							item.addClass('activeViewButton');
+							fbLeftAccordion.display(0);
+							closeLoadingMessage();
 						}
-						if(view == 'Source') {
-							initializeSourceView();
-						}
-						var selView = toolbar.getElement('a.activeViewButton');
-						if(selView != null) {
-							selView.removeClass('activeViewButton');
-						}
-						item.addClass('activeViewButton');
-						closeLoadingMessage();
 					}
 				});
 			});
