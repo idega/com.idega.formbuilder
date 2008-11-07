@@ -237,6 +237,11 @@ public class FormComponent extends GenericComponent {
 				List<String> ids = page.getContainedComponentsIds();
 				if(ids.size() > before + 1) {
 					beforeId = page.getContainedComponentsIds().get(before + 1);
+					
+					ButtonArea area = page.getButtonArea();
+					if(area != null && beforeId.equals(area.getId())) {
+						result[0] = "append";
+					}
 				}
 			}
 			Component component = page.addComponent(type, beforeId);

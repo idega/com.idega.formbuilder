@@ -394,22 +394,16 @@ function initializeDropbox() {
 									if($('noFormNotice') != null) {
 										$('noFormNotice').remove();
 									}
-									console.log('step1');
 									if(result[0] == 'append' || result[0] == null) {
 										insertNodesToContainer(result[1], dropBoxinner);
-										console.log('step2');
 									} else {
 										var node = $(result[0]);
 										insertNodesToContainerBefore(result[1], dropBoxinner, node);
-										console.log('step2');
 									}
-									console.log('step3');
 									newComponentId = null;
 									initializeDesignView(false);
-									console.log('step4');
 									dropBoxinner.setStyle('background-color', '#FFFFFF');
 									closeLoadingMessage();
-									console.log('step5');
 								}
 							});
 						}
@@ -1073,6 +1067,7 @@ function initializeNewPageAction(enable) {
 							}
 							
 							placeComponentInfo(result[2], 1, null);
+							fbLeftAccordion.display(0);
 						}
 					}
 				});
