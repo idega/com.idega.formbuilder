@@ -1,16 +1,28 @@
 package com.idega.formbuilder.presentation.components;
 
+import java.io.IOException;
+import java.util.List;
+
 import javax.faces.context.FacesContext;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.idega.block.form.presentation.FormViewer;
-import com.idega.xformsmanager.business.Document;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
 import com.idega.presentation.text.Text;
+import com.idega.presentation.ui.DropdownMenu;
+import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
+import com.idega.util.StringUtil;
+import com.idega.util.expression.ELUtil;
 import com.idega.webface.WFUtil;
+import com.idega.xformsmanager.business.Document;
+import com.idega.xformsmanager.business.Form;
+import com.idega.xformsmanager.business.PersistenceManager;
+import com.idega.xformsmanager.business.XFormPersistenceType;
 
 public class FBPreviewPage extends FBComponentBase {
 	
@@ -22,10 +34,26 @@ public class FBPreviewPage extends FBComponentBase {
 	private static final String FB_HP_LEFT = "fbHPLeft";
 	private static final String HEADER_NAME_ID = "headerName";
 	private static final String HEADER_SLOGAN_ID = "headerSlogan";
+	private static final String CHOOSE_FORM_ID = "chooseForm";
 
+	@Autowired
+	@XFormPersistenceType("slide")
+	private transient PersistenceManager persistenceManager;
+	
+	private String selectedStandaloneForm = CoreConstants.EMPTY;
+	
+	public String getSelectedStandaloneForm() {
+		return selectedStandaloneForm;
+	}
+
+	public void setSelectedStandaloneForm(String selectedStandaloneForm) {
+		this.selectedStandaloneForm = selectedStandaloneForm;
+	}
+
+	@Override
 	protected void initializeComponent(FacesContext context) {
+		getChildren().clear();
 		IWContext iwc = CoreUtil.getIWContext();
-
 		Layer body = new Layer(Layer.DIV);
 		body.setId(FB_ADMIN_PAGE_ID);
 
@@ -54,19 +82,57 @@ public class FBPreviewPage extends FBComponentBase {
 		Layer mainPart = new Layer(Layer.DIV);
 		mainPart.setId(FB_HP_MAIN_BLOCK_OD);
 		
+		Layer formChooserLayer = new Layer(Layer.DIV);
+		formChooserLayer.setStyleClass(CHOOSE_FORM_ID);
+		formChooserLayer.add(getFormsMenu());
+		mainPart.add(formChooserLayer);
+		
 		FormViewer formViewer = new FormViewer();
 		
-		if(xformsDocument != null) {
-			
+		if(xformsDocument != null && StringUtil.isEmpty(selectedStandaloneForm)) {
 			formViewer.setFormId(formDocument.getFormId());
 			formViewer.setXFormsDocument((org.w3c.dom.Document)xformsDocument.getXformsDocument().cloneNode(true));
+		} else if( !StringUtil.isEmpty(selectedStandaloneForm) ){
+			formViewer.setFormId(selectedStandaloneForm);
+			formViewer.setXFormsDocument(getPersistenceManager().loadForm(Long.parseLong(selectedStandaloneForm)).getXformsDocument());
 		}
 		
 		mainPart.add(formViewer);
-		
 		body.add(mainPart);
-			
 		add(body);
+	}
+	
+	@Override
+	public void encodeBegin(FacesContext context) throws IOException {
+		IWContext iwc = CoreUtil.getIWContext();
+		String selectedFormId = iwc.getParameter(CHOOSE_FORM_ID);
+		if(selectedFormId != getSelectedStandaloneForm()) {
+			setSelectedStandaloneForm(selectedFormId);
+			super.setInitialized(false);
+		}
+		
+
+		super.encodeBegin(context);
+	}
+	
+	private DropdownMenu getFormsMenu() {
+		DropdownMenu menu = new DropdownMenu(CHOOSE_FORM_ID);
+		menu.setID(CHOOSE_FORM_ID);
+		List<Form> forms = getPersistenceManager().getStandaloneForms();
+
+		menu.addMenuElement(CoreConstants.EMPTY, "");
+		for (Form form : forms) {
+			menu.addMenuElement(form.getFormId().toString(), form.getDisplayName());
+		}
+		menu.setOnChange("this.form.submit();");
+		menu.setSelectedElement(getSelectedStandaloneForm());
+		return menu;
+	}
+	
+	PersistenceManager getPersistenceManager() {
+		if (persistenceManager == null)
+			ELUtil.getInstance().autowire(this);
+		return persistenceManager;
 	}
 
 }
