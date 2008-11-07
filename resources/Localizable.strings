@@ -145,6 +145,7 @@ labels_noform_body=
 labels_noform_header=This is a special page
 labels_pages_disabled=Section actions disabled in this view
 labels_palette_disabled=Palette actions disabled in this view
+labels_properties_disabled=No selected component
 labels_submit_page=This is the submition page of the form
 labels_submit_page_body=You cannot add components or buttons to this page
 lockey_fbc_1input.title=Title of input

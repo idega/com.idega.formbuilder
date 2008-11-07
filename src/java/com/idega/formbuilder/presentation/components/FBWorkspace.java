@@ -8,6 +8,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 
 import com.idega.formbuilder.business.process.XFormsProcessManager;
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.formbuilder.presentation.beans.ComponentPropertyManager;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.jbpm.view.ViewToTask;
@@ -54,6 +55,7 @@ public class FBWorkspace extends FBComponentBase {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	protected void initializeComponent(FacesContext context) {
 		IWContext iwc = CoreUtil.getIWContext();
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
@@ -156,7 +158,9 @@ public class FBWorkspace extends FBComponentBase {
 		panel2.setId(LEFT_PANEL_1);
 		panel2.setStyleClass(LAST_CLASS);
 		
-		FBComponentProperties simpleProperties = new FBComponentProperties();
+		ComponentPropertyManager propertyManager = (ComponentPropertyManager) WFUtil.getBeanInstance(ComponentPropertyManager.BEAN_ID);
+		
+		FBComponentProperties simpleProperties = new FBComponentProperties(propertyManager.getComponent());
 		
 		panel2.add(simpleProperties);
 		
@@ -176,30 +180,30 @@ public class FBWorkspace extends FBComponentBase {
 		Layer rightAccordion = new Layer(Layer.DIV);
 		rightAccordion.setId(RIGHT_ACC_ID);
 		
-		if(workspace.isProcessMode()) {
-			tab1 = new Layer(Layer.SPAN);
-			tab1.setStyleClass(TOGGLER_CLASS);
-			tab1.setStyleClass(AT_START_RIGHT_CLASS);
-			tab1.setStyleClass(FIRST_TOGGLER_CLASS);
-			
-			tab1Title = new Text(getLocalizedString(iwc, "fb_acc_variables", "Variables and transitions"));
-			tab1Title.setStyleClass(TAB_TITLE_CLASS);
-			tab1.add(tab1Title);
-			
-			rightAccordion.add(tab1);
-			
-			panel1 = new Layer(Layer.DIV);
-			panel1.setId(RIGHT_PANEL_0);
-			panel1.setStyleClass(ELEMENT_CLASS);
-			panel1.setStyleClass(AT_START_RIGHT_CLASS);
-			
-			FBVariableViewer variableViewer = new FBVariableViewer();
-			
-			panel1.add(variableViewer);
-			
-			rightAccordion.add(panel1);
-			
-		}
+//		if(workspace.isProcessMode()) {
+//			tab1 = new Layer(Layer.SPAN);
+//			tab1.setStyleClass(TOGGLER_CLASS);
+//			tab1.setStyleClass(AT_START_RIGHT_CLASS);
+//			tab1.setStyleClass(FIRST_TOGGLER_CLASS);
+//			
+//			tab1Title = new Text(getLocalizedString(iwc, "fb_acc_variables", "Variables and transitions"));
+//			tab1Title.setStyleClass(TAB_TITLE_CLASS);
+//			tab1.add(tab1Title);
+//			
+//			rightAccordion.add(tab1);
+//			
+//			panel1 = new Layer(Layer.DIV);
+//			panel1.setId(RIGHT_PANEL_0);
+//			panel1.setStyleClass(ELEMENT_CLASS);
+//			panel1.setStyleClass(AT_START_RIGHT_CLASS);
+//			
+//			FBVariableViewer variableViewer = new FBVariableViewer();
+//			
+//			panel1.add(variableViewer);
+//			
+//			rightAccordion.add(panel1);
+//			
+//		}
 		
 		tab2 = new Layer(Layer.SPAN);
 		tab2.setStyleClass(TOGGLER_CLASS);

@@ -4,12 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.jdom.Document;
 
 import com.idega.block.process.variables.Variable;
 import com.idega.builder.bean.AdvancedProperty;
 import com.idega.builder.business.BuilderLogic;
 import com.idega.chiba.web.xml.xforms.validation.ErrorType;
+import com.idega.formbuilder.presentation.components.FBButton;
+import com.idega.formbuilder.presentation.components.FBComponentProperties;
+import com.idega.formbuilder.presentation.components.FBDesignView;
+import com.idega.formbuilder.presentation.components.FBFormComponent;
+import com.idega.formbuilder.presentation.components.FBVariableViewer;
+import com.idega.formbuilder.util.FBUtil;
+import com.idega.jbpm.business.JbpmProcessBusinessBean;
+import com.idega.util.CoreConstants;
+import com.idega.util.CoreUtil;
 import com.idega.xformsmanager.business.component.Button;
 import com.idega.xformsmanager.business.component.ButtonArea;
 import com.idega.xformsmanager.business.component.Component;
@@ -19,13 +29,6 @@ import com.idega.xformsmanager.business.component.properties.PropertiesButton;
 import com.idega.xformsmanager.business.component.properties.PropertiesComponent;
 import com.idega.xformsmanager.component.beans.ItemBean;
 import com.idega.xformsmanager.component.beans.LocalizedStringBean;
-import com.idega.formbuilder.presentation.components.FBButton;
-import com.idega.formbuilder.presentation.components.FBFormComponent;
-import com.idega.formbuilder.presentation.components.FBVariableViewer;
-import com.idega.formbuilder.util.FBUtil;
-import com.idega.jbpm.business.JbpmProcessBusinessBean;
-import com.idega.util.CoreConstants;
-import com.idega.util.CoreUtil;
 
 public class FormComponent extends GenericComponent {
 	
@@ -40,6 +43,7 @@ public class FormComponent extends GenericComponent {
 	private JbpmProcessBusinessBean jbpmProcessBusiness;
 	private ProcessData processData;
 	private FormPage formPage;
+	private ComponentPropertyManager propertyManager;
 	
 	public FormComponent() {}
 	
@@ -47,6 +51,14 @@ public class FormComponent extends GenericComponent {
 		this.component = component;
 	}
 	
+	public ComponentPropertyManager getPropertyManager() {
+		return propertyManager;
+	}
+
+	public void setPropertyManager(ComponentPropertyManager propertyManager) {
+		this.propertyManager = propertyManager;
+	}
+
 	public FormPage getFormPage() {
 		return formPage;
 	}
@@ -222,7 +234,10 @@ public class FormComponent extends GenericComponent {
 					beforeId = area.getId();
 				}
 			} else {
-				beforeId = page.getContainedComponentsIds().get(before);
+				List<String> ids = page.getContainedComponentsIds();
+				if(ids.size() > before + 1) {
+					beforeId = page.getContainedComponentsIds().get(before + 1);
+				}
 			}
 			Component component = page.addComponent(type, beforeId);
 			if(result[0] == null) {
@@ -252,29 +267,58 @@ public class FormComponent extends GenericComponent {
 		}
 	}
 	
-	public String removeComponent(String id) {
+	private Document getPropertiesPanel(GenericComponent component) {
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentProperties(component),true);
+	}
+	
+	private Document getDesignView() {
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBDesignView("formElement"), false);
+	}
+	
+	public Object[] removeComponent(String id) {
+		if(StringUtils.isEmpty(id)) {
+			return null;
+		}
+		
 		Page page = formPage.getPage();
 		if(page != null) {
 			Component component = page.getComponent(id);
 			if(component != null) {
+				boolean update = propertyManager.resetComponent(component);
+				
 				component.remove();
+				
+				Object[] result = new Object[3];
+				result[0] = id;
+				result[1] = update ? getPropertiesPanel(null) : null;
+				result[2] = formPage.hasRegularComponents() ? null : getDesignView();
+				
+				return result;
 			}
 		}
-		return id;
+		return null;
 	}
 	
-	public String removeButton(String id) {
-		if(id == null) {
+	public Object[] removeButton(String id) {
+		if(StringUtils.isEmpty(id)) {
 			return null;
 		}
+		
 		Page page = formPage.getPage();
 		if(page != null) {
 			ButtonArea area = page.getButtonArea();
 			if(area != null) {
 				Button button = (Button) area.getComponent(id);
 				if(button != null) {
+					boolean update = propertyManager.resetComponent(button);
+					
 					button.remove();
-					return id;
+					
+					Object[] result = new Object[2];
+					result[0] = id;
+					result[1] = update ? getPropertiesPanel(null) : null;
+					
+					return result;
 				}
 			}
 		}

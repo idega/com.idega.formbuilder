@@ -16,6 +16,7 @@ import com.idega.formbuilder.presentation.beans.FormMultiUploadComponent;
 import com.idega.formbuilder.presentation.beans.FormPlainComponent;
 import com.idega.formbuilder.presentation.beans.FormSelectComponent;
 import com.idega.formbuilder.presentation.beans.GenericComponent;
+import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
@@ -100,14 +101,30 @@ public class FBComponentProperties extends FBComponentBase {
 	}
 	
 	protected void initializeComponent(FacesContext context) {
-		if(component == null) {
-			return;
-		}
-		
 		IWContext iwc = CoreUtil.getIWContext();
+		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
 		
 		Layer layer = new Layer(Layer.DIV);
 		layer.setId(COMP_LAYER_ID);
+		
+		Layer messageBox = new Layer(Layer.DIV);
+		messageBox.setId("propertiesPanelMessageBox");
+		
+		Text headline = new Text(getLocalizedString(iwc, "labels_properties_disabled", "No selected component"));
+		messageBox.add(headline);
+		
+		String view = workspace.getView();
+		if(FBViewPanel.DESIGN_VIEW.equals(view)) {
+			if(component == null) {
+				messageBox.setStyleAttribute("display", "block");
+			} else {
+				messageBox.setStyleAttribute("display", "none");
+			}
+		} else {
+			messageBox.setStyleAttribute("display", "block");
+		}
+		
+		layer.add(messageBox);
 		
 		Locale locale = FBUtil.getUILocale();
 		

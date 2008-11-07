@@ -65,6 +65,19 @@ public class FormPage implements Serializable {
 		return page;
 	}
 	
+	public boolean hasRegularComponents() {
+		if(page == null) {
+			return false;
+		}
+		
+		ButtonArea area = page.getButtonArea();
+		if(area != null) {
+			return page.getContainedComponentsIds().size() > 1;
+		} else {
+			return !page.getContainedComponentsIds().isEmpty();
+		}
+	}
+	
 	public Page initializeBeanInstance(Page page, boolean special) {
 		initializeBeanInstance(page);
 		this.special = special;

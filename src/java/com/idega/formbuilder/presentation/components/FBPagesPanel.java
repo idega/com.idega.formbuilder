@@ -105,16 +105,16 @@ public class FBPagesPanel extends FBComponentBase {
 		newSectionBtn.setId("newPageButton");
 		newSectionBtn.setStyleClass("toolbarBtn");
 		
-		Link previewSectionBtn = new Link(getLocalizedString(iwc, "fb_preview_page_link", "Preview"));
-		previewSectionBtn.setId("previewPageButton");
-		if(formDocument.isHasPreview()) {
-			previewSectionBtn.setStyleClass("toolbarBtn removePreviewPageBtn");
-		} else {
-			previewSectionBtn.setStyleClass("toolbarBtn addPreviewPageBtn");
-		}
+//		Link previewSectionBtn = new Link(getLocalizedString(iwc, "fb_preview_page_link", "Preview"));
+//		previewSectionBtn.setId("previewPageButton");
+//		if(formDocument.isHasPreview()) {
+//			previewSectionBtn.setStyleClass("toolbarBtn removePreviewPageBtn");
+//		} else {
+//			previewSectionBtn.setStyleClass("toolbarBtn addPreviewPageBtn");
+//		}
 		
 		actionBox.add(newSectionBtn);
-		actionBox.add(previewSectionBtn);
+//		actionBox.add(previewSectionBtn);
 		
 		body.add(actionBox);
 		

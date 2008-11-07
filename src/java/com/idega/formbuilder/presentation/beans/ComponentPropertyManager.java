@@ -37,6 +37,8 @@ public class ComponentPropertyManager {
 	private static final String COMP_EXT_SRC_PROP = "externalSrc";
 	private static final String COMP_UPL_DESC_PROP = "uploadDesc";
 	private static final String COMP_UPL_DESC_LBL_PROP = "uploadDescLbl";
+	
+	public static final String BEAN_ID = "propertyManager";
 
 	private GenericComponent component;
 
@@ -44,6 +46,18 @@ public class ComponentPropertyManager {
 
 	public FormPage getFormPage() {
 		return formPage;
+	}
+	
+	public boolean resetComponent(Component comp) {
+		if(component != null && comp != null) {
+			if(component.getId().equals(comp.getId())) {
+				component = null;
+				
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	public String getSelectedComponentId() {
@@ -186,18 +200,16 @@ public class ComponentPropertyManager {
 
 	// TODO: remove componentId param
 	public Object[] saveComponentProperty(String componentId, String propertyName, String propertyValue) {
-		if (propertyName == null || propertyValue == null) {
-			Logger.getLogger(getClass().getName()).log(Level.WARNING,
-									"Tried to save component property, but either property name or value not set. PropertyName="
-									+ propertyName
-									+ ", propertyValue="
-									+ propertyValue
-									+ ", component id = "
-									+ component.getId());
+		if (propertyName == null || propertyValue == null || component == null) {
+			Logger.getLogger(getClass().getName()).log(Level.WARNING, "Tried to save component property, but either property name or value not set. PropertyName=" + propertyName + ", propertyValue=" + propertyValue);
 			return null;
 		}
 		
 		boolean reloadProperties = false;
+		
+		if(componentId == null || !componentId.equals(component.getId())) {
+			return null;
+		}
 
 		if (propertyName.equals(BUTTON_LABEL_PROP)) {
 			component.setLabel(propertyValue);

@@ -34,6 +34,7 @@
         <property name="processPalette" ref="processPalette" />
         <property name="jbpmProcessBusiness" ref="jbpmProcessBusiness" />
         <property name="processData" ref="processData" />
+        <property name="propertyManager" ref="propertyManager" />
     </bean>
     <bean id="dataSources" class="com.idega.formbuilder.presentation.beans.DataSourceList" scope="session" />
     <bean id="formField" class="com.idega.formbuilder.presentation.beans.PaletteComponent" scope="session" />

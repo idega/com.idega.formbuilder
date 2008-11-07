@@ -318,6 +318,14 @@ function handleComponentSelection(oldId, componentId) {
 		var newElement = $(componentId);
 		if(newElement != null) {
 			newElement.addClass('selectedComponent');
+			if(newElement.getParent().getProperty('id') == 'pageButtonArea') {
+				currentCallback = buttonRerenderCallback;
+			} else {
+				currentCallback = componentRerenderCallback;
+			}
+			if(fbLeftAccordion != null) {
+				fbLeftAccordion.display(1);
+			}
 		}
 	}	
 }
@@ -386,7 +394,7 @@ function initializeDropbox() {
 									if($('noFormNotice') != null) {
 										$('noFormNotice').remove();
 									}
-									if(result[0] == 'append') {
+									if(result[0] == 'append' || result[0] == null) {
 										insertNodesToContainer(result[1], dropBoxinner);
 									} else {
 										var node = $(result[0]);
@@ -425,29 +433,29 @@ function initializeDropbox() {
 				if(node != null) {
 					FormComponent.removeComponent(node.getProperty('id'), {
 						callback: function(result) {
-							var node = $(result);
-							if(node != null) {
-								node.remove();
-								var nodes = $('dropBoxinner').getElements('div.formElement');
-								if(nodes.length == 0) {
-									Workspace.getDesignView({
-										callback: function(resultDOM) {
-											if(resultDOM != null) {
-												var dropBox = $('dropBox');
-												if(dropBox != null) {
-													var parentNode = dropBox.getParent();
-													var node2 = parentNode.getLast();
-													if(node2 != null) {
-														node2.remove();
-													}
-													insertNodesToContainer(resultDOM, parentNode);
-													initializeDesignView(true);
-													initializePagesPanel();
-													initializePaletteInner(true);
-												}
+							if(result != null) {
+								var node = $(result[0]);
+								if(node != null) {
+									node.remove();
+									
+									if(result[1] != null) {
+										placeComponentInfo(result[1], 1, result[0]);
+									}
+									
+									if(result[2] != null) {
+										var dropBox = $('dropBox');
+										if(dropBox != null) {
+											var parentNode = dropBox.getParent();
+											var node2 = parentNode.getLast();
+											if(node2 != null) {
+												node2.remove();
 											}
+											insertNodesToContainer(result[2], parentNode);
+											initializeDesignView(true);
+											initializePagesPanel();
+											initializePaletteInner(true);
 										}
-									});
+									}
 								}
 							}
 						}
@@ -849,15 +857,21 @@ function getPageComponents() {
 }
 function removeButton(parameter) {
 	if(parameter != null) {
-		if(parameter.parentNode) {
-			var buttonId = parameter.parentNode.id;
+		if(parameter.getParent()) {
+			var buttonId = parameter.getParent().getProperty('id');
 			pressedButtonDelete = true;
 			FormComponent.removeButton(buttonId, {
 				callback: function(result) {
-					var node = $(result);
-					if(node != null) {
-						node.remove();
-						initializeButtonArea();
+					if(result != null) {
+						var node = $(result[0]);
+						if(node != null) {
+							node.remove();
+							initializeButtonArea();
+							
+							if(result[1] != null) {
+								placeComponentInfo(result[1], 1, result[0]);
+							}
+						}
 					}
 				}
 			});
@@ -939,11 +953,9 @@ function enablePagesPanelActions(enable) {
 		
 		$('pagesPanelMessageBox').setStyle('display', 'block');
 		
-		$('newPageButton').removeEvents('click');
-		setHrefToVoidFunction($('newPageButton'));
+		initializeNewPageAction(false);
 		
-		$('previewPageButton').removeEvents('click');
-		setHrefToVoidFunction($('previewPageButton'));
+		initializePreviewPageAction(false);
 		
 		var pagesPanel = $('pagesPanel');
 		if(pagesPanel != null) {
@@ -1016,38 +1028,42 @@ function initializePageSorting(fbPageSort) {
 	});
 }
 
-function initializeNewPageAction() {
+function initializeNewPageAction(enable) {
 	var newPageButton = $('newPageButton');
 	if(newPageButton != null) {
 		newPageButton.removeEvents('click');
-		newPageButton.addEvent('click', function(e) {
-			new Event(e).stop();
-			FormPage.createNewPage({
-				callback: function(resultDOMs) {
-					insertNodesToContainer(resultDOMs[1], $(PAGES_PANEL_ID));
-					var panel = $('pagesPanel');
-					if(panel != null) {
-						panel.getLast().addEvent('click', function(e){
-							initializeGeneralPage(e);
-						});
-					}
-					var dropBox = $('dropBox');
-					if(dropBox != null) {
-						var parentNode = dropBox.getParent();
-						var node = parentNode.getLast();
-						if(node != null) {
-							node.remove();
+		setHrefToVoidFunction(newPageButton);
+		
+		if(enable == true) {
+			newPageButton.addEvent('click', function(e) {
+				new Event(e).stop();
+				FormPage.createNewPage({
+					callback: function(resultDOMs) {
+						insertNodesToContainer(resultDOMs[1], $(PAGES_PANEL_ID));
+						var panel = $('pagesPanel');
+						if(panel != null) {
+							panel.getLast().addEvent('click', function(e){
+								initializeGeneralPage(e);
+							});
 						}
-						insertNodesToContainer(resultDOMs[0], parentNode);
-						initializeDesignView(true);
-						initializePagesPanel();
-						initializePaletteInner(true);
-						var newIcon = $(PAGES_PANEL_ID).getLast();
-						markSelectedPage(newIcon);
+						var dropBox = $('dropBox');
+						if(dropBox != null) {
+							var parentNode = dropBox.getParent();
+							var node = parentNode.getLast();
+							if(node != null) {
+								node.remove();
+							}
+							insertNodesToContainer(resultDOMs[0], parentNode);
+							initializeDesignView(true);
+							initializePagesPanel();
+							initializePaletteInner(true);
+							var newIcon = $(PAGES_PANEL_ID).getLast();
+							markSelectedPage(newIcon);
+						}
 					}
-				}
+				});
 			});
-		});
+		}
 	}
 }
 
@@ -1066,40 +1082,44 @@ function initializeThankyouPage() {
 	}
 }
 
-function initializePreviewPageAction() {
+function initializePreviewPageAction(enable) {
 	var previewPageButton = $('previewPageButton');
 	if(previewPageButton != null) {
 		previewPageButton.removeEvents('click');
-		previewPageButton.addEvent('click', function(e){
-			new Event(e).stop();
-			var checked;
-			if(previewPageButton.hasClass('addPreviewPageBtn')) {
-				checked = true;
-			} else {
-				checked = false;
-			}
-			FormDocument.togglePreviewPage(checked, {
-				callback: function(resultDOM) {
-					if(resultDOM != null) {
-						if(checked == true) {
-							previewPageButton.removeClass('addPreviewPageBtn').addClass('removePreviewPageBtn');
-							insertNodesToContainerBefore(resultDOM, $('pagesPanelSpecial'), $('pagesPanelSpecial').childNodes[0]);
-							initializePreviewPage();
-						} else {
-							previewPageButton.removeClass('removePreviewPageBtn').addClass('addPreviewPageBtn');
-							$('pagesPanelSpecial').getFirst().remove();
+		setHrefToVoidFunction(previewPageButton);
+		
+		if(enable == true) {
+			previewPageButton.addEvent('click', function(e){
+				new Event(e).stop();
+				var checked;
+				if(previewPageButton.hasClass('addPreviewPageBtn')) {
+					checked = true;
+				} else {
+					checked = false;
+				}
+				FormDocument.togglePreviewPage(checked, {
+					callback: function(resultDOM) {
+						if(resultDOM != null) {
+							if(checked == true) {
+								previewPageButton.removeClass('addPreviewPageBtn').addClass('removePreviewPageBtn');
+								insertNodesToContainerBefore(resultDOM, $('pagesPanelSpecial'), $('pagesPanelSpecial').childNodes[0]);
+								initializePreviewPage();
+							} else {
+								previewPageButton.removeClass('removePreviewPageBtn').addClass('addPreviewPageBtn');
+								$('pagesPanelSpecial').getFirst().remove();
+							}
 						}
 					}
-				}
+				});
 			});
-		});
+		}
 	}
 }
 
 function initializePagesPanelActions() {
 	initializePageSorting(fbPageSort);
-	initializeNewPageAction();
-	initializePreviewPageAction();
+	initializeNewPageAction(true);
+	initializePreviewPageAction(true);
 	
 	FormPage.getId(markSelectedPage);
 	var pagesPanel = $('pagesPanel');
@@ -1162,11 +1182,9 @@ function initializePagesPanel() {
 				initializePagesPanelActions();
 				$('designButton').addClass('activeViewButton');
 			} else {
-				$('newPageButton').removeEvents('click');
-				setHrefToVoidFunction($('newPageButton'));
+				initializeNewPageAction(false);
 				
-				$('previewPageButton').removeEvents('click');
-				setHrefToVoidFunction($('previewPageButton'));
+				initializePreviewPageAction(false);
 				
 				if(result == 'Source') {
 					$('sourceCodeButton').addClass('activeViewButton');
@@ -1351,6 +1369,9 @@ function toggleValidationText(parameter) {
 	}
 }
 var componentRerenderCallback = function(result) {
+	if(result == null) {
+		return;
+	}
 	if(result[1] != null) {
 		var componentNode = result[1].documentElement;
 		var oldNode = $(result[0]);
@@ -1366,6 +1387,9 @@ var componentRerenderCallback = function(result) {
 	}
 }
 var buttonRerenderCallback = function(results) {
+	if(results == null) {
+		return;
+	}
 	var btn = $(results[0]);
 	if(btn != null) {
 		btn.getFirst().setProperty('value', results[1]);

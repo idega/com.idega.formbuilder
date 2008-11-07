@@ -66,6 +66,7 @@ public class FBComponentBase extends IWBaseComponent {
 		getFacets().put(name, component);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void addChild(UIComponent child, UIComponent parent) {
 		parent.getChildren().add(child);
 	}
@@ -119,6 +120,7 @@ public class FBComponentBase extends IWBaseComponent {
 	}
 	
 	@Override
+	@SuppressWarnings("unchecked")
 	public void encodeChildren(FacesContext context) throws IOException {
 		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
 			RenderUtils.renderChild(context, (UIComponent) it.next());
