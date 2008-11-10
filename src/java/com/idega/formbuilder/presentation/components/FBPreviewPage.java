@@ -21,6 +21,7 @@ import com.idega.util.expression.ELUtil;
 import com.idega.webface.WFUtil;
 import com.idega.xformsmanager.business.Document;
 import com.idega.xformsmanager.business.Form;
+import com.idega.xformsmanager.business.PersistedFormDocument;
 import com.idega.xformsmanager.business.PersistenceManager;
 import com.idega.xformsmanager.business.XFormPersistenceType;
 
@@ -35,6 +36,8 @@ public class FBPreviewPage extends FBComponentBase {
 	private static final String HEADER_NAME_ID = "headerName";
 	private static final String HEADER_SLOGAN_ID = "headerSlogan";
 	private static final String CHOOSE_FORM_ID = "chooseForm";
+	
+	private static final String standaloneFormType = "standalone";
 
 	@Autowired
 	@XFormPersistenceType("slide")
@@ -84,7 +87,11 @@ public class FBPreviewPage extends FBComponentBase {
 		
 		Layer formChooserLayer = new Layer(Layer.DIV);
 		formChooserLayer.setStyleClass(CHOOSE_FORM_ID);
-		formChooserLayer.add(getFormsMenu());
+		formChooserLayer.add(new Text(getLocalizedString(iwc, "standalone_form_chooser", "Standalone forms")));
+		
+		DropdownMenu menu = getFormsMenu();
+		
+		formChooserLayer.add(menu);
 		mainPart.add(formChooserLayer);
 		
 		FormViewer formViewer = new FormViewer();
@@ -92,9 +99,11 @@ public class FBPreviewPage extends FBComponentBase {
 		if(xformsDocument != null && StringUtil.isEmpty(selectedStandaloneForm)) {
 			formViewer.setFormId(formDocument.getFormId());
 			formViewer.setXFormsDocument((org.w3c.dom.Document)xformsDocument.getXformsDocument().cloneNode(true));
+			menu.setSelectedElement(formDocument.getFormId());
 		} else if( !StringUtil.isEmpty(selectedStandaloneForm) ){
 			formViewer.setFormId(selectedStandaloneForm);
-			formViewer.setXFormsDocument(getPersistenceManager().loadForm(Long.parseLong(selectedStandaloneForm)).getXformsDocument());
+			PersistedFormDocument form = getPersistenceManager().loadForm(Long.parseLong(selectedStandaloneForm));
+			formViewer.setXFormsDocument(form.getXformsDocument());
 		}
 		
 		mainPart.add(formViewer);
@@ -120,7 +129,7 @@ public class FBPreviewPage extends FBComponentBase {
 		menu.setID(CHOOSE_FORM_ID);
 		List<Form> forms = getPersistenceManager().getStandaloneForms();
 
-		menu.addMenuElement(CoreConstants.EMPTY, "");
+		menu.addMenuElement(CoreConstants.EMPTY, "not selected");
 		for (Form form : forms) {
 			menu.addMenuElement(form.getFormId().toString(), form.getDisplayName());
 		}
