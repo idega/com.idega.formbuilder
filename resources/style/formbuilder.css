@@ -1126,7 +1126,7 @@ div.formElementHover:hover .fbcCompVar {
 }
 
 div.formButton:hover {
-	margin-right: 0px;
+	margin-right: 16px 		!important;
 }
 
 div.formElementHover:hover {
@@ -1139,10 +1139,6 @@ div.formElementHover:hover {
  	position: absolute;
  	right: 0;
  	top: 0;
-}
-
-div.formButton {
- 	position: relative;
 }
 
 div.formButton:hover .fbSpeedBButton {
@@ -1193,11 +1189,6 @@ div.formElement:hover .assignVariableBox {
 div.formElement:hover .assignVariableBox img {
 	vertical-align: middle;
 	margin-right: 6px;
-}
-
-.formButton:hover .speedButton {
-	display: block;
-	cursor: pointer;
 }
 
 #accordionLeft, #accordionRight {
@@ -1596,18 +1587,16 @@ body#formbuilder .acStretch{
 #pageButtonArea:hover{
 	border-color: #93b825;
 }
-.formButton {
+div.formButton {
 	margin-left:0;
 	margin-right:16px;
 	min-width:60px;
 	padding:10px;
 	width:auto;
+	position: relative;
 }
 .formButton input {
 	padding: 5px 8px;
-}
-#pageButtonArea .formButton:hover {
-	margin-right: 0px 		!important;
 }
 
 .accordionTabTitleBar {
