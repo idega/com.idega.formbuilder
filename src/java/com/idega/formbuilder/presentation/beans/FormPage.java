@@ -134,6 +134,10 @@ public class FormPage implements Serializable {
 	}
 	
 	public void updateButtonList(List<String> idSequence) throws Exception {
+		if(page == null) {
+			return;
+		}
+		
 		ButtonArea area = page.getButtonArea();
 		if(area != null) {
 			List<String> ids = area.getContainedComponentsIds();

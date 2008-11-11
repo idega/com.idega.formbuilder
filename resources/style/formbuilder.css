@@ -1072,6 +1072,25 @@ cursor: pointer;
 	width: 22px;
 	background-color: White;
 }
+
+div.selectedComponent .fbButtonHandler {
+	background-color: #999999				!important;
+}
+
+div.selectedComponent:hover .fbButtonHandler {
+	background: url(images/move_16.png) center 3px no-repeat Yellow		!important;
+}
+
+.fbButtonHandler {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	height: auto;
+	width: 22px;
+	background-color: White;
+	margin:10px 0;
+}
 .fbcCompVar {
 	visibility: hidden;
 	position: absolute;
@@ -1080,6 +1099,10 @@ cursor: pointer;
 }
 
 div.formElementHover:hover .fbCompHandler {
+	background: url(images/move_16.png) center 3px no-repeat Yellow;
+}
+
+div.formButton:hover .fbButtonHandler {
 	background: url(images/move_16.png) center 3px no-repeat Yellow;
 }
 
@@ -1608,7 +1631,7 @@ div.formButton {
 	margin-left:0;
 	margin-right:16px;
 	min-width:60px;
-	padding:10px;
+	padding: 10px 10px 10px 21px;
 	width:auto;
 	position: relative;
 }

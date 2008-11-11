@@ -21,6 +21,7 @@ public class FBButton extends FBComponentBase {
 	private static final String SPEED_BUTTON_STYLE = "fbSpeedBButton";
 	private static final String INLINE_STYLE = "float: left;";
 	private static final String DEFAULT_BUTTON_CLASS = "formButton";
+	private static final String HANDLER_LAYER_CLASS = "fbButtonHandler";
 	
 	public String selectedStyleClass;
 	public String label;
@@ -111,6 +112,10 @@ public class FBButton extends FBComponentBase {
 		icon.setSrc(DELETE_BUTTON_IMG);
 		icon.setOnClick(onDelete);
 		
+		Layer handleLayer = new Layer(Layer.DIV);
+		handleLayer.setStyleClass(HANDLER_LAYER_CLASS);
+		
+		container.add(handleLayer);
 		container.add(button);
 		container.add(icon);
 		

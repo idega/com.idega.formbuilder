@@ -50,6 +50,7 @@ var currentCallback = null;
 var selectedPaletteTab = null;
 var fbPageSort = null;
 var fbComponentSort = null;
+var fbButtonSort = null;
 
 var FBDraggable = Element.extend({
 	draggableTag: function(droppables, handle, type, makeDrag) {
@@ -285,6 +286,7 @@ function initializeButtonArea() {
 									if(fbLeftAccordion != null) {
 										fbLeftAccordion.display(0);
 									}
+									initializeButtonSorting(fbButtonSort);
 								}
 							});
 						}
@@ -363,6 +365,25 @@ function initializeComponentSorting(fbComponentSort) {
 			FormPage.updateComponentList(orderList);
 		},
 		handles: '.fbCompHandler'
+	});
+}
+
+function initializeButtonSorting(fbButtonSort) {
+	if(fbButtonSort) {
+		fbButtonSort.detach();
+		fbButtonSort = null;
+	}
+	fbButtonSort = new Sortables($('pageButtonArea'), {
+		onComplete: function(el){
+			var children = $('pageButtonArea').getChildren();
+			var orderList = [];
+			for(var i = 0; i < children.length; i++) {
+				var element = children[i];
+				orderList.push(element.id);
+			}
+			FormPage.updateButtonList(orderList);
+		},
+		handles: '.fbButtonHandler'
 	});
 }
 
@@ -483,6 +504,7 @@ function initializeDesignView(initializeInline) {
 	initializeSelectedComponent();
 	initializeLanguageChooser();
 	initializeComponentSorting(fbComponentSort);
+	initializeButtonSorting(fbButtonSort);
 	initializeButtonArea();
 	initializeDropbox();
 	if(selectedPaletteTab == null) {
@@ -898,6 +920,8 @@ function removeButton(parameter) {
 									initializePaletteInner(true);
 								}
 							}
+							
+							initializeButtonSorting(fbButtonSort);
 						}
 					}
 				}
@@ -1437,7 +1461,7 @@ var buttonRerenderCallback = function(results) {
 	}
 	var btn = $(results[0]);
 	if(btn != null) {
-		btn.getFirst().setProperty('value', results[1]);
+		btn.getFirst().getNext().setProperty('value', results[1]);
 	}
 };
 function saveComponentProperty(id,type,value,event) {
