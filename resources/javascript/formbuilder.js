@@ -272,6 +272,9 @@ function initializeButtonArea() {
 						if(newComponentId != null) {
 							FormComponent.getRenderedButton(newComponentId, {
 								callback: function(result) {
+									if($('noButtonsNotice') != null) {
+										$('noButtonsNotice').remove();
+									}
 									if(result != null) {
 										insertNodesToContainer(result, pageButtonArea);
 									}
@@ -876,6 +879,20 @@ function removeButton(parameter) {
 							
 							if(result[1] != null) {
 								placeComponentInfo(result[1], 1, result[0]);
+							}
+							if(result[2] != null) {
+								var dropBox = $('pageButtonArea');
+								if(dropBox != null) {
+									var parentNode = dropBox.getParent();
+									var node2 = parentNode.getLast();
+									if(node2 != null) {
+										node2.remove();
+									}
+									insertNodesToContainer(result[2], parentNode);
+									initializeDesignView(true);
+									initializePagesPanel();
+									initializePaletteInner(true);
+								}
 							}
 						}
 					}

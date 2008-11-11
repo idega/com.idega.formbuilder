@@ -139,6 +139,7 @@ form_steps_panel=Section Properties
 input.title=Title of input
 labels_confirmation_page=This is the confirmation page of the form
 labels_confirmation_page_body=You can only add buttons to this page
+labels_empty_buttons_text=No buttons in this section at the moment
 labels_empty_form_body=To add elements - drag them from the palette
 labels_empty_form_header=This form section is currently empty
 labels_noform_body=

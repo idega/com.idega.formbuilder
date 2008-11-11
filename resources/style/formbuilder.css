@@ -1246,6 +1246,23 @@ div.formElement:hover .assignVariableBox img {
 	border: 2px solid #FFAC00							!important;
 }
 
+#noButtonsNotice {
+	background-color: #F9FF9E;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom: 5px;
+	padding-top: 5px;
+	text-align: center;
+	vertical-align: middle;
+	border: 2px solid #FFFF00;
+	font-size: 12px;
+	margin: 5px;
+	min-height: 20px;
+	height: auto;
+	display: block;
+	font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+}
+
 #noFormNotice,#emptyForm {
 	background-color: #F9FF9E;
 	padding-left: 30px;

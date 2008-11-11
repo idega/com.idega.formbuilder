@@ -7,7 +7,10 @@ import javax.faces.context.FacesContext;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormPage;
 import com.idega.formbuilder.util.FBUtil;
+import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
+import com.idega.presentation.text.Text;
+import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
 import com.idega.xformsmanager.business.component.Button;
 import com.idega.xformsmanager.business.component.ButtonArea;
@@ -18,8 +21,16 @@ public class FBButtonArea extends FBComponentBase {
 	
 	private static final String DEFAULT_LOAD_ACTION = "loadButtonInfo(this);";
 	private static final String DEFAULT_DELETE_ACTION = "removeButton(this);";
+	private static final String NOBUTTONS_NOTICE_ID = "noButtonsNotice";
 	
 	public String componentStyleClass;
+	
+	public FBButtonArea() {}
+	
+	public FBButtonArea(String styleClass, String componentStyleClass) {
+		setStyleClass(styleClass);
+		this.componentStyleClass = componentStyleClass;
+	}
 	
 	@Override
 	protected void initializeComponent(FacesContext context) {
@@ -30,7 +41,17 @@ public class FBButtonArea extends FBComponentBase {
 		ButtonArea buttonArea = ((FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID)).getPage().getButtonArea();
 		if(buttonArea != null) {
 			List<String> ids = buttonArea.getContainedComponentsIds();
-			if(ids != null) {
+			if(ids == null || ids.isEmpty()) {
+				IWContext iwc = CoreUtil.getIWContext();
+				
+				Layer emptyForm = new Layer(Layer.DIV);
+				emptyForm.setId(NOBUTTONS_NOTICE_ID);
+				
+				Text emptyFormHeader = new Text(getLocalizedString(iwc, "labels_empty_buttons_text", "No buttons in this section at the moment"));
+				emptyForm.add(emptyFormHeader);
+				
+				container.add(emptyForm);
+			} else {
 				for(String nextId : ids) {
 					Button bt = (Button) buttonArea.getComponent(nextId);
 					if(bt != null) {
@@ -47,21 +68,6 @@ public class FBButtonArea extends FBComponentBase {
 		add(container);
 	}
 	
-	@Override
-	public Object saveState(FacesContext context) {
-		Object values[] = new Object[2];
-		values[0] = super.saveState(context);
-		values[1] = componentStyleClass;
-		return values;
-	}
-	
-	@Override
-	public void restoreState(FacesContext context, Object state) {
-		Object values[] = (Object[]) state;
-		super.restoreState(context, values[0]);
-		componentStyleClass = (String) values[1];
-	}
-
 	public String getComponentStyleClass() {
 		return componentStyleClass;
 	}

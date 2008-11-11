@@ -250,19 +250,6 @@ public class FBDesignView extends FBComponentBase {
 		add(component);
 	}
 	
-	public Object saveState(FacesContext context) {
-		Object values[] = new Object[3];
-		values[0] = super.saveState(context);
-		values[1] = componentStyleClass;
-		return values;
-	}
-	
-	public void restoreState(FacesContext context, Object state) {
-		Object values[] = (Object[]) state;
-		super.restoreState(context, values[0]);
-		componentStyleClass = (String) values[1];
-	}
-	
 	public String getComponentStyleClass() {
 		return componentStyleClass;
 	}

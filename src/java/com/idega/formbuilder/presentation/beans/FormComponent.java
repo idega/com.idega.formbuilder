@@ -12,6 +12,7 @@ import com.idega.builder.bean.AdvancedProperty;
 import com.idega.builder.business.BuilderLogic;
 import com.idega.chiba.web.xml.xforms.validation.ErrorType;
 import com.idega.formbuilder.presentation.components.FBButton;
+import com.idega.formbuilder.presentation.components.FBButtonArea;
 import com.idega.formbuilder.presentation.components.FBComponentProperties;
 import com.idega.formbuilder.presentation.components.FBDesignView;
 import com.idega.formbuilder.presentation.components.FBFormComponent;
@@ -117,7 +118,7 @@ public class FormComponent extends GenericComponent {
 				if(properties != null) {
 					properties.setReferAction(transition);
 					result[0] = processData.bindTransition(buttonId, transition).getStatus();
-					result[1] = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBButton(button.getId(), "formButton", "loadButtonInfo(this);", "removeButton(this);"), true);
+					result[1] = getButton(button);
 				}
 			}
 		}
@@ -185,7 +186,7 @@ public class FormComponent extends GenericComponent {
 				area = page.createButtonArea(null);
 				button = area.addButton(ConstButtonType.getByStringType(type), null);
 			}
-			return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBButton(button.getId(), "formButton", "loadButtonInfo(this);", "removeButton(this);"), true);
+			return getButton(button);
 		}
 		return null;
 	}
@@ -272,6 +273,14 @@ public class FormComponent extends GenericComponent {
 		}
 	}
 	
+	private Document getButtonArea(String styleClass, String componentStyleClass) {
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBButtonArea(styleClass, componentStyleClass), true);
+	}
+	
+	private Document getButton(Button button) {
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBButton(button.getId(), "formButton", "loadButtonInfo(this);", "removeButton(this);"), true);
+	}
+	
 	private Document getPropertiesPanel(GenericComponent component) {
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentProperties(component),true);
 	}
@@ -319,9 +328,10 @@ public class FormComponent extends GenericComponent {
 					
 					button.remove();
 					
-					Object[] result = new Object[2];
+					Object[] result = new Object[3];
 					result[0] = id;
 					result[1] = update ? getPropertiesPanel(null) : null;
+					result[2] = area.getContainedComponentsIds().isEmpty() ? getButtonArea("formElement formElementHover", "formButton") : null;
 					
 					return result;
 				}
