@@ -189,6 +189,7 @@ var FBDraggable = Element.extend({
 							draggingComponent = false;
 						}
 					} else if(type == 'fbb') {
+						$('pageButtonArea').setStyle('background-color', '#FFF');
 						if(draggingButton == true && insideDropzone == false && newComponentId != null) {
 							FormComponent.removeButton(newComponentId);
 							draggingButton = false;
@@ -201,6 +202,7 @@ var FBDraggable = Element.extend({
 							draggingComponent = false;
 						}
 					} else if(type == 'fbbp') {
+						$('pageButtonArea').setStyle('background-color', '#FFF');
 						if(draggingButton == true && insideDropzone == false && newComponentId != null) {
 							FormComponent.removeButton(newComponentId);
 							draggingButton = false;
@@ -265,6 +267,7 @@ function initializeButtonArea() {
 				insideDropzone = false;
 			},
 			'drop': function(el, drag){
+				this.dragEffect.stop();
 				pageButtonArea.setStyle('background-color', '#FFF');
 				if(draggingButton == true) {
 					draggingButton = false;
@@ -386,6 +389,7 @@ function initializeDropbox() {
 				});
 			},
 			'drop': function(el, drag){
+				this.dragEffect.stop();
 				dropBoxinner.setStyle('background-color', '#FFF');
 				dropBoxinner.getElements('div.formElement').each(function(element) {
 					element.addClass('formElementHover');
