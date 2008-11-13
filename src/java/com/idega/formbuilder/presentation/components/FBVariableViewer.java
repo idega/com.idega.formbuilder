@@ -70,7 +70,7 @@ public class FBVariableViewer extends FBComponentBase {
 				varEntry.setStyleClass(VAR_ENTRY);
 				varEntry.setId(var + CoreConstants.UNDER + VAR_POSTFIX);
 				
-				String status = processData.getVariableStatus(datatype + CoreConstants.COLON + var).getStatus();
+				String status = processData.getVariableStatus(datatype + CoreConstants.UNDER + var).getStatus();
 				varEntry.setStyleClass(status);
 				
 				layer.add(varEntry);
