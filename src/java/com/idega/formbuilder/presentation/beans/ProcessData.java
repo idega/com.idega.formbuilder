@@ -3,13 +3,19 @@ package com.idega.formbuilder.presentation.beans;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
 import com.idega.block.process.variables.Variable;
+import com.idega.util.CoreConstants;
+import com.idega.webface.WFUtil;
 import com.idega.xformsmanager.business.Document;
 import com.idega.xformsmanager.business.component.Button;
 import com.idega.xformsmanager.business.component.ButtonArea;
@@ -17,18 +23,14 @@ import com.idega.xformsmanager.business.component.Component;
 import com.idega.xformsmanager.business.component.Page;
 import com.idega.xformsmanager.business.component.properties.PropertiesButton;
 import com.idega.xformsmanager.business.component.properties.PropertiesComponent;
-import com.idega.jbpm.business.JbpmProcessBusinessBean;
-import com.idega.util.CoreConstants;
-import com.idega.webface.WFUtil;
 
-//TODO: remake this, use standard way of resolving variables
+@Service(ProcessData.BEAN_ID)
+@Scope("session")
 public class ProcessData implements Serializable {
 	
 	private static final long serialVersionUID = -1462694112346788168L;
 	
 	public static final String BEAN_ID = "processData";
-	
-	private JbpmProcessBusinessBean jbpmProcessBusiness;
 	
 	private Map<String, List<String>> variables = new HashMap<String, List<String>>();
 	private Map<String, List<String>> transitions = new HashMap<String, List<String>>();
@@ -65,8 +67,8 @@ public class ProcessData implements Serializable {
 		this.taskName = taskName;
 		this.variables.clear();
 		this.transitions.clear();
-		Set<String> vars = jbpmProcessBusiness.getProcessVariables(processId, true);
-		List<String> trans = jbpmProcessBusiness.getTaskTransitions(processId, taskName);
+		Set<String> vars = new HashSet<String>();
+		List<String> trans = new ArrayList<String>();
 		List<String> pages = document.getContainedPagesIdList();
 		for(Iterator<String> it = pages.iterator(); it.hasNext(); ) {
 			Page page = document.getPage(it.next());
@@ -138,7 +140,7 @@ public class ProcessData implements Serializable {
 	}
 	
 	public void createVariable(String variable, String datatype) {
-		jbpmProcessBusiness.addTaskVariable(processId, taskName, datatype, variable);
+//		jbpmProcessBusiness.addTaskVariable(processId, taskName, datatype, variable);
 	}
 	
 	public ConstVariableStatus getVariableStatus(String variableName) {
@@ -183,13 +185,15 @@ public class ProcessData implements Serializable {
 		if(buttonType == null || !buttonType.equals("fbc_button_submit"))
 			return null;
 		
-		return jbpmProcessBusiness.getTaskTransitions(getProcessId(), getTaskName());
+//		return jbpmProcessBusiness.getTaskTransitions(getProcessId(), getTaskName());
+		return null;
 	}
 	
 	public Set<String> getComponentTypeVariables(String componentType) {
 		ProcessPalette processPalette = (ProcessPalette) WFUtil.getBeanInstance(ProcessPalette.BEAN_ID);
 		Set<String> datatypes = processPalette.getComponentDatatype(componentType);
-		return jbpmProcessBusiness.getProcessVariablesByDatatypes(getProcessId(), datatypes);
+//		return jbpmProcessBusiness.getProcessVariablesByDatatypes(getProcessId(), datatypes);
+		return null;
 	}
 	
 	public ConstVariableStatus getTransitionStatus(String transition) {
@@ -242,14 +246,6 @@ public class ProcessData implements Serializable {
 	}
 	public void setTransitions(Map<String, List<String>> transitions) {
 		this.transitions = transitions;
-	}
-
-	public JbpmProcessBusinessBean getJbpmProcessBusiness() {
-		return jbpmProcessBusiness;
-	}
-
-	public void setJbpmProcessBusiness(JbpmProcessBusinessBean jbpmProcessBusiness) {
-		this.jbpmProcessBusiness = jbpmProcessBusiness;
 	}
 
 }

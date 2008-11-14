@@ -16,9 +16,7 @@ import com.idega.formbuilder.presentation.components.FBButtonArea;
 import com.idega.formbuilder.presentation.components.FBComponentProperties;
 import com.idega.formbuilder.presentation.components.FBDesignView;
 import com.idega.formbuilder.presentation.components.FBFormComponent;
-import com.idega.formbuilder.presentation.components.FBVariableViewer;
 import com.idega.formbuilder.util.FBUtil;
-import com.idega.jbpm.business.JbpmProcessBusinessBean;
 import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
 import com.idega.xformsmanager.business.component.Button;
@@ -41,7 +39,6 @@ public class FormComponent extends GenericComponent {
 	protected Component component;
 	
 	private ProcessPalette processPalette;
-	private JbpmProcessBusinessBean jbpmProcessBusiness;
 	private ProcessData processData;
 	private FormPage formPage;
 	private ComponentPropertyManager propertyManager;
@@ -72,7 +69,7 @@ public class FormComponent extends GenericComponent {
 		this.formPage = formPage;
 	}
 	
-	public Document assignVariable(String componentId, String variable) {
+	public String[] assignVariable(String componentId, String variable) {
 		if(componentId == null) {
 			componentId = component.getId();
 		}
@@ -82,20 +79,28 @@ public class FormComponent extends GenericComponent {
 			PropertiesComponent properties = component.getProperties();
 			if(properties != null) {
 				Variable oldVar = properties.getVariable();
+				String oldVarName = null;
 				if(oldVar != null) {
-					processData.unbindVariable(oldVar.getDefaultStringRepresentation(), componentId);
+					oldVarName = oldVar.getDefaultStringRepresentation();
+					processData.unbindVariable(oldVarName, componentId);
 				}
 				properties.setVariable(variable);
-				processData.bindVariable(componentId, variable).getStatus();
+				
+				String[] result = new String[3];
+				result[0] = processData.bindVariable(componentId, variable).getStatus();
+				result[1] = oldVarName;
+				result[2] = oldVarName == null ? null : processData.getVariableStatus(oldVarName).getStatus();
+				
+				return result;
 			}
 		}
-		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBVariableViewer(), true);
+		return null;
 	}
 	
 	public Object[] assignVariableAndMoveComponent(String componentId, String variable, int before) throws Exception {
 		Object[] results = new Object[3];
-		Document doc = assignVariable(componentId, variable);
-		results[0] = doc;
+//		Object[] results2 = assignVariable(componentId, variable);
+//		results[0] = doc;
 		String move = moveComponent(componentId, before);
 		results[1] = move;
 		Page page = formPage.getPage();
@@ -105,6 +110,88 @@ public class FormComponent extends GenericComponent {
 			results[2] = comp;
 		}
 		return results;
+	}
+	
+	public String[] removeVariableBinding(String componentId) {
+		if(componentId == null) {
+			return null;
+		}
+		
+		Page page = formPage.getPage();
+		if(page != null) {
+			Component component = page.getComponent(componentId);
+			PropertiesComponent properties = component.getProperties();
+			if(properties != null) {
+				Variable oldVar = properties.getVariable();
+				String oldVarName = null;
+				if(oldVar != null) {
+					oldVarName = oldVar.getDefaultStringRepresentation();
+					processData.unbindVariable(oldVarName, componentId);
+				}
+				properties.setVariable(CoreConstants.EMPTY);
+				
+				String[] result = new String[2];
+				result[0] = oldVarName;
+				result[1] = oldVarName == null ? null : processData.getVariableStatus(oldVarName).getStatus();
+				
+				return result;
+			}
+		}
+		
+		return null;
+	}
+	
+	public String[] removeTransitionBinding(String buttonId) {
+		if(buttonId == null) {
+			return null;
+		}
+		
+		Page page = formPage.getPage();
+		if(page != null) {
+			ButtonArea area = page.getButtonArea();
+			if(area != null) {
+				Button button = (Button) area.getComponent(buttonId);
+				PropertiesButton properties = button.getProperties();
+				if(properties != null) {
+					String action = properties.getReferAction();
+					properties.setReferAction(null);
+					
+					processData.unbindTransition(buttonId, action).getStatus();
+					
+					String[] result = new String[2];
+					result[0] = action;
+					result[1] = action == null ? null : processData.getVariableStatus(action).getStatus();
+					
+					return result;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	public String[] assignTransition(String buttonId, String transition) {
+		Page page = formPage.getPage();
+		if(page != null) {
+			ButtonArea area = page.getButtonArea();
+			if(area != null) {
+				Button button = (Button) area.getComponent(buttonId);
+				PropertiesButton properties = button.getProperties();
+				if(properties != null) {
+					String action = properties.getReferAction();
+					properties.setReferAction(transition);
+					
+					String[] result = new String[3];
+					result[0] = processData.bindTransition(buttonId, transition).getStatus();
+					result[1] = action;
+					result[2] = action == null ? null : processData.getTransitionStatus(action).getStatus();
+					
+					return result;
+				}
+			}
+		}
+		
+		return null;
 	}
 	
 	public Object[] assignTransitionAndRenderButton(String buttonId, String transition) {
@@ -440,14 +527,6 @@ public class FormComponent extends GenericComponent {
 
 	public void setProcessPalette(ProcessPalette processPalette) {
 		this.processPalette = processPalette;
-	}
-
-	public JbpmProcessBusinessBean getJbpmProcessBusiness() {
-		return jbpmProcessBusiness;
-	}
-
-	public void setJbpmProcessBusiness(JbpmProcessBusinessBean jbpmProcessBusiness) {
-		this.jbpmProcessBusiness = jbpmProcessBusiness;
 	}
 
 	public ProcessData getProcessData() {

@@ -36,7 +36,6 @@ import com.idega.formbuilder.presentation.components.FBFormPage;
 import com.idega.formbuilder.presentation.components.FBViewPanel;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.idegaweb.IWMainApplication;
-import com.idega.jbpm.business.JbpmProcessBusinessBean;
 import com.idega.jbpm.view.View;
 import com.idega.jbpm.view.ViewToTask;
 import com.idega.jbpm.view.ViewToTaskType;
@@ -56,7 +55,6 @@ public class FormDocument implements Serializable {
 	
 	private static final Log logger = LogFactory.getLog(FormDocument.class);
 	
-	private JbpmProcessBusinessBean jbpmProcessBusiness;
 	private ViewToTask viewToTaskBinder;
 	private InstanceManager instanceManager;
 	private XFormsProcessManager xformsProcessManager;
@@ -187,7 +185,7 @@ public class FormDocument implements Serializable {
 			
 			View view = new XFormsView();
 			view.setViewId(String.valueOf(formId));
-			getViewToTaskBinder().bind(view, getJbpmProcessBusiness().getProcessTask(Long.valueOf(processId), taskName));
+//			getViewToTaskBinder().bind(view, getJbpmProcessBusiness().getProcessTask(Long.valueOf(processId), taskName));
 			
 		} catch(Exception e) {
 			logger.info("Exception while trying to open a form document", e);
@@ -840,14 +838,6 @@ public class FormDocument implements Serializable {
 
 	public void setWorkspace(Workspace workspace) {
 		this.workspace = workspace;
-	}
-
-	public JbpmProcessBusinessBean getJbpmProcessBusiness() {
-		return jbpmProcessBusiness;
-	}
-
-	public void setJbpmProcessBusiness(JbpmProcessBusinessBean jbpmProcessBusiness) {
-		this.jbpmProcessBusiness = jbpmProcessBusiness;
 	}
 
 	public ViewToTask getViewToTaskBinder() {

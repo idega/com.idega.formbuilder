@@ -1,6 +1,6 @@
 package com.idega.formbuilder.presentation.components;
 
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -9,7 +9,6 @@ import javax.faces.context.FacesContext;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.ProcessData;
-import com.idega.jbpm.business.JbpmProcessBusinessBean;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
@@ -30,7 +29,7 @@ public class FBVariableViewer extends FBComponentBase {
 	private static final String FB_MENU_TABBAR = "fbMenuTabBar";
 	private static final String VARIABLE_LIST_SECTION = "variableListSection";
 	private static final String VAR_ENTRY = "varEntry";
-	private static final String VAR_POSTFIX = "var";
+//	private static final String VAR_POSTFIX = "var";
 	private static final String ADD_ICON_POSTFIX = "add";
 	private static final String ADD_VARIABLE_ICON = "addVariableIcon";
 	private static final String TRANS_POSTFIX = "trans";
@@ -44,15 +43,15 @@ public class FBVariableViewer extends FBComponentBase {
 		IWContext iwc = CoreUtil.getIWContext();
 		
 		Layer body = new Layer(Layer.DIV);
+		body.setId("variableViewer");
 		
 		ProcessData processData = (ProcessData) WFUtil.getBeanInstance(ProcessData.BEAN_ID);
-		JbpmProcessBusinessBean jbpmBusiness = (JbpmProcessBusinessBean) WFUtil.getBeanInstance(JbpmProcessBusinessBean.BEAN_ID);
-		Map<String, Set<String>> variables = jbpmBusiness.getProcessVariables(processData.getProcessId());
+//		Map<String, Set<String>> variables = jbpmBusiness.getProcessVariables(processData.getProcessId());
+		
+		Map<String, Set<String>> variables = new HashMap<String, Set<String>>();
 		
 		Map<String, List<String>> vars = processData.getDatatypedVariables();
-		for(Iterator<String> it = vars.keySet().iterator(); it.hasNext(); ) {
-			String datatype = it.next();
-			
+		for(String datatype : vars.keySet()) {
 			Layer header = new Layer(Layer.DIV);
 			header.setStyleClass(FB_MENU_TABBAR);
 			Text headerText = new Text(datatype);
@@ -63,14 +62,17 @@ public class FBVariableViewer extends FBComponentBase {
 			
 			Set<String> list = variables.get(datatype);
 			
-			for(Iterator<String> it2 = list.iterator(); it2.hasNext(); ) {
-				String var = it2.next();
+			for(String var : list) {
+				StringBuffer buffer = new StringBuffer(datatype)
+					.append(CoreConstants.UNDER)
+					.append(var);
 				
 				Text varEntry = new Text(var);
 				varEntry.setStyleClass(VAR_ENTRY);
-				varEntry.setId(var + CoreConstants.UNDER + VAR_POSTFIX);
+				varEntry.setStyleClass("fbvar");
+				varEntry.setId(buffer.toString());
 				
-				String status = processData.getVariableStatus(datatype + CoreConstants.UNDER + var).getStatus();
+				String status = processData.getVariableStatus(buffer.toString()).getStatus();
 				varEntry.setStyleClass(status);
 				
 				layer.add(varEntry);
@@ -81,7 +83,7 @@ public class FBVariableViewer extends FBComponentBase {
 			addVarIcon.setId(datatype + CoreConstants.UNDER + ADD_ICON_POSTFIX);
 			addVarIcon.setStyleClass(ADD_VARIABLE_ICON);
 			
-			layer.add(addVarIcon);
+//			layer.add(addVarIcon);
 			
 			body.add(header);
 			body.add(layer);
@@ -100,19 +102,22 @@ public class FBVariableViewer extends FBComponentBase {
 			
 			try {
 				
-				List<String> transitions = jbpmBusiness.getTaskTransitions(processData.getProcessId(), processData.getTaskName());
-				for(Iterator<String> it2 = transitions.iterator(); it2.hasNext(); ) {
-					String transition = it2.next();
-					
-					Text varEntry = new Text(transition);
-					varEntry.setStyleClass(VAR_ENTRY);
-					varEntry.setId(transition + CoreConstants.UNDER + TRANS_POSTFIX);
-					
-					String status = processData.getTransitionStatus(transition).getStatus();
-					varEntry.setStyleClass(status);
-					
-					layer.add(varEntry);
-				}
+//				List<String> transitions = jbpmBusiness.getTaskTransitions(processData.getProcessId(), processData.getTaskName());
+//				for(String transition : transitions) {
+//					StringBuffer buffer = new StringBuffer(transition)
+//					.append(CoreConstants.UNDER)
+//					.append(TRANS_POSTFIX);
+//					
+//					Text varEntry = new Text(transition);
+//					varEntry.setStyleClass(VAR_ENTRY);
+//					varEntry.setStyleClass("fbtrans");
+//					varEntry.setId(buffer.toString());
+//					
+//					String status = processData.getTransitionStatus(transition).getStatus();
+//					varEntry.setStyleClass(status);
+//					
+//					layer.add(varEntry);
+//				}
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -125,6 +130,7 @@ public class FBVariableViewer extends FBComponentBase {
 		
 		Layer legend = new Layer(Layer.DIV);
 		legend.setStyleClass(FB_VARIABLES_LEGEND);
+		legend.setStyleClass(FB_MENU_TABBAR);
 		headerText = new Text(getLocalizedString(iwc, "fb_var_legend_label", "Legend"));
 		legend.add(headerText);
 		
