@@ -7,14 +7,12 @@
     <bean id="formDocument" class="com.idega.formbuilder.presentation.beans.FormDocument" scope="session">
         <property name="workspace" ref="workspace" />
         <property name="xformsProcessManager" ref="xformsProcessManager" />
-        <property name="jbpmProcessBusiness" ref="jbpmProcessBusiness" />
         <property name="instanceManager" ref="actionManager" />
         <property name="processData" ref="processData" />
     </bean>
     <bean id="workspace" class="com.idega.formbuilder.presentation.beans.Workspace" scope="session" />
     <bean id="actionManager" class="com.idega.formbuilder.presentation.beans.InstanceManager" scope="session" />
     <bean id="processData" class="com.idega.formbuilder.presentation.beans.ProcessData" scope="session">
-        <property name="jbpmProcessBusiness" ref="jbpmProcessBusiness" />
     </bean>
     <bean id="propertyManager" class="com.idega.formbuilder.presentation.beans.ComponentPropertyManager" scope="session">
         <property name="formPage" ref="formPage" />
@@ -32,7 +30,6 @@
     <bean id="formComponent" class="com.idega.formbuilder.presentation.beans.FormComponent" scope="session">
         <property name="formPage" ref="formPage" />
         <property name="processPalette" ref="processPalette" />
-        <property name="jbpmProcessBusiness" ref="jbpmProcessBusiness" />
         <property name="processData" ref="processData" />
         <property name="propertyManager" ref="propertyManager" />
     </bean>
