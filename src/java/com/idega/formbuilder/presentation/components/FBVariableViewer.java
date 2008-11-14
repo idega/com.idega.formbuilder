@@ -7,8 +7,10 @@ import java.util.Set;
 
 import javax.faces.context.FacesContext;
 
+import com.idega.block.process.variables.Variable;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.ProcessData;
+import com.idega.jbpm.exe.ProcessDefinitionW;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
@@ -46,6 +48,7 @@ public class FBVariableViewer extends FBComponentBase {
 		body.setId("variableViewer");
 		
 		ProcessData processData = (ProcessData) WFUtil.getBeanInstance(ProcessData.BEAN_ID);
+		
 //		Map<String, Set<String>> variables = jbpmBusiness.getProcessVariables(processData.getProcessId());
 		
 		Map<String, Set<String>> variables = new HashMap<String, Set<String>>();
@@ -62,20 +65,22 @@ public class FBVariableViewer extends FBComponentBase {
 			
 			Set<String> list = variables.get(datatype);
 			
-			for(String var : list) {
-				StringBuffer buffer = new StringBuffer(datatype)
-					.append(CoreConstants.UNDER)
-					.append(var);
-				
-				Text varEntry = new Text(var);
-				varEntry.setStyleClass(VAR_ENTRY);
-				varEntry.setStyleClass("fbvar");
-				varEntry.setId(buffer.toString());
-				
-				String status = processData.getVariableStatus(buffer.toString()).getStatus();
-				varEntry.setStyleClass(status);
-				
-				layer.add(varEntry);
+			if(list != null) {
+				for(String var : list) {
+					StringBuffer buffer = new StringBuffer(datatype)
+						.append(CoreConstants.UNDER)
+						.append(var);
+					
+					Text varEntry = new Text(var);
+					varEntry.setStyleClass(VAR_ENTRY);
+					varEntry.setStyleClass("fbvar");
+					varEntry.setId(buffer.toString());
+					
+					String status = processData.getVariableStatus(buffer.toString()).getStatus();
+					varEntry.setStyleClass(status);
+					
+					layer.add(varEntry);
+				}
 			}
 			
 			Image addVarIcon = new Image();
