@@ -11,7 +11,7 @@ import com.idega.formbuilder.util.FBUtil;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
-import com.idega.presentation.text.Link;
+import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.GenericButton;
 import com.idega.webface.WFUtil;
 import com.idega.xformsmanager.business.component.Button;
@@ -145,7 +145,7 @@ public class FBButton extends FBComponentBase {
 			assignVariable.setStyleClass(ASSIGN_TRANS_BOX_CLASS);
 			assignVariable.setId("trans_" + buttonId);
 							
-			Link assignLabel = new Link();
+			Text assignLabel = new Text();
 			assignLabel.setStyleClass(ASSIGN_LABEL_CLASS);
 			if(!StringUtils.isEmpty(transition)) {
 				assignLabel.setText(getLocalizedString(iwc, "fb_assigned_to_label", "Assigned to: ") + transition);
