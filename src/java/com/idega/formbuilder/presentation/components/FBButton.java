@@ -2,16 +2,22 @@ package com.idega.formbuilder.presentation.components;
 
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.lang.StringUtils;
+
+import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.formbuilder.presentation.beans.FormPage;
+import com.idega.formbuilder.presentation.beans.Workspace;
+import com.idega.formbuilder.util.FBUtil;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.Image;
+import com.idega.presentation.Layer;
+import com.idega.presentation.text.Link;
+import com.idega.presentation.ui.GenericButton;
+import com.idega.webface.WFUtil;
 import com.idega.xformsmanager.business.component.Button;
 import com.idega.xformsmanager.business.component.ButtonArea;
 import com.idega.xformsmanager.business.component.Page;
-import com.idega.formbuilder.presentation.FBComponentBase;
-import com.idega.formbuilder.presentation.beans.FormPage;
-import com.idega.formbuilder.util.FBUtil;
-import com.idega.presentation.Image;
-import com.idega.presentation.Layer;
-import com.idega.presentation.ui.GenericButton;
-import com.idega.webface.WFUtil;
+import com.idega.xformsmanager.business.component.properties.PropertiesButton;
 
 public class FBButton extends FBComponentBase {
 	
@@ -22,6 +28,8 @@ public class FBButton extends FBComponentBase {
 	private static final String INLINE_STYLE = "float: left;";
 	private static final String DEFAULT_BUTTON_CLASS = "formButton";
 	private static final String HANDLER_LAYER_CLASS = "fbButtonHandler";
+	private static final String ASSIGN_TRANS_BOX_CLASS = "assignTransitionBox";
+	private static final String ASSIGN_LABEL_CLASS = "assignLabel";
 	
 	public String selectedStyleClass;
 	public String label;
@@ -79,18 +87,29 @@ public class FBButton extends FBComponentBase {
 	}
 	
 	protected void initializeComponent(FacesContext context) {
+		if(buttonId == null) {
+			return;
+		}
+		
+		IWContext iwc = IWContext.getIWContext(context);
+		
+		String transition = null;
+		
 		Layer container = new Layer(Layer.DIV);
 		container.setId(buttonId);
 		container.setStyleAttribute(INLINE_STYLE);
 		container.setOnClick(onSelect);
-		if(buttonId != null) {
-			Page page = ((FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID)).getPage();
-			if(page != null) {
-				ButtonArea area = page.getButtonArea();
-				if(area != null) {
-					Button button = (Button) area.getComponent(buttonId);
-					if(button != null) {
-						this.label = FBUtil.getPropertyString(button.getProperties().getLabel().getString(FBUtil.getUILocale()));
+		Page page = ((FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID)).getPage();
+		if(page != null) {
+			ButtonArea area = page.getButtonArea();
+			if(area != null) {
+				Button button = (Button) area.getComponent(buttonId);
+				if(button != null) {
+					this.label = FBUtil.getPropertyString(button.getProperties().getLabel().getString(FBUtil.getUILocale()));
+						
+					PropertiesButton properties = button.getProperties();
+					if(properties.getReferAction() != null) {
+						transition = properties.getReferAction();
 					}
 				}
 			}
@@ -119,6 +138,26 @@ public class FBButton extends FBComponentBase {
 		container.add(button);
 		container.add(icon);
 		
+		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
+		
+		if(workspace.isProcessMode()) {
+			Layer assignVariable = new Layer(Layer.DIV);
+			assignVariable.setStyleClass(ASSIGN_TRANS_BOX_CLASS);
+			assignVariable.setId("trans_" + buttonId);
+							
+			Link assignLabel = new Link();
+			assignLabel.setStyleClass(ASSIGN_LABEL_CLASS);
+			if(!StringUtils.isEmpty(transition)) {
+				assignLabel.setText(getLocalizedString(iwc, "fb_assigned_to_label", "Assigned to: ") + transition);
+			} else {
+				assignLabel.setText(getLocalizedString(iwc, "fb_no_assign_label", "Not assigned"));
+			}
+			
+			assignVariable.add(assignLabel);
+			
+			container.add(assignVariable);
+		}
+		
 		add(container);
 	}
 	
@@ -136,23 +175,6 @@ public class FBButton extends FBComponentBase {
 
 	public void setOnDelete(String onDelete) {
 		this.onDelete = onDelete;
-	}
-	
-	public Object saveState(FacesContext context) {
-		Object values[] = new Object[5];
-		values[0] = super.saveState(context);
-		values[1] = label;
-		values[2] = onSelect;
-		values[3] = onDelete;
-		return values;
-	}
-	
-	public void restoreState(FacesContext context, Object state) {
-		Object values[] = (Object[]) state;
-		super.restoreState(context, values[0]);
-		label = (String) values[1];
-		onSelect = (String) values[2];
-		onDelete = (String) values[3];
 	}
 	
 }

@@ -37,7 +37,7 @@ public class FBPreviewPage extends FBComponentBase {
 	private static final String HEADER_SLOGAN_ID = "headerSlogan";
 	private static final String CHOOSE_FORM_ID = "chooseForm";
 	
-	private static final String standaloneFormType = "standalone";
+//	private static final String standaloneFormType = "standalone";
 
 	@Autowired
 	@XFormPersistenceType("slide")

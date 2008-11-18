@@ -3,18 +3,17 @@ package com.idega.formbuilder.presentation.beans;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.idega.block.process.variables.Variable;
-import com.idega.util.CoreConstants;
+import com.idega.jbpm.exe.BPMFactory;
+import com.idega.jbpm.exe.ProcessDefinitionW;
 import com.idega.webface.WFUtil;
 import com.idega.xformsmanager.business.Document;
 import com.idega.xformsmanager.business.component.Button;
@@ -32,109 +31,174 @@ public class ProcessData implements Serializable {
 	
 	public static final String BEAN_ID = "processData";
 	
-	private Map<String, List<String>> variables = new HashMap<String, List<String>>();
-	private Map<String, List<String>> transitions = new HashMap<String, List<String>>();
+	private List<Variable> variables = new ArrayList<Variable>();
+	private List<String> transitions = new ArrayList<String>();
+	private Map<String, List<Variable>> datatypedVariables = new HashMap<String, List<Variable>>();
+	private Map<String, List<String>> variableUsageList = new HashMap<String, List<String>>();
+	private Map<String, List<String>> transitionUsageList = new HashMap<String, List<String>>();
+	
 	private Long processId;
 	private String processName;
 	private String taskName;
 	private Long taskId;
+	private Document document;
 	
-	public Map<String, List<String>> getDatatypedVariables() {
-		Map<String, List<String>> result = new HashMap<String, List<String>>();
-		if(variables != null) {
-			for(Iterator<String> it = variables.keySet().iterator(); it.hasNext(); ) {
-				String variableFullname = it.next();
-				StringTokenizer stk = new StringTokenizer(variableFullname, CoreConstants.UNDER);
-				String type = stk.nextToken();
-				String name = null;
-				if(stk.hasMoreTokens()) {
-					name = stk.nextToken();
-				}
-				if(result.containsKey(type)) {
-					result.get(type).add(name);
+	@Autowired private BPMFactory bpmFactory;
+
+	public BPMFactory getBpmFactory() {
+		return bpmFactory;
+	}
+
+	public void setBpmFactory(BPMFactory bpmFactory) {
+		this.bpmFactory = bpmFactory;
+	}
+
+	public Map<String, List<Variable>> getDatatypedVariables() {
+		if(datatypedVariables.isEmpty()) {
+			for(Variable variable : variables) {
+				String varType = variable.getDataType().toString();
+				
+				if(datatypedVariables.containsKey(varType)) {
+					datatypedVariables.get(varType).add(variable);
 				} else {
-					List<String> newList = new ArrayList<String>();
-					newList.add(name);
-					result.put(type, newList);
+					List<Variable> newList = new ArrayList<Variable>();
+					newList.add(variable);
+					datatypedVariables.put(varType, newList);
 				}
 			}
 		}
-		return result;
+		return datatypedVariables;
 	}
 	
 	public void initializeBeanInstance(Document document, Long processId, String taskName) {
 		this.processId = processId;
 		this.taskName = taskName;
+		this.document = document;
+		
 		this.variables.clear();
 		this.transitions.clear();
-		Set<String> vars = new HashSet<String>();
-		List<String> trans = new ArrayList<String>();
-		List<String> pages = document.getContainedPagesIdList();
-		for(Iterator<String> it = pages.iterator(); it.hasNext(); ) {
-			Page page = document.getPage(it.next());
-			List<String> components = page.getContainedComponentsIds();
-			for(Iterator<String> it2 = components.iterator(); it2.hasNext(); ) {
-				Component component = page.getComponent(it2.next());
-				PropertiesComponent properties = component.getProperties();
-				if(properties != null) {
-					Variable variable = properties.getVariable();
-					if(variable != null) {
-						String variableProperty = variable.getDefaultStringRepresentation();
-						if(variables.containsKey(variableProperty)) {
-							variables.get(variableProperty).add(component.getId());
-						} else {
-							List<String> comps = new ArrayList<String>();
-							comps.add(component.getId());
-							variables.put(variableProperty, comps);
-						}
-					}
-				}
-			}
-			ButtonArea buttonArea = page.getButtonArea();
-			if(buttonArea != null) {
-				List<String> buttons = buttonArea.getContainedComponentsIds();
-				for(Iterator<String> it4 = buttons.iterator(); it4.hasNext(); ) {
-					String buttonId = it4.next();
-					Button button = (Button) buttonArea.getComponent(buttonId);
-					PropertiesButton properties = button.getProperties();
-					if(properties != null) {
-						String transition = properties.getReferAction();
-						if(transition != null) {
-							if(transitions.containsKey(transition)) {
-								transitions.get(transition).add(buttonId);
-							} else {
-								List<String> comps = new ArrayList<String>();
-								comps.add(buttonId);
-								transitions.put(transition, comps);
+		
+		this.transitionUsageList.clear();
+		
+		this.datatypedVariables.clear();
+		this.variableUsageList.clear();
+		
+		ProcessDefinitionW pdw = getBpmFactory().getProcessManager(processId).getProcessDefinition(processId);
+		
+		variables.addAll(pdw.getTaskVariableList(processId, taskName));
+		
+		transitions.add("transition1");
+		transitions.add("transition2");
+		transitions.add("transition3");
+		
+	}
+	
+	public List<Variable> getVariables() {
+		return variables;
+	}
+
+	public void setVariables(List<Variable> variables) {
+		this.variables = variables;
+	}
+
+	public List<String> getTransitions() {
+		return transitions;
+	}
+
+	public void setTransitions(List<String> transitions) {
+		this.transitions = transitions;
+	}
+	
+	public Map<String, List<String>> getTransitionUsageList() {
+		if(transitionUsageList.isEmpty() && document != null) {
+			List<String> pages = document.getContainedPagesIdList();
+			for(String p : pages) {
+				Page page = document.getPage(p);
+				
+				ButtonArea buttonArea = page.getButtonArea();
+				if(buttonArea != null) {
+					List<String> buttons = buttonArea.getContainedComponentsIds();
+					for(String buttonId : buttons) {
+						Button button = (Button) buttonArea.getComponent(buttonId);
+						PropertiesButton properties = button.getProperties();
+						if(properties != null) {
+							String transition = properties.getReferAction();
+							if(transition != null) {
+								if(transitionUsageList.containsKey(transition)) {
+									transitionUsageList.get(transition).add(buttonId);
+								} else {
+									List<String> comps = new ArrayList<String>();
+									comps.add(buttonId);
+									transitionUsageList.put(transition, comps);
+								}
 							}
 						}
 					}
 				}
 			}
-		}
-		for(Iterator<String> it3 = vars.iterator(); it3.hasNext(); ) {
-			String variableName = it3.next();
-			if(variables.containsKey(variableName)) {
-				continue;
+			for(String transitionName : transitions) {
+				if(transitionUsageList.containsKey(transitionName)) {
+					continue;
+				}
+				transitionUsageList.put(transitionName, new ArrayList<String>());
 			}
-			variables.put(variableName, new ArrayList<String>());
 		}
-		for(Iterator<String> it5 = trans.iterator(); it5.hasNext(); ) {
-			String transitionName = it5.next();
-			if(transitions.containsKey(transitionName)) {
-				continue;
-			}
-			transitions.put(transitionName, new ArrayList<String>());
-		}
+		return transitionUsageList;
 	}
-	
+
+	public Map<String, List<String>> getVariableUsageList() {
+		if(variableUsageList.isEmpty() && document != null) {
+			List<String> pages = document.getContainedPagesIdList();
+			for(String p : pages) {
+				Page page = document.getPage(p);
+				
+				List<String> components = page.getContainedComponentsIds();
+				for(String c : components) {
+					Component component = page.getComponent(c);
+					PropertiesComponent properties = component.getProperties();
+					if(properties != null) {
+						Variable variable = properties.getVariable();
+						if(variable != null) {
+							String variableProperty = variable.getDefaultStringRepresentation();
+							if(variableUsageList.containsKey(variableProperty)) {
+								variableUsageList.get(variableProperty).add(component.getId());
+							} else {
+								List<String> comps = new ArrayList<String>();
+								comps.add(component.getId());
+								variableUsageList.put(variableProperty, comps);
+							}
+						}
+					}
+				}
+			}
+			
+			for(Variable variable : variables) {
+				String varName = variable.getDefaultStringRepresentation();
+				
+				if(variableUsageList.containsKey(varName)) {
+					continue;
+				}
+				variableUsageList.put(varName, new ArrayList<String>());
+			}
+		}
+		return variableUsageList;
+	}
+
+	public void setVariableUsageList(Map<String, List<String>> variableUsageList) {
+		this.variableUsageList = variableUsageList;
+	}
+
+	public void setDatatypedVariables(Map<String, List<Variable>> datatypedVariables) {
+		this.datatypedVariables = datatypedVariables;
+	}
+
 	public ConstVariableStatus bindVariable(String componentId, String variable) {
-		if(variables.containsKey(variable)) {
-			variables.get(variable).add(componentId);
+		if(getVariableUsageList().containsKey(variable)) {
+			getVariableUsageList().get(variable).add(componentId);
 		} else {
 			List<String> comps = new ArrayList<String>();
 			comps.add(componentId);
-			variables.put(variable, comps);
+			getVariableUsageList().put(variable, comps);
 		}
 		return getVariableStatus(variable);
 	}
@@ -143,8 +207,16 @@ public class ProcessData implements Serializable {
 //		jbpmProcessBusiness.addTaskVariable(processId, taskName, datatype, variable);
 	}
 	
-	public ConstVariableStatus getVariableStatus(String variableName) {
-		List<String> comps = variables.get(variableName);
+	public ConstVariableStatus getTransitionStatus(String transition) {
+		return getStatus(transition, getTransitionUsageList());
+	}
+	
+	public ConstVariableStatus getVariableStatus(String variable) {
+		return getStatus(variable, getVariableUsageList());
+	}
+	
+	private ConstVariableStatus getStatus(String name, Map<String, List<String>> usageMap) {
+		List<String> comps = usageMap.get(name);
 		if(comps != null) {
 			if(comps.size() == 0) {
 				return new ConstVariableStatus(ConstVariableStatus.UNUSED);
@@ -159,24 +231,24 @@ public class ProcessData implements Serializable {
 	}
 	
 	public ConstVariableStatus unbindVariable(String variable, String componentId) {
-		variables.get(variable).remove(componentId);
+		getVariableUsageList().get(variable).remove(componentId);
 		//TODO add actual nulling of the component property
 		return getVariableStatus(variable);
 	}
 	
 	public ConstVariableStatus bindTransition(String buttonId, String transition) {
-		if(transitions.containsKey(transition)) {
-			transitions.get(transition).add(buttonId);
+		if(getTransitionUsageList().containsKey(transition)) {
+			getTransitionUsageList().get(transition).add(buttonId);
 		} else {
 			List<String> comps = new ArrayList<String>();
 			comps.add(buttonId);
-			transitions.put(transition, comps);
+			getTransitionUsageList().put(transition, comps);
 		}
 		return getTransitionStatus(transition);
 	}
 	
 	public ConstVariableStatus unbindTransition(String transition, String buttonId) {
-		transitions.get(transition).remove(buttonId);
+		getTransitionUsageList().get(transition).remove(buttonId);
 		//TODO add actual nulling of the component property
 		return getTransitionStatus(transition);
 	}
@@ -189,26 +261,22 @@ public class ProcessData implements Serializable {
 		return null;
 	}
 	
-	public Set<String> getComponentTypeVariables(String componentType) {
+	public List<Variable> getComponentTypeVariables(String componentType) {
 		ProcessPalette processPalette = (ProcessPalette) WFUtil.getBeanInstance(ProcessPalette.BEAN_ID);
 		Set<String> datatypes = processPalette.getComponentDatatype(componentType);
-//		return jbpmProcessBusiness.getProcessVariablesByDatatypes(getProcessId(), datatypes);
-		return null;
-	}
-	
-	public ConstVariableStatus getTransitionStatus(String transition) {
-		List<String> comps = transitions.get(transition);
-		if(comps != null) {
-			if(comps.size() == 0) {
-				return new ConstVariableStatus(ConstVariableStatus.UNUSED);
-			} else if(comps.size() == 1) {
-				return new ConstVariableStatus(ConstVariableStatus.SINGLE);
-			} else {
-				return new ConstVariableStatus(ConstVariableStatus.MULTIPLE);
+		
+		List<Variable> vars = new ArrayList<Variable>();
+		for(String dataType : datatypes) {
+			
+			List<Variable> dvars = getDatatypedVariables().get(dataType);
+			
+			if(dvars != null && !dvars.isEmpty()) {
+				vars.addAll(dvars);
 			}
-		} else {
-			return new ConstVariableStatus(ConstVariableStatus.UNUSED);
+			
 		}
+		
+		return vars;
 	}
 	
 	public Long getProcessId() {
@@ -235,17 +303,8 @@ public class ProcessData implements Serializable {
 	public void setTaskId(Long taskId) {
 		this.taskId = taskId;
 	}
-	public Map<String, List<String>> getVariables() {
-		return variables;
-	}
-	public void setVariables(Map<String, List<String>> variables) {
-		this.variables = variables;
-	}
-	public Map<String, List<String>> getTransitions() {
-		return transitions;
-	}
-	public void setTransitions(Map<String, List<String>> transitions) {
-		this.transitions = transitions;
-	}
 
+	public void setTransitionUsageList(Map<String, List<String>> transitionUsageList) {
+		this.transitionUsageList = transitionUsageList;
+	}
 }

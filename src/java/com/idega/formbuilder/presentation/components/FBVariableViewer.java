@@ -1,16 +1,13 @@
 package com.idega.formbuilder.presentation.components;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.faces.context.FacesContext;
 
 import com.idega.block.process.variables.Variable;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.ProcessData;
-import com.idega.jbpm.exe.ProcessDefinitionW;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
@@ -31,10 +28,9 @@ public class FBVariableViewer extends FBComponentBase {
 	private static final String FB_MENU_TABBAR = "fbMenuTabBar";
 	private static final String VARIABLE_LIST_SECTION = "variableListSection";
 	private static final String VAR_ENTRY = "varEntry";
-//	private static final String VAR_POSTFIX = "var";
+	private static final String VAR_POSTFIX = "fbvar";
 	private static final String ADD_ICON_POSTFIX = "add";
 	private static final String ADD_VARIABLE_ICON = "addVariableIcon";
-	private static final String TRANS_POSTFIX = "trans";
 	private static final String FB_VARIABLES_LEGEND = "fbVariablesLegend";
 	private static final String LEGEND_ITEM = "legenItem";
 	private static final String UNUSED_LEGEND_CLASS = "unusedLegend";
@@ -49,11 +45,7 @@ public class FBVariableViewer extends FBComponentBase {
 		
 		ProcessData processData = (ProcessData) WFUtil.getBeanInstance(ProcessData.BEAN_ID);
 		
-//		Map<String, Set<String>> variables = jbpmBusiness.getProcessVariables(processData.getProcessId());
-		
-		Map<String, Set<String>> variables = new HashMap<String, Set<String>>();
-		
-		Map<String, List<String>> vars = processData.getDatatypedVariables();
+		Map<String, List<Variable>> vars = processData.getDatatypedVariables();
 		for(String datatype : vars.keySet()) {
 			Layer header = new Layer(Layer.DIV);
 			header.setStyleClass(FB_MENU_TABBAR);
@@ -63,20 +55,16 @@ public class FBVariableViewer extends FBComponentBase {
 			Layer layer = new Layer(Layer.DIV);
 			layer.setStyleClass(VARIABLE_LIST_SECTION);
 			
-			Set<String> list = variables.get(datatype);
+			List<Variable> list = vars.get(datatype);
 			
 			if(list != null) {
-				for(String var : list) {
-					StringBuffer buffer = new StringBuffer(datatype)
-						.append(CoreConstants.UNDER)
-						.append(var);
-					
-					Text varEntry = new Text(var);
+				for(Variable var : list) {
+					Text varEntry = new Text(var.getName());
 					varEntry.setStyleClass(VAR_ENTRY);
-					varEntry.setStyleClass("fbvar");
-					varEntry.setId(buffer.toString());
+					varEntry.setStyleClass(VAR_POSTFIX);
+					varEntry.setId(var.getDefaultStringRepresentation());
 					
-					String status = processData.getVariableStatus(buffer.toString()).getStatus();
+					String status = processData.getVariableStatus(var.getDefaultStringRepresentation()).getStatus();
 					varEntry.setStyleClass(status);
 					
 					layer.add(varEntry);
@@ -107,22 +95,19 @@ public class FBVariableViewer extends FBComponentBase {
 			
 			try {
 				
-//				List<String> transitions = jbpmBusiness.getTaskTransitions(processData.getProcessId(), processData.getTaskName());
-//				for(String transition : transitions) {
-//					StringBuffer buffer = new StringBuffer(transition)
-//					.append(CoreConstants.UNDER)
-//					.append(TRANS_POSTFIX);
-//					
-//					Text varEntry = new Text(transition);
-//					varEntry.setStyleClass(VAR_ENTRY);
-//					varEntry.setStyleClass("fbtrans");
-//					varEntry.setId(buffer.toString());
-//					
-//					String status = processData.getTransitionStatus(transition).getStatus();
-//					varEntry.setStyleClass(status);
-//					
-//					layer.add(varEntry);
-//				}
+				List<String> transitions = processData.getTransitions();
+				for(String transition : transitions) {
+					
+					Text varEntry = new Text(transition);
+					varEntry.setStyleClass(VAR_ENTRY);
+					varEntry.setStyleClass("fbtrans");
+					varEntry.setId(transition);
+					
+					String status = processData.getTransitionStatus(transition).getStatus();
+					varEntry.setStyleClass(status);
+					
+					layer.add(varEntry);
+				}
 				
 			} catch (Exception e) {
 				e.printStackTrace();

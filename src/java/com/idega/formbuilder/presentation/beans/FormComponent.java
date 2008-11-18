@@ -1,14 +1,11 @@
 package com.idega.formbuilder.presentation.beans;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.jdom.Document;
 
 import com.idega.block.process.variables.Variable;
-import com.idega.builder.bean.AdvancedProperty;
 import com.idega.builder.business.BuilderLogic;
 import com.idega.chiba.web.xml.xforms.validation.ErrorType;
 import com.idega.formbuilder.presentation.components.FBButton;
@@ -16,9 +13,11 @@ import com.idega.formbuilder.presentation.components.FBButtonArea;
 import com.idega.formbuilder.presentation.components.FBComponentProperties;
 import com.idega.formbuilder.presentation.components.FBDesignView;
 import com.idega.formbuilder.presentation.components.FBFormComponent;
+import com.idega.formbuilder.presentation.components.FBVariableList;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
+import com.idega.webface.WFUtil;
 import com.idega.xformsmanager.business.component.Button;
 import com.idega.xformsmanager.business.component.ButtonArea;
 import com.idega.xformsmanager.business.component.Component;
@@ -97,21 +96,6 @@ public class FormComponent extends GenericComponent {
 		return null;
 	}
 	
-	public Object[] assignVariableAndMoveComponent(String componentId, String variable, int before) throws Exception {
-		Object[] results = new Object[3];
-//		Object[] results2 = assignVariable(componentId, variable);
-//		results[0] = doc;
-		String move = moveComponent(componentId, before);
-		results[1] = move;
-		Page page = formPage.getPage();
-		if(page != null) {
-			Component component = page.getComponent(componentId);
-			Document comp = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component), true);
-			results[2] = comp;
-		}
-		return results;
-	}
-	
 	public String[] removeVariableBinding(String componentId) {
 		if(componentId == null) {
 			return null;
@@ -171,6 +155,10 @@ public class FormComponent extends GenericComponent {
 	}
 	
 	public String[] assignTransition(String buttonId, String transition) {
+		if(StringUtils.isEmpty(buttonId) || buttonId.equals("-1")) {
+			return null;
+		}
+		
 		Page page = formPage.getPage();
 		if(page != null) {
 			ButtonArea area = page.getButtonArea();
@@ -181,7 +169,7 @@ public class FormComponent extends GenericComponent {
 					String action = properties.getReferAction();
 					properties.setReferAction(transition);
 					
-					String[] result = new String[3];
+					String[] result = new String[4];
 					result[0] = processData.bindTransition(buttonId, transition).getStatus();
 					result[1] = action;
 					result[2] = action == null ? null : processData.getTransitionStatus(action).getStatus();
@@ -194,114 +182,140 @@ public class FormComponent extends GenericComponent {
 		return null;
 	}
 	
-	public Object[] assignTransitionAndRenderButton(String buttonId, String transition) {
-		Object[] result = new Object[2];
-		Page page = formPage.getPage();
-		if(page != null) {
-			ButtonArea area = page.getButtonArea();
-			if(area != null) {
-				Button button = (Button) area.getComponent(buttonId);
-				PropertiesButton properties = button.getProperties();
-				if(properties != null) {
-					properties.setReferAction(transition);
-					result[0] = processData.bindTransition(buttonId, transition).getStatus();
-					result[1] = getButton(button);
-				}
-			}
-		}
-		return result;
-	}
-	
-	public List<AdvancedProperty> getAvailableComponentVariables(String type) {
-		Set<String> variables = getProcessData().getComponentTypeVariables(type);
-		List<AdvancedProperty> result = new ArrayList<AdvancedProperty>();
-		for(String var : variables) {
-			String name = var.split(":")[1];
-			result.add(new AdvancedProperty(var, name));
-		}
-		
-		return result;
-	}
-	
 	public String getDataSrc() {return null;}
 
 	public void setDataSrc(String dataSrc) {}
 	
-	public Object[] addTaskComponent(String type) throws Exception {
+	public Document getAvailableProcessDataList(String type, boolean transition) {
+		if(StringUtils.isEmpty(type)) {
+			return null;
+		}
+		
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBVariableList(type, transition), true);
+	}
+	
+	public Object[] addTaskComponent(String type, int before, String variable) throws Exception {
+		if(type == null) {
+			return null;
+		}
+		
 		Object[] result = new Object[3];
-		
-		String doc = addComponent(type);
-		result[0] = doc;
-		
-		Set<String> datatype = getProcessPalette().getComponentDatatype(type);
-		result[1] = datatype;
-		
-		Set<String> vars = getProcessData().getComponentTypeVariables(type);
-		result[2] = vars;
-		
-		return result;
-	}
-	
-//	public String addButton(String type) {
-//		Page page = formPage.getPage();
-//		if(page != null) {
-//			ButtonArea area = page.getButtonArea();
-//			Button button = null;
-//			if(area != null) {
-//				button = area.addButton(ConstButtonType.getByStringType(type), null);
-//			} else {
-//				area = page.createButtonArea(null);
-//				button = area.addButton(ConstButtonType.getByStringType(type), null);
-//			}
-//			return button.getId();
-////			return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBButton(button.getId(), "formButton", "loadButtonInfo(this);", "removeButton(this);"), true);
-//		}
-//		return null;
-//	}
-	
-	public Document getRenderedButton(String type) {
-		if(type == null) {
-			return null;
-		}
-		Page page = formPage.getPage();
-		if(page != null) {
-			ButtonArea area = page.getButtonArea();
-			Button button = null;
-			if(area != null) {
-				button = area.addButton(ConstButtonType.getByStringType(type), null);
-			} else {
-				area = page.createButtonArea(null);
-				button = area.addButton(ConstButtonType.getByStringType(type), null);
-			}
-			return getButton(button);
-		}
-		return null;
-	}
-	
-	private String addComponent(String type) throws Exception {
-		if(type == null) {
-			return null;
-		}
 		
 		Page page = formPage.getPage();
 		if(formPage.isSpecial()) {
 			return null;
 		}
 		if(page != null) {
-			String before = null;
-			ButtonArea area = page.getButtonArea();
-			if(area != null) {
-				before = area.getId();
+			String beforeId = null;
+			if(before == -1) {
+				result[0] = "append";
+				
+				ButtonArea area = page.getButtonArea();
+				if(area != null) {
+					beforeId = area.getId();
+				}
+			} else {
+				List<String> ids = page.getContainedComponentsIds();
+				if(ids.size() > before + 1) {
+					beforeId = page.getContainedComponentsIds().get(before + 1);
+					
+					ButtonArea area = page.getButtonArea();
+					if(area != null && beforeId.equals(area.getId())) {
+						result[0] = "append";
+					}
+				}
 			}
-			Component component = page.addComponent(type, before);
-			if(component != null) {
-				return component.getId();
+			Component component = page.addComponent(type, beforeId);
+			PropertiesComponent properties = component.getProperties();
+			if(properties != null) {
+				properties.setVariable(variable);
+				
+				result[2] = processData.bindVariable(component.getId(), variable).getStatus();
 			}
+			if(result[0] == null) {
+				result[0] = beforeId;
+			}
+			result[1] = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component), true);
+			
 		}
-		return null;
+
+		return result;
 	}
 	
-	public Object[] moveAndRenderComponent(String type, int before) throws Exception {
+	public Object[] addTransitionButton(String type, String transition, int before) {
+		if(type == null) {
+			return null;
+		}
+		
+		Object[] result = new Object[3];
+		Page page = formPage.getPage();
+		if(page != null) {
+			ButtonArea area = page.getButtonArea();
+			if(area == null) {
+				area = page.createButtonArea(null);
+			}
+			
+			String beforeId = null;
+			if(before == -1) {
+				result[0] = "append";
+			} else {
+				List<String> ids = area.getContainedComponentsIds();
+				if(ids.size() > before + 1) {
+					beforeId = ids.get(before + 1);
+				}
+			}
+			
+			if(result[2] == null) {
+				result[2] = beforeId;
+			}
+			
+			Button button = area.addButton(ConstButtonType.getByStringType(type), beforeId);
+			PropertiesButton properties = button.getProperties();
+			if(properties != null) {
+				properties.setReferAction(transition);
+				
+				result[1] = processData.bindTransition(button.getId(), transition).getStatus();
+			}
+			result[0] = getButton(button);
+		}
+		return result;
+	}
+	
+	public Object[] addButton(String type, int before) {
+		if(type == null) {
+			return null;
+		}
+		
+		Object[] result = new Object[2];
+		Page page = formPage.getPage();
+		if(page != null) {
+			ButtonArea area = page.getButtonArea();
+			
+			if(area == null) {
+				area = page.createButtonArea(null);
+			}
+			
+			String beforeId = null;
+			if(before == -1) {
+				result[0] = "append";
+			} else {
+				List<String> ids = area.getContainedComponentsIds();
+				if(ids.size() > before + 1) {
+					beforeId = ids.get(before + 1);
+				}
+			}
+			
+			Button button = area.addButton(ConstButtonType.getByStringType(type), beforeId);
+			
+			if(result[0] == null) {
+				result[0] = beforeId;
+			}
+			result[1] = getButton(button);
+		}
+		return result;
+	}
+	
+	public Object[] addComponent(String type, int before) throws Exception {
 		if(type == null) {
 			return null;
 		}
@@ -389,10 +403,27 @@ public class FormComponent extends GenericComponent {
 				
 				component.remove();
 				
-				Object[] result = new Object[3];
+				Object[] result = new Object[5];
 				result[0] = id;
 				result[1] = update ? getPropertiesPanel(null) : null;
 				result[2] = formPage.hasRegularComponents() ? null : getDesignView();
+				
+				Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
+				if(workspace.isProcessMode()) {
+					PropertiesComponent properties = component.getProperties();
+					if(properties != null) {
+						Variable oldVar = properties.getVariable();
+						String oldVarName = null;
+						if(oldVar != null) {
+							oldVarName = oldVar.getDefaultStringRepresentation();
+							processData.unbindVariable(oldVarName, id);
+						}
+						
+						result[3] = oldVarName;
+						result[4] = oldVarName == null ? null : processData.getVariableStatus(oldVarName).getStatus();
+						
+					}
+				}
 				
 				return result;
 			}
@@ -413,12 +444,26 @@ public class FormComponent extends GenericComponent {
 				if(button != null) {
 					boolean update = propertyManager.resetComponent(button);
 					
-					button.remove();
-					
-					Object[] result = new Object[3];
+					Object[] result = new Object[5];
 					result[0] = id;
 					result[1] = update ? getPropertiesPanel(null) : null;
 					result[2] = area.getContainedComponentsIds().isEmpty() ? getButtonArea("formElement formElementHover", "formButton") : null;
+					
+					Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
+					if(workspace.isProcessMode()) {
+						PropertiesButton properties = button.getProperties();
+						if(properties != null) {
+							String action = properties.getReferAction();
+							if(action != null) {
+								processData.unbindTransition(id, action).getStatus();
+							}
+							
+							result[3] = action;
+							result[4] = action == null ? null : processData.getTransitionStatus(action).getStatus();
+						}
+					}
+					
+					button.remove();
 					
 					return result;
 				}
@@ -480,16 +525,6 @@ public class FormComponent extends GenericComponent {
 		getComponent().getProperties().setHelpText(bean);
 	}
 
-//	public String getValidationText() {
-//		return getComponent().getProperties().getValidationText().getString(FBUtil.getUILocale());
-//	}
-//	
-//	public void setValidationText(String validationText) {
-//		LocalizedStringBean bean = getComponent().getProperties().getValidationText();
-//		bean.setString(FBUtil.getUILocale(), validationText);
-//		getComponent().getProperties().setValidationText(bean);
-//	}
-	
 	public String getAutofillKey() {
 			return getComponent().getProperties().getAutofillKey();
 	}

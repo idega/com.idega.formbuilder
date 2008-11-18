@@ -1186,7 +1186,7 @@ div.formElement:hover .speedButton {
 	display: none;
 }
 
-.assignVariableBox a {
+.assignVariableBox span {
 	color: #1f1f1f;
 }
 

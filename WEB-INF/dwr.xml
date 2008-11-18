@@ -22,7 +22,6 @@
     	<create creator="jsf" javascript="ProcessData" scope="session">
 	    	<param name="managedBeanName" value="processData"/>
 	    	<param name="class" value="com.idega.formbuilder.presentation.beans.ProcessData"/>
-	    	<include method="getAvailableTransitions" />
 	    	<include method="createVariable" />
     	</create>
   		<create creator="jsf" javascript="XFormsProcess" scope="application">
@@ -82,23 +81,19 @@
 	    	<param name="managedBeanName" value="formComponent"/>
 	    	<param name="class" value="com.idega.formbuilder.presentation.beans.FormComponent"/>
 	    	<include method="addTaskComponent" />
-	    	<include method="moveComponent" />
-	    	<include method="moveAndRenderComponent" />
-	    	<include method="getRenderedButton" />
+	    	<include method="addTransitionButton" />
+	    	<include method="addComponent" />
+	    	<include method="addButton" />
 	    	<include method="removeComponent" />
+	    	<include method="removeButton" />
 	    	<include method="getId" />
 	    	<include method="assignVariable" />
-	    	<include method="assignVariableAndMoveComponent" />
-	    	<include method="assignTransitionAndRenderButton" />
-	    	<include method="getAvailableComponentVariables" />
+	    	<include method="assignTransition" />
+	    	<include method="removeVariableBinding" />
+	    	<include method="removeTransitionBinding" />
+	    	<include method="getAvailableProcessDataList" />
 	    	<include method="getFormButtonInfo" />
 	    	<include method="getFormComponentInfo" />
-	    	<include method="removeButton" />
-	    	
-	    	<!-- 
-	    	<include method="addButton" />
-	    	<include method="addComponent" />
-	    	 -->
     	</create>
   	</allow>
 </dwr>

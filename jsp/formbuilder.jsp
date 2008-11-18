@@ -23,8 +23,6 @@
 								/dwr/interface/PropertyManager.js,
 								/dwr/interface/FormDocument.js,
 								/dwr/interface/FormPage.js,
-								/dwr/interface/JbpmBusiness.js,
-								/dwr/interface/ProcessPalette.js,
 								/dwr/interface/ProcessData.js,
 								/dwr/interface/Workspace.js,
 								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js"
@@ -69,15 +67,6 @@
 				<t:div id="formListDialog" forceId="true" styleClass="formListDialogStyle" style="display: none;">
 					<t:commandLink id="yesSaveFormBtn" forceId="true" onclick="fbsave();window.location.href = '/workspace/forms/';" value="Yes" />
 					<t:commandLink id="noSaveFormBtn" forceId="true" onclick="window.location.href = '/workspace/forms/';" value="No" />
-				</t:div>
-				<t:div id="selectVariableDialog" forceId="true" styleClass="selectVariableDialogStyle" style="visibility: hidden;">
-					<t:htmlTag styleClass="accordionHeading" value="span">
-						<t:outputText value="Select variable" styleClass="title"> </t:outputText>
-					</t:htmlTag>
-					<t:htmlTag styleClass="variablePopupList" value="ul" id="variablePopupList">
-					</t:htmlTag>
-					<t:commandLink id="noVariableBtn" forceId="true"  value="None"></t:commandLink>
-					<t:commandLink id="cancelVariableBtn" forceId="true"  value="Cancel"></t:commandLink>
 				</t:div>
 				<t:div id="bottomButtonsContainer" forceId="true" styleClass="fbBottomButtonsContainer">
 					<t:div styleClass="states">

@@ -11,8 +11,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Element;
 
-import com.idega.xformsmanager.business.component.Component;
-import com.idega.xformsmanager.business.component.properties.PropertiesComponent;
 import com.idega.formbuilder.dom.DOMTransformer;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.ProcessPalette;
@@ -21,8 +19,10 @@ import com.idega.formbuilder.util.FBUtil;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
-import com.idega.presentation.text.Link;
+import com.idega.presentation.text.Text;
 import com.idega.webface.WFUtil;
+import com.idega.xformsmanager.business.component.Component;
+import com.idega.xformsmanager.business.component.properties.PropertiesComponent;
 
 public class FBFormComponent extends FBComponentBase {
 	
@@ -41,12 +41,10 @@ public class FBFormComponent extends FBComponentBase {
 	private static final String HANDLER_LAYER_CLASS = "fbCompHandler";
 	private static final String DELETE_BUTTON_PREFIX = "db";
 	private static final String ID_ATTRIBUTE = "id";
-	//private static final String ONCLICK_ATTRIBUTE = "onclick";
 	private static final String CLASS_ATTRIBUTE = "class";
 	private static final String STYLECLASS_ATTRIBUTE = "styleClass";
 	private static final String EDIT_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit_16.png";
 	private static final String ASSIGN_VAR_BOX_CLASS = "assignVariableBox";
-	private static final String LETTER_A = "A";
 	private static final String ASSIGN_LABEL_CLASS = "assignLabel";
 	private static final String REL_ATTRIBUTE = "rel";
 	
@@ -154,9 +152,9 @@ public class FBFormComponent extends FBComponentBase {
 		Layer assignVariable = new Layer(Layer.DIV);
 		assignVariable.setStyleClass(ASSIGN_VAR_BOX_CLASS);
 		assignVariable.setMarkupAttribute(REL_ATTRIBUTE, type);
-		assignVariable.setId(LETTER_A + getId());
+		assignVariable.setId("var_" + getId());
 						
-		Link assignLabel = new Link();
+		Text assignLabel = new Text();
 		assignLabel.setStyleClass(ASSIGN_LABEL_CLASS);
 		if(value == null) {
 			assignLabel.setText(getLocalizedString(iwc, "fb_no_assign_label", "Not assigned"));
@@ -166,6 +164,8 @@ public class FBFormComponent extends FBComponentBase {
 							
 		Image icon = new Image();
 		icon.setSrc(EDIT_ICON);
+		icon.setToolTip(getLocalizedString(iwc, "fb_assign_clear", "Click to remove binding"));
+		icon.setStyleClass("removeVarIcon");
 							
 		assignVariable.add(icon);
 		assignVariable.add(assignLabel);
@@ -173,7 +173,6 @@ public class FBFormComponent extends FBComponentBase {
 		Image deleteButton = new Image();
 		deleteButton.setId(DELETE_BUTTON_PREFIX + getId());
 		deleteButton.setSrc(DELETE_BUTTON_ICON);
-//		deleteButton.setOnClick(onDelete);
 		deleteButton.setStyleClass(speedButtonStyleClass);
 						
 		addFacet(VARIABLE_NAME_FACET, assignVariable);
@@ -188,7 +187,6 @@ public class FBFormComponent extends FBComponentBase {
 		writer.startElement(Layer.DIV, this);
 		writer.writeAttribute(CLASS_ATTRIBUTE, getStyleClass(), STYLECLASS_ATTRIBUTE);
 		writer.writeAttribute(ID_ATTRIBUTE, getId(), ID_ATTRIBUTE);
-//		writer.writeAttribute(ONCLICK_ATTRIBUTE, onLoad, ONCLICK_ATTRIBUTE);
 		UIComponent handleLayer = getFacet(HANDLE_LAYER_FACET);
 		if(handleLayer != null) {
 			renderChild(context, handleLayer);
