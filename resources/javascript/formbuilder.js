@@ -264,22 +264,9 @@ function initializeButtonArea() {
 					draggingButton = false;
 					if(el.hasClass('fbb')) {
 						if(newComponentId != null) {
-							FormComponent.addButton(newComponentId, CURRENT_ELEMENT_UNDER, {
+							FormComponent.addButton(newComponentId, CURRENT_ELEMENT_UNDER, null, {
 								callback: function(result) {
-									if($('noButtonsNotice') != null) {
-										$('noButtonsNotice').remove();
-									}
-									if(result[0] == 'append' || result[0] == null) {
-										insertNodesToContainer(result[1], pageButtonArea);
-									} else {
-										var node = $(result[0]);
-										insertNodesToContainerBefore(result[1], pageButtonArea, node);
-									}
-									newComponentId = null;
-									if(fbLeftAccordion != null) {
-										fbLeftAccordion.display(0);
-									}
-									initializeButtonSorting(fbButtonSort);
+									addButton(result, pageButtonArea, null, null);
 								}
 							});
 						}
@@ -412,6 +399,29 @@ function initializeButtonSorting(fbButtonSort) {
 		},
 		handles: '.fbButtonHandler'
 	});
+}
+
+function addButton(data, container, transition, dialog) {
+	if($('noButtonsNotice') != null) {
+		$('noButtonsNotice').remove();
+	}
+	if(data[0] == 'append' || data[0] == null) {
+		insertNodesToContainer(data[1], container);
+	} else {
+		var node = $(data[0]);
+		insertNodesToContainerBefore(data[1], container, node);
+	}
+	newComponentId = null;
+	if(fbLeftAccordion != null) {
+		fbLeftAccordion.display(0);
+	}
+	initializeButtonSorting(fbButtonSort);
+	
+	updateVariableItem(transition, data[1]);
+										
+	if(dialog) dialog.remove();
+										
+	closeLoadingMessage();
 }
 
 function addComponent(data, container, variable, dialog) {
@@ -788,22 +798,7 @@ function showVariableList(positionLeft, positionTop, transition) {
 								showLoadingMessage('Adding button');
 								FormComponent.addButton(newComponentId, CURRENT_ELEMENT_UNDER, {
 									callback: function(result) {
-										if($('noButtonsNotice') != null) {
-											$('noButtonsNotice').remove();
-										}
-										if(result[0] == 'append' || result[0] == null) {
-											insertNodesToContainer(result[1], pageButtonArea);
-										} else {
-											var node = $(result[0]);
-											insertNodesToContainerBefore(result[1], pageButtonArea, node);
-										}
-										newComponentId = null;
-										if(fbLeftAccordion != null) {
-											fbLeftAccordion.display(0);
-										}
-										initializeButtonSorting(fbButtonSort);
-										
-										closeLoadingMessage();
+										addButton(result, pageButtonArea, null, null);
 									}
 								});
 							} else {
@@ -838,27 +833,8 @@ function showVariableList(positionLeft, positionTop, transition) {
 							if(transition) {
 								showLoadingMessage('Adding button');
 								FormComponent.addTransitionButton(newComponentId, variable, CURRENT_ELEMENT_UNDER, {
-									callback: function(result) {
-										if($('noButtonsNotice') != null) {
-											$('noButtonsNotice').remove();
-										}
-										if(result[2] == 'append' || result[2] == null) {
-											insertNodesToContainer(result[0], pageButtonArea);
-										} else {
-											var node = $(result[0]);
-											insertNodesToContainerBefore(result[0], pageButtonArea, node);
-										}
-										newComponentId = null;
-										if(fbLeftAccordion != null) {
-											fbLeftAccordion.display(0);
-										}
-										initializeButtonSorting(fbButtonSort);
-										
-										updateVariableItem(variable, result[1]);
-										
-										container.remove();
-										
-										closeLoadingMessage();
+									callback: function(data) {
+										addButton(data, pageButtonArea, variable, container);
 									}
 								});
 							} else {

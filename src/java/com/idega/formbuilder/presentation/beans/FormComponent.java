@@ -194,7 +194,7 @@ public class FormComponent extends GenericComponent {
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBVariableList(type, transition), true);
 	}
 	
-	public Object[] addTransitionButton(String type, String transition, String before) {
+	public Object[] addButton(String type, String before, String transition) {
 		if(type == null) {
 			return null;
 		}
@@ -203,46 +203,6 @@ public class FormComponent extends GenericComponent {
 		Page page = formPage.getPage();
 		if(page != null) {
 			ButtonArea area = page.getButtonArea();
-			if(area == null) {
-				area = page.createButtonArea(null);
-			}
-			
-			String beforeId = null;
-			if(StringUtils.isEmpty(before)) {
-				result[0] = "append";
-			} else {
-				List<String> ids = area.getContainedComponentsIds();
-				int beforeInt = ids.indexOf(before);
-				if(ids.size() > beforeInt + 1) {
-					beforeId = ids.get(beforeInt + 1);
-				}
-			}
-			
-			if(result[2] == null) {
-				result[2] = beforeId;
-			}
-			
-			Button button = area.addButton(ConstButtonType.getByStringType(type), beforeId);
-			PropertiesButton properties = button.getProperties();
-			if(properties != null) {
-				properties.setReferAction(transition);
-				
-				result[1] = processData.bindTransition(button.getId(), transition).getStatus();
-			}
-			result[0] = getButton(button);
-		}
-		return result;
-	}
-	
-	public Object[] addButton(String type, String before) {
-		if(type == null) {
-			return null;
-		}
-		
-		Object[] result = new Object[2];
-		Page page = formPage.getPage();
-		if(page != null) {
-			ButtonArea area = page.getButtonArea();
 			
 			if(area == null) {
 				area = page.createButtonArea(null);
@@ -260,6 +220,15 @@ public class FormComponent extends GenericComponent {
 			}
 			
 			Button button = area.addButton(ConstButtonType.getByStringType(type), beforeId);
+			Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
+			if(workspace.isProcessMode()) {
+				PropertiesButton properties = button.getProperties();
+				if(properties != null) {
+					properties.setReferAction(transition);
+					
+					result[2] = processData.bindTransition(button.getId(), transition).getStatus();
+				}
+			}
 			
 			if(result[0] == null) {
 				result[0] = beforeId;
