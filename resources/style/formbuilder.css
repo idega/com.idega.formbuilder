@@ -1074,22 +1074,30 @@ cursor: pointer;
 }
 
 div.selectedComponent .fbButtonHandler {
-	background-color: #999999				!important;
+	/*background-color: #999999				!important;*/
 }
 
 div.selectedComponent:hover .fbButtonHandler {
-	background: url(images/move_16.png) center 3px no-repeat Yellow		!important;
+	display: block;
 }
 
 .fbButtonHandler {
-	position: absolute;
+	/*position: absolute;
 	top: 0;
 	left: 0;
 	bottom: 0;
-	height: auto;
+	height: 30px;
 	width: 22px;
 	background-color: White;
-	margin:10px 0;
+	margin:10px 0 0;*/
+	background:transparent url(images/move_16.png) no-repeat scroll 0 0;
+	display:none;
+	height:16px;
+	left:5px;
+	position:absolute;
+	top:5px;
+	width:16px;
+	z-index:100;
 }
 .fbcCompVar {
 	visibility: hidden;
@@ -1099,10 +1107,6 @@ div.selectedComponent:hover .fbButtonHandler {
 }
 
 div.formElementHover:hover .fbCompHandler {
-	background: url(images/move_16.png) center 3px no-repeat Yellow;
-}
-
-div.formButton:hover .fbButtonHandler {
 	background: url(images/move_16.png) center 3px no-repeat Yellow;
 }
 
@@ -1631,15 +1635,37 @@ div.formButton {
 	margin-left:0;
 	margin-right:16px;
 	min-width:60px;
-	padding: 10px 10px 10px 21px;
+	padding: 10px;
 	width:auto;
 	position: relative;
 }
 .formButton input {
 	padding: 5px 8px;
+	height:30px;
+}
+div.mainButtonBox {
+	float:left;
+	width:100%;
+}
+/*div.assignTransitionBox {
+	visibility: hidden;
+}*/
+
+div.formButton div.assignTransitionBox {
+	visibility: visible;
+	cursor: pointer;
+	border: 1px #a8a8a8 solid;
+	background: #fff;
+	font-size: 10px;
+	padding: 3px 8px;
+	line-height: 10px;
+	opacity: 0.7;
+	moz-opacity: 0.7;
+	float:left;
 }
 
-div.assignTransitionBox {
+div.assignTransitionBox span {
+	color:#1F1F1F;
 }
 
 .accordionTabTitleBar {

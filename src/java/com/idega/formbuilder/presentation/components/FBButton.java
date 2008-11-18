@@ -24,6 +24,7 @@ public class FBButton extends FBComponentBase {
 	public static final String COMPONENT_TYPE = "Button";
 	
 	private static final String DELETE_BUTTON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete-tiny.png";
+	private static final String EDIT_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/edit_16.png";
 	private static final String SPEED_BUTTON_STYLE = "fbSpeedBButton";
 	private static final String INLINE_STYLE = "float: left;";
 	private static final String DEFAULT_BUTTON_CLASS = "formButton";
@@ -121,6 +122,10 @@ public class FBButton extends FBComponentBase {
 			container.setStyleClass(selectedStyleClass);
 		}
 		
+		Layer mainBox = new Layer(Layer.DIV);
+		mainBox.setStyleClass("mainButtonBox");
+		container.add(mainBox);
+		
 		GenericButton button = new GenericButton();
 		button.setValue(label);
 		button.setStyleAttribute(INLINE_STYLE);
@@ -134,9 +139,9 @@ public class FBButton extends FBComponentBase {
 		Layer handleLayer = new Layer(Layer.DIV);
 		handleLayer.setStyleClass(HANDLER_LAYER_CLASS);
 		
-		container.add(handleLayer);
-		container.add(button);
-		container.add(icon);
+		mainBox.add(handleLayer);
+		mainBox.add(button);
+		mainBox.add(icon);
 		
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
 		
@@ -153,7 +158,13 @@ public class FBButton extends FBComponentBase {
 				assignLabel.setText(getLocalizedString(iwc, "fb_no_assign_label", "Not assigned"));
 			}
 			
+			Image icon2 = new Image();
+			icon2.setSrc(EDIT_ICON);
+			icon2.setToolTip(getLocalizedString(iwc, "fb_assign_clear", "Click to remove binding"));
+			icon2.setStyleClass("removeTransIcon");
+			
 			assignVariable.add(assignLabel);
+			assignVariable.add(icon2);
 			
 			container.add(assignVariable);
 		}

@@ -713,6 +713,21 @@ function initializeVariableViewer() {
 			});
 		});
 	});
+	$$('img.removeTransIcon').each(function(item) {
+		item.addEvent('click', function(event) {
+			new Event(event).stopPropagation();
+			var componentId = item.getParent().getParent().getProperty('id');
+			FormComponent.removeTransitionBinding(componentId, {
+				callback: function(result) {
+					if(result != null) {
+						updateVariableItem(result[0], result[1]);
+						
+						item.getPrevious().setText('Not assigned');
+					}
+				}
+			});
+		});
+	});
 	initializeVariableDragging(true);
 }
 function createVariable(datatype, value, element, image) {

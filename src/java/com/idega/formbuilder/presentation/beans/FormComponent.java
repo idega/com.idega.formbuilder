@@ -144,7 +144,7 @@ public class FormComponent extends GenericComponent {
 					
 					String[] result = new String[2];
 					result[0] = action;
-					result[1] = action == null ? null : processData.getVariableStatus(action).getStatus();
+					result[1] = action == null ? null : processData.getTransitionStatus(action).getStatus();
 					
 					return result;
 				}
