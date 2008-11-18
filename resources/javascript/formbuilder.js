@@ -840,7 +840,7 @@ function showVariableList(positionLeft, positionTop, transition) {
 				container.setStyle('position', 'fixed');
 				var list = $('variablePopupList');
 				if(list != null) {
-					list.getElements('a').each(function(item) {
+					list.getElements('span').each(function(item) {
 						item.addEvent('click', function(e) {
 							new Event(e).stop();
 							var variable = item.getProperty('rel');
