@@ -17,7 +17,7 @@ function loadTaskFormDocument(processName, processId, taskName, formId) {
 			if(result == true) {
 				window.location=FORMBUILDER_PATH;
 			} else {
-				alert('Error occured trying to load editing mode');
+				if(humanMsg) humanMsg.displayMsg("Error occured trying to load editing mode");
 			}
 		}
 	});
@@ -207,8 +207,8 @@ function registerFormsHomeActions() {
 					if(result == true) {
 						window.location=FORMBUILDER_PATH;
 					} else {
-						alert('Error occured trying to load editing mode');
 						closeLoadingMessage();
+						if(humanMsg) humanMsg.displayMsg("Error occured trying to load editing mode");
 					}
 				}
 			});
@@ -226,8 +226,8 @@ function registerFormsHomeActions() {
 					if(result == true) {
 						window.location=FORMPREVIEW_PATH;
 					} else {
-						alert('Error occured trying to load preview mode');
 						closeLoadingMessage();
+						if(humanMsg) humanMsg.displayMsg("Error occured trying to load preview mode");
 					}
 				}
 			});
@@ -245,8 +245,8 @@ function registerFormsHomeActions() {
 					if(result == true) {
 						window.location=FORMBUILDER_PATH;
 					} else {
-						alert('Error occured trying to load code view mode');
 						closeLoadingMessage();
+						if(humanMsg) humanMsg.displayMsg("Error occured trying to load code view mode");
 					}
 				}
 			});
@@ -266,8 +266,8 @@ function registerFormsHomeActions() {
 						if(result == true) {
 							window.location = FORMSHOME_PATH;
 						} else {
-							alert('Error trying to delete');
 							closeLoadingMessage();
+							if(humanMsg) humanMsg.displayMsg("Error trying to delete");
 						}
 					}
 				});
@@ -288,8 +288,8 @@ function registerFormsHomeActions() {
 						if(result == true) {
 							window.location = FORMSHOME_PATH;
 						} else {
-							alert('Error trying to delete');
 							closeLoadingMessage();
+							if(humanMsg) humanMsg.displayMsg("Error trying to delete");
 						}
 					}
 				});

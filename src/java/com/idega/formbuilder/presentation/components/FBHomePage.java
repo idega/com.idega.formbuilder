@@ -87,6 +87,8 @@ public class FBHomePage extends FBComponentBase {
 			PresentationUtil.addJavaScriptSourceLineToHeader(iwc, web2.getBundleURIToMootoolsLib());
 			PresentationUtil.addJavaScriptSourceLineToHeader(iwc, web2.getBundleUriToSmoothboxScript());
 			PresentationUtil.addJavaScriptSourceLineToHeader(iwc, web2.getBundleUriToMootabsScript());
+			PresentationUtil.addJavaScriptSourceLineToHeader(iwc, web2.getBundleURIToJQueryLib());
+			PresentationUtil.addJavaScriptSourceLineToHeader(iwc, web2.getBundleUriToHumanizedMessagesScript());
 			PresentationUtil.addJavaScriptSourceLineToHeader(iwc, CoreConstants.DWR_ENGINE_SCRIPT);
 			PresentationUtil.addJavaScriptSourceLineToHeader(iwc, "/dwr/interface/Workspace.js");
 			PresentationUtil.addJavaScriptSourceLineToHeader(iwc, "/dwr/interface/FormDocument.js");
@@ -94,6 +96,7 @@ public class FBHomePage extends FBComponentBase {
 			
 			PresentationUtil.addStyleSheetToHeader(iwc, web2.getBundleUriToSmoothboxStylesheet());
 			PresentationUtil.addStyleSheetToHeader(iwc, web2.getBundleUriToMootabsStyle());
+			PresentationUtil.addStyleSheetToHeader(iwc, web2.getBundleUriToHumanizedMessagesStyleSheet());
 			PresentationUtil.addStyleSheetToHeader(iwc, FORMSHOME_CSS);
 		} catch (RemoteException e) {
 			e.printStackTrace();

@@ -315,7 +315,7 @@ function initializeButtonArea() {
 								}
 							});
 						} else {
-							alert('You have to drop the transition on a button');
+							if(humanMsg) humanMsg.displayMsg("You have to drop the transition on a button");
 						}
 					}
 				}
@@ -500,7 +500,7 @@ function initializeDropbox() {
 								}
 							});
 						} else {
-							alert('You have to drop the variable on a component');
+							if(humanMsg) humanMsg.displayMsg("You have to drop the variable on a component");
 						}
 					}
 				}

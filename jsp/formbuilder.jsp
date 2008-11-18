@@ -14,6 +14,8 @@
 				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/moodalbox/1.2.1/js/moodalbox_full.js,
 				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/inlineEdit/1.1/inlineEdit.js,
 				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/mootabs/1.2/mootabs.js,
+				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/jquery/1.2.3/jquery-compressed.js,
+				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/humanmsg/1.0/js/humanmsg.js,
 				 				
 				 				/idegaweb/bundles/org.chiba.web.bundle/resources/javascript/PresentationContext.js,
 				 				
@@ -31,6 +33,7 @@
 								/idegaweb/bundles/is.idega.idegaweb.egov.application.bundle/resources/style/application.css,
 								/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/smoothbox/smoothbox.css,
 								/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/moodalbox/1.2.1/css/moodalbox.css,
+								/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/humanmsg/1.0/css/humanmsg.css,
 								/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/mootabs/1.2/mootabs.css">
 			<h:form id="workspaceform1" onsubmit="return false;">
 				<f:verbatim>
