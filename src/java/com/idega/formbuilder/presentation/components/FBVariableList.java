@@ -74,7 +74,7 @@ public class FBVariableList extends FBComponentBase {
 					
 					ListItem item = new ListItem();
 					
-					Link itemLink = new Link();
+					Text itemLink = new Text();
 					itemLink.setMarkupAttribute("rel", tr);
 					itemLink.setText(tr);
 					
@@ -102,7 +102,7 @@ public class FBVariableList extends FBComponentBase {
 					
 					ListItem item = new ListItem();
 					
-					Link itemLink = new Link();
+					Text itemLink = new Text();
 					itemLink.setMarkupAttribute("rel", name.getDefaultStringRepresentation());
 					itemLink.setText(name.getName());
 					
