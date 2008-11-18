@@ -194,55 +194,7 @@ public class FormComponent extends GenericComponent {
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBVariableList(type, transition), true);
 	}
 	
-	public Object[] addTaskComponent(String type, int before, String variable) throws Exception {
-		if(type == null) {
-			return null;
-		}
-		
-		Object[] result = new Object[3];
-		
-		Page page = formPage.getPage();
-		if(formPage.isSpecial()) {
-			return null;
-		}
-		if(page != null) {
-			String beforeId = null;
-			if(before == -1) {
-				result[0] = "append";
-				
-				ButtonArea area = page.getButtonArea();
-				if(area != null) {
-					beforeId = area.getId();
-				}
-			} else {
-				List<String> ids = page.getContainedComponentsIds();
-				if(ids.size() > before + 1) {
-					beforeId = page.getContainedComponentsIds().get(before + 1);
-					
-					ButtonArea area = page.getButtonArea();
-					if(area != null && beforeId.equals(area.getId())) {
-						result[0] = "append";
-					}
-				}
-			}
-			Component component = page.addComponent(type, beforeId);
-			PropertiesComponent properties = component.getProperties();
-			if(properties != null) {
-				properties.setVariable(variable);
-				
-				result[2] = processData.bindVariable(component.getId(), variable).getStatus();
-			}
-			if(result[0] == null) {
-				result[0] = beforeId;
-			}
-			result[1] = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component), true);
-			
-		}
-
-		return result;
-	}
-	
-	public Object[] addTransitionButton(String type, String transition, int before) {
+	public Object[] addTransitionButton(String type, String transition, String before) {
 		if(type == null) {
 			return null;
 		}
@@ -256,12 +208,13 @@ public class FormComponent extends GenericComponent {
 			}
 			
 			String beforeId = null;
-			if(before == -1) {
+			if(StringUtils.isEmpty(before)) {
 				result[0] = "append";
 			} else {
 				List<String> ids = area.getContainedComponentsIds();
-				if(ids.size() > before + 1) {
-					beforeId = ids.get(before + 1);
+				int beforeInt = ids.indexOf(before);
+				if(ids.size() > beforeInt + 1) {
+					beforeId = ids.get(beforeInt + 1);
 				}
 			}
 			
@@ -281,7 +234,7 @@ public class FormComponent extends GenericComponent {
 		return result;
 	}
 	
-	public Object[] addButton(String type, int before) {
+	public Object[] addButton(String type, String before) {
 		if(type == null) {
 			return null;
 		}
@@ -296,12 +249,13 @@ public class FormComponent extends GenericComponent {
 			}
 			
 			String beforeId = null;
-			if(before == -1) {
+			if(StringUtils.isEmpty(before)) {
 				result[0] = "append";
 			} else {
 				List<String> ids = area.getContainedComponentsIds();
-				if(ids.size() > before + 1) {
-					beforeId = ids.get(before + 1);
+				int beforeInt = ids.indexOf(before);
+				if(ids.size() > beforeInt + 1) {
+					beforeId = ids.get(beforeInt + 1);
 				}
 			}
 			
@@ -315,12 +269,12 @@ public class FormComponent extends GenericComponent {
 		return result;
 	}
 	
-	public Object[] addComponent(String type, int before) throws Exception {
+	public Object[] addComponent(String type, String before, String variable) throws Exception {
 		if(type == null) {
 			return null;
 		}
 		
-		Object[] result = new Object[2];
+		Object[] result = new Object[3];
 		
 		Page page = formPage.getPage();
 		if(formPage.isSpecial()) {
@@ -328,7 +282,7 @@ public class FormComponent extends GenericComponent {
 		}
 		if(page != null) {
 			String beforeId = null;
-			if(before == -1) {
+			if(StringUtils.isEmpty(before)) {
 				result[0] = "append";
 				
 				ButtonArea area = page.getButtonArea();
@@ -337,8 +291,9 @@ public class FormComponent extends GenericComponent {
 				}
 			} else {
 				List<String> ids = page.getContainedComponentsIds();
-				if(ids.size() > before + 1) {
-					beforeId = page.getContainedComponentsIds().get(before + 1);
+				int beforeInt = ids.indexOf(before);
+				if(ids.size() > beforeInt + 1) {
+					beforeId = page.getContainedComponentsIds().get(beforeInt + 1);
 					
 					ButtonArea area = page.getButtonArea();
 					if(area != null && beforeId.equals(area.getId())) {
@@ -347,6 +302,15 @@ public class FormComponent extends GenericComponent {
 				}
 			}
 			Component component = page.addComponent(type, beforeId);
+			Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
+			if(workspace.isProcessMode()) {
+				PropertiesComponent properties = component.getProperties();
+				if(properties != null) {
+					properties.setVariable(variable);
+					
+					result[2] = processData.bindVariable(component.getId(), variable).getStatus();
+				}
+			}
 			if(result[0] == null) {
 				result[0] = beforeId;
 			}

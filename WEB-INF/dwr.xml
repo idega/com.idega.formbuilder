@@ -80,7 +80,6 @@
     	<create creator="jsf" javascript="FormComponent" scope="session">
 	    	<param name="managedBeanName" value="formComponent"/>
 	    	<param name="class" value="com.idega.formbuilder.presentation.beans.FormComponent"/>
-	    	<include method="addTaskComponent" />
 	    	<include method="addTransitionButton" />
 	    	<include method="addComponent" />
 	    	<include method="addButton" />
