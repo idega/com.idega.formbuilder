@@ -51,86 +51,6 @@ var fbButtonSort = null;
 
 var statuses = ['unused', 'single', 'multiple'];
 
-var FBVariable = Element.extend({
-	draggableVariable: function(droppables, handle, type, makeDrag, targetElement) {
-		type = type;
-		handle = handle || this;
-		if(makeDrag) {
-			this.makeDraggable({
-				'handle': handle,
-				'droppables': droppables,
-				onStart: function() {
-					this.elementOrg = this.element;
-					var now = {'x': this.element.getLeft(), 'y': this.element.getTop()};
-					this.element = this.element.clone().setStyles({
-						'position': 'absolute',
-						'left': now.x + 'px',
-						'top':  now.y + 'px',
-						'opacity': '0.75'
-					}).injectInside(document.body);
-					this.value.now = now;
-					CURRENT_ELEMENT_UNDER = null;
-					droppables.setStyle('background-color', '#F9FF9E');
-					childBoxes = [];
-					var childNodes = droppables.getElements(targetElement);
-					for(var i = 0; i < childNodes.length; i++){
-						var child = childNodes[i];
-						var pos = child.getCoordinates();
-						childBoxes.push({top: pos.top, bottom: pos.bottom, left: pos.left, right: pos.right, height: pos.height, width: pos.width, node: child});
-					}
-					this.element.removeEvents('mousemove');
-					this.element.addEvent('mousemove', function(e) {
-						if(!e) e = window.event;
-						for(var i = 0, child; i < childBoxes.length; i++){
-							with(childBoxes[i]){
-								if (e.pageX >= left && e.pageX <= right && e.pageY >= top && e.pageY <= bottom) {
-									CURRENT_ELEMENT_UNDER = childBoxes[i].node.getProperty('id');
-									if(CURRENT_ELEMENT_UNDER != LAST_ELEMENT_UNDER) {
-										LAST_ELEMENT_UNDER = CURRENT_ELEMENT_UNDER;
-									}
-								}
-							}
-						}
-					});
-					if(type == 'fbvar') {
-						if(draggingComponent == false) {
-	   						draggingComponent = true;
-						}
-					} else if(type == 'fbtrans') {
-						if(draggingButton == false) {
-							draggingButton = true;
-						}
-					}
-				},
-				onComplete: function(event) {
-					this.element.removeEvents('mousemove');
-					this.element.remove();
-					this.element = this.elementOrg;
-					this.elementOrg = null;
-					droppables.setStyle('background-color', '#FFF');
-					if(type == 'fbvar') {
-						if(insideDropzone == false && draggingComponent == true) {
-							draggingComponent = false;
-						}
-					} else if(type == 'fbtrans') {
-						if(draggingButton == true && insideDropzone == false) {
-							draggingButton = false;
-						}
-					}
-				},
-			});
-		} else {
-			this.removeEvent('mousedown');
-			handle.removeEvent('mousedown');
-		}
-		
-		this.setStyles({
-			'position': ''
-		});
-		return this;
-	}
-});
-
 var FBDraggable = Element.extend({
 	draggableComponent: function(droppables, handle, type, makeDrag, targetElement) {
 		type = type;
@@ -172,12 +92,12 @@ var FBDraggable = Element.extend({
 							}
 						}
 					});
-					if(type == 'fbc' || type == 'fbcp') {
+					if(type == 'fbc' || type == 'fbcp' || type == 'fbvar') {
 						if(draggingComponent == false) {
 							newComponentId = this.elementOrg.id;
 	   						draggingComponent = true;
 						}
-					} else if(type == 'fbb' || type == 'fbbp') {
+					} else if(type == 'fbb' || type == 'fbbp' || type == 'fbtrans') {
 						if(draggingButton == false) {
 							newComponentId = this.elementOrg.id;
 							draggingButton = true;
@@ -191,9 +111,9 @@ var FBDraggable = Element.extend({
 					this.elementOrg = null;
 					droppables.setStyle('background-color', '#FFF');
 					if(insideDropzone == false && newComponentId != null) {
-						if((type == 'fbc' || type == 'fbcp') && draggingComponent == true) {
+						if((type == 'fbc' || type == 'fbcp' || type == 'fbvar') && draggingComponent == true) {
 							draggingComponent = false;
-						} else if((type == 'fbb' || type == 'fbbp') && draggingButton == true) {
+						} else if((type == 'fbb' || type == 'fbbp' || type == 'fbtrans') && draggingButton == true) {
 							draggingButton = false;
 						}
 					}
@@ -605,11 +525,11 @@ function initializeVariableDragging(enable) {
 	if(viewer != null) {
 		viewer.getElements('.fbvar').each(function(el){
 			el.removeEvents();
-			el.draggableVariable($('dropBoxinner'), null, 'fbvar', enable, 'div.formElement');
+			el.draggableComponent($('dropBoxinner'), null, 'fbvar', enable, 'div.formElement');
 		});
 		viewer.getElements('.fbtrans').each(function(el){
 			el.removeEvents();
-			el.draggableVariable($('pageButtonArea'), null, 'fbtrans', enable, 'div.formButton');
+			el.draggableComponent($('pageButtonArea'), null, 'fbtrans', enable, 'div.formButton');
 		});
 	}
 }
@@ -902,12 +822,12 @@ function getPageComponents() {
 function removeButton(parameter) {
 	if(parameter != null) {
 		if(parameter.getParent()) {
-			var buttonId = parameter.getParent().getProperty('id');
+			var buttonId = parameter.getParent().getParent().getProperty('id');
 			pressedButtonDelete = true;
 			FormComponent.removeButton(buttonId, {
 				callback: function(result) {
 					if(result != null) {
-						var node = $(result[0]);
+						var node = $(buttonId);
 						if(node != null) {
 							node.remove();
 							initializeButtonArea();
@@ -1434,20 +1354,6 @@ function toggleAutofill(parameter) {
 		}
 	}
 }
-
-function toggleValidationText(parameter) {
-	if(parameter != null) {
-		var node = $('propertyValidationText');
-		var nodeLabel = $('propertyValidationLabel');
-		if(parameter == false) {
-			node.removeClass('activeValidationText');
-			nodeLabel.removeClass('activeValidationLabel');
-		} else {
-			node.addClass('activeValidationText');
-			nodeLabel.addClass('activeValidationLabel');
-		}
-	}
-}
 var componentRerenderCallback = function(result) {
 	if(result == null) {
 		return;
@@ -1475,23 +1381,23 @@ var buttonRerenderCallback = function(results) {
 		btn.getFirst().getNext().setProperty('value', results[1]);
 	}
 };
-function saveComponentProperty(id,type,value,event) {
+function saveComponentProperty(id, type, value, event) {
 	if(event.type == 'blur' || event.type == 'change' || isEnterEvent(event)) {
 		PropertyManager.saveComponentProperty(id,type,value,currentCallback);
 	}
 }
 function saveLabel(parameter) {
-	var index = parameter.id.split('_')[1];
+	var index = parameter.getProperty('id').split('_')[1];
 	var value = parameter.getProperty('value');
 	if(value.length != 0) {
-		PropertyManager.saveSelectOptionLabel(index,value,currentCallback);
+		PropertyManager.saveSelectOptionLabel(index, value, currentCallback);
 	}
 }
 function saveValue(parameter) {
-	var index = parameter.id.split('_')[1];
+	var index = parameter.getProperty('id').split('_')[1];
 	var value = parameter.getProperty('value');
 	if(value.length != 0) {
-		PropertyManager.saveSelectOptionValue(index,value,currentCallback);
+		PropertyManager.saveSelectOptionValue(index, value, currentCallback);
 	}
 }
 function switchDataSource() {

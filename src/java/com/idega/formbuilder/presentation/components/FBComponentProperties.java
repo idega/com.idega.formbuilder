@@ -331,7 +331,6 @@ public class FBComponentProperties extends FBComponentBase {
 				required.setId(PROPERTY_REQUIRED_ID);
 				required.setChecked(properties.isRequired());
 				required.setOnChange("saveComponentProperty('" + componentId + "','compRequired',this.checked, event);");
-//				required.setOnClick("toggleValidationText(this.checked);");
 				
 				line.add(required);
 				line.add(new Label(getLocalizedString(iwc, "comp_prop_requiredfield", "Required field"), required));

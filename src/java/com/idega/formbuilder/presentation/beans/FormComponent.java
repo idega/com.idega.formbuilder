@@ -379,8 +379,6 @@ public class FormComponent extends GenericComponent {
 					
 					Object[] result = new Object[5];
 					result[0] = id;
-					result[1] = update ? getPropertiesPanel(null) : null;
-					result[2] = area.getContainedComponentsIds().isEmpty() ? getButtonArea("formElement formElementHover", "formButton") : null;
 					
 					Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
 					if(workspace.isProcessMode()) {
@@ -397,6 +395,9 @@ public class FormComponent extends GenericComponent {
 					}
 					
 					button.remove();
+					
+					result[1] = update ? getPropertiesPanel(null) : null;
+					result[2] = area.getContainedComponentsIds().isEmpty() ? getButtonArea("formElement formElementHover", "formButton") : null;
 					
 					return result;
 				}
