@@ -78,7 +78,7 @@ var FBVariable = Element.extend({
 						var pos = child.getCoordinates();
 						childBoxes.push({top: pos.top, bottom: pos.bottom, left: pos.left, right: pos.right, height: pos.height, width: pos.width, node: child});
 					}
-					this.element.removeEvents();
+					this.element.removeEvents('mousemove');
 					this.element.addEvent('mousemove', function(e) {
 						if(!e) e = window.event;
 						for(var i = 0, child; i < childBoxes.length; i++){
@@ -158,13 +158,13 @@ var FBDraggable = Element.extend({
 						var pos = child.getCoordinates();
 						childBoxes.push({top: pos.top, bottom: pos.bottom, left: pos.left, right: pos.right, height: pos.height, width: pos.width, node: child});
 					}
-					this.element.removeEvents();
+					this.element.removeEvents('mousemove');
 					this.element.addEvent('mousemove', function(e) {
 						if(!e) e = window.event;
 						for(var i = 0, child; i < childBoxes.length; i++){
 							with(childBoxes[i]){
 								if (e.pageX >= left && e.pageX <= right && e.pageY >= top && e.pageY <= bottom) {
-									CURRENT_ELEMENT_UNDER = i;
+									CURRENT_ELEMENT_UNDER = childBoxes[i].node.getProperty('id');
 									if(CURRENT_ELEMENT_UNDER != LAST_ELEMENT_UNDER) {
 										LAST_ELEMENT_UNDER = CURRENT_ELEMENT_UNDER;
 									}
@@ -248,10 +248,12 @@ function initializeButtonArea() {
 				if (!this.dragEffect) {
 					this.dragEffect = new Fx.Style(this, 'background-color');
 				}
+				console.log('over button area');
 				this.dragEffect.stop().start('#F9FF9E', '#FFFF00');
 				insideDropzone = true;
 			},
 			'leave': function(el){
+				console.log('leaving button area');
 				this.dragEffect.stop().start('#FFFF00', '#F9FF9E');
 				insideDropzone = false;
 			},

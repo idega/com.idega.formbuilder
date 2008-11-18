@@ -85,12 +85,9 @@ public class ProcessData implements Serializable {
 		
 		ProcessDefinitionW pdw = getBpmFactory().getProcessManager(processId).getProcessDefinition(processId);
 		
-		variables.addAll(pdw.getTaskVariableList(processId, taskName));
+		variables.addAll(pdw.getTaskVariableList(taskName));
 		
-		transitions.add("transition1");
-		transitions.add("transition2");
-		transitions.add("transition3");
-		
+		transitions.addAll(pdw.getTaskNodeTransitionsNames(taskName));
 	}
 	
 	public List<Variable> getVariables() {
