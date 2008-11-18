@@ -1647,17 +1647,20 @@ div.mainButtonBox {
 	float:left;
 	width:100%;
 }
-/*div.assignTransitionBox {
+div.assignTransitionBox {
 	visibility: hidden;
-}*/
-
-div.formButton div.assignTransitionBox {
+}
+img.removeTransIcon {
+	width: 11px;
+	height: 11px;
+}
+div.formButton:hover div.assignTransitionBox {
 	visibility: visible;
 	cursor: pointer;
 	border: 1px #a8a8a8 solid;
 	background: #fff;
 	font-size: 10px;
-	padding: 3px 8px;
+	padding: 1px 8px;
 	line-height: 10px;
 	opacity: 0.7;
 	moz-opacity: 0.7;
@@ -1666,6 +1669,7 @@ div.formButton div.assignTransitionBox {
 
 div.assignTransitionBox span {
 	color:#1F1F1F;
+	padding-right: 3px;
 }
 
 .accordionTabTitleBar {

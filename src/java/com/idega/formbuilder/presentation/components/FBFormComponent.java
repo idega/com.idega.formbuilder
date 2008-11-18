@@ -47,6 +47,7 @@ public class FBFormComponent extends FBComponentBase {
 	private static final String ASSIGN_VAR_BOX_CLASS = "assignVariableBox";
 	private static final String ASSIGN_LABEL_CLASS = "assignLabel";
 	private static final String REL_ATTRIBUTE = "rel";
+	private static final String REMOVE_VAR_ICON = "removeVarIcon";
 	
 	private Element element;
 	private String onLoad;
@@ -165,7 +166,7 @@ public class FBFormComponent extends FBComponentBase {
 		Image icon = new Image();
 		icon.setSrc(EDIT_ICON);
 		icon.setToolTip(getLocalizedString(iwc, "fb_assign_clear", "Click to remove binding"));
-		icon.setStyleClass("removeVarIcon");
+		icon.setStyleClass(REMOVE_VAR_ICON);
 							
 		assignVariable.add(icon);
 		assignVariable.add(assignLabel);
