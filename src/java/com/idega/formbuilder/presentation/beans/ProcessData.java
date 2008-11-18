@@ -231,8 +231,10 @@ public class ProcessData implements Serializable {
 	}
 	
 	public ConstVariableStatus unbindVariable(String variable, String componentId) {
-		getVariableUsageList().get(variable).remove(componentId);
-		//TODO add actual nulling of the component property
+		List<String> usage = getVariableUsageList().get(variable);
+		if(usage != null) {
+			usage.remove(componentId);
+		}
 		return getVariableStatus(variable);
 	}
 	
@@ -252,7 +254,6 @@ public class ProcessData implements Serializable {
 		if(usage != null) {
 			usage.remove(buttonId);
 		}
-		//TODO add actual nulling of the component property
 		return getTransitionStatus(transition);
 	}
 	
