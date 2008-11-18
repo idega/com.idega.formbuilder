@@ -21,6 +21,17 @@ div#pageButtonArea .selectedComponent {
 	background-color: #E4E4E4 !important;
 }
 
+.accordionHeading {
+	background:#D1D1D1 url(images/accordion_title.gif) repeat-x scroll left top;
+	border-bottom:1px solid #BDBDBD;
+	color:#3D3D3D;
+	display:block;
+	font-family:"Lucida Grande","Lucida Sans","Lucida Sans Unicode",Arial,Helvetica,sans-serif;
+	font-weight:bold;
+	line-height:18px;
+	padding:0 6px;
+}
+
 .fbBottomButtonsContainer .states {
 	float: left;
 	margin-left: 5px;
