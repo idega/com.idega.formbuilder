@@ -707,12 +707,10 @@ function initializeVariableViewer() {
 function createVariable(datatype, value, element, image) {
 	ProcessData.createVariable(value, datatype, {
 		callback: function(result) {
-			var span = new Element('span');
-			span.setProperty('id', value + '_var');
-			span.addClass('varEntry');
-			span.addClass('unused');
-			span.setText(value);
-			span.injectBefore(element);
+			var span = new Element('span', {
+				'id': value + '_var',
+				'class': 'varEntry unused',
+			}).setText(value).injectBefore(element);
 			element.replaceWith(image);
 		}
 	});
