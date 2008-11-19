@@ -168,12 +168,10 @@ function initializeButtonArea() {
 				if (!this.dragEffect) {
 					this.dragEffect = new Fx.Style(this, 'background-color');
 				}
-				console.log('over button area');
 				this.dragEffect.stop().start('#F9FF9E', '#FFFF00');
 				insideDropzone = true;
 			},
 			'leave': function(el){
-				console.log('leaving button area');
 				this.dragEffect.stop().start('#FFFF00', '#F9FF9E');
 				insideDropzone = false;
 			},
@@ -666,7 +664,7 @@ function initializeVariableViewer() {
 			});
 		});
 	});
-	initializeVariableDragging(true);
+	//initializeVariableDragging(true);
 }
 function createVariable(datatype, value, element, image) {
 	ProcessData.createVariable(value, datatype, {
