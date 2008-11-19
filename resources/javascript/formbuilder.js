@@ -749,24 +749,21 @@ function showVariableList(positionLeft, positionTop, transition) {
 					setHrefToVoidFunction(noVariableBtn);
 					noVariableBtn.removeEvents('click');
 					noVariableBtn.addEvent('click', function(e) {
-						if(CURRENT_ELEMENT_UNDER != null) {
-							if(transition == 'true') {
-								showLoadingMessage('Adding button');
-								FormComponent.addButton(newComponentId, CURRENT_ELEMENT_UNDER, {
-									callback: function(result) {
-										addButton(result, pageButtonArea, null, null);
-									}
-								});
-							} else {
-								showLoadingMessage('Adding component');
-								FormComponent.addComponent(newComponentId, CURRENT_ELEMENT_UNDER, null, {
-									callback: function(result) {
-										addComponent(result, dropBoxinner, null, null);
-									}
-								});
-							}
+						if(transition) {
+							showLoadingMessage('Adding button');
+							FormComponent.addButton(newComponentId, CURRENT_ELEMENT_UNDER, null, {
+								callback: function(result) {
+									addButton(result, pageButtonArea, null, container);
+								}
+							});
+						} else {
+							showLoadingMessage('Adding component');
+							FormComponent.addComponent(newComponentId, CURRENT_ELEMENT_UNDER, null, {
+								callback: function(result) {
+									addComponent(result, dropBoxinner, null, container);
+								}
+							});
 						}
-						container.remove();
 					});
 				}
 				var cancelVariableBtn = $('cancelVariableBtn');
