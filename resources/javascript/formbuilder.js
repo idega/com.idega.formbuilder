@@ -144,7 +144,7 @@ function resizeAccordion(reservedHeight, containerId, variableTabs) {
 	}
 }
 
-function initializeDroppableArea(areaId) {
+function initializeDroppableArea(areaId, targetElement, hoverClass) {
 	var area = $(areaId);
 	if(area != null) {
 		area.setStyle('background-color', '#FFFFFF');
@@ -156,13 +156,28 @@ function initializeDroppableArea(areaId) {
 				}
 				this.dragEffect.stop().start('#F9FF9E', '#FFFF00');
 				insideDropzone = true;
+				if(targetElement != null) {
+					area.getElements(targetElement).each(function(element) {
+						element.removeClass(hoverClass);
+					});
+				}
 			},
 			'leave': function(el){
 				this.dragEffect.stop().start('#FFFF00', '#F9FF9E');
 				insideDropzone = false;
+				if(targetElement != null) {
+					area.getElements(targetElement).each(function(element) {
+						element.addClass(hoverClass);
+					});
+				}
 			},
 			'drop': function(el, drag){
 				this.dragEffect.stop();
+				if(targetElement != null) {
+					area.getElements(targetElement).each(function(element) {
+						element.addClass(hoverClass);
+					});
+				}
 				if(draggingButton) {
 					draggingButton = false;
 					if(el.hasClass('fbb')) {
@@ -243,7 +258,7 @@ function initializeDroppableArea(areaId) {
 }
 
 function initializeButtonArea() {
-	initializeDroppableArea(BUTTON_AREA_ID);
+	initializeDroppableArea(BUTTON_AREA_ID, null, null);
 	$$('div.formButton').each(function(item) {
 		item.removeEvents('click');
 		item.addEvent('click', function() {
@@ -432,7 +447,7 @@ function addComponent(data, container, variable, dialog) {
 }
 
 function initializeDropbox() {
-	initializeDroppableArea('dropBoxinner');
+	initializeDroppableArea('dropBoxinner', 'div.formElement', 'formElementHover');
 	var dropBoxinner = $('dropBoxinner');
 	if(dropBoxinner != null) {
 		dropBoxinner.getElements('div.formElement').each(function(item) {
