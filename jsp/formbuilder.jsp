@@ -68,8 +68,8 @@
 					<t:commandLink id="createFormBtn" onclick="createNewForm(modalFormName, modalGoToDesigner);" forceId="true" value="Create" />
 				</t:div>
 				<t:div id="formListDialog" forceId="true" styleClass="formListDialogStyle" style="display: none;">
-					<t:commandLink id="yesSaveFormBtn" forceId="true" onclick="fbsave();window.location.href = '/workspace/forms/';" value="Yes" />
-					<t:commandLink id="noSaveFormBtn" forceId="true" onclick="window.location.href = '/workspace/forms/';" value="No" />
+					<t:commandLink id="yesSaveFormBtn" forceId="true" onclick="fbsave();window.location.href = '/workspace/forms/list/';" value="Yes" />
+					<t:commandLink id="noSaveFormBtn" forceId="true" onclick="window.location.href = '/workspace/forms/list/';" value="No" />
 				</t:div>
 				<t:div id="bottomButtonsContainer" forceId="true" styleClass="fbBottomButtonsContainer">
 					<t:div styleClass="states">

@@ -12,7 +12,7 @@
 				<t:div styleClass="previewMainLayer">
 					<fb:previewPage />
 					<t:div styleClass="fbBottomButtonsContainer">
-						<t:commandLink id="homeButton" forceId="true" styleClass="rightButton" onclick="window.location.href = '/workspace/forms/';return false;" value="#{localizedStrings['com.idega.formbuilder']['toolbar_home']}"></t:commandLink>
+						<t:commandLink id="homeButton" forceId="true" styleClass="rightButton" onclick="window.location.href = '/workspace/forms/list/';return false;" value="#{localizedStrings['com.idega.formbuilder']['toolbar_home']}"></t:commandLink>
 					</t:div>
 				</t:div>
 			</h:form>
