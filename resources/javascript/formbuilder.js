@@ -196,18 +196,7 @@ function initializeDroppableArea(areaId, targetElement, hoverClass) {
 							var variableId = el.getProperty('id');
 							FormComponent.assignTransition(CURRENT_ELEMENT_UNDER, variableId, {
 								callback: function(result) {
-									if(result != null) {
-										updateVariableItem(variableId, result[0]);
-										updateVariableItem(result[1], result[2]);
-											
-										var assignLabel = $('trans_' + CURRENT_ELEMENT_UNDER);
-										if(assignLabel != null) {
-											var cleanVarName = variableId.substring(variableId.indexOf('_') + 1)
-											assignLabel.getLast().setText('Assigned to: ' + cleanVarName);
-										}
-									}
-									CURRENT_ELEMENT_UNDER = null;
-									closeLoadingMessage();
+									handleProcessDataAssignment(result, variableId, 'trans_');
 								}
 							});
 						} else {
@@ -231,18 +220,7 @@ function initializeDroppableArea(areaId, targetElement, hoverClass) {
 							var variableId = el.getProperty('id');
 							FormComponent.assignVariable(CURRENT_ELEMENT_UNDER, variableId, {
 								callback: function(result) {
-									if(result != null) {
-										updateVariableItem(variableId, result[0]);
-										updateVariableItem(result[1], result[2]);
-										
-										var assignLabel = $('var_' + CURRENT_ELEMENT_UNDER);
-										if(assignLabel != null) {
-											var cleanVarName = variableId.substring(variableId.indexOf('_') + 1)
-											assignLabel.getLast().setText('Assigned to: ' + cleanVarName);
-										}
-									}
-									CURRENT_ELEMENT_UNDER = null;
-									closeLoadingMessage();
+									handleProcessDataAssignment(result, variableId, 'var_');
 								}
 							});
 						} else {
@@ -255,6 +233,21 @@ function initializeDroppableArea(areaId, targetElement, hoverClass) {
 			}
 		});
 	}
+}
+
+function handleProcessDataAssignment(data, variable, prefix) {
+	if(data != null) {
+		updateVariableItem(variable, data[0]);
+		updateVariableItem(data[1], data[2]);
+										
+		var assignLabel = $(prefix + CURRENT_ELEMENT_UNDER);
+		if(assignLabel != null) {
+			var cleanVarName = variable.substring(variable.indexOf('_') + 1)
+			assignLabel.getLast().setText('Assigned to: ' + cleanVarName);
+		}
+	}
+	CURRENT_ELEMENT_UNDER = null;
+	closeLoadingMessage();
 }
 
 function initializeButtonArea() {
