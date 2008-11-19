@@ -143,12 +143,13 @@ function resizeAccordion(reservedHeight, containerId, variableTabs) {
 		}
 	}
 }
-function initializeButtonArea() {
-	var pageButtonArea = $(BUTTON_AREA_ID);
-	if(pageButtonArea != null) {
-		pageButtonArea.setStyle('background-color', '#FFFFFF');
-		pageButtonArea.removeEvents();
-		pageButtonArea.addEvents({
+
+function initializeDroppableArea(areaId) {
+	var area = $(areaId);
+	if(area != null) {
+		area.setStyle('background-color', '#FFFFFF');
+		area.removeEvents();
+		area.addEvents({
 			'over': function(el){
 				if (!this.dragEffect) {
 					this.dragEffect = new Fx.Style(this, 'background-color');
@@ -162,14 +163,13 @@ function initializeButtonArea() {
 			},
 			'drop': function(el, drag){
 				this.dragEffect.stop();
-				pageButtonArea.setStyle('background-color', '#FFF');
-				if(draggingButton == true) {
+				if(draggingButton) {
 					draggingButton = false;
 					if(el.hasClass('fbb')) {
 						if(newComponentId != null) {
 							FormComponent.addButton(newComponentId, CURRENT_ELEMENT_UNDER, null, {
 								callback: function(result) {
-									addButton(result, pageButtonArea, null, null);
+									addButton(result, area, null, null);
 								}
 							});
 						}
@@ -183,19 +183,8 @@ function initializeButtonArea() {
 								callback: function(result) {
 									if(result != null) {
 										updateVariableItem(variableId, result[0]);
-										
-										if(result[1] != null) {
-											var oldSpan = $(result[1]);
-											if(oldSpan != null) {
-												if(oldSpan.hasClass('single')) {
-													oldSpan.removeClass('single');
-												} else if(oldSpan.hasClass('multiple')) {
-													oldSpan.removeClass('multiple');
-												}
-												oldSpan.addClass(result[2]);
-											}
-										}
-										
+										updateVariableItem(result[1], result[2]);
+											
 										var assignLabel = $('trans_' + CURRENT_ELEMENT_UNDER);
 										if(assignLabel != null) {
 											var cleanVarName = variableId.substring(variableId.indexOf('_') + 1)
@@ -209,13 +198,52 @@ function initializeButtonArea() {
 						} else {
 							if(humanMsg) humanMsg.displayMsg("You have to drop the transition on a button");
 						}
+					} 
+				} else if(draggingComponent) {
+					draggingComponent = false;
+					if(el.hasClass('fbc')) {
+						showLoadingMessage('Adding component');
+						FormComponent.addComponent(newComponentId, CURRENT_ELEMENT_UNDER, null, {
+							callback: function(result) {
+								addComponent(result, area, null, null);
+							}
+						});
+					} else if(el.hasClass('fbcp')) {
+						showVariableList(el.getLeft(), el.getTop(), false);
+					} else if(el.hasClass('fbvar')) {
+						if(CURRENT_ELEMENT_UNDER != null) {
+							showLoadingMessage('Binding variable');
+							var variableId = el.getProperty('id');
+							FormComponent.assignVariable(CURRENT_ELEMENT_UNDER, variableId, {
+								callback: function(result) {
+									if(result != null) {
+										updateVariableItem(variableId, result[0]);
+										updateVariableItem(result[1], result[2]);
+										
+										var assignLabel = $('var_' + CURRENT_ELEMENT_UNDER);
+										if(assignLabel != null) {
+											var cleanVarName = variableId.substring(variableId.indexOf('_') + 1)
+											assignLabel.getLast().setText('Assigned to: ' + cleanVarName);
+										}
+									}
+									CURRENT_ELEMENT_UNDER = null;
+									closeLoadingMessage();
+								}
+							});
+						} else {
+							if(humanMsg) humanMsg.displayMsg("You have to drop the variable on a component");
+						}
 					}
 				}
-				pageButtonArea.setStyle('background-color', '#FFFFFF');
+				area.setStyle('background-color', '#FFFFFF');
 				insideDropzone = false;
 			}
 		});
 	}
+}
+
+function initializeButtonArea() {
+	initializeDroppableArea(BUTTON_AREA_ID);
 	$$('div.formButton').each(function(item) {
 		item.removeEvents('click');
 		item.addEvent('click', function() {
@@ -404,83 +432,9 @@ function addComponent(data, container, variable, dialog) {
 }
 
 function initializeDropbox() {
+	initializeDroppableArea('dropBoxinner');
 	var dropBoxinner = $('dropBoxinner');
 	if(dropBoxinner != null) {
-		dropBoxinner.removeEvents();
-		dropBoxinner.addEvents({
-			'over': function(el){
-				if (!this.dragEffect) {
-					this.dragEffect = new Fx.Style(this, 'background-color');
-				}
-				this.dragEffect.stop().start('#F9FF9E', '#FFFF00');
-				insideDropzone = true;
-				dropBoxinner.getElements('div.formElement').each(function(element) {
-					element.removeClass('formElementHover');
-				});
-			},
-			'leave': function(el){
-				this.dragEffect.stop().start('#FFFF00', '#F9FF9E');
-				insideDropzone = false;
-				dropBoxinner.getElements('div.formElement').each(function(element) {
-					element.addClass('formElementHover');
-				});
-			},
-			'drop': function(el, drag){
-				this.dragEffect.stop();
-				dropBoxinner.setStyle('background-color', '#FFF');
-				dropBoxinner.getElements('div.formElement').each(function(element) {
-					element.addClass('formElementHover');
-				});
-				if(draggingComponent == true) {
-					draggingComponent = false;
-					if(el.hasClass('fbc')) {
-						showLoadingMessage('Adding component');
-						FormComponent.addComponent(newComponentId, CURRENT_ELEMENT_UNDER, null, {
-							callback: function(result) {
-								addComponent(result, dropBoxinner, null, null);
-							}
-						});
-					} else if(el.hasClass('fbcp')) {
-						showVariableList(el.getLeft(), el.getTop(), false);
-					} else if(el.hasClass('fbvar')) {
-						if(CURRENT_ELEMENT_UNDER != null) {
-							showLoadingMessage('Binding variable');
-							var variableId = el.getProperty('id');
-							FormComponent.assignVariable(CURRENT_ELEMENT_UNDER, variableId, {
-								callback: function(result) {
-									if(result != null) {
-										updateVariableItem(variableId, result[0]);
-										
-										if(result[1] != null) {
-											var oldSpan = $(result[1]);
-											if(oldSpan != null) {
-												if(oldSpan.hasClass('single')) {
-													oldSpan.removeClass('single');
-												} else if(oldSpan.hasClass('multiple')) {
-													oldSpan.removeClass('multiple');
-												}
-												oldSpan.addClass(result[2]);
-											}
-										}
-										
-										var assignLabel = $('var_' + CURRENT_ELEMENT_UNDER);
-										if(assignLabel != null) {
-											var cleanVarName = variableId.substring(variableId.indexOf('_') + 1)
-											assignLabel.getLast().setText('Assigned to: ' + cleanVarName);
-										}
-									}
-									CURRENT_ELEMENT_UNDER = null;
-									closeLoadingMessage();
-								}
-							});
-						} else {
-							if(humanMsg) humanMsg.displayMsg("You have to drop the variable on a component");
-						}
-					}
-				}
-				insideDropzone = false;
-			}
-		});
 		dropBoxinner.getElements('div.formElement').each(function(item) {
 			item.removeEvents();
 			item.addEvent('click', function(e) {
