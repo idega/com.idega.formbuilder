@@ -1058,48 +1058,50 @@ function initializePagesPanelActions() {
 			item.addEvent('click', function(e){
 				initializeGeneralPage(item);
 			});
-			item.getElement('img.pageSpeedButton').removeEvents('click');
-			item.getElement('img.pageSpeedButton').addEvent('click', function(e) {
-				new Event(e).stopPropagation();
-				var root = $(PAGES_PANEL_ID);
-				if(root != null) {
-					var nodes = root.getChildren();
-					if(nodes.length == 1) {
-						return;
+			var pageSpeedButton = item.getElement('img.pageSpeedButton');
+			if(pageSpeedButton != null) {
+				pageSpeedButton.removeEvents('click');
+				pageSpeedButton.addEvent('click', function(e) {
+					new Event(e).stopPropagation();
+					var root = $(PAGES_PANEL_ID);
+					if(root != null) {
+						var nodes = root.getChildren();
+						if(nodes.length == 1) {
+							return;
+						}
 					}
-				}
-				var node = e.target;
-				var parentNode = node.getParent();
-				if(parentNode != null) {
-					var targetId = parentNode.getProperty('id');
-					if(targetId.indexOf('_P_page') != -1) {
-						var actualId = targetId.substring(0, targetId.indexOf('_P_page'));
-						FormPage.removePage(actualId, {
-							callback: function(result) {
-								if(result != null) {
-									showLoadingMessage('Loading section...');
-									var iconNode = $(actualId + '_P_page');
-									if(iconNode != null) {
-										iconNode.remove();
+					var parentNode = pageSpeedButton.getParent();
+					if(parentNode != null) {
+						var targetId = parentNode.getProperty('id');
+						if(targetId.indexOf('_P_page') != -1) {
+							var actualId = targetId.substring(0, targetId.indexOf('_P_page'));
+							FormPage.removePage(actualId, {
+								callback: function(result) {
+									if(result != null) {
+										showLoadingMessage('Loading section...');
+										var iconNode = $(actualId + '_P_page');
+										if(iconNode != null) {
+											iconNode.remove();
+										}
+										markSelectedPage(result[0])
+										var dropBox = $('dropBox');
+										if(dropBox != null) {
+											var parentNode = dropBox.getParent();
+											var node = parentNode.getLast();
+											node.remove();
+											insertNodesToContainer(result[1], parentNode);
+											initializeDesignView(true);
+										}
+										placeComponentInfo(result[2], 1, null);
+										closeLoadingMessage();
 									}
-									markSelectedPage(result[0])
-									var dropBox = $('dropBox');
-									if(dropBox != null) {
-										var parentNode = dropBox.getParent();
-										var node = parentNode.getLast();
-										node.remove();
-										insertNodesToContainer(result[1], parentNode);
-										initializeDesignView(true);
-									}
-									placeComponentInfo(result[2], 1, null);
-									closeLoadingMessage();
 								}
-							}
-						});
+							});
+						}
 					}
-				}
-				initializePagesPanel();
-			});
+					initializePagesPanel();
+				});
+			}
 		});
 	}
 	initializeThankyouPage();
