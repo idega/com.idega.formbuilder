@@ -221,7 +221,7 @@ public class FormComponent extends GenericComponent {
 			
 			Button button = area.addButton(ConstButtonType.getByStringType(type), beforeId);
 			Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
-			if(workspace.isProcessMode()) {
+			if(workspace.isProcessMode() && !StringUtils.isEmpty(transition)) {
 				PropertiesButton properties = button.getProperties();
 				if(properties != null) {
 					properties.setReferAction(transition);
@@ -272,7 +272,7 @@ public class FormComponent extends GenericComponent {
 			}
 			Component component = page.addComponent(type, beforeId);
 			Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
-			if(workspace.isProcessMode()) {
+			if(workspace.isProcessMode() && !StringUtils.isEmpty(variable)) {
 				PropertiesComponent properties = component.getProperties();
 				if(properties != null) {
 					properties.setVariable(variable);

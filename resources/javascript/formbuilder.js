@@ -653,7 +653,7 @@ function initializePaletteInner(enable) {
 	}
 }
 function initializeVariableViewer() {
-	/*$$('.addVariableIcon').each(function(el){
+	$$('.addVariableIcon').each(function(el){
 		el.addEvent('click', function(e) {
 			var id = el.getProperty('id');
 			var datatype = id.substring(0, id.indexOf('_'));
@@ -702,7 +702,7 @@ function initializeVariableViewer() {
 			});
 		});
 	});
-	initializeVariableDragging(true);*/
+	initializeVariableDragging(true);
 }
 function createVariable(datatype, value, element, image) {
 	ProcessData.createVariable(value, datatype, {
