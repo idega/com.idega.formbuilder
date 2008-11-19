@@ -22,8 +22,6 @@ var RESERVED_HEIGHT_FOR_FB = RESERVED_HEIGHT + 94;
 var modalFormName = null;
 var modalGoToDesigner = false;
 var modalSelectedForm = null;
-var SELECTED_PROCESS = null;
-var SELECTED_TASK = null;
 
 var fbLeftAccordion = null;
 var fbRightAccordion = null;
