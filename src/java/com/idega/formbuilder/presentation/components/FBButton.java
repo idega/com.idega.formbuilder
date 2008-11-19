@@ -35,8 +35,6 @@ public class FBButton extends FBComponentBase {
 	public String selectedStyleClass;
 	public String label;
 	public boolean selected;
-	public String onSelect;
-	public String onDelete;
 	private String buttonId;
 	
 	public String getButtonId() {
@@ -45,14 +43,6 @@ public class FBButton extends FBComponentBase {
 
 	public void setButtonId(String buttonId) {
 		this.buttonId = buttonId;
-	}
-
-	public String getOnSelect() {
-		return onSelect;
-	}
-
-	public void setOnSelect(String onSelect) {
-		this.onSelect = onSelect;
 	}
 
 	public boolean isSelected() {
@@ -82,8 +72,6 @@ public class FBButton extends FBComponentBase {
 	public FBButton(String buttonId, String styleClass, String onSelect, String onDelete) {
 		super();
 		this.buttonId = buttonId;
-		this.onSelect = onSelect;
-		this.onDelete = onDelete;
 		this.setStyleClass(styleClass);
 	}
 	
@@ -99,7 +87,6 @@ public class FBButton extends FBComponentBase {
 		Layer container = new Layer(Layer.DIV);
 		container.setId(buttonId);
 		container.setStyleAttribute(INLINE_STYLE);
-		container.setOnClick(onSelect);
 		Page page = ((FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID)).getPage();
 		if(page != null) {
 			ButtonArea area = page.getButtonArea();
@@ -134,7 +121,6 @@ public class FBButton extends FBComponentBase {
 		Image icon = new Image();
 		icon.setStyleClass(SPEED_BUTTON_STYLE);
 		icon.setSrc(DELETE_BUTTON_IMG);
-		icon.setOnClick(onDelete);
 		
 		Layer handleLayer = new Layer(Layer.DIV);
 		handleLayer.setStyleClass(HANDLER_LAYER_CLASS);
@@ -180,12 +166,4 @@ public class FBButton extends FBComponentBase {
 		this.label = label;
 	}
 
-	public String getOnDelete() {
-		return onDelete;
-	}
-
-	public void setOnDelete(String onDelete) {
-		this.onDelete = onDelete;
-	}
-	
 }

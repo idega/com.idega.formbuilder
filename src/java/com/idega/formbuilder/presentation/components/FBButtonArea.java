@@ -19,8 +19,6 @@ public class FBButtonArea extends FBComponentBase {
 
 	public static final String COMPONENT_TYPE = "ButtonArea";
 	
-	private static final String DEFAULT_LOAD_ACTION = "loadButtonInfo(this);";
-	private static final String DEFAULT_DELETE_ACTION = "removeButton(this);";
 	private static final String NOBUTTONS_NOTICE_ID = "noButtonsNotice";
 	
 	public String componentStyleClass;
@@ -58,8 +56,6 @@ public class FBButtonArea extends FBComponentBase {
 						FBButton button = new FBButton();
 						button.setLabel(FBUtil.getPropertyString(bt.getProperties().getLabel().getString(FBUtil.getUILocale())));
 						button.setButtonId(nextId);
-						button.setOnSelect(DEFAULT_LOAD_ACTION);
-						button.setOnDelete(DEFAULT_DELETE_ACTION);
 						container.add(button);
 					}
 				}

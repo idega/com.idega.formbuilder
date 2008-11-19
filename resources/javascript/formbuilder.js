@@ -1,26 +1,12 @@
 var PAGES_PANEL_ID = 'pagesPanel';
 var BUTTON_AREA_ID = 'pageButtonArea';
 var SP_PAGES_PANEL_ID = 'pagesPanelSpecial';
-var PAGE_ICON_STYLE = 'formPageIcon';
-var PAGE_ICON_SELECTED = 'formPageIconSelected';
-var CURRENT_ELEMENT_UNDER = -1;
+var CURRENT_ELEMENT_UNDER = null;
 var LAST_ELEMENT_UNDER = -1;
+var CURRENT_PAGE_ID;
 var childBoxes = [];
 
-var CURRENT_PAGE_ID;
-var PREVIOUS_PAGE_ID;
-var CURRENT_ELEMENT_ID;
-var PREVIOUS_ELEMENT_ID;
-var CURRENT_ELEMENT = null;
-
-var FORM_TITLE = 'formHeadingHeader';
-var PAGE_TITLE = 'currentPageTitle';
-
 var newComponentId = null;
-var newButtonLabel = null;
-var pressedComponentDelete = false;
-var pressedButtonDelete = false;
-var pressedPageDelete = false;
 var draggingButton = false;
 var draggingComponent = false;
 var draggingPage = false;
@@ -29,7 +15,6 @@ var insideDropzone = false;
 var FORMBUILDER_PATH = "/workspace/forms/formbuilder/";
 var FORMADMIN_PATH = "/workspace/forms/entries/";
 var FORMSHOME_PATH = "/workspace/forms/list/";
-var TRANSITION_DURATION = 500;
 
 var RESERVED_HEIGHT = 82;
 var RESERVED_HEIGHT_FOR_FB = RESERVED_HEIGHT + 94;
@@ -137,7 +122,7 @@ function controlFormbuilderAppWindow() {
 function resizeAccordion(reservedHeight, containerId, variableTabs) {
 	var siteTreeContainer = $(containerId);
 	if (siteTreeContainer) {
-		var totalHeight = getTotalHeight();
+		var totalHeight = window.getHeight();
 		var height = totalHeight - reservedHeight;
 		if (height > 0) {
 			siteTreeContainer.setStyle('height', height + 'px');
@@ -159,7 +144,7 @@ function resizeAccordion(reservedHeight, containerId, variableTabs) {
 	}
 }
 function initializeButtonArea() {
-	var pageButtonArea = $('pageButtonArea');
+	var pageButtonArea = $(BUTTON_AREA_ID);
 	if(pageButtonArea != null) {
 		pageButtonArea.setStyle('background-color', '#FFFFFF');
 		pageButtonArea.removeEvents();
@@ -231,6 +216,59 @@ function initializeButtonArea() {
 			}
 		});
 	}
+	$$('div.formButton').each(function(item) {
+		item.removeEvents('click');
+		item.addEvent('click', function() {
+			PropertyManager.selectComponent(item.getProperty('id'), 'button', {
+				callback: function(result) {
+					var buttonId = item.getProperty('id');
+					currentCallback = buttonRerenderCallback;
+					placeComponentInfo(result[0], 1, buttonId);
+					handleComponentSelection(result[1], buttonId);
+				}
+			});
+		});
+	});
+	$$('img.fbSpeedBButton').each(function(item) {
+		item.removeEvents('click');
+		item.addEvent('click', function(e) {
+			new Event(e).stopPropagation();
+			var buttonId = item.getParent().getParent().getProperty('id');
+			FormComponent.removeButton(buttonId, {
+				callback: function(result) {
+					if(result != null) {
+						var node = $(buttonId);
+						if(node != null) {
+							node.remove();
+							initializeButtonArea();
+							
+							if(result[1] != null) {
+								placeComponentInfo(result[1], 1, result[0]);
+							}
+							if(result[2] != null) {
+								var dropBox = $(BUTTON_AREA_ID);
+								if(dropBox != null) {
+									var parentNode = dropBox.getParent();
+									var node2 = parentNode.getLast();
+									if(node2 != null) {
+										node2.remove();
+									}
+									insertNodesToContainer(result[2], parentNode);
+									initializeDesignView(true);
+									initializePagesPanel();
+									initializePaletteInner(true);
+								}
+							}
+							
+							updateVariableItem(result[3], result[4]);
+							
+							initializeButtonSorting(fbButtonSort);
+						}
+					}
+				}
+			});
+		});
+	});
 }
 
 function initializeLanguageChooser() {
@@ -261,7 +299,7 @@ function handleComponentSelection(oldId, componentId) {
 		var newElement = $(componentId);
 		if(newElement != null) {
 			newElement.addClass('selectedComponent');
-			if(newElement.getParent().getProperty('id') == 'pageButtonArea') {
+			if(newElement.getParent().getProperty('id') == BUTTON_AREA_ID) {
 				currentCallback = buttonRerenderCallback;
 			} else {
 				currentCallback = componentRerenderCallback;
@@ -305,9 +343,9 @@ function initializeButtonSorting(fbButtonSort) {
 		fbButtonSort.detach();
 		fbButtonSort = null;
 	}
-	fbButtonSort = new Sortables($('pageButtonArea'), {
+	fbButtonSort = new Sortables($(BUTTON_AREA_ID), {
 		onComplete: function(el){
-			var children = $('pageButtonArea').getChildren();
+			var children = $(BUTTON_AREA_ID).getChildren();
 			var orderList = [];
 			for(var i = 0; i < children.length; i++) {
 				var element = children[i];
@@ -527,7 +565,7 @@ function initializeVariableDragging(enable) {
 		});
 		viewer.getElements('.fbtrans').each(function(el){
 			el.removeEvents();
-			el.draggableComponent($('pageButtonArea'), null, 'fbtrans', enable, 'div.formButton');
+			el.draggableComponent($(BUTTON_AREA_ID), null, 'fbtrans', enable, 'div.formButton');
 		});
 	}
 }
@@ -606,16 +644,16 @@ function initializePaletteInner(enable) {
 	tabElements.each(function(item) {
 		item.addEvent('click', function(e){
 			selectedPaletteTab = item.getProperty('title');
-			initializePaletteComponents(selectedPaletteTab, $('dropBoxinner'), $('pageButtonArea'), enable);
+			initializePaletteComponents(selectedPaletteTab, $('dropBoxinner'), $(BUTTON_AREA_ID), enable);
 		});
 	});
 	if(tabElements.length > 0) {
 		var firstTab = tabElements[0];
-		initializePaletteComponents(firstTab.getProperty('title'), $('dropBoxinner'), $('pageButtonArea'), enable);
+		initializePaletteComponents(firstTab.getProperty('title'), $('dropBoxinner'), $(BUTTON_AREA_ID), enable);
 	}
 }
 function initializeVariableViewer() {
-	$$('.addVariableIcon').each(function(el){
+	/*$$('.addVariableIcon').each(function(el){
 		el.addEvent('click', function(e) {
 			var id = el.getProperty('id');
 			var datatype = id.substring(0, id.indexOf('_'));
@@ -664,7 +702,7 @@ function initializeVariableViewer() {
 			});
 		});
 	});
-	initializeVariableDragging(true);
+	initializeVariableDragging(true);*/
 }
 function createVariable(datatype, value, element, image) {
 	ProcessData.createVariable(value, datatype, {
@@ -750,7 +788,7 @@ function showVariableList(positionLeft, positionTop, transition) {
 							var variable = item.getProperty('rel');
 							if(transition) {
 								showLoadingMessage('Adding button');
-								FormComponent.addTransitionButton(newComponentId, variable, CURRENT_ELEMENT_UNDER, {
+								FormComponent.addButton(newComponentId, CURRENT_ELEMENT_UNDER, variable, {
 									callback: function(data) {
 										addButton(data, pageButtonArea, variable, container);
 									}
@@ -817,63 +855,6 @@ function getPageComponents() {
 	}
 	return result;
 }
-function removeButton(parameter) {
-	if(parameter != null) {
-		if(parameter.getParent()) {
-			var buttonId = parameter.getParent().getParent().getProperty('id');
-			pressedButtonDelete = true;
-			FormComponent.removeButton(buttonId, {
-				callback: function(result) {
-					if(result != null) {
-						var node = $(buttonId);
-						if(node != null) {
-							node.remove();
-							initializeButtonArea();
-							
-							if(result[1] != null) {
-								placeComponentInfo(result[1], 1, result[0]);
-							}
-							if(result[2] != null) {
-								var dropBox = $('pageButtonArea');
-								if(dropBox != null) {
-									var parentNode = dropBox.getParent();
-									var node2 = parentNode.getLast();
-									if(node2 != null) {
-										node2.remove();
-									}
-									insertNodesToContainer(result[2], parentNode);
-									initializeDesignView(true);
-									initializePagesPanel();
-									initializePaletteInner(true);
-								}
-							}
-							
-							updateVariableItem(result[3], result[4]);
-							
-							initializeButtonSorting(fbButtonSort);
-						}
-					}
-				}
-			});
-		}
-	}
-}
-function loadButtonInfo(button) {
-	if(button != null) {
-		if(button.id) {
-			if(pressedButtonDelete == false) {
-				PropertyManager.selectComponent(button.id, 'button', {
-					callback: function(result) {
-						currentCallback = buttonRerenderCallback;
-						placeComponentInfo(result[0], 1, button.id);
-						handleComponentSelection(result[1], button.id);
-					}
-				});
-			}
-		}
-	}
-	pressedButtonDelete = false;
-}
 function saveThankYouTitle(parameter) {
 	if(parameter != null) {
 		FormDocument.setThankYouTitle(parameter, placePageTitle);
@@ -937,7 +918,7 @@ function enablePagesPanelActions(enable) {
 		
 		initializePreviewPageAction(false);
 		
-		var pagesPanel = $('pagesPanel');
+		var pagesPanel = $(PAGES_PANEL_ID);
 		if(pagesPanel != null) {
 			pagesPanel.getElements("div.formPageIcon").each(function(item) {
 				item.removeEvents('click');
@@ -1025,7 +1006,7 @@ function initializeNewPageAction(enable) {
 					callback: function(result) {
 						if(result != null) {
 							insertNodesToContainer(result[1], $(PAGES_PANEL_ID));
-							var panel = $('pagesPanel');
+							var panel = $(PAGES_PANEL_ID);
 							if(panel != null) {
 								panel.getLast().addEvent('click', function(e){
 									initializeGeneralPage(panel.getLast());
@@ -1057,7 +1038,7 @@ function initializeNewPageAction(enable) {
 }
 
 function initializeThankyouPage() {
-	var thankyoupage = $('pagesPanelSpecial').getElement('div.thankyou');
+	var thankyoupage = $(SP_PAGES_PANEL_ID).getElement('div.thankyou');
 	if(thankyoupage != null) {
 		thankyoupage.addEvent('click', function(e){
 			showLoadingMessage('Loading section...');
@@ -1094,11 +1075,11 @@ function initializePreviewPageAction(enable) {
 						if(resultDOM != null) {
 							if(checked == true) {
 								previewPageButton.removeClass('addPreviewPageBtn').addClass('removePreviewPageBtn');
-								insertNodesToContainerBefore(resultDOM, $('pagesPanelSpecial'), $('pagesPanelSpecial').childNodes[0]);
+								insertNodesToContainerBefore(resultDOM, $(SP_PAGES_PANEL_ID), $(SP_PAGES_PANEL_ID).childNodes[0]);
 								initializePreviewPage();
 							} else {
 								previewPageButton.removeClass('removePreviewPageBtn').addClass('addPreviewPageBtn');
-								$('pagesPanelSpecial').getFirst().remove();
+								$(SP_PAGES_PANEL_ID).getFirst().remove();
 							}
 						}
 					}
@@ -1114,7 +1095,7 @@ function initializePagesPanelActions() {
 	initializePreviewPageAction(true);
 	
 	FormPage.getId(markSelectedPage);
-	var pagesPanel = $('pagesPanel');
+	var pagesPanel = $(PAGES_PANEL_ID);
 	if(pagesPanel != null) {
 		pagesPanel.getElements('div.formPageIcon').each(function(item) {
 			item.addEvent('click', function(e){
@@ -1202,10 +1183,6 @@ function initializeSourceView() {
 		}
 	});
 }
-function getTotalHeight() {
-	return window.getHeight();
-}
-
 function initializeGeneralPage(element) {
 	var targetId = getPageID(element);
 	if(draggingPage == false && targetId.indexOf('_P_page') != -1) {
@@ -1223,7 +1200,7 @@ function initializeGeneralPage(element) {
 	}
 }
 function initializePreviewPage() {
-	var previewp = $('pagesPanelSpecial').getElement('div.preview');
+	var previewp = $(SP_PAGES_PANEL_ID).getElement('div.preview');
 	if(previewp != null) {
 		previewp.addEvent('click', function(e){
 			showLoadingMessage('Loading section...');
@@ -1263,14 +1240,6 @@ function reloadDesignView(resultDOM, targetId) {
 		closeLoadingMessage();
 	}
 }
-function markSelectedComponent(parameter) {
-	if(parameter != null) {
-		var element = $(parameter);
-		if(element != null) {
-			CURRENT_ELEMENT_ID = parameter;
-		}
-	}
-}
 function createAccordion(tabClass, containerClass, heightOffset, componentId) {
 	return new Accordion(tabClass, containerClass, {
 		opacity: false,
@@ -1283,7 +1252,7 @@ function createAccordion(tabClass, containerClass, heightOffset, componentId) {
 			element.removeClass('hiddenElement');
 			element.addClass('selectedAccElement');
 
-			var heightForAccordion = getTotalHeight() - heightOffset;
+			var heightForAccordion = window.getHeight() - heightOffset;
 			if (heightForAccordion > 0) {
 				element.setStyle('height', heightForAccordion + 'px');
 			}
@@ -1312,8 +1281,6 @@ function initializeAccordions() {
 function placeComponentInfo(resultDOM, tabIndex, component) {
 	var parentNode = $('panel' + tabIndex + 'Content');
 	if(parentNode != null) {
-		if(component != null) 
-			CURRENT_ELEMENT = component;
 		removeChildren(parentNode);
 		insertNodesToContainer(resultDOM, parentNode);
 		fbLeftAccordion.display(1);
