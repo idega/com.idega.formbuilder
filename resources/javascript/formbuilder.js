@@ -664,7 +664,7 @@ function initializeVariableViewer() {
 			});
 		});
 	});
-	//initializeVariableDragging(true);
+	initializeVariableDragging(true);
 }
 function createVariable(datatype, value, element, image) {
 	ProcessData.createVariable(value, datatype, {
