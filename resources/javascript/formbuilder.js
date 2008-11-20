@@ -591,6 +591,7 @@ function initializePalette() {
 				initializePaletteInner(true);
 			} else {
 				initializePaletteInner(false);
+				initializeVariableViewer(false);
 			}
 		}
 	});
@@ -612,57 +613,66 @@ function initializePaletteInner(enable) {
 		initializePaletteComponents(firstTab.getProperty('title'), $('dropBoxinner'), $(BUTTON_AREA_ID), enable);
 	}
 }
-function initializeVariableViewer() {
-	$$('.addVariableIcon').each(function(el){
-		el.addEvent('click', function(e) {
-			var id = el.getProperty('id');
-			var datatype = id.substring(0, id.indexOf('_'));
-			var input = new Element('input');
-			input.setProperty('type', 'text');
-			input.addEvent('keypress', function(event) {
-				if(isEnterEvent(event)) {
-					var value = event.target.value;
-					createVariable(datatype, value, input, el);
-				}
+function initializeVariableViewer(enable) {
+	$$('.addVariableIcon').each(function(item){
+		item.removeEvents('click');
+		if(enable == true) {
+			item.addEvent('click', function(e) {
+				var id = item.getProperty('id');
+				var datatype = id.substring(0, id.indexOf('_'));
+				var input = new Element('input');
+				input.setProperty('type', 'text');
+				input.addEvent('keypress', function(event) {
+					if(isEnterEvent(event)) {
+						var value = event.target.value;
+						createVariable(datatype, value, input, item);
+					}
+				});
+				input.addEvent('blur', function(event) {	
+					input.replaceWith(el);
+				});
+				item.replaceWith(input);
+				input.focus();
 			});
-			input.addEvent('blur', function(event) {	
-				input.replaceWith(el);
-			});
-			el.replaceWith(input);
-			input.focus();
-		});
+		}
 	});
 	$$('img.removeVarIcon').each(function(item) {
-		item.addEvent('click', function(event) {
-			new Event(event).stopPropagation();
-			var componentId = item.getParent().getParent().getProperty('id');
-			FormComponent.removeVariableBinding(componentId, {
-				callback: function(result) {
-					if(result != null) {
-						updateVariableItem(result[0], result[1]);
-						
-						item.getNext().setText('Not assigned');
+		item.removeEvents('click');
+		if(enable == true) {
+			item.addEvent('click', function(event) {
+				new Event(event).stopPropagation();
+				var componentId = item.getParent().getParent().getProperty('id');
+				FormComponent.removeVariableBinding(componentId, {
+					callback: function(result) {
+						if(result != null) {
+							updateVariableItem(result[0], result[1]);
+							
+							item.getNext().setText('Not assigned');
+						}
 					}
-				}
+				});
 			});
-		});
+		}
 	});
 	$$('img.removeTransIcon').each(function(item) {
-		item.addEvent('click', function(event) {
-			new Event(event).stopPropagation();
-			var componentId = item.getParent().getParent().getProperty('id');
-			FormComponent.removeTransitionBinding(componentId, {
-				callback: function(result) {
-					if(result != null) {
-						updateVariableItem(result[0], result[1]);
-						
-						item.getPrevious().setText('Not assigned');
+		item.removeEvents('click');
+		if(enable == true) {
+			item.addEvent('click', function(event) {
+				new Event(event).stopPropagation();
+				var componentId = item.getParent().getParent().getProperty('id');
+				FormComponent.removeTransitionBinding(componentId, {
+					callback: function(result) {
+						if(result != null) {
+							updateVariableItem(result[0], result[1]);
+							
+							item.getPrevious().setText('Not assigned');
+						}
 					}
-				}
+				});
 			});
-		});
+		}
 	});
-	initializeVariableDragging(true);
+	initializeVariableDragging(enable);
 }
 function createVariable(datatype, value, element, image) {
 	ProcessData.createVariable(value, datatype, {
@@ -685,7 +695,7 @@ function reloadWorkspace(locale) {
 				initializePalette(true);
 				initializePagesPanel();
 				initializeDesignView(true);
-				initializeVariableViewer();
+				initializeVariableViewer(true);
 				initializeBottomToolbar();
 			}
 			closeLoadingMessage();
@@ -909,10 +919,12 @@ function initializeBottomToolbar() {
 							if(view != 'Design') {
 								enablePagesPanelActions(false);
 								enablePalettePanelActions(false);
+								initializeVariableViewer(false);
 							} else {
 								enablePagesPanelActions(true);
 								enablePalettePanelActions(true);
 								initializeDesignView(true);
+								initializeVariableViewer(true);
 							}
 							placeComponentInfo(result[1], 1, null);
 							if(view == 'Source') {
@@ -1537,4 +1549,7 @@ function updatePageIconText(result) {
 }
 function initializeDesign() {
 	initializeDesignView(true);
+}
+function initializeVariables() {
+	initializeVariableViewer(true);
 }

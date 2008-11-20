@@ -49,7 +49,7 @@
 						window.addEvent('domready', initializePagesPanel);
 						window.addEvent('domready', initializeDesign);
 						window.addEvent('domready', registerFormbuilderActions);
-						window.addEvent('domready', initializeVariableViewer);
+						window.addEvent('domready', initializeVariables);
 						window.addEvent('domready', initializeBottomToolbar);
 						window.addEvent('resize', controlFormbuilderAppWindow);
                 	</script>
