@@ -338,9 +338,7 @@ function handleComponentSelection(oldId, componentId) {
 			} else {
 				currentCallback = componentRerenderCallback;
 			}
-			if(fbLeftAccordion != null) {
-				fbLeftAccordion.display(1);
-			}
+			if(fbLeftAccordion) fbLeftAccordion.display(0);
 		}
 	}	
 }
@@ -402,9 +400,8 @@ function addButton(data, container, transition, dialog) {
 		insertNodesToContainerBefore(data[1], container, node);
 	}
 	newComponentId = null;
-	if(fbLeftAccordion != null) {
-		fbLeftAccordion.display(0);
-	}
+	if(fbLeftAccordion) fbLeftAccordion.display(0);
+	
 	initializeButtonSorting(fbButtonSort);
 	
 	updateVariableItem(transition, data[1]);
@@ -415,9 +412,8 @@ function addButton(data, container, transition, dialog) {
 }
 
 function addComponent(data, container, variable, dialog) {
-	if($('noFormNotice') != null) {
-		$('noFormNotice').remove();
-	}
+	if($('noFormNotice')) $('noFormNotice').remove();
+	
 	if(data[0] == 'append' || data[0] == null) {
 		insertNodesToContainer(data[1], container);
 	} else {
@@ -428,9 +424,7 @@ function addComponent(data, container, variable, dialog) {
 	initializeDesignView(false);
 	container.setStyle('background-color', '#FFFFFF');
 	closeLoadingMessage();
-	if(fbLeftAccordion != null) {
-		fbLeftAccordion.display(0);
-	}
+	if(fbLeftAccordion) fbLeftAccordion.display(0);
 	
 	updateVariableItem(variable, data[2]);
 										
@@ -442,7 +436,7 @@ function initializeDropbox() {
 	var dropBoxinner = $('dropBoxinner');
 	if(dropBoxinner != null) {
 		dropBoxinner.getElements('div.formElement').each(function(item) {
-			item.removeEvents();
+			item.removeEvents('click');
 			item.addEvent('click', function(e) {
 				var componentId = item.getProperty('id');
 				PropertyManager.selectComponent(componentId, 'component', {
@@ -453,44 +447,47 @@ function initializeDropbox() {
 					}
 				});
 			});
-			item.getElement('img.speedButton').removeEvents('click');
-			item.getElement('img.speedButton').addEvent('click', function(e) {
-				new Event(e).stopPropagation();
-				var node = e.target.getParent();
-				if(node != null) {
-					FormComponent.removeComponent(node.getProperty('id'), {
-						callback: function(result) {
-							if(result != null) {
-								var node = $(result[0]);
-								if(node != null) {
-									node.remove();
-									
-									if(result[1] != null) {
-										placeComponentInfo(result[1], 1, result[0]);
-									}
-									
-									if(result[2] != null) {
-										var dropBox = $('dropBox');
-										if(dropBox != null) {
-											var parentNode = dropBox.getParent();
-											var node2 = parentNode.getLast();
-											if(node2 != null) {
-												node2.remove();
-											}
-											insertNodesToContainer(result[2], parentNode);
-											initializeDesignView(true);
-											initializePagesPanel();
-											initializePaletteInner(true);
+			var speedButton = item.getElement('img.speedButton');
+			if(speedButton != null) {
+				speedButton.removeEvents('click');
+				speedButton.addEvent('click', function(e) {
+					new Event(e).stopPropagation();
+					var node = speedButton.getParent();
+					if(node != null) {
+						FormComponent.removeComponent(node.getProperty('id'), {
+							callback: function(result) {
+								if(result != null) {
+									var node = $(result[0]);
+									if(node != null) {
+										node.remove();
+										
+										if(result[1] != null) {
+											placeComponentInfo(result[1], 1, result[0]);
 										}
+										
+										if(result[2] != null) {
+											var dropBox = $('dropBox');
+											if(dropBox != null) {
+												var parentNode = dropBox.getParent();
+												var node2 = parentNode.getLast();
+												if(node2 != null) {
+													node2.remove();
+												}
+												insertNodesToContainer(result[2], parentNode);
+												initializeDesignView(true);
+												initializePagesPanel();
+												initializePaletteInner(true);
+											}
+										}
+										
+										updateVariableItem(result[3], result[4]);
 									}
-									
-									updateVariableItem(result[3], result[4]);
 								}
 							}
-						}
-					});
-				}
-			});
+						});
+					}
+				});
+			}
 		});
 	}
 }
@@ -531,22 +528,25 @@ function initializeVariableDragging(enable) {
 }
 
 function initializePaletteComponents(tab, dropBoxinner, pageButtonArea, enable) {
-	$(tab).getElements('.fbc').each(function(el){
-		el.removeEvents();
-		el.draggableComponent(dropBoxinner, null, 'fbc', enable, 'div.formElement');
-	});
-	$(tab).getElements('.fbcp').each(function(el){
-		el.removeEvents();
-		el.draggableComponent(dropBoxinner, null, 'fbcp', enable, 'div.formElement');
-	});
-	$(tab).getElements('.fbb').each(function(el){
-		el.removeEvents();
-		el.draggableComponent(pageButtonArea, null, 'fbb', enable, 'div.formButton');
-	});
-	$(tab).getElements('.fbbp').each(function(el){
-		el.removeEvents();
-		el.draggableComponent(pageButtonArea, null, 'fbbp', enable, 'div.formButton');
-	});
+	var tabComponent = $(tab);
+	if(tabComponent != null) {
+		tabComponent.getElements('.fbc').each(function(el){
+			el.removeEvents();
+			el.draggableComponent(dropBoxinner, null, 'fbc', enable, 'div.formElement');
+		});
+		tabComponent.getElements('.fbcp').each(function(el){
+			el.removeEvents();
+			el.draggableComponent(dropBoxinner, null, 'fbcp', enable, 'div.formElement');
+		});
+		tabComponent.getElements('.fbb').each(function(el){
+			el.removeEvents();
+			el.draggableComponent(pageButtonArea, null, 'fbb', enable, 'div.formButton');
+		});
+		tabComponent.getElements('.fbbp').each(function(el){
+			el.removeEvents();
+			el.draggableComponent(pageButtonArea, null, 'fbbp', enable, 'div.formButton');
+		});
+	}
 }
 function createNewForm() {
 	if(modalFormName == null || modalFormName == '') {
