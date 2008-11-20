@@ -198,6 +198,8 @@ span.multipleLegend {
 	margin-top: 5px;
 	background-color: #fff;
 	padding: 0px;
+	max-height:150px;
+	overflow:auto;
 }
 .variablePopupList li {
 	padding: 2px;
