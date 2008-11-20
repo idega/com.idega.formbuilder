@@ -14,15 +14,23 @@ function loadTaskFormDocument(processName, processId, taskName, formId) {
 	showLoadingMessage('Loading');
 	FormDocument.loadTaskFormDocument(processId, taskName, formId, {
 		callback: function(result) {
-			if(result == true) {
-				window.location=FORMBUILDER_PATH;
-			} else {
-				if(humanMsg) humanMsg.displayMsg("Error occured trying to load editing mode");
-			}
+			handleActionRedirect(result, true, FORMBUILDER_PATH, null, 'Error occured trying to load editing mode');
 		}
 	});
 	closeLoadingMessage();
 	return false;
+}
+function handleActionRedirect(result, indicator, successPath1, successPath2, errorMessage) {
+	if(result == true) {
+		if(indicator == true) {
+			window.location=successPath1;
+		} else {
+			window.location=successPath2;
+		}
+	} else {
+		closeLoadingMessage();
+		if(humanMsg) humanMsg.displayMsg(errorMessage);
+	}
 }
 function createNewForm() {
 	if(modalFormName == null || modalFormName == '') {
@@ -35,39 +43,21 @@ function createNewForm() {
 	}
 	FormDocument.createFormDocument(modalFormName, {
 		callback: function(result) {
-			if(result == true) {
-				if(modalGoToDesigner == true) {
-					window.location=FORMBUILDER_PATH;
-				} else {
-					window.location=FORMSHOME_PATH;
-				}
-			}
+			handleActionRedirect(result, modalGoToDesigner, FORMBUILDER_PATH, FORMSHOME_PATH, 'Error creating new form document');
 		}
 	});
 }
 function createNewTaskForm() {
 	FormDocument.createTaskFormDocument(modalFormName, SELECTED_PROCESS, SELECTED_TASK, {
 		callback: function(result) {
-			if(result == true) {
-				if(modalGoToDesigner == true) {
-					window.location=FORMBUILDER_PATH;
-				} else {
-					window.location=FORMSHOME_PATH;
-				}
-			}
+			handleActionRedirect(result, modalGoToDesigner, FORMBUILDER_PATH, FORMSHOME_PATH, 'Error creating new form document');
 		}
 	});
 }
 function attachTaskForm() {
 	FormDocument.attachFormDocumentToTask(SELECTED_PROCESS, SELECTED_TASK, modalSelectedForm, modalGoToDesigner,  {
 		callback: function(result) {
-			if(result == true) {
-				if(modalGoToDesigner == true) {
-					window.location=FORMBUILDER_PATH;
-				} else {
-					window.location=FORMSHOME_PATH;
-				}
-			}
+			handleActionRedirect(result, modalGoToDesigner, FORMBUILDER_PATH, FORMSHOME_PATH, 'Error attaching a form to a task');
 		}
 	});
 }
@@ -134,12 +124,7 @@ function registerFormsHomeActions() {
 			
 			FormDocument.loadFormDocumentEntries(formId, {
 				callback: function(result) {
-					if(result != null) {
-						window.location=FORMADMIN_PATH + '?formId=' + result;
-					} else {
-						alert('Error occured trying to load admin mode');
-						closeLoadingMessage();
-					}
+					handleActionRedirect(result, true, FORMADMIN_PATH + '?formId=' + result, null, 'Error occured trying to load admin mode');
 				}
 			});
 		});
@@ -204,12 +189,7 @@ function registerFormsHomeActions() {
 			
 			FormDocument.loadFormDocument(formId, {
 				callback: function(result) {
-					if(result == true) {
-						window.location=FORMBUILDER_PATH;
-					} else {
-						closeLoadingMessage();
-						if(humanMsg) humanMsg.displayMsg("Error occured trying to load editing mode");
-					}
+					handleActionRedirect(result, true, FORMADMIN_PATH, null, 'Error occured trying to load editing mode');
 				}
 			});
 		});
@@ -223,12 +203,7 @@ function registerFormsHomeActions() {
 			
 			FormDocument.loadFormDocumentPreview(formId, {
 				callback: function(result) {
-					if(result == true) {
-						window.location=FORMPREVIEW_PATH;
-					} else {
-						closeLoadingMessage();
-						if(humanMsg) humanMsg.displayMsg("Error occured trying to load preview mode");
-					}
+					handleActionRedirect(result, true, FORMPREVIEW_PATH, null, 'Error occured trying to load preview mode');
 				}
 			});
 		});
@@ -242,12 +217,7 @@ function registerFormsHomeActions() {
 			
 			FormDocument.loadFormDocumentCode(formId, {
 				callback: function(result) {
-					if(result == true) {
-						window.location=FORMBUILDER_PATH;
-					} else {
-						closeLoadingMessage();
-						if(humanMsg) humanMsg.displayMsg("Error occured trying to load code view mode");
-					}
+					handleActionRedirect(result, true, FORMBUILDER_PATH, null, 'Error occured trying to load code view mode');
 				}
 			});
 		});
@@ -263,12 +233,7 @@ function registerFormsHomeActions() {
 				
 				FormDocument.deleteFormDocument(formId, {
 					callback: function(result) {
-						if(result == true) {
-							window.location = FORMSHOME_PATH;
-						} else {
-							closeLoadingMessage();
-							if(humanMsg) humanMsg.displayMsg("Error trying to delete");
-						}
+						handleActionRedirect(result, true, FORMSHOME_PATH, null, 'Error trying to delete a form');
 					}
 				});
 			}
@@ -285,12 +250,7 @@ function registerFormsHomeActions() {
 				
 				FormDocument.deleteTaskFormDocument(formId, {
 					callback: function(result) {
-						if(result == true) {
-							window.location = FORMSHOME_PATH;
-						} else {
-							closeLoadingMessage();
-							if(humanMsg) humanMsg.displayMsg("Error trying to delete");
-						}
+						handleActionRedirect(result, true, FORMSHOME_PATH, null, 'Error trying to delete a form');
 					}
 				});
 			}
