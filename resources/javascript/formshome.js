@@ -189,7 +189,7 @@ function registerFormsHomeActions() {
 			
 			FormDocument.loadFormDocument(formId, {
 				callback: function(result) {
-					handleActionRedirect(result, true, FORMADMIN_PATH, null, 'Error occured trying to load editing mode');
+					handleActionRedirect(result, true, FORMBUILDER_PATH, null, 'Error occured trying to load editing mode');
 				}
 			});
 		});

@@ -246,6 +246,36 @@ public class ProcessData implements Serializable {
 		return getTransitionStatus(transition);
 	}
 	
+	public void unbindTransitions(List<String> buttonIds) {
+		if(buttonIds == null) {
+			return;
+		}
+		
+		for(String buttonId : buttonIds) {
+			for(String transition : getTransitionUsageList().keySet()) {
+				List<String> list = getTransitionUsageList().get(transition);
+				if(list != null) {
+					list.remove(buttonId);
+				}
+			}
+		}
+	}
+	
+	public void unbindVariables(List<String> componentIds) {
+		if(componentIds == null) {
+			return;
+		}
+		
+		for(String componentId : componentIds) {
+			for(String variable : getVariableUsageList().keySet()) {
+				List<String> list = getVariableUsageList().get(variable);
+				if(list != null) {
+					list.remove(componentId);
+				}
+			}
+		}
+	}
+	
 	public ConstVariableStatus unbindTransition(String transition, String buttonId) {
 		List<String> usage = getTransitionUsageList().get(transition);
 		if(usage != null) {

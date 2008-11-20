@@ -8,19 +8,20 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import com.idega.builder.business.BuilderLogic;
+import com.idega.formbuilder.presentation.components.FBComponentProperties;
+import com.idega.formbuilder.presentation.components.FBDesignView;
+import com.idega.formbuilder.presentation.components.FBFormPage;
+import com.idega.formbuilder.presentation.components.FBVariableViewer;
+import com.idega.formbuilder.presentation.components.FBViewPanel;
+import com.idega.formbuilder.util.FBUtil;
+import com.idega.util.CoreConstants;
+import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
 import com.idega.xformsmanager.business.Document;
 import com.idega.xformsmanager.business.component.ButtonArea;
 import com.idega.xformsmanager.business.component.Component;
 import com.idega.xformsmanager.business.component.Page;
 import com.idega.xformsmanager.component.beans.LocalizedStringBean;
-import com.idega.formbuilder.presentation.components.FBComponentProperties;
-import com.idega.formbuilder.presentation.components.FBDesignView;
-import com.idega.formbuilder.presentation.components.FBFormPage;
-import com.idega.formbuilder.presentation.components.FBViewPanel;
-import com.idega.formbuilder.util.FBUtil;
-import com.idega.util.CoreConstants;
-import com.idega.util.CoreUtil;
 
 public class FormPage implements Serializable {
 	
@@ -148,7 +149,7 @@ public class FormPage implements Serializable {
 	}
 	
 	public Object[] removePage(String id) throws Exception {
-		Object[] result = new Object[3];
+		Object[] result = new Object[4];
 		Document document = formDocument.getDocument();
 		if(document != null) {
 			Page page = document.getPage(id);
@@ -156,19 +157,32 @@ public class FormPage implements Serializable {
 				List<String> ids = formDocument.getCommonPagesIdList();
 				int index = ids.indexOf(id);
 				String newPageId = CoreConstants.EMPTY;
-				if(index < 1) {
-					if(ids.size() > 1) {
-						newPageId = ids.get(1);
-						page.remove();
-						page = document.getPage(newPageId);
-						initializeBeanInstance(page);
-					}
-				} else {
+				if(index < 1 && ids.size() > 1) {
+					newPageId = ids.get(1);
+				} else if(index >= 1) {
 					newPageId = ids.get(index - 1);
+				}
+				
+				if(workspace.isProcessMode()) {
+					ProcessData processData = (ProcessData) WFUtil.getBeanInstance(ProcessData.BEAN_ID);
+					
+					processData.unbindVariables(page.getContainedComponentsIds());
+					
+					ButtonArea buttonArea = page.getButtonArea();
+					
+					if(buttonArea != null) {
+						processData.unbindTransitions(buttonArea.getContainedComponentsIds());
+					}
+					
+					result[3] = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBVariableViewer(),true);
+				}
+				
+				if(!StringUtils.isEmpty(newPageId)) {
 					page.remove();
 					page = document.getPage(newPageId);
 					initializeBeanInstance(page);
 				}
+				
 				workspace.setView(FBViewPanel.DESIGN_VIEW);
 				
 				ComponentPropertyManager propertyManager = (ComponentPropertyManager) WFUtil.getBeanInstance(ComponentPropertyManager.BEAN_ID);

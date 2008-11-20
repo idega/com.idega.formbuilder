@@ -1090,6 +1090,14 @@ function initializePagesPanelActions() {
 											insertNodesToContainer(result[1], parentNode);
 											initializeDesignView(true);
 										}
+										if(result[3] != null) {
+											var viewer = $('variableViewer');
+											if(viewer != null) {
+												var parentNode = viewer.getParent();
+												viewer.remove();
+												insertNodesToContainer(result[3], parentNode);
+											}
+										}
 										placeComponentInfo(result[2], 1, null);
 										closeLoadingMessage();
 									}
