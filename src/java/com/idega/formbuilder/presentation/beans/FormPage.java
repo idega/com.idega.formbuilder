@@ -91,7 +91,7 @@ public class FormPage implements Serializable {
 	public org.jdom.Document[] getThxPageInfo() throws Exception {
 		Document document = formDocument.getDocument();
 		if(document != null) {
-			Page page = document.getThxPage();
+			Page page = null;//document.getThxPage();
 			if(page != null) {
 				initializeBeanInstance(page, true);
 			}
@@ -219,7 +219,7 @@ public class FormPage implements Serializable {
 	public org.jdom.Document[] getConfirmationPageInfo() throws Exception {
 		Document document = formDocument.getDocument();
 		if(document != null) {
-			Page page = document.getConfirmationPage();
+			Page page = null;//document.getConfirmationPage();
 			if(page != null) {
 				initializeBeanInstance(page, true);
 			}
@@ -240,13 +240,14 @@ public class FormPage implements Serializable {
 		
 		org.jdom.Document[] result = new org.jdom.Document[3];
 		if(document != null) {
-			String temp = null;
-			if(document.getConfirmationPage() != null) {
-				temp = document.getConfirmationPage().getId();
-			} else {
-				temp = document.getThxPage().getId();
-			}
-			Page page = document.addPage(temp);
+//			String temp = null;
+//			if(document.getConfirmationPage() != null) {
+//				temp = document.getConfirmationPage().getId();
+//			} else {
+//				temp = document.getThxPage().getId();
+//			}
+			Page page = document.addPage(null);
+//			TODO: no null here ever. Don't keep silent about errors, if those are tracked (or don't track them)!! 
 			if(page != null) {
 				initializeBeanInstance(page, false);
 				workspace.setView(FBViewPanel.DESIGN_VIEW);

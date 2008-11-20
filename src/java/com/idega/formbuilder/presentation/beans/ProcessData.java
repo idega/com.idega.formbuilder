@@ -2,6 +2,7 @@ package com.idega.formbuilder.presentation.beans;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,7 +88,10 @@ public class ProcessData implements Serializable {
 		
 		variables.addAll(pdw.getTaskVariableList(taskName));
 		
-		transitions.addAll(pdw.getTaskNodeTransitionsNames(taskName));
+		Collection<String> transitionNames = pdw.getTaskNodeTransitionsNames(taskName);
+		
+		if(transitionNames != null)
+			transitions.addAll(transitionNames);
 	}
 	
 	public List<Variable> getVariables() {

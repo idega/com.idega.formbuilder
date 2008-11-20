@@ -22,7 +22,6 @@ import com.idega.xformsmanager.business.component.ButtonArea;
 import com.idega.xformsmanager.business.component.Component;
 import com.idega.xformsmanager.business.component.Container;
 import com.idega.xformsmanager.business.component.Page;
-import com.idega.xformsmanager.business.component.PageThankYou;
 
 public class FBDesignView extends FBComponentBase {
 	
@@ -175,7 +174,7 @@ public class FBDesignView extends FBComponentBase {
 		
 		Page page = formPage.getPage();
 		if(page != null) {
-			if(page instanceof PageThankYou) {
+			if(page.isSpecialPage()) {
 				Layer thankYouTextBox = new Layer(Layer.DIV);
 				thankYouTextBox.setId(NOFORM_NOTICE_ID);
 				

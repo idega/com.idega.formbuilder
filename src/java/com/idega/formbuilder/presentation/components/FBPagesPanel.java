@@ -162,6 +162,7 @@ public class FBPagesPanel extends FBComponentBase {
 		special.setId("pagesPanelSpecial");
 		special.setStyleClass("pagesSpecialContainer");
 		
+		/*
 		if(formDocument.isHasPreview()) {
 			Page confirmation = document.getConfirmationPage();
 			if(confirmation != null) {
@@ -186,6 +187,7 @@ public class FBPagesPanel extends FBComponentBase {
 			formPage.setOnLoad(DEFAULT_THX_LOAD_ACTION);
 			special.add(formPage);
 		}
+		*/
 		
 		body.add(special);
 		

@@ -46,7 +46,6 @@ import com.idega.webface.WFUtil;
 import com.idega.xformsmanager.business.Document;
 import com.idega.xformsmanager.business.DocumentManager;
 import com.idega.xformsmanager.business.component.Page;
-import com.idega.xformsmanager.business.component.PageThankYou;
 import com.idega.xformsmanager.component.beans.LocalizedStringBean;
 
 public class FormDocument implements Serializable {
@@ -65,7 +64,7 @@ public class FormDocument implements Serializable {
 	private boolean enableBubbles;
 	private Document document;
 	private Page overviewPage;
-	private PageThankYou submitPage;
+//	private PageThankYou submitPage;
 	private List<AdvancedProperty> standaloneForms = new ArrayList<AdvancedProperty>();
 	
 	private Workspace workspace;
@@ -96,14 +95,14 @@ public class FormDocument implements Serializable {
 		List<String> ids = document.getContainedPagesIdList();
 		String confId = "";
 		String tksId = "";
-		Page temp = document.getConfirmationPage();
+		Page temp = null;//document.getConfirmationPage();
 		if(temp != null) {
 			confId = temp.getId();
 		}
-		temp = document.getThxPage();
-		if(temp != null) {
-			tksId = temp.getId();
-		}
+//		temp = document.getThxPage();
+//		if(temp != null) {
+//			tksId = temp.getId();
+//		}
 		Iterator<String> it = ids.iterator();
 		while(it.hasNext()) {
 			String nextId = it.next();
@@ -118,8 +117,8 @@ public class FormDocument implements Serializable {
 	public Document initializeBeanInstance(Long formId) throws Exception {
 		DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
 		this.document = formManagerInstance.openForm(formId);
-		this.overviewPage = document.getConfirmationPage();
-		this.submitPage = document.getThxPage();
+//		this.overviewPage = document.getConfirmationPage();
+//		this.submitPage = document.getThxPage();
 		this.formId = document.getId();
 		this.hasPreview = overviewPage != null ? true : false;
 		
@@ -547,11 +546,11 @@ public class FormDocument implements Serializable {
 	public void updatePagesList(List<String> idSequence) throws Exception {
 		String confirmId = "";
 		String thxId = "";
-		Page confPage = document.getConfirmationPage();
+		Page confPage = null;//document.getConfirmationPage();
 		if(confPage != null) {
 			confirmId = confPage.getId();
 		}
-		Page thxPage = document.getThxPage();
+		Page thxPage = null;//document.getThxPage();
 		if(thxPage != null) {
 			thxId = thxPage.getId();
 		}
@@ -607,15 +606,15 @@ public class FormDocument implements Serializable {
 		hasPreview = value;
 		Page page = null;
 		if(hasPreview) {
-			Page thxPage = document.getThxPage();
+			Page thxPage = null;//document.getThxPage();
 			if(thxPage != null) {
-				page = document.addConfirmationPage(thxPage.getId());
+				page = document.addConfirmationPage();
 			} else {
-				page = document.addConfirmationPage(null);
+				page = document.addConfirmationPage();
 			}
 			setOverviewPage(page);
 		} else {
-			page = document.getConfirmationPage();
+			page = null;//document.getConfirmationPage();
 			if(page != null) {
 				setOverviewPage(null);
 				page.remove();
@@ -650,8 +649,8 @@ public class FormDocument implements Serializable {
 	public Document initializeBeanInstance(Document document) {
 		this.document = document;
 		this.formId = document.getId();
-		this.overviewPage = document.getConfirmationPage();
-		this.submitPage = document.getThxPage();
+//		this.overviewPage = document.getConfirmationPage();
+//		this.submitPage = document.getThxPage();
 		this.hasPreview = overviewPage != null ? true : false;
 		
 		return document;
@@ -730,9 +729,9 @@ public class FormDocument implements Serializable {
 	public void setHasPreview(boolean hasPreview) {
 		this.hasPreview = hasPreview;
 		if(hasPreview) {
-			document.addConfirmationPage(null);
+			document.addConfirmationPage();
 		} else {
-			Page page = document.getConfirmationPage();
+			Page page = null;//document.getConfirmationPage();
 			if(page != null) {
 				page.remove();
 			}
@@ -740,10 +739,12 @@ public class FormDocument implements Serializable {
 	}
 
 	public String getThankYouText() {
-		if(submitPage == null) {
-			return CoreConstants.EMPTY;
-		}
-		return FBUtil.getPropertyString(submitPage.getProperties().getText().getString(FBUtil.getUILocale()));
+		
+		return CoreConstants.EMPTY;
+//		if(submitPage == null) {
+//			return CoreConstants.EMPTY;
+//		}
+//		return FBUtil.getPropertyString(submitPage.getProperties().getText().getString(FBUtil.getUILocale()));
 	}
 	
 	public String getFormErrorMessage() {
@@ -754,19 +755,20 @@ public class FormDocument implements Serializable {
 	}
 
 	public void setThankYouText(String thankYouText) {
-		LocalizedStringBean bean = submitPage.getProperties().getText();
-		bean.setString(FBUtil.getUILocale(), thankYouText);
-		submitPage.getProperties().setText(bean);
+//		LocalizedStringBean bean = submitPage.getProperties().getText();
+//		bean.setString(FBUtil.getUILocale(), thankYouText);
+//		submitPage.getProperties().setText(bean);
 	}
 
 	public String getThankYouTitle() {
-		return submitPage.getProperties().getLabel().getString(FBUtil.getUILocale());
+		return CoreConstants.EMPTY;
+//		return submitPage.getProperties().getLabel().getString(FBUtil.getUILocale());
 	}
 
 	public void setThankYouTitle(String thankYouTitle) {
-		LocalizedStringBean bean = submitPage.getProperties().getLabel();
-		bean.setString(FBUtil.getUILocale(), thankYouTitle);
-		submitPage.getProperties().setLabel(bean);
+//		LocalizedStringBean bean = submitPage.getProperties().getLabel();
+//		bean.setString(FBUtil.getUILocale(), thankYouTitle);
+//		submitPage.getProperties().setLabel(bean);
 	}
 
 	public String getTempValue() {
@@ -824,13 +826,13 @@ public class FormDocument implements Serializable {
 		this.overviewPage = overviewPage;
 	}
 
-	public PageThankYou getSubmitPage() {
-		return submitPage;
-	}
-
-	public void setSubmitPage(PageThankYou submitPage) {
-		this.submitPage = submitPage;
-	}
+//	public PageThankYou getSubmitPage() {
+//		return submitPage;
+//	}
+//
+//	public void setSubmitPage(PageThankYou submitPage) {
+//		this.submitPage = submitPage;
+//	}
 
 	public Workspace getWorkspace() {
 		return workspace;
