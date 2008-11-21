@@ -259,6 +259,7 @@ function initializeButtonArea() {
 					currentCallback = buttonRerenderCallback;
 					placeComponentInfo(result[0], 1, buttonId);
 					handleComponentSelection(result[1], buttonId);
+					if(fbLeftAccordion) fbLeftAccordion.display(1);
 				}
 			});
 		});
@@ -366,6 +367,8 @@ function initializeComponentSorting(fbComponentSort) {
 			}
 			FormPage.updateComponentList(orderList);
 		},
+		onStart: function(el) {
+		},
 		handles: '.fbCompHandler'
 	});
 }
@@ -444,6 +447,7 @@ function initializeDropbox() {
 						currentCallback = componentRerenderCallback;
 						placeComponentInfo(result[0], 1, componentId);
 						handleComponentSelection(result[1], componentId);
+						if(fbLeftAccordion) fbLeftAccordion.display(1);
 					}
 				});
 			});
@@ -838,12 +842,7 @@ function markSelectedPage(parameter) {
 			oldPageIcon.removeClass('selectedPage');
 		}
 		var pageNode = $(parameter);
-		if(pageNode == null) {
-			pageNode = $(parameter + '_P_page');
-			CURRENT_PAGE_ID = parameter + '_P_page';
-		} else {
-			CURRENT_PAGE_ID = parameter;
-		}
+		CURRENT_PAGE_ID = parameter;
 		if(pageNode != null) {
 			pageNode.addClass('selectedPage');
 		}
@@ -851,7 +850,7 @@ function markSelectedPage(parameter) {
 }
 function placePageTitle(parameter) {
 	if(parameter != null) {
-		var node = $(parameter.pageId + '_P_page');
+		var node = $(parameter.pageId);
 		if(node != null) {
 			var parent = node.getFirst().getNext();
 			parent.setText(parameter.pageTitle);
@@ -883,23 +882,13 @@ function enablePagesPanelActions(enable) {
 		
 		initializePreviewPageAction(false);
 		
-		var pagesPanel = $(PAGES_PANEL_ID);
-		if(pagesPanel != null) {
-			pagesPanel.getElements("div.formPageIcon").each(function(item) {
-				item.removeEvents('click');
-				item.getElement('img.pageSpeedButton').removeEvents('click');
-			});
-		}
-		
-		var thankyoupage = $E('div.thankyou');
-		if(thankyoupage != null) {
-			thankyoupage.removeEvents('click');
-		}
-		
-		var previewp = $E('div.preview');
-		if(previewp != null) {
-			previewp.removeEvents('click');
-		}
+		$$('div.formPageIcon').each(function(item) {
+			item.removeEvents('click');
+			var speedButton = item.getElement('img.pageSpeedButton');
+			if(speedButton != null) {
+				speedButton.removeEvents('click');
+			}
+		});
 	}
 }
 function initializeBottomToolbar() {
@@ -1004,24 +993,6 @@ function initializeNewPageAction(enable) {
 	}
 }
 
-function initializeThankyouPage() {
-	var thankyoupage = $(SP_PAGES_PANEL_ID).getElement('div.thankyou');
-	if(thankyoupage != null) {
-		thankyoupage.addEvent('click', function(e){
-			showLoadingMessage('Loading section...');
-			var targetId = getPageID(thankyoupage);
-			FormPage.getThxPageInfo({
-				callback: function(result) {
-					if(result != null) {
-						reloadDesignView(result[0], targetId);
-						placeComponentInfo(result[1], 1, null);
-					}
-				}
-			});
-		});
-	}
-}
-
 function initializePreviewPageAction(enable) {
 	var previewPageButton = $('previewPageButton');
 	if(previewPageButton != null) {
@@ -1062,68 +1033,58 @@ function initializePagesPanelActions() {
 	initializePreviewPageAction(true);
 	
 	FormPage.getId(markSelectedPage);
-	var pagesPanel = $(PAGES_PANEL_ID);
-	if(pagesPanel != null) {
-		pagesPanel.getElements('div.formPageIcon').each(function(item) {
-			item.addEvent('click', function(e){
-				initializeGeneralPage(item);
-			});
-			var pageSpeedButton = item.getElement('img.pageSpeedButton');
-			if(pageSpeedButton != null) {
-				pageSpeedButton.removeEvents('click');
-				pageSpeedButton.addEvent('click', function(e) {
-					new Event(e).stopPropagation();
-					var root = $(PAGES_PANEL_ID);
-					if(root != null) {
-						var nodes = root.getChildren();
-						if(nodes.length == 1) {
-							return;
-						}
+	$$('div.formPageIcon').each(function(item) {
+		item.addEvent('click', function(e){
+			initializeGeneralPage(item);
+		});
+		var pageSpeedButton = item.getElement('img.pageSpeedButton');
+		if(pageSpeedButton != null) {
+			pageSpeedButton.removeEvents('click');
+			pageSpeedButton.addEvent('click', function(e) {
+				new Event(e).stopPropagation();
+				var root = $(PAGES_PANEL_ID);
+				if(root != null) {
+					var nodes = root.getChildren();
+					if(nodes.length == 1) {
+						return;
 					}
-					var parentNode = pageSpeedButton.getParent();
-					if(parentNode != null) {
-						var targetId = parentNode.getProperty('id');
-						if(targetId.indexOf('_P_page') != -1) {
-							var actualId = targetId.substring(0, targetId.indexOf('_P_page'));
-							FormPage.removePage(actualId, {
-								callback: function(result) {
-									if(result != null) {
-										showLoadingMessage('Loading section...');
-										var iconNode = $(actualId + '_P_page');
-										if(iconNode != null) {
-											iconNode.remove();
-										}
-										markSelectedPage(result[0])
-										var dropBox = $('dropBox');
-										if(dropBox != null) {
-											var parentNode = dropBox.getParent();
-											var node = parentNode.getLast();
-											node.remove();
-											insertNodesToContainer(result[1], parentNode);
-											initializeDesignView(true);
-										}
-										if(result[3] != null) {
-											var viewer = $('variableViewer');
-											if(viewer != null) {
-												var parentNode = viewer.getParent();
-												viewer.remove();
-												insertNodesToContainer(result[3], parentNode);
-											}
-										}
-										placeComponentInfo(result[2], 1, null);
-										closeLoadingMessage();
+				}
+				var parentNode = pageSpeedButton.getParent();
+				if(parentNode != null) {
+					var targetId = parentNode.getProperty('id');
+					FormPage.removePage(targetId, {
+						callback: function(result) {
+							if(result != null) {
+								showLoadingMessage('Loading section...');
+								item.remove();
+								
+								markSelectedPage(result[0])
+								var dropBox = $('dropBox');
+								if(dropBox != null) {
+									var parentNode = dropBox.getParent();
+									var node = parentNode.getLast();
+									node.remove();
+									insertNodesToContainer(result[1], parentNode);
+									initializeDesignView(true);
+								}
+								if(result[3] != null) {
+									var viewer = $('variableViewer');
+									if(viewer != null) {
+										var parentNode = viewer.getParent();
+										viewer.remove();
+										insertNodesToContainer(result[3], parentNode);
 									}
 								}
-							});
+								placeComponentInfo(result[2], 1, null);
+								closeLoadingMessage();
+							}
 						}
-					}
-					initializePagesPanel();
-				});
-			}
-		});
-	}
-	initializeThankyouPage();
-	initializePreviewPage();
+					});
+				}
+				initializePagesPanel();
+			});
+		}
+	});
 }
 function initializePagesPanel() {
 	Workspace.getView({
@@ -1161,44 +1122,39 @@ function initializeSourceView() {
 	});
 }
 function initializeGeneralPage(element) {
-	var targetId = getPageID(element);
-	if(draggingPage == false && targetId.indexOf('_P_page') != -1) {
-		var actualId = targetId.substring(0, targetId.indexOf('_P_page'));
+	var targetId = element.getProperty('id');
+	if(draggingPage == false) {
 		showLoadingMessage('Loading section...');
-		FormPage.getFormPageInfo(actualId, {
+		FormPage.getFormPageInfo(targetId, {
 			callback: function(result) {
 				if(result != null) {
 					reloadDesignView(result[0], targetId);
 					placeComponentInfo(result[1], 1, null);
 					fbLeftAccordion.display(0);
+					
+					if(isSpecialPageSelected()) {
+						$('optionsPanelMessageBox').setStyle('display', 'block');
+						initializePaletteInner(false);
+					} else {
+						$('optionsPanelMessageBox').setStyle('display', 'none');
+						initializePaletteInner(true);
+					}
 				}
 			}
 		});
 	}
 }
-function initializePreviewPage() {
-	var previewp = $(SP_PAGES_PANEL_ID).getElement('div.preview');
-	if(previewp != null) {
-		previewp.addEvent('click', function(e){
-			showLoadingMessage('Loading section...');
-			var targetId = getPageID(previewp);
-			FormPage.getConfirmationPageInfo({
-				callback: function(result) {
-					if(result != null) {
-						reloadDesignView(result[0], targetId);
-						placeComponentInfo(result[1], 1, null);
-					}
-				}
-			});
-		});
-	}
-}
-function getPageID(pageElement) {
-	if(pageElement.hasClass('formPageIcon')) {
-		return pageElement.getProperty('id');
+function isSpecialPageSelected() {
+	var pages = $$('div.selectedPage');
+	if(pages != null && pages.length == 1) {
+		if(pages[0].getProperty('rel') == 'special') {
+			return true;
+		} else {
+			return false;
+		}
 	} else {
-		return pageElement.getParent().getProperty('id');
-	}
+		return false;
+	} 
 }
 function reloadDesignView(resultDOM, targetId) {
 	if(resultDOM != null) {

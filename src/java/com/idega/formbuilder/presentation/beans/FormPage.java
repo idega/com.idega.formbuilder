@@ -32,14 +32,16 @@ public class FormPage implements Serializable {
 	private static final String FORM_ELEMENT = "formElement formElementHover";
 	
 	private Page page;
-	private String id;
-	private boolean special;
 	
 	private FormDocument formDocument;
 	private Workspace workspace;
 	
 	public Workspace getWorkspace() {
 		return workspace;
+	}
+	
+	public String getId() {
+		return page == null ? null : page.getId();
 	}
 
 	public void setWorkspace(Workspace workspace) {
@@ -55,23 +57,7 @@ public class FormPage implements Serializable {
 	}
 
 	public Page initializeBeanInstance(Page page) {
-		if(page != null) {
-			this.page = page;
-			this.id = page.getId();
-			this.special = false;
-		} else {
-			this.page = null;
-			this.id = null;
-			this.special = false;
-		}
-		
-		return page;
-	}
-	
-	public Page initializeBeanInstance(Page page, boolean special) {
-		initializeBeanInstance(page);
-		this.special = special;
-		
+		this.page = page;
 		return page;
 	}
 	
@@ -86,25 +72,6 @@ public class FormPage implements Serializable {
 		} else {
 			return !page.getContainedComponentsIds().isEmpty();
 		}
-	}
-	
-	public org.jdom.Document[] getThxPageInfo() throws Exception {
-		Document document = formDocument.getDocument();
-		if(document != null) {
-			Page page = null;//document.getThxPage();
-			if(page != null) {
-				initializeBeanInstance(page, true);
-			}
-		}
-		
-		ComponentPropertyManager propertyManager = (ComponentPropertyManager) WFUtil.getBeanInstance(ComponentPropertyManager.BEAN_ID);
-		propertyManager.resetComponent();
-		
-		org.jdom.Document[] result = new org.jdom.Document[2];
-		result[0] = getDesignView(FORM_ELEMENT);
-		result[1] = getPropertiesPanel(null);
-
-		return result;
 	}
 	
 	private org.jdom.Document getDesignView(String elementStyleClass) {
@@ -216,47 +183,22 @@ public class FormPage implements Serializable {
 		return result;
 	}
 	
-	public org.jdom.Document[] getConfirmationPageInfo() throws Exception {
-		Document document = formDocument.getDocument();
-		if(document != null) {
-			Page page = null;//document.getConfirmationPage();
-			if(page != null) {
-				initializeBeanInstance(page, true);
-			}
-		}
-		
-		ComponentPropertyManager propertyManager = (ComponentPropertyManager) WFUtil.getBeanInstance(ComponentPropertyManager.BEAN_ID);
-		propertyManager.resetComponent();
-		
-		org.jdom.Document[] result = new org.jdom.Document[2];
-		result[0] = getDesignView(FORM_ELEMENT);
-		result[1] = getPropertiesPanel(null);
-
-		return result;
-	}
-	
 	public org.jdom.Document[] createNewPage() throws Exception {
 		Document document = formDocument.getDocument();
 		
 		org.jdom.Document[] result = new org.jdom.Document[3];
 		if(document != null) {
-//			String temp = null;
-//			if(document.getConfirmationPage() != null) {
-//				temp = document.getConfirmationPage().getId();
-//			} else {
-//				temp = document.getThxPage().getId();
-//			}
 			Page page = document.addPage(null);
 //			TODO: no null here ever. Don't keep silent about errors, if those are tracked (or don't track them)!! 
 			if(page != null) {
-				initializeBeanInstance(page, false);
+				initializeBeanInstance(page);
 				workspace.setView(FBViewPanel.DESIGN_VIEW);
 				
 				ComponentPropertyManager propertyManager = (ComponentPropertyManager) WFUtil.getBeanInstance(ComponentPropertyManager.BEAN_ID);
 				propertyManager.resetComponent();
 				
 				result[0] = getDesignView(FORM_ELEMENT);
-				result[1] = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormPage(id + "_P", page.getProperties().getLabel().getString(FBUtil.getUILocale())), true);
+				result[1] = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormPage(page), true);
 				result[2] = getPropertiesPanel(null);
 			}
 		}
@@ -278,14 +220,6 @@ public class FormPage implements Serializable {
 			}
 		}
 		return list;
-	}
-	
-	public String getId() {
-		return id;
-	}
-	
-	public void setId(String id) {
-		this.id = id;
 	}
 	
 	public Page getPage() {
@@ -315,14 +249,5 @@ public class FormPage implements Serializable {
 		setTitle(title);
 		return title;
 	}
-
-	public boolean isSpecial() {
-		return special;
-	}
-
-	public void setSpecial(boolean special) {
-		this.special = special;
-	}
-	
 
 }

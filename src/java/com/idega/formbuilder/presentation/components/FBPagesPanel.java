@@ -1,17 +1,13 @@
 package com.idega.formbuilder.presentation.components;
 
-import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.context.FacesContext;
 
-import com.idega.xformsmanager.business.Document;
-import com.idega.xformsmanager.business.component.Page;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.presentation.beans.FormPage;
 import com.idega.formbuilder.presentation.beans.Workspace;
-import com.idega.formbuilder.util.FBUtil;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
 import com.idega.presentation.text.Link;
@@ -19,24 +15,17 @@ import com.idega.presentation.text.Text;
 import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
+import com.idega.xformsmanager.business.Document;
+import com.idega.xformsmanager.business.component.Page;
 
 public class FBPagesPanel extends FBComponentBase {
 	
 	public static final String COMPONENT_TYPE = "PagesPanel";
 	
-	private static final String DEFAULT_PAGE_REMOVE_ACTION = "deletePage(event);";
-	private static final String DEFAULT_CONFIRM_LOAD_ACTION = "loadConfirmationPage(this.id);";
-	private static final String DEFAULT_THX_LOAD_ACTION = "loadThxPage(this.id);";
-	private static final String SPECIAL = "Special";
-	private static final String SPECIAL_PREVIEW = "preview";
-	private static final String SPECIAL_THANKYOU = "thankyou";
-	private static final String P = "_P";
 	private static final String PAGES_PANEL_TOOLBAR_CLASS = "pagesPanelToolbar";
 	private static final String PAGES_PANEL_HEADER_CLASS = "pagesPanelHeaderText";
 	
 	private String componentStyleClass;
-	private String generalPartStyleClass;
-	private String specialPartStyleClass;
 	private String selectedStyleClass;
 
 	public String getSelectedStyleClass() {
@@ -45,22 +34,6 @@ public class FBPagesPanel extends FBComponentBase {
 
 	public void setSelectedStyleClass(String selectedStyleClass) {
 		this.selectedStyleClass = selectedStyleClass;
-	}
-
-	public String getGeneralPartStyleClass() {
-		return generalPartStyleClass;
-	}
-
-	public void setGeneralPartStyleClass(String generalPartStyleClass) {
-		this.generalPartStyleClass = generalPartStyleClass;
-	}
-
-	public String getSpecialPartStyleClass() {
-		return specialPartStyleClass;
-	}
-
-	public void setSpecialPartStyleClass(String specialPartStyleClass) {
-		this.specialPartStyleClass = specialPartStyleClass;
 	}
 
 	@Override
@@ -131,19 +104,12 @@ public class FBPagesPanel extends FBComponentBase {
 		if(document != null) {
 			List<String> ids = formDocument.getCommonPagesIdList();
 			if(ids != null) {
-				for(Iterator<String> it = ids.iterator(); it.hasNext(); ) {
-					String nextId = it.next();
+				for(String nextId : ids) {
 					Page currentPage = document.getPage(nextId);
-					if(currentPage != null) {
-						FBFormPage formPage = new FBFormPage();
-						formPage.setId(nextId + P);
-						formPage.setStyleClass(generateClassAttribute(false, nextId.equals(selectedPageId), null));
-						formPage.setOnDelete(DEFAULT_PAGE_REMOVE_ACTION);
-						String label = FBUtil.getPropertyString(currentPage.getProperties().getLabel().getString(FBUtil.getUILocale()));
-						formPage.setLabel(label);
-						formPage.setActive(false);
-						general.add(formPage);
-					}
+					
+					FBFormPage formPage = new FBFormPage(currentPage);
+					formPage.setStyleClass(generateClassAttribute(nextId.equals(selectedPageId)));
+					general.add(formPage);
 				}
 			}
 		}
@@ -162,47 +128,26 @@ public class FBPagesPanel extends FBComponentBase {
 		special.setId("pagesPanelSpecial");
 		special.setStyleClass("pagesSpecialContainer");
 		
-		/*
-		if(formDocument.isHasPreview()) {
-			Page confirmation = document.getConfirmationPage();
-			if(confirmation != null) {
-				FBFormPage formPage = new FBFormPage();
-				formPage.setId(confirmation.getId() + P);
-				formPage.setStyleClass(generateClassAttribute(true, confirmation.getId().equals(selectedPageId), SPECIAL_PREVIEW));
-				String label = FBUtil.getPropertyString(confirmation.getProperties().getLabel().getString(FBUtil.getUILocale()));
-				formPage.setLabel(label);
-				formPage.setActive(false);
-				formPage.setOnLoad(DEFAULT_CONFIRM_LOAD_ACTION);
+		List<Page> specialPages = document.getSpecialPages();
+		
+		if(specialPages != null) {
+			for(Page specialPage : specialPages) {
+				
+				FBFormPage formPage = new FBFormPage(specialPage);
+				formPage.setStyleClass(generateClassAttribute(specialPage.getId().equals(selectedPageId)));
 				special.add(formPage);
+				
 			}
 		}
-		Page thanks = document.getThxPage();
-		if(thanks != null) {
-			FBFormPage formPage = new FBFormPage();
-			formPage.setId(thanks.getId() + P);
-			formPage.setStyleClass(generateClassAttribute(true, thanks.getId().equals(selectedPageId), SPECIAL_THANKYOU));
-			String label = FBUtil.getPropertyString(thanks.getProperties().getLabel().getString(FBUtil.getUILocale()));
-			formPage.setLabel(label);
-			formPage.setActive(false);
-			formPage.setOnLoad(DEFAULT_THX_LOAD_ACTION);
-			special.add(formPage);
-		}
-		*/
 		
 		body.add(special);
 		
 		add(body);
 	}
 	
-	private String generateClassAttribute(boolean special, boolean selected, String specialClass) {
+	private String generateClassAttribute(boolean selected) {
 		StringBuilder style = new StringBuilder(componentStyleClass)
 			.append(CoreConstants.SPACE);
-		if(special) {
-			style.append(SPECIAL)
-			.append(CoreConstants.SPACE)
-			.append(specialClass)
-			.append(CoreConstants.SPACE);
-		}
 		if(selected) {
 			style.append(CoreConstants.SPACE)
 			.append(selectedStyleClass);
@@ -210,27 +155,6 @@ public class FBPagesPanel extends FBComponentBase {
 		return style.toString();
 	}
 	
-	@Override
-	public Object saveState(FacesContext context) {
-		Object values[] = new Object[5];
-		values[0] = super.saveState(context); 
-		values[1] = componentStyleClass;
-		values[2] = generalPartStyleClass;
-		values[3] = specialPartStyleClass;
-		values[4] = selectedStyleClass;
-		return values;
-	}
-	
-	@Override
-	public void restoreState(FacesContext context, Object state) {
-		Object values[] = (Object[]) state;
-		super.restoreState(context, values[0]);
-		componentStyleClass = (String) values[1];
-		generalPartStyleClass = (String) values[2];
-		specialPartStyleClass = (String) values[3];
-		selectedStyleClass = (String) values[4];
-	}
-
 	public String getComponentStyleClass() {
 		return componentStyleClass;
 	}

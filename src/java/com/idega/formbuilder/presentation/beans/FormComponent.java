@@ -35,6 +35,8 @@ public class FormComponent extends GenericComponent {
 	public static final String BUTTON_TYPE = "button";
 	public static final String COMPONENT_TYPE = "component";
 	
+	private static final String APPEND = "append";
+	
 	protected Component component;
 	
 	private ProcessPalette processPalette;
@@ -210,7 +212,7 @@ public class FormComponent extends GenericComponent {
 			
 			String beforeId = null;
 			if(StringUtils.isEmpty(before)) {
-				result[0] = "append";
+				result[0] = APPEND;
 			} else {
 				List<String> ids = area.getContainedComponentsIds();
 				int beforeInt = ids.indexOf(before);
@@ -246,13 +248,13 @@ public class FormComponent extends GenericComponent {
 		Object[] result = new Object[3];
 		
 		Page page = formPage.getPage();
-		if(formPage.isSpecial()) {
+		if(page.isSpecialPage()) {
 			return null;
 		}
 		if(page != null) {
 			String beforeId = null;
 			if(StringUtils.isEmpty(before)) {
-				result[0] = "append";
+				result[0] = APPEND;
 				
 				ButtonArea area = page.getButtonArea();
 				if(area != null) {
@@ -266,7 +268,7 @@ public class FormComponent extends GenericComponent {
 					
 					ButtonArea area = page.getButtonArea();
 					if(area != null && beforeId.equals(area.getId())) {
-						result[0] = "append";
+						result[0] = APPEND;
 					}
 				}
 			}
@@ -290,7 +292,7 @@ public class FormComponent extends GenericComponent {
 	
 	public String moveComponent(String id, int before) throws Exception {
 		if(before == -1) {
-			return "append";
+			return APPEND;
 		} else {
 			Page page = formPage.getPage();
 			String beforeId = CoreConstants.EMPTY;
@@ -460,11 +462,11 @@ public class FormComponent extends GenericComponent {
 	}
 
 	public String getAutofillKey() {
-			return getComponent().getProperties().getAutofillKey();
+		return getComponent().getProperties().getAutofillKey();
 	}
 
 	public void setAutofillKey(String autofillKey) {
-		if(autofillKey == null || CoreConstants.EMPTY.equals(autofillKey)) {
+		if(StringUtils.isEmpty(autofillKey)) {
 			return;
 		}
 		getComponent().getProperties().setAutofillKey(autofillKey);

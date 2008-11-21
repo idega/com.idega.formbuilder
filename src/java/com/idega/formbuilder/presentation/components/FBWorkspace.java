@@ -10,6 +10,7 @@ import com.idega.formbuilder.business.process.XFormsProcessManager;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.ComponentPropertyManager;
 import com.idega.formbuilder.presentation.beans.FormDocument;
+import com.idega.formbuilder.presentation.beans.FormPage;
 import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.jbpm.view.ViewToTask;
 import com.idega.presentation.IWContext;
@@ -24,8 +25,6 @@ public class FBWorkspace extends FBComponentBase {
 
 	private static final String PAGES_PANEL = "pagesPanel";
 	private static final String FORM_PAGE_ICON_CLASS = "formPageIcon";
-	private static final String PAGES_GENERAL_CONTAINER_CLASS = "pagesGeneralContainer";
-	private static final String PAGES_SPECIAL_CONTAINER_CLASS = "pagesSpecialContainer";
 	private static final String SELECTED_PAGE_CLASS = "selectedPage";
 	private static final String OPTIONS_PANEL_ID = "optionsPanel";
 	private static final String FORM_LIST_URL = "/workspace/forms/list/";
@@ -125,7 +124,8 @@ public class FBWorkspace extends FBComponentBase {
 		messageBox.add(headline);
 		
 		String view = workspace.getView();
-		if(!FBViewPanel.DESIGN_VIEW.equals(view)) {
+		FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
+		if(!FBViewPanel.DESIGN_VIEW.equals(view) || (formPage.getPage() != null && formPage.getPage().isSpecialPage())) {
 			messageBox.setStyleAttribute("display", "block");
 		} else {
 			messageBox.setStyleAttribute("display", "none");
@@ -225,8 +225,6 @@ public class FBWorkspace extends FBComponentBase {
 		FBPagesPanel pages = new FBPagesPanel();
 		pages.setStyleClass(PAGES_PANEL);
 		pages.setComponentStyleClass(FORM_PAGE_ICON_CLASS);
-		pages.setGeneralPartStyleClass(PAGES_GENERAL_CONTAINER_CLASS);
-		pages.setSpecialPartStyleClass(PAGES_SPECIAL_CONTAINER_CLASS);
 		pages.setSelectedStyleClass(SELECTED_PAGE_CLASS);
 		
 		panel2.add(pages);

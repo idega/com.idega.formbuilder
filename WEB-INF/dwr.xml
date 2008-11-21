@@ -65,12 +65,10 @@
     	<create creator="jsf" javascript="FormPage" scope="session">
 	    	<param name="managedBeanName" value="formPage"/>
 	    	<param name="class" value="com.idega.formbuilder.presentation.beans.FormPage"/>
-	    	<include method="getThxPageInfo" />
 	    	<include method="updateComponentList" />
 	    	<include method="updateButtonList" />
 	    	<include method="removePage" />
 	    	<include method="getFormPageInfo" />
-	    	<include method="getConfirmationPageInfo" />
 	    	<include method="createNewPage" />
 	    	<include method="saveTitle" />
 	    	<include method="getId" />

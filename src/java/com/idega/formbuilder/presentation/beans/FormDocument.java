@@ -63,8 +63,6 @@ public class FormDocument implements Serializable {
 	private boolean hasPreview;
 	private boolean enableBubbles;
 	private Document document;
-	private Page overviewPage;
-//	private PageThankYou submitPage;
 	private List<AdvancedProperty> standaloneForms = new ArrayList<AdvancedProperty>();
 	
 	private Workspace workspace;
@@ -92,24 +90,14 @@ public class FormDocument implements Serializable {
 	
 	public List<String> getCommonPagesIdList() {
 		List<String> result = new LinkedList<String>();
-		List<String> ids = document.getContainedPagesIdList();
-		String confId = "";
-		String tksId = "";
-		Page temp = null;//document.getConfirmationPage();
-		if(temp != null) {
-			confId = temp.getId();
-		}
-//		temp = document.getThxPage();
-//		if(temp != null) {
-//			tksId = temp.getId();
-//		}
-		Iterator<String> it = ids.iterator();
-		while(it.hasNext()) {
-			String nextId = it.next();
-			if(nextId.equals(confId) || nextId.equals(tksId)) {
-				continue;
+		List<String> allIds = document.getContainedPagesIdList();
+		List<Page> specialPages = document.getSpecialPages();
+		
+		result.addAll(allIds);
+		for(Page page : specialPages) {
+			if(result.contains(page.getId())) {
+				result.remove(page.getId());
 			}
-			result.add(nextId);
 		}
 		return result;
 	}
@@ -117,10 +105,9 @@ public class FormDocument implements Serializable {
 	public Document initializeBeanInstance(Long formId) throws Exception {
 		DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
 		this.document = formManagerInstance.openForm(formId);
-//		this.overviewPage = document.getConfirmationPage();
-//		this.submitPage = document.getThxPage();
 		this.formId = document.getId();
-		this.hasPreview = overviewPage != null ? true : false;
+//		this.hasPreview = overviewPage != null ? true : false;
+		this.hasPreview = false;
 		
 		return document;
 	}
@@ -612,15 +599,15 @@ public class FormDocument implements Serializable {
 			} else {
 				page = document.addConfirmationPage();
 			}
-			setOverviewPage(page);
+//			setOverviewPage(page);
 		} else {
 			page = null;//document.getConfirmationPage();
 			if(page != null) {
-				setOverviewPage(null);
+//				setOverviewPage(null);
 				page.remove();
 			}
 		}
-		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormPage(page.getId(), page.getProperties().getLabel().getString(new Locale("en")), true, "formPageIcon Special preview"), true);
+		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormPage(page, "formPageIcon"), true);
 	}
 	
 	public void saveSrc(String sourceCode) {
@@ -649,9 +636,7 @@ public class FormDocument implements Serializable {
 	public Document initializeBeanInstance(Document document) {
 		this.document = document;
 		this.formId = document.getId();
-//		this.overviewPage = document.getConfirmationPage();
-//		this.submitPage = document.getThxPage();
-		this.hasPreview = overviewPage != null ? true : false;
+		this.hasPreview = false;
 		
 		return document;
 	}
@@ -817,22 +802,6 @@ public class FormDocument implements Serializable {
 	public void setAppId(String app_id) {
 		this.app_id = app_id;
 	}
-
-	public Page getOverviewPage() {
-		return overviewPage;
-	}
-
-	public void setOverviewPage(Page overviewPage) {
-		this.overviewPage = overviewPage;
-	}
-
-//	public PageThankYou getSubmitPage() {
-//		return submitPage;
-//	}
-//
-//	public void setSubmitPage(PageThankYou submitPage) {
-//		this.submitPage = submitPage;
-//	}
 
 	public Workspace getWorkspace() {
 		return workspace;

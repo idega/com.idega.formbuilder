@@ -3,10 +3,11 @@ package com.idega.formbuilder.presentation.components;
 import javax.faces.context.FacesContext;
 
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.formbuilder.util.FBUtil;
 import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
 import com.idega.presentation.text.Text;
-import com.idega.util.CoreConstants;
+import com.idega.xformsmanager.business.component.Page;
 
 public class FBFormPage extends FBComponentBase {
 	
@@ -14,110 +15,61 @@ public class FBFormPage extends FBComponentBase {
 	
 	private static final String PAGE_ICON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/document-new.png";
 	private static final String DELETE_ICON_IMG = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/delete-tiny.png";
-	private static final String DEFAULT_LOAD_ACTION = "loadPage(event);";
-	private static final String DEFAULT_DELETE_ACTION = "deletePage(event);";
-	private static final String DEFAULT_STYLE_CLASS = "formPageIcon";
 	private static final String DEFAULT_ICON_STYLE_CLASS = "pageIconIcon";
 	private static final String DEFAULT_LABEL_STYLE_CLASS = "pageIconLabel";
 	private static final String DEFAULT_SPEED_BUTTON_STYLE_CLASS = "pageSpeedButton";
 	private static final String FB_PAGE_HANDLER = "fbPageHandler";
-	private static final String PAGE_ID_POSTFIX = "_page";
-	private static final String ICON_ID_POSTFIX = "_pi";
-	private static final String SPEED_BUTTON_ID_POSTFIX = "_db";
+	private static final String SPECIAL = "special";
+	private static final String REL_ATTRIBUTE = "rel";
 	
-	private String label;
-	private boolean active;
-	private String activeStyleClass;
-	private String onDelete;
-	private String onLoad;
+	private Page page;
 	
-	public String getOnLoad() {
-		return onLoad;
+	public Page getPage() {
+		return page;
 	}
 
-	public void setOnLoad(String onLoad) {
-		this.onLoad = onLoad;
+	public void setPage(Page page) {
+		this.page = page;
 	}
 
-	public String getOnDelete() {
-		return onDelete;
-	}
-
-	public void setOnDelete(String onDelete) {
-		this.onDelete = onDelete;
-	}
-
-	public String getActiveStyleClass() {
-		return activeStyleClass;
-	}
-
-	public void setActiveStyleClass(String activeStyleClass) {
-		this.activeStyleClass = activeStyleClass;
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-
-	public FBFormPage() {
-		super();
-		setRendererType(null);
+	public FBFormPage(Page page) {
+		this(page, null);
 	}
 	
-	public FBFormPage(String id, String label, boolean special, String styleClass) {
-		this(id, label, styleClass);
-		if(special) {
-			this.onDelete = CoreConstants.EMPTY;
-		}
-	}
-	
-	public FBFormPage(String id, String label) {
-		setRendererType(null);
-		setId(id);
-		setStyleClass(DEFAULT_STYLE_CLASS);
-		this.label = label;
-		this.onDelete = DEFAULT_DELETE_ACTION;
-		this.onLoad = DEFAULT_LOAD_ACTION;
-	}
-	
-	public FBFormPage(String id, String label, String styleClass) {
-		setRendererType(null);
-		setId(id);
-		setStyleClass(styleClass);
-		this.label = label;
-		this.onDelete = DEFAULT_DELETE_ACTION;
-		this.onLoad = DEFAULT_LOAD_ACTION;
+	public FBFormPage(Page page, String styleClass) {
+		super(null, styleClass);
+		this.page = page;
 	}
 	
 	protected void initializeComponent(FacesContext context) {
+		if(page == null) {
+			return;
+		}
+		
 		Layer pageLayer = new Layer(Layer.DIV);
-		pageLayer.setId(getId() + PAGE_ID_POSTFIX);
+		pageLayer.setId(page.getId());
 		pageLayer.setStyleClass(getStyleClass());
 		
-		if(!CoreConstants.EMPTY.equals(onDelete)) {
+		if(!page.isSpecialPage()) {
 			Layer handleLayer = new Layer(Layer.DIV);
 			handleLayer.setStyleClass(FB_PAGE_HANDLER);
 			pageLayer.add(handleLayer);
+		} else {
+			pageLayer.setMarkupAttribute(REL_ATTRIBUTE, SPECIAL);
 		}
 		
 		Image pageIconImg = new Image();
-		pageIconImg.setId(getId() + ICON_ID_POSTFIX);
 		pageIconImg.setSrc(PAGE_ICON_IMG);
 		pageIconImg.setStyleClass(DEFAULT_ICON_STYLE_CLASS);
 		
-		Text pageIconLabel = new Text(label);
+		Text pageIconLabel = new Text(FBUtil.getPropertyString(page.getProperties().getLabel().getString(FBUtil.getUILocale())));
 		pageIconLabel.setStyleClass(DEFAULT_LABEL_STYLE_CLASS);
 		
 		pageLayer.add(pageIconImg);
 		pageLayer.add(pageIconLabel);
 		
-		if(!CoreConstants.EMPTY.equals(onDelete)) {
+		if(!page.isSpecialPage()) {
 			Image deleteButton = new Image();
-			deleteButton.setId(getId() + SPEED_BUTTON_ID_POSTFIX);
 			deleteButton.setSrc(DELETE_ICON_IMG);
 			deleteButton.setStyleClass(DEFAULT_SPEED_BUTTON_STYLE_CLASS);
 			pageLayer.add(deleteButton);
@@ -125,12 +77,4 @@ public class FBFormPage extends FBComponentBase {
 		add(pageLayer);
 	}
 	
-	public String getLabel() {
-		return label;
-	}
-	
-	public void setLabel(String label) {
-		this.label = label;
-	}
-
 }

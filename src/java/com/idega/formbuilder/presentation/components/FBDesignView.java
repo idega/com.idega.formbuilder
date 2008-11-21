@@ -12,6 +12,7 @@ import com.idega.formbuilder.presentation.beans.FormPage;
 import com.idega.formbuilder.presentation.beans.Workspace;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
+import com.idega.presentation.PresentationObjectContainer;
 import com.idega.presentation.text.Paragraph;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.DropdownMenu;
@@ -61,11 +62,6 @@ public class FBDesignView extends FBComponentBase {
 	private static final String DROPBOX_INNER_ID = "dropBoxinner";
 	private static final String INNER_POSTFIX = "inner";
 	private static final String NOFORM_NOTICE_ID = "noFormNotice";
-	private static final String THANK_YOU_TEXT_REL = "FormDocument.setThankYouText";
-	private static final String DESIGN_VIEW_THANK_YOU_ID = "designViewThankYou";
-	private static final String EMPTY_FORM_ID = "emptyForm";
-	private static final String LOAD_COMPONENT_ACTION = "loadComponentInfo(this);";
-	private static final String REMOVE_COMPONENT_ACTION = "removeComponent(this);";
 	private static final String SPEED_BUTTON_CLASS = "speedButton";
 	private static final String FORM_BUTTON_CLASS = "formButton";
 	
@@ -178,37 +174,16 @@ public class FBDesignView extends FBComponentBase {
 				Layer thankYouTextBox = new Layer(Layer.DIV);
 				thankYouTextBox.setId(NOFORM_NOTICE_ID);
 				
-				Text headline = new Text(getLocalizedString(iwc, "labels_submit_page", "This is the submition page of the form"));
+				Text headline = new Text(getLocalizedString(iwc, "labels_special_page", "This is a special page"));
 				thankYouTextBox.add(headline);
 				
 				Paragraph emptyFormBody = new Paragraph();
-				emptyFormBody.add(getLocalizedString(iwc, "labels_submit_page_body", "You cannot add components or buttons to this page"));
-				thankYouTextBox.add(emptyFormBody);
-				
-				Layer noFormNotice = new Layer(Layer.DIV);
-				noFormNotice.setId(EMPTY_FORM_ID);
-				noFormNotice.setStyleClass(INLINE_EDIT_CLASS);
-				noFormNotice.setMarkupAttribute(REL_ATTRIBUTE, THANK_YOU_TEXT_REL);
-				
-				Text thankYouText = new Text(formDocument.getThankYouText());
-				thankYouText.setId(DESIGN_VIEW_THANK_YOU_ID);
-				noFormNotice.add(thankYouText);
-				
-				component.add(thankYouTextBox);
-				component.add(noFormNotice);
-			} else if (formDocument.getOverviewPage() != null && page.getId().equals(formDocument.getOverviewPage().getId())) {
-				Layer thankYouTextBox = new Layer(Layer.DIV);
-				thankYouTextBox.setId(NOFORM_NOTICE_ID);
-				
-				Text thankYouText = new Text(getLocalizedString(iwc, "labels_confirmation_page", "This is the confirmation page of the form"));
-				thankYouText.setId(DESIGN_VIEW_THANK_YOU_ID);
-				thankYouTextBox.add(thankYouText);
-				
-				Paragraph emptyFormBody = new Paragraph();
-				emptyFormBody.add(getLocalizedString(iwc, "labels_confirmation_page_body", "You can only add buttons to this page"));
+				emptyFormBody.add(getLocalizedString(iwc, "labels_special_page_body", "You cannot add components or buttons to this page"));
 				thankYouTextBox.add(emptyFormBody);
 				
 				component.add(thankYouTextBox);
+				
+				fillComponentList(page.getContainedComponentsIds(), page, dropBoxInner);
 			} else {
 				List<String> ids = page.getContainedComponentsIds();
 				if(!hasComponents(ids, page)) {
@@ -224,17 +199,7 @@ public class FBDesignView extends FBComponentBase {
 					
 					component.add(emptyForm);
 				} else {
-					for(String nextId : ids) {
-						Component comp = page.getComponent(nextId);
-						if(!(comp instanceof Container)) {
-							FBFormComponent formComponent = new FBFormComponent(comp);
-							formComponent.setStyleClass(componentStyleClass);
-							formComponent.setOnLoad(LOAD_COMPONENT_ACTION);
-							formComponent.setOnDelete(REMOVE_COMPONENT_ACTION);
-							formComponent.setSpeedButtonStyleClass(SPEED_BUTTON_CLASS);
-							dropBoxInner.add(formComponent);
-						}
-					}
+					fillComponentList(ids, page, dropBoxInner);
 				}
 			}
 		}
@@ -247,6 +212,22 @@ public class FBDesignView extends FBComponentBase {
 		component.add(area);
 		
 		add(component);
+	}
+	
+	private void fillComponentList(List<String> ids, Page page, PresentationObjectContainer parent) {
+		if(ids == null) {
+			return;
+		}
+		
+		for(String nextId : ids) {
+			Component comp = page.getComponent(nextId);
+			if(!(comp instanceof Container)) {
+				FBFormComponent formComponent = new FBFormComponent(comp);
+				formComponent.setStyleClass(componentStyleClass);
+				formComponent.setSpeedButtonStyleClass(SPEED_BUTTON_CLASS);
+				parent.add(formComponent);
+			}
+		}
 	}
 	
 	public String getComponentStyleClass() {

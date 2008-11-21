@@ -34,12 +34,9 @@ public class FBFormComponent extends FBComponentBase {
 	private static final String HANDLE_LAYER_FACET = "HANDLE_LAYER_FACET";
 	private static final String VARIABLE_NAME_FACET = "VARIABLE_NAME_FACET";
 	private static final String DELETE_BUTTON_ICON = "/idegaweb/bundles/com.idega.formbuilder.bundle/resources/images/del_16.png";
-	private static final String DEFAULT_LOAD_ACTION = "loadComponentInfo(this);";
-	private static final String DEFAULT_DELETE_ACTION = "removeComponent(this);";
 	private static final String DEFAULT_CLASS = "formElement formElementHover";
 	private static final String DEFAULT_SPEED_CLASS = "speedButton";
 	private static final String HANDLER_LAYER_CLASS = "fbCompHandler";
-	private static final String DELETE_BUTTON_PREFIX = "db";
 	private static final String ID_ATTRIBUTE = "id";
 	private static final String CLASS_ATTRIBUTE = "class";
 	private static final String STYLECLASS_ATTRIBUTE = "styleClass";
@@ -50,8 +47,6 @@ public class FBFormComponent extends FBComponentBase {
 	private static final String REMOVE_VAR_ICON = "removeVarIcon";
 	
 	private Element element;
-	private String onLoad;
-	private String onDelete;
 	private String speedButtonStyleClass;
 	private String value;
 	private String type;
@@ -81,42 +76,14 @@ public class FBFormComponent extends FBComponentBase {
 		this.type = type;
 	}
 
-	public String getOnDelete() {
-		return onDelete;
-	}
-
-	public void setOnDelete(String onDelete) {
-		this.onDelete = onDelete;
-	}
-
-	public String getOnLoad() {
-		return onLoad;
-	}
-
-	public void setOnLoad(String onLoad) {
-		this.onLoad = onLoad;
-	}
-
 	public FBFormComponent() {
 		super();
 	}
 	
 	public FBFormComponent(Component component) {
 		this.component = component;
-		setId(component.getId());
 		setStyleClass(DEFAULT_CLASS);
 		this.speedButtonStyleClass = DEFAULT_SPEED_CLASS;
-		this.onDelete = DEFAULT_DELETE_ACTION;
-		this.onLoad = DEFAULT_LOAD_ACTION;
-	}
-	
-	public FBFormComponent(String componentId) {
-		super();
-		setId(componentId);
-		setStyleClass(DEFAULT_CLASS);
-		this.speedButtonStyleClass = DEFAULT_SPEED_CLASS;
-		this.onDelete = DEFAULT_DELETE_ACTION;
-		this.onLoad = DEFAULT_LOAD_ACTION;
 	}
 	
 	@Override
@@ -134,7 +101,7 @@ public class FBFormComponent extends FBComponentBase {
 				setElement(element);
 			}
 		} catch(Exception e) {
-			logger.error("Could not get HTML representation of component: " + getId(), e);
+			logger.error("Could not get HTML representation of component: " + component.getId(), e);
 		}
 						
 		Layer handleLayer = new Layer(Layer.DIV);
@@ -153,7 +120,6 @@ public class FBFormComponent extends FBComponentBase {
 		Layer assignVariable = new Layer(Layer.DIV);
 		assignVariable.setStyleClass(ASSIGN_VAR_BOX_CLASS);
 		assignVariable.setMarkupAttribute(REL_ATTRIBUTE, type);
-		assignVariable.setId("var_" + getId());
 						
 		Text assignLabel = new Text();
 		assignLabel.setStyleClass(ASSIGN_LABEL_CLASS);
@@ -172,7 +138,6 @@ public class FBFormComponent extends FBComponentBase {
 		assignVariable.add(assignLabel);
 						
 		Image deleteButton = new Image();
-		deleteButton.setId(DELETE_BUTTON_PREFIX + getId());
 		deleteButton.setSrc(DELETE_BUTTON_ICON);
 		deleteButton.setStyleClass(speedButtonStyleClass);
 						
@@ -187,7 +152,7 @@ public class FBFormComponent extends FBComponentBase {
 		super.encodeBegin(context);
 		writer.startElement(Layer.DIV, this);
 		writer.writeAttribute(CLASS_ATTRIBUTE, getStyleClass(), STYLECLASS_ATTRIBUTE);
-		writer.writeAttribute(ID_ATTRIBUTE, getId(), ID_ATTRIBUTE);
+		writer.writeAttribute(ID_ATTRIBUTE, component.getId(), ID_ATTRIBUTE);
 		UIComponent handleLayer = getFacet(HANDLE_LAYER_FACET);
 		if(handleLayer != null) {
 			renderChild(context, handleLayer);
@@ -218,27 +183,6 @@ public class FBFormComponent extends FBComponentBase {
 		}
 	}
 	
-	@Override
-	public Object saveState(FacesContext context) {
-		Object values[] = new Object[5];
-		values[0] = super.saveState(context);
-		values[1] = element;
-		values[2] = onLoad;
-		values[3] = onDelete;
-		values[4] = speedButtonStyleClass;
-		return values;
-	}
-	
-	@Override
-	public void restoreState(FacesContext context, Object state) {
-		Object values[] = (Object[]) state;
-		super.restoreState(context, values[0]);
-		element = (Element) values[1];
-		onLoad = (String) values[2];
-		onDelete = (String) values[3];
-		speedButtonStyleClass = (String) values[4];
-	}
-
 	public Element getElement() {
 		return element;
 	}
