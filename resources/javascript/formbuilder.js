@@ -194,7 +194,7 @@ function initializeDroppableArea(areaId, targetElement, hoverClass) {
 							var variableId = el.getProperty('id');
 							FormComponent.assignTransition(CURRENT_ELEMENT_UNDER, variableId, {
 								callback: function(result) {
-									handleProcessDataAssignment(result, variableId, 'trans_');
+									handleProcessDataAssignment(result, variableId);
 								}
 							});
 						} else {
@@ -218,7 +218,7 @@ function initializeDroppableArea(areaId, targetElement, hoverClass) {
 							var variableId = el.getProperty('id');
 							FormComponent.assignVariable(CURRENT_ELEMENT_UNDER, variableId, {
 								callback: function(result) {
-									handleProcessDataAssignment(result, variableId, 'var_');
+									handleProcessDataAssignment(result, variableId);
 								}
 							});
 						} else {
@@ -233,15 +233,17 @@ function initializeDroppableArea(areaId, targetElement, hoverClass) {
 	}
 }
 
-function handleProcessDataAssignment(data, variable, prefix) {
+function handleProcessDataAssignment(data, variable) {
 	if(data != null) {
 		updateVariableItem(variable, data[0]);
 		updateVariableItem(data[1], data[2]);
-										
-		var assignLabel = $(prefix + CURRENT_ELEMENT_UNDER);
-		if(assignLabel != null) {
-			var cleanVarName = variable.substring(variable.indexOf('_') + 1)
-			assignLabel.getLast().setText('Assigned to: ' + cleanVarName);
+					
+		if(CURRENT_ELEMENT_UNDER != null) {
+			var assignLabel = $(CURRENT_ELEMENT_UNDER).getElement('span.assignLabel');
+			if(assignLabel != null) {
+				var cleanVarName = variable.substring(variable.indexOf('_') + 1)
+				assignLabel.setText('Assigned to: ' + cleanVarName);
+			}
 		}
 	}
 	CURRENT_ELEMENT_UNDER = null;
