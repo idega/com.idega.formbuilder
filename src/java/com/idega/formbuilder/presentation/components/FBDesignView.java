@@ -64,6 +64,7 @@ public class FBDesignView extends FBComponentBase {
 	private static final String NOFORM_NOTICE_ID = "noFormNotice";
 	private static final String SPEED_BUTTON_CLASS = "speedButton";
 	private static final String FORM_BUTTON_CLASS = "formButton";
+	private static final String MODIFIED_LABEL = "modifiedLabel";
 	
 	private String componentStyleClass;
 	private String selectedStyleClass;
@@ -154,12 +155,12 @@ public class FBDesignView extends FBComponentBase {
 		pageNotice = new Layer(Layer.DIV);
 		pageNotice.setId(DESIGN_VIEW_FORM_ERROR_MESSAGE_ID);
 		pageNotice.setStyleClass(INLINE_EDIT_CLASS);
-		pageNotice.setStyleClass("modifiedLabel");
+		pageNotice.setStyleClass(MODIFIED_LABEL);
 		pageNotice.setStyleClass(LABEL_CLASS);
 		pageNotice.setMarkupAttribute(REL_ATTRIBUTE, FORM_ERROR_MESSAGE_REL);
 		
 		Text formErrorMessage = new Text(formDocument.getFormErrorMessage());
-		formErrorMessage.setStyleClass("modifiedLabel");
+		formErrorMessage.setStyleClass(MODIFIED_LABEL);
 		pageNotice.add(formErrorMessage);
 		
 		component.add(pageNotice);
