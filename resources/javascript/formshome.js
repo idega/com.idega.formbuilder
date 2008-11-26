@@ -180,7 +180,7 @@ function registerFormsHomeActions() {
 			}
 		});
 	});
-	$$("a.editButton").each(function(item) {
+	$('standalone').getElements('a.editButton').each(function(item) {
 		item.addEvent('click', function(e){
 			new Event(e).stop();
 			showLoadingMessage('Loading');
