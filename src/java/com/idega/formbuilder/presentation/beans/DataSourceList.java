@@ -45,6 +45,7 @@ public class DataSourceList implements Serializable {
 		this.sources = sources;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<SelectOption> getExternalDataSources() {
 	
 		if(extDataSources == null) {

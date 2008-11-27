@@ -26,9 +26,9 @@ import com.idega.util.IWTimestamp;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *
- * Last modified: $Date: 2008/11/05 08:56:07 $ by $Author: civilis $
+ * Last modified: $Date: 2008/11/27 06:42:30 $ by $Author: alexis $
  */
 @Scope("singleton")
 @Service(FBHomePageBean.beanIdentifier)
@@ -40,6 +40,7 @@ public class FBHomePageBean {
 	private ViewFactory viewFactory;
 	
 	@Transactional(readOnly=true)
+	@SuppressWarnings("unchecked")
 	public List<ProcessAllTasksForms> getAllTasksForms(IWContext iwc, Locale locale) {
 		
 		JbpmContext jbpmContext = getIdegaJbpmContext().createJbpmContext();
