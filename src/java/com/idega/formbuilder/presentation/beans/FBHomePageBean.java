@@ -26,9 +26,9 @@ import com.idega.util.IWTimestamp;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *
- * Last modified: $Date: 2008/11/27 06:42:30 $ by $Author: alexis $
+ * Last modified: $Date: 2008/12/08 11:16:38 $ by $Author: juozas $
  */
 @Scope("singleton")
 @Service(FBHomePageBean.beanIdentifier)
@@ -191,8 +191,7 @@ public class FBHomePageBean {
 	}
 
 	@Autowired
-	@ViewFactoryType("xforms")
-	public void setViewFactory(ViewFactory viewFactory) {
+	public void setViewFactory(@ViewFactoryType("xforms") ViewFactory viewFactory) {
 		this.viewFactory = viewFactory;
 	}
 }
