@@ -15,14 +15,11 @@ import com.idega.builder.bean.AdvancedProperty;
 import com.idega.jbpm.BPMContext;
 import com.idega.jbpm.view.View;
 import com.idega.jbpm.view.ViewFactory;
-import com.idega.jbpm.view.ViewToTask;
-import com.idega.jbpm.view.ViewToTaskType;
 
 public class XFormsProcessManager {
 	
 	//private static final String JBPM_XFORM_VIEW_NAME = "jbpm_view_name";
 	
-	private ViewToTask viewToTaskBinder;
 	private ViewFactory viewFactory;
 	private BPMContext idegaJbpmContext;
 	
@@ -45,7 +42,7 @@ public class XFormsProcessManager {
 			TaskMgmtDefinition mgmt = pd.getTaskMgmtDefinition();
 			Task task = mgmt.getTask(taskName);
 			View view = getViewFactory().getView(formId, true);
-			getViewToTaskBinder().bind(view, task);
+			view.getViewToTask().bind(view, task);
 			
 		} finally {
 			
@@ -96,16 +93,6 @@ public class XFormsProcessManager {
 			
 			getIdegaJbpmContext().closeAndCommit(ctx);
 		}
-	}
-
-	public ViewToTask getViewToTaskBinder() {
-		return viewToTaskBinder;
-	}
-
-	@Autowired
-	@ViewToTaskType("xforms")
-	public void setViewToTaskBinder(ViewToTask viewToTaskBinder) {
-		this.viewToTaskBinder = viewToTaskBinder;
 	}
 
 	public BPMContext getIdegaJbpmContext() {

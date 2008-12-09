@@ -14,7 +14,6 @@ import javax.faces.context.FacesContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.idega.block.form.presentation.FormViewer;
 import com.idega.bpm.xformsview.XFormsView;
@@ -37,8 +36,6 @@ import com.idega.formbuilder.presentation.components.FBViewPanel;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.jbpm.view.View;
-import com.idega.jbpm.view.ViewToTask;
-import com.idega.jbpm.view.ViewToTaskType;
 import com.idega.presentation.IWContext;
 import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
@@ -54,7 +51,6 @@ public class FormDocument implements Serializable {
 	
 	private static final Log logger = LogFactory.getLog(FormDocument.class);
 	
-	private ViewToTask viewToTaskBinder;
 	private InstanceManager instanceManager;
 	private XFormsProcessManager xformsProcessManager;
 	private ProcessData processData;
@@ -809,16 +805,6 @@ public class FormDocument implements Serializable {
 
 	public void setWorkspace(Workspace workspace) {
 		this.workspace = workspace;
-	}
-
-	public ViewToTask getViewToTaskBinder() {
-		return viewToTaskBinder;
-	}
-
-	@Autowired
-	@ViewToTaskType("xforms")
-	public void setViewToTaskBinder(ViewToTask viewToTaskBinder) {
-		this.viewToTaskBinder = viewToTaskBinder;
 	}
 
 	public InstanceManager getInstanceManager() {

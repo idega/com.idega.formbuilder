@@ -4,19 +4,20 @@ import java.util.Map;
 
 import javax.faces.context.FacesContext;
 
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.idega.formbuilder.business.process.XFormsProcessManager;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.ComponentPropertyManager;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.presentation.beans.FormPage;
 import com.idega.formbuilder.presentation.beans.Workspace;
-import com.idega.jbpm.view.ViewToTask;
+import com.idega.jbpm.data.ViewTaskBind;
+import com.idega.jbpm.data.dao.BPMDAO;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
 import com.idega.presentation.text.Text;
 import com.idega.util.CoreUtil;
+import com.idega.util.expression.ELUtil;
 import com.idega.webface.WFUtil;
 
 public class FBWorkspace extends FBComponentBase {
@@ -44,6 +45,9 @@ public class FBWorkspace extends FBComponentBase {
 	private static final String RIGHT_PANEL_0 = "panel0Content2";
 	private static final String RIGHT_PANEL_1 = "panel1Content2";
 	private static final String LAST_CLASS = "last";
+	
+	@Autowired
+	private BPMDAO bpmDAO;
 
 	public FBWorkspace() {
 		this(null);
@@ -77,17 +81,10 @@ public class FBWorkspace extends FBComponentBase {
 			return;
 		}
 		
-		XFormsProcessManager xformsProcessManager = (XFormsProcessManager) WFUtil.getBeanInstance("xformsProcessManager");
-		ViewToTask viewToTaskBinnder = xformsProcessManager.getViewToTaskBinder();
+		ViewTaskBind vtb = getBpmDAO().getViewTaskBindByView(fd.getFormId(), "xforms");
+		Long taskId = vtb.getTaskId();
 		
-		Long task = null;
-		try {
-			task = viewToTaskBinnder.getTask(fd.getFormId());
-		} catch(EmptyResultDataAccessException e) {
-			workspace.setProcessMode(false);
-		}
-		
-		if(task != null && task.intValue() > 0) {
+		if(taskId != null && taskId > 0) {
 			workspace.setProcessMode(true);
 		} else {
 			workspace.setProcessMode(false);
@@ -237,6 +234,14 @@ public class FBWorkspace extends FBComponentBase {
 		
 		add(mainApplication);
 		
+	}
+
+	BPMDAO getBpmDAO() {
+		
+		if(bpmDAO == null)
+			ELUtil.getInstance().autowire(this);
+		
+		return bpmDAO;
 	}
 	
 }
