@@ -38,8 +38,8 @@
 					<t:outputLabel for="formSelector" value="Choose form" />
 					<t:selectOneMenu id="formSelector" onchange="var selFormVal = this.options[this.selectedIndex].getProperty('value');if(selFormVal != ''){modalSelectedForm = selFormVal;}" forceId="true" />
 					<t:htmlTag value="br" />
-					<t:selectBooleanCheckbox onchange="modalGoToDesigner = this.checked;" id="designerCheckbox" forceId="true" value="true" />
-					<t:outputLabel for="designerCheckbox" value="Go to designer" />
+					<t:selectBooleanCheckbox onchange="modalGoToDesigner = this.checked;" id="designerCheckbox2" forceId="true" value="true" />
+					<t:outputLabel for="designerCheckbox2" value="Go to designer" />
 					<t:htmlTag value="br" />
 					<t:commandLink id="attachTaskFormBtn" onclick="attachTaskForm(modalFormName, modalGoToDesigner);" forceId="true" value="Attach" />
 				</t:div>
@@ -49,8 +49,8 @@
 						<t:inputText styleClass="simplePopupInput" id="formNameInput" onkeydown="if(isEnterEvent(event)) {createNewForm(modalFormName, modalGoToDesigner);}" onkeyup="modalFormName = this.value;" onblur="modalFormName = this.value;" forceId="true" />
 					</t:div>
 					<t:htmlTag value="br" />
-					<t:selectBooleanCheckbox onchange="modalGoToDesigner = this.checked;" id="designerCheckbox2" forceId="true" value="true" />
-					<t:outputLabel for="designerCheckbox2" value="Go to designer" />
+					<t:selectBooleanCheckbox onchange="modalGoToDesigner = this.checked;" id="designerCheckbox3" forceId="true" value="true" />
+					<t:outputLabel for="designerCheckbox3" value="Go to designer" />
 					<t:htmlTag value="br" />
 					<t:commandLink id="createFormBtn" onclick="createNewForm(modalFormName, modalGoToDesigner);" forceId="true" value="Create" />
 				</t:div>
