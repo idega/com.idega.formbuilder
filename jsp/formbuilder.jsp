@@ -35,7 +35,8 @@
 								/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/moodalbox/1.2.1/css/moodalbox.css,
 								/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/humanmsg/1.0/css/humanmsg.css,
 								/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/mootabs/1.2/mootabs.css">
-			<h:form id="workspaceform1" onsubmit="return false;">
+								<!--  onsubmit="return false;"-->
+			<h:form id="workspaceform1">
 				<f:verbatim>
                 	<script type="text/javascript">
                 		window.addEvent('domready', function() {

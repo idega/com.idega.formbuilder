@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.jbpm.JbpmContext;
+import org.jbpm.JbpmException;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -18,6 +19,7 @@ import com.idega.xformsmanager.business.Form;
 import com.idega.xformsmanager.business.PersistenceManager;
 import com.idega.xformsmanager.business.XFormPersistenceType;
 import com.idega.jbpm.BPMContext;
+import com.idega.jbpm.JbpmCallback;
 import com.idega.jbpm.view.TaskView;
 import com.idega.jbpm.view.ViewFactory;
 import com.idega.jbpm.view.ViewFactoryType;
@@ -26,9 +28,9 @@ import com.idega.util.IWTimestamp;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  *
- * Last modified: $Date: 2008/12/08 11:16:38 $ by $Author: juozas $
+ * Last modified: $Date: 2008/12/30 09:32:45 $ by $Author: civilis $
  */
 @Scope("singleton")
 @Service(FBHomePageBean.beanIdentifier)
@@ -41,59 +43,57 @@ public class FBHomePageBean {
 	
 	@Transactional(readOnly=true)
 	@SuppressWarnings("unchecked")
-	public List<ProcessAllTasksForms> getAllTasksForms(IWContext iwc, Locale locale) {
+	public List<ProcessAllTasksForms> getAllTasksForms(IWContext iwc, final Locale locale) {
 		
-		JbpmContext jbpmContext = getIdegaJbpmContext().createJbpmContext();
-		
-		try {
-			List<ProcessDefinition> defs = jbpmContext.getGraphSession().findLatestProcessDefinitions();
-			HashSet<Long> defsIds = new HashSet<Long>(defs.size());
-			
-			for (ProcessDefinition def : defs)
-				defsIds.add(def.getId());
-			
-			Multimap<Long, TaskView> pdsViews = getViewFactory().getAllViewsByProcessDefinitions(defsIds);
-			ArrayList<ProcessAllTasksForms> allForms = new ArrayList<ProcessAllTasksForms>(pdsViews.keySet().size());
-			
-			for (Long pdId : pdsViews.keySet()) {
+		return getIdegaJbpmContext().execute(new JbpmCallback() {
+
+			public Object doInJbpm(JbpmContext context) throws JbpmException {
+				List<ProcessDefinition> defs = context.getGraphSession().findLatestProcessDefinitions();
+				HashSet<Long> defsIds = new HashSet<Long>(defs.size());
 				
-				ProcessDefinition pd;
-				Collection<TaskView> tviews = pdsViews.get(pdId);
+				for (ProcessDefinition def : defs)
+					defsIds.add(def.getId());
 				
-				if(tviews.isEmpty()) {
-					pd = jbpmContext.getGraphSession().getProcessDefinition(pdId);
-				} else {
+				Multimap<Long, TaskView> pdsViews = getViewFactory().getAllViewsByProcessDefinitions(defsIds);
+				ArrayList<ProcessAllTasksForms> allForms = new ArrayList<ProcessAllTasksForms>(pdsViews.keySet().size());
+				
+				for (Long pdId : pdsViews.keySet()) {
 					
-					 pd = tviews.iterator().next().getTask().getProcessDefinition();
-				 }
-				
-				ProcessAllTasksForms processForms = new ProcessAllTasksForms();
-				processForms.setProcessId(String.valueOf(pd.getId()));
-				processForms.setProcessName(pd.getName());
-				
-				ArrayList<TaskForm> taskForms = new ArrayList<TaskForm>(tviews.size());
-				
-				for (TaskView taskView : tviews) {
+					ProcessDefinition pd;
+					Collection<TaskView> tviews = pdsViews.get(pdId);
 					
-					String dateCreatedStr = new IWTimestamp(taskView.getDateCreated()).getLocaleDateAndTime(locale, IWTimestamp.SHORT, IWTimestamp.SHORT);
-					TaskForm form = new TaskForm();
-					form.setDateCreatedStr(dateCreatedStr);
-					form.setFormId(taskView.getViewId());
-					form.setFormName(taskView.getDefaultDisplayName());
-					form.setTaskName(taskView.getTask().getName());
-					taskForms.add(form);
+					if(tviews.isEmpty()) {
+						pd = context.getGraphSession().getProcessDefinition(pdId);
+					} else {
+						
+						 pd = tviews.iterator().next().getTask().getProcessDefinition();
+					 }
+					
+					ProcessAllTasksForms processForms = new ProcessAllTasksForms();
+					processForms.setProcessId(String.valueOf(pd.getId()));
+					processForms.setProcessName(pd.getName());
+					
+					ArrayList<TaskForm> taskForms = new ArrayList<TaskForm>(tviews.size());
+					
+					for (TaskView taskView : tviews) {
+						
+						String dateCreatedStr = new IWTimestamp(taskView.getDateCreated()).getLocaleDateAndTime(locale, IWTimestamp.SHORT, IWTimestamp.SHORT);
+						TaskForm form = new TaskForm();
+						form.setDateCreatedStr(dateCreatedStr);
+						form.setFormId(taskView.getViewId());
+						form.setFormName(taskView.getDefaultDisplayName());
+						form.setTaskName(taskView.getTask().getName());
+						taskForms.add(form);
+					}
+					
+					processForms.setTasksCount(String.valueOf(pd.getTaskMgmtDefinition().getTasks().size()));
+					processForms.setTaskForms(taskForms);
+					allForms.add(processForms);
 				}
 				
-				processForms.setTasksCount(String.valueOf(pd.getTaskMgmtDefinition().getTasks().size()));
-				processForms.setTaskForms(taskForms);
-				allForms.add(processForms);
+				return allForms;
 			}
-			
-			return allForms;
-			
-		} finally {
-			getIdegaJbpmContext().closeAndCommit(jbpmContext);
-		}
+		});
 	}
 	
 	public List<Form> getStandaloneForms() {
