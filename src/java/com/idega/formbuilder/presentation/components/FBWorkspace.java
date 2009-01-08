@@ -82,7 +82,7 @@ public class FBWorkspace extends FBComponentBase {
 		}
 		
 		ViewTaskBind vtb = getBpmDAO().getViewTaskBindByView(fd.getFormId(), "xforms");
-		Long taskId = vtb.getTaskId();
+		Long taskId = vtb == null ? null : vtb.getTaskId();
 		
 		if(taskId != null && taskId > 0) {
 			workspace.setProcessMode(true);
