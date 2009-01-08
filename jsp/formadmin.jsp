@@ -5,7 +5,8 @@
 	xmlns:fb="http://xmlns.idega.com/com.idega.formbuilder"
 	xmlns:ws="http://xmlns.idega.com/com.idega.workspace" version="1.2"
 	xmlns:t="http://myfaces.apache.org/tomahawk">
-	<jsp:directive.page contentType="text/html" />
+	
+	<jsp:directive.page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" />
 	<f:view>
 		<ws:page id="formbuilder" stylesheeturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formbuilder.css">
 			<h:form id="workspaceform1">
