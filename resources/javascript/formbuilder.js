@@ -32,6 +32,8 @@ var fbPageSort = null;
 var fbComponentSort = null;
 var fbButtonSort = null;
 
+var formCodeEditor = null;
+
 var statuses = ['unused', 'single', 'multiple'];
 
 var FBDraggable = Element.extend({
@@ -1111,14 +1113,24 @@ function initializePagesPanel() {
 }
 function initializeSourceView() {
 	FormDocument.getSourceCode({
-		callback : function(code) {
+		callback : function(results) {
 			var textarea = $('sourceTextarea');
-			if(textarea != null) {
-				textarea.setText(code);
-				textarea.addClass('codepress');
-				textarea.addClass('html');
-				textarea.addClass('linenumbers-on');
-				CodePress.run();
+			if (textarea != null) {
+				textarea.setText('');
+				
+				if (results == null) {
+					return false;
+				}
+				
+				LazyLoader.load(results[1], function() {
+					textarea.setText(results[0]);
+
+					formCodeEditor = CodeMirror.fromTextArea('sourceTextarea', {
+						parserfile: ['parsexml.js'],
+						stylesheet: results[2],
+						path: results[3]
+					});
+				});
 			}
 		}
 	});
@@ -1442,8 +1454,8 @@ function fbsave() {
 	if(node != null) {
 		showLoadingMessage('Saving');
 		try {
-			if(sourceTextarea != null) {
-				FormDocument.saveSrc(sourceTextarea.getCode(), closeLoadingMessage);
+			if(formCodeEditor != null) {
+				FormDocument.saveSrc(formCodeEditor.getCode(), closeLoadingMessage);
 			} else {
 				FormDocument.saveSrc(node.getLast().getProperty('value'), closeLoadingMessage);
 			}

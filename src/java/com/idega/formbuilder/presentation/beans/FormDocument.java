@@ -16,6 +16,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.idega.block.form.presentation.FormViewer;
+import com.idega.block.web2.business.Web2Business;
 import com.idega.bpm.xformsview.XFormsView;
 import com.idega.builder.bean.AdvancedProperty;
 import com.idega.builder.business.BuilderLogic;
@@ -39,6 +40,8 @@ import com.idega.jbpm.view.View;
 import com.idega.presentation.IWContext;
 import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
+import com.idega.util.StringUtil;
+import com.idega.util.expression.ELUtil;
 import com.idega.webface.WFUtil;
 import com.idega.xformsmanager.business.Document;
 import com.idega.xformsmanager.business.DocumentManager;
@@ -607,7 +610,7 @@ public class FormDocument implements Serializable {
 	}
 	
 	public void saveSrc(String sourceCode) {
-		if(sourceCode == null || sourceCode.equals(CoreConstants.EMPTY))
+		if (StringUtil.isEmpty(sourceCode))
 			return;
 		
 		try {
@@ -684,13 +687,22 @@ public class FormDocument implements Serializable {
 		}
 	}
 
-	public String getSourceCode() {
+	public List<String> getSourceCode() {
+		List<String> results = new ArrayList<String>(4);
+		
 		try {	
-			return document.getFormSourceCode();
+			results.add(document.getFormSourceCode());
 		} catch (Exception e) {
 			logger.error("Error when getting form source code", e);
-			return "";
+			return null;
 		}
+		
+		Web2Business web2 = ELUtil.getInstance().getBean(Web2Business.SPRING_BEAN_IDENTIFIER);
+		results.add(web2.getBundleURIToCodeMirrorScriptFile());
+		results.add(web2.getBundleURIToCodeMirrorStyleFile("xmlcolors.css"));
+		results.add(web2.getBundleURIToCodeMirrorFolder());
+		
+		return results;
 	}
 
 	public boolean isHasPreview() {

@@ -9,7 +9,6 @@
 	<f:view>
 		<ws:page id="formbuilder" 
 				 javascripturls="/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/mootools/1.11/mootools-all.js,
-				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/codepress/codepress.js,
 				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/smoothbox/smoothbox.js,
 				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/moodalbox/1.2.1/js/moodalbox_full.js,
 				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/inlineEdit/1.1/inlineEdit.js,
