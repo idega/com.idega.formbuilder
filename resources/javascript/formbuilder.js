@@ -1123,12 +1123,11 @@ function initializeSourceView() {
 				}
 				
 				LazyLoader.load(results[1], function() {
-					textarea.setText(results[0]);
-
 					formCodeEditor = CodeMirror.fromTextArea('sourceTextarea', {
 						parserfile: ['parsexml.js'],
 						stylesheet: results[2],
-						path: results[3]
+						path: results[3],
+						content: results[0]
 					});
 				});
 			}
