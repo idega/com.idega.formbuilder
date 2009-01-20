@@ -6,6 +6,7 @@ import java.util.Locale;
 import org.jdom.Document;
 
 import com.idega.builder.business.BuilderLogic;
+import com.idega.formbuilder.media.FormSourceDownloader;
 import com.idega.formbuilder.presentation.components.FBComponentProperties;
 import com.idega.formbuilder.presentation.components.FBDesignView;
 import com.idega.formbuilder.presentation.components.FBViewPanel;
@@ -100,6 +101,14 @@ public class Workspace implements Serializable {
 		this.locale = LocaleUtil.getLocale(langCode);
 		this.view = FBViewPanel.DESIGN_VIEW;
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBWorkspace("mainWorkspace"), false);
+	}
+	
+	public Class<FormSourceDownloader> getFormSourceDownloaderClass() {
+		return FormSourceDownloader.class;
+	}
+	
+	public String getFormSourceDownloaderClassName() {
+		return getFormSourceDownloaderClass().getName();
 	}
 	
 }

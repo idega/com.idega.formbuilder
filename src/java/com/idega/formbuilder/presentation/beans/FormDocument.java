@@ -686,17 +686,21 @@ public class FormDocument implements Serializable {
 			return null;
 		}
 	}
-
-	public List<String> getSourceCode() {
-		List<String> results = new ArrayList<String>(4);
-		
+	
+	public String getOnlySourceCode() {
 		try {	
-			results.add(document.getFormSourceCode());
+			return document.getFormSourceCode();
 		} catch (Exception e) {
 			logger.error("Error when getting form source code", e);
 			return null;
 		}
+	}
+
+	public List<String> getSourceCode() {
+		List<String> results = new ArrayList<String>(4);
 		
+		results.add(getOnlySourceCode());
+
 		Web2Business web2 = ELUtil.getInstance().getBean(Web2Business.SPRING_BEAN_IDENTIFIER);
 		results.add(web2.getBundleURIToCodeMirrorScriptFile());
 		results.add(web2.getBundleURIToCodeMirrorStyleFile("xmlcolors.css"));

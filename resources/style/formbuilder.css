@@ -1748,6 +1748,10 @@ html>body .fbBottomButtonsContainer a, html>body div#sourceViewDiv a {
 	background: url(images/wiz_32.png) center top no-repeat;
 }
 
+.fbBottomButtonsContainer a#exportAndDownloadFormSourceCode {
+	background: url(images/export_form_source_code.png) center top no-repeat;
+}
+
 .fbBottomButtonsContainer a#saveFormButton, div#sourceViewDiv a#saveCodeButton {
 	background: url(images/save_32.png) center top no-repeat;
 }

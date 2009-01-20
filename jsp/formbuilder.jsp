@@ -4,7 +4,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:fb="http://xmlns.idega.com/com.idega.formbuilder"
 	xmlns:ws="http://xmlns.idega.com/com.idega.workspace" version="1.2"
-	xmlns:t="http://myfaces.apache.org/tomahawk">
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:core="http://xmlns.idega.com/com.idega.core">
 	<jsp:directive.page contentType="text/html" />
 	<f:view>
 		<ws:page id="formbuilder" 
@@ -89,6 +90,9 @@
 						</t:commandLink>
 					</t:div>
 					<t:commandLink id="newFormButton" styleClass="rightButton smoothbox" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}"></t:commandLink>
+					<core:DownloadLink id="exportAndDownloadFormSourceCode" styleClass="rightButton" downloadWriter="#{workspace.formSourceDownloaderClassName}" value="#{localizedStrings['com.idega.formbuilder']['toolbar_export_and_download_form']}">
+						<f:param id="resourceToExportId" value="#{formDocument.formId}"/>
+					</core:DownloadLink>
 					<t:commandLink id="saveFormButton" styleClass="rightButton" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"></t:commandLink>
 					<t:commandLink id="homeButton" styleClass="rightButton smoothbox" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_home']}"></t:commandLink>
 				</t:div>
