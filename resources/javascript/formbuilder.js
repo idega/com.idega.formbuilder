@@ -343,7 +343,7 @@ function handleComponentSelection(oldId, componentId) {
 			} else {
 				currentCallback = componentRerenderCallback;
 			}
-			if(fbLeftAccordion) fbLeftAccordion.display(0);
+			if(fbLeftAccordion) fbLeftAccordion.display(1);
 		}
 	}	
 }
@@ -406,16 +406,19 @@ function addButton(data, container, transition, dialog) {
 		var node = $(data[0]);
 		insertNodesToContainerBefore(data[1], container, node);
 	}
-	newComponentId = null;
-	if(fbLeftAccordion) fbLeftAccordion.display(0);
 	
-	initializeButtonSorting(fbButtonSort);
-	
-	updateVariableItem(transition, data[1]);
-										
-	if(dialog) dialog.remove();
-										
-	closeLoadingMessage();
+	initializeDesignView(false, function() {
+		newComponentId = null;
+		if(fbLeftAccordion) fbLeftAccordion.display(1);
+		
+		initializeButtonSorting(fbButtonSort);
+		
+		updateVariableItem(transition, data[1]);
+											
+		if(dialog) dialog.remove();
+											
+		closeLoadingMessage();
+	});
 }
 
 function addComponent(data, container, variable, dialog) {
@@ -428,14 +431,30 @@ function addComponent(data, container, variable, dialog) {
 		insertNodesToContainerBefore(data[1], container, node);
 	}
 	newComponentId = null;
-	initializeDesignView(false);
-	container.setStyle('background-color', '#FFFFFF');
-	closeLoadingMessage();
-	if(fbLeftAccordion) fbLeftAccordion.display(0);
-	
-	updateVariableItem(variable, data[2]);
-										
-	if(dialog) dialog.remove();
+	initializeDesignView(false, function() {
+		container.setStyle('background-color', '#FFFFFF');
+		closeLoadingMessage();
+		if(fbLeftAccordion) fbLeftAccordion.display(1);
+		
+		updateVariableItem(variable, data[2]);
+											
+		if(dialog) dialog.remove();
+		
+		if (data[3] != null) {
+			clickedFormElementAction(data[3]);
+		}
+	});
+}
+
+function clickedFormElementAction(componentId) {
+	PropertyManager.selectComponent(componentId, 'component', {
+		callback: function(result) {
+			currentCallback = componentRerenderCallback;
+			placeComponentInfo(result[0], 1, componentId);
+			handleComponentSelection(result[1], componentId);
+			if(fbLeftAccordion) fbLeftAccordion.display(1);
+		}
+	});	
 }
 
 function initializeDropbox() {
@@ -445,15 +464,8 @@ function initializeDropbox() {
 		dropBoxinner.getElements('div.formElement').each(function(item) {
 			item.removeEvents('click');
 			item.addEvent('click', function(e) {
-				var componentId = item.getProperty('id');
-				PropertyManager.selectComponent(componentId, 'component', {
-					callback: function(result) {
-						currentCallback = componentRerenderCallback;
-						placeComponentInfo(result[0], 1, componentId);
-						handleComponentSelection(result[1], componentId);
-						if(fbLeftAccordion) fbLeftAccordion.display(1);
-					}
-				});
+				var componentId = item.getProperty('id');				
+				clickedFormElementAction(componentId);
 			});
 			var speedButton = item.getElement('img.speedButton');
 			if(speedButton != null) {
@@ -500,7 +512,7 @@ function initializeDropbox() {
 	}
 }
 
-function initializeDesignView(initializeInline) {
+function initializeDesignView(initializeInline, callback) {
 	initializeSelectedComponent();
 	initializeLanguageChooser();
 	initializeComponentSorting(fbComponentSort);
@@ -512,6 +524,10 @@ function initializeDesignView(initializeInline) {
 	}
 	if(initializeInline == true) {
 		initializeInlineEdits();
+	}
+	
+	if (callback) {
+		callback();
 	}
 }
 
@@ -1287,10 +1303,8 @@ var buttonRerenderCallback = function(results) {
 	if(results == null) {
 		return;
 	}
-	var btn = $(results[0]);
-	if(btn != null) {
-		btn.getFirst().getNext().setProperty('value', results[1]);
-	}
+	
+	jQuery('input[type=\'button\']', '#' + results[0]).attr('value', results[1]);
 };
 function saveComponentProperty(id, type, value, event) {
 	if(event.type == 'blur' || event.type == 'change' || isEnterEvent(event)) {

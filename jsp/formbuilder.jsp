@@ -37,12 +37,12 @@
 			<h:form id="workspaceform1" onsubmit="return false;">
 				<f:verbatim>
                 	<script type="text/javascript">
-                		window.addEvent('domready', function() {
+                		/*window.addEvent('domready', function() {
 							var errorHanlder = function(errorString, exception) {
 								reloadPage();
 							}
 							DWREngine.setErrorHandler(errorHanlder);
-						});
+						});*/
 						window.addEvent('domready', initializeAccordions);
 						window.addEvent('domready', initializePalette);
 						window.addEvent('domready', initializePagesPanel);

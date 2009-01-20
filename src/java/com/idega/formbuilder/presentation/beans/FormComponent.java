@@ -62,6 +62,7 @@ public class FormComponent extends GenericComponent {
 		return formPage;
 	}
 	
+	@Override
 	public String getId() {
 		return component.getId();
 	}
@@ -184,8 +185,10 @@ public class FormComponent extends GenericComponent {
 		return null;
 	}
 	
+	@Override
 	public String getDataSrc() {return null;}
 
+	@Override
 	public void setDataSrc(String dataSrc) {}
 	
 	public Document getAvailableProcessDataList(String type, boolean transition) {
@@ -245,7 +248,7 @@ public class FormComponent extends GenericComponent {
 			return null;
 		}
 		
-		Object[] result = new Object[3];
+		Object[] result = new Object[4];
 		
 		Page page = formPage.getPage();
 		if(page.isSpecialPage()) {
@@ -286,6 +289,7 @@ public class FormComponent extends GenericComponent {
 				result[0] = beforeId;
 			}
 			result[1] = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormComponent(component), true);
+			result[3] = component.getId();
 		}
 		return result;
 	}
@@ -408,20 +412,24 @@ public class FormComponent extends GenericComponent {
 		return null;
 	}
 
+	@Override
 	public String getErrorMessage(ErrorType errorType) {
 		return getComponent().getProperties().getErrorMsg(errorType).getString(FBUtil.getUILocale());
 	}
 
+	@Override
 	public void setErrorMessage(ErrorType errorType, String errorMessage) {
 		LocalizedStringBean bean = getComponent().getProperties().getErrorMsg(errorType);
 		bean.setString(FBUtil.getUILocale(), errorMessage);
 		getComponent().getProperties().setErrorMsg(errorType, bean);
 	}
 
+	@Override
 	public String getLabel() {
 		return getComponent().getProperties().getLabel().getString(FBUtil.getUILocale());
 	}
 
+	@Override
 	public void setLabel(String label) {
 		LocalizedStringBean bean = getComponent().getProperties().getLabel();
 		if(bean == null) {
@@ -431,18 +439,23 @@ public class FormComponent extends GenericComponent {
 		getComponent().getProperties().setLabel(bean);
 	}
 	
+	@Override
 	public boolean getRequired() {
 		return getComponent().getProperties().isRequired();
 	}
 
+	@Override
 	public void setRequired(boolean required) {
 		getComponent().getProperties().setRequired(required);
 	}
 
+	@Override
 	public List<ItemBean> getItems() {return null;}
 
+	@Override
 	public void setItems(List<ItemBean> items) {}
 
+	@Override
 	public Component getComponent() {
 		return component;
 	}
@@ -451,20 +464,24 @@ public class FormComponent extends GenericComponent {
 		this.component = component;
 	}
 
+	@Override
 	public String getHelpMessage() {
 		return getComponent().getProperties().getHelpText().getString(FBUtil.getUILocale());
 	}
 	
+	@Override
 	public void setHelpMessage(String helpMessage) {
 		LocalizedStringBean bean = getComponent().getProperties().getHelpText();
 		bean.setString(FBUtil.getUILocale(), helpMessage);
 		getComponent().getProperties().setHelpText(bean);
 	}
 
+	@Override
 	public String getAutofillKey() {
 		return getComponent().getProperties().getAutofillKey();
 	}
 
+	@Override
 	public void setAutofillKey(String autofillKey) {
 		if(StringUtils.isEmpty(autofillKey)) {
 			return;
@@ -472,24 +489,34 @@ public class FormComponent extends GenericComponent {
 		getComponent().getProperties().setAutofillKey(autofillKey);
 	}
 
+	@Override
 	public String getPlainText() {return null;}
 
+	@Override
 	public void setPlainText(String plainText) {}
 	
+	@Override
 	public void setAddButtonLabel(String value) {}
 	
+	@Override
 	public void setRemoveButtonLabel(String value) {}
 	
+	@Override
 	public void setExternalSrc(String externalSrc) {}
 	
+	@Override
 	public String getExternalSrc() {return null;}
 	
+	@Override
 	public String getRemoveButtonLabel() {return null;}
 	
+	@Override
 	public String getAddButtonLabel() {return null;}
 	
+	@Override
 	public String getUploadDescription() {return null;}
 	
+	@Override
 	public void setUploadDescription(String value) {}
 
 	public ProcessPalette getProcessPalette() {
