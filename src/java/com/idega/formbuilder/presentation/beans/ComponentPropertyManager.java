@@ -37,7 +37,8 @@ public class ComponentPropertyManager {
 	private static final String COMP_EXT_SRC_PROP = "externalSrc";
 	private static final String COMP_UPL_DESC_PROP = "uploadDesc";
 	private static final String COMP_UPL_DESC_LBL_PROP = "uploadDescLbl";
-	
+	private static final String COMP_UPL_HEADER_TEXT_PROP = "uploadHeaderText";
+
 	public static final String BEAN_ID = "propertyManager";
 
 	private GenericComponent component;
@@ -248,6 +249,8 @@ public class ComponentPropertyManager {
 				component.setUploadDescription(propertyValue);
 			} else if (propertyName.equals(COMP_UPL_DESC_LBL_PROP)) {
 				component.setDescriptionLabel(propertyValue);
+			} else if (propertyName.equals(COMP_UPL_HEADER_TEXT_PROP)) {
+				component.setUploaderHeaderText(propertyValue);
 			}
 			
 			return getResponse(component, reloadProperties);

@@ -89,6 +89,10 @@ public class FormButton extends GenericComponent {
 	
 	public void setUploadDescription(String value) {}
 	
+	public void setUploaderHeaderText(String value) {}
+	
+	public String getUploadHeaderText() {return null;}
+
 	private FormPage formPage;
 	
 	public FormPage getFormPage() {

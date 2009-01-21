@@ -318,6 +318,18 @@ public class FBComponentProperties extends FBComponentBase {
 				
 				layer.add(body);
 				
+				line = createPropertyContainer(TWO_LINE_PROPERTY);
+				
+				TextArea uploaderHeaderText = new TextArea("propertyUploaderHeaderText", ((FormMultiUploadComponent) component).getUploaderHeaderText());
+				
+				String updateHeaderTextAction = "saveComponentProperty('" + componentId + "','uploadHeaderText',this.value, event)";
+				uploaderHeaderText.setOnBlur(updateHeaderTextAction);
+				uploaderHeaderText.setOnKeyDown(updateHeaderTextAction);
+				
+				line.add(new Label(getLocalizedString(iwc, "comp_prop_upload_header_text", "Header text"), uploaderHeaderText));
+				line.add(uploaderHeaderText);
+				body.add(line);
+				
 				add(layer);
 				
 				return;

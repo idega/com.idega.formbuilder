@@ -70,4 +70,8 @@ public abstract class GenericComponent {
 	public abstract String getUploadDescription();
 
 	public abstract void setUploadDescription(String value);
+	
+	public abstract String getUploadHeaderText();
+
+	public abstract void setUploaderHeaderText(String value);
 }

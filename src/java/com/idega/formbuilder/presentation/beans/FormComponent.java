@@ -518,6 +518,13 @@ public class FormComponent extends GenericComponent {
 	
 	@Override
 	public void setUploadDescription(String value) {}
+	
+	@Override
+	public void setUploaderHeaderText(String value) {}
+	
+	@Override
+	public String getUploadHeaderText() {return null;}
+
 
 	public ProcessPalette getProcessPalette() {
 		return processPalette;
