@@ -23,7 +23,7 @@ public class FormSourceDownloader extends DownloadWriter {
 	@Autowired
 	private FormDocument formDocument;
 	
-	private String code;
+	private byte[] formSourceCode;
 	
 	@Override
 	public String getMimeType() {
@@ -44,18 +44,30 @@ public class FormSourceDownloader extends DownloadWriter {
 			return;
 		}
 		
-		code = formDocument.getOnlySourceCode();
+		//	Body
+		String code = formDocument.getOnlySourceCode();
 		if (StringUtil.isEmpty(code)) {
 			return;
 		}
-		String fileName = formDocument.getDocument().getFormTitle().getString(iwc.getCurrentLocale());
+		formSourceCode = code.getBytes();
 		
-		setAsDownload(iwc, StringHandler.shortenToLength(fileName, 64) + ".xhtml", code.getBytes().length);
+		//	Title
+		String fileName = null;
+		try {
+			fileName = formDocument.getDocument().getFormTitle().getString(iwc.getCurrentLocale());
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		if (StringUtil.isEmpty(fileName)) {
+			fileName = new StringBuilder("form_").append(resourceId).toString();
+		}
+		
+		setAsDownload(iwc, new StringBuilder(StringHandler.shortenToLength(fileName, 64)).append(".xhtml").toString(), formSourceCode.length);
 	}
 
 	@Override
 	public void writeTo(OutputStream streamOut) throws IOException {
-		InputStream streamIn = new ByteArrayInputStream(code.getBytes());
+		InputStream streamIn = new ByteArrayInputStream(formSourceCode);
 		FileUtil.streamToOutputStream(streamIn, streamOut);
 		
 		streamOut.flush();
