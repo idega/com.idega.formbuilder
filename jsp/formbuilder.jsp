@@ -8,33 +8,7 @@
 	xmlns:core="http://xmlns.idega.com/com.idega.core">
 	<jsp:directive.page contentType="text/html" />
 	<f:view>
-		<ws:page id="formbuilder" 
-				 javascripturls="/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/mootools/1.11/mootools-all.js,
-				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/smoothbox/smoothbox.js,
-				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/moodalbox/1.2.1/js/moodalbox_full.js,
-				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/inlineEdit/1.1/inlineEdit.js,
-				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/mootabs/1.2/mootabs.js,
-				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/jquery/1.2.6/jquery-compressed.js,
-				 				/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/humanmsg/1.0/js/humanmsg.js,
-				 				
-				 				/idegaweb/bundles/org.chiba.web.bundle/resources/javascript/PresentationContext.js,
-				 				
-				 				/dwr/engine.js,
-				 				/dwr/util.js,
-								/dwr/interface/FormComponent.js,
-								/dwr/interface/PropertyManager.js,
-								/dwr/interface/FormDocument.js,
-								/dwr/interface/FormPage.js,
-								/dwr/interface/ProcessData.js,
-								/dwr/interface/Workspace.js,
-								/idegaweb/bundles/com.idega.formbuilder.bundle/resources/javascript/formbuilder.js"
-								
-				stylesheeturls="/idegaweb/bundles/com.idega.formbuilder.bundle/resources/style/formbuilder.css,		
-								/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/smoothbox/smoothbox.css,
-								/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/moodalbox/1.2.1/css/moodalbox.css,
-								/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/humanmsg/1.0/css/humanmsg.css,
-								/idegaweb/bundles/com.idega.block.web2.0.bundle/resources/javascript/mootabs/1.2/mootabs.css">
-								
+		<ws:page id="formbuilder" javascripturls="#{workspace.javaScriptSources}" stylesheeturls="#{workspace.styleSheetSources}">
 			<h:form id="workspaceform1" onsubmit="return false;">
 				<f:verbatim>
                 	<script type="text/javascript">
