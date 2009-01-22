@@ -310,21 +310,17 @@ function initializeComponentSorting(fbComponentSort) {
 }
 
 function initializeButtonSorting(fbButtonSort) {
-	if(fbButtonSort) {
-		fbButtonSort.detach();
-		fbButtonSort = null;
-	}
-	fbButtonSort = new Sortables($(BUTTON_AREA_ID), {
-		onComplete: function(el){
-			var children = $(BUTTON_AREA_ID).getChildren();
-			var orderList = [];
-			for(var i = 0; i < children.length; i++) {
-				var element = children[i];
-				orderList.push(element.id);
-			}
-			FormPage.updateButtonList(orderList);
-		},
-		handles: '.fbButtonHandler'
+	jQuery('#' + BUTTON_AREA_ID).sortable({
+		scroll: false,
+		update: function() {
+			showLoadingMessage('Saving order...');
+			console.log(jQuery('#' + BUTTON_AREA_ID).sortable('toArray'));
+			FormPage.updateButtonList(jQuery('#' + BUTTON_AREA_ID).sortable('toArray'), {
+				callback: function() {
+					closeAllLoadingMessages();
+				}
+			});
+		}
 	});
 }
 

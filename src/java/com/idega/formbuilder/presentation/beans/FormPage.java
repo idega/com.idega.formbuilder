@@ -117,7 +117,13 @@ public class FormPage implements Serializable {
 		if(area != null) {
 			List<String> ids = area.getContainedComponentsIds();
 			ids.clear();
-			ids.addAll(idSequence);
+			
+			for (String id: idSequence) {
+				if (!StringUtil.isEmpty(id)) {
+					ids.add(id);
+				}
+			}
+			
 			area.rearrangeComponents();
 		}
 	}
