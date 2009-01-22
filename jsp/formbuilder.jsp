@@ -18,13 +18,7 @@
 							}
 							DWREngine.setErrorHandler(errorHanlder);
 						});
-						window.addEvent('domready', initializeAccordions);
-						window.addEvent('domready', initializePalette);
-						window.addEvent('domready', initializePagesPanel);
-						window.addEvent('domready', initializeDesign);
-						window.addEvent('domready', registerFormbuilderActions);
-						window.addEvent('domready', initializeVariables);
-						window.addEvent('domready', initializeBottomToolbar);
+						window.addEvent('domready', FormBuilder.initializeFormBuilder);
 						window.addEvent('resize', controlFormbuilderAppWindow);
                 	</script>
                 </f:verbatim>

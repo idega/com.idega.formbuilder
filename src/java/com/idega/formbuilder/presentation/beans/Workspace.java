@@ -8,6 +8,7 @@ import org.jdom.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.idega.block.web2.business.Web2Business;
+import com.idega.block.web2.business.Web2BusinessBean;
 import com.idega.builder.business.BuilderLogic;
 import com.idega.formbuilder.IWBundleStarter;
 import com.idega.formbuilder.media.FormSourceDownloader;
@@ -15,6 +16,7 @@ import com.idega.formbuilder.presentation.components.FBComponentProperties;
 import com.idega.formbuilder.presentation.components.FBDesignView;
 import com.idega.formbuilder.presentation.components.FBViewPanel;
 import com.idega.formbuilder.presentation.components.FBWorkspace;
+import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.presentation.IWContext;
 import com.idega.util.CoreConstants;
@@ -131,12 +133,19 @@ public class Workspace implements Serializable {
 			e.printStackTrace();
 		}
 		js.append(web2.getBundleUriToMootabsScript()).append(CoreConstants.COMMA).append(web2.getBundleURIToJQueryLib()).append(CoreConstants.COMMA);
+		
+		IWBundle web2Bundle = IWMainApplication.getDefaultIWMainApplication().getBundle(Web2BusinessBean.WEB2_BUNDLE_IDENTIFIER);
+		String basePath = "javascript/jquery-ui/1.6rc5/";
+		js.append(web2Bundle.getVirtualPathWithFileNameString(new StringBuilder(basePath).append("ui.core.js").toString())).append(CoreConstants.COMMA);
+		js.append(web2Bundle.getVirtualPathWithFileNameString(new StringBuilder(basePath).append("ui.draggable.js").toString())).append(CoreConstants.COMMA);
+		js.append(web2Bundle.getVirtualPathWithFileNameString(new StringBuilder(basePath).append("ui.sortable.js").toString())).append(CoreConstants.COMMA);
+		
 		js.append(web2.getBundleUriToHumanizedMessagesScript()).append(CoreConstants.COMMA);
 		
 		js.append(IWMainApplication.getDefaultIWMainApplication().getBundle(org.chiba.web.IWBundleStarter.BUNDLE_IDENTIFIER)
 				.getVirtualPathWithFileNameString("javascript/PresentationContext.js")).append(CoreConstants.COMMA);
 		js.append(IWMainApplication.getDefaultIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER)
-																						.getVirtualPathWithFileNameString("javascript/formbuilder.js"));
+																						.getVirtualPathWithFileNameString("javascript/FormBuilderHelper.js"));
 		
 		return js.toString();
 	}

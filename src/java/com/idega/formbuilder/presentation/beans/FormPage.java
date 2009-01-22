@@ -16,6 +16,7 @@ import com.idega.formbuilder.presentation.components.FBViewPanel;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
+import com.idega.util.StringUtil;
 import com.idega.webface.WFUtil;
 import com.idega.xformsmanager.business.Document;
 import com.idega.xformsmanager.business.component.ButtonArea;
@@ -91,7 +92,13 @@ public class FormPage implements Serializable {
 				buttonAreaId = area.getId();
 			}
 			ids.clear();
-			ids.addAll(idSequence);
+			
+			for (String id: idSequence) {
+				if (!StringUtil.isEmpty(id)) {
+					ids.add(id);
+				}
+			}
+			
 			if(buttonAreaId != null) {
 				ids.add(buttonAreaId);
 			}

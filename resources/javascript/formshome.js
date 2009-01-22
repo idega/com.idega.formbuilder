@@ -12,12 +12,16 @@ var SELECTED_TASK = null;
 
 function loadTaskFormDocument(processName, processId, taskName, formId) {
 	showLoadingMessage('Loading');
+	var errorMessage = 'Error occured trying to load editing mode';
 	FormDocument.loadTaskFormDocument(processId, taskName, formId, {
 		callback: function(result) {
-			handleActionRedirect(result, true, FORMBUILDER_PATH, null, 'Error occured trying to load editing mode');
+			handleActionRedirect(result, true, FORMBUILDER_PATH, null, errorMessage);
+		},
+		errorHandler: function() {
+			closeAllLoadingMesssages();
+			if (humanMsg) humanMsg.displayMsg(errorMessage);
 		}
 	});
-	closeLoadingMessage();
 	return false;
 }
 function handleActionRedirect(result, indicator, successPath1, successPath2, errorMessage) {
@@ -28,7 +32,7 @@ function handleActionRedirect(result, indicator, successPath1, successPath2, err
 			window.location=successPath2;
 		}
 	} else {
-		closeLoadingMessage();
+		closeAllLoadingMesssages();
 		if(humanMsg) humanMsg.displayMsg(errorMessage);
 	}
 }

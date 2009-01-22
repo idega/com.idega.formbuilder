@@ -111,7 +111,7 @@ div#pageButtonArea .selectedComponent {
 #languageChooser {
 	position: absolute;
 	left: 80%;
-	top: 20px;
+	top: 1px;
 }
 
 .fbVariablesLegend ul {
@@ -1646,9 +1646,11 @@ body#formbuilder .acStretch{
 }
 #pageButtonArea{
 	position: relative !important;
-	/*display: block;*/
 	width: auto; 			
-	border: 1px solid transparent;
+	border-left: 1px solid transparent;
+	border-bottom: 1px solid transparent;
+	border-right: 1px solid transparent;
+	border-top: 1px #ccc solid;
 }
 .activeButtonArea {
 	background-color: Red;
@@ -1831,8 +1833,6 @@ h1.title {
 }
 
 div#dropBoxinner {
-	min-height: 100px;
-	height: auto !important;
 	overflow: auto !important;
 }
 #optionsPanel .acToggle, #rightPanel .acToggle {
