@@ -31,6 +31,9 @@ public class Workspace implements Serializable {
 	public static final String BEAN_ID = "workspace";
 	
 	private String view;
+	private Long parentFormId;
+	private Long processId;
+	private String taskName;
 	private Locale locale;
 	private boolean processMode;
 	private String activeHomepageTab;
@@ -83,6 +86,30 @@ public class Workspace implements Serializable {
 		this.view = view;
 	}
 	
+	public Long getParentFormId() {
+		return parentFormId;
+	}
+
+	public void setParentFormId(Long parentFormId) {
+		this.parentFormId = parentFormId;
+	}
+
+	public Long getProcessId() {
+		return processId;
+	}
+
+	public void setProcessId(Long processId) {
+		this.processId = processId;
+	}
+
+	public String getTaskName() {
+		return taskName;
+	}
+
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
+	}
+
 	private Document getPropertiesPanel() {
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentProperties(),true);
 	}
@@ -113,7 +140,7 @@ public class Workspace implements Serializable {
 		this.view = FBViewPanel.DESIGN_VIEW;
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBWorkspace("mainWorkspace"), false);
 	}
-	
+		
 	public Class<FormSourceDownloader> getFormSourceDownloaderClass() {
 		return FormSourceDownloader.class;
 	}

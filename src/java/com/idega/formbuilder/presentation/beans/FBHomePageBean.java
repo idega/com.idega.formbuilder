@@ -2,6 +2,7 @@ package com.idega.formbuilder.presentation.beans;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -15,9 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Multimap;
-import com.idega.xformsmanager.business.Form;
-import com.idega.xformsmanager.business.PersistenceManager;
-import com.idega.xformsmanager.business.XFormPersistenceType;
+import com.idega.block.form.data.XForm;
+import com.idega.block.form.data.dao.XFormsDAO;
 import com.idega.jbpm.BPMContext;
 import com.idega.jbpm.JbpmCallback;
 import com.idega.jbpm.view.TaskView;
@@ -25,12 +25,15 @@ import com.idega.jbpm.view.ViewFactory;
 import com.idega.jbpm.view.ViewFactoryType;
 import com.idega.presentation.IWContext;
 import com.idega.util.IWTimestamp;
+import com.idega.xformsmanager.business.Form;
+import com.idega.xformsmanager.business.PersistenceManager;
+import com.idega.xformsmanager.business.XFormPersistenceType;
 
 /**
  * @author <a href="mailto:civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  *
- * Last modified: $Date: 2008/12/30 09:32:45 $ by $Author: civilis $
+ * Last modified: $Date: 2009/02/12 16:53:48 $ by $Author: donatas $
  */
 @Scope("singleton")
 @Service(FBHomePageBean.beanIdentifier)
@@ -40,6 +43,9 @@ public class FBHomePageBean {
 	private BPMContext idegaJbpmContext;
 	private PersistenceManager persistenceManager;
 	private ViewFactory viewFactory;
+	
+	@Autowired
+	private XFormsDAO xformsDao;
 	
 	@Transactional(readOnly=true)
 	@SuppressWarnings("unchecked")
@@ -72,6 +78,7 @@ public class FBHomePageBean {
 					ProcessAllTasksForms processForms = new ProcessAllTasksForms();
 					processForms.setProcessId(String.valueOf(pd.getId()));
 					processForms.setProcessName(pd.getName());
+					processForms.setProcessVersion(pd.getVersion());
 					
 					ArrayList<TaskForm> taskForms = new ArrayList<TaskForm>(tviews.size());
 					
@@ -96,6 +103,52 @@ public class FBHomePageBean {
 		});
 	}
 	
+	@Transactional(readOnly = true)
+	public ProcessAllTasksForms getTasksFormsForProcess(final Locale locale, final String processName, final Integer version) {
+		return getIdegaJbpmContext().execute(new JbpmCallback() {
+
+			public Object doInJbpm(JbpmContext context) throws JbpmException {
+				ProcessDefinition pd = context.getGraphSession().findProcessDefinition(processName, version);
+				
+				if (pd == null) {
+					return null;
+				}
+				
+				Long pdId = pd.getId();
+				
+				Multimap<Long, TaskView> pdsViews = getViewFactory().getAllViewsByProcessDefinitions(Collections.singletonList(pdId));
+				
+				Collection<TaskView> tviews = pdsViews.get(pdId);
+							
+				ProcessAllTasksForms processForms = new ProcessAllTasksForms();
+				processForms.setProcessId(String.valueOf(pd.getId()));
+				processForms.setProcessName(pd.getName());
+				processForms.setProcessVersion(pd.getVersion());
+					
+				ArrayList<TaskForm> taskForms = new ArrayList<TaskForm>(tviews.size());
+					
+				for (TaskView taskView : tviews) {
+						
+					String dateCreatedStr = new IWTimestamp(taskView.getDateCreated()).getLocaleDateAndTime(locale, IWTimestamp.SHORT, IWTimestamp.SHORT);
+					TaskForm form = new TaskForm();
+					form.setDateCreatedStr(dateCreatedStr);
+					form.setFormId(taskView.getViewId());
+					form.setFormName(taskView.getDefaultDisplayName());
+					form.setTaskName(taskView.getTask().getName());
+					taskForms.add(form);
+				}
+				processForms.setTasksCount(String.valueOf(pd.getTaskMgmtDefinition().getTasks().size()));
+				processForms.setTaskForms(taskForms);
+				return processForms;
+				}
+		});
+	}
+	
+	@Transactional(readOnly = true)
+	public List<XForm> getRelatedByFormId(Long formId) {
+		return getXformsDao().getAllVersionsByParentId(formId);
+	}
+	
 	public List<Form> getStandaloneForms() {
 		
 		return getPersistenceManager().getStandaloneForms();
@@ -110,11 +163,20 @@ public class FBHomePageBean {
 		this.idegaJbpmContext = idegaJbpmContext;
 	}
 	
+	public XFormsDAO getXformsDao() {
+		return xformsDao;
+	}
+
+	public void setXformsDao(XFormsDAO xformsDao) {
+		this.xformsDao = xformsDao;
+	}
+
 	public class ProcessAllTasksForms {
 		
 		private String processId;
 		private String processName;
 		private String tasksCount;
+		private int processVersion;
 		private List<TaskForm> taskForms;
 		
 		public List<TaskForm> getTaskForms() {
@@ -141,6 +203,13 @@ public class FBHomePageBean {
 		public void setProcessId(String processId) {
 			this.processId = processId;
 		}
+		public int getProcessVersion() {
+			return processVersion;
+		}
+		public void setProcessVersion(int processVersion) {
+			this.processVersion = processVersion;
+		}
+		
 	}
 	
 	public class TaskForm {

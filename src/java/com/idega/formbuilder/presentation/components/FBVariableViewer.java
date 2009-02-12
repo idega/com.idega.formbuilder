@@ -76,7 +76,7 @@ public class FBVariableViewer extends FBComponentBase {
 			addVarIcon.setId(datatype + CoreConstants.UNDER + ADD_ICON_POSTFIX);
 			addVarIcon.setStyleClass(ADD_VARIABLE_ICON);
 			
-//			layer.add(addVarIcon);
+			layer.add(addVarIcon);
 			
 			body.add(header);
 			body.add(layer);
@@ -98,15 +98,17 @@ public class FBVariableViewer extends FBComponentBase {
 				List<String> transitions = processData.getTransitions();
 				for(String transition : transitions) {
 					
-					Text varEntry = new Text(transition);
-					varEntry.setStyleClass(VAR_ENTRY);
-					varEntry.setStyleClass("fbtrans");
-					varEntry.setId(transition);
+					if (transition != null) {
+						Text varEntry = new Text(transition);
+						varEntry.setStyleClass(VAR_ENTRY);
+						varEntry.setStyleClass("fbtrans");
+						varEntry.setId(transition);
 					
-					String status = processData.getTransitionStatus(transition).getStatus();
-					varEntry.setStyleClass(status);
+						String status = processData.getTransitionStatus(transition).getStatus();
+						varEntry.setStyleClass(status);
 					
-					layer.add(varEntry);
+						layer.add(varEntry);
+					}
 				}
 				
 			} catch (Exception e) {

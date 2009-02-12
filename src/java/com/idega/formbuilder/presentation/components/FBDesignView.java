@@ -5,8 +5,10 @@ import java.util.Locale;
 
 import javax.faces.context.FacesContext;
 
+import com.idega.block.form.data.XForm;
 import com.idega.core.localisation.business.ICLocaleBusiness;
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.formbuilder.presentation.beans.FBHomePageBean;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.presentation.beans.FormPage;
 import com.idega.formbuilder.presentation.beans.Workspace;
@@ -54,6 +56,8 @@ public class FBDesignView extends FBComponentBase {
 	private static final String MESSAGE_BOX_CONTENT_CLASS = "messageBoxContent";
 	private static final String LANGUAGE_CHOOSER_ID = "languageChooser";
 	private static final String LANGUAGE_CHOOSER_MENU_ID = "languageChooserMenu";
+	private static final String VERSION_CHOOSER_ID = "versionChooser";
+	private static final String VERSION_CHOOSER_MENU_ID = "versionChooserMenu";
 	private static final String DESIGN_VIEW_PAGE_TITLE_ID = "designViewPageTitle";
 	private static final String DESIGN_VIEW_FORM_ERROR_MESSAGE_ID = "designViewFormErrorMsg";
 	private static final String LABEL_CLASS = "label";
@@ -134,9 +138,33 @@ public class FBDesignView extends FBComponentBase {
 		
 		languageChooserLayer.add(new Label(getLocalizedString(iwc, "fb_choose_language", "Form language"), languageChooser));
 		languageChooserLayer.add(languageChooser);
-		
+
 		component.add(formHeading);
 		component.add(languageChooserLayer);
+		
+		if (workspace.isProcessMode()) {
+			
+			Layer versionChooserLayer = new Layer(Layer.DIV);
+			versionChooserLayer.setId(VERSION_CHOOSER_ID);
+			
+			DropdownMenu versionChooser = new DropdownMenu(VERSION_CHOOSER_MENU_ID);
+
+			versionChooser.addMenuElement(workspace.getParentFormId().toString(), "latest");
+			
+			FBHomePageBean bean = (FBHomePageBean) WFUtil.getBeanInstance(FBHomePageBean.beanIdentifier);
+			
+			List<XForm> xforms = bean.getRelatedByFormId(workspace.getParentFormId());
+			
+			for (XForm xform : xforms) {
+				versionChooser.addMenuElement(xform.getFormId().toString(), "v." + xform.getVersion());
+			}
+			versionChooser.setSelectedElement(formDocument.getFormId());
+			versionChooser.setId(VERSION_CHOOSER_MENU_ID);
+			
+			versionChooserLayer.add(new Label(getLocalizedString(iwc, "fb_choose_version", "Version"), versionChooser));
+			versionChooserLayer.add(versionChooser);
+			component.add(versionChooserLayer);
+		}
 		
 		Layer pageNotice = new Layer(Layer.DIV);
 		pageNotice.setId(DESIGN_VIEW_PAGE_TITLE_ID);

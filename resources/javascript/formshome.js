@@ -141,23 +141,40 @@ function registerFormsHomeActions() {
 	});
 	$$('div.processItem').each(function(item) {
 		item.setStyle('cursor', 'pointer');
-		var taskList = item.getElement('.taskFormList');
+		var select = item.getElement('div.processButtonList').getFirst();
 		item.addEvent('click', function(e){
-			var link = item.getElement('ul.processButtonList').getLast().getFirst();
+			if (!$(e.target).hasClass('processItem')) {
+				return false;
+			}
 			var transition = new Fx.Style(item, 'height' ,{
 				duration: TRANSITION_DURATION, onComplete: function() {
-					transitionButtons(item, link, false);
-				}
-			});
-			if(taskList.getStyle('display') == 'none') {
-				var listSize = item.getLast().getChildren().length;
-				transition.start((listSize * 55) + 53);
-			} else {
-				item.getElements('li.procBtnClass').each(function(button) {
-					button.setStyle('visibility', 'hidden');
-				});
-				transition.start(35);
 			}
+			});
+			if(item.getElement('.taskFormList').getStyle('display') == 'none') {
+				var size = item.getElement('.taskFormList').getChildren().length;
+				if (size > 0) {
+					transition.start((size * 55) + 53);
+					item.getElement('.taskFormList').setStyle('display', 'block');
+				} else {
+					var version = DWRUtil.getValue(select);
+					var processName = DWRUtil.getValue(item.getElement('.formTitle'));
+					loadProcessTasks(processName, version, item.getElement('.taskFormList'), item, transition);
+				}
+			} else {
+				transition.start(35);
+				console.log(item.getElement('.taskFormList'));
+				item.getElement('.taskFormList').setStyle('display', 'none');
+			}
+		});
+		select.addEvent('change', function(e) {
+			var version = DWRUtil.getValue(e.target.id);
+			var processName = DWRUtil.getValue(item.getElement('.formTitle'));
+			var transition = new Fx.Style(item, 'height' ,{
+				duration: TRANSITION_DURATION, onComplete: function() {
+				console.log(item.getElement('.taskFormList'));
+			}
+			});
+			loadProcessTasks(processName, version, item.getElement('.taskFormList'), item, transition);
 		});
 	});
 	$$('a.transitionButton').each(function(item) {
@@ -261,6 +278,23 @@ function registerFormsHomeActions() {
 		});
 	});
 }
+function loadProcessTasks(processName, version, node, container, transition) {
+	showLoadingMessage('Loading');
+	FormDocument.getProcessTasks(processName, version, {
+		callback: function(component) {
+		replaceNode(component.document, node, container);
+		var tasks = component.taskCount;
+		var forms = component.taskFormCount;
+		console.log(container.getElement(".processSummaryText"));
+		container.getElement(".processSummaryText").getElement(".tasks").setText(tasks);
+		container.getElement(".processSummaryText").getElement(".forms").setText(forms);
+		transition.start((forms * 55) + 53);
+		container.getElement('.taskFormList').setStyle('display', 'block');
+		closeAllLoadingMessages();
+	}
+});
+}
+
 function transitionButtons(container, item, linkTarget) {
 	if(item.hasClass('expandButton')) {
 		item.removeClass('expandButton');

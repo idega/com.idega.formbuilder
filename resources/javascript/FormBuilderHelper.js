@@ -267,6 +267,23 @@ function initializeLanguageChooser() {
 	}
 }
 
+function initializeVersionChooser() {
+	var versionChooser = $('versionChooserMenu');
+	if(versionChooser != null) {
+		versionChooser.removeEvents();
+		versionChooser.addEvent('change', function(e) {
+			if(versionChooser.id == null) {
+				return;
+			}
+			
+			var version = dwr.util.getValue(versionChooser.id);
+			if (version != '') {
+				loadDocumentByVersion(version);
+			}
+		});
+	}
+}
+
 function handleComponentSelection(oldId, componentId) {
 	if(oldId != null && oldId != '') {
 		var old = $(oldId);
@@ -442,6 +459,7 @@ function initializeDropbox() {
 function initializeDesignView(initializeInline, callback) {
 	initializeSelectedComponent();
 	initializeLanguageChooser();
+	initializeVersionChooser();
 	initializeComponentSorting(fbComponentSort);
 	initializeButtonSorting(fbButtonSort);
 	initializeButtonArea();
@@ -654,6 +672,17 @@ function reloadWorkspace(locale) {
 			closeLoadingMessage();
 		}
 	});
+}
+function loadDocumentByVersion(version) {
+	showLoadingMessage('Loading...');
+	FormDocument.changeTaskFormDocumentVersion(version, {
+		callback: function(success) {
+			if(success != null) {
+				window.location.reload();
+			}
+		}
+	});
+	closeLoadingMessage();
 }
 function setHrefToVoidFunction(element) {
 	element.setProperty('href', 'javascript:void(0)');

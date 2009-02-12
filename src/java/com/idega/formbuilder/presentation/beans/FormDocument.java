@@ -32,7 +32,9 @@ import com.idega.data.IDOLookupException;
 import com.idega.formbuilder.business.egov.Application;
 import com.idega.formbuilder.business.egov.ApplicationBusiness;
 import com.idega.formbuilder.business.process.XFormsProcessManager;
+import com.idega.formbuilder.presentation.beans.FBHomePageBean.ProcessAllTasksForms;
 import com.idega.formbuilder.presentation.components.FBFormPage;
+import com.idega.formbuilder.presentation.components.FBHomePage;
 import com.idega.formbuilder.presentation.components.FBViewPanel;
 import com.idega.formbuilder.util.FBUtil;
 import com.idega.idegaweb.IWMainApplication;
@@ -107,7 +109,6 @@ public class FormDocument implements Serializable {
 		this.formId = document.getId();
 //		this.hasPreview = overviewPage != null ? true : false;
 		this.hasPreview = false;
-		
 		return document;
 	}
 	
@@ -198,6 +199,9 @@ public class FormDocument implements Serializable {
 			formPage.initializeBeanInstance(firstP);
 				
 			getWorkspace().setView(FBViewPanel.DESIGN_VIEW);
+			getWorkspace().setParentFormId(formId);
+			getWorkspace().setProcessId(new Long(processId));
+			getWorkspace().setTaskName(taskName);
 			initializeBeanInstance(getDocument());
 			getProcessData().initializeBeanInstance(getDocument(), new Long(processId), taskName);
 		} catch(Exception e) {
@@ -207,6 +211,32 @@ public class FormDocument implements Serializable {
 		return true;
 	}
 	
+	public boolean changeTaskFormDocumentVersion(Long formId) {
+		
+		if(formId == null)
+			return false;
+		
+		clearAppsRelatedMetaData();
+		
+		try {
+			DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
+			setDocument(formManagerInstance.openForm(formId));
+
+			String firstPage = getCommonPagesIdList().get(0);
+			Page firstP = getDocument().getPage(firstPage);
+			FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
+			formPage.initializeBeanInstance(firstP);
+				
+			getWorkspace().setView(FBViewPanel.DESIGN_VIEW);
+			initializeBeanInstance(getDocument());
+			getProcessData().initializeBeanInstance(getDocument(), getWorkspace().getProcessId(), getWorkspace().getTaskName());
+		} catch(Exception e) {
+			logger.info("Exception while trying to open a form document", e);
+			return false;
+		}
+		return true;
+	}
+		
 	public boolean createFormDocument(String parameter) throws Exception {
 		Locale locale = workspace.getLocale();
 		
@@ -716,6 +746,24 @@ public class FormDocument implements Serializable {
 	public void setProcessForm(boolean procForm) {
 		
 		document.getProperties().setSubmissionAction(processSubmissionAction);
+	}
+	
+	public ProcessTasksBean getProcessTasks(String processName, Integer version) {
+		
+		FBHomePageBean bean = (FBHomePageBean) WFUtil.getBeanInstance(FBHomePageBean.beanIdentifier);
+		
+		IWContext iwc = IWContext.getCurrentInstance();
+		
+		ProcessAllTasksForms forms = bean.getTasksFormsForProcess(iwc.getCurrentLocale(), processName, version);
+
+		org.jdom.Document renderedComponent = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), FBHomePage.getTaskList(forms), true);
+		
+		ProcessTasksBean result = new ProcessTasksBean();
+		result.setDocument(renderedComponent);
+		result.setTaskCount(forms.getTasksCount());
+		result.setTaskFormCount(forms.getTaskForms().size());
+		return result ; 
+		
 	}
 	
 	public boolean isProcessForm() {
