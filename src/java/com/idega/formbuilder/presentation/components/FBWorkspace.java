@@ -11,7 +11,6 @@ import com.idega.formbuilder.presentation.beans.ComponentPropertyManager;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.formbuilder.presentation.beans.FormPage;
 import com.idega.formbuilder.presentation.beans.Workspace;
-import com.idega.jbpm.data.ViewTaskBind;
 import com.idega.jbpm.data.dao.BPMDAO;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
@@ -80,17 +79,9 @@ public class FBWorkspace extends FBComponentBase {
 			iwc.sendRedirect(FORM_LIST_URL);
 			return;
 		}
-		
-		ViewTaskBind vtb = getBpmDAO().getViewTaskBindByView(fd.getFormId(), "xforms");
-		Long taskId = vtb == null ? null : vtb.getTaskId();
-		Long taskInstanceId = vtb == null ? null : vtb.getTaskInstanceId();
-		
-		if((taskId != null && taskId > 0) || (taskInstanceId != null && taskInstanceId > 0)) {
-			workspace.setProcessMode(true);
-		} else {
-			workspace.setProcessMode(false);
-		}
-		
+				
+		workspace.setProcessMode(getBpmDAO().getTaskViewBindCount(fd.getFormId(), "xforms") > 0);
+				
 		Layer mainApplication = new Layer(Layer.DIV);
 		
 		Layer body = new Layer(Layer.DIV);
