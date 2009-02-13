@@ -539,10 +539,8 @@ function createNewForm() {
 function registerFormbuilderActions() {
 	var saveFormButton = $('saveFormButton');
 	if(saveFormButton != null) {
-		saveFormButton.addEvent('click', function(e) {
-			new Event(e).stop();
-			fbsave();
-		});
+		saveFormButton.setProperty('Title', 'Save form');
+		saveFormButton.setProperty('href', '#TB_inline?height=60&width=350&inlineId=saveFormDialog');
 	}
 	var newFormButton = $('newFormButton');
 	if(newFormButton != null) {
@@ -1440,6 +1438,29 @@ function fbsave() {
 		}
 		showLoadingMessage('Saving document...');
 		FormDocument.save(closeLoadingMessage);
+	}
+}
+function fbsaveAllVersions() {
+	var node = $('sourceViewDiv');
+	if(node != null) {
+		showLoadingMessage('Saving');
+		try {
+			if(formCodeEditor != null) {
+				FormDocument.saveSrc(formCodeEditor.getCode(), closeLoadingMessage);
+			} else {
+				FormDocument.saveSrc(node.getLast().getProperty('value'), closeLoadingMessage);
+			}
+		} catch(e) {
+			FormDocument.saveSrc(node.getLast().getProperty('value'), closeLoadingMessage);
+		}
+	} else {
+		var dialog = $('TB_window');
+		if(dialog != null) {
+			dialog.setStyle('visibility', 'hidden');
+			showLoadingMessage('Creating form');
+		}
+		showLoadingMessage('Saving document...');
+		FormDocument.saveAllVersions(closeLoadingMessage);
 	}
 }
 function initializeInlineEdits() {

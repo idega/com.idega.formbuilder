@@ -235,7 +235,7 @@ span.multipleLegend {
 	border: 3px solid #a1a1a1;
 }
 
-#createFormBtn, #yesSaveFormBtn, #noSaveFormBtn, #noVariableBtn, #cancelVariableBtn {
+.btnStyle, #createFormBtn, #yesSaveFormBtn, #noSaveFormBtn, #noVariableBtn, #cancelVariableBtn {
 	font-family: "Lucida Grande", "Lucida Sans", "Lucida Sans Unicode", Arial, Helvetica, sans-serif !important;
 	font-size: 16px !important;
 	background-color: #cef3cf;

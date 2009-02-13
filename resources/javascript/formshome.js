@@ -285,7 +285,6 @@ function loadProcessTasks(processName, version, node, container, transition) {
 		replaceNode(component.document, node, container);
 		var tasks = component.taskCount;
 		var forms = component.taskFormCount;
-		console.log(container.getElement(".processSummaryText"));
 		container.getElement(".processSummaryText").getElement(".tasks").setText(tasks);
 		container.getElement(".processSummaryText").getElement(".forms").setText(forms);
 		transition.start((forms * 55) + 53);

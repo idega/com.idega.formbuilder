@@ -37,6 +37,7 @@
 	    	<include method="changeTaskFormDocumentVersion" />
 	    	<include method="createFormDocument" />
 	    	<include method="save" />
+	    	<include method="saveAllVersions" />
 	    	<include method="loadFormDocument" />
 	    	<include method="loadFormDocumentCode" />
 	    	<include method="loadFormDocumentPreview" />

@@ -88,7 +88,7 @@ public class FormDocument implements Serializable {
 	public static final String FROM_APP_REQ_PARAM = "fapp";
 	public static final String FORM_ID_OPEN_TAG = "<form_id>";
 	public static final String FORM_ID_CLOSE_TAG = "</form_id>";
-	
+		
 	public List<String> getCommonPagesIdList() {
 		List<String> result = new LinkedList<String>();
 		List<String> allIds = document.getContainedPagesIdList();
@@ -397,6 +397,22 @@ public class FormDocument implements Serializable {
 			
 		} catch(Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Save all versions of the form
+	 */
+	public void saveAllVersions() {
+		if (!getWorkspace().isProcessMode() || getWorkspace().getParentFormId() == null) {
+			save();
+		} else {
+			try {
+				Long parentFormId = getWorkspace().getParentFormId();
+				document.saveAllVersions(parentFormId);
+			} catch (Exception e) {
+				logger.error("Could not save form", e);
+			}
 		}
 	}
 	

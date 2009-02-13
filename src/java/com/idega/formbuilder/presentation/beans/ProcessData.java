@@ -8,11 +8,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jbpm.JbpmContext;
+import org.jbpm.JbpmException;
+import org.jbpm.context.def.VariableAccess;
+import org.jbpm.taskmgmt.def.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.idega.block.process.variables.Variable;
+import com.idega.block.process.variables.VariableDataType;
+import com.idega.jbpm.BPMContext;
+import com.idega.jbpm.JbpmCallback;
+import com.idega.jbpm.data.ViewTaskBind;
 import com.idega.jbpm.exe.BPMFactory;
 import com.idega.jbpm.exe.ProcessDefinitionW;
 import com.idega.webface.WFUtil;
@@ -32,6 +40,8 @@ public class ProcessData implements Serializable {
 	
 	public static final String BEAN_ID = "processData";
 	
+	private static final VariableDataType[] AVAILABE_TYPES = { VariableDataType.STRING, VariableDataType.DATE, VariableDataType.LIST, VariableDataType.FILE, VariableDataType.FILES };
+	
 	private List<Variable> variables = new ArrayList<Variable>();
 	private List<String> transitions = new ArrayList<String>();
 	private Map<String, List<Variable>> datatypedVariables = new HashMap<String, List<Variable>>();
@@ -44,8 +54,11 @@ public class ProcessData implements Serializable {
 	private Long taskId;
 	private Document document;
 	
+	
 	@Autowired private BPMFactory bpmFactory;
 
+	private BPMContext idegaJbpmContext;
+	
 	public BPMFactory getBpmFactory() {
 		return bpmFactory;
 	}
@@ -55,11 +68,14 @@ public class ProcessData implements Serializable {
 	}
 
 	public Map<String, List<Variable>> getDatatypedVariables() {
-		if(datatypedVariables.isEmpty()) {
-			for(Variable variable : variables) {
+		if (datatypedVariables.isEmpty()) {
+			for (VariableDataType type : AVAILABE_TYPES) {
+				datatypedVariables.put(type.toString(), new ArrayList<Variable>());
+			}
+			for (Variable variable : variables) {
 				String varType = variable.getDataType().toString();
-				
-				if(datatypedVariables.containsKey(varType)) {
+
+				if (datatypedVariables.containsKey(varType)) {
 					datatypedVariables.get(varType).add(variable);
 				} else {
 					List<Variable> newList = new ArrayList<Variable>();
@@ -75,23 +91,27 @@ public class ProcessData implements Serializable {
 		this.processId = processId;
 		this.taskName = taskName;
 		this.document = document;
-		
-		this.variables.clear();
-		this.transitions.clear();
-		
+		initializeVariablesAndTransitions();
 		this.transitionUsageList.clear();
-		
 		this.datatypedVariables.clear();
 		this.variableUsageList.clear();
 		
+		
+	}
+	
+	private void initializeVariablesAndTransitions() {
+		this.variables.clear();
+		this.transitions.clear();
+		this.datatypedVariables.clear();
 		ProcessDefinitionW pdw = getBpmFactory().getProcessManager(processId).getProcessDefinition(processId);
 		
 		variables.addAll(pdw.getTaskVariableList(taskName));
 		
 		Collection<String> transitionNames = pdw.getTaskNodeTransitionsNames(taskName);
 		
-		if(transitionNames != null)
+		if(transitionNames != null) {
 			transitions.addAll(transitionNames);
+		}
 	}
 	
 	public List<Variable> getVariables() {
@@ -204,8 +224,24 @@ public class ProcessData implements Serializable {
 		return getVariableStatus(variable);
 	}
 	
-	public void createVariable(String variable, String datatype) {
-//		jbpmProcessBusiness.addTaskVariable(processId, taskName, datatype, variable);
+	public void createVariable(final String variable, final String datatype) {
+		getIdegaJbpmContext().execute(new JbpmCallback() {
+
+			public Object doInJbpm(JbpmContext context) throws JbpmException {
+				Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
+				Long parentFormId = workspace.getParentFormId();
+				ViewTaskBind vtb = getBpmFactory().getBPMDAO().getViewTaskBindByView(parentFormId.toString(), "xforms");
+				Task task = getBpmFactory().getBPMDAO().getTaskFromViewTaskBind(vtb);
+			    task = getIdegaJbpmContext().mergeProcessEntity(task);
+				List variableAccesses = task.getTaskController().getVariableAccesses();
+				VariableAccess variableAccess = new VariableAccess(datatype + "_" + variable, "read,write", null);
+				getIdegaJbpmContext().saveProcessEntity(variableAccess);
+				variableAccesses.add(variableAccess);
+				getIdegaJbpmContext().mergeProcessEntity(task);
+				return null;
+			}
+		});
+		initializeVariablesAndTransitions();
 	}
 	
 	public ConstVariableStatus getTransitionStatus(String transition) {
@@ -341,5 +377,14 @@ public class ProcessData implements Serializable {
 
 	public void setTransitionUsageList(Map<String, List<String>> transitionUsageList) {
 		this.transitionUsageList = transitionUsageList;
+	}
+	
+	public BPMContext getIdegaJbpmContext() {
+		return idegaJbpmContext;
+	}
+
+	@Autowired
+	public void setIdegaJbpmContext(BPMContext idegaJbpmContext) {
+		this.idegaJbpmContext = idegaJbpmContext;
 	}
 }

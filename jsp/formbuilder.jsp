@@ -39,6 +39,11 @@
 					<t:commandLink id="yesSaveFormBtn" forceId="true" onclick="fbsave();window.location.href = '/workspace/forms/list/';" value="Yes" />
 					<t:commandLink id="noSaveFormBtn" forceId="true" onclick="window.location.href = '/workspace/forms/list/';" value="No" />
 				</t:div>
+				<t:div id="saveFormDialog" forceId="true" styleClass="formListDialogStyle" style="display: none;">
+					<t:commandLink id="SaveFormBtn" styleClass="btnStyle" forceId="true" onclick="fbsave();TB_remove();" value="This version" />
+					<t:commandLink id="allSaveFormBtn" styleClass="btnStyle" forceId="true" onclick="fbsaveAllVersions();TB_remove();" value="All versions" />
+					<t:commandLink id="cancelSaveFormBtn" styleClass="btnStyle" forceId="true" onclick="TB_remove();" value="Cancel" />
+				</t:div>
 				<t:div id="bottomButtonsContainer" forceId="true" styleClass="fbBottomButtonsContainer">
 					<t:div styleClass="states">
 						<t:commandLink id="previewButton" styleClass="leftButton viewSwitchBtn" forceId="true">
@@ -61,7 +66,7 @@
 					<core:DownloadLink id="exportAndDownloadFormSourceCode" styleClass="rightButton" downloadWriter="#{workspace.formSourceDownloaderClassName}" value="#{localizedStrings['com.idega.formbuilder']['toolbar_export_and_download_form']}">
 						<f:param id="resourceToExportId" value="#{formDocument.formId}"/>
 					</core:DownloadLink>
-					<t:commandLink id="saveFormButton" styleClass="rightButton" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"></t:commandLink>
+					<t:commandLink id="saveFormButton" styleClass="rightButton smoothbox" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"></t:commandLink>
 					<t:commandLink id="homeButton" styleClass="rightButton smoothbox" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_home']}"></t:commandLink>
 				</t:div>
 			</h:form>

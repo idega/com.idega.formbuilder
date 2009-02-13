@@ -3,9 +3,9 @@ package com.idega.formbuilder.presentation.beans;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.idega.formbuilder.util.FBUtil;
 import com.idega.xformsmanager.business.component.ComponentSelect;
 import com.idega.xformsmanager.component.beans.ItemBean;
-import com.idega.formbuilder.util.FBUtil;
 
 public class FormSelectComponent extends FormComponent {
 	
@@ -30,7 +30,7 @@ public class FormSelectComponent extends FormComponent {
 	}
 	
 	public List<ItemBean> getItems() {
-		if(getComponent() != null) {
+		if(getComponent() != null && getComponent().getProperties() != null && getComponent().getProperties().getItemset() != null) {
 			System.out.println("items="+getComponent().getProperties().getItemset());
 			return getComponent().getProperties().getItemset().getItems(FBUtil.getUILocale());
 		}
