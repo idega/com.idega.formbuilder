@@ -23,6 +23,8 @@
 	    	<param name="managedBeanName" value="processData"/>
 	    	<param name="class" value="com.idega.formbuilder.presentation.beans.ProcessData"/>
 	    	<include method="createVariable" />
+	    	<include method="getVariableAccessesBox" />
+	    	<include method="saveVariableAccesses" />
     	</create>
   		<create creator="jsf" javascript="XFormsProcess" scope="application">
 	    	<param name="managedBeanName" value="xformsProcessManager"/>

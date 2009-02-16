@@ -191,11 +191,7 @@ public class FormComponent extends GenericComponent {
 	@Override
 	public void setDataSrc(String dataSrc) {}
 	
-	public Document getAvailableProcessDataList(String type, boolean transition) {
-		if(StringUtils.isEmpty(type)) {
-			return null;
-		}
-		
+	public Document getAvailableProcessDataList(String type, boolean transition) {		
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBVariableList(type, transition), true);
 	}
 	

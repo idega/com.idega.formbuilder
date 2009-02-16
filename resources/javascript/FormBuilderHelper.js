@@ -192,6 +192,22 @@ function handleProcessDataAssignment(data, variable) {
 	closeLoadingMessage();
 }
 
+function handleProcessDataAssignmentChange(componentId, data, variable) {
+	if(data != null) {
+		updateVariableItem(variable, data[0]);
+		updateVariableItem(data[1], data[2]);
+					
+		if(componentId != null) {
+			var assignLabel = $(componentId).getElement('span.assignLabel');
+			if(assignLabel != null) {
+				var cleanVarName = variable.substring(variable.indexOf('_') + 1)
+				assignLabel.setText('Assigned to: ' + cleanVarName);
+			}
+		}
+	}
+	closeLoadingMessage();
+}
+
 function initializeButtonArea() {
 	initializeDroppableArea(BUTTON_AREA_ID, null, null);
 	$$('div.formButton').each(function(item) {
@@ -609,17 +625,8 @@ function initializeVariableViewer(enable) {
 		item.removeEvents('click');
 		if(enable == true) {
 			item.addEvent('click', function(event) {
-				new Event(event).stopPropagation();
 				var componentId = item.getParent().getParent().getProperty('id');
-				FormComponent.removeVariableBinding(componentId, {
-					callback: function(result) {
-						if(result != null) {
-							updateVariableItem(result[0], result[1]);
-							
-							item.getNext().setText('Not assigned');
-						}
-					}
-				});
+				showVariableListForChange(event.target.getLeft(), event.target.getTop(), componentId, false, item);
 			});
 		}
 	});
@@ -642,6 +649,60 @@ function initializeVariableViewer(enable) {
 		}
 	});
 	initializeVariableDragging(enable);
+}
+
+function showVariableListForChange(positionLeft, positionTop, componentId, transition, item) {
+	FormComponent.getAvailableProcessDataList(null, transition, {
+		callback : function(result) {
+			insertNodesToContainer(result, $('mainApplication'));
+			var container = $('selectVariableDialog');
+			if(container != null) {
+				var noVariableBtn = $('noVariableBtn');
+				if(noVariableBtn != null) {
+					setHrefToVoidFunction(noVariableBtn);
+					noVariableBtn.removeEvents('click');
+					noVariableBtn.addEvent('click', function(e) {
+						FormComponent.removeVariableBinding(componentId, {
+						callback: function(res) {
+							if(res != null) {
+								updateVariableItem(result[0], result[1]);
+								item.getNext().setText('Not assigned');
+							}
+						}
+					});
+					container.remove();
+					});
+				}
+				var cancelVariableBtn = $('cancelVariableBtn');
+				if(cancelVariableBtn != null) {
+					setHrefToVoidFunction(cancelVariableBtn);
+					cancelVariableBtn.removeEvents('click');
+					cancelVariableBtn.addEvent('click', function(e) {
+						container.remove();
+					});
+				}
+				container.setStyle('left', positionLeft);
+				container.setStyle('top', positionTop);
+				container.setStyle('position', 'fixed');
+				var list = $('variablePopupList');
+				if(list != null) {
+					list.getElements('span').each(function(it) {
+						it.addEvent('click', function(e) {
+							new Event(e).stop();
+							var variable = it.getProperty('rel');
+							showLoadingMessage('Assigning variable');
+							FormComponent.assignVariable(componentId, variable, {
+								callback: function(res) {
+								handleProcessDataAssignmentChange(componentId, res, variable);
+								container.remove();
+								}
+							});
+						});
+					});
+				}
+			}
+		}
+	});
 }
 function createVariable(datatype, value, element, image) {
 	ProcessData.createVariable(value, datatype, {
@@ -1593,3 +1654,83 @@ var FBDraggable = Element.extend({
 		return this;
 	}
 });
+
+function showVariableAccessPopup(event, element, variableName) {
+	
+	if (element == null || event == null) {
+		return false;
+	}
+	
+	element = jQuery(element);
+	
+	var offsets = element.offset();
+	if (offsets == null) {
+		return false;
+	}
+	
+	var xCoord = offsets.left;
+	var yCoord = offsets.top;
+	
+	if (event) {
+		if (event.stopPropagation) {
+			event.stopPropagation();
+		}
+		event.cancelBubble = true;
+	}
+	
+    var htmlForBox = "<div class='variableAccessPopupStyle' />";
+	var rightsBox = jQuery(htmlForBox);
+		
+	jQuery(document.body).append(rightsBox);
+	   
+	rightsBox.css('top', yCoord + 'px');
+	rightsBox.css('left', xCoord + 'px');
+	
+	var clbck = {
+	   callback: function(component) {
+            if (component == null) {
+                return false;
+            }
+            insertNodesToContainer(component, rightsBox[0]);
+            
+            rightsBox.show('fast');
+        }
+	};
+    ProcessData.getVariableAccessesBox(variableName, clbck);
+}
+
+function closeVariableAccessRightsBox (element) {
+	
+	var rightsBoxCands = jQuery(element).parents(".variableAccessPopupStyle");
+	
+	if (rightsBoxCands == null || rightsBoxCands.length == 0) {
+		return false;
+	}
+	
+	var rightsBox = jQuery(rightsBoxCands[0]);
+	
+	rightsBox.hide('fast', 
+        function () {
+            rightsBox.remove();
+        }
+	);
+}
+
+function saveVariableAccessRights (element, variableName) {
+	
+	var box = jQuery(element).parents(".variableAccessPopupStyle");
+	var read = jQuery(box).find('.read')[0];
+	var write = jQuery(box).find('.write')[0];
+	var required = jQuery(box).find('.required')[0];
+	var access = '';
+	if (read != null && read.checked) {
+		access += 'read';
+	}
+	if (write != null && write.checked) {
+		access += 'write';
+	}
+	if (required != null && required.checked) {
+		access += 'required';
+	}
+	ProcessData.saveVariableAccesses(variableName, access);
+}

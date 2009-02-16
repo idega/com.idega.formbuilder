@@ -18,11 +18,23 @@ import org.springframework.stereotype.Service;
 
 import com.idega.block.process.variables.Variable;
 import com.idega.block.process.variables.VariableDataType;
+import com.idega.builder.business.BuilderLogic;
 import com.idega.jbpm.BPMContext;
 import com.idega.jbpm.JbpmCallback;
 import com.idega.jbpm.data.ViewTaskBind;
 import com.idega.jbpm.exe.BPMFactory;
 import com.idega.jbpm.exe.ProcessDefinitionW;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.Layer;
+import com.idega.presentation.Table2;
+import com.idega.presentation.TableBodyRowGroup;
+import com.idega.presentation.TableCell2;
+import com.idega.presentation.TableRow;
+import com.idega.presentation.text.Heading3;
+import com.idega.presentation.text.Text;
+import com.idega.presentation.ui.CheckBox;
+import com.idega.presentation.ui.GenericButton;
+import com.idega.util.CoreConstants;
 import com.idega.webface.WFUtil;
 import com.idega.xformsmanager.business.Document;
 import com.idega.xformsmanager.business.component.Button;
@@ -40,6 +52,10 @@ public class ProcessData implements Serializable {
 	
 	public static final String BEAN_ID = "processData";
 	
+	public static final String DEFAULT_ACCESS = "read,write";
+	public static final String DEFAULT_REQUIRED_ACCESS = "read,write,required";
+	
+	private static final String[] AVAILABLE_ACCESES  = {"read", "write", "required"};
 	private static final VariableDataType[] AVAILABE_TYPES = { VariableDataType.STRING, VariableDataType.DATE, VariableDataType.LIST, VariableDataType.FILE, VariableDataType.FILES };
 	
 	private List<Variable> variables = new ArrayList<Variable>();
@@ -105,7 +121,7 @@ public class ProcessData implements Serializable {
 		this.datatypedVariables.clear();
 		ProcessDefinitionW pdw = getBpmFactory().getProcessManager(processId).getProcessDefinition(processId);
 		
-		variables.addAll(pdw.getTaskVariableList(taskName));
+		variables.addAll(pdw.getTaskVariableWithAccessesList(taskName));
 		
 		Collection<String> transitionNames = pdw.getTaskNodeTransitionsNames(taskName);
 		
@@ -224,7 +240,8 @@ public class ProcessData implements Serializable {
 		return getVariableStatus(variable);
 	}
 	
-	public void createVariable(final String variable, final String datatype) {
+	public void createVariable(final String variable, final String datatype, final boolean required) {
+		if (variable != null && datatype != null) {
 		getIdegaJbpmContext().execute(new JbpmCallback() {
 
 			public Object doInJbpm(JbpmContext context) throws JbpmException {
@@ -233,8 +250,15 @@ public class ProcessData implements Serializable {
 				ViewTaskBind vtb = getBpmFactory().getBPMDAO().getViewTaskBindByView(parentFormId.toString(), "xforms");
 				Task task = getBpmFactory().getBPMDAO().getTaskFromViewTaskBind(vtb);
 			    task = getIdegaJbpmContext().mergeProcessEntity(task);
-				List variableAccesses = task.getTaskController().getVariableAccesses();
-				VariableAccess variableAccess = new VariableAccess(datatype + "_" + variable, "read,write", null);
+				List<VariableAccess> variableAccesses = (List<VariableAccess>)task.getTaskController().getVariableAccesses();
+				String newName = datatype + CoreConstants.UNDER + variable;
+				for (VariableAccess variableAccess : variableAccesses) {
+					if (variableAccess.getVariableName().equals(newName)) {
+						//exists already
+						return null;
+					}
+				}
+				VariableAccess variableAccess = new VariableAccess(newName, required ? DEFAULT_REQUIRED_ACCESS : DEFAULT_ACCESS, null);
 				getIdegaJbpmContext().saveProcessEntity(variableAccess);
 				variableAccesses.add(variableAccess);
 				getIdegaJbpmContext().mergeProcessEntity(task);
@@ -242,6 +266,7 @@ public class ProcessData implements Serializable {
 			}
 		});
 		initializeVariablesAndTransitions();
+		}
 	}
 	
 	public ConstVariableStatus getTransitionStatus(String transition) {
@@ -348,6 +373,91 @@ public class ProcessData implements Serializable {
 		}
 		
 		return vars;
+	}
+	
+	public org.jdom.Document getVariableAccessesBox(String variableName) {
+		
+		if (variableName == null) {
+			return null;
+		}
+		
+		Variable targetVariable = null;
+		
+		List<Variable> variables = getVariables();
+		for (Variable variable : variables) {
+			if (variable.getName().equals(variableName)) {
+				targetVariable = variable;
+				break;
+			}
+		}
+		
+		if (targetVariable == null) {
+			return null;
+		}
+		
+		Layer container = new Layer();
+		Heading3 heading3 = new Heading3("Accesses");
+		heading3.setStyleAttribute("align", "center");
+		container.add(heading3);
+		Table2 table = new Table2();
+		TableBodyRowGroup rowGroup = table.createBodyRowGroup();
+		for (String access : AVAILABLE_ACCESES) {
+			TableRow accessRow = rowGroup.createRow();
+			TableCell2 nameCell = accessRow.createCell();
+			nameCell.add(new Text(access));
+			TableCell2 checkboxCell = accessRow.createCell();
+			CheckBox checkBox = new CheckBox(access, access);
+			checkBox.setStyleClass(access);
+			checkBox.setChecked(targetVariable.hasAccess(access));
+			checkboxCell.add(checkBox);
+		}
+		TableRow buttonRow = rowGroup.createRow();
+		TableCell2 saveCell = buttonRow.createCell();
+		GenericButton saveButton = new GenericButton("save");
+		saveButton.setOnClick("saveVariableAccessRights(this, '" + targetVariable.getDataType().toString() + "_" + variableName + "');closeVariableAccessRightsBox(this);");
+		saveCell.add(saveButton);
+		TableCell2 cancelCell = buttonRow.createCell();
+		GenericButton cancelButton = new GenericButton("cancel");
+		cancelButton.setOnClick("closeVariableAccessRightsBox(this);");
+		cancelCell.add(cancelButton);
+		container.add(table);
+		return BuilderLogic.getInstance().getRenderedComponent(IWContext.getCurrentInstance(), container, true);
+	}
+	
+	public boolean saveVariableAccesses(final String variableName, final String access) {
+		if (variableName != null && access != null) {
+			final StringBuilder accessString = new StringBuilder();
+			for (String availableAccess : AVAILABLE_ACCESES) {
+				if (access.indexOf(availableAccess) > -1) {
+					accessString.append(accessString.length() > 0 ? "," : "").append(availableAccess);
+				}
+			}
+			getIdegaJbpmContext().execute(new JbpmCallback() {
+
+				public Object doInJbpm(JbpmContext context) throws JbpmException {
+					Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
+					Long parentFormId = workspace.getParentFormId();
+					ViewTaskBind vtb = getBpmFactory().getBPMDAO().getViewTaskBindByView(parentFormId.toString(), "xforms");
+					Task task = getBpmFactory().getBPMDAO().getTaskFromViewTaskBind(vtb);
+				    task = getIdegaJbpmContext().mergeProcessEntity(task);
+					List<VariableAccess> variableAccesses = task.getTaskController().getVariableAccesses();
+					for (VariableAccess variableAccess : variableAccesses)
+					{
+						if (variableAccess.getVariableName().equals(variableName)) {
+							VariableAccess newVariableAccess = new VariableAccess(variableName, accessString.toString(), variableAccess.getMappedName());
+							getIdegaJbpmContext().saveProcessEntity(newVariableAccess);
+							variableAccesses.add(newVariableAccess);
+							variableAccesses.remove(variableAccess);
+							getIdegaJbpmContext().mergeProcessEntity(task);
+							return null;
+						}
+					}
+					return null;	
+				}
+			});
+			initializeVariablesAndTransitions();
+		}
+		return true;
 	}
 	
 	public Long getProcessId() {

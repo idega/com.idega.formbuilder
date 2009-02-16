@@ -2154,3 +2154,12 @@ span.alert {
 	color: #f00;
 	font-weight: bold;
 }
+
+div.variableAccessPopupStyle {
+	z-index: 1000;
+	position: absolute;
+	display: none;
+	border: 1px solid #D7D7D7;
+	padding: 3px;
+	background-color: #fff;
+}

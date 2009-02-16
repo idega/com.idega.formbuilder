@@ -58,15 +58,16 @@ public class FBVariableViewer extends FBComponentBase {
 			List<Variable> list = vars.get(datatype);
 			
 			if(list != null) {
-				for(Variable var : list) {
+				for (Variable var : list) {
 					Text varEntry = new Text(var.getName());
 					varEntry.setStyleClass(VAR_ENTRY);
 					varEntry.setStyleClass(VAR_POSTFIX);
 					varEntry.setId(var.getDefaultStringRepresentation());
+					varEntry.setMarkupAttribute("ondblclick", "showVariableAccessPopup(event, this, '" + var.getName() + "');");
 					
 					String status = processData.getVariableStatus(var.getDefaultStringRepresentation()).getStatus();
 					varEntry.setStyleClass(status);
-					
+
 					layer.add(varEntry);
 				}
 			}

@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.ejb.FinderException;
 import javax.faces.context.FacesContext;
@@ -16,6 +17,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.idega.block.form.presentation.FormViewer;
+import com.idega.block.process.variables.Variable;
 import com.idega.block.web2.business.Web2Business;
 import com.idega.bpm.xformsview.XFormsView;
 import com.idega.builder.bean.AdvancedProperty;
@@ -47,7 +49,10 @@ import com.idega.util.expression.ELUtil;
 import com.idega.webface.WFUtil;
 import com.idega.xformsmanager.business.Document;
 import com.idega.xformsmanager.business.DocumentManager;
+import com.idega.xformsmanager.business.component.Component;
+import com.idega.xformsmanager.business.component.Container;
 import com.idega.xformsmanager.business.component.Page;
+import com.idega.xformsmanager.business.component.properties.PropertiesComponent;
 import com.idega.xformsmanager.component.beans.LocalizedStringBean;
 
 public class FormDocument implements Serializable {
@@ -267,11 +272,49 @@ public class FormDocument implements Serializable {
 		return true;
 	}
 	
+	private void synchronizeVariables(Component component) {
+		if (component instanceof Container) {
+			List<String> containedComponentsIds = ((Container) component).getContainedComponentsIds();
+			for (String id : containedComponentsIds) {
+				Component child = ((Container) component).getComponent(id);
+				synchronizeVariables(child);
+			}
+		} else {
+			PropertiesComponent properties = component.getProperties();
+			Variable variable = properties.getVariable();
+			if (variable != null) {
+				List<Variable> variables = getProcessData().getVariables();
+				Variable matchingVariable = null;
+				for (Variable var : variables) {
+					if (var.getDefaultStringRepresentation().equals(variable.getDefaultStringRepresentation())) {
+						matchingVariable = var;
+						break;
+					}
+				}
+				if (matchingVariable == null) {
+					getProcessData().createVariable(variable.getName(), variable.getDataType().toString(), properties.isRequired());
+				} else if (matchingVariable.hasAccess(Variable.ACCESS_REQUIRED) != properties.isRequired()) {
+					Set<String> accesses = matchingVariable.getAccesses();
+					StringBuilder access = new StringBuilder();
+					for (String string : accesses) {
+						if (!string.equals(Variable.ACCESS_REQUIRED)) {
+							access.append(string);
+						}
+					}
+					if (properties.isRequired()) {
+						access.append(Variable.ACCESS_REQUIRED);
+					}
+					getProcessData().saveVariableAccesses(variable.getDefaultStringRepresentation(), access.toString());
+				}
+			}
+		}
+	}
+	
 	public void save() {
 		
 		try {
 			document.save();
-			
+			synchronizeVariables(document);
 //			TODO: this need to be moved under the bean implementing ApplicationType interface
 			if(app_id != null && false) {
 				FacesContext ctx = FacesContext.getCurrentInstance();
@@ -410,6 +453,7 @@ public class FormDocument implements Serializable {
 			try {
 				Long parentFormId = getWorkspace().getParentFormId();
 				document.saveAllVersions(parentFormId);
+				synchronizeVariables(document);
 			} catch (Exception e) {
 				logger.error("Could not save form", e);
 			}

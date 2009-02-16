@@ -146,7 +146,7 @@ public class FBButton extends FBComponentBase {
 			
 			Image icon2 = new Image();
 			icon2.setSrc(EDIT_ICON);
-			icon2.setToolTip(getLocalizedString(iwc, "fb_assign_clear", "Click to remove binding"));
+			icon2.setToolTip(getLocalizedString(iwc, "fb_assign_variable", "Click to assign variable"));
 			icon2.setStyleClass("removeTransIcon");
 			
 			assignVariable.add(assignLabel);

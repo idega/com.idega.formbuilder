@@ -87,8 +87,12 @@ public class FBVariableList extends FBComponentBase {
 			}
 			
 		} else {
-			List<Variable> names = processData.getComponentTypeVariables(type);
-			
+			List<Variable> names = null;
+			if (type != null) {
+				names = processData.getComponentTypeVariables(type);
+			} else {
+				names = processData.getVariables();
+			}
 			if(names == null || names.isEmpty()) {
 				
 				ListItem item = new ListItem();
