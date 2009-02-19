@@ -162,7 +162,6 @@ function registerFormsHomeActions() {
 				}
 			} else {
 				transition.start(35);
-				console.log(item.getElement('.taskFormList'));
 				item.getElement('.taskFormList').setStyle('display', 'none');
 			}
 		});
@@ -171,7 +170,6 @@ function registerFormsHomeActions() {
 			var processName = DWRUtil.getValue(item.getElement('.formTitle'));
 			var transition = new Fx.Style(item, 'height' ,{
 				duration: TRANSITION_DURATION, onComplete: function() {
-				console.log(item.getElement('.taskFormList'));
 			}
 			});
 			loadProcessTasks(processName, version, item.getElement('.taskFormList'), item, transition);

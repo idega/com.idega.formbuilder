@@ -613,9 +613,6 @@ function initializeVariableViewer(enable) {
 						createVariable(datatype, value, input, item);
 					}
 				});
-				input.addEvent('blur', function(event) {	
-					input.replaceWith(el);
-				});
 				item.replaceWith(input);
 				input.focus();
 			});
@@ -717,14 +714,16 @@ function showVariableListForChange(positionLeft, positionTop, componentId, trans
 	});
 }
 function createVariable(datatype, value, element, image) {
-	ProcessData.createVariable(value, datatype, {
+	ProcessData.createVariable(value, datatype, false, {
 		callback: function(result) {
+		if (result) {
 			var span = new Element('span', {
 				'id': value + '_var',
 				'class': 'varEntry unused',
 			}).setText(value).injectBefore(element);
 			element.replaceWith(image);
 		}
+	}
 	});
 }
 function reloadWorkspace(locale) {

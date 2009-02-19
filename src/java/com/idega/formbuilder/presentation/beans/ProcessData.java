@@ -240,33 +240,38 @@ public class ProcessData implements Serializable {
 		return getVariableStatus(variable);
 	}
 	
-	public void createVariable(final String variable, final String datatype, final boolean required) {
+	public boolean createVariable(final String variable, final String datatype, final boolean required) {
 		if (variable != null && datatype != null) {
-		getIdegaJbpmContext().execute(new JbpmCallback() {
+			boolean result = getIdegaJbpmContext().execute(new JbpmCallback() {
 
-			public Object doInJbpm(JbpmContext context) throws JbpmException {
-				Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
-				Long parentFormId = workspace.getParentFormId();
-				ViewTaskBind vtb = getBpmFactory().getBPMDAO().getViewTaskBindByView(parentFormId.toString(), "xforms");
-				Task task = getBpmFactory().getBPMDAO().getTaskFromViewTaskBind(vtb);
-			    task = getIdegaJbpmContext().mergeProcessEntity(task);
-				List<VariableAccess> variableAccesses = (List<VariableAccess>)task.getTaskController().getVariableAccesses();
-				String newName = datatype + CoreConstants.UNDER + variable;
-				for (VariableAccess variableAccess : variableAccesses) {
-					if (variableAccess.getVariableName().equals(newName)) {
-						//exists already
-						return null;
+				public Object doInJbpm(JbpmContext context) throws JbpmException {
+					Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
+					Long parentFormId = workspace.getParentFormId();
+					ViewTaskBind vtb = getBpmFactory().getBPMDAO().getViewTaskBindByView(parentFormId.toString(),
+							"xforms");
+					Task task = getBpmFactory().getBPMDAO().getTaskFromViewTaskBind(vtb);
+					task = getIdegaJbpmContext().mergeProcessEntity(task);
+					List<VariableAccess> variableAccesses = (List<VariableAccess>) task.getTaskController()
+							.getVariableAccesses();
+					String newName = datatype + CoreConstants.UNDER + variable;
+					for (VariableAccess variableAccess : variableAccesses) {
+						if (variableAccess.getVariableName().equals(newName)) {
+							// exists already
+							return false;
+						}
 					}
+					VariableAccess variableAccess = new VariableAccess(newName, required ? DEFAULT_REQUIRED_ACCESS
+							: DEFAULT_ACCESS, null);
+					getIdegaJbpmContext().saveProcessEntity(variableAccess);
+					variableAccesses.add(variableAccess);
+					getIdegaJbpmContext().mergeProcessEntity(task);
+					return true;
 				}
-				VariableAccess variableAccess = new VariableAccess(newName, required ? DEFAULT_REQUIRED_ACCESS : DEFAULT_ACCESS, null);
-				getIdegaJbpmContext().saveProcessEntity(variableAccess);
-				variableAccesses.add(variableAccess);
-				getIdegaJbpmContext().mergeProcessEntity(task);
-				return null;
-			}
-		});
-		initializeVariablesAndTransitions();
+			});
+			initializeVariablesAndTransitions();
+			return result;
 		}
+		return false;
 	}
 	
 	public ConstVariableStatus getTransitionStatus(String transition) {
