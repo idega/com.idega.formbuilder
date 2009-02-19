@@ -626,7 +626,15 @@ function initializeVariableViewer(enable) {
 		if(enable == true) {
 			item.addEvent('click', function(event) {
 				var componentId = item.getParent().getParent().getProperty('id');
-				showVariableListForChange(event.target.getLeft(), event.target.getTop(), componentId, false, item);
+				
+				element = jQuery(item);
+				var offsets = element.offset();
+				if (offsets == null) {
+					return false;
+				}
+				var left = offsets.left;
+				var top = offsets.top;
+				showVariableListForChange(left, top, componentId, false, item);
 			});
 		}
 	});
@@ -654,6 +662,10 @@ function initializeVariableViewer(enable) {
 function showVariableListForChange(positionLeft, positionTop, componentId, transition, item) {
 	FormComponent.getAvailableProcessDataList(null, transition, {
 		callback : function(result) {
+			var prevcontainer = $('selectVariableDialog');
+			if (prevcontainer != null) {
+				prevcontainer.remove() ;
+			};
 			insertNodesToContainer(result, $('mainApplication'));
 			var container = $('selectVariableDialog');
 			if(container != null) {
