@@ -240,10 +240,19 @@ public class ProcessData implements Serializable {
 		return getVariableStatus(variable);
 	}
 	
+	/**
+	 * Create variable if it doesn't exist.
+	 * 
+	 * @param variable Variable name
+	 * @param datatype Variable type.
+	 * @param required Is variable required.
+	 * @return true if created successfully, false if existed already.
+	 */
 	public boolean createVariable(final String variable, final String datatype, final boolean required) {
 		if (variable != null && datatype != null) {
-			boolean result = getIdegaJbpmContext().execute(new JbpmCallback() {
+			Boolean result = getIdegaJbpmContext().execute(new JbpmCallback() {
 
+				@SuppressWarnings("unchecked")
 				public Object doInJbpm(JbpmContext context) throws JbpmException {
 					Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
 					Long parentFormId = workspace.getParentFormId();
@@ -257,7 +266,7 @@ public class ProcessData implements Serializable {
 					for (VariableAccess variableAccess : variableAccesses) {
 						if (variableAccess.getVariableName().equals(newName)) {
 							// exists already
-							return false;
+							return Boolean.FALSE;
 						}
 					}
 					VariableAccess variableAccess = new VariableAccess(newName, required ? DEFAULT_REQUIRED_ACCESS
@@ -265,7 +274,7 @@ public class ProcessData implements Serializable {
 					getIdegaJbpmContext().saveProcessEntity(variableAccess);
 					variableAccesses.add(variableAccess);
 					getIdegaJbpmContext().mergeProcessEntity(task);
-					return true;
+					return Boolean.TRUE;
 				}
 			});
 			initializeVariablesAndTransitions();
