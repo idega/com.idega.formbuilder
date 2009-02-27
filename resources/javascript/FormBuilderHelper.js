@@ -947,6 +947,9 @@ function initializeBottomToolbar() {
 				new Event(e).stop();
 				showLoadingMessage('Switching...');
 				var view = item.getText();
+				if(view == 'Design' && $('sourceViewDiv') != null) {
+					fbsave();
+				}
 				Workspace.switchView(view, {
 					callback: function(result) {
 						if(result != null) {

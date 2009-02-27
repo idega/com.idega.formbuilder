@@ -3,6 +3,7 @@ package com.idega.formbuilder.presentation.beans;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -272,12 +273,16 @@ public class FormDocument implements Serializable {
 		return true;
 	}
 	
-	private void synchronizeVariables(Component component) {
+	/**
+	 * Synchronize bound variables. Create not existing, update required attribute if changed.
+	 * 
+	 */
+	private void synchronizeVariablesByComponents(Component component) {
 		if (component instanceof Container) {
 			List<String> containedComponentsIds = ((Container) component).getContainedComponentsIds();
 			for (String id : containedComponentsIds) {
 				Component child = ((Container) component).getComponent(id);
-				synchronizeVariables(child);
+				synchronizeVariablesByComponents(child);
 			}
 		} else {
 			PropertiesComponent properties = component.getProperties();
@@ -306,6 +311,26 @@ public class FormDocument implements Serializable {
 					}
 					getProcessData().saveVariableAccesses(variable.getDefaultStringRepresentation(), access.toString());
 				}
+			} else {
+			}
+		}
+	}
+	
+	/**
+	 * Synchronizes form's mapped variables task definition variables.
+	 * Creates variables if they don't exist ni task definition.
+	 */
+	private void synchronizeVariables() {
+		synchronizeVariablesByComponents(document);
+		List<Variable> formVariables = document.getFormVariablesHandler().getAllVariables();
+		List<Variable> existingVariables = getProcessData().getVariables();
+		Set<String> existingVariableNames = new HashSet<String>();
+		for (Variable variable : existingVariables) {
+			existingVariableNames.add(variable.getDefaultStringRepresentation());
+		}
+		for (Variable var : formVariables) {
+			if (!existingVariableNames.contains(var.getDefaultStringRepresentation())) {
+				getProcessData().createVariable(var.getName(), var.getDataType().toString(), false);
 			}
 		}
 	}
@@ -314,8 +339,8 @@ public class FormDocument implements Serializable {
 		
 		try {
 			document.save();
-			synchronizeVariables(document);
-//			TODO: this need to be moved under the bean implementing ApplicationType interface
+			synchronizeVariables();
+			//TODO: this need to be moved under the bean implementing ApplicationType interface
 			if(app_id != null && false) {
 				FacesContext ctx = FacesContext.getCurrentInstance();
 				
@@ -453,7 +478,7 @@ public class FormDocument implements Serializable {
 			try {
 				Long parentFormId = getWorkspace().getParentFormId();
 				document.saveAllVersions(parentFormId);
-				synchronizeVariables(document);
+				synchronizeVariables();
 			} catch (Exception e) {
 				logger.error("Could not save form", e);
 			}
