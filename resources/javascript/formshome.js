@@ -156,8 +156,8 @@ function registerFormsHomeActions() {
 					transition.start((size * 55) + 53);
 					item.getElement('.taskFormList').setStyle('display', 'block');
 				} else {
-					var version = DWRUtil.getValue(select);
-					var processName = DWRUtil.getValue(item.getElement('.formTitle'));
+					var version = dwr.util.getValue(select);
+					var processName = dwr.util.getValue(item.getElement('.formTitle'));
 					loadProcessTasks(processName, version, item.getElement('.taskFormList'), item, transition);
 				}
 			} else {
@@ -166,8 +166,8 @@ function registerFormsHomeActions() {
 			}
 		});
 		select.addEvent('change', function(e) {
-			var version = DWRUtil.getValue(e.target.id);
-			var processName = DWRUtil.getValue(item.getElement('.formTitle'));
+			var version = dwr.util.getValue(e.target.id);
+			var processName = dwr.util.getValue(item.getElement('.formTitle'));
 			var transition = new Fx.Style(item, 'height' ,{
 				duration: TRANSITION_DURATION, onComplete: function() {
 			}

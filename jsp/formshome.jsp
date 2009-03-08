@@ -15,7 +15,7 @@
 							var errorHanlder = function(errorString, exception) {
 								reloadPage();
 							}
-							DWREngine.setErrorHandler(errorHanlder);
+							dwr.engine.setErrorHandler(errorHanlder);
 						});
 						window.addEvent('domready', registerFormsHomeActions);
                 	</script>
