@@ -74,4 +74,14 @@ public abstract class GenericComponent {
 	public abstract String getUploadHeaderText();
 
 	public abstract void setUploaderHeaderText(String value);
+	
+	public abstract void setCalculateExp(String expression);
+
+	public abstract String getCalculateExp();
+
+	public abstract void setIsCalculate(boolean isCalculate);
+
+	public abstract boolean getIsCalculate();
+
+	
 }

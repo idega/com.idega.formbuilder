@@ -500,6 +500,12 @@ function saveComponentErrorMessage(errorType, value, event) {
     }
 }
 
+function saveComponentCalcExpression(value, event) {
+	if(event.type == 'blur' || event.type == 'change' || isEnterEvent(event)) {
+        PropertyManager.saveComponentCalcExpression(value, currentCallback);
+    }
+}
+
 function initializeVariableDragging(enable) {
 	var viewer = $('variableViewer');
 	if(viewer != null) {

@@ -45,7 +45,7 @@ public class PaletteComponent implements Serializable {
 	
 	public PaletteComponent(String type, String category) throws Exception {
 		this.type = type;
-		this.iconPath = FBComponentBase.getLocalizedString(CoreUtil.getIWContext(), type + ICON_PATH_POSTFIX, "fdfgdfg");
+		this.iconPath = FBComponentBase.getLocalizedString(CoreUtil.getIWContext(), new StringBuilder().append(type).append(ICON_PATH_POSTFIX).toString(), "fdfgdfg");
 		this.category = category;
 	}
 	

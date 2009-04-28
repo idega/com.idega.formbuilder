@@ -538,4 +538,30 @@ public class FormComponent extends GenericComponent {
 		this.processData = processData;
 	}
 
+	@Override
+    public String getCalculateExp() {
+		return getComponent().getProperties().getCalculateExp();
+
+    }
+
+	@Override
+    public void setCalculateExp(String expression) {
+		if(StringUtils.isEmpty(expression)) {
+			return;
+		}
+		getComponent().getProperties().setCalculateExp(expression);
+	    
+    }
+	
+	@Override
+	public boolean getIsCalculate() {
+		return getComponent().getProperties().isCalculate();
+	}
+
+	@Override
+	public void setIsCalculate(boolean calculate) {
+		getComponent().getProperties().setIsCalculate(calculate);
+	}
+	
+
 }

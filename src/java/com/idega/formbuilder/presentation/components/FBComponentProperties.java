@@ -61,6 +61,7 @@ public class FBComponentProperties extends FBComponentBase {
 	
 	private static final String PROPERTY_HELP_TEXT_NAME = "propertyHelpText";
 	private static final String PROPERTY_AUTOFILL_CHECKBOX = "propertyHasAutofill";
+	private static final String PROPERTY_CALCULATE = "propertyCalc";
 	
 	public String getComponentId() {
 		return componentId;
@@ -177,10 +178,9 @@ public class FBComponentProperties extends FBComponentBase {
 			line.add(labelValue);
 			body.add(line);
 			
-// 			TODO better... 
-			com.idega.xformsmanager.component.FormComponent docComponentent = (com.idega.xformsmanager.component.FormComponent) comp;
+			com.idega.xformsmanager.component.FormComponent docComponent = (com.idega.xformsmanager.component.FormComponent) comp;
 			
-			if (docComponentent.getType().equals("fbc_text_output") || docComponentent.getType().equals("xf:output")) {
+			if (docComponent.getType().equals("fbc_text_output") || docComponent.getType().equals("xf:output")) {
 			    
 			    layer.add(body);
 			    
@@ -347,6 +347,8 @@ public class FBComponentProperties extends FBComponentBase {
 				line.add(required);
 				line.add(new Label(getLocalizedString(iwc, "comp_prop_requiredfield", "Required field"), required));
 				body.add(line);
+				
+				
 			}
 			
 
@@ -400,6 +402,36 @@ public class FBComponentProperties extends FBComponentBase {
 			line.add(new Label(getLocalizedString(iwc, "comp_prop_helpmsg", "Help text"), helpMsg));
 			line.add(helpMsg);
 			body.add(line);
+			
+			if(!"fbc_upload".equals(component.getComponent().getType())) {
+				
+				line = createPropertyContainer(SINGLE_LINE_PROPERTY);
+				
+				CheckBox isCalculate = new CheckBox();
+				isCalculate.setId(PROPERTY_CALCULATE);
+				isCalculate.setChecked(properties.isCalculate());
+				isCalculate.setOnChange("saveComponentProperty('" + componentId + "','compCalculate',this.checked, event);");
+				
+				line.add(isCalculate);
+				line.add(new Label(getLocalizedString(iwc, "", "Calculate field"), isCalculate));
+				body.add(line); 
+				
+			}
+			
+			line = createPropertyContainer(TWO_LINE_PROPERTY);
+			
+			if (properties.isCalculate()) {
+				
+				TextArea calcExpression = new TextArea();
+				calcExpression.setContent(properties.getCalculateExp());
+				calcExpression.setOnBlur("saveComponentCalcExpression(this.value, event)");
+				calcExpression.setOnKeyDown("saveComponentCalcExpression(this.value, event)");
+				
+				line.add(new Label(getLocalizedString(iwc, "comp_prop_calcExp", "Expression"), calcExpression));
+				line.add(calcExpression);
+				body.add(line);
+				
+			}
 			
 			line = createPropertyContainer(SINGLE_LINE_PROPERTY);
 			

@@ -17,6 +17,7 @@
 	    	<include method="saveSelectOptionValue" />
 	    	<include method="saveComponentProperty" />
 	    	<include method="saveComponentErrorMessage" />
+	    	<include method="saveComponentCalcExpression" />
 	    	<include method="getSelectedComponentId" />
     	</create>
     	<create creator="jsf" javascript="ProcessData" scope="session">
