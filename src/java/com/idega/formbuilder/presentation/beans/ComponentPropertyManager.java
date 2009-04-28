@@ -16,7 +16,7 @@ import com.idega.xformsmanager.business.component.Button;
 import com.idega.xformsmanager.business.component.ButtonArea;
 import com.idega.xformsmanager.business.component.Component;
 import com.idega.xformsmanager.business.component.ComponentMultiUpload;
-import com.idega.xformsmanager.business.component.ComponentPlain;
+import com.idega.xformsmanager.business.component.ComponentStatic;
 import com.idega.xformsmanager.business.component.ComponentSelect;
 import com.idega.xformsmanager.business.component.Page;
 import com.idega.xformsmanager.component.beans.ItemBean;
@@ -116,8 +116,8 @@ public class ComponentPropertyManager {
 				Component comp = page.getComponent(id);
 				if (comp instanceof ComponentMultiUpload) {
 					component = new FormMultiUploadComponent((ComponentMultiUpload) comp);
-				} else if (comp instanceof ComponentPlain) {
-					component = new FormPlainComponent((ComponentPlain) comp);
+				} else if (comp instanceof ComponentStatic) {
+					component = new FormPlainComponent((ComponentStatic) comp);
 				} else if (comp instanceof ComponentSelect) {
 					component = new FormSelectComponent((ComponentSelect) comp);
 				} else {

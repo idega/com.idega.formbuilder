@@ -34,11 +34,11 @@ import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
 import com.idega.xformsmanager.business.component.Button;
 import com.idega.xformsmanager.business.component.Component;
-import com.idega.xformsmanager.business.component.ComponentPlain;
+import com.idega.xformsmanager.business.component.ComponentStatic;
 import com.idega.xformsmanager.business.component.ComponentSelect;
 import com.idega.xformsmanager.business.component.properties.PropertiesButton;
 import com.idega.xformsmanager.business.component.properties.PropertiesComponent;
-import com.idega.xformsmanager.business.component.properties.PropertiesPlain;
+import com.idega.xformsmanager.business.component.properties.PropertiesStatic;
 
 public class FBComponentProperties extends FBComponentBase {
 
@@ -129,8 +129,8 @@ public class FBComponentProperties extends FBComponentBase {
 		Locale locale = FBUtil.getUILocale();
 		
 		if(component instanceof FormPlainComponent) {
-			ComponentPlain comp = (ComponentPlain) component.getComponent();
-			PropertiesPlain properties = comp.getProperties();
+			ComponentStatic comp = (ComponentStatic) component.getComponent();
+			PropertiesStatic properties = comp.getProperties();
 			
 			if(properties.getText() != null) {
 				String componentId = comp.getId();
