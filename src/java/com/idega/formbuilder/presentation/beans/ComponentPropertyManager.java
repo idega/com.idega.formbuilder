@@ -206,7 +206,7 @@ public class ComponentPropertyManager {
 	
 	public Object[] saveComponentCalcExpression(String calcExp) {
 		
-		component.setCalculateExp(calcExp);
+		component.setCalculate(calcExp);
 
 		return getResponse(component, false);
 	}
@@ -239,7 +239,7 @@ public class ComponentPropertyManager {
 				reloadProperties = true;
 			} else if (propertyName.equals(COMP_CALCULATE_PROP)) {
 				component.setIsCalculate(Boolean.parseBoolean(propertyValue));
-				component.setCalculateExp(component.getCalculateExp());
+				component.setCalculate(component.getCalculate());
 				reloadProperties = true;
 		
 			} else if (propertyName.equals(PLAIN_TEXT_PROP)) {

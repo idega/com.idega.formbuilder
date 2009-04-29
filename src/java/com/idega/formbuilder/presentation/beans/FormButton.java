@@ -162,13 +162,13 @@ public class FormButton extends GenericComponent {
 	}
 
 	@Override
-    public String getCalculateExp() {
+    public String getCalculate() {
 	    // TODO Auto-generated method stub
 	    return null;
     }
 
 	@Override
-    public void setCalculateExp(String expression) {
+    public void setCalculate(String expression) {
 	    // TODO Auto-generated method stub
 	    
     }

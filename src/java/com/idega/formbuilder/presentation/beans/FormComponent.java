@@ -539,13 +539,13 @@ public class FormComponent extends GenericComponent {
 	}
 
 	@Override
-    public String getCalculateExp() {
+    public String getCalculate() {
 		return getComponent().getProperties().getCalculateExp();
 
     }
 
 	@Override
-    public void setCalculateExp(String expression) {
+    public void setCalculate(String expression) {
 		if(StringUtils.isEmpty(expression)) {
 			return;
 		}
