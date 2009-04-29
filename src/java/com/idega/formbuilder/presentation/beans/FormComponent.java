@@ -549,7 +549,7 @@ public class FormComponent extends GenericComponent {
 		if(StringUtils.isEmpty(expression)) {
 			return;
 		}
-		getComponent().getProperties().setCalculateExp(expression);
+		getComponent().getProperties().setCalculate(expression);
 	    
     }
 
