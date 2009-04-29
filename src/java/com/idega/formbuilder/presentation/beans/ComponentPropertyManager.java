@@ -16,8 +16,8 @@ import com.idega.xformsmanager.business.component.Button;
 import com.idega.xformsmanager.business.component.ButtonArea;
 import com.idega.xformsmanager.business.component.Component;
 import com.idega.xformsmanager.business.component.ComponentMultiUpload;
-import com.idega.xformsmanager.business.component.ComponentStatic;
 import com.idega.xformsmanager.business.component.ComponentSelect;
+import com.idega.xformsmanager.business.component.ComponentStatic;
 import com.idega.xformsmanager.business.component.Page;
 import com.idega.xformsmanager.component.beans.ItemBean;
 
@@ -239,6 +239,7 @@ public class ComponentPropertyManager {
 				reloadProperties = true;
 			} else if (propertyName.equals(COMP_CALCULATE_PROP)) {
 				component.setIsCalculate(Boolean.parseBoolean(propertyValue));
+				component.setCalculateExp(component.getCalculateExp());
 				reloadProperties = true;
 		
 			} else if (propertyName.equals(PLAIN_TEXT_PROP)) {

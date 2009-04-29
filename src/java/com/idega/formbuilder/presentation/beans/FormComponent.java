@@ -552,11 +552,6 @@ public class FormComponent extends GenericComponent {
 		getComponent().getProperties().setCalculateExp(expression);
 	    
     }
-	
-	@Override
-	public boolean getIsCalculate() {
-		return getComponent().getProperties().isCalculate();
-	}
 
 	@Override
 	public void setIsCalculate(boolean calculate) {

@@ -175,6 +175,4 @@ public class FormButton extends GenericComponent {
 	
 	public void setIsCalculate(boolean value) {}
 	
-	public boolean getIsCalculate() {return false;}
-
 }

@@ -81,7 +81,5 @@ public abstract class GenericComponent {
 
 	public abstract void setIsCalculate(boolean isCalculate);
 
-	public abstract boolean getIsCalculate();
-
 	
 }
