@@ -34,8 +34,8 @@ import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
 import com.idega.xformsmanager.business.component.Button;
 import com.idega.xformsmanager.business.component.Component;
-import com.idega.xformsmanager.business.component.ComponentStatic;
 import com.idega.xformsmanager.business.component.ComponentSelect;
+import com.idega.xformsmanager.business.component.ComponentStatic;
 import com.idega.xformsmanager.business.component.properties.PropertiesButton;
 import com.idega.xformsmanager.business.component.properties.PropertiesComponent;
 import com.idega.xformsmanager.business.component.properties.PropertiesStatic;
@@ -413,7 +413,7 @@ public class FBComponentProperties extends FBComponentBase {
 				isCalculate.setOnChange("saveComponentProperty('" + componentId + "','compCalculate',this.checked, event);");
 				
 				line.add(isCalculate);
-				line.add(new Label(getLocalizedString(iwc, "", "Calculate field"), isCalculate));
+				line.add(new Label(getLocalizedString(iwc, "comp_prop_calcField", "Calculate field"), isCalculate));
 				body.add(line); 
 				
 			}
