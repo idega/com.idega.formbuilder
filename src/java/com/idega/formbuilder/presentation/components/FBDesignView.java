@@ -142,7 +142,7 @@ public class FBDesignView extends FBComponentBase {
 		component.add(formHeading);
 		component.add(languageChooserLayer);
 		
-		if (workspace.isProcessMode()) {
+		if (workspace.isProcessMode() && workspace.getParentFormId() != null) {
 			
 			Layer versionChooserLayer = new Layer(Layer.DIV);
 			versionChooserLayer.setId(VERSION_CHOOSER_ID);
