@@ -216,6 +216,36 @@ public class FBComponentProperties extends FBComponentBase {
 			    
 			   layer.add(body);
 			   
+				if(!"fbc_upload".equals(component.getComponent().getType())) {
+					
+					line = createPropertyContainer(SINGLE_LINE_PROPERTY);
+					
+					CheckBox isCalculate = new CheckBox();
+					isCalculate.setId(PROPERTY_CALCULATE);
+					isCalculate.setChecked(properties.isCalculate());
+					isCalculate.setOnChange("saveComponentProperty('" + componentId + "','compCalculate',this.checked, event);");
+					
+					line.add(isCalculate);
+					line.add(new Label(getLocalizedString(iwc, "comp_prop_calcField", "Calculate field"), isCalculate));
+					body.add(line); 
+					
+				}
+				
+				line = createPropertyContainer(TWO_LINE_PROPERTY);
+				
+				if (properties.isCalculate()) {
+					
+					TextArea calcExpression = new TextArea();
+					calcExpression.setContent(properties.getCalculateExp());
+					calcExpression.setOnBlur("saveComponentCalcExpression(this.value, event)");
+					calcExpression.setOnKeyDown("saveComponentCalcExpression(this.value, event)");
+					
+					line.add(new Label(getLocalizedString(iwc, "comp_prop_calcExp", "Expression"), calcExpression));
+					line.add(calcExpression);
+					body.add(line);
+					
+				}
+			   
 			   add(layer);
 			   return;
 			    
