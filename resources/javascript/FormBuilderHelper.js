@@ -559,11 +559,18 @@ function createNewForm() {
 	});
 }
 function registerFormbuilderActions() {
-	var saveFormButton = $('saveFormButton');
+	var saveFormButton = getSaveFormButton();
 	if(saveFormButton != null) {
 		saveFormButton.setProperty('Title', 'Save form');
 		saveFormButton.setProperty('href', '#TB_inline?height=60&width=350&inlineId=saveFormDialog');
 	}
+	
+	var saveSrcFormButton = getSaveScourceFormButton();
+	if(saveSrcFormButton != null) {
+		saveSrcFormButton.setProperty('Title', 'Save source');
+		saveSrcFormButton.setProperty('href', '#TB_inline?height=60&width=350&inlineId=saveFormDialog');
+	}
+	
 	var newFormButton = $('newFormButton');
 	if(newFormButton != null) {
 		newFormButton.setProperty('Title', 'Create new form');
@@ -580,10 +587,17 @@ function initializePalette() {
 		callback: function(result) {
 			if(result == 'Design') {
 				initializePaletteInner(true);
+				enableSaveFormButton(true);
 			} else {
 				initializePaletteInner(false);
 				initializeVariableViewer(false);
 			}
+			
+			if (result == 'Source')					
+					enableSaveFormButton(false);
+				else 
+					enableSaveFormButton(true);
+			
 		}
 	});
 }
@@ -953,6 +967,7 @@ function initializeBottomToolbar() {
 				new Event(e).stop();
 				showLoadingMessage('Switching...');
 				var view = item.getText();
+							
 				if(view == 'Design' && $('sourceViewDiv') != null) {
 					fbsave();
 				}
@@ -1164,6 +1179,8 @@ function initializePagesPanel() {
 	});
 }
 function initializeSourceView() {
+	
+	
 	FormDocument.getSourceCode({
 		callback : function(results) {
 			var textarea = $('sourceTextarea');
@@ -1754,3 +1771,27 @@ function saveVariableAccessRights (element, variableName) {
 	}
 	ProcessData.saveVariableAccesses(variableName, access);
 }
+
+function enableSaveFormButton(enable){
+	
+	var saveButton = getSaveFormButton();
+	var saveSrcButton = getSaveScourceFormButton();
+			
+	if (enable) {
+			saveButton.setStyle('display', 'block');
+			saveSrcButton.setStyle('display', 'none');
+			
+	}else {
+		saveButton.setStyle('display', 'none');
+		saveSrcButton.setStyle('display', 'block');
+	}
+}
+
+function getSaveFormButton() {
+	return $('saveFormButton');
+}
+
+function getSaveScourceFormButton() {
+	return $('saveFormSrcButton');
+}
+

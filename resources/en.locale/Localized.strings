@@ -9,6 +9,7 @@ fb_home_greeting3=. You can manage them in the list below or create a new one
 
 toolbar_new=New form
 toolbar_save=Save form
+toolbar_saveSrc=Save source
 toolbar_home=Form list
 
 fbc_text=Text Field

@@ -1758,6 +1758,10 @@ html>body .fbBottomButtonsContainer a, html>body div#sourceViewDiv a {
 	background: url(images/save_32.png) center top no-repeat;
 }
 
+.fbBottomButtonsContainer a#saveFormSrcButton, div#sourceViewDiv a#saveCodeButton {
+	background: url(images/save_source_32.png) center top no-repeat;
+}
+
 .fbBottomButtonsContainer a#newFormButton {
 	background: url(images/new_32.png) center top no-repeat;
 }

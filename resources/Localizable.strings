@@ -165,6 +165,7 @@ no_menu_label=No menu available for this view
 toolbar_home=Form list
 toolbar_new=New form
 toolbar_save=Save form
+toolbar_saveSrc=Save source
 view_design=Design
 view_preview=Preview
 view_source=Source
