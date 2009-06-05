@@ -110,8 +110,21 @@ div#pageButtonArea .selectedComponent {
 
 #languageChooser {
 	position: absolute;
-	left: 80%;
-	top: 1px;
+	right: 4px;
+	top: 4px;
+}
+
+#languageChooser label, #languageChooser select {
+	display: inline;
+	margin: 0;
+}
+
+#languageChooser label {
+	margin-right: 3px;
+}
+
+#languageChooser select {
+font-size: 10px;
 }
 
 .fbVariablesLegend ul {
@@ -2166,4 +2179,18 @@ div.variableAccessPopupStyle {
 	border: 1px solid #D7D7D7;
 	padding: 3px;
 	background-color: #fff;
+}
+
+div#formHeading {
+	height: 26px;
+}
+
+span#formHeadingHeader {
+	font-size: 16px;
+	line-height: 26px;
+	padding-left: 6px;
+}
+
+div#formHeading img.inlineEditIcon {
+	vertical-align: top;
 }
