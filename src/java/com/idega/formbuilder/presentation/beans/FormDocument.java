@@ -45,6 +45,7 @@ import com.idega.jbpm.view.View;
 import com.idega.presentation.IWContext;
 import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
+import com.idega.util.ListUtil;
 import com.idega.util.StringUtil;
 import com.idega.util.expression.ELUtil;
 import com.idega.webface.WFUtil;
@@ -325,12 +326,16 @@ public class FormDocument implements Serializable {
 		List<Variable> formVariables = document.getFormVariablesHandler().getAllVariables();
 		List<Variable> existingVariables = getProcessData().getVariables();
 		Set<String> existingVariableNames = new HashSet<String>();
-		for (Variable variable : existingVariables) {
-			existingVariableNames.add(variable.getDefaultStringRepresentation());
+		if (!ListUtil.isEmpty(existingVariables)) {
+			for (Variable variable : existingVariables) {
+				existingVariableNames.add(variable.getDefaultStringRepresentation());
+			}
 		}
-		for (Variable var : formVariables) {
-			if (!existingVariableNames.contains(var.getDefaultStringRepresentation())) {
-				getProcessData().createVariable(var.getName(), var.getDataType().toString(), false);
+		if (!ListUtil.isEmpty(formVariables)) {
+			for (Variable var : formVariables) {
+				if (!existingVariableNames.contains(var.getDefaultStringRepresentation())) {
+					getProcessData().createVariable(var.getName(), var.getDataType().toString(), false);
+				}
 			}
 		}
 	}
