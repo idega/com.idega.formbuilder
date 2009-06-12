@@ -16,6 +16,7 @@ import javax.faces.context.FacesContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.idega.block.form.presentation.FormViewer;
 import com.idega.block.process.variables.Variable;
@@ -95,6 +96,9 @@ public class FormDocument implements Serializable {
 	public static final String FROM_APP_REQ_PARAM = "fapp";
 	public static final String FORM_ID_OPEN_TAG = "<form_id>";
 	public static final String FORM_ID_CLOSE_TAG = "</form_id>";
+	
+	@Autowired
+	private ThemesHelper themesHelper;
 		
 	public List<String> getCommonPagesIdList() {
 		List<String> result = new LinkedList<String>();
@@ -423,7 +427,7 @@ public class FormDocument implements Serializable {
 							null											//source markup
 					);
 				
-				ThemesHelper helper = ThemesHelper.getInstance();
+				ThemesHelper helper = getThemesHelper();
 				
 				String webdav_uri_to_page = helper.loadPageToSlide(egov_form_type, egov_form_template.getTemplateFile(), null, created_page_key);
 				if (webdav_uri_to_page != null) {
@@ -991,5 +995,16 @@ public class FormDocument implements Serializable {
 
 	public void setStandaloneForms(List<AdvancedProperty> standaloneForms) {
 		this.standaloneForms = standaloneForms;
+	}
+
+	public ThemesHelper getThemesHelper() {
+		if (themesHelper == null) {
+			ELUtil.getInstance().autowire(this);
+		}
+		return themesHelper;
+	}
+
+	public void setThemesHelper(ThemesHelper themesHelper) {
+		this.themesHelper = themesHelper;
 	}
 }
