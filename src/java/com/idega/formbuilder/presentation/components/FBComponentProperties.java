@@ -219,7 +219,7 @@ public class FBComponentProperties extends FBComponentBase {
 			    
 			   layer.add(body);
 			   
-				if(!"fbc_upload".equals(component.getComponent().getType())) {
+			   if (!"fbc_upload".equals(component.getComponent().getType())) {
 					
 					line = createPropertyContainer(SINGLE_LINE_PROPERTY);
 					
@@ -436,6 +436,20 @@ public class FBComponentProperties extends FBComponentBase {
 			line.add(helpMsg);
 			body.add(line);
 			
+			if (component.getComponent().getType().equals("fbc_textarea")) {
+				line = createPropertyContainer(SINGLE_LINE_PROPERTY);
+				
+				CheckBox useHtmlEditor = new CheckBox();
+				useHtmlEditor.setId(PROPERTY_USE_HTML_EDITOR);
+				useHtmlEditor.setOnClick(new StringBuilder("FormBuilder.toggleUseHtmlEditor('").append(useHtmlEditor.getId()).append("', '").append(componentId)
+						.append("', '").append(ComponentPropertyManager.COMP_USE_HTML_EDITOR).append("', event);").toString());
+				useHtmlEditor.setChecked(properties.isUseHtmlEditor());
+				
+				line.add(useHtmlEditor);
+				line.add(new Label(getLocalizedString(iwc, "comp_prop_use_html_editor", "HTML editor"), useHtmlEditor));
+				body.add(line);
+		   }
+			
 			if(!"fbc_upload".equals(component.getComponent().getType())) {
 				
 				line = createPropertyContainer(SINGLE_LINE_PROPERTY);
@@ -496,21 +510,6 @@ public class FBComponentProperties extends FBComponentBase {
 			line.add(new Text(CoreConstants.EMPTY));
 			line.add(autofillValue);
 			body.add(line);
-			
-			if (component.getComponent().getType().equals("fbc_textarea")) {
-				line = createPropertyContainer(SINGLE_LINE_PROPERTY);
-				
-				CheckBox useHtmlEditor = new CheckBox();
-				useHtmlEditor.setId(PROPERTY_USE_HTML_EDITOR);
-				useHtmlEditor.setOnClick(new StringBuilder("FormBuilder.toggleUseHtmlEditor('").append(useHtmlEditor.getId()).append("', '").append(componentId)
-						.append("', '").append(ComponentPropertyManager.COMP_USE_HTML_EDITOR).append("', event);").toString());
-				useHtmlEditor.setChecked(properties.isUseHtmlEditor());
-				
-				line.add(useHtmlEditor);
-				line.add(new Label(getLocalizedString(iwc, "comp_prop_use_html_editor", "HTML editor"), useHtmlEditor));
-				body.add(line);
-			}
-			
 			layer.add(body);
 			
 			if(component instanceof FormSelectComponent) {
