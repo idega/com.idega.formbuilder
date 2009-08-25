@@ -23,74 +23,101 @@ public class FormButton extends GenericComponent {
 	
 	private Button button;
 	
+	@Override
 	public Component getComponent() {
 		return button;
 	}
 	
+	@Override
 	public void setLabel(String value) {
 		LocalizedStringBean bean = getComponent().getProperties().getLabel();
 		bean.setString(FBUtil.getUILocale(), value);
 		getComponent().getProperties().setLabel(bean);
 	}
 	
+	@Override
 	public String getId() {
 		return button.getId();
 	}
 	
+	@Override
 	public List<ItemBean> getItems() {return null;}
 	
+	@Override
 	public void setItems(List<ItemBean> list) {}
 	
+	@Override
 	public void setExternalSrc(String externalSrc) {}
 	
+	@Override
 	public void setErrorMessage(ErrorType errorType, String value) {}
 	
+	@Override
 	public String getErrorMessage(ErrorType errorType) {return null;}
 	
+	@Override
 	public void setHelpMessage(String value) {}
 	
+	@Override
 	public String getHelpMessage() {return null;}
 	
 	public void setValidationText(String value) {}
 	
 	public String getValidationText() {return null;}
 	
+	@Override
 	public void setPlainText(String value) {}
 	
+	@Override
 	public String getPlainText() {return null;}
 
 	public String getCompText() {return null;}
 	
 	public void setCompText(String value) { }
 	
+	@Override
 	public void setAddButtonLabel(String value) {}
 	
+	@Override
 	public void setRemoveButtonLabel(String value) {}
 	
+	@Override
 	public void setRequired(boolean value) {}
 	
+	@Override
 	public boolean getRequired() {return false;}
 	
+	@Override
 	public String getExternalSrc() {return null;}
 	
+	@Override
 	public String getRemoveButtonLabel() {return null;}
 	
+	@Override
 	public String getAddButtonLabel() {return null;}
 	
+	@Override
 	public String getDataSrc() {return null;}
 
+	@Override
 	public void setDataSrc(String dataSrc) {}
 	
+	@Override
 	public String getAutofillKey() {return null;}
 
+	@Override
 	public void setAutofillKey(String autofillKey) {}
 	
+	@Override
 	public String getUploadDescription() {return null;}
 	
+	@Override
 	public void setUploadDescription(String value) {}
 	
+	@Override
 	public void setUploaderHeaderText(String value) {}
 	
+	@Override
 	public String getUploadHeaderText() {return null;}
 
 	private FormPage formPage;
@@ -116,6 +143,7 @@ public class FormButton extends GenericComponent {
 		this.button = button;
 	}
 	
+	@Override
 	public String getLabel() {
 		if(button == null)
 			return null;
@@ -173,6 +201,16 @@ public class FormButton extends GenericComponent {
 	    
     }
 	
+	@Override
 	public void setIsCalculate(boolean value) {}
+
+	@Override
+	public boolean isUseHtmlEditor() {
+		return false;
+	}
+
+	@Override
+	public void setUseHtmlEditor(boolean useHtmlEditor) {
+	}
 	
 }

@@ -131,7 +131,7 @@ public class FBFormComponent extends FBComponentBase {
 							
 		Image icon = new Image();
 		icon.setSrc(EDIT_ICON);
-		icon.setToolTip(getLocalizedString(iwc, "fb_assign_variable", "Click to assign variable"));
+		icon.setTitle(getLocalizedString(iwc, "fb_assign_variable", "Click to assign variable"));
 		icon.setStyleClass(REMOVE_VAR_ICON);
 							
 		assignVariable.add(icon);

@@ -39,7 +39,8 @@ public class ComponentPropertyManager {
 	private static final String COMP_UPL_DESC_PROP = "uploadDesc";
 	private static final String COMP_UPL_DESC_LBL_PROP = "uploadDescLbl";
 	private static final String COMP_UPL_HEADER_TEXT_PROP = "uploadHeaderText";
-
+	public static final String COMP_USE_HTML_EDITOR = "compUseHtmlEditor";
+	
 	public static final String BEAN_ID = "propertyManager";
 
 	private GenericComponent component;
@@ -241,7 +242,8 @@ public class ComponentPropertyManager {
 				component.setIsCalculate(Boolean.parseBoolean(propertyValue));
 				component.setCalculate(component.getCalculate());
 				reloadProperties = true;
-		
+			} else if (propertyName.equals(COMP_USE_HTML_EDITOR)) {
+				component.setUseHtmlEditor(Boolean.valueOf(propertyValue));
 			} else if (propertyName.equals(PLAIN_TEXT_PROP)) {
 				component.setPlainText(propertyValue);
 			} else if (propertyName.equals(PLAIN_LABEL_PROP)) {

@@ -81,5 +81,7 @@ public abstract class GenericComponent {
 
 	public abstract void setIsCalculate(boolean isCalculate);
 
+	public abstract void setUseHtmlEditor(boolean useHtmlEditor);
 	
+	public abstract boolean isUseHtmlEditor();
 }

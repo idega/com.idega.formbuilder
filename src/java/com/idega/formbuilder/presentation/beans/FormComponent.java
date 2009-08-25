@@ -557,6 +557,14 @@ public class FormComponent extends GenericComponent {
 	public void setIsCalculate(boolean calculate) {
 		getComponent().getProperties().setIsCalculate(calculate);
 	}
-	
 
+	@Override
+	public boolean isUseHtmlEditor() {
+		return getComponent().getProperties().isUseHtmlEditor();
+	}
+
+	@Override
+	public void setUseHtmlEditor(boolean useHtmlEditor) {
+		getComponent().getProperties().setUseHtmlEditor(useHtmlEditor);
+	}
 }

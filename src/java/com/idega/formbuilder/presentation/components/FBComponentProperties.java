@@ -9,6 +9,7 @@ import javax.faces.context.FacesContext;
 
 import com.idega.chiba.web.xml.xforms.validation.ErrorType;
 import com.idega.formbuilder.presentation.FBComponentBase;
+import com.idega.formbuilder.presentation.beans.ComponentPropertyManager;
 import com.idega.formbuilder.presentation.beans.DataSourceList;
 import com.idega.formbuilder.presentation.beans.FormButton;
 import com.idega.formbuilder.presentation.beans.FormComponent;
@@ -62,6 +63,7 @@ public class FBComponentProperties extends FBComponentBase {
 	private static final String PROPERTY_HELP_TEXT_NAME = "propertyHelpText";
 	private static final String PROPERTY_AUTOFILL_CHECKBOX = "propertyHasAutofill";
 	private static final String PROPERTY_CALCULATE = "propertyCalc";
+	private static final String PROPERTY_USE_HTML_EDITOR = "propertyUseHtmlEditor";
 	
 	public String getComponentId() {
 		return componentId;
@@ -101,6 +103,7 @@ public class FBComponentProperties extends FBComponentBase {
 		return body;
 	}
 	
+	@Override
 	protected void initializeComponent(FacesContext context) {
 		IWContext iwc = CoreUtil.getIWContext();
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
@@ -493,6 +496,20 @@ public class FBComponentProperties extends FBComponentBase {
 			line.add(new Text(CoreConstants.EMPTY));
 			line.add(autofillValue);
 			body.add(line);
+			
+			if (component.getComponent().getType().equals("fbc_textarea")) {
+				line = createPropertyContainer(SINGLE_LINE_PROPERTY);
+				
+				CheckBox useHtmlEditor = new CheckBox();
+				useHtmlEditor.setId(PROPERTY_USE_HTML_EDITOR);
+				useHtmlEditor.setOnClick(new StringBuilder("FormBuilder.toggleUseHtmlEditor('").append(useHtmlEditor.getId()).append("', '").append(componentId)
+						.append("', '").append(ComponentPropertyManager.COMP_USE_HTML_EDITOR).append("', event);").toString());
+				useHtmlEditor.setChecked(properties.isUseHtmlEditor());
+				
+				line.add(useHtmlEditor);
+				line.add(new Label(getLocalizedString(iwc, "comp_prop_use_html_editor", "HTML editor"), useHtmlEditor));
+				body.add(line);
+			}
 			
 			layer.add(body);
 			
