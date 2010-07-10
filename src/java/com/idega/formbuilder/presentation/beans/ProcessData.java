@@ -56,7 +56,8 @@ public class ProcessData implements Serializable {
 	public static final String DEFAULT_REQUIRED_ACCESS = "read,write,required";
 	
 	private static final String[] AVAILABLE_ACCESES  = {"read", "write", "required"};
-	private static final VariableDataType[] AVAILABE_TYPES = { VariableDataType.STRING, VariableDataType.DATE, VariableDataType.LIST, VariableDataType.FILE, VariableDataType.FILES, VariableDataType.OBJLIST };
+	private static final VariableDataType[] AVAILABE_TYPES = { VariableDataType.STRING, VariableDataType.DATE, VariableDataType.LIST, VariableDataType.FILE,
+		VariableDataType.FILES, VariableDataType.OBJLIST, VariableDataType.LONG};
 	
 	private List<Variable> variables = new ArrayList<Variable>();
 	private List<String> transitions = new ArrayList<String>();
@@ -111,8 +112,6 @@ public class ProcessData implements Serializable {
 		this.transitionUsageList.clear();
 		this.datatypedVariables.clear();
 		this.variableUsageList.clear();
-		
-		
 	}
 	
 	private void initializeVariablesAndTransitions() {
@@ -260,7 +259,7 @@ public class ProcessData implements Serializable {
 							"xforms");
 					Task task = getBpmFactory().getBPMDAO().getTaskFromViewTaskBind(vtb);
 					task = getIdegaJbpmContext().mergeProcessEntity(task);
-					List<VariableAccess> variableAccesses = (List<VariableAccess>) task.getTaskController()
+					List<VariableAccess> variableAccesses = task.getTaskController()
 							.getVariableAccesses();
 					String newName = datatype + CoreConstants.UNDER + variable;
 					for (VariableAccess variableAccess : variableAccesses) {
