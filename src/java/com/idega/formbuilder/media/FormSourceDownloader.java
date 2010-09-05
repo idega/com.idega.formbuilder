@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,6 +15,7 @@ import com.idega.core.file.util.MimeTypeUtil;
 import com.idega.formbuilder.presentation.beans.FormDocument;
 import com.idega.io.DownloadWriter;
 import com.idega.presentation.IWContext;
+import com.idega.util.CoreConstants;
 import com.idega.util.FileUtil;
 import com.idega.util.StringHandler;
 import com.idega.util.StringUtil;
@@ -34,6 +37,7 @@ public class FormSourceDownloader extends DownloadWriter {
 	public void init(HttpServletRequest req, IWContext iwc) {
 		String resourceId = iwc.getParameter("resourceToExportId");
 		if (StringUtil.isEmpty(resourceId)) {
+			Logger.getLogger(getClass().getName()).warning("XForm ID is not provided! Unable to resolve it.");
 			return;
 		}
 		
@@ -47,9 +51,15 @@ public class FormSourceDownloader extends DownloadWriter {
 		//	Body
 		String code = formDocument.getOnlySourceCode();
 		if (StringUtil.isEmpty(code)) {
+			Logger.getLogger(getClass().getName()).warning("Error getting source code from xform: " + formDocument);
 			return;
 		}
-		formSourceCode = code.getBytes();
+		try {
+			formSourceCode = code.getBytes(CoreConstants.ENCODING_UTF8);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return;
+		}
 		
 		//	Title
 		String fileName = null;

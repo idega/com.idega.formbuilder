@@ -64,7 +64,7 @@
 					</t:div>
 					<t:commandLink id="newFormButton" styleClass="rightButton smoothbox" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_new']}"></t:commandLink>
 					<core:DownloadLink id="exportAndDownloadFormSourceCode" styleClass="rightButton" downloadWriter="#{workspace.formSourceDownloaderClassName}" value="#{localizedStrings['com.idega.formbuilder']['toolbar_export_and_download_form']}">
-						<f:param id="resourceToExportId" value="#{formDocument.formId}"/>
+						<f:param id="resourceToExportId" name="resourceToExportId" value="#{formDocument.formId}"/>
 					</core:DownloadLink>
 					<t:commandLink id="saveFormButton" styleClass="rightButton smoothbox" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_save']}"></t:commandLink>
 					<t:commandLink id="saveFormSrcButton" styleClass="rightButton smoothbox" forceId="true" value="#{localizedStrings['com.idega.formbuilder']['toolbar_saveSrc']}"></t:commandLink>
