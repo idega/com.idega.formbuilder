@@ -6,12 +6,14 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jbpm.JbpmContext;
 import org.jbpm.JbpmException;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,11 +38,13 @@ import com.idega.xformsmanager.business.XFormPersistenceType;
  *
  * Last modified: $Date: 2009/04/21 12:21:25 $ by $Author: civilis $
  */
-@Scope("singleton")
+@Scope(BeanDefinition.SCOPE_SINGLETON)
 @Service(FBHomePageBean.beanIdentifier)
 public class FBHomePageBean {
 	
+	private static final Logger LOGGER = Logger.getLogger(FBHomePageBean.class.getName());
 	public static final String beanIdentifier = "FBHomePageBean";
+	
 	private BPMContext idegaJbpmContext;
 	private PersistenceManager persistenceManager;
 	private ViewFactory viewFactory;
@@ -64,10 +68,9 @@ public class FBHomePageBean {
 						defsIds.add(def.getId());
 					
 					Multimap<Long, TaskView> pdsViews = getViewFactory().getAllViewsByProcessDefinitions(defsIds);
-					ArrayList<ProcessAllTasksForms> allForms = new ArrayList<ProcessAllTasksForms>(pdsViews.keySet().size());
+					List<ProcessAllTasksForms> allForms = new ArrayList<ProcessAllTasksForms>(pdsViews.keySet().size());
 					
 					for (Long pdId : pdsViews.keySet()) {
-						
 						try {
 							ProcessDefinition pd;
 							Collection<TaskView> tviews = pdsViews.get(pdId);
@@ -75,7 +78,6 @@ public class FBHomePageBean {
 							if(tviews.isEmpty()) {
 								pd = context.getGraphSession().getProcessDefinition(pdId);
 							} else {
-								
 								 pd = tviews.iterator().next().getTask().getProcessDefinition();
 							 }
 							
@@ -84,7 +86,7 @@ public class FBHomePageBean {
 							processForms.setProcessName(pd.getName());
 							processForms.setProcessVersion(pd.getVersion());
 							
-							ArrayList<TaskForm> taskForms = new ArrayList<TaskForm>(tviews.size());
+							List<TaskForm> taskForms = new ArrayList<TaskForm>(tviews.size());
 							
 							for (TaskView taskView : tviews) {
 								
@@ -102,15 +104,13 @@ public class FBHomePageBean {
 							allForms.add(processForms);
 	                        
                         } catch (Exception e) {
-                        	System.out.println("+++++++++++++exception for pdid="+pdId);
-	                        e.printStackTrace();
+                        	LOGGER.log(Level.WARNING, "Exception loading info for process definition: " + pdId, e);
                         }
 					}
 					
 					return allForms;
-	                
                 } catch (Exception e) {
-	                e.printStackTrace();
+	                LOGGER.log(Level.WARNING, "Error loading info for process definitions", e);
                 	return Collections.emptyList();
                 }
 			}
@@ -139,7 +139,7 @@ public class FBHomePageBean {
 				processForms.setProcessName(pd.getName());
 				processForms.setProcessVersion(pd.getVersion());
 					
-				ArrayList<TaskForm> taskForms = new ArrayList<TaskForm>(tviews.size());
+				List<TaskForm> taskForms = new ArrayList<TaskForm>(tviews.size());
 					
 				for (TaskView taskView : tviews) {
 						
@@ -154,7 +154,7 @@ public class FBHomePageBean {
 				processForms.setTasksCount(String.valueOf(pd.getTaskMgmtDefinition().getTasks().size()));
 				processForms.setTaskForms(taskForms);
 				return processForms;
-				}
+			}
 		});
 	}
 	
