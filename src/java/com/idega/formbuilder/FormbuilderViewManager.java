@@ -13,10 +13,7 @@ import com.idega.core.view.ViewManager;
 import com.idega.core.view.ViewNode;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWMainApplication;
-import com.idega.idegaweb.IWResourceBundle;
-import com.idega.presentation.IWContext;
 import com.idega.repository.data.Singleton;
-import com.idega.util.CoreUtil;
 
 public class FormbuilderViewManager implements Singleton  {
 
@@ -73,37 +70,30 @@ public class FormbuilderViewManager implements Singleton  {
 		
 		node.setJspUri(bundle.getJSPURI("formshome.jsp"));
 		node.setKeyboardShortcut(new KeyboardShortcut("4"));
-		node.setName(getResourceBundle(bundle).getLocalizedString("fb_app.forms", "Forms"));
+		node.setName("#{localizedStrings['" + IWBundleStarter.IW_BUNDLE_IDENTIFIER + "']['fb_app.forms']}");
 		
 		this.rootNode = node;
 		return this.rootNode;
-	}
-	
-	private IWResourceBundle getResourceBundle(IWBundle bundle) {
-		IWContext iwc = CoreUtil.getIWContext();
-		return iwc == null ? bundle.getResourceBundle(IWMainApplication.getDefaultIWMainApplication().getDefaultLocale()) : bundle.getResourceBundle(iwc);
 	}
 	
 	public void initializeStandardNodes(IWBundle bundle) {
 		initalizeContentNode(bundle);
 		ViewNode contentNode = initalizeContentNode(bundle);
 
-		IWResourceBundle iwrb = getResourceBundle(bundle);
-		
 		DefaultViewNode formsHomeNode = new DefaultViewNode("list", contentNode);
 		formsHomeNode.setJspUri(bundle.getJSPURI("formshome.jsp"));
-		formsHomeNode.setName(iwrb.getLocalizedString("fb_app.forms_list", "Form list"));
+		formsHomeNode.setName("#{localizedStrings['" + IWBundleStarter.IW_BUNDLE_IDENTIFIER + "']['fb_app.forms_list']}");
 		
 		DefaultViewNode formbuilderNode = new DefaultViewNode("formbuilder", contentNode);
 		formbuilderNode.setJspUri(bundle.getJSPURI("formbuilder.jsp"));
-		formbuilderNode.setName(iwrb.getLocalizedString("fb_app.designer", "Designer"));
+		formbuilderNode.setName("#{localizedStrings['" + IWBundleStarter.IW_BUNDLE_IDENTIFIER + "']['fb_app.designer']}");
 		
 		DefaultViewNode adminNode = new DefaultViewNode("entries", contentNode);
 		adminNode.setJspUri(bundle.getJSPURI("formadmin.jsp"));
-		adminNode.setName(iwrb.getLocalizedString("fb_app.entries", "Entries"));
+		adminNode.setName("#{localizedStrings['" + IWBundleStarter.IW_BUNDLE_IDENTIFIER + "']['fb_app.entries']}");
 		
 		DefaultViewNode testerNode = new DefaultViewNode("preview", contentNode);
 		testerNode.setJspUri(bundle.getJSPURI("formpreview.jsp"));
-		testerNode.setName(iwrb.getLocalizedString("fb_app.preview", "Preview"));
+		testerNode.setName("#{localizedStrings['" + IWBundleStarter.IW_BUNDLE_IDENTIFIER + "']['fb_app.preview']}");
 	}
 }

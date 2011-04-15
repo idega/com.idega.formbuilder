@@ -85,3 +85,9 @@ no_menu_label=No menu available for this view
 change_source_code=Save changes
 
 casesStatuses.label=Cases statuses
+
+fb_app.forms_list=Forms list
+fb_app.designer=Designer
+fb_app.entries=Entries
+fb_app.preview=Preview
+fb_app.forms=Forms
