@@ -27,10 +27,10 @@ public class XFormVariablesManager extends DefaultSpringBean implements Variable
 		if (ListUtil.isEmpty(currentSessions))
 			return;
 		
-		String updateTask = "update jbpm_variableinstance set stringvalue_ = null where processinstance_ = " + processInstanceId + " and taskinstance_ = " + taskInstanceId +
-				" and name_ = '";
-		String updateToken = "update jbpm_variableinstance set stringvalue_ = null where processinstance_ = " + processInstanceId +
-				" and taskinstance_ is null and TOKENVARIABLEMAP_ is not null and name_ = '";
+		String query = "update jbpm_variableinstance set stringvalue_ = null, LONGVALUE_ = null, DOUBLEVALUE_ = null, DATEVALUE_ = null, BYTEARRAYVALUE_ = null " +
+						" where processinstance_ = " + processInstanceId + " and taskinstance_ ";
+		String updateTask = query + "= " + taskInstanceId +	" and name_ = '";
+		String updateToken = query + "is null and TOKENVARIABLEMAP_ is not null and name_ = '";
 		for (String sessionKey: currentSessions) {
 			Map<String, String> emptyValues = ChibaUtils.getInstance().getEmptyXFormValues(sessionKey);
 			if (MapUtil.isEmpty(emptyValues))
@@ -38,7 +38,7 @@ public class XFormVariablesManager extends DefaultSpringBean implements Variable
 			
 			for (String elementId: emptyValues.keySet()) {
 				String variableName = ChibaUtils.getInstance().getVariableNameByXFormElementId(sessionKey, elementId);
-				if (StringUtil.isEmpty(variableName) || !variableName.startsWith("string_")) {
+				if (StringUtil.isEmpty(variableName)) {
 					getLogger().warning("Variable name is unknown for XForm element " + elementId + " and session " + sessionKey);
 					continue;
 				}
