@@ -162,7 +162,7 @@ public class Workspace implements Serializable {
 		js.append(web2.getBundleUriToMootabsScript()).append(CoreConstants.COMMA).append(web2.getBundleURIToJQueryLib()).append(CoreConstants.COMMA);
 		
 		IWBundle web2Bundle = IWMainApplication.getDefaultIWMainApplication().getBundle(Web2BusinessBean.WEB2_BUNDLE_IDENTIFIER);
-		String basePath = "javascript/jquery-ui/1.6rc5/";
+		String basePath = "javascript/jquery-ui/1.8.17/";
 		js.append(web2Bundle.getVirtualPathWithFileNameString(new StringBuilder(basePath).append("ui.core.js").toString())).append(CoreConstants.COMMA);
 		js.append(web2Bundle.getVirtualPathWithFileNameString(new StringBuilder(basePath).append("ui.draggable.js").toString())).append(CoreConstants.COMMA);
 		js.append(web2Bundle.getVirtualPathWithFileNameString(new StringBuilder(basePath).append("ui.sortable.js").toString())).append(CoreConstants.COMMA);
