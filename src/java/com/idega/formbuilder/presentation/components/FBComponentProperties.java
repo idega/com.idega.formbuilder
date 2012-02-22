@@ -184,7 +184,8 @@ public class FBComponentProperties extends FBComponentBase {
 
 			com.idega.xformsmanager.component.FormComponent docComponent = (com.idega.xformsmanager.component.FormComponent) comp;
 
-			if (docComponent.getType().equals("fbc_text_output") || docComponent.getType().equals(FormManagerUtil.output_tag)) {
+			String docType = docComponent.getType();
+			if (docType.equals("fbc_text_output") || docType.equals(FormManagerUtil.output_tag) || docType.equals("xf:output")) {
 
 			    layer.add(body);
 
