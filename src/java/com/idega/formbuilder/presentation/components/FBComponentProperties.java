@@ -443,8 +443,9 @@ public class FBComponentProperties extends FBComponentBase {
 
 				CheckBox useHtmlEditor = new CheckBox();
 				useHtmlEditor.setId(PROPERTY_USE_HTML_EDITOR);
-				useHtmlEditor.setOnClick(new StringBuilder("FormBuilder.toggleUseHtmlEditor('").append(useHtmlEditor.getId()).append("', '").append(componentId)
-						.append("', '").append(ComponentPropertyManager.COMP_USE_HTML_EDITOR).append("', event);").toString());
+				useHtmlEditor.setOnClick(new StringBuilder("FormBuilder.toggleUseHtmlEditor('").append(useHtmlEditor.getId())
+						.append("', '").append(componentId).append("', '").append(ComponentPropertyManager.COMP_USE_HTML_EDITOR).append("');")
+						.toString());
 				useHtmlEditor.setChecked(properties.isUseHtmlEditor());
 
 				line.add(useHtmlEditor);
