@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -19,14 +20,14 @@ import com.idega.util.StringUtil;
 import com.idega.util.datastructures.map.MapUtil;
 
 @Service
-@Scope("request")
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class XFormVariablesManager extends DefaultSpringBean implements VariablesManager {
 
 	public void doManageVariables(Long processInstanceId, Long taskInstanceId, Map<String, Object> variables) {
 		List<String> currentSessions = ChibaUtils.getInstance().getKeysOfXFormSessions(ChibaUtils.getInstance().getCurrentHttpSessionId());
 		if (ListUtil.isEmpty(currentSessions))
 			return;
-		
+
 		String query = "update jbpm_variableinstance set stringvalue_ = null, LONGVALUE_ = null, DOUBLEVALUE_ = null, DATEVALUE_ = null, BYTEARRAYVALUE_ = null " +
 						" where processinstance_ = " + processInstanceId + " and taskinstance_ ";
 		String updateTask = query + "= " + taskInstanceId +	" and name_ = '";
@@ -35,23 +36,23 @@ public class XFormVariablesManager extends DefaultSpringBean implements Variable
 			Map<String, String> emptyValues = ChibaUtils.getInstance().getEmptyXFormValues(sessionKey);
 			if (MapUtil.isEmpty(emptyValues))
 				continue;
-			
+
 			for (String elementId: emptyValues.keySet()) {
 				String variableName = ChibaUtils.getInstance().getVariableNameByXFormElementId(sessionKey, elementId);
 				if (StringUtil.isEmpty(variableName)) {
 					getLogger().warning("Variable name is unknown for XForm element " + elementId + " and session " + sessionKey);
 					continue;
 				}
-				
+
 				if (!hasTokenValue(variableName, processInstanceId))
 					continue;
-				
+
 				if (doUpdate(updateTask.concat(variableName).concat(CoreConstants.QOUTE_SINGLE_MARK)))
 					doUpdate(updateToken.concat(variableName).concat(CoreConstants.QOUTE_SINGLE_MARK));
 			}
 		}
 	}
-	
+
 	private boolean doUpdate(String updateSQL) {
 		try {
 			SimpleQuerier.executeUpdate(updateSQL, false);
@@ -61,7 +62,7 @@ public class XFormVariablesManager extends DefaultSpringBean implements Variable
 		}
 		return false;
 	}
-	
+
 	private boolean hasTokenValue(String name, Long piId) {
 		List<Serializable[]> results = null;
 		String query = "select stringvalue_ from jbpm_variableinstance where processinstance_ = " + piId + " and name_ = '" + name +
