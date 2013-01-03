@@ -16,25 +16,25 @@ import com.idega.util.RenderUtils;
 import com.idega.webface.WFUtil;
 
 public class FBComponentBase extends IWBaseComponent {
-	
+
 	public static final String COMPONENT_FAMILY = "formbuilder";
-	
+
 	protected Logger logger = Logger.getLogger(FBComponentBase.class.getName());
-	
+
 	private String id;
 	private String styleClass;
-	
+
 	public FBComponentBase() {
 		this(null, null);
 	}
-	
+
 	public FBComponentBase(String id, String styleClass) {
 		super();
 		setRendererType(null);
 		this.id = id;
 		this.styleClass = styleClass;
 	}
-	
+
 	@Override
 	public String getId() {
 		return id;
@@ -61,40 +61,40 @@ public class FBComponentBase extends IWBaseComponent {
 			component.encodeEnd(context);
 		}
 	}
-	
+
 	public void addFacet(String name, UIComponent component) {
 		getFacets().put(name, component);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void addChild(UIComponent child, UIComponent parent) {
 		parent.getChildren().add(child);
 	}
-	
+
 	@Override
 	public String getFamily() {
 		return COMPONENT_FAMILY;
 	}
-	
+
 	@Override
 	public boolean getRendersChildren() {
 		return true;
 	}
-	
+
 	@Override
 	public String getRendererType() {
 		return null;
 	}
-	
+
 	@Override
 	public Object saveState(FacesContext context) {
 		Object values[] = new Object[3];
-		values[0] = super.saveState(context); 
+		values[0] = super.saveState(context);
 		values[1] = id;
 		values[2] = styleClass;
 		return values;
 	}
-	
+
 	@Override
 	public void restoreState(FacesContext context, Object state) {
 		Object values[] = (Object[]) state;
@@ -102,28 +102,27 @@ public class FBComponentBase extends IWBaseComponent {
 		id = (String) values[1];
 		styleClass = (String) values[2];
 	}
-	
+
 	protected static String _(String localizationKey) {
 		return WFUtil.getLocalizedStringExpr(IWBundleStarter.IW_BUNDLE_IDENTIFIER, localizationKey);
 	}
-	
+
 	protected static String _(IWContext iwc, String localizationKey, String defaultString) {
 		IWMainApplication iwma = iwc.getApplicationContext().getIWMainApplication();
 		IWBundle bundle = iwma.getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER);
 		return bundle.getResourceBundle(iwc.getCurrentLocale()).getLocalizedString(localizationKey, defaultString);
 	}
-	
+
 	public static String getLocalizedString(IWContext iwc, String localizationKey, String defaultString) {
 		IWMainApplication iwma = iwc.getApplicationContext().getIWMainApplication();
 		IWBundle bundle = iwma.getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER);
 		return bundle.getResourceBundle(iwc.getCurrentLocale()).getLocalizedString(localizationKey, defaultString);
 	}
-	
+
 	@Override
-	@SuppressWarnings("unchecked")
 	public void encodeChildren(FacesContext context) throws IOException {
-		for(Iterator it = getChildren().iterator(); it.hasNext(); ) {
-			RenderUtils.renderChild(context, (UIComponent) it.next());
+		for(Iterator<UIComponent> it = getChildren().iterator(); it.hasNext(); ) {
+			RenderUtils.renderChild(context, it.next());
 		}
 	}
 }

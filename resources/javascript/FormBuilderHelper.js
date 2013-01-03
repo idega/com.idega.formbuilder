@@ -1772,16 +1772,14 @@ function saveVariableAccessRights (element, variableName) {
 	ProcessData.saveVariableAccesses(variableName, access);
 }
 
-function enableSaveFormButton(enable){
-	
+function enableSaveFormButton(enable) {
 	var saveButton = getSaveFormButton();
 	var saveSrcButton = getSaveScourceFormButton();
 			
 	if (enable) {
-			saveButton.setStyle('display', 'block');
-			saveSrcButton.setStyle('display', 'none');
-			
-	}else {
+		saveButton.setStyle('display', 'block');
+		saveSrcButton.setStyle('display', 'none');
+	} else {
 		saveButton.setStyle('display', 'none');
 		saveSrcButton.setStyle('display', 'block');
 	}
@@ -1795,8 +1793,7 @@ function getSaveScourceFormButton() {
 	return $('saveFormSrcButton');
 }
 
-FormBuilder.toggleUseHtmlEditor = function(checkBoxId, componentId, type, event) {
-	var value = jQuery('#' + checkBoxId).attr('checked');
-	//saveComponentProperty(componentId, type, value, event);
+FormBuilder.toggleUseHtmlEditor = function(checkBoxId, componentId, type) {
+	var value = jQuery('#' + checkBoxId).attr('checked') == 'checked';
 	PropertyManager.saveComponentProperty(componentId, type, value, currentCallback);
 }
