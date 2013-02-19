@@ -1,22 +1,22 @@
 /**
- * 
+ *
  */
 package com.idega.formbuilder.presentation.beans;
 
-import org.jdom.Document;
+import org.jdom2.Document;
 
 /**
  * Bean for transfering Process tasks throuh DWR.
- * 
+ *
  * @author donatas
  *
  */
 public class ProcessTasksBean {
 
 	private Document document;
-	
+
 	private int taskFormCount;
-	
+
 	private String taskCount;
 
 	public Document getDocument() {
@@ -42,5 +42,5 @@ public class ProcessTasksBean {
 	public void setTaskCount(String taskCount) {
 		this.taskCount = taskCount;
 	}
-	
+
 }

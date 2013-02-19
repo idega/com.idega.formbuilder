@@ -47,35 +47,35 @@ import com.idega.xformsmanager.business.component.properties.PropertiesComponent
 @Service(ProcessData.BEAN_ID)
 @Scope("session")
 public class ProcessData implements Serializable {
-	
+
 	private static final long serialVersionUID = -1462694112346788168L;
-	
+
 	public static final String BEAN_ID = "processData";
-	
+
 	public static final String DEFAULT_ACCESS = "read,write";
 	public static final String DEFAULT_REQUIRED_ACCESS = "read,write,required";
-	
+
 	private static final String[] AVAILABLE_ACCESES  = {"read", "write", "required"};
 	private static final VariableDataType[] AVAILABE_TYPES = { VariableDataType.STRING, VariableDataType.DATE, VariableDataType.LIST, VariableDataType.FILE,
 		VariableDataType.FILES, VariableDataType.OBJLIST, VariableDataType.LONG};
-	
+
 	private List<Variable> variables = new ArrayList<Variable>();
 	private List<String> transitions = new ArrayList<String>();
 	private Map<String, List<Variable>> datatypedVariables = new HashMap<String, List<Variable>>();
 	private Map<String, List<String>> variableUsageList = new HashMap<String, List<String>>();
 	private Map<String, List<String>> transitionUsageList = new HashMap<String, List<String>>();
-	
+
 	private Long processId;
 	private String processName;
 	private String taskName;
 	private Long taskId;
 	private Document document;
-	
-	
+
+
 	@Autowired private BPMFactory bpmFactory;
 
 	private BPMContext idegaJbpmContext;
-	
+
 	public BPMFactory getBpmFactory() {
 		return bpmFactory;
 	}
@@ -103,7 +103,7 @@ public class ProcessData implements Serializable {
 		}
 		return datatypedVariables;
 	}
-	
+
 	public void initializeBeanInstance(Document document, Long processId, String taskName) {
 		this.processId = processId;
 		this.taskName = taskName;
@@ -113,22 +113,22 @@ public class ProcessData implements Serializable {
 		this.datatypedVariables.clear();
 		this.variableUsageList.clear();
 	}
-	
+
 	private void initializeVariablesAndTransitions() {
 		this.variables.clear();
 		this.transitions.clear();
 		this.datatypedVariables.clear();
 		ProcessDefinitionW pdw = getBpmFactory().getProcessManager(processId).getProcessDefinition(processId);
-		
+
 		variables.addAll(pdw.getTaskVariableWithAccessesList(taskName));
-		
+
 		Collection<String> transitionNames = pdw.getTaskNodeTransitionsNames(taskName);
-		
+
 		if(transitionNames != null) {
 			transitions.addAll(transitionNames);
 		}
 	}
-	
+
 	public List<Variable> getVariables() {
 		return variables;
 	}
@@ -144,13 +144,13 @@ public class ProcessData implements Serializable {
 	public void setTransitions(List<String> transitions) {
 		this.transitions = transitions;
 	}
-	
+
 	public Map<String, List<String>> getTransitionUsageList() {
 		if(transitionUsageList.isEmpty() && document != null) {
 			List<String> pages = document.getContainedPagesIdList();
 			for(String p : pages) {
 				Page page = document.getPage(p);
-				
+
 				ButtonArea buttonArea = page.getButtonArea();
 				if(buttonArea != null) {
 					List<String> buttons = buttonArea.getContainedComponentsIds();
@@ -187,7 +187,7 @@ public class ProcessData implements Serializable {
 			List<String> pages = document.getContainedPagesIdList();
 			for(String p : pages) {
 				Page page = document.getPage(p);
-				
+
 				List<String> components = page.getContainedComponentsIds();
 				for(String c : components) {
 					Component component = page.getComponent(c);
@@ -207,10 +207,10 @@ public class ProcessData implements Serializable {
 					}
 				}
 			}
-			
+
 			for(Variable variable : variables) {
 				String varName = variable.getDefaultStringRepresentation();
-				
+
 				if(variableUsageList.containsKey(varName)) {
 					continue;
 				}
@@ -238,10 +238,10 @@ public class ProcessData implements Serializable {
 		}
 		return getVariableStatus(variable);
 	}
-	
+
 	/**
 	 * Create variable if it doesn't exist.
-	 * 
+	 *
 	 * @param variable Variable name
 	 * @param datatype Variable type.
 	 * @param required Is variable required.
@@ -251,6 +251,7 @@ public class ProcessData implements Serializable {
 		if (variable != null && datatype != null) {
 			Boolean result = getIdegaJbpmContext().execute(new JbpmCallback() {
 
+				@Override
 				@SuppressWarnings("unchecked")
 				public Object doInJbpm(JbpmContext context) throws JbpmException {
 					Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
@@ -281,15 +282,15 @@ public class ProcessData implements Serializable {
 		}
 		return false;
 	}
-	
+
 	public ConstVariableStatus getTransitionStatus(String transition) {
 		return getStatus(transition, getTransitionUsageList());
 	}
-	
+
 	public ConstVariableStatus getVariableStatus(String variable) {
 		return getStatus(variable, getVariableUsageList());
 	}
-	
+
 	private ConstVariableStatus getStatus(String name, Map<String, List<String>> usageMap) {
 		List<String> comps = usageMap.get(name);
 		if(comps != null) {
@@ -304,7 +305,7 @@ public class ProcessData implements Serializable {
 			return new ConstVariableStatus(ConstVariableStatus.UNUSED);
 		}
 	}
-	
+
 	public ConstVariableStatus unbindVariable(String variable, String componentId) {
 		List<String> usage = getVariableUsageList().get(variable);
 		if(usage != null) {
@@ -312,7 +313,7 @@ public class ProcessData implements Serializable {
 		}
 		return getVariableStatus(variable);
 	}
-	
+
 	public ConstVariableStatus bindTransition(String buttonId, String transition) {
 		if(getTransitionUsageList().containsKey(transition)) {
 			getTransitionUsageList().get(transition).add(buttonId);
@@ -323,12 +324,12 @@ public class ProcessData implements Serializable {
 		}
 		return getTransitionStatus(transition);
 	}
-	
+
 	public void unbindTransitions(List<String> buttonIds) {
 		if(buttonIds == null) {
 			return;
 		}
-		
+
 		for(String buttonId : buttonIds) {
 			for(String transition : getTransitionUsageList().keySet()) {
 				List<String> list = getTransitionUsageList().get(transition);
@@ -338,12 +339,12 @@ public class ProcessData implements Serializable {
 			}
 		}
 	}
-	
+
 	public void unbindVariables(List<String> componentIds) {
 		if(componentIds == null) {
 			return;
 		}
-		
+
 		for(String componentId : componentIds) {
 			for(String variable : getVariableUsageList().keySet()) {
 				List<String> list = getVariableUsageList().get(variable);
@@ -353,7 +354,7 @@ public class ProcessData implements Serializable {
 			}
 		}
 	}
-	
+
 	public ConstVariableStatus unbindTransition(String transition, String buttonId) {
 		List<String> usage = getTransitionUsageList().get(transition);
 		if(usage != null) {
@@ -361,41 +362,41 @@ public class ProcessData implements Serializable {
 		}
 		return getTransitionStatus(transition);
 	}
-	
+
 	public List<String> getAvailableTransitions(String buttonType) {
 		if(buttonType == null || !buttonType.equals("fbc_button_submit"))
 			return null;
-		
+
 //		return jbpmProcessBusiness.getTaskTransitions(getProcessId(), getTaskName());
 		return null;
 	}
-	
+
 	public List<Variable> getComponentTypeVariables(String componentType) {
 		ProcessPalette processPalette = (ProcessPalette) WFUtil.getBeanInstance(ProcessPalette.BEAN_ID);
 		Set<String> datatypes = processPalette.getComponentDatatype(componentType);
-		
+
 		List<Variable> vars = new ArrayList<Variable>();
 		for(String dataType : datatypes) {
-			
+
 			List<Variable> dvars = getDatatypedVariables().get(dataType);
-			
+
 			if(dvars != null && !dvars.isEmpty()) {
 				vars.addAll(dvars);
 			}
-			
+
 		}
-		
+
 		return vars;
 	}
-	
-	public org.jdom.Document getVariableAccessesBox(String variableName) {
-		
+
+	public org.jdom2.Document getVariableAccessesBox(String variableName) {
+
 		if (variableName == null) {
 			return null;
 		}
-		
+
 		Variable targetVariable = null;
-		
+
 		List<Variable> variables = getVariables();
 		for (Variable variable : variables) {
 			if (variable.getName().equals(variableName)) {
@@ -403,11 +404,11 @@ public class ProcessData implements Serializable {
 				break;
 			}
 		}
-		
+
 		if (targetVariable == null) {
 			return null;
 		}
-		
+
 		Layer container = new Layer();
 		Heading3 heading3 = new Heading3("Accesses");
 		heading3.setStyleAttribute("align", "center");
@@ -436,7 +437,7 @@ public class ProcessData implements Serializable {
 		container.add(table);
 		return BuilderLogic.getInstance().getRenderedComponent(IWContext.getCurrentInstance(), container, true);
 	}
-	
+
 	public boolean saveVariableAccesses(final String variableName, final String access) {
 		if (variableName != null && access != null) {
 			final StringBuilder accessString = new StringBuilder();
@@ -447,6 +448,7 @@ public class ProcessData implements Serializable {
 			}
 			getIdegaJbpmContext().execute(new JbpmCallback() {
 
+				@Override
 				public Object doInJbpm(JbpmContext context) throws JbpmException {
 					Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
 					Long parentFormId = workspace.getParentFormId();
@@ -465,14 +467,14 @@ public class ProcessData implements Serializable {
 							return null;
 						}
 					}
-					return null;	
+					return null;
 				}
 			});
 			initializeVariablesAndTransitions();
 		}
 		return true;
 	}
-	
+
 	public Long getProcessId() {
 		return processId;
 	}
@@ -501,7 +503,7 @@ public class ProcessData implements Serializable {
 	public void setTransitionUsageList(Map<String, List<String>> transitionUsageList) {
 		this.transitionUsageList = transitionUsageList;
 	}
-	
+
 	public BPMContext getIdegaJbpmContext() {
 		return idegaJbpmContext;
 	}

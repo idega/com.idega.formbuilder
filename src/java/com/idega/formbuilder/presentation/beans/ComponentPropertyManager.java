@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.jdom.Document;
+import org.jdom2.Document;
 
 import com.idega.builder.business.BuilderLogic;
 import com.idega.chiba.web.xml.xforms.validation.ErrorType;
@@ -40,7 +40,7 @@ public class ComponentPropertyManager {
 	private static final String COMP_UPL_DESC_LBL_PROP = "uploadDescLbl";
 	private static final String COMP_UPL_HEADER_TEXT_PROP = "uploadHeaderText";
 	public static final String COMP_USE_HTML_EDITOR = "compUseHtmlEditor";
-	
+
 	public static final String BEAN_ID = "propertyManager";
 
 	private GenericComponent component;
@@ -50,20 +50,20 @@ public class ComponentPropertyManager {
 	public FormPage getFormPage() {
 		return formPage;
 	}
-	
+
 	public void resetComponent() {
 		component = null;
 	}
-	
+
 	public boolean resetComponent(Component comp) {
 		if(component != null && comp != null) {
 			if(component.getId().equals(comp.getId())) {
 				component = null;
-				
+
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -102,16 +102,16 @@ public class ComponentPropertyManager {
 		Object[] result = { component.getComponent().getId(), getFormComponent(component), getPropertiesPanel(component) };
 		return result;
 	}
-	
+
 	public Object[] selectComponent(String id, String type) {
 		if (type == null || id == null) {
 			return null;
 		}
 
 		Object[] values = new Object[2];
-		
+
 		values[1] = component == null ? null : component.getId();
-		
+
 		Page page = formPage.getPage();
 		if (page != null) {
 			if (type.equals(FormComponent.COMPONENT_TYPE)) {
@@ -134,7 +134,7 @@ public class ComponentPropertyManager {
 			}
 			values[0] = getPropertiesPanel(component);
 		}
-		
+
 		return values;
 	}
 
@@ -204,9 +204,9 @@ public class ComponentPropertyManager {
 
 		return getResponse(component, false);
 	}
-	
+
 	public Object[] saveComponentCalcExpression(String calcExp) {
-		
+
 		component.setCalculate(calcExp);
 
 		return getResponse(component, false);
@@ -219,9 +219,9 @@ public class ComponentPropertyManager {
 			Logger.getLogger(getClass().getName()).log(Level.WARNING, "Tried to save component property, but either property name or value not set. PropertyName=" + propertyName + ", propertyValue=" + propertyValue);
 			return null;
 		}
-		
+
 		boolean reloadProperties = false;
-		
+
 		if(componentId == null || !componentId.equals(component.getId())) {
 			return null;
 		}
@@ -266,7 +266,7 @@ public class ComponentPropertyManager {
 			} else if (propertyName.equals(COMP_UPL_HEADER_TEXT_PROP)) {
 				component.setUploaderHeaderText(propertyValue);
 			}
-			
+
 			return getResponse(component, reloadProperties);
 		}
 	}
@@ -278,11 +278,11 @@ public class ComponentPropertyManager {
 		}
 		return new Object[] { component.getId(), getFormComponent(component), propertiesPanel };
 	}
-	
+
 	private Document getPropertiesPanel(GenericComponent component) {
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBComponentProperties(component),true);
 	}
-	
+
 	private Document getFormComponent(GenericComponent component) {
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(),new FBFormComponent(component.getComponent()), true);
 	}

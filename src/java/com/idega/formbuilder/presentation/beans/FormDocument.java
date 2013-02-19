@@ -59,27 +59,27 @@ import com.idega.xformsmanager.business.component.properties.PropertiesComponent
 import com.idega.xformsmanager.component.beans.LocalizedStringBean;
 
 public class FormDocument implements Serializable {
-	
+
 	private static final long serialVersionUID = -1462694112346788168L;
-	
+
 	private static final Log logger = LogFactory.getLog(FormDocument.class);
-	
+
 	private InstanceManager instanceManager;
 	private XFormsProcessManager xformsProcessManager;
 	private ProcessData processData;
-	
+
 	private String formId;
 	private boolean hasPreview;
 	private boolean enableBubbles;
 	private Document document;
 	private List<AdvancedProperty> standaloneForms = new ArrayList<AdvancedProperty>();
-	
+
 	private Workspace workspace;
 	private ApplicationBusiness app_business_bean;
 	private String tempValue;
 	private String primary_form_name;
 	private String app_id;
-	
+
 	private static final String root_uri = "/pages/";
 	private static final String applications_forms_page_uri = "/pages/applications_forms/";
 	private static final String applications_forms_page_uri_db = "/applications_forms/";
@@ -89,22 +89,22 @@ public class FormDocument implements Serializable {
 	private static final String region_id_property_name = "regionId";
 	private static final String form_template_id_property_key = "fb.form.template.id";
 	private static final String form_region_id_property_key = "fb.form.region.id";
-	
+
 	public static final String BEAN_ID = "formDocument";
 	public static final String APP_FORM_NAME_PARAM = "appform_name";
 	public static final String APP_ID_PARAM = "appid";
 	public static final String FROM_APP_REQ_PARAM = "fapp";
 	public static final String FORM_ID_OPEN_TAG = "<form_id>";
 	public static final String FORM_ID_CLOSE_TAG = "</form_id>";
-	
+
 	@Autowired
 	private ThemesHelper themesHelper;
-		
+
 	public List<String> getCommonPagesIdList() {
 		List<String> result = new LinkedList<String>();
 		List<String> allIds = document.getContainedPagesIdList();
 		List<Page> specialPages = document.getSpecialPages();
-		
+
 		result.addAll(allIds);
 		for(Page page : specialPages) {
 			if(result.contains(page.getId())) {
@@ -113,7 +113,7 @@ public class FormDocument implements Serializable {
 		}
 		return result;
 	}
-	
+
 	public Document initializeBeanInstance(Long formId) throws Exception {
 		DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
 		this.document = formManagerInstance.openForm(formId);
@@ -122,93 +122,93 @@ public class FormDocument implements Serializable {
 		this.hasPreview = false;
 		return document;
 	}
-	
+
 	public boolean createTaskFormDocument(String parameter, String processId, String taskName) throws Exception {
 		Locale locale = workspace.getLocale();
-		
+
 		DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
-		
+
 		LocalizedStringBean formName = new LocalizedStringBean();
 		formName.setString(locale, parameter);
-			
+
 		try {
 			document = formManagerInstance.createForm(formName, null);
 			document.save();
 		} catch(Exception e) {
 			logger.error("Could not create XForms document");
 		}
-			
+
 //		if(getFormId() != null)
 //			getFormsService().unlockForm(getFormId());
-			
+
 		workspace.setView(FBViewPanel.DESIGN_VIEW);
-		
+
 		initializeBeanInstance(getDocument());
 		processData.initializeBeanInstance(getDocument(), new Long(processId), taskName);
 		xformsProcessManager.assignTaskForm(new Long(processId).toString(), taskName, formId);
-			
+
 		Page page = getDocument().getPage(getDocument().getContainedPagesIdList().get(0));
 		FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 		formPage.initializeBeanInstance(page);
-		
+
 		return true;
 	}
-	
+
 //	TODO: fix and move away from here
 	public boolean attachFormDocumentToTask(String processId, String taskName, Long formId, boolean gotoDesigner) {
-		
+
 		if(processId == null || taskName == null || formId == null)
 			return false;
-		
+
 		clearAppsRelatedMetaData();
-		
+
 		try {
 			if(gotoDesigner) {
 				DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
 				setDocument(formManagerInstance.openForm(formId));
 //				if(getFormId() != null)
 //					getFormsService().unlockForm(getFormId());
-					
+
 				String firstPage = getCommonPagesIdList().get(0);
 				Page firstP = getDocument().getPage(firstPage);
 				FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 				formPage.initializeBeanInstance(firstP);
-					
+
 				getWorkspace().setView(FBViewPanel.DESIGN_VIEW);
 				getWorkspace().setProcessMode(true);
 				initializeBeanInstance(getDocument());
 				getProcessData().initializeBeanInstance(getDocument(), new Long(processId), taskName);
 			}
-			
+
 			View view = new XFormsView();
 			view.setViewId(String.valueOf(formId));
 //			getViewToTaskBinder().bind(view, getJbpmProcessBusiness().getProcessTask(Long.valueOf(processId), taskName));
-			
+
 		} catch(Exception e) {
 			logger.info("Exception while trying to open a form document", e);
 			return false;
 		}
 		return true;
 	}
-	
+
 	public boolean loadTaskFormDocument(String processId, String taskName, Long formId) {
-		
+
 		if(processId == null || taskName == null || formId == null)
 			return false;
-		
+
 		clearAppsRelatedMetaData();
-		
+
 		try {
 			DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
 			setDocument(formManagerInstance.openForm(formId));
 //			if(getFormId() != null)
 //				getFormsService().unlockForm(getFormId());
-				
+
 			String firstPage = getCommonPagesIdList().get(0);
 			Page firstP = getDocument().getPage(firstPage);
 			FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 			formPage.initializeBeanInstance(firstP);
-				
+
 			getWorkspace().setView(FBViewPanel.DESIGN_VIEW);
 			getWorkspace().setParentFormId(formId);
 			getWorkspace().setProcessId(new Long(processId));
@@ -221,14 +221,14 @@ public class FormDocument implements Serializable {
 		}
 		return true;
 	}
-	
+
 	public boolean changeTaskFormDocumentVersion(Long formId) {
-		
+
 		if(formId == null)
 			return false;
-		
+
 		clearAppsRelatedMetaData();
-		
+
 		try {
 			DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
 			setDocument(formManagerInstance.openForm(formId));
@@ -237,7 +237,7 @@ public class FormDocument implements Serializable {
 			Page firstP = getDocument().getPage(firstPage);
 			FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 			formPage.initializeBeanInstance(firstP);
-				
+
 			getWorkspace().setView(FBViewPanel.DESIGN_VIEW);
 			initializeBeanInstance(getDocument());
 			getProcessData().initializeBeanInstance(getDocument(), getWorkspace().getProcessId(), getWorkspace().getTaskName());
@@ -247,15 +247,15 @@ public class FormDocument implements Serializable {
 		}
 		return true;
 	}
-		
+
 	public boolean createFormDocument(String parameter) throws Exception {
 		Locale locale = workspace.getLocale();
-		
+
 		DocumentManager formManagerInstance = InstanceManager.getCurrentInstance().getDocumentManagerInstance();
-		
+
 		LocalizedStringBean formName = new LocalizedStringBean();
 		formName.setString(locale, parameter);
-			
+
 		try {
 			document = formManagerInstance.createForm(formName, null);
 			document.save();
@@ -263,24 +263,24 @@ public class FormDocument implements Serializable {
 			logger.error("Could not create XForms document", e);
 			return false;
 		}
-			
+
 //		if(getFormId() != null)
 //			getFormsService().unlockForm(getFormId());
-			
+
 		workspace.setView(FBViewPanel.DESIGN_VIEW);
-		
+
 		initializeBeanInstance(document);
-			
+
 		Page page = document.getPage(document.getContainedPagesIdList().get(0));
 		FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 		formPage.initializeBeanInstance(page);
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Synchronize bound variables. Create not existing, update required attribute if changed.
-	 * 
+	 *
 	 */
 	private void synchronizeVariablesByComponents(Component component) {
 		if (component instanceof Container) {
@@ -320,7 +320,7 @@ public class FormDocument implements Serializable {
 			}
 		}
 	}
-	
+
 	/**
 	 * Synchronizes form's mapped variables task definition variables.
 	 * Creates variables if they don't exist ni task definition.
@@ -343,140 +343,140 @@ public class FormDocument implements Serializable {
 			}
 		}
 	}
-	
+
 	public void save() {
-		
+
 		try {
 			document.save();
 			synchronizeVariables();
 			//TODO: this need to be moved under the bean implementing ApplicationType interface
 			if(app_id != null && false) {
 				FacesContext ctx = FacesContext.getCurrentInstance();
-				
+
 				String name = primary_form_name;
 				String app_id = this.app_id;
 				this.app_id = null;
 				primary_form_name = null;
-				
+
 				if(app_id == null || name == null) {
 					logger.warn("Application id or name was not set when trying to save application form for the first time.");
 					return;
 				}
-				
+
 				IWMainApplication iwma = IWMainApplication.getIWMainApplication(ctx);
-				
+
 				Map<String, PageTemplate> p_templates = TemplatesLoader.getInstance(iwma).getPageTemplates();
 				PageTemplate egov_form_template = p_templates.get(egov_form_type);
-				
-				
+
+
 				if(egov_form_template == null) {
 					logger.error("eGov form page was not created for application due to missing eGov form page template");
 					return;
 				}
-				
+
 				BuilderService bservice = getBuilderService();
-				
+
 				ICDomain domain = getDomain();
 				int domain_id = -1;
-				
+
 				if(domain != null)
 					domain_id = domain.getID();
-				
+
 				String key = bservice.getPageKeyByURI(applications_forms_page_uri);
-				
+
 				if(key == null) {
-					
+
 					key = bservice.getPageKeyByURI(root_uri);
-					
+
 					int created_page_key =
 						bservice.createNewPage(
-								key, 
-								applications_forms_page_name, 
+								key,
+								applications_forms_page_name,
 								bservice.getPageKey(),
 								null, 		//template id
 								applications_forms_page_uri_db,				//uri
-								bservice.getTree(IWContext.getIWContext(ctx)), 
-								IWContext.getIWContext(ctx), 
-								null, //subtype 
-								domain_id, 
+								bservice.getTree(IWContext.getIWContext(ctx)),
+								IWContext.getIWContext(ctx),
+								null, //subtype
+								domain_id,
 								bservice.getIBXMLFormat(),
 								null 		//source markup
 						);
-					
-					key = String.valueOf(created_page_key); 
+
+					key = String.valueOf(created_page_key);
 				}
-				
+
 				String template_id = iwma.getSettings().getProperty(form_template_id_property_key);
 				String region_id = iwma.getSettings().getProperty(form_region_id_property_key);
-				
+
 				template_id = "".equals(template_id) ? null : template_id;
 				region_id = "".equals(region_id) ? null : region_id;
-				
+
 				int created_page_key =
 					bservice.createNewPage(
-							key, 
-							name, 
+							key,
+							name,
 							bservice.getPageKey(),
 							template_id,									//template id
 							null,											//uri
-							bservice.getTree(IWContext.getIWContext(ctx)), 
-							IWContext.getIWContext(ctx), 
-							egov_form_type,									//subtype 
-							domain_id, 
+							bservice.getTree(IWContext.getIWContext(ctx)),
+							IWContext.getIWContext(ctx),
+							egov_form_type,									//subtype
+							domain_id,
 							bservice.getIBXMLFormat(),
 							null											//source markup
 					);
-				
+
 				ThemesHelper helper = getThemesHelper();
-				
+
 				String webdav_uri_to_page = helper.loadPageToSlide(egov_form_type, egov_form_template.getTemplateFile(), null, created_page_key);
 				if (webdav_uri_to_page != null) {
 					helper.getThemesService().updatePageWebDav(created_page_key, webdav_uri_to_page);
 				}
-				
+
 				String page_uri = bservice.getPageURI(created_page_key);
-				
+
 				Application app = getAppBusiness().getApplication(Integer.parseInt(app_id));
-				
+
 				if(app == null) {
 //					TODO: log - something wrong, as it should be created and saved before going here actually
-					
+
 				} else {
 					app.setUrl(page_uri);
 					app.store();
 				}
-				
+
 				String page_key_str = String.valueOf(created_page_key);
-				
+
 				List<String> formviewer_ids = bservice.getModuleId(page_key_str, FormViewer.class.getName());
-				
+
 				if(formviewer_ids == null || formviewer_ids.isEmpty()) {
 					logger.error("Formviewer not found in the page: "+page_uri);
 					return;
 				}
-				
+
 				String formviewer_id = formviewer_ids.get(0);
 				bservice.setProperty(page_key_str, formviewer_id, form_id_property_name, new String[] {document.getId()}, iwma);
-				
+
 				if(region_id != null) {
-					
+
 					String current_region_id = bservice.getProperty(page_key_str, formviewer_id, region_id_property_name);
-					
+
 					if(current_region_id == null || !current_region_id.equals(region_id)) {
 						bservice.renameRegion(page_key_str, current_region_id, null, region_id, null);
 						bservice.setProperty(page_key_str, formviewer_id, region_id_property_name, new String[] {region_id}, iwma);
 					}
 				}
-				
+
 //				as it is not set when creating page (bug or what?) - add here
 				bservice.setTemplateId(page_key_str, template_id);
 			}
-			
+
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Save all versions of the form
 	 */
@@ -493,35 +493,35 @@ public class FormDocument implements Serializable {
 			}
 		}
 	}
-	
+
 	public void setAppBusiness(ApplicationBusiness app_business_bean) {
 		this.app_business_bean = app_business_bean;
 	}
-	
+
 	public ApplicationBusiness getAppBusiness() {
 		return app_business_bean;
 	}
-	
+
 	protected void clearAppsRelatedMetaData() {
-		
+
 		app_id = null;
 		primary_form_name = null;
 	}
-	
+
 	public boolean loadFormDocument(Long formId) {
-		
+
 		clearAppsRelatedMetaData();
-		
+
 		try {
 			if(formId != null) {
 				DocumentManager formManagerInstance = InstanceManager.getCurrentInstance().getDocumentManagerInstance();
 				document = formManagerInstance.openForm(formId);
-				
+
 				String firstPage = getCommonPagesIdList().get(0);
 				Page firstP = document.getPage(firstPage);
 				FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 				formPage.initializeBeanInstance(firstP);
-				
+
 				getWorkspace().setView(FBViewPanel.DESIGN_VIEW);
 				initializeBeanInstance(document);
 			}
@@ -531,23 +531,23 @@ public class FormDocument implements Serializable {
 		}
 		return true;
 	}
-	
+
 	public boolean loadFormDocumentCode(Long formId) {
-		
+
 		clearAppsRelatedMetaData();
-		
+
 		try {
 			if(formId != null) {
 				DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
 				document = formManagerInstance.openForm(formId);
-				
+
 				workspace.setView(FBViewPanel.SOURCE_VIEW);
-				
+
 				String firstPage = getCommonPagesIdList().get(0);
 				Page firstP = document.getPage(firstPage);
 				FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 				formPage.initializeBeanInstance(firstP);
-				
+
 				initializeBeanInstance(document);
 			}
 		} catch(Exception e) {
@@ -556,23 +556,23 @@ public class FormDocument implements Serializable {
 		}
 		return true;
 	}
-	
+
 	public boolean loadFormDocumentPreview(Long formId) {
-		
+
 		clearAppsRelatedMetaData();
-		
+
 		try {
 			if(formId != null) {
 				DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
 				document = formManagerInstance.openForm(formId);
-				
+
 				workspace.setView(FBViewPanel.PREVIEW_VIEW);
-				
+
 				String firstPage = getCommonPagesIdList().get(0);
 				Page firstP = document.getPage(firstPage);
 				FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 				formPage.initializeBeanInstance(firstP);
-				
+
 				initializeBeanInstance(document);
 			}
 		} catch(Exception e) {
@@ -581,14 +581,14 @@ public class FormDocument implements Serializable {
 		}
 		return true;
 	}
-	
+
 	public boolean deleteFormDocument(Long formId) {
 //		boolean delete_submitted_data = true;
-		
-		if(formId == null || true)		
+
+		if(formId == null || true)
 			return false;
-		
-//		TODO: implement in persistence manager 
+
+//		TODO: implement in persistence manager
 		/*
 		try {
 			getPersistenceManager().removeForm(formId, delete_submitted_data);
@@ -602,13 +602,13 @@ public class FormDocument implements Serializable {
 		*?
 		return true;
 	}
-	
+
 	public boolean deleteTaskFormDocument(Long formId) {
 //		boolean delete_submitted_data = true;
-		
-		if(formId == null || true)		
+
+		if(formId == null || true)
 			return false;
-		
+
 		/*
 		try {
 			getPersistenceManager().removeForm(documentId, delete_submitted_data);
@@ -623,24 +623,24 @@ public class FormDocument implements Serializable {
 		*/
 		return true;
 	}
-	
+
 	public String loadFormDocumentEntries(Long formId) {
-		
+
 		if(formId != null) {
-			
+
 			DocumentManager formManagerInstance = instanceManager.getDocumentManagerInstance();
 			document = formManagerInstance.openForm(formId);
-			
+
 			return document == null ? null : document.getId();
 		}
 		return null;
 	}
-	
+
 	public String duplicateFormDocument(String documentId, String newTitle) {
 		if(documentId == null || newTitle == null)
-//			TODO: (alex) tell user about error			
+//			TODO: (alex) tell user about error
 			throw new NullPointerException("Form id not found");
-		
+
 		/* TODO: implement
 		try {
 			getPersistenceManager().duplicateForm(documentId, newTitle);
@@ -649,10 +649,10 @@ public class FormDocument implements Serializable {
 //			TODO: (alex) tell user about error
 		}
 		*/
-		
+
 		return documentId;
 	}
-	
+
 	public void updatePagesList(List<String> idSequence) throws Exception {
 		String confirmId = "";
 		String thxId = "";
@@ -679,7 +679,7 @@ public class FormDocument implements Serializable {
 		ids.add(thxId);
 		document.rearrangeDocument();
 	}
-	
+
 	public Document getDocument() {
 		return document;
 	}
@@ -700,10 +700,10 @@ public class FormDocument implements Serializable {
 //	TODO: this is temporary. remove.
 	public static final String webdavSubmissionAction = "webdav:/files/forms/submissions/";
 	public static final String processSubmissionAction = "process:/files/forms/submissions/";
-	
+
 	public void toggleProcessTask(boolean value) {
 
-//		TODO: temporary. replace this method. should be possibility to choose from the actions list, 
+//		TODO: temporary. replace this method. should be possibility to choose from the actions list,
 //		or retrieve default for each use case. e.g. for simple use case, use webdav submission action,
 //		for process, use jbpm ws
 		if(value)
@@ -711,8 +711,8 @@ public class FormDocument implements Serializable {
 		else
 			document.getProperties().setSubmissionAction(webdavSubmissionAction);
 	}
-	
-	public org.jdom.Document togglePreviewPage(boolean value) throws Exception {
+
+	public org.jdom2.Document togglePreviewPage(boolean value) throws Exception {
 		hasPreview = value;
 		Page page = null;
 		if(hasPreview) {
@@ -732,17 +732,17 @@ public class FormDocument implements Serializable {
 		}
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBFormPage(page, "formPageIcon"), true);
 	}
-	
+
 	public void saveSrc(String sourceCode) {
 		if (StringUtil.isEmpty(sourceCode))
 			return;
-		
+
 		try {
 			if(document != null) {
 				String formIdSearchRegex = FORM_ID_OPEN_TAG + CoreConstants.DOT + CoreConstants.PLUS + FORM_ID_CLOSE_TAG;
 				String formIdReplacement = FORM_ID_OPEN_TAG + getFormId() + FORM_ID_CLOSE_TAG;
 				sourceCode = sourceCode.replaceAll(formIdSearchRegex, formIdReplacement);
-				
+
 				document.setFormSourceCode(sourceCode);
 				FormPage currentPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 				if(currentPage != null) {
@@ -750,47 +750,47 @@ public class FormDocument implements Serializable {
 					currentPage.initializeBeanInstance(page);
 				}
 			}
-			
+
 		} catch (Exception e) {
 			logger.error("Error when setting form source code", e);
 		}
 	}
-	
+
 	public Document initializeBeanInstance(Document document) {
 		this.document = document;
 		this.formId = document.getId();
 		this.hasPreview = false;
-		
+
 		return document;
 	}
-	
+
 	public String getFormId() {
 		return formId;
 	}
-	
+
 	public void setFormId(String formId) {
 		this.formId = formId;
 	}
-	
+
 	public String getFormTitle() {
 		if(document == null) {
 			return CoreConstants.EMPTY;
 		}
 		return FBUtil.getPropertyString(document.getFormTitle().getString(FBUtil.getUILocale()));
 	}
-	
+
 	public void setFormTitle(String formTitle) throws Exception {
 		LocalizedStringBean bean = document.getFormTitle();
 		bean.setString(FBUtil.getUILocale(), formTitle);
 		document.setFormTitle(bean);
 	}
-	
+
 	public void setFormErrorMessage(String message) throws Exception {
 		LocalizedStringBean bean = document.getFormErrorMsg();
 		bean.setString(FBUtil.getUILocale(), message);
 		document.setFormErrorMsg(bean);
 	}
-	
+
 	public String saveFormErrorMessage(String message) {
 		try {
 			setFormErrorMessage(message);
@@ -800,7 +800,7 @@ public class FormDocument implements Serializable {
 			return null;
 		}
 	}
-	
+
 	public String saveFormTitle(String formTitle) {
 		try {
 			setFormTitle(formTitle);
@@ -810,9 +810,9 @@ public class FormDocument implements Serializable {
 			return null;
 		}
 	}
-	
+
 	public String getOnlySourceCode() {
-		try {	
+		try {
 			return document.getFormSourceCode();
 		} catch (Exception e) {
 			logger.error("Error when getting form source code", e);
@@ -822,14 +822,14 @@ public class FormDocument implements Serializable {
 
 	public List<String> getSourceCode() {
 		List<String> results = new ArrayList<String>(4);
-		
+
 		results.add(getOnlySourceCode());
 
 		Web2Business web2 = ELUtil.getInstance().getBean(Web2Business.SPRING_BEAN_IDENTIFIER);
 		results.add(web2.getBundleURIToCodeMirrorScriptFile());
 		results.add(web2.getBundleURIToCodeMirrorStyleFile("xmlcolors.css"));
 		results.add(web2.getBundleURIToCodeMirrorFolder());
-		
+
 		return results;
 	}
 
@@ -838,28 +838,28 @@ public class FormDocument implements Serializable {
 	}
 
 	public void setProcessForm(boolean procForm) {
-		
+
 		document.getProperties().setSubmissionAction(processSubmissionAction);
 	}
-	
+
 	public ProcessTasksBean getProcessTasks(String processName, Integer version) {
-		
+
 		FBHomePageBean bean = (FBHomePageBean) WFUtil.getBeanInstance(FBHomePageBean.beanIdentifier);
-		
+
 		IWContext iwc = IWContext.getCurrentInstance();
-		
+
 		ProcessAllTasksForms forms = bean.getTasksFormsForProcess(iwc.getCurrentLocale(), processName, version);
 
-		org.jdom.Document renderedComponent = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), FBHomePage.getTaskList(forms), true);
-		
+		org.jdom2.Document renderedComponent = BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), FBHomePage.getTaskList(forms), true);
+
 		ProcessTasksBean result = new ProcessTasksBean();
 		result.setDocument(renderedComponent);
 		result.setTaskCount(forms.getTasksCount());
 		result.setTaskFormCount(forms.getTaskForms().size());
-		return result ; 
-		
+		return result ;
+
 	}
-	
+
 	public boolean isProcessForm() {
 
 		return processSubmissionAction.equals(document.getProperties().getSubmissionAction());
@@ -878,14 +878,14 @@ public class FormDocument implements Serializable {
 	}
 
 	public String getThankYouText() {
-		
+
 		return CoreConstants.EMPTY;
 //		if(submitPage == null) {
 //			return CoreConstants.EMPTY;
 //		}
 //		return FBUtil.getPropertyString(submitPage.getProperties().getText().getString(FBUtil.getUILocale()));
 	}
-	
+
 	public String getFormErrorMessage() {
 		if(document == null || document.getFormErrorMsg() == null) {
 			return CoreConstants.EMPTY;
@@ -917,18 +917,18 @@ public class FormDocument implements Serializable {
 	public void setTempValue(String tempValue) {
 		this.tempValue = tempValue;
 	}
-	
+
 	protected BuilderService getBuilderService() {
-		
+
 		try {
 			return BuilderServiceFactory.getBuilderService(IWMainApplication.getDefaultIWApplicationContext());
 		} catch (RemoteException e) {
-			
+
 			logger.error("Error while retrieving builder service", e);
 		}
 		return null;
 	}
-	
+
 	public ICDomain getDomain() {
 		ICDomainHome domainHome = null;
 		try {
@@ -952,7 +952,7 @@ public class FormDocument implements Serializable {
 	public void setPrimaryFormName(String primary_form_name) {
 		this.primary_form_name = primary_form_name;
 	}
-	
+
 	public void setAppId(String app_id) {
 		this.app_id = app_id;
 	}

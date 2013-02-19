@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Locale;
 
-import org.jdom.Document;
+import org.jdom2.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.idega.block.web2.business.Web2Business;
