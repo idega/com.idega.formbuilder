@@ -429,7 +429,7 @@ public class FormDocument implements Serializable {
 
 				ThemesHelper helper = getThemesHelper();
 
-				String webdav_uri_to_page = helper.loadPageToSlide(egov_form_type, egov_form_template.getTemplateFile(), null, created_page_key);
+				String webdav_uri_to_page = helper.loadPageToRepository(egov_form_type, egov_form_template.getTemplateFile(), null, created_page_key);
 				if (webdav_uri_to_page != null) {
 					helper.getThemesService().updatePageWebDav(created_page_key, webdav_uri_to_page);
 				}
