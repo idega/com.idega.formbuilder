@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -54,17 +55,15 @@ public class FBHomePageBean {
 	private XFormsDAO xformsDao;
 
 	@Transactional(readOnly=true)
-	@SuppressWarnings("unchecked")
 	public List<ProcessAllTasksForms> getAllTasksForms(IWContext iwc, final Locale locale) {
-
-		return getIdegaJbpmContext().execute(new JbpmCallback() {
+		return getIdegaJbpmContext().execute(new JbpmCallback<List<ProcessAllTasksForms>>() {
 
 			@Override
-			public Object doInJbpm(JbpmContext context) throws JbpmException {
-
+			public List<ProcessAllTasksForms> doInJbpm(JbpmContext context) throws JbpmException {
 				try {
+					@SuppressWarnings("unchecked")
 					List<ProcessDefinition> defs = context.getGraphSession().findLatestProcessDefinitions();
-					HashSet<Long> defsIds = new HashSet<Long>(defs.size());
+					Set<Long> defsIds = new HashSet<Long>(defs.size());
 
 					for (ProcessDefinition def : defs)
 						defsIds.add(def.getId());
@@ -72,16 +71,16 @@ public class FBHomePageBean {
 					Multimap<Long, TaskView> pdsViews = getViewFactory().getAllViewsByProcessDefinitions(defsIds);
 					List<ProcessAllTasksForms> allForms = new ArrayList<ProcessAllTasksForms>(pdsViews.keySet().size());
 
-					for (Long pdId : pdsViews.keySet()) {
+					for (Long pdId: pdsViews.keySet()) {
 						try {
 							ProcessDefinition pd;
 							Collection<TaskView> tviews = pdsViews.get(pdId);
 
-							if(tviews.isEmpty()) {
+							if (tviews.isEmpty()) {
 								pd = context.getGraphSession().getProcessDefinition(pdId);
 							} else {
 								 pd = tviews.iterator().next().getTask().getProcessDefinition();
-							 }
+							}
 
 							ProcessAllTasksForms processForms = new ProcessAllTasksForms();
 							processForms.setProcessId(String.valueOf(pd.getId()));
@@ -91,7 +90,6 @@ public class FBHomePageBean {
 							List<TaskForm> taskForms = new ArrayList<TaskForm>(tviews.size());
 
 							for (TaskView taskView : tviews) {
-
 								String dateCreatedStr = new IWTimestamp(taskView.getDateCreated()).getLocaleDateAndTime(locale, IWTimestamp.SHORT, IWTimestamp.SHORT);
 								TaskForm form = new TaskForm();
 								form.setDateCreatedStr(dateCreatedStr);
@@ -109,7 +107,6 @@ public class FBHomePageBean {
                         	LOGGER.log(Level.WARNING, "Exception loading info for process definition: " + pdId, e);
                         }
 					}
-
 					return allForms;
                 } catch (Exception e) {
 	                LOGGER.log(Level.WARNING, "Error loading info for process definitions", e);
@@ -121,12 +118,11 @@ public class FBHomePageBean {
 
 	@Transactional(readOnly = true)
 	public ProcessAllTasksForms getTasksFormsForProcess(final Locale locale, final String processName, final Integer version) {
-		return getIdegaJbpmContext().execute(new JbpmCallback() {
+		return getIdegaJbpmContext().execute(new JbpmCallback<ProcessAllTasksForms>() {
 
 			@Override
-			public Object doInJbpm(JbpmContext context) throws JbpmException {
+			public ProcessAllTasksForms doInJbpm(JbpmContext context) throws JbpmException {
 				ProcessDefinition pd = context.getGraphSession().findProcessDefinition(processName, version);
-
 				if (pd == null) {
 					return null;
 				}

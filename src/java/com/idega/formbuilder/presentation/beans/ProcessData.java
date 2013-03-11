@@ -249,19 +249,17 @@ public class ProcessData implements Serializable {
 	 */
 	public boolean createVariable(final String variable, final String datatype, final boolean required) {
 		if (variable != null && datatype != null) {
-			Boolean result = getIdegaJbpmContext().execute(new JbpmCallback() {
+			Boolean result = getIdegaJbpmContext().execute(new JbpmCallback<Boolean>() {
 
 				@Override
-				@SuppressWarnings("unchecked")
-				public Object doInJbpm(JbpmContext context) throws JbpmException {
+				public Boolean doInJbpm(JbpmContext context) throws JbpmException {
 					Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
 					Long parentFormId = workspace.getParentFormId();
-					ViewTaskBind vtb = getBpmFactory().getBPMDAO().getViewTaskBindByView(parentFormId.toString(),
-							"xforms");
+					ViewTaskBind vtb = getBpmFactory().getBPMDAO().getViewTaskBindByView(parentFormId.toString(), "xforms");
 					Task task = getBpmFactory().getBPMDAO().getTaskFromViewTaskBind(vtb);
 					task = getIdegaJbpmContext().mergeProcessEntity(task);
-					List<VariableAccess> variableAccesses = task.getTaskController()
-							.getVariableAccesses();
+					@SuppressWarnings("unchecked")
+					List<VariableAccess> variableAccesses = task.getTaskController().getVariableAccesses();
 					String newName = datatype + CoreConstants.UNDER + variable;
 					for (VariableAccess variableAccess : variableAccesses) {
 						if (variableAccess.getVariableName().equals(newName)) {
@@ -446,18 +444,18 @@ public class ProcessData implements Serializable {
 					accessString.append(accessString.length() > 0 ? "," : "").append(availableAccess);
 				}
 			}
-			getIdegaJbpmContext().execute(new JbpmCallback() {
+			getIdegaJbpmContext().execute(new JbpmCallback<Void>() {
 
 				@Override
-				public Object doInJbpm(JbpmContext context) throws JbpmException {
+				public Void doInJbpm(JbpmContext context) throws JbpmException {
 					Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
 					Long parentFormId = workspace.getParentFormId();
 					ViewTaskBind vtb = getBpmFactory().getBPMDAO().getViewTaskBindByView(parentFormId.toString(), "xforms");
 					Task task = getBpmFactory().getBPMDAO().getTaskFromViewTaskBind(vtb);
 				    task = getIdegaJbpmContext().mergeProcessEntity(task);
+					@SuppressWarnings("unchecked")
 					List<VariableAccess> variableAccesses = task.getTaskController().getVariableAccesses();
-					for (VariableAccess variableAccess : variableAccesses)
-					{
+					for (VariableAccess variableAccess: variableAccesses) {
 						if (variableAccess.getVariableName().equals(variableName)) {
 							VariableAccess newVariableAccess = new VariableAccess(variableName, accessString.toString(), variableAccess.getMappedName());
 							getIdegaJbpmContext().saveProcessEntity(newVariableAccess);

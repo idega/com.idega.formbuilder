@@ -19,12 +19,12 @@ import com.idega.jbpm.view.View;
 import com.idega.jbpm.view.ViewFactory;
 
 public class XFormsProcessManager {
-	
+
 	//private static final String JBPM_XFORM_VIEW_NAME = "jbpm_view_name";
-	
+
 	private ViewFactory viewFactory;
 	private BPMContext idegaJbpmContext;
-	
+
 	public ViewFactory getViewFactory() {
 		return viewFactory;
 	}
@@ -35,12 +35,10 @@ public class XFormsProcessManager {
 	}
 
 	public void assignTaskForm(final String processId, final String taskName, final String formId) {
-		
-//		TODO: move purely bpm related stuff to jbpm module.
-		
-		getIdegaJbpmContext().execute(new JbpmCallback() {
+		getIdegaJbpmContext().execute(new JbpmCallback<Void>() {
 
-			public Object doInJbpm(JbpmContext context) throws JbpmException {
+			@Override
+			public Void doInJbpm(JbpmContext context) throws JbpmException {
 				ProcessDefinition pd = context.getGraphSession().getProcessDefinition(Long.parseLong(processId));
 				TaskMgmtDefinition mgmt = pd.getTaskMgmtDefinition();
 				Task task = mgmt.getTask(taskName);
@@ -50,13 +48,13 @@ public class XFormsProcessManager {
 			}
 		});
 	}
-	
-	public List<AdvancedProperty> getTaskProperties(final String processId, final String taskId) {
-		
-		return getIdegaJbpmContext().execute(new JbpmCallback() {
 
-			public Object doInJbpm(JbpmContext context) throws JbpmException {
-				
+	public List<AdvancedProperty> getTaskProperties(final String processId, final String taskId) {
+		return getIdegaJbpmContext().execute(new JbpmCallback<List<AdvancedProperty>>() {
+
+			@Override
+			public List<AdvancedProperty> doInJbpm(JbpmContext context) throws JbpmException {
+
 				List<AdvancedProperty> result = new ArrayList<AdvancedProperty>();
 				ProcessDefinition pd = context.getGraphSession().getProcessDefinition(Long.parseLong(processId));
 				TaskMgmtDefinition mgmt = pd.getTaskMgmtDefinition();
@@ -66,10 +64,10 @@ public class XFormsProcessManager {
 				AdvancedProperty taskForm = new AdvancedProperty(JBPM_XFORM_VIEW_NAME, view == null ? "" : view.getViewId());
 				result.add(taskForm);
 				*/
-				
+
 				/*
-				 * 
-				 * TODO: adapt this logic to current assignments management 
+				 *
+				 * TODO: adapt this logic to current assignments management
 				ActorTaskBind atb = getActorToTaskBinder().getActor(task.getId());
 				if(atb != null) {
 					AdvancedProperty taskActor = new AdvancedProperty(JBPM_XFORM_ACTOR_ID, atb == null ? "" : atb.getActorId());
@@ -79,7 +77,7 @@ public class XFormsProcessManager {
 					String actorName = getActorToTaskBinder().getActorName(atb.getActorId(), atb.getActorType());
 					AdvancedProperty name = new AdvancedProperty(JBPM_XFORM_ACTOR_NAME, actorName);
 					result.add(name);
-					
+
 					IdentityMgmntBean abm = (IdentityMgmntBean) WFUtil.getBeanInstance("actorBindingManager");
 //					if(abm != null) {
 //						abm.setActorType(atb.getActorType());
