@@ -14,6 +14,7 @@ import com.idega.util.CoreUtil;
 import com.idega.webface.WFUtil;
 import com.idega.xformsmanager.business.component.Button;
 import com.idega.xformsmanager.business.component.ButtonArea;
+import com.idega.xformsmanager.business.component.Component;
 
 public class FBButtonArea extends FBComponentBase {
 
@@ -51,13 +52,16 @@ public class FBButtonArea extends FBComponentBase {
 				container.add(emptyForm);
 			} else {
 				for(String nextId : ids) {
-					Button bt = (Button) buttonArea.getComponent(nextId);
-					if(bt != null) {
+					Component component = buttonArea.getComponent(nextId);
+					
+					if(component instanceof Button) {
+						Button bt = (Button) component;
 						FBButton button = new FBButton();
 						button.setLabel(FBUtil.getPropertyString(bt.getProperties().getLabel().getString(FBUtil.getUILocale())));
 						button.setButtonId(nextId);
 						container.add(button);
-					}
+					} else {
+						getLogger().warning("Expected " + Button.class.getName() + " by id: " + nextId + " got " + component);					}
 				}
 			}
 		}
