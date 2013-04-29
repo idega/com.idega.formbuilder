@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.jbpm.JbpmContext;
 import org.jbpm.JbpmException;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import com.idega.block.process.variables.Variable;
 import com.idega.block.process.variables.VariableDataType;
 import com.idega.builder.business.BuilderLogic;
+import com.idega.core.business.DefaultSpringBean;
 import com.idega.jbpm.BPMContext;
 import com.idega.jbpm.JbpmCallback;
 import com.idega.jbpm.data.ViewTaskBind;
@@ -46,7 +48,7 @@ import com.idega.xformsmanager.business.component.properties.PropertiesComponent
 
 @Service(ProcessData.BEAN_ID)
 @Scope("session")
-public class ProcessData implements Serializable {
+public class ProcessData extends DefaultSpringBean implements Serializable {
 	
 	private static final long serialVersionUID = -1462694112346788168L;
 	
@@ -56,8 +58,10 @@ public class ProcessData implements Serializable {
 	public static final String DEFAULT_REQUIRED_ACCESS = "read,write,required";
 	
 	private static final String[] AVAILABLE_ACCESES  = {"read", "write", "required"};
-	private static final VariableDataType[] AVAILABE_TYPES = { VariableDataType.STRING, VariableDataType.DATE, VariableDataType.LIST, VariableDataType.FILE,
-		VariableDataType.FILES, VariableDataType.OBJLIST, VariableDataType.LONG};
+	private static final VariableDataType[] AVAILABE_TYPES = { 
+		VariableDataType.STRING, VariableDataType.DATE, VariableDataType.LIST, 
+		VariableDataType.FILE, VariableDataType.FILES, VariableDataType.OBJLIST,
+		VariableDataType.LONG};
 	
 	private List<Variable> variables = new ArrayList<Variable>();
 	private List<String> transitions = new ArrayList<String>();
@@ -115,10 +119,28 @@ public class ProcessData implements Serializable {
 	}
 	
 	private void initializeVariablesAndTransitions() {
+		if (processId == null) {
+			getLogger().warning("processId is null, task id: " + taskId);
+			return;
+		}
+		
 		this.variables.clear();
 		this.transitions.clear();
 		this.datatypedVariables.clear();
-		ProcessDefinitionW pdw = getBpmFactory().getProcessManager(processId).getProcessDefinition(processId);
+		
+		ProcessDefinitionW pdw = null;
+		try {
+			pdw = getBpmFactory().getProcessManager(processId)
+					.getProcessDefinition(processId);
+		} catch (Exception e) {
+			getLogger().log(Level.WARNING, "Unable to load " + 
+					ProcessDefinitionW.class.getName() + " for process id: " + 
+					processId, e);
+		}
+		
+		if (pdw == null) {
+			return;
+		}
 		
 		variables.addAll(pdw.getTaskVariableWithAccessesList(taskName));
 		
@@ -255,8 +277,23 @@ public class ProcessData implements Serializable {
 				public Object doInJbpm(JbpmContext context) throws JbpmException {
 					Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
 					Long parentFormId = workspace.getParentFormId();
-					ViewTaskBind vtb = getBpmFactory().getBPMDAO().getViewTaskBindByView(parentFormId.toString(),
+					
+					if (parentFormId == null) {
+						getLogger().log(Level.WARNING, 
+								"parentFormId is null for variable: " + variable);
+						return Boolean.FALSE;
+					}
+					
+					ViewTaskBind vtb = getBpmFactory().getBPMDAO()
+							.getViewTaskBindByView(parentFormId.toString(),
 							"xforms");
+					if (vtb == null) {
+						getLogger().warning(ViewTaskBind.class + 
+								" is null for parent form id: " + parentFormId + 
+								" and variable " + variable);
+						return Boolean.FALSE;
+					}
+				
 					Task task = getBpmFactory().getBPMDAO().getTaskFromViewTaskBind(vtb);
 					task = getIdegaJbpmContext().mergeProcessEntity(task);
 					List<VariableAccess> variableAccesses = task.getTaskController()
