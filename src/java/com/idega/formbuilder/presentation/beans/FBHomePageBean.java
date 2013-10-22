@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.common.collect.Multimap;
 import com.idega.block.form.data.XForm;
 import com.idega.block.form.data.dao.XFormsDAO;
+import com.idega.bpm.xformsview.XFormsView;
 import com.idega.jbpm.BPMContext;
 import com.idega.jbpm.JbpmCallback;
 import com.idega.jbpm.view.TaskView;
@@ -41,55 +42,56 @@ import com.idega.xformsmanager.business.XFormPersistenceType;
 @Scope(BeanDefinition.SCOPE_SINGLETON)
 @Service(FBHomePageBean.beanIdentifier)
 public class FBHomePageBean {
-	
+
 	private static final Logger LOGGER = Logger.getLogger(FBHomePageBean.class.getName());
 	public static final String beanIdentifier = "FBHomePageBean";
-	
+
 	private BPMContext idegaJbpmContext;
 	private PersistenceManager persistenceManager;
 	private ViewFactory viewFactory;
-	
+
 	@Autowired
 	private XFormsDAO xformsDao;
-	
+
 	@Transactional(readOnly=true)
 	@SuppressWarnings("unchecked")
 	public List<ProcessAllTasksForms> getAllTasksForms(IWContext iwc, final Locale locale) {
-		
+
 		return getIdegaJbpmContext().execute(new JbpmCallback() {
 
+			@Override
 			public Object doInJbpm(JbpmContext context) throws JbpmException {
-				
+
 				try {
 					List<ProcessDefinition> defs = context.getGraphSession().findLatestProcessDefinitions();
 					HashSet<Long> defsIds = new HashSet<Long>(defs.size());
-					
+
 					for (ProcessDefinition def : defs)
 						defsIds.add(def.getId());
-					
+
 					Multimap<Long, TaskView> pdsViews = getViewFactory().getAllViewsByProcessDefinitions(defsIds);
 					List<ProcessAllTasksForms> allForms = new ArrayList<ProcessAllTasksForms>(pdsViews.keySet().size());
-					
+
 					for (Long pdId : pdsViews.keySet()) {
 						try {
 							ProcessDefinition pd;
 							Collection<TaskView> tviews = pdsViews.get(pdId);
-							
+
 							if(tviews.isEmpty()) {
 								pd = context.getGraphSession().getProcessDefinition(pdId);
 							} else {
 								 pd = tviews.iterator().next().getTask().getProcessDefinition();
 							 }
-							
+
 							ProcessAllTasksForms processForms = new ProcessAllTasksForms();
 							processForms.setProcessId(String.valueOf(pd.getId()));
 							processForms.setProcessName(pd.getName());
 							processForms.setProcessVersion(pd.getVersion());
-							
+
 							List<TaskForm> taskForms = new ArrayList<TaskForm>(tviews.size());
-							
+
 							for (TaskView taskView : tviews) {
-								
+
 								String dateCreatedStr = new IWTimestamp(taskView.getDateCreated()).getLocaleDateAndTime(locale, IWTimestamp.SHORT, IWTimestamp.SHORT);
 								TaskForm form = new TaskForm();
 								form.setDateCreatedStr(dateCreatedStr);
@@ -98,16 +100,16 @@ public class FBHomePageBean {
 								form.setTaskName(taskView.getTask().getName());
 								taskForms.add(form);
 							}
-							
+
 							processForms.setTasksCount(String.valueOf(pd.getTaskMgmtDefinition().getTasks().size()));
 							processForms.setTaskForms(taskForms);
 							allForms.add(processForms);
-	                        
+
                         } catch (Exception e) {
                         	LOGGER.log(Level.WARNING, "Exception loading info for process definition: " + pdId, e);
                         }
 					}
-					
+
 					return allForms;
                 } catch (Exception e) {
 	                LOGGER.log(Level.WARNING, "Error loading info for process definitions", e);
@@ -116,33 +118,34 @@ public class FBHomePageBean {
 			}
 		});
 	}
-	
+
 	@Transactional(readOnly = true)
 	public ProcessAllTasksForms getTasksFormsForProcess(final Locale locale, final String processName, final Integer version) {
 		return getIdegaJbpmContext().execute(new JbpmCallback() {
 
+			@Override
 			public Object doInJbpm(JbpmContext context) throws JbpmException {
 				ProcessDefinition pd = context.getGraphSession().findProcessDefinition(processName, version);
-				
+
 				if (pd == null) {
 					return null;
 				}
-				
+
 				Long pdId = pd.getId();
-				
+
 				Multimap<Long, TaskView> pdsViews = getViewFactory().getAllViewsByProcessDefinitions(Collections.singletonList(pdId));
-				
+
 				Collection<TaskView> tviews = pdsViews.get(pdId);
-							
+
 				ProcessAllTasksForms processForms = new ProcessAllTasksForms();
 				processForms.setProcessId(String.valueOf(pd.getId()));
 				processForms.setProcessName(pd.getName());
 				processForms.setProcessVersion(pd.getVersion());
-					
+
 				List<TaskForm> taskForms = new ArrayList<TaskForm>(tviews.size());
-					
+
 				for (TaskView taskView : tviews) {
-						
+
 					String dateCreatedStr = new IWTimestamp(taskView.getDateCreated()).getLocaleDateAndTime(locale, IWTimestamp.SHORT, IWTimestamp.SHORT);
 					TaskForm form = new TaskForm();
 					form.setDateCreatedStr(dateCreatedStr);
@@ -157,17 +160,17 @@ public class FBHomePageBean {
 			}
 		});
 	}
-	
+
 	@Transactional(readOnly = true)
 	public List<XForm> getRelatedByFormId(Long formId) {
 		return getXformsDao().getAllVersionsByParentId(formId);
 	}
-	
+
 	public List<Form> getStandaloneForms() {
-		
+
 		return getPersistenceManager().getStandaloneForms();
 	}
-	
+
 	public BPMContext getIdegaJbpmContext() {
 		return idegaJbpmContext;
 	}
@@ -176,7 +179,7 @@ public class FBHomePageBean {
 	public void setIdegaJbpmContext(BPMContext idegaJbpmContext) {
 		this.idegaJbpmContext = idegaJbpmContext;
 	}
-	
+
 	public XFormsDAO getXformsDao() {
 		return xformsDao;
 	}
@@ -186,13 +189,13 @@ public class FBHomePageBean {
 	}
 
 	public class ProcessAllTasksForms {
-		
+
 		private String processId;
 		private String processName;
 		private String tasksCount;
 		private int processVersion;
 		private List<TaskForm> taskForms;
-		
+
 		public List<TaskForm> getTaskForms() {
 			return taskForms;
 		}
@@ -223,16 +226,16 @@ public class FBHomePageBean {
 		public void setProcessVersion(int processVersion) {
 			this.processVersion = processVersion;
 		}
-		
+
 	}
-	
+
 	public class TaskForm {
-		
+
 		private String dateCreatedStr;
 		private String formName;
 		private String taskName;
 		private String formId;
-		
+
 		public String getDateCreatedStr() {
 			return dateCreatedStr;
 		}
