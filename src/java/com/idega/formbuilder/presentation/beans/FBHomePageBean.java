@@ -268,13 +268,13 @@ public class FBHomePageBean {
 	public void setPersistenceManager(PersistenceManager persistenceManager) {
 		this.persistenceManager = persistenceManager;
 	}
-	
+
 	public ViewFactory getViewFactory() {
 		return viewFactory;
 	}
 
 	@Autowired
-	public void setViewFactory(@ViewFactoryType("xforms") ViewFactory viewFactory) {
+	public void setViewFactory(@ViewFactoryType(XFormsView.VIEW_TYPE) ViewFactory viewFactory) {
 		this.viewFactory = viewFactory;
 	}
 }
