@@ -6,6 +6,7 @@ import javax.faces.context.FacesContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.idega.bpm.xformsview.XFormsView;
 import com.idega.formbuilder.presentation.FBComponentBase;
 import com.idega.formbuilder.presentation.beans.ComponentPropertyManager;
 import com.idega.formbuilder.presentation.beans.FormDocument;
@@ -44,27 +45,26 @@ public class FBWorkspace extends FBComponentBase {
 	private static final String RIGHT_PANEL_0 = "panel0Content2";
 	private static final String RIGHT_PANEL_1 = "panel1Content2";
 	private static final String LAST_CLASS = "last";
-	
+
 	@Autowired
 	private BPMDAO bpmDAO;
 
 	public FBWorkspace() {
 		this(null);
 	}
-	
+
 	public FBWorkspace(String id) {
 		super(id, null);
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	protected void initializeComponent(FacesContext context) {
 		IWContext iwc = CoreUtil.getIWContext();
 		Workspace workspace = (Workspace) WFUtil.getBeanInstance(Workspace.BEAN_ID);
 		FormDocument fd = (FormDocument) WFUtil.getBeanInstance(FormDocument.BEAN_ID);
 		if (context.getExternalContext().getRequestParameterMap().containsKey(FormDocument.FROM_APP_REQ_PARAM)) {
 			try {
-				Map session_map = context.getExternalContext().getSessionMap();
+				Map<String, Object> session_map = context.getExternalContext().getSessionMap();
 				fd.setAppId((String)session_map.get(FormDocument.APP_ID_PARAM));
 				fd.setPrimaryFormName((String)session_map.get(FormDocument.APP_FORM_NAME_PARAM));
 				session_map.remove(FormDocument.APP_ID_PARAM);
@@ -73,45 +73,45 @@ public class FBWorkspace extends FBComponentBase {
 				iwc.sendRedirect(FORM_LIST_URL);
 				return;
 			}
-			
+
 		}
 		if(fd.getDocument() == null) {
 			iwc.sendRedirect(FORM_LIST_URL);
 			return;
 		}
-				
-		workspace.setProcessMode(getBpmDAO().getTaskViewBindCount(fd.getFormId(), "xforms") > 0);
-				
+
+		workspace.setProcessMode(getBpmDAO().getTaskViewBindCount(fd.getFormId(), XFormsView.VIEW_TYPE) > 0);
+
 		Layer mainApplication = new Layer(Layer.DIV);
-		
+
 		Layer body = new Layer(Layer.DIV);
 		body.setId(OPTIONS_PANEL_ID);
-		
+
 		Layer leftAccordion = new Layer(Layer.DIV);
 		leftAccordion.setId(LEFT_ACC_ID);
-		
+
 		Layer tab1 = new Layer(Layer.SPAN);
 		tab1.setStyleClass(TOGGLER_CLASS);
 		tab1.setStyleClass(AT_START_CLASS);
 		tab1.setStyleClass(FIRST_TOGGLER_CLASS);
-		
+
 		Text tab1Title = new Text(getLocalizedString(iwc, "fb_acc_comp_palette", "Component palette"));
 		tab1Title.setStyleClass(TAB_TITLE_CLASS);
 		tab1.add(tab1Title);
-		
+
 		leftAccordion.add(tab1);
-		
+
 		Layer panel1 = new Layer(Layer.DIV);
 		panel1.setId(LEFT_PANEL_0);
 		panel1.setStyleClass(ELEMENT_CLASS);
 		panel1.setStyleClass(AT_START_CLASS);
-		
+
 		Layer messageBox = new Layer(Layer.DIV);
 		messageBox.setId("optionsPanelMessageBox");
-		
+
 		Text headline = new Text(getLocalizedString(iwc, "labels_palette_disabled", "Palette actions disabled in this view"));
 		messageBox.add(headline);
-		
+
 		String view = workspace.getView();
 		FormPage formPage = (FormPage) WFUtil.getBeanInstance(FormPage.BEAN_ID);
 		if(!FBViewPanel.DESIGN_VIEW.equals(view) || (formPage.getPage() != null && formPage.getPage().isSpecialPage())) {
@@ -119,121 +119,121 @@ public class FBWorkspace extends FBComponentBase {
 		} else {
 			messageBox.setStyleAttribute("display", "none");
 		}
-		
+
 		panel1.add(messageBox);
-		
+
 		FBPalette palette = new FBPalette();
 		palette.setItemStyleClass(PALETTE_COMPONENT_CLASS);
 		palette.setStyleClass(COMPONENTS_LIST_CLASS);
-		
+
 		panel1.add(palette);
-		
+
 		leftAccordion.add(panel1);
-		
+
 		Layer tab2 = new Layer(Layer.SPAN);
 		tab2.setStyleClass(TOGGLER_CLASS);
 		tab2.setStyleClass(AT_START_CLASS);
-		
-		
+
+
 		Text tab2Title = new Text(getLocalizedString(iwc, "fb_acc_comp_properties", "Component properties"));
 		tab2Title.setStyleClass(TAB_TITLE_CLASS);
 		tab2.add(tab2Title);
-		
+
 		leftAccordion.add(tab2);
-		
+
 		Layer panel2 = new Layer(Layer.DIV);
 		panel2.setStyleClass(ELEMENT_CLASS);
 		panel2.setStyleClass(AT_START_CLASS);
 		panel2.setId(LEFT_PANEL_1);
 		panel2.setStyleClass(LAST_CLASS);
-		
+
 		ComponentPropertyManager propertyManager = (ComponentPropertyManager) WFUtil.getBeanInstance(ComponentPropertyManager.BEAN_ID);
-		
+
 		FBComponentProperties simpleProperties = new FBComponentProperties(propertyManager.getComponent());
-		
+
 		panel2.add(simpleProperties);
-		
+
 		leftAccordion.add(panel2);
-		
+
 		body.add(leftAccordion);
-		
+
 		mainApplication.add(body);
-		
+
 		FBViewPanel views = new FBViewPanel();
-		
+
 		mainApplication.add(views);
-		
+
 		body = new Layer(Layer.DIV);
 		body.setId(RIGHT_PANEL_ID);
-		
+
 		Layer rightAccordion = new Layer(Layer.DIV);
 		rightAccordion.setId(RIGHT_ACC_ID);
-		
+
 		if(workspace.isProcessMode()) {
 			tab1 = new Layer(Layer.SPAN);
 			tab1.setStyleClass(TOGGLER_CLASS);
 			tab1.setStyleClass(AT_START_RIGHT_CLASS);
 			tab1.setStyleClass(FIRST_TOGGLER_CLASS);
-			
+
 			tab1Title = new Text(getLocalizedString(iwc, "fb_acc_variables", "Variables and transitions"));
 			tab1Title.setStyleClass(TAB_TITLE_CLASS);
 			tab1.add(tab1Title);
-			
+
 			rightAccordion.add(tab1);
-			
+
 			panel1 = new Layer(Layer.DIV);
 			panel1.setId(RIGHT_PANEL_0);
 			panel1.setStyleClass(ELEMENT_CLASS);
 			panel1.setStyleClass(AT_START_RIGHT_CLASS);
-			
+
 			FBVariableViewer variableViewer = new FBVariableViewer();
-			
+
 			panel1.add(variableViewer);
-			
+
 			rightAccordion.add(panel1);
-			
+
 		}
-		
+
 		tab2 = new Layer(Layer.SPAN);
 		tab2.setStyleClass(TOGGLER_CLASS);
 		tab2.setStyleClass(AT_START_RIGHT_CLASS);
-		
-		
+
+
 		tab2Title = new Text(getLocalizedString(iwc, "fb_acc_sections", "Sections"));
 		tab2Title.setStyleClass(TAB_TITLE_CLASS);
 		tab2.add(tab2Title);
-		
+
 		rightAccordion.add(tab2);
-		
+
 		panel2 = new Layer(Layer.DIV);
 		panel2.setStyleClass(ELEMENT_CLASS);
 		panel2.setStyleClass(AT_START_RIGHT_CLASS);
 		panel2.setId(RIGHT_PANEL_1);
 		panel2.setStyleClass(LAST_CLASS);
-		
+
 		FBPagesPanel pages = new FBPagesPanel();
 		pages.setStyleClass(PAGES_PANEL);
 		pages.setComponentStyleClass(FORM_PAGE_ICON_CLASS);
 		pages.setSelectedStyleClass(SELECTED_PAGE_CLASS);
-		
+
 		panel2.add(pages);
-		
+
 		rightAccordion.add(panel2);
-		
+
 		body.add(rightAccordion);
-		
+
 		mainApplication.add(body);
-		
+
 		add(mainApplication);
-		
+
 	}
 
 	BPMDAO getBpmDAO() {
-		
+
 		if(bpmDAO == null)
 			ELUtil.getInstance().autowire(this);
-		
+
 		return bpmDAO;
 	}
-	
+
 }
