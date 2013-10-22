@@ -7,6 +7,7 @@ import java.util.Locale;
 import org.jdom.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.idega.block.web2.business.JQuery;
 import com.idega.block.web2.business.Web2Business;
 import com.idega.block.web2.business.Web2BusinessBean;
 import com.idega.builder.business.BuilderLogic;
@@ -40,6 +41,9 @@ public class Workspace implements Serializable {
 
 	@Autowired
 	private Web2Business web2;
+
+	@Autowired
+	private JQuery jQuery;
 
 	public String getActiveHomepageTab() {
 		return activeHomepageTab;
@@ -135,7 +139,6 @@ public class Workspace implements Serializable {
 	}
 
 	public Document getWorkspace(String langCode) {
-
 		this.locale = LocaleUtil.getLocale(langCode);
 		this.view = FBViewPanel.DESIGN_VIEW;
 		return BuilderLogic.getInstance().getRenderedComponent(CoreUtil.getIWContext(), new FBWorkspace("mainWorkspace"), false);
@@ -159,7 +162,7 @@ public class Workspace implements Serializable {
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-		js.append(web2.getBundleUriToMootabsScript()).append(CoreConstants.COMMA).append(web2.getBundleURIToJQueryLib()).append(CoreConstants.COMMA);
+		js.append(web2.getBundleUriToMootabsScript()).append(CoreConstants.COMMA).append(jQuery.getBundleURIToJQueryLib()).append(CoreConstants.COMMA);
 
 		IWBundle web2Bundle = IWMainApplication.getDefaultIWMainApplication().getBundle(Web2BusinessBean.WEB2_BUNDLE_IDENTIFIER);
 		String basePath = "javascript/jquery-ui/1.8.17/";
@@ -174,7 +177,7 @@ public class Workspace implements Serializable {
 		js.append(IWMainApplication.getDefaultIWMainApplication().getBundle(org.chiba.web.IWBundleStarter.BUNDLE_IDENTIFIER)
 				.getVirtualPathWithFileNameString("javascript/PresentationContext.js")).append(CoreConstants.COMMA);
 		js.append(IWMainApplication.getDefaultIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER)
-																						.getVirtualPathWithFileNameString("javascript/FormBuilderHelper.js"));
+				.getVirtualPathWithFileNameString("javascript/FormBuilderHelper.js"));
 
 		return js.toString();
 	}
