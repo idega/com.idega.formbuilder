@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.common.collect.Multimap;
 import com.idega.block.form.data.XForm;
 import com.idega.block.form.data.dao.XFormsDAO;
+import com.idega.bpm.xformsview.XFormsView;
 import com.idega.jbpm.BPMContext;
 import com.idega.jbpm.JbpmCallback;
 import com.idega.jbpm.view.TaskView;
@@ -273,7 +274,7 @@ public class FBHomePageBean {
 	}
 
 	@Autowired
-	public void setViewFactory(@ViewFactoryType("xforms") ViewFactory viewFactory) {
+	public void setViewFactory(@ViewFactoryType(XFormsView.VIEW_TYPE) ViewFactory viewFactory) {
 		this.viewFactory = viewFactory;
 	}
 }
