@@ -145,9 +145,14 @@ public class ProcessData extends DefaultSpringBean implements Serializable {
 
 		variables.addAll(pdw.getTaskVariableWithAccessesList(taskName));
 
-		Collection<String> transitionNames = pdw.getTaskNodeTransitionsNames(taskName);
-
-		if(transitionNames != null) {
+		Collection<String> transitionNames = null;
+		try {
+			transitionNames = pdw.getTaskNodeTransitionsNames(taskName);
+		} catch (Exception e) {
+			getLogger().log(Level.WARNING, "Error getting names of transitions for task: " + taskName + ", proc. def. ID: " + processId, e);
+		}
+		
+		if (transitionNames != null) {
 			transitions.addAll(transitionNames);
 		}
 	}
