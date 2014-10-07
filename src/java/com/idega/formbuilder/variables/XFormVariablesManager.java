@@ -23,13 +23,18 @@ import com.idega.util.datastructures.map.MapUtil;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class XFormVariablesManager extends DefaultSpringBean implements VariablesManager {
 
+	@Override
 	public void doManageVariables(Long processInstanceId, Long taskInstanceId, Map<String, Object> variables) {
 		List<String> currentSessions = ChibaUtils.getInstance().getKeysOfXFormSessions(ChibaUtils.getInstance().getCurrentHttpSessionId());
 		if (ListUtil.isEmpty(currentSessions))
 			return;
 
 		String query = "update jbpm_variableinstance set stringvalue_ = null, LONGVALUE_ = null, DOUBLEVALUE_ = null, DATEVALUE_ = null, BYTEARRAYVALUE_ = null " +
-						" where processinstance_ = " + processInstanceId + " and taskinstance_ ";
+						" where ";
+		if (processInstanceId != null) {
+			query += "processinstance_ = " + processInstanceId + " and ";
+		}
+		query += " taskinstance_ ";
 		String updateTask = query + "= " + taskInstanceId +	" and name_ = '";
 		String updateToken = query + "is null and TOKENVARIABLEMAP_ is not null and name_ = '";
 		for (String sessionKey: currentSessions) {
@@ -64,6 +69,10 @@ public class XFormVariablesManager extends DefaultSpringBean implements Variable
 	}
 
 	private boolean hasTokenValue(String name, Long piId) {
+		if (piId == null) {
+			return false;
+		}
+
 		List<Serializable[]> results = null;
 		String query = "select stringvalue_ from jbpm_variableinstance where processinstance_ = " + piId + " and name_ = '" + name +
 				"' and TOKENVARIABLEMAP_ is not null and taskinstance_ is null";
