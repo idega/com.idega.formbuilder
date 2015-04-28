@@ -4,7 +4,7 @@ import com.idega.data.IDOEntity;
 
 /**
  * Basically talking copied from is.idega.idegaweb.egov.application.data.Application with several methods removed
- * 
+ *
  * @author <a href="mailto:civilis@idega.com">Vytautas Čivilis</a>
  * @version 1.0
  *
@@ -110,8 +110,8 @@ public interface Application extends IDOEntity {
 	 * @see is.idega.idegaweb.egov.application.data.ApplicationBMPBean#getHiddenFromGuests
 	 */
 	public boolean getHiddenFromGuests();
-	
+
 	public void setAppType(Integer app_type);
-		
+
 	public Integer getAppType();
 }
