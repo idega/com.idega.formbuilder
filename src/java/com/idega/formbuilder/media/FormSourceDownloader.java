@@ -25,9 +25,9 @@ public class FormSourceDownloader extends DownloadWriter {
 
 	@Autowired
 	private FormDocument formDocument;
-	
+
 	private byte[] formSourceCode;
-	
+
 	@Override
 	public String getMimeType() {
 		return MimeTypeUtil.MIME_TYPE_XML;
@@ -35,19 +35,23 @@ public class FormSourceDownloader extends DownloadWriter {
 
 	@Override
 	public void init(HttpServletRequest req, IWContext iwc) {
+		if (iwc == null || !iwc.isLoggedOn()) {
+			return;
+		}
+
 		String resourceId = iwc.getParameter("resourceToExportId");
 		if (StringUtil.isEmpty(resourceId)) {
 			Logger.getLogger(getClass().getName()).warning("XForm ID is not provided! Unable to resolve it.");
 			return;
 		}
-		
+
 		try {
 			ELUtil.getInstance().autowire(this);
 		} catch(Exception e) {
 			e.printStackTrace();
 			return;
 		}
-		
+
 		//	Body
 		String code = formDocument.getOnlySourceCode();
 		if (StringUtil.isEmpty(code)) {
@@ -60,7 +64,7 @@ public class FormSourceDownloader extends DownloadWriter {
 			e.printStackTrace();
 			return;
 		}
-		
+
 		//	Title
 		String fileName = null;
 		try {
@@ -71,15 +75,15 @@ public class FormSourceDownloader extends DownloadWriter {
 		if (StringUtil.isEmpty(fileName)) {
 			fileName = new StringBuilder("form_").append(resourceId).toString();
 		}
-		
+
 		setAsDownload(iwc, new StringBuilder(StringHandler.shortenToLength(fileName, 64)).append(".xhtml").toString(), formSourceCode.length);
 	}
 
 	@Override
-	public void writeTo(OutputStream streamOut) throws IOException {
+	public void writeTo(IWContext iwc, OutputStream streamOut) throws IOException {
 		InputStream streamIn = new ByteArrayInputStream(formSourceCode);
 		FileUtil.streamToOutputStream(streamIn, streamOut);
-		
+
 		streamOut.flush();
 		streamOut.close();
 		streamIn.close();
